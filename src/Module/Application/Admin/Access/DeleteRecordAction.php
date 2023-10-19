@@ -67,9 +67,7 @@ final class DeleteRecordAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $this->accessRepository->delete(
-            (int) $request->getQueryParams()['access_id'] ?? 0
-        );
+        $this->accessRepository->delete((int)($request->getQueryParams()['access_id'] ?? 0));
 
         $this->ui->showConfirmation(
             T_('No Problem'),

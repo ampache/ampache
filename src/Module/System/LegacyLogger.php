@@ -34,7 +34,7 @@ use Psr\Log\LoggerInterface;
 final class LegacyLogger implements LoggerInterface
 {
     /**
-     * This emulate the ampache log levels
+     * This emulates the Ampache log levels
      */
     public const LOG_LEVEL_CRITICAL = 1;
     public const LOG_LEVEL_ERROR    = 2;
@@ -55,6 +55,9 @@ final class LegacyLogger implements LoggerInterface
         $this->configContainer = $configContainer;
     }
 
+    /**
+     * Use LegacyLogger::critical (Required function to implement LoggerInterface)
+     */
     public function emergency($message, array $context = []): void
     {
         $this->log(
@@ -64,6 +67,9 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
+    /**
+     * Use LegacyLogger::critical (Required function to implement LoggerInterface)
+     */
     public function alert($message, array $context = []): void
     {
         $this->log(
@@ -73,6 +79,9 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
+    /**
+     * debug_level = 1
+     */
     public function critical($message, array $context = []): void
     {
         $this->log(
@@ -82,6 +91,9 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
+    /**
+     * debug_level = 2
+     */
     public function error($message, array $context = []): void
     {
         $this->log(
@@ -91,6 +103,9 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
+    /**
+     * debug_level = 3
+     */
     public function warning($message, array $context = []): void
     {
         $this->log(
@@ -100,6 +115,9 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
+    /**
+     * debug_level = 4
+     */
     public function notice($message, array $context = []): void
     {
         $this->log(
@@ -109,6 +127,9 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
+    /**
+     * Use LegacyLogger::notice(Required function to implement LoggerInterface)
+     */
     public function info($message, array $context = []): void
     {
         $this->log(
@@ -118,6 +139,9 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
+    /**
+     * debug_level = 5
+     */
     public function debug($message, array $context = []): void
     {
         $this->log(
@@ -127,6 +151,9 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
+    /**
+     * Replaces debug_event()
+     */
     public function log($level, $message, array $context = []): void
     {
         if (!$this->configContainer->get('debug') || $level > $this->configContainer->get('debug_level')) {

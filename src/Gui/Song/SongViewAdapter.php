@@ -244,7 +244,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $owner = $this->song->get_user_owner();
 
         return (
-            ($owner !== null && $owner == $GLOBALS['user']->id) ||
+            (($owner !== null && !empty($GLOBALS['user'])) && $owner == $GLOBALS['user']->id) ||
             $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
         ) &&
         $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&

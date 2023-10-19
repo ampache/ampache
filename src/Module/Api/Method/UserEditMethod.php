@@ -52,7 +52,7 @@ final class UserEditMethod
      * @param array $input
      * @param User $user
      * username          = (string) $username
-     * password          = (string) hash('sha256', $password)) //optional
+     * password          = (string) hash('sha256', $password) //optional
      * fullname          = (string) $fullname //optional
      * email             = (string) $email //optional
      * website           = (string) $website //optional

@@ -87,8 +87,8 @@ final class AddHostAction implements ApplicationActionInterface
                 $startIp,
                 $endIp,
                 $data['name'] ?? '',
-                (int) ($data['user'] ?? -1),
-                (int) $data['level'] ?? 0,
+                (int)($data['user'] ?? -1),
+                (int)($data['level'] ?? 0),
                 $data['type'] ?? '',
                 $data['addtype'] ?? ''
             );

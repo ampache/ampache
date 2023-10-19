@@ -27,17 +27,27 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 
 final class CatalogAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
+    public function __construct(
+        RequestParserInterface $requestParser
+    ) {
+        $this->requestParser   = $requestParser;
+    }
+
     public function handle(): void
     {
         $results = array();
+        $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'flip_state':
                 if (!Access::check('interface', 75)) {
                     debug_event('catalog.ajax', Core::get_global('user')->username . ' attempted to change the state of a catalog', 1);

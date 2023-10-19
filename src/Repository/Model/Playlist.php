@@ -215,8 +215,8 @@ class Playlist extends playlist_object
         }
 
         $sql        = "SELECT `id`, `name` FROM `$type` WHERE (`user` = ? OR `type` = 'public') ORDER BY `name`";
-        $results    = array();
         $db_results = Dba::read($sql, array($user_id));
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }

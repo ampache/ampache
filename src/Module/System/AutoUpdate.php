@@ -133,6 +133,10 @@ class AutoUpdate
      */
     protected static function lastcheck_expired()
     {
+        // if you're not auto updating the check should never expire
+        if (!AmpConfig::get('autoupdate', false)) {
+            return false;
+        }
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
             Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, 1);
@@ -151,7 +155,7 @@ class AutoUpdate
     {
         $lastversion = (string) AmpConfig::get('autoupdate_lastversion');
         // Forced or last check expired, check latest version from GitHub
-        if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
+        if ($force || self::lastcheck_expired()) {
             // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
             $time       = time();
             $git_branch = self::is_force_git_branch();
@@ -255,8 +259,9 @@ class AutoUpdate
      */
     public static function is_update_available($force = false)
     {
-        if (!$force || (!(self::lastcheck_expired() && AmpConfig::get('autoupdate')))) {
-            return AmpConfig::get('autoupdate_lastversion_new');
+        $current = self::get_current_version();
+        if (!$force || (!self::lastcheck_expired())) {
+            return AmpConfig::get('autoupdate_lastversion_new', false);
         }
         $time = time();
         Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, $time);
@@ -264,7 +269,6 @@ class AutoUpdate
 
         $available  = false;
         $git_branch = self::is_force_git_branch();
-        $current    = self::get_current_version();
         $latest     = self::get_latest_version($force);
 
         debug_event(self::class, 'Checking latest version online...', 5);
@@ -321,14 +325,14 @@ class AutoUpdate
         if ($current === $latest) {
             return;
         }
-        echo '<div id="autoupdate">';
-        echo '<span>' . T_('Update available') . '</span>';
-        echo ' (' . self::get_latest_version() . ').<br />';
         $git_branch    = self::is_force_git_branch();
         $develop_check = self::is_develop() || $git_branch != '';
         $changelog     = ($git_branch == '') ? 'master' : $git_branch;
         $zip_name      = ($git_branch == '') ? 'develop' : $git_branch;
 
+        echo '<div id="autoupdate">';
+        echo '<span>' . T_('Update available') . '</span>';
+        echo ' (' . $latest . ').<br />';
         echo '<a href="https://github.com/ampache/ampache/' . ($develop_check ? 'compare/' . $current . '...' . $latest : 'blob/' . $changelog . '/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
         if ($develop_check) {
             echo ' | <a href="https://github.com/ampache/ampache/archive/' . $zip_name . '.zip' . '" target="_blank">' . T_('Download') . '</a>';

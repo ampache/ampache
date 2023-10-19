@@ -26,8 +26,10 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Method\LostPasswordMethod;
 use Ampache\Module\Api\Method\RegisterMethod;
 use Ampache\Module\System\Session;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
@@ -49,6 +51,8 @@ use Throwable;
 
 final class ApiHandler implements ApiHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
     private StreamFactoryInterface $streamFactory;
 
     private LoggerInterface $logger;
@@ -60,12 +64,14 @@ final class ApiHandler implements ApiHandlerInterface
     private ContainerInterface $dic;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
         ContainerInterface $dic
     ) {
+        $this->requestParser   = $requestParser;
         $this->streamFactory   = $streamFactory;
         $this->logger          = $logger;
         $this->configContainer = $configContainer;
@@ -85,11 +91,12 @@ final class ApiHandler implements ApiHandlerInterface
         // block html and visual output
         define('API', true);
 
-        $action        = (string)Core::get_request('action');
+        $action        = $this->requestParser->getFromRequest('action');
         $is_handshake  = $action == HandshakeMethod::ACTION;
         $is_ping       = $action == PingMethod::ACTION;
         $is_register   = $action == RegisterMethod::ACTION;
-        $is_public     = ($is_handshake || $is_ping || $is_register);
+        $is_forgotten  = $action == LostPasswordMethod::ACTION;
+        $is_public     = ($is_handshake || $is_ping || $is_register || $is_forgotten);
         $input         = $request->getQueryParams();
         $input['auth'] = $gatekeeper->getAuth();
         $api_format    = $input['api_format'];
@@ -395,7 +402,7 @@ final class ApiHandler implements ApiHandlerInterface
              *
              * @todo cleanup
              */
-            $this->logger->info(
+            $this->logger->notice(
                 sprintf('API function [%s]', $handlerClassName),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );

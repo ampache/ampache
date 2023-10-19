@@ -28,17 +28,26 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\Ui;
 
 final class StreamAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
+    public function __construct(
+        RequestParserInterface $requestParser
+    ) {
+        $this->requestParser   = $requestParser;
+    }
     public function handle(): void
     {
         $results = array();
+        $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'set_play_type':
                 // Make sure they have the rights to do this
                 if (!Preference::has_access('play_type')) {

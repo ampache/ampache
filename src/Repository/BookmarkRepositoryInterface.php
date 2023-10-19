@@ -28,6 +28,11 @@ interface BookmarkRepositoryInterface
      */
     public function getBookmarks(int $userId): array;
 
+    /**
+     * @return int
+     */
+    public function getBookmark(int $bookmarkId, int $userId): int;
+
     public function delete(int $bookmarkId): bool;
 
     /**

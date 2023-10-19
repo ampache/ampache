@@ -55,7 +55,7 @@ final class ShowEditRecordAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $accessId = (int) $request->getQueryParams()['access_id'] ?? 0;
+        $accessId = (int)($request->getQueryParams()['access_id'] ?? 0);
 
         $this->ui->showHeader();
         $this->ui->show(

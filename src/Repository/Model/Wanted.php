@@ -132,8 +132,11 @@ class Wanted extends database_object
         $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array('release-groups');
         $types    = AmpConfig::get('wanted_types', array());
-        if (!is_array($types)) {
+        if (is_string($types)) {
             $types = explode(',', $types);
+        }
+        if (!$types) {
+            $types = array();
         }
         try {
             $martist = $mbrainz->lookup('artist', $lookupId, $includes);

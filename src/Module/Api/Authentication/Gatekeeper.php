@@ -97,7 +97,7 @@ final class Gatekeeper implements GatekeeperInterface
                 $token = $this->request->getQueryParams()['auth'] ?? '';
             }
 
-            $this->logger->info(
+            $this->logger->notice(
                 sprintf('API session [%s]', $token),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );

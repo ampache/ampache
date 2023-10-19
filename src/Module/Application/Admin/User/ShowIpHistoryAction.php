@@ -54,7 +54,7 @@ final class ShowIpHistoryAction extends AbstractUserAction
     {
         $queryParams = $request->getQueryParams();
 
-        $userId = (int) $queryParams['user_id'] ?? 0;
+        $userId = (int)($queryParams['user_id'] ?? 0);
         if ($userId < 1) {
             echo T_('You have requested an object that does not exist');
         } else {

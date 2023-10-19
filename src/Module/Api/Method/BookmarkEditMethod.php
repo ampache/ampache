@@ -50,21 +50,21 @@ final class BookmarkEditMethod
      * @param array $input
      * @param User $user
      * filter   = (string) object_id
-     * type     = (string) object_type ('song', 'video', 'podcast_episode')
+     * type     = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
-     * client   = (string) Agent string Default: 'AmpacheAPI' //optional
+     * client   = (string) Agent string //optional
      * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
     public static function bookmark_edit(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('filter', 'type', 'position'), self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT) ?? 0;
-        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -72,27 +72,28 @@ final class BookmarkEditMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), array('bookmark', 'song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
-        $className = ObjectTypeToClassNameMapper::map($type);
+        if ($type != 'bookmark') {
+            $className = ObjectTypeToClassNameMapper::map($type);
+            if ($className === $type || !$object_id) {
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
-        if ($className === $type || !$object_id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+                return false;
+            }
 
-            return false;
-        }
+            $item = new $className($object_id);
+            if (!$item->id) {
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
-        $item = new $className($object_id);
-        if (!$item->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+                return false;
+            }
         }
         $object = array(
             'object_id' => $object_id,
@@ -104,7 +105,8 @@ final class BookmarkEditMethod
         // check for the bookmark first
         $results = Bookmark::get_bookmark($object);
         if (empty($results)) {
-            Api::empty('bookmark', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'bookmark', $input['api_format']);
 
             return false;
         }

@@ -168,18 +168,18 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             try {
                 $response = $this->spotifyWebAPI->search($query, $art->type, ['limit' => $limit]);
             } catch (SpotifyWebAPIException $error) {
-                $response = array();
+                $response = null;
             }
         }
-
-        if (count($response->{$types}->items)) {
-            foreach ($response->{$types}->items as $item) {
+        $items = $response->{$types}->items ?? array();
+        if (count($items)) {
+            foreach ($items as $item) {
                 $item_id = $item->id;
                 try {
                     $result = $this->spotifyWebAPI->{$getType}($item_id);
                 } catch (SpotifyWebAPIException $error) {
                     $this->logger->error(
-                        'gather_spotify' . $error->getMessage(),
+                        'gather_spotify ' . $error->getMessage(),
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
 

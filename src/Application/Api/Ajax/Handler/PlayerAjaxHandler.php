@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
@@ -32,18 +33,22 @@ use Ampache\Module\Util\Ui;
 
 final class PlayerAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
     private AjaxUriRetrieverInterface $ajaxUriRetriever;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         AjaxUriRetrieverInterface $ajaxUriRetriever
     ) {
+        $this->requestParser    = $requestParser;
         $this->ajaxUriRetriever = $ajaxUriRetriever;
     }
 
     public function handle(): void
     {
         $results = array();
-        $action  = Core::get_request('action');
+        $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
         switch ($action) {

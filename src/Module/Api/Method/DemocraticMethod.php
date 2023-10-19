@@ -63,7 +63,7 @@ final class DemocraticMethod
         switch ($input['method']) {
             case 'vote':
                 $type      = 'song';
-                $object_id = (int) $input['oid'];
+                $object_id = (int)($input['oid'] ?? 0);
                 $media     = new Song($object_id);
                 if (!$media->id) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -92,7 +92,7 @@ final class DemocraticMethod
                 break;
             case 'devote':
                 $type      = 'song';
-                $object_id = (int) $input['oid'];
+                $object_id = (int)($input['oid'] ?? 0);
                 $media     = new Song($object_id);
                 if (!$media->id) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

@@ -52,7 +52,7 @@ final class BookmarkCreateMethod
      * filter   = (string) object_id
      * type     = (string) object_type ('song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
-     * client   = (string) Agent string Default: 'AmpacheAPI' //optional
+     * client   = (string) Agent string //optional
      * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
@@ -64,7 +64,7 @@ final class BookmarkCreateMethod
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = $input['position'];
-        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);

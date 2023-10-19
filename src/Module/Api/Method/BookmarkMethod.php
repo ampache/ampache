@@ -3,7 +3,7 @@
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,55 +25,60 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\BookmarkRepositoryInterface;
 
 /**
- * Class GenreArtistsMethod
+ * Class BookmarkMethod
  * @package Lib\ApiMethods
  */
-final class GenreArtistsMethod
+final class BookmarkMethod
 {
-    const ACTION = 'genre_artists';
+    public const ACTION = 'bookmark';
 
     /**
-     * genre_artists
-     * MINIMUM_API_VERSION=380001
+     * bookmark
+     * MINIMUM_API_VERSION=6.1.0
      *
-     * This returns the artists associated with the genre in question as defined by the UID
+     * Get a single bookmark
      *
      * @param array $input
      * @param User $user
-     * filter = (string) UID of Album //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * filter = (string) bookmark_id
      * @return boolean
      */
-    public static function genre_artists(array $input, User $user): bool
+    public static function bookmark(array $input, User $user): bool
     {
-        $results = Tag::get_tag_objects('artist', ($input['filter'] ?? ''));
-        if (empty($results)) {
-            Api::empty('artist', $input['api_format']);
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+            return false;
+        }
+        $bookmark_id = static::getBookmarkRepository()->getBookmark((int)$input['api_format'], $user->getId());
+        if ($bookmark_id === 0) {
+            Api::empty('bookmark', $input['api_format']);
 
             return false;
         }
+        $results = array($bookmark_id);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
-                Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::artists($results, array(), $user);
+                echo Json_Data::bookmarks($results, false);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
-                Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::artists($results, array(), $user);
+                echo Xml_Data::bookmarks($results);
         }
 
         return true;
+    }
+
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
     }
 }

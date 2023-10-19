@@ -27,6 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Session;
@@ -35,10 +36,18 @@ use Ampache\Repository\Model\Song;
 
 final class StatsAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
+    public function __construct(
+        RequestParserInterface $requestParser
+    ) {
+        $this->requestParser   = $requestParser;
+    }
+
     public function handle(): void
     {
         $results = array();
-        $action  = Core::get_request('action');
+        $action  = $this->requestParser->getFromRequest('action');
         $user    = Core::get_global('user');
 
         // Switch on the actions

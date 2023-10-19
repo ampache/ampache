@@ -486,6 +486,7 @@ class Label extends database_object implements library_item
     public static function garbage_collection()
     {
         Dba::write("DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`);");
+        Dba::write("DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL;");
     }
 
     private static function getLabelRepository(): LabelRepositoryInterface

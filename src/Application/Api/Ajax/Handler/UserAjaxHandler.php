@@ -28,20 +28,25 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
 
 final class UserAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
     private UserFollowTogglerInterface $followToggler;
 
     private UserFollowStateRendererInterface $userFollowStateRenderer;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UserFollowTogglerInterface $followToggler,
         UserFollowStateRendererInterface $userFollowStateRenderer
     ) {
+        $this->requestParser           = $requestParser;
         $this->followToggler           = $followToggler;
         $this->userFollowStateRenderer = $userFollowStateRenderer;
     }
@@ -49,10 +54,11 @@ final class UserAjaxHandler implements AjaxHandlerInterface
     public function handle(): void
     {
         $results = array();
-        $user_id = (int) (Core::get_request('user_id'));
+        $action  = $this->requestParser->getFromRequest('action');
+        $user_id = (int)$this->requestParser->getFromRequest('user_id');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'flip_follow':
                 if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
                     $fuser = new User($user_id);

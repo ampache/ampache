@@ -1703,9 +1703,8 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
         $sql        = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `artist`.`album_count` AS `albums` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` " . $sql_limit;
-        $results    = array();
         $db_results = Dba::read($sql);
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = Artist::construct_from_array($row);
         }

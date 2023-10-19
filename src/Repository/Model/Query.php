@@ -33,10 +33,9 @@ use Ampache\Module\System\Dba;
 /**
  * Query Class
  *
- * This handles all of the sql/filtering for the ampache database
- * FIXME: flowerysong didn't know about this when he wrote all the fancy stuff
- * for newsearch, and they should be merged if possible.
- *
+ * This handles all of the sql/filtering for the Ampache database
+ * The Search and Query classes do the same thing different ways.
+ * It would be good to merge the classes (may not be possible now)
  */
 class Query
 {
@@ -53,7 +52,32 @@ class Query
     /**
      * @var array $_state
      */
-    protected $_state = array();
+    protected $_state = array(
+        'album_artist' => false, // Used by $browse->set_type() to filter artists
+        'base' => null,
+        'custom' => false,
+        'extended_key_name' => null,
+        'filter' => array(),
+        'grid_view' => true,
+        'having' => '', // HAVING is not currently used in Query SQL
+        'join' => null,
+        'mashup' => null,
+        'offset' => 0,
+        'song_artist' => null, // Used by $browse->set_type() to filter artists
+        'select' => array(),
+        'simple' => false,
+        'show_header' => true,
+        'sort' => array(),
+        'start' => 0,
+        'static' => false,
+        'threshold' => '',
+        'title' => null,
+        'total' => null,
+        'type' => '',
+        'update_session' => false,
+        'use_alpha' => false,
+        'use_pages' => false
+    );
 
     /**
      * @var array $_cache
@@ -106,13 +130,18 @@ class Query
             'catalog_number',
             'generic_artist',
             'name',
+            'name_year',
+            'name_original_year',
             'original_year',
             'random',
             'release_status',
             'release_type',
+            'disk',
             'song_count',
             'subtitle',
+            'time',
             'total_count',
+            'version',
             'year',
             'rating'
         ),
@@ -120,9 +149,12 @@ class Query
             'album_artist',
             'artist',
             'barcode',
+            'disksubtitle',
             'catalog_number',
             'generic_artist',
             'name',
+            'name_year',
+            'name_original_year',
             'original_year',
             'random',
             'release_status',
@@ -149,7 +181,8 @@ class Query
             'name',
             'type',
             'user',
-            'username'
+            'username',
+            'rating'
         ),
         'smartplaylist' => array(
             'name',
@@ -274,7 +307,8 @@ class Query
             'title',
             'website',
             'episodes',
-            'random'
+            'random',
+            'rating'
         ),
         'podcast_episode' => array(
             'podcast',
@@ -284,7 +318,8 @@ class Query
             'time',
             'pubdate',
             'state',
-            'random'
+            'random',
+            'rating'
         )
     ];
 
@@ -499,7 +534,7 @@ class Query
      */
     public function reset_having()
     {
-        unset($this->_state['having']);
+        $this->_state['having'] = '';
     } // reset_having
 
     /**
@@ -508,7 +543,7 @@ class Query
      */
     public function reset_join()
     {
-        unset($this->_state['join']);
+        $this->_state['join'] = array();
     } // reset_join
 
     /**
@@ -526,7 +561,7 @@ class Query
      */
     public function reset_total()
     {
-        unset($this->_state['total']);
+        $this->_state['total'] = null;
     } // reset_total
 
     /**
@@ -537,8 +572,6 @@ class Query
      */
     public function get_filter($key)
     {
-        // Simple enough, but if we ever move this crap
-        // If we ever move this crap what?
         return (isset($this->_state['filter'][$key])) ? $this->_state['filter'][$key] : false;
     } // get_filter
 
@@ -588,7 +621,7 @@ class Query
         }
 
         // See if we can find it in the cache
-        if (isset($this->_state['total'])) {
+        if (is_int($this->_state['total'])) {
             return $this->_state['total'];
         }
 
@@ -835,11 +868,7 @@ class Query
      */
     public function get_type()
     {
-        if (array_key_exists('type', $this->_state)) {
-            return (string)$this->_state['type'];
-        }
-
-        return '';
+        return $this->_state['type'];
     } // get_type
 
     /**
@@ -866,13 +895,14 @@ class Query
                 : 'ASC';
         } else {
             // if the sort already exists you want the reverse
-            $state = array_key_exists($sort, $this->_state['sort'])
+            $state = (array_key_exists($sort, $this->_state['sort']))
                 ? $this->_state['sort'][$sort]
                 : self::$sort_state[$sort] ?? 'DESC';
             $order = ($state == 'ASC')
                 ? 'DESC'
                 : 'ASC';
         }
+        // reset any existing sorts before setting a new one
         $this->_state['sort']        = array();
         $this->_state['sort'][$sort] = $order;
 
@@ -962,8 +992,7 @@ class Query
 
     /**
      * set_having
-     * This sets the "HAVING" part of the query, we can only have one..
-     * god this is ugly
+     * This sets the "HAVING" part of the query, we can only have one.
      * @param string $condition
      */
     public function set_having($condition)
@@ -976,11 +1005,10 @@ class Query
      * This sets the start point for our show functions
      * We need to store this in the session so that it can be pulled
      * back, if they hit the back button
-     * @param integer $start
+     * @param int $start
      */
     public function set_start($start)
     {
-        $start                 = (int)($start);
         $this->_state['start'] = $start;
     } // set_start
 
@@ -992,8 +1020,7 @@ class Query
      */
     public function set_is_simple($value)
     {
-        $value                  = make_bool($value);
-        $this->_state['simple'] = $value;
+        $this->_state['simple'] = make_bool($value);
     } // set_is_simple
 
     /**
@@ -1005,9 +1032,7 @@ class Query
      */
     public function set_static_content($value)
     {
-        $value = make_bool($value);
-
-        $this->_state['static'] = $value;
+        $this->_state['static'] = make_bool($value);
     } // set_static_content
 
     /**
@@ -1016,11 +1041,7 @@ class Query
      */
     public function is_static_content()
     {
-        if (array_key_exists('static', $this->_state)) {
-            return make_bool($this->_state['static']);
-        }
-
-        return false;
+        return make_bool($this->_state['static']);
     }
 
     /**
@@ -1030,11 +1051,7 @@ class Query
      */
     public function is_simple()
     {
-        if (array_key_exists('simple', $this->_state)) {
-            return $this->_state['simple'];
-        }
-
-        return false;
+        return $this->_state['simple'];
     } // is_simple
 
     /**
@@ -1111,7 +1128,7 @@ class Query
     private function set_base_sql($force = false, $custom_base = '')
     {
         // Only allow it to be set once
-        if (array_key_exists('base', $this->_state) && strlen((string)$this->_state['base']) && !$force) {
+        if (!empty((string)$this->_state['base']) && !$force) {
             return true;
         }
 
@@ -1266,7 +1283,7 @@ class Query
      */
     private function get_base_sql()
     {
-        return str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
+        return str_replace("%%SELECT%%", $this->get_select(), ($this->_state['base'] ?? ''));
     } // get_base_sql
 
     /**
@@ -1335,7 +1352,7 @@ class Query
      */
     private function get_sort_sql()
     {
-        if (!array_key_exists('sort', $this->_state)) {
+        if (empty($this->_state['sort'])) {
             return '';
         }
 
@@ -1374,7 +1391,7 @@ class Query
      */
     private function get_join_sql()
     {
-        if (!isset($this->_state['join']) || !is_array($this->_state['join'])) {
+        if (empty($this->_state['join']) || !is_array($this->_state['join'])) {
             return '';
         }
 
@@ -1396,7 +1413,7 @@ class Query
      */
     public function get_having_sql()
     {
-        return $this->_state['having'] ?? '';
+        return $this->_state['having'];
     } // get_having_sql
 
     /**
@@ -1414,8 +1431,7 @@ class Query
         $join_sql   = "";
         $having_sql = "";
         $order_sql  = "";
-        $is_custom  = (array_key_exists('custom', $this->_state) && $this->_state['custom']);
-        if (!$is_custom) {
+        if (!$this->_state['custom']) {
             $filter_sql = $this->get_filter_sql();
             $order_sql  = $this->get_sort_sql();
             $join_sql   = $this->get_join_sql();
@@ -1424,7 +1440,7 @@ class Query
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
-        if (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$is_custom) {
+        if (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
@@ -1436,7 +1452,7 @@ class Query
     /**
      * post_process
      * This does some additional work on the results that we've received
-     * before returning them.
+     * before returning them. TODO this is only for tags/genres? should do this in the select/return if possible
      * @param array $data
      * @return array
      */
@@ -1830,7 +1846,9 @@ class Query
                         $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'playlist_type':
-                        $user_id    = ((int) Core::get_global('user')->id > 0) ? Core::get_global('user')->id : $value;
+                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                            ? Core::get_global('user')->id
+                            : $value;
                         $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
                         break;
                 } // end filter
@@ -1857,7 +1875,9 @@ class Query
                         $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'playlist_type':
-                        $user_id    = ((int) Core::get_global('user')->id > 0) ? Core::get_global('user')->id : $value;
+                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                            ? Core::get_global('user')->id
+                            : $value;
                         $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
                         break;
                 } // end switch on $filter
@@ -2199,10 +2219,10 @@ class Query
                         $sql = "`album`.`name`";
                         break;
                     case 'name_original_year':
-                        $sql = "`album`.`name`, IFNULL(`album`.`original_year`, `album`.`year`)";
+                        $sql = "`album`.`name` $order, IFNULL(`album`.`original_year`, `album`.`year`)";
                         break;
                     case 'name_year':
-                        $sql = "`album`.`name`, `album`.`year`";
+                        $sql = "`album`.`name` $order, `album`.`year`";
                         break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
@@ -2227,6 +2247,7 @@ class Query
                         $sql = "IFNULL(`album`.`original_year`, `album`.`year`)";
                         break;
                     case 'year':
+                    case 'disk_count':
                     case 'song_count':
                     case 'total_count':
                     case 'release_type':
@@ -2234,6 +2255,8 @@ class Query
                     case 'barcode':
                     case 'catalog_number':
                     case 'subtitle':
+                    case 'time':
+                    case 'version':
                         $sql = "`album`.`$field`";
                         break;
                 } // end switch
@@ -2242,13 +2265,15 @@ class Query
                 $this->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 100);
                 switch ($field) {
                     case 'name':
-                        $sql = "`album`.`name`, `album_disk`.`disk`";
+                        $sql   = "`album`.`name` $order, `album_disk`.`disk`";
+                        $order = '';
                         break;
                     case 'name_original_year':
-                        $sql = "`album`.`name`, IFNULL(`album`.`original_year`, `album`.`year`), `album_disk`.`disk`";
+                        $sql = "`album`.`name` $order, IFNULL(`album`.`original_year`, `album`.`year`) $order, `album_disk`.`disk`";
                         break;
                     case 'name_year':
-                        $sql = "`album`.`name`, `album`.`year`, `album_disk`.`disk`";
+                        $sql   = "`album`.`name` $order, `album`.`year` $order, `album_disk`.`disk`";
+                        $order = '';
                         break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
@@ -2270,17 +2295,24 @@ class Query
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
                     case 'original_year':
-                        $sql = "IFNULL(`album`.`original_year`, `album`.`year`), `album`.`name`, `album_disk`.`disk`";
+                        $sql   = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`name`, `album_disk`.`disk`";
+                        $order = '';
                         break;
-                    case 'year':
+                    case 'disksubtitle':
                     case 'song_count':
                     case 'total_count':
+                    case 'time':
+                        $sql   = "`album_disk`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
+                        $order = '';
+                        break;
+                    case 'year':
                     case 'release_type':
                     case 'release_status':
                     case 'barcode':
                     case 'catalog_number':
                     case 'subtitle':
-                        $sql = "`album`.`$field`, `album`.`name`, `album_disk`.`disk`";
+                        $sql   = "`album`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
+                        $order = '';
                         break;
                 } // end switch
                 break;
@@ -2308,6 +2340,10 @@ class Query
                     case 'user':
                     case 'username':
                         $sql = "`playlist`.`$field`";
+                        break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`id`", "`rating`.`object_type`", "'playlist'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
                 } // end switch
                 break;
@@ -2496,6 +2532,10 @@ class Query
                     case 'episodes':
                         $sql = "`podcast`.`$field`";
                         break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast`.`id`", "`rating`.`object_type`", "'podcast'", "`rating`.`user`", (int)$this->user_id, 100);
+                        break;
                 }
                 break;
             case 'podcast_episode':
@@ -2508,6 +2548,10 @@ class Query
                     case 'pubdate':
                     case 'state':
                         $sql = "`podcast_episode`.`$field`";
+                        break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
                 }
                 break;
@@ -2595,10 +2639,11 @@ class Query
             $group_sql = " GROUP BY `" . $this->get_type() . '`.`id`';
             $order_sql = " ORDER BY ";
 
+            // There should only be one of these in a browse
             foreach ($this->_state['sort'] as $key => $value) {
                 $sql_sort = $this->sql_sort($key, $value);
                 $order_sql .= $sql_sort;
-                $group_sql .= ", " . substr($sql_sort, 0, strpos($sql_sort, " "));
+                $group_sql .= ", " . preg_replace('/(ASC,|DESC,|,|RAND\(\))$/', '', $sql_sort);
             }
             // Clean her up
             $order_sql = rtrim((string)$order_sql, "ORDER BY ");
@@ -2681,19 +2726,21 @@ class Query
     public function get_content_div()
     {
         $key = 'browse_content_' . $this->get_type();
-        if (array_key_exists('ak', $this->_state)) {
-            $key .= '_' . $this->_state['ak'];
+        if (!empty($this->_state['extended_key_name'])) {
+            $key .= '_' . $this->_state['extended_key_name'];
         }
+        $key .= '_' . $this->id;
 
         return $key;
     }
 
     /**
      * Set an additional content div key.
+     * This is used to keep div names unique in the html
      * @param string $key
      */
     public function set_content_div_ak($key)
     {
-        $this->_state['ak'] = $key;
+        $this->_state['extended_key_name'] = str_replace(", ", "_", $key);
     }
 }

@@ -70,7 +70,7 @@ final class ShowDeleteRecordAction implements ApplicationActionInterface
             return null;
         }
 
-        $accessId = (int) $request->getQueryParams()['access_id'] ?? 0;
+        $accessId = (int)($request->getQueryParams()['access_id'] ?? 0);
         $access   = $this->modelFactory->createAccess($accessId);
 
         $this->ui->showConfirmation(

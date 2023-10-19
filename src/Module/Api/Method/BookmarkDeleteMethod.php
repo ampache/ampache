@@ -49,8 +49,8 @@ final class BookmarkDeleteMethod
      * @param array $input
      * @param User $user
      * filter = (string) object_id to delete
-     * type   = (string) object_type  ('song', 'video', 'podcast_episode')
-     * client = (string) Agent string Default: 'AmpacheAPI' //optional
+     * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode')
+     * client = (string) Agent string //optional
      * @return boolean
      */
     public static function bookmark_delete(array $input, User $user): bool
@@ -60,35 +60,37 @@ final class BookmarkDeleteMethod
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : null;
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), array('bookmark', 'song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
-        $className = ObjectTypeToClassNameMapper::map($type);
+        if ($type != 'bookmark') {
+            $className = ObjectTypeToClassNameMapper::map($type);
 
-        if ($className === $type || !$object_id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            if ($className === $type || !$object_id) {
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
-            return false;
-        }
+                return false;
+            }
 
-        $item = new $className($object_id);
-        if (!$item->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            $item = new $className($object_id);
+            if (!$item->id) {
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
-            return false;
+                return false;
+            }
         }
         $object = array(
             'user' => $user->id,
@@ -99,7 +101,8 @@ final class BookmarkDeleteMethod
 
         $find = Bookmark::get_bookmark($object);
         if (empty($find)) {
-            Api::empty('bookmark', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'bookmark', $input['api_format']);
 
             return false;
         }

@@ -58,7 +58,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
         // }
         $this->ui->showHeader();
 
-        $filter_id   = (int) $request->getQueryParams()['filter_id'] ?? 0;
+        $filter_id   = (int)($request->getQueryParams()['filter_id'] ?? 0);
         $filter_name = $request->getQueryParams()['filter_name'];
         if (Catalog::delete_catalog_filter($filter_id)) {
             Catalog::reset_user_filter($filter_id);

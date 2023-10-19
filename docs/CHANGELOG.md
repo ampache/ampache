@@ -1,5 +1,63 @@
 # CHANGELOG
 
+## Ampache develop
+
+### Added
+
+* Sort `podcast` and `podcast_episode` by rating
+* Read more tag frames for `disksubtitle`
+* Database 600041
+  * Index `label` column on the `label_asso` table
+
+### Changed
+
+* Restore `album` sort links again when split by group
+
+### Fixed
+
+* Rating `album_disk` objects would not refresh the value
+* Multiple code quality updates to the browse/query class
+* Sorting and filtering on browses works correctly
+* `album_disk` was inserting the song id instead of the album id
+* SQL generation for browse sorting with comma and space in the text
+* Don't overwrite a browse box title if set
+* Genre browse page HTML div name using bad names
+* Autoupdate notifications
+* Fix a lot of code Runtime Errors
+* Garbage collect empty labels. (Keep user-generated labels)
+* Handle GatherSpotify exceptions and empty results
+* Search
+  * Respect limits for subsearches again
+
+## API develop
+
+### Added
+
+* API6
+  * bookmark: Get single bookmark by bookmark_id
+  * lost_password: Allows a non-admin user to reset their password
+
+### Changed
+
+* API5
+  * bookmark_edit, bookmark_delete: show error on missing bookmark instead of empty object
+* API6
+  * bookmark_create, bookmark_edit, bookmark_delete: Remove `client` parameter default value ('AmpacheAPI')
+  * bookmark_edit, bookmark_delete: show error on missing bookmark instead of empty object
+  * bookmark_delete, bookmark_delete: add bookmark as a valid `object_type`
+
+### Fixed
+
+* API4
+  * Fix lots of Runtime Error's on missing optional data
+* API5
+  * Fix lots of Runtime Error's on missing optional data
+  * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+* API6
+  * Fix lots of Runtime Error's on missing optional data
+  * catalog_folder didn't get the group of items correctly
+  * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+
 ## Ampache 6.0.3
 
 ### Added

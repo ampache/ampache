@@ -72,7 +72,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             } ?>
             <?php if ($show_ratings) {
                 ++$thcount; ?>
-            <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
+            <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating', $rating_text, 'podcast_sort_rating'); ?></th>
             <?php
             } ?>
             <th class="cel_action essential"><?php echo $action_text; ?></th>

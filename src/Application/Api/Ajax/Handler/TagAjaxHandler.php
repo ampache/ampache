@@ -27,6 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Label;
@@ -37,18 +38,22 @@ use Ampache\Repository\LabelRepositoryInterface;
 
 final class TagAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
     private LabelRepositoryInterface $labelRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         LabelRepositoryInterface $labelRepository
     ) {
+        $this->requestParser   = $requestParser;
         $this->labelRepository = $labelRepository;
     }
 
     public function handle(): void
     {
         $results   = array();
-        $action    = Core::get_request('action');
+        $action    = $this->requestParser->getFromRequest('action');
         $type      = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
         $object_id = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 

@@ -315,7 +315,7 @@ class Api5
      * check_access
      *
      * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id)
+     * 'interface', 100, $user->id
      *
      * @param string $type
      * @param integer $level

@@ -54,7 +54,7 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $tvshow_id = (int) $request->getQueryParams()['tvshow_id'];
+        $tvshow_id = (int)($request->getQueryParams()['tvshow_id'] ?? 0);
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(

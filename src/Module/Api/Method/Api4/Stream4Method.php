@@ -63,16 +63,16 @@ final class Stream4Method
         $type   = $input['type'];
 
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
-        $format        = $input['format']; // mp3, flv or raw
-        $original      = $format && $format != 'raw';
-        $timeOffset    = $input['offset'];
-        $contentLength = (int) $input['length']; // Force content-length guessing if transcode
+        $format        = $input['format'] ?? null; // mp3, flv or raw
+        $transcode_to  = $format && $format != 'raw';
+        $timeOffset    = $input['offset'] ?? null;
+        $contentLength = (int)($input['length'] ?? 0); // Force content-length guessing if transcode
 
         $params = '&client=api';
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
-        if ($original && $type == 'song') {
+        if ($transcode_to && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
         if ($maxBitRate > 0 && $type == 'song') {

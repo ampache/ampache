@@ -68,8 +68,8 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         }
 
         $playlist                 = $this->modelFactory->createSearch(null);
-        $playlist->name           = scrub_in($_REQUEST['playlist_name'] ?? '');
-        $playlist->logic_operator = (isset($_REQUEST['operator']) && ($_REQUEST['operator']) == 'or')
+        $playlist->name           = scrub_in((string)($_REQUEST['playlist_name'] ?? ''));
+        $playlist->logic_operator = (isset($_REQUEST['operator']) && $_REQUEST['operator'] == 'or')
             ? 'OR'
             : 'AND';
         $playlist->create();

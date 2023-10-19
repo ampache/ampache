@@ -69,7 +69,7 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $label_id = (int) $request->getQueryParams()['label'] ?? 0;
+        $label_id = (int)($request->getQueryParams()['label'] ?? 0);
         if (!$label_id) {
             $name = $_REQUEST['name'] ?? null;
             if ($name !== null) {

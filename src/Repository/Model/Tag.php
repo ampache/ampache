@@ -582,9 +582,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $sql .= " AND `tag_map`.`object_id` = ?";
             $params[] = $object_id;
         }
-        $results    = array();
         $db_results = Dba::read($sql, $params);
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row;
         }

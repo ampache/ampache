@@ -903,6 +903,9 @@ class Update
         $update_string = "* Add `disksubtitle` to `song_data` and `album_disk` table";
         $version[]     = array('version' => '600040', 'description' => $update_string);
 
+        $update_string = "* Index `label` column on the `label_asso` table";
+        $version[]     = array('version' => '600041', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1224,8 +1227,8 @@ class Update
     /**
      * _update_360010
      *
-     * MBz NGS means collaborations have more than one MBID (the ones
-     * belonging to the underlying artists).  We need a bigger column.
+     * MBz NGS means collaborations have more than one MBID
+     * (the ones belonging to the underlying artists).  We need a bigger column.
      */
     private static function _update_360010(Interactor $interactor = null): bool
     {
@@ -5601,5 +5604,16 @@ class Update
         }
 
         return true;
+    }
+
+    /** _update_600041
+     *
+     * Index `label` column on the `label_asso` table
+     */
+    private static function _update_600041(Interactor $interactor = null): bool
+    {
+        $sql = "CREATE INDEX `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`);";
+
+        return (self::_write($interactor, $sql) !== false);
     }
 } // end update.class
