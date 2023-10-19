@@ -2208,10 +2208,10 @@ class Query
                         $sql = "`album`.`name`";
                         break;
                     case 'name_original_year':
-                        $sql = "`album`.`name`, IFNULL(`album`.`original_year`, `album`.`year`)";
+                        $sql = "`album`.`name` $order, IFNULL(`album`.`original_year`, `album`.`year`)";
                         break;
                     case 'name_year':
-                        $sql = "`album`.`name`, `album`.`year`";
+                        $sql = "`album`.`name` $order, `album`.`year`";
                         break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
@@ -2251,13 +2251,15 @@ class Query
                 $this->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 100);
                 switch ($field) {
                     case 'name':
-                        $sql = "`album`.`name`, `album_disk`.`disk`";
+                        $sql   = "`album`.`name` $order, `album_disk`.`disk`";
+                        $order = '';
                         break;
                     case 'name_original_year':
-                        $sql = "`album`.`name`, IFNULL(`album`.`original_year`, `album`.`year`), `album_disk`.`disk`";
+                        $sql = "`album`.`name` $order, IFNULL(`album`.`original_year`, `album`.`year`) $order, `album_disk`.`disk`";
                         break;
                     case 'name_year':
-                        $sql = "`album`.`name`, `album`.`year`, `album_disk`.`disk`";
+                        $sql   = "`album`.`name` $order, `album`.`year` $order, `album_disk`.`disk`";
+                        $order = '';
                         break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
@@ -2279,7 +2281,8 @@ class Query
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
                     case 'original_year':
-                        $sql = "IFNULL(`album`.`original_year`, `album`.`year`), `album`.`name`, `album_disk`.`disk`";
+                        $sql   = "IFNULL(`album`.`original_year`, `album`.`year`), `album`.`name`, `album_disk`.`disk`";
+                        $order = '';
                         break;
                     case 'year':
                     case 'song_count':
@@ -2289,7 +2292,7 @@ class Query
                     case 'barcode':
                     case 'catalog_number':
                     case 'subtitle':
-                        $sql = "`album`.`$field`, `album`.`name`, `album_disk`.`disk`";
+                        $sql = "`album`.`$field` $order, `album`.`name` $order, `album_disk`.`disk`";
                         break;
                 } // end switch
                 break;
