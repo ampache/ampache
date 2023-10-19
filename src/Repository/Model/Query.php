@@ -2292,7 +2292,7 @@ class Query
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
                     case 'original_year':
-                        $sql   = "IFNULL(`album`.`original_year`, `album`.`year`), `album`.`name`, `album_disk`.`disk`";
+                        $sql   = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`name`, `album_disk`.`disk`";
                         $order = '';
                         break;
                     case 'disksubtitle':
