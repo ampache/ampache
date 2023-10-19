@@ -1070,8 +1070,8 @@ final class VaInfo implements VaInfoInterface
                     // Pass the array through
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
-                case 'disksubtitle':
-                    $parsed['discsubtitle'] = $data[0];
+                case 'discsubtitle':
+                    $parsed['disksubtitle'] = $data[0];
                     break;
                 case 'partofset':
                     $elements             = explode('/', $data[0]);
