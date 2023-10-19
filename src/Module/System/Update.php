@@ -5605,6 +5605,7 @@ class Update
 
         return true;
     }
+
     /** _update_600041
      *
      * Index `label` column on the `label_asso` table

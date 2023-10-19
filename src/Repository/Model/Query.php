@@ -2236,6 +2236,7 @@ class Query
                         $sql = "IFNULL(`album`.`original_year`, `album`.`year`)";
                         break;
                     case 'year':
+                    case 'disk_count':
                     case 'song_count':
                     case 'total_count':
                     case 'release_type':
@@ -2243,6 +2244,8 @@ class Query
                     case 'barcode':
                     case 'catalog_number':
                     case 'subtitle':
+                    case 'time':
+                    case 'version':
                         $sql = "`album`.`$field`";
                         break;
                 } // end switch
