@@ -4,20 +4,21 @@
 
 ### Added
 
+* Sort `podcast` and `podcast_episode` by rating
 * Read more tag frames for `disksubtitle`
 * Database 600041
   * Index `label` column on the `label_asso` table
 
 ### Changed
 
-* Restore album sort links again when split by group
+* Restore `album` sort links again when split by group
 
 ### Fixed
 
-* Rating album_disk objects would not refresh the value
+* Rating `album_disk` objects would not refresh the value
 * Multiple code quality updates to the browse/query class
 * Sorting and filtering on browses works correctly
-* album_disk was inserting the song id instead of the album id
+* `album_disk` was inserting the song id instead of the album id
 * SQL generation for browse sorting with comma and space in the text
 * Don't overwrite a browse box title if set
 * Genre browse page HTML div name using bad names
