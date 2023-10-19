@@ -77,11 +77,6 @@ class Browse extends Query
     );
 
     /**
-     * @var boolean $show_header
-     */
-    public $show_header;
-
-    /**
      * @var integer $duration
      */
     public $duration;
@@ -101,7 +96,6 @@ class Browse extends Query
             $this->set_use_alpha(false);
             $this->set_grid_view(true);
         }
-        $this->show_header = true;
     }
 
     public function getId(): int
@@ -702,7 +696,7 @@ class Browse extends Query
      */
     public function set_show_header($show_header)
     {
-        $this->show_header = $show_header;
+        $this->_state['show_header'] = $show_header;
     }
 
     /**
@@ -720,7 +714,7 @@ class Browse extends Query
      */
     public function is_show_header()
     {
-        return $this->show_header;
+        return $this->_state['show_header'];
     }
 
     /**
@@ -774,7 +768,7 @@ class Browse extends Query
      */
     public function get_title($default)
     {
-        if (!empty($this->_state['title'])) {
+        if ($this->_state['title'] !== null) {
             return (string)$this->_state['title'];
         }
 

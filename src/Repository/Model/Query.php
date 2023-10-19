@@ -66,6 +66,7 @@ class Query
         'song_artist' => null, // Used by $browse->set_type() to filter artists
         'select' => array(),
         'simple' => false,
+        'show_header' => true,
         'sort' => array(),
         'start' => 0,
         'static' => false,
