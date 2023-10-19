@@ -2284,9 +2284,14 @@ class Query
                         $sql   = "IFNULL(`album`.`original_year`, `album`.`year`), `album`.`name`, `album_disk`.`disk`";
                         $order = '';
                         break;
-                    case 'year':
+                    case 'disksubtitle':
                     case 'song_count':
                     case 'total_count':
+                    case 'time':
+                        $sql   = "`album_disk`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
+                        $order = '';
+                        break;
+                    case 'year':
                     case 'release_type':
                     case 'release_status':
                     case 'barcode':
