@@ -181,7 +181,8 @@ class Query
             'name',
             'type',
             'user',
-            'username'
+            'username',
+            'rating'
         ),
         'smartplaylist' => array(
             'name',
@@ -306,7 +307,8 @@ class Query
             'title',
             'website',
             'episodes',
-            'random'
+            'random',
+            'rating'
         ),
         'podcast_episode' => array(
             'podcast',
@@ -316,7 +318,8 @@ class Query
             'time',
             'pubdate',
             'state',
-            'random'
+            'random',
+            'rating'
         )
     ];
 
@@ -2338,6 +2341,10 @@ class Query
                     case 'username':
                         $sql = "`playlist`.`$field`";
                         break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`id`", "`rating`.`object_type`", "'playlist'", "`rating`.`user`", (int)$this->user_id, 100);
+                        break;
                 } // end switch
                 break;
             case 'smartplaylist':
@@ -2525,6 +2532,10 @@ class Query
                     case 'episodes':
                         $sql = "`podcast`.`$field`";
                         break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast`.`id`", "`rating`.`object_type`", "'podcast'", "`rating`.`user`", (int)$this->user_id, 100);
+                        break;
                 }
                 break;
             case 'podcast_episode':
@@ -2537,6 +2548,10 @@ class Query
                     case 'pubdate':
                     case 'state':
                         $sql = "`podcast_episode`.`$field`";
+                        break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
                 }
                 break;
