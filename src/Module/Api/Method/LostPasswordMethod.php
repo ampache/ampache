@@ -43,7 +43,7 @@ final class LostPasswordMethod
 
     /**
      * lost_password
-     * MINIMUM_API_VERSION=610000
+     * MINIMUM_API_VERSION=6.1.0
      *
      * Allows a non-admin user to reset their password without web access to the main site.
      * It requires a reset token hash using your username and email
