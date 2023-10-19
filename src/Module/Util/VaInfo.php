@@ -1478,6 +1478,10 @@ final class VaInfo implements VaInfoInterface
                     case 'original_year':
                         $parsed['original_year'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
+                    case 'discsubtitle':
+                    case 'setsubtitle':
+                        $parsed['disksubtitle'] = $data[0];
+                        break;
                     case 'barcode':
                         $parsed['barcode'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
