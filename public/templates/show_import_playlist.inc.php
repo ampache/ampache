@@ -36,7 +36,7 @@ Ui::show_box_top(T_('Importing a Playlist from a File'), 'box box_import_playlis
         <tr>
             <td><?php echo T_('Type'); ?>:</td>
             <td>
-                <select name="default_type">
+                <select name="playlist_visibility">
                     <option value="private"><?php echo T_("Private"); ?></option>
                     <option value="public" selected="selected"><?php echo T_("Public"); ?></option>
                 </select>

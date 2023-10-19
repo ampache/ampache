@@ -43,7 +43,7 @@ final class PlaylistCreate4Method
      * playlist_create
      * MINIMUM_API_VERSION=380001
      *
-     * This create a new playlist and return it
+     * Create a new playlist and return it
      *
      * @param array $input
      * @param User $user
