@@ -61,7 +61,7 @@ final class Handshake3Method
         if (empty($passphrase)) {
             $passphrase = $_POST['auth'];
         }
-        $username     = trim((string) ($input['user'] ?? Session::username($_REQUEST['auth'])));
+        $username     = trim((string) ($input['user'] ?? Session::username($passphrase)));
         $user_ip      = Core::get_user_ip();
         $version      = (isset($input['version'])) ? (string) $input['version'] : Api3::$version;
         $data_version = (int)substr($version, 0, 1);

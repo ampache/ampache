@@ -12,6 +12,8 @@
 
 ### Fixed
 
+* ALL
+  * Fixed Bearer token auth on all methods
 * API4
   * Fix lots of Runtime Error's on missing optional data
 * API5
