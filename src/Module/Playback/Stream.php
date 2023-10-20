@@ -50,7 +50,9 @@ class Stream
      */
     public static function set_session($sid)
     {
-        self::$session=$sid;
+        if (!empty($sid)) {
+            self::$session = $sid;
+        }
     } // set_session
 
     /**
