@@ -1076,7 +1076,7 @@ class Json_Data
         $output = array(
             "total_count" => count($objects)
         );
-        Stream::set_session($user->get_session_id());
+        Stream::set_session($_REQUEST['auth']);
         $playlist_track = 0;
 
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
@@ -1095,7 +1095,7 @@ class Json_Data
             $rating       = new Rating($song_id, 'song');
             $user_rating  = $rating->get_user_rating($user->getId());
             $flag         = new Userflag($song_id, 'song');
-            $art_url      = Art::url($song->album, 'album', $user->get_session_id());
+            $art_url      = Art::url($song->album, 'album', $_REQUEST['auth']);
             $songType     = $song->type;
             $songMime     = $song->mime;
             $songBitrate  = $song->bitrate;
@@ -1278,7 +1278,7 @@ class Json_Data
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $art_url     = Art::url($song->album, 'album', $user->get_session_id());
+            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
             $songType    = $song->type;
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;

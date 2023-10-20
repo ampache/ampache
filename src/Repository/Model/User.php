@@ -175,11 +175,6 @@ class User extends database_object
     public $catalogs;
 
     /**
-     * @var string $session_id;
-     */
-    private $session_id;
-
-    /**
      * Constructor
      * This function is the constructor object for the user
      * class, it currently takes a username
@@ -210,24 +205,6 @@ class User extends database_object
     public function getId(): int
     {
         return (int)($this->id ?? 0);
-    }
-
-    /**
-     * set current session id
-     * @paramn string $session_id
-     */
-    public function set_session_id($session_id)
-    {
-        $this->session_id = $session_id;
-    }
-
-    /**
-     * Get current session id
-     * @return string
-     */
-    public function get_session_id()
-    {
-        return $this->session_id;
     }
 
     /**
