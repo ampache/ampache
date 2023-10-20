@@ -466,7 +466,7 @@ class Xml3_Data
         }
 
         Song::build_cache($songs);
-        Stream::set_session($_REQUEST['auth']);
+        Stream::set_session($_REQUEST['auth'] ?? '');
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
@@ -482,7 +482,7 @@ class Xml3_Data
             $tag_string            = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating                = new Rating($song_id, 'song');
             $user_rating           = $rating->get_user_rating($user->getId());
-            $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url               = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime              = $song->mime;
             $songBitrate           = $song->bitrate;
             $play_url              = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
@@ -565,7 +565,7 @@ class Xml3_Data
             $tag_string  = self::tags_string($song->tags);
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime    = $song->mime;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 

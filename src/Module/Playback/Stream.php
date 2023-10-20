@@ -45,14 +45,14 @@ class Stream
     /**
      * set_session
      *
-     * This overrides the normal session value, without adding
-     * an additional session into the database, should be called
-     * with care
+     * This overrides the normal session value, without adding another session into the database, should be called with care
      * @param integer|string $sid
      */
     public static function set_session($sid)
     {
-        self::$session=$sid;
+        if (!empty($sid)) {
+            self::$session = $sid;
+        }
     } // set_session
 
     /**
