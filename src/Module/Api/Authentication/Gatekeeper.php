@@ -91,8 +91,7 @@ final class Gatekeeper implements GatekeeperInterface
             } else {
                 /**
                  * Fallback to legacy get parameter
-                 *
-                 * @todo Remove some day
+                 * Remove some day when backwards compatability isn't a problem
                  */
                 $token = $this->request->getQueryParams()['auth'] ?? '';
             }
