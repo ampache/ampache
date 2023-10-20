@@ -407,6 +407,8 @@ final class ApiHandler implements ApiHandlerInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             if ($this->dic->has($handlerClassName) && $this->dic->get($handlerClassName) instanceof MethodInterface) {
+                $user->set_session_id($input['auth']); // set the user session without recreating it in the method
+
                 /** @var MethodInterface $handler */
                 $handler = $this->dic->get($handlerClassName);
 
