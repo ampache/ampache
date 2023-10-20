@@ -102,6 +102,7 @@
 ### Fixed
 
 * ALL
+  * Fixed Bearer token auth on all methods
   * handshake: runtime errors with bad username
   * handshake: Don't error on empty data counts
   * ping: Don't error on empty data counts
