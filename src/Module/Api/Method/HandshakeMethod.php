@@ -69,7 +69,7 @@ final class HandshakeMethod
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
         }
-        $username = trim((string) ($input['user'] ?? Session::username($_REQUEST['auth'])));
+        $username = trim((string) ($input['user'] ?? Session::username($passphrase)));
         $user_ip  = Core::get_user_ip();
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
