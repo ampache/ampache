@@ -96,6 +96,7 @@ final class BookmarkEditMethod
             }
         }
         $object = array(
+            'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
