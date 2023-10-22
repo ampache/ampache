@@ -2244,9 +2244,11 @@ class Query
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
                     case 'original_year':
-                        $sql = "IFNULL(`album`.`original_year`, `album`.`year`)";
+                        $sql = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time`";
                         break;
                     case 'year':
+                        $sql   = "`album`.`year` $order, `album`.`addition_time`";
+                        break;
                     case 'disk_count':
                     case 'song_count':
                     case 'total_count':
@@ -2295,7 +2297,11 @@ class Query
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
                     case 'original_year':
-                        $sql   = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`name`, `album_disk`.`disk`";
+                        $sql   = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time` $order, `album`.`name`, `album_disk`.`disk`";
+                        $order = '';
+                        break;
+                    case 'year':
+                        $sql   = "`album`.`year` $order, `album`.`addition_time` $order, `album`.`name`, `album_disk`.`disk`";
                         $order = '';
                         break;
                     case 'disksubtitle':
@@ -2305,7 +2311,6 @@ class Query
                         $sql   = "`album_disk`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
                         $order = '';
                         break;
-                    case 'year':
                     case 'release_type':
                     case 'release_status':
                     case 'barcode':
