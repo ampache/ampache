@@ -93,7 +93,8 @@ final class GetBookmarkMethod
         $object = array(
             'user' => $user->id,
             'object_id' => $object_id,
-            'object_type' => $type
+            'object_type' => $type,
+            'comment' => null
         );
         $results = Bookmark::get_bookmark($object);
         if (empty($results)) {

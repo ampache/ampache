@@ -94,6 +94,7 @@ final class BookmarkEdit5Method
             return false;
         }
         $object = array(
+            'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
