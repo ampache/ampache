@@ -44,7 +44,7 @@
 * API6
   * bookmark_create, bookmark_edit, bookmark_delete: Remove `client` parameter default value ('AmpacheAPI')
   * bookmark_edit, bookmark_delete: show error on missing bookmark instead of empty object
-  * bookmark_delete, bookmark_delete: add bookmark as a valid `object_type`
+  * bookmark_edit, bookmark_delete: add bookmark as a valid `object_type`
 
 ### Fixed
 
@@ -102,6 +102,7 @@
 ### Fixed
 
 * ALL
+  * Fixed Bearer token auth on all methods
   * handshake: runtime errors with bad username
   * handshake: Don't error on empty data counts
   * ping: Don't error on empty data counts

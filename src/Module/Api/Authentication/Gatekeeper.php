@@ -84,15 +84,14 @@ final class Gatekeeper implements GatekeeperInterface
             $matches = [];
 
             // Retrieve auth token from header
-            preg_match('/Bearer: ([0-9a-f].*)/', $auth, $matches);
+            preg_match('/Bearer ([0-9a-f].*)/', $auth, $matches);
 
             if ($matches !== []) {
                 $token = $matches[1];
             } else {
                 /**
                  * Fallback to legacy get parameter
-                 *
-                 * @todo Remove some day
+                 * Remove some day when backwards compatability isn't a problem
                  */
                 $token = $this->request->getQueryParams()['auth'] ?? '';
             }

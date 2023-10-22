@@ -39,7 +39,7 @@ final class PlaylistCreate3Method
 
     /**
      * playlist_create
-     * This create a new playlist and return it
+     * Create a new playlist and return it
      * @param array $input
      * @param User $user
      */

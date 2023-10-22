@@ -46,7 +46,7 @@ final class CatalogFolderMethod
 
     /**
      * catalog_folder
-     * MINIMUM_API_VERSION=600000
+     * MINIMUM_API_VERSION=6.0.0
      *
      * Perform actions on local catalog folders.
      * Single folder versions of catalog add, clean and verify.

@@ -174,12 +174,12 @@ class Api
     /**
      * @var string $version
      */
-    public static $version = '6.0.3'; // AMPACHE_VERSION
+    public static $version = '6.1.0'; // AMPACHE_VERSION
 
     /**
      * @var string $version_numeric
      */
-    public static $version_numeric = '603000'; // AMPACHE_VERSION
+    public static $version_numeric = '610000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse

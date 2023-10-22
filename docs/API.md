@@ -85,6 +85,14 @@ $key = hash('sha256', 'myapikey');
 $passphrase = hash('sha256', $user . $key);
 ```
 
+## HTTP Header Authentication
+
+Ampache supports sending your auth parameter to the server using a Bearer Token.
+
+```Text
+Authorization: Bearer PASSPHRASE
+```
+
 ### Other handshake-related stuff
 
 #### Ampache sheme

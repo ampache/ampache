@@ -71,7 +71,7 @@ final class Handshake4Method
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
         }
-        $username     = trim((string) ($input['user'] ?? Session::username($_REQUEST['auth'])));
+        $username     = trim((string) ($input['user'] ?? Session::username($passphrase)));
         $user_ip      = Core::get_user_ip();
         $version      = (isset($input['version'])) ? (string) $input['version'] : Api4::$version;
         $data_version = (int)substr($version, 0, 1);

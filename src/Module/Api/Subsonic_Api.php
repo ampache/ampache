@@ -1279,7 +1279,7 @@ class Subsonic_Api
             self::_updatePlaylist($playlistId, $name, $songIdList, array(), true, true);
             $response = Subsonic_Xml_Data::addSubsonicResponse('createplaylist');
         } elseif (!empty($name)) {
-            $playlistId = Playlist::create($name, 'private', $user->id);
+            $playlistId = Playlist::create($name, 'public', $user->id);
             if (count($songIdList) > 0) {
                 self::_updatePlaylist($playlistId, "", $songIdList, array(), true, true);
             }
