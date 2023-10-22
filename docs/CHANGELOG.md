@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## Ampache 5.6.4-release
+
+### Fixed
+
+* SQL generation for browse sorting with comma and space in the text
+* Genre browse page HTML div name using bad names
+* Fix a lot of code Runtime Errors
+
+## API 5.6.4
+
+### Fixed
+
+* ALL
+  * Fixed Bearer token auth on all methods
+* API4
+  * Fix lots of Runtime Error's on missing optional data
+* API5
+  * Fix lots of Runtime Error's on missing optional data
+  * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+
 ## Ampache 5.6.3-release
 
 ### Added
