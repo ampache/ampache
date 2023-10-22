@@ -67,8 +67,12 @@ final class PlaylistGenerateMethod
     public static function playlist_generate(array $input, User $user): bool
     {
         // parameter defaults
-        $mode   = (in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? $input['mode'] : 'random';
-        $format = (in_array($input['format'], array('song', 'index', 'id'), true)) ? $input['format'] : 'song';
+        $mode   = (array_key_exists('mode', $input) && in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true))
+            ? $input['mode']
+            : 'random';
+        $format = (array_key_exists('format', $input) && in_array($input['format'], array('song', 'index', 'id'), true))
+            ? $input['format']
+            : 'song';
         // confirm the correct data
         if (!in_array($format, array('song', 'index', 'id'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $format), '4710', self::ACTION, 'type', $input['api_format']);
