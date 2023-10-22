@@ -161,6 +161,7 @@ class Query
             'release_type',
             'song_count',
             'subtitle',
+            'time',
             'total_count',
             'year',
             'rating'
@@ -174,7 +175,8 @@ class Query
             'album_count',
             'total_count',
             'random',
-            'rating'
+            'rating',
+            'time'
         ),
         'playlist' => array(
             'last_update',
@@ -2329,6 +2331,7 @@ class Query
                     case 'song_count':
                     case 'album_count':
                     case 'total_count':
+                    case 'time':
                         $sql = "`artist`.`$field`";
                         break;
                     case 'rating':
