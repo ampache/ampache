@@ -29,6 +29,16 @@ interface BookmarkRepositoryInterface
     public function getBookmarks(int $userId): array;
 
     /**
+     * @param int $userId
+     * @param string $comment
+     * @return int[]
+     * @return int[]
+     */
+    public function getBookmarksByComment(int $userId, string $comment): array;
+
+    /**
+     * @param int $bookmarkId
+     * @param int $userId
      * @return int
      */
     public function getBookmark(int $bookmarkId, int $userId): int;

@@ -46,12 +46,15 @@ final class BookmarksMethod
      * Get information about bookmarked media this user is allowed to manage.
      *
      * @param array $input
+     *  client = (string) Filter results to a specific comment/client name //optional
      * @param User $user
      * @return boolean
      */
     public static function bookmarks(array $input, User $user): bool
     {
-        $results = static::getBookmarkRepository()->getBookmarks($user->getId());
+        $results = (!empty($input['client']))
+            ? static::getBookmarkRepository()->getBookmarksByComment($user->getId(), scrub_in($input['client']))
+            : static::getBookmarkRepository()->getBookmarks($user->getId());
         if (empty($results)) {
             Api::empty('bookmark', $input['api_format']);
 
