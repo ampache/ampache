@@ -812,10 +812,11 @@ class Json_Data
      * This returns bookmarks to the user, in a pretty json document with the information
      *
      * @param  integer[] $objects Bookmark id's to include
+     * @param  boolean   $include if true include the object in the bookmark
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "bookmark"
      */
-    public static function bookmarks($objects, $object = true): string
+    public static function bookmarks($objects, $include = false, $object = true): string
     {
         $output = array(
             "total_count" => count($objects)
@@ -845,6 +846,20 @@ class Json_Data
                 "creation_date" => $bookmark_creation_date,
                 "update_date" => $bookmark_update_date
             ];
+            if ($include) {
+                $user = new User($bookmark_user);
+                switch ($bookmark_object_type) {
+                    case 'song':
+                        $JSON['song'] = self::songs(array($bookmark_object_id), $user, true, false);
+                        break;
+                    case 'podcast_episode':
+                        $JSON['podcast_episode'] = self::podcast_episodes(array($bookmark_object_id), $user, true, false);
+                        break;
+                    case 'video':
+                        $JSON['video'] = self::videos(array($bookmark_object_id), $user, false);
+                        break;
+                }
+            }
         } // end foreach
         if ($object) {
             $output["bookmark"] = $JSON;
