@@ -169,26 +169,6 @@ Register as a new user if allowed. (Requires the username, password and email.)
 
 These methods take no parameters beyond your auth key to return information
 
-### bookmarks
-
-Get information about bookmarked media this user is allowed to manage.
-
-* return
-
-```XML
-<root>
-    <bookmark>
-</root>
-```
-
-* throws
-
-```XML
-<root><error></root>
-```
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmarks.xml)
-
 ### system_update
 
 Check Ampache for updates and run the update if there is one.
@@ -519,6 +499,56 @@ This returns the songs of the specified artist
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/artist_songs.xml)
 
+### bookmarks
+
+Get information about bookmarked media this user is allowed to manage.
+
+| Input      | Type    | Description                                     | Optional |
+|------------|---------|-------------------------------------------------|---------:|
+| 'client'   | string  | filter by the agent/client name                 |      YES |
+| 'include'  | integer | 0,1, if true include the object in the bookmark |      YES |
+
+* return
+
+```XML
+<root>
+    <bookmark>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmarks.xml)
+
+### bookmark
+
+Get a single bookmark by bookmark_id
+
+| Input      | Type    | Description                                     | Optional |
+|------------|---------|-------------------------------------------------|---------:|
+| 'filter'   | string  | bookmark_id                                     |      YES |
+| 'include'  | integer | 0,1, if true include the object in the bookmark |      YES |
+
+* return
+
+```XML
+<root>
+    <bookmark>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark.xml)
+
 ### bookmark_create
 
 Create a placeholder for the current media that you can return to later.
@@ -528,8 +558,9 @@ Create a placeholder for the current media that you can return to later.
 | 'filter'   | string  | $object_id to find                               |       NO |
 | 'type'     | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
 | 'position' | integer | current track time in seconds                    |       NO |
-| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')            |      YES |
+| 'client'   | string  | Agent string.                                    |      YES |
 | 'date'     | integer | update time (Default: UNIXTIME())                |      YES |
+| 'include'  | integer | 0,1, if true include the object in the bookmark  |      YES |
 
 * return
 
@@ -555,7 +586,7 @@ Delete an existing bookmark. (if it exists)
 |----------|--------|--------------------------------------------------|---------:|
 | 'filter' | string | $object_id to delete                             |       NO |
 | 'type'   | string | `song`, `video`, `podcast_episode` (object_type) |       NO |
-| 'client' | string | Agent string. (Default: 'AmpacheAPI')            |      YES |
+| 'client' | string | Agent string.                                    |      YES |
 
 * return
 
@@ -582,8 +613,9 @@ Edit a placeholder for the current media that you can return to later.
 | 'filter'   | string  | $object_id to find                               |       NO |
 | 'type'     | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
 | 'position' | integer | current track time in seconds                    |       NO |
-| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')            |      YES |
+| 'client'   | string  | Agent string.                                    |      YES |
 | 'date'     | integer | update time (Default: UNIXTIME())                |      YES |
+| 'include'  | integer | 0,1, if true include the object in the bookmark  |      YES |
 
 * return
 
@@ -1163,10 +1195,11 @@ returns the songs for this genre
 
 Get the bookmark from it's object_id and object_type.
 
-| Input    | Type   | Description                                      | Optional |
-|----------|--------|--------------------------------------------------|---------:|
-| 'filter' | string | $object_id to find                               |       NO |
-| 'type'   | string | `song`, `video`, `podcast_episode` (object_type) |       NO |
+| Input     | Type    | Description                                      | Optional |
+|-----------|---------|--------------------------------------------------|---------:|
+| 'filter'  | string  | $object_id to find                               |       NO |
+| 'type'    | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
+| 'include' | integer | 0,1, if true include the object in the bookmark  |      YES |
 
 * return
 
