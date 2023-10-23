@@ -4,6 +4,7 @@
 
 ### Added
 
+* Translations 2023-10
 * Sort `podcast` and `podcast_episode` by rating
 * Read more tag frames for `disksubtitle`
 * Database 600041
