@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache develop
+## Ampache 6.1.0
 
 ### Added
 
@@ -15,6 +15,7 @@
 
 ### Fixed
 
+* Null artist time's not updating
 * Rating `album_disk` objects would not refresh the value
 * Multiple code quality updates to the browse/query class
 * Sorting and filtering on browses works correctly
@@ -28,35 +29,54 @@
 * Handle GatherSpotify exceptions and empty results
 * Search
   * Respect limits for subsearches again
+  * `search_user_id` fallback for searches without a user
 
-## API develop
+## API 6.1.0
 
 ### Added
 
 * API6
   * bookmark: Get single bookmark by bookmark_id
   * lost_password: Allows a non-admin user to reset their password
+  * bookmark_create: Add `include` parameter (if true include the object in the bookmark)
+  * bookmark_edit: Add `include` parameter (if true include the object in the bookmark)
+  * get_bookmark: Add `include` parameter (if true include the object in the bookmark)
+  * bookmarks
+    * Add parameter `client` to filter by specific groups of bookmarks
+    * Add `include` parameter (if true include the object in the bookmark)
 
 ### Changed
 
 * API5
-  * bookmark_edit, bookmark_delete: show error on missing bookmark instead of empty object
+  * bookmark_edit: show error on missing bookmark instead of empty object
+  * bookmark_delete: show error on missing bookmark instead of empty object
 * API6
-  * bookmark_create, bookmark_edit, bookmark_delete: Remove `client` parameter default value ('AmpacheAPI')
-  * bookmark_edit, bookmark_delete: show error on missing bookmark instead of empty object
-  * bookmark_edit, bookmark_delete: add bookmark as a valid `object_type`
+  * bookmark_create: Remove `client` parameter default value ('AmpacheAPI')
+  * bookmark_edit
+    * Remove `client` parameter default value ('AmpacheAPI')
+    * show error on missing bookmark instead of empty object
+    * add bookmark as a valid `object_type`
+  * bookmark_delete
+    * Remove `client` parameter default value ('AmpacheAPI')
+    * show error on missing bookmark instead of empty object
+    * add bookmark as a valid `object_type`
 
 ### Fixed
 
 * API4
   * Fix lots of Runtime Error's on missing optional data
+  * playlist_generate: Don't error when optional `mode` and `format` are not set
 * API5
   * Fix lots of Runtime Error's on missing optional data
+  * bookemark_edit: missing user id in data array
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+  * playlist_generate: Don't error when optional `mode` and `format` are not set
 * API6
   * Fix lots of Runtime Error's on missing optional data
   * catalog_folder didn't get the group of items correctly
+  * bookemark_edit: missing user id in data array
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+  * playlist_generate: Don't error when optional `mode` and `format` are not set
 
 ## Ampache 6.0.3
 
