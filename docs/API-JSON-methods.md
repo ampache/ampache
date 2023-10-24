@@ -17,7 +17,11 @@ Binary methods will also return:
 
 ## Auth Methods
 
-Auth methods are used for authenticating or checking the status of your session in an Ampache server
+Auth methods are used for authenticating or checking the status of your session in an Ampache server.
+
+Remember that the auth parameter does not need to be sent as a parameter in the URL.
+
+[HTTP header authentication](https://ampache.org/api/#http-header-authentication) is supported for the auth parameter where present.
 
 ### handshake
 
@@ -144,6 +148,32 @@ Register as a new user if allowed. (Requires the username, password and email.)
 | 'fullname' | string  |                                   |      YES |
 
 * return object
+
+```JSON
+"success": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+### lost_password
+
+Email a new password to the user (if allowed) using a reset token.
+
+```php
+   $username;
+   $key = hash('sha256', 'email');
+   auth = hash('sha256', $username . $key);
+```
+
+| Input  | Type    | Description                 | Optional |
+|--------|---------|-----------------------------|---------:|
+| 'auth' | string  | password reset token        |       NO |
+
+* return
 
 ```JSON
 "success": ""
