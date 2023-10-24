@@ -64,8 +64,12 @@ final class PlaylistGenerate4Method
     public static function playlist_generate(array $input, User $user)
     {
         // parameter defaults
-        $mode   = (!in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? 'random' : $input['mode'];
-        $format = (!in_array($input['format'], array('song', 'index', 'id'), true)) ? 'song' : $input['format'];
+        $mode   = (array_key_exists('mode', $input) && in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true))
+            ? $input['mode']
+            : 'random';
+        $format = (array_key_exists('format', $input) && in_array($input['format'], array('song', 'index', 'id'), true))
+            ? $input['format']
+            : 'song';
 
         // count for search rules
         $rule_count = 1;

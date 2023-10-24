@@ -95,11 +95,11 @@ final class BookmarkCreate5Method
             return false;
         }
         $object = array(
+            'user' => $user->getId(),
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => $position,
-            'user' => $user->getId()
+            'position' => $position
         );
 
         // create it then retrieve it

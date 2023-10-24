@@ -232,9 +232,9 @@ final class SongSearch implements SearchInterface
                         $table['last_play_or_skip'] = '';
                     }
                     $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search_user_id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "`.`object_type` = '$my_type'"
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '$my_type'"
                         : "";
-                    $where[] = "`last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $where[] = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'played_times':
                     $where[]      = "(`song`.`total_count` $operator_sql ?)";
@@ -264,10 +264,10 @@ final class SongSearch implements SearchInterface
                     if (!array_key_exists('myplayed', $table)) {
                         $table['myplayed'] = '';
                     }
-                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search->search_user->id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $search->search_user->id . "` ON `song`.`$column` = `myplayed_" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search->search_user->id . "`.`object_type` = '$my_type'"
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `song`.`$column` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '$my_type'"
                         : "";
-                    $where[] = "`myplayed_" . $my_type . "_" . $search->search_user->id . "`.`object_id` $operator_sql";
+                    $where[] = "`myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` $operator_sql";
                     break;
                 case 'bitrate':
                     $input        = $input * 1000;
@@ -281,37 +281,37 @@ final class SongSearch implements SearchInterface
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='song' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `song`.`id` ";
                     break;
                 case 'favorite':
-                    $where[]      = "`song`.`title` $operator_sql ? AND `favorite_song_" . $search->search_user->id . "`.`user` = " . $search->search_user->id . " AND `favorite_song_" . $search->search_user->id . "`.`object_type` = 'song'";
+                    $where[]      = "`song`.`title` $operator_sql ? AND `favorite_song_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_song_" . $search_user_id . "`.`object_type` = 'song'";
                     $parameters[] = $input;
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
                     }
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_song_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search->search_user->id . ") AS `favorite_song_" . $search->search_user->id . "` ON `song`.`id` = `favorite_song_" . $search->search_user->id . "`.`object_id` AND `favorite_song_" . $search->search_user->id . "`.`object_type` = 'song'"
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_song_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search_user_id . ") AS `favorite_song_" . $search_user_id . "` ON `song`.`id` = `favorite_song_" . $search_user_id . "`.`object_id` AND `favorite_song_" . $search_user_id . "`.`object_type` = 'song'"
                         : "";
                     break;
                 case 'favorite_album':
-                    $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `favorite_album_" . $search->search_user->id . "`.`user` = " . $search->search_user->id . " AND `favorite_album_" . $search->search_user->id . "`.`object_type` = 'album'";
+                    $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `favorite_album_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_album_" . $search_user_id . "`.`object_type` = 'album'";
                     $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
                     }
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search->search_user->id . ") AS `favorite_album_" . $search->search_user->id . "` ON `album`.`id` = `favorite_album_" . $search->search_user->id . "`.`object_id` AND `favorite_album_" . $search->search_user->id . "`.`object_type` = 'album'"
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search_user_id . ") AS `favorite_album_" . $search_user_id . "` ON `album`.`id` = `favorite_album_" . $search_user_id . "`.`object_id` AND `favorite_album_" . $search_user_id . "`.`object_type` = 'album'"
                         : "";
                     $join['album'] = true;
                     break;
                 case 'favorite_artist':
-                    $where[]    = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `favorite_artist_" . $search->search_user->id . "`.`user` = " . $search->search_user->id . " AND `favorite_artist_" . $search->search_user->id . "`.`object_type` = 'artist'";
+                    $where[]    = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `favorite_artist_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_artist_" . $search_user_id . "`.`object_type` = 'artist'";
                     $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
                     }
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search->search_user->id . ") AS `favorite_artist_" . $search->search_user->id . "` ON `artist`.`id` = `favorite_artist_" . $search->search_user->id . "`.`object_id` AND `favorite_artist_" . $search->search_user->id . "`.`object_type` = 'artist'"
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search_user_id . ") AS `favorite_artist_" . $search_user_id . "` ON `artist`.`id` = `favorite_artist_" . $search_user_id . "`.`object_id` AND `favorite_artist_" . $search_user_id . "`.`object_type` = 'artist'"
                         : "";
                     $join['artist'] = true;
                     break;
@@ -334,20 +334,20 @@ final class SongSearch implements SearchInterface
                         $operator_sql = '>=';
                     }
                     if (($input == 0 && $operator_sql != '>') || ($input == 1 && $operator_sql == '<')) {
-                        $where[] = "`rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` IS NULL";
+                        $where[] = "`rating_" . $my_type . "_" . $search_user_id . "`.`rating` IS NULL";
                     } elseif (in_array($operator_sql, array('<>', '<', '<=', '!='))) {
-                        $where[]      = "(`rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` $operator_sql ? OR `rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` IS NULL)";
+                        $where[]      = "(`rating_" . $my_type . "_" . $search_user_id . "`.`rating` $operator_sql ? OR `rating_" . $my_type . "_" . $search_user_id . "`.`rating` IS NULL)";
                         $parameters[] = $input;
                     } else {
-                        $where[]      = "`rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` $operator_sql ?";
+                        $where[]      = "`rating_" . $my_type . "_" . $search_user_id . "`.`rating` $operator_sql ?";
                         $parameters[] = $input;
                     }
                     // rating once per user
                     if (!array_key_exists('rating', $table)) {
                         $table['rating'] = '';
                     }
-                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $search->search_user->id . "` ON `rating_" . $my_type . "_" . $search->search_user->id . "`.`object_id` = `song`.`$column`"
+                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = " . $search_user_id . " AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $search_user_id . "` ON `rating_" . $my_type . "_" . $search_user_id . "`.`object_id` = `song`.`$column`"
                         : "";
                     break;
                 case 'my_flagged':
@@ -362,10 +362,10 @@ final class SongSearch implements SearchInterface
                     if (!array_key_exists('my_flagged_', $table)) {
                         $table['my_flagged_'] = '';
                     }
-                    $table['my_flagged_'] .= (!strpos((string) $table['my_flagged_'], "my_flagged__" . $my_type . "_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user_flag`.`object_type` = '$my_type' AND `user_flag`.`count_type` = 'stream' AND `user_flag`.`user` = " . $search->search_user->id . " GROUP BY `object_id`, `object_type`, `user`) AS `my_flagged__" . $my_type . "_" . $search->search_user->id . "` ON `song`.`$column` = `my_flagged__" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `my_flagged__" . $my_type . "_" . $search->search_user->id . "`.`object_type` = '$my_type'"
+                    $table['my_flagged_'] .= (!strpos((string) $table['my_flagged_'], "my_flagged__" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user_flag`.`object_type` = '$my_type' AND `user_flag`.`count_type` = 'stream' AND `user_flag`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `my_flagged__" . $my_type . "_" . $search_user_id . "` ON `song`.`$column` = `my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_id` AND `my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_type` = '$my_type'"
                         : "";
-                    $where[] = "`my_flagged__" . $my_type . "_" . $search->search_user->id . "`.`object_id` $operator_sql";
+                    $where[] = "`my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_id` $operator_sql";
                     break;
                 case 'other_user':
                 case 'other_user_album':
@@ -553,9 +553,9 @@ final class SongSearch implements SearchInterface
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_song` ON `catalog_map_song`.`object_id` = `song`.`id` AND `catalog_map_song`.`object_type` = 'song' AND `catalog_map_song`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search->search_user->id . " AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search->search_user->id . " AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if (array_key_exists('artist', $join)) {

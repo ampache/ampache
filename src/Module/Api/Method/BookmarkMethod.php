@@ -47,7 +47,8 @@ final class BookmarkMethod
      *
      * @param array $input
      * @param User $user
-     * filter = (string) bookmark_id
+     * filter  = (string) bookmark_id
+     * include = (integer) 0,1, if true include the object in the bookmark //optional
      * @return boolean
      */
     public static function bookmark(array $input, User $user): bool
@@ -61,15 +62,16 @@ final class BookmarkMethod
 
             return false;
         }
+        $include = (bool)($input['include'] ?? false);
         $results = array($bookmark_id);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($results, false);
+                echo Json_Data::bookmarks($results, $include, false);
                 break;
             default:
-                echo Xml_Data::bookmarks($results);
+                echo Xml_Data::bookmarks($results, $include);
         }
 
         return true;

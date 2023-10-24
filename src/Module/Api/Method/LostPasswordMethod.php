@@ -49,10 +49,10 @@ final class LostPasswordMethod
      * It requires a reset token hash using your username and email
      *
      * @param array $input
-     * token = (string) (
+     * auth = (string) (
      *   $username;
      *   $key = hash('sha256', 'email');
-     *   token = hash('sha256', $username . $key);
+     *   auth = hash('sha256', $username . $key);
      * )
      * @return boolean
      * @throws ContainerExceptionInterface
@@ -63,11 +63,11 @@ final class LostPasswordMethod
         if (!Mailer::is_mail_enabled()) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
         }
-        if (!Api::check_parameter($input, array('token'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
         }
         // identify the user to modify
-        $user_id     = User::id_from_token($input['token']);
+        $user_id     = User::id_from_token($input['auth']);
         $update_user = new User($user_id);
 
         if ($user_id > 0) {

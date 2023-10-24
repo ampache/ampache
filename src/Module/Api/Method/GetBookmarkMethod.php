@@ -49,8 +49,9 @@ final class GetBookmarkMethod
      *
      * @param array $input
      * @param User $user
-     * filter = (string) object_id to find
-     * type   = (string) object_type ('song', 'video', 'podcast_episode')
+     * filter  = (string) object_id to find
+     * type    = (string) object_type ('song', 'video', 'podcast_episode')
+     * include = (integer) 0,1, if true include the object in the bookmark //optional
      * @return boolean
      */
     public static function get_bookmark(array $input, User $user): bool
@@ -60,6 +61,7 @@ final class GetBookmarkMethod
         }
         $object_id = (int) $input['filter'];
         $type      = $input['type'];
+        $include   = (bool)($input['include'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
@@ -93,7 +95,8 @@ final class GetBookmarkMethod
         $object = array(
             'user' => $user->id,
             'object_id' => $object_id,
-            'object_type' => $type
+            'object_type' => $type,
+            'comment' => null
         );
         $results = Bookmark::get_bookmark($object);
         if (empty($results)) {
@@ -105,10 +108,10 @@ final class GetBookmarkMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($results);
+                echo Json_Data::bookmarks($results, $include);
                 break;
             default:
-                echo Xml_Data::bookmarks($results);
+                echo Xml_Data::bookmarks($results, $include);
         }
 
         return true;

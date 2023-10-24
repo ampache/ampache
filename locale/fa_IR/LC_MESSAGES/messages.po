@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2023-09-25 16:17+1000\n"
+"POT-Creation-Date: 2023-09-29 12:25+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Parviz Homayun <parviz.homayun@gmail.com>, 2021\n"
 "Language-Team: Persian (Iran) (http://app.transifex.com/ampache/ampache/language/fa_IR/)\n"
@@ -50,8 +50,8 @@ msgstr "تمام لیست های پخش"
 #: ../../public/templates/show_songs.inc.php:65
 #: ../../public/templates/show_songs.inc.php:164
 #: ../../public/templates/show_top_tracks.inc.php:55
-#: ../../src/Repository/Model/Search.php:729
-#: ../../src/Repository/Model/Search.php:803
+#: ../../src/Repository/Model/Search.php:744
+#: ../../src/Repository/Model/Search.php:818
 msgid "Song Title"
 msgstr "عنوان آهنگ"
 
@@ -76,8 +76,8 @@ msgstr "عنوان آهنگ"
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:117
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:145
 #: ../../src/Module/Api/Upnp_Api.php:629
-#: ../../src/Repository/Model/Browse.php:288
-#: ../../src/Repository/Model/Browse.php:295
+#: ../../src/Repository/Model/Browse.php:284
+#: ../../src/Repository/Model/Browse.php:297
 msgid "Albums"
 msgstr "آلبوم ها"
 
@@ -105,12 +105,12 @@ msgstr "آلبوم ها"
 #: ../../public/templates/show_tagcloud.inc.php:32
 #: ../../public/templates/show_wanted_albums.inc.php:32
 #: ../../src/Module/Util/AmpacheRss.php:306
-#: ../../src/Repository/Model/AlbumDisk.php:373
+#: ../../src/Repository/Model/AlbumDisk.php:377
 #: ../../src/Repository/Model/Album.php:605
 #: ../../src/Repository/Model/Artist.php:549
-#: ../../src/Repository/Model/Browse.php:311
+#: ../../src/Repository/Model/Browse.php:319
 #: ../../src/Repository/Model/Clip.php:180
-#: ../../src/Repository/Model/Song.php:1881
+#: ../../src/Repository/Model/Song.php:1890
 msgid "Artist"
 msgstr "هنرمند"
 
@@ -118,9 +118,9 @@ msgstr "هنرمند"
 #: ../../public/templates/show_add_live_stream.inc.php:56
 #: ../../public/templates/show_add_podcast.inc.php:38
 #: ../../public/templates/show_export.inc.php:44
-#: ../../src/Repository/Model/Search.php:693
-#: ../../src/Repository/Model/Search.php:783
-#: ../../src/Repository/Model/Search.php:867
+#: ../../src/Repository/Model/Search.php:708
+#: ../../src/Repository/Model/Search.php:798
+#: ../../src/Repository/Model/Search.php:882
 msgid "Catalog"
 msgstr "فهرست"
 
@@ -196,11 +196,11 @@ msgstr "کوکی"
 #: ../../public/templates/show_plugins.inc.php:33
 #: ../../public/templates/show_plugins.inc.php:73
 #: ../../src/Module/Cli/AdminAddUserCommand.php:46
-#: ../../src/Repository/Model/Search.php:727
-#: ../../src/Repository/Model/Search.php:894
-#: ../../src/Repository/Model/Search.php:912
-#: ../../src/Repository/Model/Search.php:953
-#: ../../src/Repository/Model/Search.php:991
+#: ../../src/Repository/Model/Search.php:742
+#: ../../src/Repository/Model/Search.php:909
+#: ../../src/Repository/Model/Search.php:927
+#: ../../src/Repository/Model/Search.php:968
+#: ../../src/Repository/Model/Search.php:1006
 msgid "Name"
 msgstr "نام"
 
@@ -283,7 +283,7 @@ msgstr "برای عاشقان موسیقی"
 #: ../../src/Config/functions.php:587
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:63
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:104
-#: ../../src/Repository/Model/Catalog.php:2398
+#: ../../src/Repository/Model/Catalog.php:2426
 msgid "Error"
 msgstr "اشکال"
 
@@ -390,10 +390,10 @@ msgstr "هنرمندان"
 #: ../../public/templates/sidebar.inc.php:66
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:205
 #: ../../src/Module/Api/Upnp_Api.php:671
-#: ../../src/Repository/Model/Browse.php:322
-#: ../../src/Repository/Model/Search.php:639
-#: ../../src/Repository/Model/Search.php:763
-#: ../../src/Repository/Model/Search.php:841
+#: ../../src/Repository/Model/Browse.php:330
+#: ../../src/Repository/Model/Search.php:654
+#: ../../src/Repository/Model/Search.php:778
+#: ../../src/Repository/Model/Search.php:856
 msgid "Playlists"
 msgstr "لیست های پخش"
 
@@ -421,17 +421,17 @@ msgstr "لیست های پخش"
 #: ../../public/templates/sidebar.inc.php:60
 #: ../../src/Gui/Song/SongViewAdapter.php:356
 #: ../../src/Module/Application/Browse/TagAction.php:84
-#: ../../src/Repository/Model/Browse.php:348
-#: ../../src/Repository/Model/Browse.php:353
+#: ../../src/Repository/Model/Browse.php:356
+#: ../../src/Repository/Model/Browse.php:361
 msgid "Genres"
 msgstr "ژانرها"
 
 #: ../../public/templates/header.inc.php:64
 #: ../../public/templates/show_form_userflag.inc.php:38
 #: ../../public/templates/sidebar.inc.php:78
-#: ../../src/Repository/Model/Search.php:606
-#: ../../src/Repository/Model/Search.php:743
-#: ../../src/Repository/Model/Search.php:820
+#: ../../src/Repository/Model/Search.php:621
+#: ../../src/Repository/Model/Search.php:758
+#: ../../src/Repository/Model/Search.php:835
 msgid "Favorites"
 msgstr "موارد دلخواه"
 
@@ -494,16 +494,16 @@ msgstr "پخش تصادفی"
 #: ../../public/templates/header.inc.php:150
 #: ../../public/templates/show_manage_democratic.inc.php:34
 #: ../../public/templates/sidebar.inc.php:65
-#: ../../src/Repository/Model/Search.php:642
-#: ../../src/Repository/Model/Search.php:766
-#: ../../src/Repository/Model/Search.php:844
-#: ../../src/Repository/Model/Search.php:893
+#: ../../src/Repository/Model/Search.php:657
+#: ../../src/Repository/Model/Search.php:781
+#: ../../src/Repository/Model/Search.php:859
+#: ../../src/Repository/Model/Search.php:908
 msgid "Playlist"
 msgstr "لیست پخش"
 
 #: ../../public/templates/header.inc.php:151
-#: ../../src/Repository/Model/Search.php:646
-#: ../../src/Repository/Model/Search.php:848
+#: ../../src/Repository/Model/Search.php:661
+#: ../../src/Repository/Model/Search.php:863
 msgid "Smart Playlist"
 msgstr "لیست پخش هوشمند"
 
@@ -527,7 +527,7 @@ msgstr "تنظیمات ظاهر"
 #: ../../public/templates/show_edit_filter.inc.php:60
 #: ../../public/templates/show_manage_filters.inc.php:44
 #: ../../public/templates/sidebar_admin.inc.php:41
-#: ../../src/Repository/Model/Browse.php:339
+#: ../../src/Repository/Model/Browse.php:347
 msgid "Catalogs"
 msgstr "مجموعه ها"
 
@@ -559,7 +559,7 @@ msgid "Modules"
 msgstr "ماژول ها"
 
 #: ../../public/templates/header.inc.php:160
-#: ../../src/Repository/Model/Browse.php:383
+#: ../../src/Repository/Model/Browse.php:391
 msgid "Media Licenses"
 msgstr "مجوزهای رسانه"
 
@@ -604,9 +604,9 @@ msgstr "مرور کردن"
 #: ../../src/Gui/Song/SongViewAdapter.php:351
 #: ../../src/Gui/Song/SongViewAdapter.php:353
 #: ../../src/Module/Util/AmpacheRss.php:306
-#: ../../src/Repository/Model/AlbumDisk.php:378
+#: ../../src/Repository/Model/AlbumDisk.php:382
 #: ../../src/Repository/Model/Album.php:610
-#: ../../src/Repository/Model/Search.php:586
+#: ../../src/Repository/Model/Search.php:601
 msgid "Album"
 msgstr "آلبوم"
 
@@ -628,7 +628,7 @@ msgstr "اطلاعات آماری"
 #: ../../public/templates/show_recently_skipped.inc_user.php:165
 #: ../../public/templates/show_tagcloud_hidden.inc.php:33
 #: ../../public/templates/show_tagcloud.inc.php:34
-#: ../../src/Repository/Model/Catalog.php:2374
+#: ../../src/Repository/Model/Catalog.php:2402
 msgid "Song"
 msgstr "آهنگ"
 
@@ -653,7 +653,7 @@ msgstr "آزادانه"
 #: ../../public/templates/show_search_bar.inc.php:47
 #: ../../public/templates/sidebar.inc.php:50
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:234
-#: ../../src/Repository/Model/Browse.php:415
+#: ../../src/Repository/Model/Browse.php:423
 msgid "Labels"
 msgstr "برچسب ها"
 
@@ -669,14 +669,14 @@ msgstr "داشبورد"
 #: ../../public/templates/show_podcast_episodes.inc.php:98
 #: ../../src/Repository/Model/Podcast_Episode.php:227
 #: ../../src/Repository/Model/Podcast.php:178
-#: ../../src/Repository/Model/Search.php:911
-#: ../../src/Repository/Model/Search.php:954
+#: ../../src/Repository/Model/Search.php:926
+#: ../../src/Repository/Model/Search.php:969
 msgid "Podcast"
 msgstr "پادکست"
 
 #: ../../public/templates/header.inc.php:171
-#: ../../src/Repository/Model/Search.php:916
-#: ../../src/Repository/Model/Search.php:952
+#: ../../src/Repository/Model/Search.php:931
+#: ../../src/Repository/Model/Search.php:967
 msgid "Podcast Episode"
 msgstr ""
 
@@ -684,7 +684,7 @@ msgstr ""
 #: ../../public/templates/show_form_browse.inc.php:56
 #: ../../public/templates/sidebar.inc.php:52
 #: ../../src/Module/Api/Upnp_Api.php:713
-#: ../../src/Repository/Model/Browse.php:317
+#: ../../src/Repository/Model/Browse.php:325
 msgid "Radio Stations"
 msgstr "ایستگاه های رادیویی"
 
@@ -913,9 +913,9 @@ msgstr "الفبا"
 
 #: ../../public/templates/list_header.inc.php:148
 #: ../../public/templates/show_get_art.inc.php:103
-#: ../../src/Repository/Model/Search.php:417
-#: ../../src/Repository/Model/Search.php:422
-#: ../../src/Repository/Model/Search.php:428
+#: ../../src/Repository/Model/Search.php:432
+#: ../../src/Repository/Model/Search.php:437
+#: ../../src/Repository/Model/Search.php:443
 msgid "Limit"
 msgstr "محدود"
 
@@ -1025,7 +1025,7 @@ msgstr "لیست پخش تصادفی"
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:239
 #: ../../src/Gui/Song/SongViewAdapter.php:335
 #: ../../src/Repository/Model/Broadcast.php:394
-#: ../../src/Repository/Model/Share.php:275
+#: ../../src/Repository/Model/Share.php:281
 msgid "Delete"
 msgstr "حذف"
 
@@ -1035,7 +1035,7 @@ msgstr "موردی نیست"
 
 #: ../../public/templates/rightbar.inc.php:146
 #: ../../public/templates/show_recently_played.inc.php:190
-#: ../../src/Repository/Model/Browse.php:469
+#: ../../src/Repository/Model/Browse.php:477
 msgid "More"
 msgstr "بیشتر"
 
@@ -1110,7 +1110,7 @@ msgstr "کاربر"
 #: ../../public/templates/show_import_playlist.inc.php:37
 #: ../../public/templates/show_playlists.inc.php:57
 #: ../../public/templates/show_searches.inc.php:51
-#: ../../src/Repository/Model/Search.php:899
+#: ../../src/Repository/Model/Search.php:914
 msgid "Type"
 msgstr "نوع"
 
@@ -1194,7 +1194,7 @@ msgstr "اجرا"
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:216
 #: ../../src/Gui/Song/SongViewAdapter.php:294
 #: ../../src/Repository/Model/Broadcast.php:393
-#: ../../src/Repository/Model/Share.php:274
+#: ../../src/Repository/Model/Share.php:280
 msgid "Edit"
 msgstr "ویرایش"
 
@@ -1252,8 +1252,8 @@ msgstr "وب سایت"
 #: ../../public/templates/show_podcast_episodes.inc.php:61
 #: ../../public/templates/show_podcast_episodes.inc.php:105
 #: ../../public/templates/show_user_registration.inc.php:122
-#: ../../src/Repository/Model/Search.php:922
-#: ../../src/Repository/Model/Search.php:960
+#: ../../src/Repository/Model/Search.php:937
+#: ../../src/Repository/Model/Search.php:975
 msgid "State"
 msgstr "استان"
 
@@ -1424,9 +1424,9 @@ msgstr "فیلدهای خودکار افزوده شده "
 #: ../../public/templates/show_edit_album_row.inc.php:39
 #: ../../public/templates/show_edit_catalog.inc.php:38
 #: ../../src/Gui/Song/SongViewAdapter.php:349
-#: ../../src/Repository/Model/Browse.php:307
-#: ../../src/Repository/Model/Search.php:588
-#: ../../src/Repository/Model/Search.php:801
+#: ../../src/Repository/Model/Browse.php:315
+#: ../../src/Repository/Model/Search.php:603
+#: ../../src/Repository/Model/Search.php:816
 msgid "Album Artist"
 msgstr "هنرمند آلبوم"
 
@@ -1437,7 +1437,7 @@ msgstr "هنرمند آلبوم"
 #: ../../public/templates/show_manage_shoutbox.inc.php:35
 #: ../../public/templates/show_manage_shoutbox.inc.php:62
 #: ../../src/Gui/Song/SongViewAdapter.php:371
-#: ../../src/Repository/Model/Search.php:594
+#: ../../src/Repository/Model/Search.php:609
 msgid "Comment"
 msgstr "نظرات"
 
@@ -1445,7 +1445,7 @@ msgstr "نظرات"
 #: ../../public/templates/show_edit_album_row.inc.php:98
 #: ../../public/templates/show_edit_catalog.inc.php:40
 #: ../../src/Gui/Song/SongViewAdapter.php:385
-#: ../../src/Repository/Model/Search.php:811
+#: ../../src/Repository/Model/Search.php:826
 msgid "Catalog Number"
 msgstr "شماره فهرست"
 
@@ -1460,8 +1460,8 @@ msgstr "آهنگ (0 پر شده)"
 #: ../../public/templates/show_edit_catalog.inc.php:42
 #: ../../public/templates/show_song_previews.inc.php:33
 #: ../../src/Gui/Song/SongViewAdapter.php:358
-#: ../../src/Repository/Model/AlbumDisk.php:408
-#: ../../src/Repository/Model/AlbumDisk.php:421
+#: ../../src/Repository/Model/AlbumDisk.php:412
+#: ../../src/Repository/Model/AlbumDisk.php:425
 msgid "Disk"
 msgstr "دیسک"
 
@@ -1469,10 +1469,10 @@ msgstr "دیسک"
 #: ../../public/templates/show_broadcasts.inc.php:35
 #: ../../public/templates/show_edit_broadcast_row.inc.php:40
 #: ../../public/templates/show_edit_catalog.inc.php:43
-#: ../../src/Repository/Model/Search.php:633
-#: ../../src/Repository/Model/Search.php:758
-#: ../../src/Repository/Model/Search.php:836
-#: ../../src/Repository/Model/Search.php:1012
+#: ../../src/Repository/Model/Search.php:648
+#: ../../src/Repository/Model/Search.php:773
+#: ../../src/Repository/Model/Search.php:851
+#: ../../src/Repository/Model/Search.php:1027
 #: ../../src/Repository/Model/Tag.php:955
 msgid "Genre"
 msgstr "ژانر"
@@ -1502,10 +1502,10 @@ msgstr "ژانر"
 #: ../../public/templates/show_top_tracks.inc.php:64
 #: ../../public/templates/show_wanted_albums.inc.php:33
 #: ../../src/Gui/Song/SongViewAdapter.php:360
-#: ../../src/Repository/Model/AlbumDisk.php:383
+#: ../../src/Repository/Model/AlbumDisk.php:387
 #: ../../src/Repository/Model/Album.php:615
-#: ../../src/Repository/Model/Search.php:591
-#: ../../src/Repository/Model/Search.php:804
+#: ../../src/Repository/Model/Search.php:606
+#: ../../src/Repository/Model/Search.php:819
 msgid "Year"
 msgstr "سال"
 
@@ -1513,28 +1513,28 @@ msgstr "سال"
 #: ../../public/templates/show_edit_album_row.inc.php:106
 #: ../../public/templates/show_edit_catalog.inc.php:46
 #: ../../src/Gui/Song/SongViewAdapter.php:361
-#: ../../src/Repository/Model/Search.php:805
+#: ../../src/Repository/Model/Search.php:820
 msgid "Original Year"
 msgstr "سال اصلی"
 
 #: ../../public/templates/show_add_catalog.inc.php:59
 #: ../../public/templates/show_edit_album_row.inc.php:86
 #: ../../public/templates/show_edit_catalog.inc.php:47
-#: ../../src/Repository/Model/Search.php:807
+#: ../../src/Repository/Model/Search.php:822
 msgid "Release Type"
 msgstr "نوع انتشار"
 
 #: ../../public/templates/show_add_catalog.inc.php:60
 #: ../../public/templates/show_edit_album_row.inc.php:90
 #: ../../public/templates/show_edit_catalog.inc.php:48
-#: ../../src/Repository/Model/Search.php:808
+#: ../../src/Repository/Model/Search.php:823
 msgid "Release Status"
 msgstr "وضعیت انتشار"
 
 #: ../../public/templates/show_add_catalog.inc.php:61
 #: ../../public/templates/show_edit_album_row.inc.php:94
 #: ../../public/templates/show_edit_catalog.inc.php:49
-#: ../../src/Repository/Model/Search.php:809
+#: ../../src/Repository/Model/Search.php:824
 msgid "Release Comment"
 msgstr ""
 
@@ -1542,7 +1542,7 @@ msgstr ""
 #: ../../public/templates/show_edit_album_row.inc.php:102
 #: ../../public/templates/show_edit_catalog.inc.php:50
 #: ../../src/Gui/Song/SongViewAdapter.php:386
-#: ../../src/Repository/Model/Search.php:810
+#: ../../src/Repository/Model/Search.php:825
 msgid "Barcode"
 msgstr "بارکد"
 
@@ -1550,7 +1550,7 @@ msgstr "بارکد"
 #: ../../public/templates/show_edit_catalog.inc.php:52
 #: ../../public/templates/sidebar.inc.php:57
 #: ../../src/Module/Api/Upnp_Api.php:1009
-#: ../../src/Repository/Model/Browse.php:387
+#: ../../src/Repository/Model/Browse.php:395
 msgid "TV Shows"
 msgstr "برنامه های تلویزیونی"
 
@@ -1614,10 +1614,10 @@ msgstr "قسمت"
 #: ../../src/Gui/Song/SongViewAdapter.php:347
 #: ../../src/Module/Util/AmpacheRss.php:306
 #: ../../src/Repository/Model/Podcast_Episode.php:232
-#: ../../src/Repository/Model/Search.php:585
-#: ../../src/Repository/Model/Search.php:800
-#: ../../src/Repository/Model/Song.php:1886
-#: ../../src/Repository/Model/Video.php:374
+#: ../../src/Repository/Model/Search.php:600
+#: ../../src/Repository/Model/Search.php:815
+#: ../../src/Repository/Model/Song.php:1895
+#: ../../src/Repository/Model/Video.php:375
 msgid "Title"
 msgstr "عنوان"
 
@@ -1719,9 +1719,9 @@ msgstr "افزودن برچسب"
 #: ../../public/templates/show_edit_artist_row.inc.php:39
 #: ../../public/templates/show_edit_label_row.inc.php:36
 #: ../../public/templates/show_edit_song_row.inc.php:72
-#: ../../src/Repository/Model/Search.php:697
-#: ../../src/Repository/Model/Search.php:787
-#: ../../src/Repository/Model/Search.php:871
+#: ../../src/Repository/Model/Search.php:712
+#: ../../src/Repository/Model/Search.php:802
+#: ../../src/Repository/Model/Search.php:886
 msgid "MusicBrainz ID"
 msgstr "شناسه موسیقی برینز"
 
@@ -1731,7 +1731,7 @@ msgstr "شناسه موسیقی برینز"
 #: ../../public/templates/show_labels.inc.php:55
 #: ../../public/templates/show_labels.inc.php:83
 #: ../../public/templates/show_podcast_episode.inc.php:111
-#: ../../src/Repository/Model/Search.php:992
+#: ../../src/Repository/Model/Search.php:1007
 msgid "Category"
 msgstr "دسته بندی"
 
@@ -1805,7 +1805,7 @@ msgstr "برچسب ایجاد شده"
 #: ../../public/templates/show_partial_movie.inc.php:22
 #: ../../public/templates/show_partial_personal_video.inc.php:24
 #: ../../public/templates/show_partial_tvshow_episode.inc.php:26
-#: ../../src/Repository/Model/Search.php:730
+#: ../../src/Repository/Model/Search.php:745
 msgid "Summary"
 msgstr "خلاصه"
 
@@ -1829,7 +1829,7 @@ msgstr "کشور"
 #: ../../public/templates/show_test.inc.php:62
 #: ../../public/templates/show_user.inc.php:113
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:74
-#: ../../src/Repository/Model/Catalog.php:2374
+#: ../../src/Repository/Model/Catalog.php:2402
 msgid "Status"
 msgstr "وضعیت"
 
@@ -1985,8 +1985,8 @@ msgstr "به اشتراک بگذارید"
 
 #: ../../public/templates/show_add_share.inc.php:42
 #: ../../public/templates/show_edit_share_row.inc.php:32
-#: ../../src/Repository/Model/Share.php:519
-#: ../../src/Repository/Model/Share.php:523
+#: ../../src/Repository/Model/Share.php:525
+#: ../../src/Repository/Model/Share.php:529
 msgid "Share"
 msgstr "اشتراک گذاری"
 
@@ -2044,7 +2044,7 @@ msgstr "برای خواندن فایل برچسب ها ، فیلدهای هنر�
 
 #: ../../public/templates/show_add_upload.inc.php:204
 #: ../../public/templates/show_edit_song_row.inc.php:106
-#: ../../src/Repository/Model/Search.php:679
+#: ../../src/Repository/Model/Search.php:694
 msgid "Music License"
 msgstr "مجوز موسیقی"
 
@@ -2087,7 +2087,7 @@ msgstr "افزودن کاربر"
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:194
 #: ../../src/Module/User/Registration.php:68
 #: ../../src/Module/User/Registration.php:82
-#: ../../src/Repository/Model/Search.php:1002
+#: ../../src/Repository/Model/Search.php:1017
 msgid "Username"
 msgstr "نام کاربری"
 
@@ -2230,11 +2230,11 @@ msgstr "جستجو در Musicbrainz..."
 #: ../../public/templates/show_videos.inc.php:59
 #: ../../public/templates/show_videos.inc.php:104
 #: ../../src/Gui/Song/SongViewAdapter.php:415
-#: ../../src/Repository/Model/Search.php:627
-#: ../../src/Repository/Model/Search.php:754
-#: ../../src/Repository/Model/Search.php:831
-#: ../../src/Repository/Model/Search.php:935
-#: ../../src/Repository/Model/Search.php:973
+#: ../../src/Repository/Model/Search.php:642
+#: ../../src/Repository/Model/Search.php:769
+#: ../../src/Repository/Model/Search.php:846
+#: ../../src/Repository/Model/Search.php:950
+#: ../../src/Repository/Model/Search.php:988
 msgid "Played"
 msgstr "پخش شده"
 
@@ -2405,7 +2405,7 @@ msgstr "ویرایش آلبوم"
 #: ../../src/Gui/Song/SongViewAdapter.php:239
 #: ../../src/Module/System/AutoUpdate.php:334
 #: ../../src/Module/System/AutoUpdate.php:336
-#: ../../src/Repository/Model/Share.php:272
+#: ../../src/Repository/Model/Share.php:278
 msgid "Download"
 msgstr "بارگیری"
 
@@ -2432,8 +2432,8 @@ msgstr "بارگیری"
 #: ../../src/Application/Api/Ajax/Handler/IndexAjaxHandler.php:412
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:177
 #: ../../src/Module/Api/Upnp_Api.php:650
-#: ../../src/Repository/Model/Browse.php:282
-#: ../../src/Repository/Model/Browse.php:375
+#: ../../src/Repository/Model/Browse.php:278
+#: ../../src/Repository/Model/Browse.php:383
 msgid "Songs"
 msgstr "آهنگ ها"
 
@@ -2626,9 +2626,9 @@ msgstr "ترانه های مشابه"
 #: ../../public/templates/show_songs.inc.php:167
 #: ../../public/templates/show_top_tracks.inc.php:58
 #: ../../src/Gui/Song/SongViewAdapter.php:348
-#: ../../src/Repository/Model/Browse.php:309
-#: ../../src/Repository/Model/Search.php:587
-#: ../../src/Repository/Model/Search.php:802
+#: ../../src/Repository/Model/Browse.php:317
+#: ../../src/Repository/Model/Search.php:602
+#: ../../src/Repository/Model/Search.php:817
 msgid "Song Artist"
 msgstr "هنرمند آهنگ"
 
@@ -2664,7 +2664,7 @@ msgstr "انتخاب روی جلد جدید"
 #: ../../public/templates/show_disabled_songs.inc.php:32
 #: ../../public/templates/show_disabled_songs.inc.php:59
 #: ../../public/templates/show_pvmsg_row.inc.php:29
-#: ../../src/Repository/Model/Catalog.php:382
+#: ../../src/Repository/Model/Catalog.php:405
 msgid "Select"
 msgstr "انتخاب"
 
@@ -2777,6 +2777,7 @@ msgstr "حرکت"
 #: ../../src/Gui/Song/SongViewAdapter.php:406
 #: ../../src/Module/Catalog/Catalog_dropbox.php:148
 #: ../../src/Module/Catalog/Catalog_local.php:146
+#: ../../src/Module/Cli/AddCatalogCommand.php:43
 #: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:47
 msgid "Path"
 msgstr "مسیر"
@@ -3005,7 +3006,7 @@ msgid "%s Playlist"
 msgstr "%s لیست پخش"
 
 #: ../../public/templates/show_democratic.inc.php:32
-#: ../../src/Repository/Model/Browse.php:363
+#: ../../src/Repository/Model/Browse.php:371
 msgid "Democratic Playlist"
 msgstr "لیست پخش آزاد"
 
@@ -3097,12 +3098,12 @@ msgstr ""
 #: ../../public/templates/show_import_playlist.inc.php:32
 #: ../../public/templates/show_video.inc.php:144
 #: ../../src/Gui/Song/SongViewAdapter.php:407
-#: ../../src/Repository/Model/Search.php:651
-#: ../../src/Repository/Model/Search.php:771
-#: ../../src/Repository/Model/Search.php:853
-#: ../../src/Repository/Model/Search.php:883
-#: ../../src/Repository/Model/Search.php:940
-#: ../../src/Repository/Model/Search.php:978
+#: ../../src/Repository/Model/Search.php:666
+#: ../../src/Repository/Model/Search.php:786
+#: ../../src/Repository/Model/Search.php:868
+#: ../../src/Repository/Model/Search.php:898
+#: ../../src/Repository/Model/Search.php:955
+#: ../../src/Repository/Model/Search.php:993
 msgid "Filename"
 msgstr "نام فایل"
 
@@ -3133,12 +3134,12 @@ msgid "Add tags to sub songs"
 msgstr "افزودن برچسب های آهنگ های فرعی"
 
 #: ../../public/templates/show_edit_artist_row.inc.php:53
-#: ../../src/Repository/Model/Search.php:732
+#: ../../src/Repository/Model/Search.php:747
 msgid "Place Formed"
 msgstr "مکان ساخته شده"
 
 #: ../../public/templates/show_edit_artist_row.inc.php:57
-#: ../../src/Repository/Model/Search.php:731
+#: ../../src/Repository/Model/Search.php:746
 msgid "Year Formed"
 msgstr "سال ساخت"
 
@@ -3211,7 +3212,7 @@ msgstr "تایید"
 #: ../../public/templates/show_edit_search_row.inc.php:57
 #: ../../public/templates/show_playlists.inc.php:62
 #: ../../public/templates/show_searches.inc.php:54
-#: ../../src/Repository/Model/Search.php:901
+#: ../../src/Repository/Model/Search.php:916
 msgid "Owner"
 msgstr "مالک"
 
@@ -3229,7 +3230,7 @@ msgid "Feed"
 msgstr "خوراک"
 
 #: ../../public/templates/show_edit_podcast_row.inc.php:43
-#: ../../src/Repository/Model/Preference.php:868
+#: ../../src/Repository/Model/Preference.php:876
 msgid "Language"
 msgstr "زبان"
 
@@ -3269,13 +3270,13 @@ msgstr "دیدگاه :"
 #: ../../public/templates/show_song_previews.inc.php:32
 #: ../../src/Gui/Song/SongViewAdapter.php:357
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:74
-#: ../../src/Repository/Model/Search.php:590
+#: ../../src/Repository/Model/Search.php:605
 msgid "Track"
 msgstr "قطعه"
 
 #: ../../public/templates/show_edit_song_row.inc.php:84
 #: ../../src/Gui/Song/SongViewAdapter.php:355
-#: ../../src/Repository/Model/Search.php:589
+#: ../../src/Repository/Model/Search.php:604
 msgid "Composer"
 msgstr "آهنگساز"
 
@@ -3285,8 +3286,8 @@ msgstr "آهنگساز"
 #: ../../src/Gui/Song/SongViewAdapter.php:378
 #: ../../src/Gui/Song/SongViewAdapter.php:380
 #: ../../src/Repository/Model/Label.php:250
-#: ../../src/Repository/Model/Search.php:593
-#: ../../src/Repository/Model/Search.php:990
+#: ../../src/Repository/Model/Search.php:608
+#: ../../src/Repository/Model/Search.php:1005
 msgid "Label"
 msgstr "برچسب"
 
@@ -3409,7 +3410,7 @@ msgstr "هنرمندان آلبوم"
 
 #: ../../public/templates/show_form_browse.inc.php:53
 #: ../../public/templates/sidebar.inc.php:51
-#: ../../src/Repository/Model/Browse.php:379
+#: ../../src/Repository/Model/Browse.php:387
 msgid "Broadcasts"
 msgstr "پخش می شود"
 
@@ -3417,7 +3418,7 @@ msgstr "پخش می شود"
 #: ../../public/templates/show_form_search.inc.php:71
 #: ../../public/templates/sidebar.inc.php:54
 #: ../../src/Module/Api/Upnp_Api.php:734
-#: ../../src/Repository/Model/Browse.php:423
+#: ../../src/Repository/Model/Browse.php:431
 msgid "Podcasts"
 msgstr "پادکست ها"
 
@@ -3430,8 +3431,8 @@ msgstr "پادکست ها"
 #: ../../public/templates/show_form_search.inc.php:72
 #: ../../public/templates/show_form_userflag.inc.php:50
 #: ../../public/templates/sidebar.inc.php:64
-#: ../../src/Repository/Model/Browse.php:427
-#: ../../src/Repository/Model/Search.php:915
+#: ../../src/Repository/Model/Browse.php:435
+#: ../../src/Repository/Model/Search.php:930
 msgid "Podcast Episodes"
 msgstr "قسمت های پادکست"
 
@@ -3446,7 +3447,7 @@ msgstr "قسمت های پادکست"
 #: ../../public/templates/show_form_userflag.inc.php:53
 #: ../../public/templates/show_random.inc.php:65
 #: ../../public/templates/sidebar.inc.php:55
-#: ../../src/Repository/Model/Browse.php:359
+#: ../../src/Repository/Model/Browse.php:367
 msgid "Videos"
 msgstr "ویدیو ها"
 
@@ -3493,7 +3494,7 @@ msgid "Save as Smart Playlist"
 msgstr "ذخیره بعنوان لیست پخش هوشمند"
 
 #: ../../public/templates/show_form_search.inc.php:110
-#: ../../public/templates/show_search.inc.php:83
+#: ../../public/templates/show_search.inc.php:84
 msgid "Save as Playlist"
 msgstr "ذخیره بعنوان لیست پخش"
 
@@ -3522,8 +3523,8 @@ msgid "Direct URL to Image"
 msgstr "آدرس اینترنتی تصویر"
 
 #: ../../public/templates/show_get_art.inc.php:81
-#: ../../src/Repository/Model/Search.php:772
-#: ../../src/Repository/Model/Search.php:854
+#: ../../src/Repository/Model/Search.php:787
+#: ../../src/Repository/Model/Search.php:869
 msgid "Local Image"
 msgstr "تصویر محلی"
 
@@ -3645,7 +3646,7 @@ msgid "Show Album"
 msgstr "نمایش آلبوم"
 
 #: ../../public/templates/show_html5_player.inc.php:220
-#: ../../src/Repository/Model/Song.php:1833
+#: ../../src/Repository/Model/Song.php:1842
 msgid "Show Lyrics"
 msgstr " نمایش متن ترانه"
 
@@ -3920,7 +3921,7 @@ msgid ""
 msgstr "تنظیمات توصیه شده هنگام استفاده از آمپاچی به عنوان نمای پیشرو برای یک انجمن موسیقی."
 
 #: ../../public/templates/show_install_config.inc.php:134
-#: ../../src/Repository/Model/Preference.php:944
+#: ../../src/Repository/Model/Preference.php:952
 msgid "Allow Transcoding"
 msgstr "اجازه کدگذاری"
 
@@ -4461,9 +4462,9 @@ msgstr "مدت زمان"
 #: ../../public/templates/show_playlists.inc.php:54
 #: ../../public/templates/show_searches.inc.php:49
 #: ../../src/Gui/Playlist/NewPlaylistDialogAdapter.php:89
-#: ../../src/Repository/Model/Search.php:648
-#: ../../src/Repository/Model/Search.php:768
-#: ../../src/Repository/Model/Search.php:850
+#: ../../src/Repository/Model/Search.php:663
+#: ../../src/Repository/Model/Search.php:783
+#: ../../src/Repository/Model/Search.php:865
 msgid "Playlist Name"
 msgstr "نام لیست پخش"
 
@@ -4522,8 +4523,8 @@ msgstr "ویرایش قسمت های پادکست"
 #: ../../public/templates/show_podcast_episode.inc.php:113
 #: ../../public/templates/show_podcast_episodes.inc.php:60
 #: ../../public/templates/show_podcast_episodes.inc.php:104
-#: ../../src/Repository/Model/Search.php:941
-#: ../../src/Repository/Model/Search.php:979
+#: ../../src/Repository/Model/Search.php:956
+#: ../../src/Repository/Model/Search.php:994
 msgid "Publication Date"
 msgstr "تاریخ انتشار"
 
@@ -4547,7 +4548,7 @@ msgstr "اندازه"
 
 #: ../../public/templates/show_podcast_episode.inc.php:123
 #: ../../src/Gui/Song/SongViewAdapter.php:387
-#: ../../src/Repository/Model/Search.php:670
+#: ../../src/Repository/Model/Search.php:685
 msgid "Bitrate"
 msgstr "نرخ بیت"
 
@@ -4584,7 +4585,7 @@ msgstr "ویرایش پادکست"
 #: ../../public/templates/show_tvshow_seasons.inc.php:83
 #: ../../public/templates/show_tvshows.inc.php:53
 #: ../../public/templates/show_tvshows.inc.php:93
-#: ../../src/Repository/Model/Browse.php:395
+#: ../../src/Repository/Model/Browse.php:403
 msgid "Episodes"
 msgstr "قسمت ها"
 
@@ -4665,6 +4666,7 @@ msgstr "زمان بارگیری:"
 #: ../../public/templates/show_random_album_disks.inc.php:35
 #: ../../public/templates/show_random_albums.inc.php:35
 #: ../../public/templates/show_random_videos.inc.php:36
+#: ../../public/templates/show_search.inc.php:82
 msgid "Refresh"
 msgstr "بازسازی"
 
@@ -4870,7 +4872,7 @@ msgstr "افزودن همه"
 msgid "Smart Playlist Edit"
 msgstr "ویرایش لیست پخش هوشمند"
 
-#: ../../public/templates/show_search.inc.php:82
+#: ../../public/templates/show_search.inc.php:83
 msgid "Save Changes"
 msgstr "ذخیره‌ تغییرات"
 
@@ -5234,7 +5236,7 @@ msgstr "ویرایش نمایش تلویزیونی"
 #: ../../public/templates/show_tvshow.inc.php:104
 #: ../../public/templates/show_tvshows.inc.php:54
 #: ../../public/templates/show_tvshows.inc.php:94
-#: ../../src/Repository/Model/Browse.php:391
+#: ../../src/Repository/Model/Browse.php:399
 msgid "Seasons"
 msgstr "سریال ها"
 
@@ -5288,9 +5290,9 @@ msgstr "کلید اعتبارسنجی استفاده شده صحیح نیست"
 #: ../../public/templates/show_user.inc.php:51
 #: ../../public/templates/show_users.inc.php:75
 #: ../../src/Module/Util/Ui.php:1088
-#: ../../src/Repository/Model/Catalog.php:1031
-#: ../../src/Repository/Model/Catalog.php:1032
-#: ../../src/Repository/Model/Catalog.php:1033
+#: ../../src/Repository/Model/Catalog.php:1054
+#: ../../src/Repository/Model/Catalog.php:1055
+#: ../../src/Repository/Model/Catalog.php:1056
 #: ../../src/Repository/Model/User.php:1115
 msgid "Never"
 msgstr "هرگز"
@@ -5305,7 +5307,7 @@ msgstr "هرگز"
 #: ../../src/Repository/Model/TVShow_Episode.php:89
 #: ../../src/Repository/Model/User.php:1120
 #: ../../src/Repository/Model/User.php:1201
-#: ../../src/Repository/Model/Video.php:913
+#: ../../src/Repository/Model/Video.php:915
 msgid "Unknown"
 msgstr "ناشناخته"
 
@@ -5439,9 +5441,9 @@ msgstr "آخرین بروزرسانی"
 
 #: ../../public/templates/show_video.inc.php:150
 #: ../../src/Gui/Song/SongViewAdapter.php:413
-#: ../../src/Repository/Model/Search.php:671
-#: ../../src/Repository/Model/Search.php:942
-#: ../../src/Repository/Model/Search.php:980
+#: ../../src/Repository/Model/Search.php:686
+#: ../../src/Repository/Model/Search.php:957
+#: ../../src/Repository/Model/Search.php:995
 msgid "Added"
 msgstr "اضافه شد"
 
@@ -5458,7 +5460,7 @@ msgid "Manage Licenses"
 msgstr "مدیریت مجوز ها"
 
 #: ../../public/templates/sidebar_admin.inc.php:65
-#: ../../src/Repository/Model/Browse.php:302
+#: ../../src/Repository/Model/Browse.php:310
 msgid "Browse Users"
 msgstr "مرور کاربران"
 
@@ -5513,13 +5515,13 @@ msgstr "کلیپ های موسیقی"
 
 #: ../../public/templates/sidebar.inc.php:58
 #: ../../src/Module/Api/Upnp_Api.php:1067
-#: ../../src/Repository/Model/Browse.php:400
+#: ../../src/Repository/Model/Browse.php:408
 msgid "Movies"
 msgstr "فیلم ها"
 
 #: ../../public/templates/sidebar.inc.php:59
 #: ../../src/Module/Api/Upnp_Api.php:1089
-#: ../../src/Repository/Model/Browse.php:410
+#: ../../src/Repository/Model/Browse.php:418
 msgid "Personal Videos"
 msgstr "ویدئوهای شخصی"
 
@@ -5530,7 +5532,7 @@ msgstr "بارگذاری ها"
 
 #: ../../public/templates/sidebar.inc.php:67
 #: ../../src/Module/Api/Upnp_Api.php:692
-#: ../../src/Repository/Model/Browse.php:335
+#: ../../src/Repository/Model/Browse.php:343
 msgid "Smart Playlists"
 msgstr "لیست پخش های هوشمند"
 
@@ -5544,7 +5546,7 @@ msgstr "درخواست شده"
 
 #: ../../public/templates/sidebar.inc.php:80
 #: ../../src/Module/Application/Stats/ShareAction.php:67
-#: ../../src/Repository/Model/Browse.php:371
+#: ../../src/Repository/Model/Browse.php:379
 msgid "Shares"
 msgstr "اشتراک گذاری ها"
 
@@ -5835,7 +5837,7 @@ msgid "R128 Album Gain"
 msgstr ""
 
 #: ../../src/Gui/Song/SongViewAdapter.php:422
-#: ../../src/Repository/Model/Search.php:595
+#: ../../src/Repository/Model/Search.php:610
 msgid "Lyrics"
 msgstr "متن ترانه"
 
@@ -5889,7 +5891,7 @@ msgstr ""
 #. title", 1298376)
 #: ../../src/Module/Api/Api5.php:305 ../../src/Module/Api/Api.php:329
 #: ../../src/Module/Api/Json5_Data.php:228
-#: ../../src/Module/Api/Json_Data.php:228
+#: ../../src/Module/Api/Json_Data.php:237
 #: ../../src/Module/Api/Method/AdvancedSearchMethod.php:88
 #: ../../src/Module/Api/Method/AlbumMethod.php:86
 #: ../../src/Module/Api/Method/Api5/AdvancedSearch5Method.php:87
@@ -6086,13 +6088,13 @@ msgstr ""
 
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:108
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:119
-#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:189
+#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:190
 msgid "Error Invalid Handshake - "
 msgstr ""
 
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:118
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:119
-#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:189
+#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:190
 msgid "Invalid Username/Password"
 msgstr ""
 
@@ -6512,12 +6514,12 @@ msgid "Enable: allow_public_registration"
 msgstr ""
 
 #: ../../src/Module/Api/Upnp_Api.php:1045
-#: ../../src/Repository/Model/Browse.php:405
+#: ../../src/Repository/Model/Browse.php:413
 msgid "Clips"
 msgstr "کلیپ ها"
 
 #: ../../src/Module/Api/Xml3_Data.php:684
-#: ../../src/Module/Api/Xml4_Data.php:1021
+#: ../../src/Module/Api/Xml4_Data.php:1020
 #: ../../src/Module/Api/Xml5_Data.php:1208
 #: ../../src/Module/Api/Xml_Data.php:1330
 msgid "Ampache XSPF Playlist"
@@ -6726,7 +6728,7 @@ msgstr "مجموعه و کاتالوگ پاک شد"
 #: ../../src/Module/Application/TvShow/ConfirmDeleteAction.php:82
 #: ../../src/Module/Application/TvShowSeason/ConfirmDeleteAction.php:77
 #: ../../src/Module/Application/Video/ConfirmDeleteAction.php:79
-#: ../../src/Module/Catalog/Catalog_Seafile.php:546
+#: ../../src/Module/Catalog/Catalog_Seafile.php:545
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:376
 msgid "There Was a Problem"
 msgstr "یک مشکل وجود داشت"
@@ -7117,8 +7119,8 @@ msgstr "هنرمند و همه فایل ها حذف می شوند"
 #: ../../src/Plugin/AmpacheMusicBrainz.php:96
 #: ../../src/Plugin/AmpacheTheaudiodb.php:75
 #: ../../src/Plugin/AmpacheTheaudiodb.php:103
-#: ../../src/Repository/Model/Preference.php:880
-#: ../../src/Repository/Model/Preference.php:939
+#: ../../src/Repository/Model/Preference.php:888
+#: ../../src/Repository/Model/Preference.php:947
 msgid "Overwrite Artist names that match an mbid"
 msgstr ""
 
@@ -7382,7 +7384,7 @@ msgid "Your search has been saved as a Playlist with the name %s"
 msgstr "جستجوی شما به عنوان لیست پخش با نام %s ذخیره شده است "
 
 #: ../../src/Module/Application/Search/SaveAsPlaylistAction.php:106
-#: ../../src/Repository/Model/Catalog.php:3700
+#: ../../src/Repository/Model/Catalog.php:3728
 msgid "Failed to create playlist"
 msgstr "ناموفق در ایجاد لیست پخش"
 
@@ -7585,21 +7587,21 @@ msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr "به روزرسانی مجموعه و کاتالوگ به پایان رسید. مجموع رسانه ها : [%s]"
 
 #: ../../src/Module/Catalog/Catalog_dropbox.php:577
-#: ../../src/Module/Catalog/Catalog_Seafile.php:463
+#: ../../src/Module/Catalog/Catalog_Seafile.php:462
 #, php-format
 msgid "Updated song: \"%s\""
 msgstr "\"%s\" : آهنگ به روزرسانی شد"
 
 #: ../../src/Module/Catalog/Catalog_dropbox.php:580
-#: ../../src/Module/Catalog/Catalog_Seafile.php:466
+#: ../../src/Module/Catalog/Catalog_Seafile.php:465
 #, php-format
 msgid "Song up to date: \"%s\""
 msgstr "\"%s\" : آهنگ به روز شده"
 
 #. HINT: filename (File path)
 #: ../../src/Module/Catalog/Catalog_dropbox.php:584
-#: ../../src/Module/Catalog/Catalog_Seafile.php:470
-#: ../../src/Module/Catalog/Catalog_Seafile.php:560
+#: ../../src/Module/Catalog/Catalog_Seafile.php:469
+#: ../../src/Module/Catalog/Catalog_Seafile.php:559
 #, php-format
 msgid "Removing song: \"%s\""
 msgstr "درحال حذف آهنگ: \"%s\""
@@ -7609,7 +7611,7 @@ msgid "API Error: cannot connect to Dropbox."
 msgstr "خطای رابط کاربری برنامه: نمی توان به دروپ باکس متصل شد."
 
 #: ../../src/Module/Catalog/Catalog_local.php:220
-#: ../../src/Module/Catalog/Catalog_local.php:1135
+#: ../../src/Module/Catalog/Catalog_local.php:1133
 msgid "Path was not specified"
 msgstr "مسیر مشخص نشده بود"
 
@@ -7640,7 +7642,7 @@ msgstr "قادر به دریافت حجم فایل برای \"%s\" نیست"
 
 #. HINT: filename (file path)
 #: ../../src/Module/Catalog/Catalog_local.php:402
-#: ../../src/Module/Catalog/Catalog_local.php:692
+#: ../../src/Module/Catalog/Catalog_local.php:690
 #, php-format
 msgid "The file couldn't be read. Does it exist? %s"
 msgstr "فایل قابل خواندن نیست. آیا %s وجود دارد؟"
@@ -7665,31 +7667,31 @@ msgstr "مجموعه وکاتالوگ به روز شد"
 msgid "Total Time: [%s] Total Media: [%s] Media Per Second: [%s]"
 msgstr "کل زمان: [%s] کل رسانه: [%s] رسانه در ثانیه: [%s]"
 
-#: ../../src/Module/Catalog/Catalog_local.php:723
+#: ../../src/Module/Catalog/Catalog_local.php:721
 msgid "Catalog root unreadable, stopping clean"
 msgstr "ریشه مجموعه وکاتالوگ قابل خواندن نیست، متوقف می شود"
 
-#: ../../src/Module/Catalog/Catalog_local.php:762
+#: ../../src/Module/Catalog/Catalog_local.php:760
 msgid "All files would be removed. Doing nothing"
 msgstr "هیچ کاری نمی کند، همه فایلها حذف خواهند شد."
 
 #. HINT: filename (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:859
+#: ../../src/Module/Catalog/Catalog_local.php:857
 #, php-format
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "%s : فایل پیدا نشد یا 0 بایت است"
 
-#: ../../src/Module/Catalog/Catalog_local.php:1142
+#: ../../src/Module/Catalog/Catalog_local.php:1140
 msgid "Specified path is inside an existing catalog"
 msgstr "مسیر مشخص شده در داخل مجموعه و کاتالوگ موجود است"
 
 #. HINT: directory (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:1151
+#: ../../src/Module/Catalog/Catalog_local.php:1149
 #, php-format
 msgid "The folder couldn't be read. Does it exist? %s"
 msgstr "پوشه قابل خواندن نیست. آیا %s وجود دارد؟"
 
-#: ../../src/Module/Catalog/Catalog_local.php:1166
+#: ../../src/Module/Catalog/Catalog_local.php:1164
 msgid "Catalog root unreadable, stopping check"
 msgstr ""
 
@@ -7741,8 +7743,8 @@ msgstr "%s - قادر به درج آهنگ نیست"
 #: ../../src/Module/Catalog/Catalog_remote.php:326
 #: ../../src/Module/Catalog/Catalog_subsonic.php:309
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:124
-#: ../../src/Repository/Model/Catalog.php:2396
-#: ../../src/Repository/Model/Search.php:672
+#: ../../src/Repository/Model/Catalog.php:2424
+#: ../../src/Repository/Model/Search.php:687
 msgid "Updated"
 msgstr "به روز شد"
 
@@ -7831,36 +7833,36 @@ msgstr "در حال اجرا به روز رسانی از راه دور سرور�
 msgid "Total Media: [%s]"
 msgstr "مجموع رسانه ها : [%s]"
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:311
+#: ../../src/Module/Catalog/Catalog_Seafile.php:310
 msgid "No media was updated, did you respect the patterns?"
 msgstr "هیچ رسانه ای به روز نشد، آیا به الگوها توجه داشتید؟"
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:338
+#: ../../src/Module/Catalog/Catalog_Seafile.php:337
 #, php-format
 msgid "Skipping existing song: %s"
 msgstr "رد کردن آهنگ موجود: %s"
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:345
+#: ../../src/Module/Catalog/Catalog_Seafile.php:344
 #, php-format
 msgid "Adding a new song: %s"
 msgstr "افزودن آهنگ جدید: %s"
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:361
+#: ../../src/Module/Catalog/Catalog_Seafile.php:360
 #, php-format
 msgid "Could not add song: %s"
 msgstr "آهنگ: %s افزوده نشد"
 
 #. HINT: %1 filename (File path), %2 Error Message
-#: ../../src/Module/Catalog/Catalog_Seafile.php:547
+#: ../../src/Module/Catalog/Catalog_Seafile.php:546
 #, php-format
 msgid "There was an error while checking this song \"%1$s\": %2$s"
 msgstr "هنگام بررسی این آهنگ: \"%1$s\" خطای: %2$s روی داد"
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:557
+#: ../../src/Module/Catalog/Catalog_Seafile.php:556
 #, php-format
 msgid "Keeping song: %s"
 msgstr "نگهداشتن آهنگ: %s"
@@ -7895,6 +7897,15 @@ msgstr "سرورمیزبان فایل تأیید هویت نمیشود"
 #, php-format
 msgid "Could not find the Seafile library called \"%s\", no media was updated"
 msgstr "هیچ رسانه یی به روز نشد، کتابخانه سرورمیزبان فایل به نام \"%s\" پیدا نشد."
+
+#: ../../src/Module/Catalog/Update/AddCatalog.php:85
+#: ../../src/Repository/Model/Catalog.php:1230
+msgid "Failed to create the catalog, check the debug logs"
+msgstr "ناموفق در ایجاد مجموعه و کاتالوگ، گزارش اشکال زدایی را بررسی کنید"
+
+#: ../../src/Module/Catalog/Update/AddCatalog.php:104
+msgid "Catalog created"
+msgstr ""
 
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:63
 msgid "Deactivated PHP memory limit"
@@ -7986,6 +7997,30 @@ msgstr "حذف فایل : \"%s\""
 #, php-format
 msgid "Reading File: \"%s\""
 msgstr "خواندن فایل : \"%s\""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:37
+msgid "Create a local media catalog"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:42
+msgid "Catalog name"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:44
+msgid "Catalog Media Type (optional)"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:45
+msgid "Filename Pattern (optional)"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:46
+msgid "Folder Pattern (optional)"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:47
+msgid "Create a local music catalog called `some-catalog`"
+msgstr ""
 
 #: ../../src/Module/Cli/AdminAddUserCommand.php:38
 msgid "Add a User"
@@ -8500,7 +8535,7 @@ msgid "No changes have been made"
 msgstr "هیچ تغییری ایجاد نشده است"
 
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:97
-#: ../../src/Repository/Model/Preference.php:867
+#: ../../src/Repository/Model/Preference.php:875
 msgid "HTTPQ Active Instance"
 msgstr "نمونه فعال HTTPQ"
 
@@ -8535,12 +8570,12 @@ msgid "Paused"
 msgstr "مکث کرد"
 
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:98
-#: ../../src/Repository/Model/Preference.php:881
+#: ../../src/Repository/Model/Preference.php:889
 msgid "MPD Active Instance"
 msgstr "نمونه فعال MPD"
 
 #: ../../src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php:95
-#: ../../src/Repository/Model/Preference.php:956
+#: ../../src/Repository/Model/Preference.php:964
 msgid "UPnP Active Instance"
 msgstr "نمونه فعال UPnP"
 
@@ -8549,12 +8584,12 @@ msgid "URL"
 msgstr "آدرس اینترنتی"
 
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:94
-#: ../../src/Repository/Model/Preference.php:960
+#: ../../src/Repository/Model/Preference.php:968
 msgid "VLC Active Instance"
 msgstr "نمونه فعال VLC"
 
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:100
-#: ../../src/Repository/Model/Preference.php:968
+#: ../../src/Repository/Model/Preference.php:976
 msgid "XBMC Active Instance"
 msgstr "نمونه فعال XBMC"
 
@@ -8604,7 +8639,7 @@ msgstr ""
 
 #: ../../src/Module/Song/SongSorter.php:109
 #: ../../src/Module/Song/SongSorter.php:183
-#: ../../src/Repository/Model/Catalog.php:3425
+#: ../../src/Repository/Model/Catalog.php:3453
 #, php-format
 msgid "%d file updated."
 msgid_plural "%d files updated."
@@ -8976,23 +9011,23 @@ msgstr ""
 msgid "Allow API6 Only"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:967 ../../src/Repository/Model/Search.php:116
+#: ../../src/Module/Util/Ui.php:967 ../../src/Repository/Model/Search.php:131
 msgid "1 Star"
 msgstr "1 ستاره"
 
-#: ../../src/Module/Util/Ui.php:968 ../../src/Repository/Model/Search.php:117
+#: ../../src/Module/Util/Ui.php:968 ../../src/Repository/Model/Search.php:132
 msgid "2 Stars"
 msgstr "2 ستاره"
 
-#: ../../src/Module/Util/Ui.php:969 ../../src/Repository/Model/Search.php:118
+#: ../../src/Module/Util/Ui.php:969 ../../src/Repository/Model/Search.php:133
 msgid "3 Stars"
 msgstr "3 ستاره"
 
-#: ../../src/Module/Util/Ui.php:970 ../../src/Repository/Model/Search.php:119
+#: ../../src/Module/Util/Ui.php:970 ../../src/Repository/Model/Search.php:134
 msgid "4 Stars"
 msgstr "4 ستاره"
 
-#: ../../src/Module/Util/Ui.php:971 ../../src/Repository/Model/Search.php:120
+#: ../../src/Module/Util/Ui.php:971 ../../src/Repository/Model/Search.php:135
 msgid "5 Stars"
 msgstr "5 ستاره"
 
@@ -9054,12 +9089,12 @@ msgid "Song preview from 7digital"
 msgstr "پیش نمایش آهنگ بوسیله 7digital"
 
 #: ../../src/Plugin/Ampache7digital.php:66
-#: ../../src/Repository/Model/Preference.php:791
+#: ../../src/Repository/Model/Preference.php:799
 msgid "7digital consumer key"
 msgstr "کلید مصرف کننده 7digital"
 
 #: ../../src/Plugin/Ampache7digital.php:67
-#: ../../src/Repository/Model/Preference.php:792
+#: ../../src/Repository/Model/Preference.php:800
 msgid "7digital secret"
 msgstr "کلمه عبور 7digital"
 
@@ -9068,27 +9103,27 @@ msgid "Amazon art search"
 msgstr "جستجوی روی جلد آثار آمازون"
 
 #: ../../src/Plugin/AmpacheAmazon.php:68
-#: ../../src/Repository/Model/Preference.php:807
+#: ../../src/Repository/Model/Preference.php:815
 msgid "Amazon base url"
 msgstr "آدرس اینترنتی پایه آمازون"
 
 #: ../../src/Plugin/AmpacheAmazon.php:69
-#: ../../src/Repository/Model/Preference.php:811
+#: ../../src/Repository/Model/Preference.php:819
 msgid "Amazon max results pages"
 msgstr "حداکثر صفحات نتایج آمازون"
 
 #: ../../src/Plugin/AmpacheAmazon.php:70
-#: ../../src/Repository/Model/Preference.php:810
+#: ../../src/Repository/Model/Preference.php:818
 msgid "Amazon Access Key ID"
 msgstr "کلید شناسه دسترسی آمازون"
 
 #: ../../src/Plugin/AmpacheAmazon.php:71
-#: ../../src/Repository/Model/Preference.php:809
+#: ../../src/Repository/Model/Preference.php:817
 msgid "Amazon Secret Access Key"
 msgstr "کلید سری دسترسی آمازون"
 
 #: ../../src/Plugin/AmpacheAmazon.php:72
-#: ../../src/Repository/Model/Preference.php:808
+#: ../../src/Repository/Model/Preference.php:816
 msgid "Amazon associate tag"
 msgstr "برچسب مربوط به آمازون"
 
@@ -9097,12 +9132,12 @@ msgid "URL shorteners on shared links with Bit.ly"
 msgstr "کوتاه کننده آدرس اینترنتی بر پیوندهای اشتراک گذاشته شده با bit.ly"
 
 #: ../../src/Plugin/AmpacheBitly.php:69
-#: ../../src/Repository/Model/Preference.php:824
+#: ../../src/Repository/Model/Preference.php:832
 msgid "Bit.ly Username"
 msgstr "نام کاربری bit.ly"
 
 #: ../../src/Plugin/AmpacheBitly.php:70
-#: ../../src/Repository/Model/Preference.php:823
+#: ../../src/Repository/Model/Preference.php:831
 msgid "Bit.ly API key"
 msgstr "کلید رابط کاربری برنامه bit.ly"
 
@@ -9111,13 +9146,13 @@ msgid "Catalog favorites on homepage"
 msgstr "مجموعه وکاتالوگ مورد علاقه روی صفحه اصلی"
 
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:73
-#: ../../src/Repository/Model/Preference.php:831
+#: ../../src/Repository/Model/Preference.php:839
 msgid "Catalog favorites max items"
 msgstr "حداکثر آیتم های مجموعه وکاتالوگ مورد علاقه"
 
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:74
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:103
-#: ../../src/Repository/Model/Preference.php:830
+#: ../../src/Repository/Model/Preference.php:838
 msgid "Catalog favorites grid view display"
 msgstr "نمای نمایش شبکه مجموعه و کاتالوگ موردعلاقه"
 
@@ -9134,12 +9169,12 @@ msgid "Discogs metadata integration"
 msgstr "ادغام متادیتای Discogs"
 
 #: ../../src/Plugin/AmpacheDiscogs.php:65
-#: ../../src/Repository/Model/Preference.php:849
+#: ../../src/Repository/Model/Preference.php:857
 msgid "Discogs consumer key"
 msgstr "کلید مصرف کننده Discogs"
 
 #: ../../src/Plugin/AmpacheDiscogs.php:66
-#: ../../src/Repository/Model/Preference.php:850
+#: ../../src/Repository/Model/Preference.php:858
 msgid "Discogs secret"
 msgstr "گذرواژه Discogs"
 
@@ -9152,7 +9187,7 @@ msgid "Flattr donation button on user page"
 msgstr "کلید اهداء Flattr روی صفحه کاربر"
 
 #: ../../src/Plugin/AmpacheFlattr.php:68
-#: ../../src/Repository/Model/Preference.php:852
+#: ../../src/Repository/Model/Preference.php:860
 msgid "Flattr User ID"
 msgstr "شناسه کاربری Flattr"
 
@@ -9165,7 +9200,7 @@ msgid "Artist photos from Flickr"
 msgstr "عکس های هنرمند از  Flickr"
 
 #: ../../src/Plugin/Ampacheflickr.php:64
-#: ../../src/Repository/Model/Preference.php:853
+#: ../../src/Repository/Model/Preference.php:861
 msgid "Flickr API key"
 msgstr "کلید رابط کاربری برنامه Flickr"
 
@@ -9174,7 +9209,7 @@ msgid "Friend's Timeline on homepage"
 msgstr "جدول زمانی دوستان در صفحه اصلی"
 
 #: ../../src/Plugin/AmpacheFriendsTimeline.php:71
-#: ../../src/Repository/Model/Preference.php:855
+#: ../../src/Repository/Model/Preference.php:863
 msgid "Friends timeline max items"
 msgstr "حداکثر آیتم های جدول زمانی دوستان"
 
@@ -9187,7 +9222,7 @@ msgid "Google Analytics statistics"
 msgstr "آمار تجزیه و تحلیل گوگل"
 
 #: ../../src/Plugin/AmpacheGoogleAnalytics.php:66
-#: ../../src/Repository/Model/Preference.php:858
+#: ../../src/Repository/Model/Preference.php:866
 msgid "Google Analytics Tracking ID"
 msgstr "شناسه ردیابی تجزیه و تحلیل گوگل"
 
@@ -9196,7 +9231,7 @@ msgid "Show user's location with Google Maps"
 msgstr "نشان دادن مکان کاربر با نقشه های گوگل"
 
 #: ../../src/Plugin/AmpacheGoogleMaps.php:65
-#: ../../src/Repository/Model/Preference.php:857
+#: ../../src/Repository/Model/Preference.php:865
 msgid "Google Maps API key"
 msgstr "کلید رابط کاربری برنامه نقشه های گوگل"
 
@@ -9217,12 +9252,12 @@ msgid "Automatically download accepted Wanted List albums with Headphones"
 msgstr "لیست آلبوم ها را جهت دانلود با هدفون به طور خودکار بارگیری کنید"
 
 #: ../../src/Plugin/AmpacheHeadphones.php:69
-#: ../../src/Repository/Model/Preference.php:860
+#: ../../src/Repository/Model/Preference.php:868
 msgid "Headphones URL"
 msgstr "آدرس اینترنتی هدفون ها"
 
 #: ../../src/Plugin/AmpacheHeadphones.php:70
-#: ../../src/Repository/Model/Preference.php:859
+#: ../../src/Repository/Model/Preference.php:867
 msgid "Headphones API key"
 msgstr "کلید رابط کاربری برنامه هدفون ها"
 
@@ -9231,13 +9266,13 @@ msgid "Scrobble songs you play to your Last.FM account"
 msgstr "پخش آهنگ هایی که در حساب last.fm خود دارید"
 
 #: ../../src/Plugin/AmpacheLastfm.php:76
-#: ../../src/Repository/Model/Preference.php:869
+#: ../../src/Repository/Model/Preference.php:877
 msgid "Last.FM Submit Challenge"
 msgstr "چالش ارسال Last.FM"
 
 #: ../../src/Plugin/AmpacheLastfm.php:77
 #: ../../src/Plugin/AmpacheLastfm.php:119
-#: ../../src/Repository/Model/Preference.php:870
+#: ../../src/Repository/Model/Preference.php:878
 msgid "Last.FM Grant URL"
 msgstr "اعطای آدرس اینترنتی Last.FM"
 
@@ -9250,7 +9285,7 @@ msgid "Scrobble songs you play to your Libre.FM Account"
 msgstr "پخش آهنگ هایی که در حساب Libre.FM خود دارید"
 
 #: ../../src/Plugin/Ampachelibrefm.php:76
-#: ../../src/Repository/Model/Preference.php:873
+#: ../../src/Repository/Model/Preference.php:881
 msgid "Libre.FM Submit Challenge"
 msgstr "چالش ارسال Libre.FM"
 
@@ -9264,7 +9299,7 @@ msgid "Scrobble songs you play to your ListenBrainz Account"
 msgstr "پخش آهنگ هایی که در حساب ListenBrainz خود دارید"
 
 #: ../../src/Plugin/Ampachelistenbrainz.php:73
-#: ../../src/Repository/Model/Preference.php:874
+#: ../../src/Repository/Model/Preference.php:882
 msgid "ListenBrainz User Token"
 msgstr "گذرواژه کاربر ListenBrainz"
 
@@ -9286,12 +9321,12 @@ msgid "Matomo statistics"
 msgstr "آمار Matomo"
 
 #: ../../src/Plugin/AmpacheMatomo.php:68
-#: ../../src/Repository/Model/Preference.php:878
+#: ../../src/Repository/Model/Preference.php:886
 msgid "Matomo Site ID"
 msgstr "شناسه سایت Matomo"
 
 #: ../../src/Plugin/AmpacheMatomo.php:69
-#: ../../src/Repository/Model/Preference.php:879
+#: ../../src/Repository/Model/Preference.php:887
 msgid "Matomo URL"
 msgstr "آدرس اینترنتی Matomo"
 
@@ -9308,12 +9343,12 @@ msgid "PayPal donation button on user page"
 msgstr "کلید اهداء با پی پال روی صفحه کاربر"
 
 #: ../../src/Plugin/AmpachePaypal.php:69
-#: ../../src/Repository/Model/Preference.php:886
+#: ../../src/Repository/Model/Preference.php:894
 msgid "PayPal ID"
 msgstr "شناسه پی پال"
 
 #: ../../src/Plugin/AmpachePaypal.php:70
-#: ../../src/Repository/Model/Preference.php:887
+#: ../../src/Repository/Model/Preference.php:895
 msgid "PayPal Currency Code"
 msgstr "کد ارزی پی پال"
 
@@ -9326,17 +9361,17 @@ msgid "Personal favorites on homepage"
 msgstr "مورد علاقه شخصی روی صفحه اصلی"
 
 #: ../../src/Plugin/AmpachePersonalFavorites.php:73
-#: ../../src/Repository/Model/Preference.php:888
+#: ../../src/Repository/Model/Preference.php:896
 msgid "Personal favorites on the homepage"
 msgstr "مورد علاقه شخصی روی صفحه اصلی"
 
 #: ../../src/Plugin/AmpachePersonalFavorites.php:74
-#: ../../src/Repository/Model/Preference.php:889
+#: ../../src/Repository/Model/Preference.php:897
 msgid "Favorite Playlists"
 msgstr "لیست پخش های موردعلاقه"
 
 #: ../../src/Plugin/AmpachePersonalFavorites.php:75
-#: ../../src/Repository/Model/Preference.php:890
+#: ../../src/Repository/Model/Preference.php:898
 msgid "Favorite Smartlists"
 msgstr "لیست های هوشمند موردعلاقه"
 
@@ -9349,12 +9384,12 @@ msgid "Piwik statistics"
 msgstr "آمار Piwik"
 
 #: ../../src/Plugin/AmpachePiwik.php:68
-#: ../../src/Repository/Model/Preference.php:891
+#: ../../src/Repository/Model/Preference.php:899
 msgid "Piwik Site ID"
 msgstr "شناسه سایت Piwik"
 
 #: ../../src/Plugin/AmpachePiwik.php:69
-#: ../../src/Repository/Model/Preference.php:892
+#: ../../src/Repository/Model/Preference.php:900
 msgid "Piwik URL"
 msgstr "آدرس اینترنتی Piwik"
 
@@ -9363,49 +9398,49 @@ msgid "Raise the album and artist rating to match the highest song rating"
 msgstr "آلبوم و رتبه هنرمند را برای مطابقت با بالاترین رتبه آهنگ افزایش دهید"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:82
-#: ../../src/Repository/Model/Preference.php:907
+#: ../../src/Repository/Model/Preference.php:915
 msgid "Minimum star rating to match"
 msgstr "حداقل رتبه ستاره برای مطابقت"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:84
 #: ../../src/Plugin/AmpacheRatingMatch.php:127
-#: ../../src/Repository/Model/Preference.php:901
+#: ../../src/Repository/Model/Preference.php:909
 msgid "When you love a track, flag the album and artist"
 msgstr "وقتی آهنگی را دوست دارید ، آلبوم و هنرمند را پرچم گذاری کنید"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:86
 #: ../../src/Plugin/AmpacheRatingMatch.php:130
-#: ../../src/Repository/Model/Preference.php:902
+#: ../../src/Repository/Model/Preference.php:910
 msgid "Match rule for 1 Star ($play,$skip)"
 msgstr "قانون مطابقت برای 1 ستاره  ($play,$skip)"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:87
 #: ../../src/Plugin/AmpacheRatingMatch.php:131
-#: ../../src/Repository/Model/Preference.php:903
+#: ../../src/Repository/Model/Preference.php:911
 msgid "Match rule for 2 Stars"
 msgstr "قانون مطابقت برای 2 ستاره"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:88
 #: ../../src/Plugin/AmpacheRatingMatch.php:132
-#: ../../src/Repository/Model/Preference.php:904
+#: ../../src/Repository/Model/Preference.php:912
 msgid "Match rule for 3 Stars"
 msgstr "قانون مطابقت برای 3 ستاره"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:89
 #: ../../src/Plugin/AmpacheRatingMatch.php:133
-#: ../../src/Repository/Model/Preference.php:905
+#: ../../src/Repository/Model/Preference.php:913
 msgid "Match rule for 4 Stars"
 msgstr "قانون مطابقت برای 4 ستاره"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:90
 #: ../../src/Plugin/AmpacheRatingMatch.php:134
-#: ../../src/Repository/Model/Preference.php:906
+#: ../../src/Repository/Model/Preference.php:914
 msgid "Match rule for 5 Stars"
 msgstr "قانون مطابقت برای 5 ستاره"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:91
 #: ../../src/Plugin/AmpacheRatingMatch.php:135
-#: ../../src/Repository/Model/Preference.php:900
+#: ../../src/Repository/Model/Preference.php:908
 msgid "Match rule for Flags"
 msgstr "قانون مطابقت برای پرچم ها"
 
@@ -9419,12 +9454,12 @@ msgid "RSS View"
 msgstr "مشاهده RSS"
 
 #: ../../src/Plugin/AmpacheRSSView.php:68
-#: ../../src/Repository/Model/Preference.php:908
+#: ../../src/Repository/Model/Preference.php:916
 msgid "RSS Feed URL"
 msgstr "آدرس اینترنتی خوراک RSS"
 
 #: ../../src/Plugin/AmpacheRSSView.php:69
-#: ../../src/Repository/Model/Preference.php:909
+#: ../../src/Repository/Model/Preference.php:917
 msgid "RSS Feed max items"
 msgstr "حداکثر آیتم های خوراک RSS"
 
@@ -9433,7 +9468,7 @@ msgid "Shoutbox on homepage"
 msgstr "شات باکس روی صفحه اصلی"
 
 #: ../../src/Plugin/AmpacheShoutHome.php:68
-#: ../../src/Repository/Model/Preference.php:912
+#: ../../src/Repository/Model/Preference.php:920
 msgid "Shoutbox on homepage max items"
 msgstr "حداکثر آیتم های شات باکس روی صفحه اصلی"
 
@@ -9442,12 +9477,12 @@ msgid "Control bandwidth per user"
 msgstr "کنترل پهنای باند برای هر کاربر"
 
 #: ../../src/Plugin/AmpacheStreamBandwidth.php:67
-#: ../../src/Repository/Model/Preference.php:931
+#: ../../src/Repository/Model/Preference.php:939
 msgid "Stream control maximal bandwidth (month)"
 msgstr "حداکثر  پهنای باند کنترل جریان (ماه)"
 
 #: ../../src/Plugin/AmpacheStreamBandwidth.php:68
-#: ../../src/Repository/Model/Preference.php:930
+#: ../../src/Repository/Model/Preference.php:938
 msgid "Stream control bandwidth history (days)"
 msgstr "تاریخچه کنترل پهنای باند جریان (روز)"
 
@@ -9456,12 +9491,12 @@ msgid "Control hits per user"
 msgstr "کنترل بازدیدهای هر کاربر"
 
 #: ../../src/Plugin/AmpacheStreamHits.php:66
-#: ../../src/Repository/Model/Preference.php:933
+#: ../../src/Repository/Model/Preference.php:941
 msgid "Stream control maximal hits"
 msgstr "حداکثر بازدیدهای کنترل جریان"
 
 #: ../../src/Plugin/AmpacheStreamHits.php:67
-#: ../../src/Repository/Model/Preference.php:932
+#: ../../src/Repository/Model/Preference.php:940
 msgid "Stream control hits history (days)"
 msgstr "تاریخچه بازدید های کنترل جریان (روز)"
 
@@ -9470,12 +9505,12 @@ msgid "Control time per user"
 msgstr "کنترل زمان هر کاربر"
 
 #: ../../src/Plugin/AmpacheStreamTime.php:67
-#: ../../src/Repository/Model/Preference.php:935
+#: ../../src/Repository/Model/Preference.php:943
 msgid "Stream control maximal time (minutes)"
 msgstr "حداکثر زمان کنترل جریان (دقیقه)"
 
 #: ../../src/Plugin/AmpacheStreamTime.php:68
-#: ../../src/Repository/Model/Preference.php:934
+#: ../../src/Repository/Model/Preference.php:942
 msgid "Stream control time history (days)"
 msgstr "تاریخچه زمان کنترل جریان (روز)"
 
@@ -9484,7 +9519,7 @@ msgid "TheAudioDb metadata integration"
 msgstr "ادغام متادیتای TheAudioDb"
 
 #: ../../src/Plugin/AmpacheTheaudiodb.php:74
-#: ../../src/Repository/Model/Preference.php:938
+#: ../../src/Repository/Model/Preference.php:946
 msgid "TheAudioDb API key"
 msgstr "کلید رابط کاربری برنامه TheAudioDb"
 
@@ -9493,7 +9528,7 @@ msgid "TVDb metadata integration"
 msgstr "ادغام متادیتای TVDb"
 
 #: ../../src/Plugin/AmpacheTvdb.php:66
-#: ../../src/Repository/Model/Preference.php:945
+#: ../../src/Repository/Model/Preference.php:953
 msgid "TVDb API key"
 msgstr "کلید رابط کاربری برنامه TVDb"
 
@@ -9506,26 +9541,26 @@ msgid "URL shorteners on shared links with YOURLS"
 msgstr "کوتاه کننده آدرس اینترنتی بر پیوندهای اشتراک گذاشته شده با YOURLS"
 
 #: ../../src/Plugin/AmpacheYourls.php:70
-#: ../../src/Repository/Model/Preference.php:970
+#: ../../src/Repository/Model/Preference.php:978
 msgid "YOURLS domain name"
 msgstr "نام دامنه YOURLS"
 
 #: ../../src/Plugin/AmpacheYourls.php:71
-#: ../../src/Repository/Model/Preference.php:971
+#: ../../src/Repository/Model/Preference.php:979
 msgid "YOURLS use IDN"
 msgstr "YOURLS استفاده از IDN"
 
 #: ../../src/Plugin/AmpacheYourls.php:72
-#: ../../src/Repository/Model/Preference.php:969
+#: ../../src/Repository/Model/Preference.php:977
 msgid "YOURLS API key"
 msgstr "کلید رابط کاربری برنامه YOURLS"
 
-#: ../../src/Repository/Model/AlbumDisk.php:363
+#: ../../src/Repository/Model/AlbumDisk.php:367
 #: ../../src/Repository/Model/Album.php:595
 msgid "Album MusicBrainzID"
 msgstr "شناسه آلبوم MusicBrainz"
 
-#: ../../src/Repository/Model/AlbumDisk.php:368
+#: ../../src/Repository/Model/AlbumDisk.php:372
 #: ../../src/Repository/Model/Album.php:600
 msgid "Release Group MusicBrainzID"
 msgstr "شناسه گروه انتشار MusicBrainz"
@@ -9558,67 +9593,63 @@ msgstr "پخش"
 msgid "Unbroadcast"
 msgstr "پخش نشده"
 
-#: ../../src/Repository/Model/Browse.php:326
+#: ../../src/Repository/Model/Browse.php:334
 #: ../../src/Repository/Model/playlist_object.php:304
 msgid "Playlist Items"
 msgstr "آیتم های لیست پخش"
 
-#: ../../src/Repository/Model/Browse.php:330
+#: ../../src/Repository/Model/Browse.php:338
 msgid "Current Playlist"
 msgstr "لیست پخش جاری"
 
-#: ../../src/Repository/Model/Browse.php:343
+#: ../../src/Repository/Model/Browse.php:351
 msgid "Shoutbox Records"
 msgstr "رکوردهای پیام کوتاه"
 
-#: ../../src/Repository/Model/Browse.php:367
+#: ../../src/Repository/Model/Browse.php:375
 msgid "Wanted Albums"
 msgstr "آلبوم های درخواستی"
 
-#: ../../src/Repository/Model/Browse.php:419
+#: ../../src/Repository/Model/Browse.php:427
 msgid "Private Messages"
 msgstr "پیام های خصوصی"
 
-#: ../../src/Repository/Model/Catalog.php:1161
+#: ../../src/Repository/Model/Catalog.php:1184
 msgid "day"
 msgid_plural "days"
 msgstr[0] "روز"
 msgstr[1] "روز"
 
-#: ../../src/Repository/Model/Catalog.php:1163
+#: ../../src/Repository/Model/Catalog.php:1186
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "ساعت"
 msgstr[1] "ساعت"
 
-#: ../../src/Repository/Model/Catalog.php:1208
-msgid "Failed to create the catalog, check the debug logs"
-msgstr "ناموفق در ایجاد مجموعه و کاتالوگ، گزارش اشکال زدایی را بررسی کنید"
-
-#: ../../src/Repository/Model/Catalog.php:2400
+#: ../../src/Repository/Model/Catalog.php:2428
 msgid "No Update Needed"
 msgstr "به ‌روز رسانی نیاز نیست"
 
-#: ../../src/Repository/Model/Catalog.php:3394
+#: ../../src/Repository/Model/Catalog.php:3422
 msgid "Catalog Cleaned"
 msgstr "مجموعه وکاتالوگ پاکسازی شد"
 
-#: ../../src/Repository/Model/Catalog.php:3395
+#: ../../src/Repository/Model/Catalog.php:3423
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] "%d فایل حذف شدند."
 msgstr[1] "%d فایل ها حذف شدند."
 
-#: ../../src/Repository/Model/Catalog.php:3424
+#: ../../src/Repository/Model/Catalog.php:3452
 msgid "Catalog Verified"
 msgstr "مجموعه وکاتالوگ تأیید شد"
 
-#: ../../src/Repository/Model/Catalog.php:3718
+#: ../../src/Repository/Model/Catalog.php:3746
 msgid "No valid songs found in playlist file"
 msgstr "هیچ آهنگ معتبری در فایل لیست پخش پیدا نشد"
 
-#: ../../src/Repository/Model/Catalog.php:4280
+#: ../../src/Repository/Model/Catalog.php:4308
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
@@ -9660,20 +9691,20 @@ msgid "Update Plugins automatically"
 msgstr ""
 
 #: ../../src/Repository/Model/Podcast_Episode.php:158
-#: ../../src/Repository/Model/Search.php:918
-#: ../../src/Repository/Model/Search.php:956
+#: ../../src/Repository/Model/Search.php:933
+#: ../../src/Repository/Model/Search.php:971
 msgid "skipped"
 msgstr ""
 
 #: ../../src/Repository/Model/Podcast_Episode.php:161
-#: ../../src/Repository/Model/Search.php:919
-#: ../../src/Repository/Model/Search.php:957
+#: ../../src/Repository/Model/Search.php:934
+#: ../../src/Repository/Model/Search.php:972
 msgid "pending"
 msgstr ""
 
 #: ../../src/Repository/Model/Podcast_Episode.php:164
-#: ../../src/Repository/Model/Search.php:920
-#: ../../src/Repository/Model/Search.php:958
+#: ../../src/Repository/Model/Search.php:935
+#: ../../src/Repository/Model/Search.php:973
 msgid "completed"
 msgstr ""
 
@@ -9697,482 +9728,482 @@ msgstr "نمیتوان به خوراک دسترسی پیدا کرد"
 msgid "Can not read the feed"
 msgstr "خوراک قابل خواندن نیست"
 
-#: ../../src/Repository/Model/Preference.php:793
+#: ../../src/Repository/Model/Preference.php:801
 msgid "Ajax page load"
 msgstr "بارگذاری صفحه آجکسی"
 
-#: ../../src/Repository/Model/Preference.php:794
+#: ../../src/Repository/Model/Preference.php:802
 msgid "Album - Group multiple disks"
 msgstr "آلبوم - گروه بندی چندین دیسک"
 
-#: ../../src/Repository/Model/Preference.php:795
+#: ../../src/Repository/Model/Preference.php:803
 msgid "Album - Group per release type sort"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:796
+#: ../../src/Repository/Model/Preference.php:804
 msgid "Album - Group per release type"
 msgstr "آلبوم - گروه در هر نوع انتشار"
 
-#: ../../src/Repository/Model/Preference.php:797
+#: ../../src/Repository/Model/Preference.php:805
 msgid "Album - Default sort"
 msgstr "آلبوم - مرتب سازی پیش فرض"
 
-#: ../../src/Repository/Model/Preference.php:798
+#: ../../src/Repository/Model/Preference.php:806
 msgid "Allow Democratic Play"
 msgstr "اجازه پخش آزاد"
 
-#: ../../src/Repository/Model/Preference.php:799
+#: ../../src/Repository/Model/Preference.php:807
 msgid "Allow Localplay Play"
 msgstr "اجازه اجرا پخش محلی"
 
-#: ../../src/Repository/Model/Preference.php:800
+#: ../../src/Repository/Model/Preference.php:808
 msgid "Share Recently Played information - Allow access to streaming agent"
 msgstr "اشتراک گذاری اطلاعات ترانه پخش شده اخیر - اجازه دسترسی به عامل پخش کننده"
 
-#: ../../src/Repository/Model/Preference.php:801
+#: ../../src/Repository/Model/Preference.php:809
 msgid "Share Now Playing information"
 msgstr "اشتراک گذاری اطلاعات ترانه درحال پخش"
 
-#: ../../src/Repository/Model/Preference.php:802
+#: ../../src/Repository/Model/Preference.php:810
 msgid "Share Recently Played information"
 msgstr "اشتراک گذاری اطلاعات ترانه پخش شده اخیر"
 
-#: ../../src/Repository/Model/Preference.php:803
+#: ../../src/Repository/Model/Preference.php:811
 msgid ""
 "Share Recently Played information - Allow access to streaming date/time"
 msgstr "اشتراک گذاری اطلاعات ترانه پخش شده اخیر - اجازه دسترسی به تاریخ / زمان پخش"
 
-#: ../../src/Repository/Model/Preference.php:804
+#: ../../src/Repository/Model/Preference.php:812
 msgid "Allow Streaming"
 msgstr "اجازه پخش جریانی"
 
-#: ../../src/Repository/Model/Preference.php:805
+#: ../../src/Repository/Model/Preference.php:813
 msgid "Allow user uploads"
 msgstr "اجازه بارگذاری کاربران"
 
-#: ../../src/Repository/Model/Preference.php:806
+#: ../../src/Repository/Model/Preference.php:814
 msgid "Allow Video Features"
 msgstr "ویژگی های ویدئویی مجاز"
 
-#: ../../src/Repository/Model/Preference.php:812
+#: ../../src/Repository/Model/Preference.php:820
 msgid "Allow Ampache API3 responses"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:813
+#: ../../src/Repository/Model/Preference.php:821
 msgid "Allow Ampache API4 responses"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:814
+#: ../../src/Repository/Model/Preference.php:822
 msgid "Allow Ampache API5 responses"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:815
+#: ../../src/Repository/Model/Preference.php:823
 msgid "Allow Ampache API6 responses"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:816
+#: ../../src/Repository/Model/Preference.php:824
 msgid "Force a specific API response no matter what version you send"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:817
+#: ../../src/Repository/Model/Preference.php:825
 msgid "Hide playlists in Subsonic and API clients that start with this string"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:818
+#: ../../src/Repository/Model/Preference.php:826
 msgid "Hide smartlists that match playlist names in Subsonic and API clients"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:819
+#: ../../src/Repository/Model/Preference.php:827
 msgid "AutoUpdate last check time"
 msgstr "آخرین زمان بررسی بروزرسانی خودکار"
 
-#: ../../src/Repository/Model/Preference.php:820
+#: ../../src/Repository/Model/Preference.php:828
 msgid "AutoUpdate last version from last check is newer"
 msgstr "آخرین نسخه از آخرین بررسی بروزرسانی خودکار جدیدتر است"
 
-#: ../../src/Repository/Model/Preference.php:821
+#: ../../src/Repository/Model/Preference.php:829
 msgid "AutoUpdate last version from last check"
 msgstr "آخرین نسخه از آخرین بررسی بروزرسانی خودکار"
 
-#: ../../src/Repository/Model/Preference.php:822
+#: ../../src/Repository/Model/Preference.php:830
 msgid "Check for Ampache updates automatically"
 msgstr "بررسی بروزرسانی های آمپاچی به طور خودکار"
 
-#: ../../src/Repository/Model/Preference.php:825
+#: ../../src/Repository/Model/Preference.php:833
 msgid "Broadcast web player by default"
 msgstr "پخش کننده وب به صورت پیش فرض"
 
-#: ../../src/Repository/Model/Preference.php:826
+#: ../../src/Repository/Model/Preference.php:834
 msgid "Show filter box on browse"
 msgstr "نمایش جعبه فیلتر در مرورگر"
 
-#: ../../src/Repository/Model/Preference.php:827
+#: ../../src/Repository/Model/Preference.php:835
 msgid "Web Player browser notifications timeout (seconds)"
 msgstr "تایم اوت (ثانیه) اعلان های پخش کننده وب مرورگر"
 
-#: ../../src/Repository/Model/Preference.php:828
+#: ../../src/Repository/Model/Preference.php:836
 msgid "Web Player browser notifications"
 msgstr "اعلان های پخش کننده وب مرورگر"
 
-#: ../../src/Repository/Model/Preference.php:829
+#: ../../src/Repository/Model/Preference.php:837
 msgid "Check library item at import time and disable duplicates"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:832
+#: ../../src/Repository/Model/Preference.php:840
 msgid "Cache computed SQL data (eg. media hits stats) using a cron"
 msgstr "ذخیره داده های اسکیول محاسبه شده (به عنوان مثال: آمار بازدید رسانه) با استفاده از وظیفه خودکار"
 
-#: ../../src/Repository/Model/Preference.php:833
+#: ../../src/Repository/Model/Preference.php:841
 msgid "Custom blank album default image"
 msgstr "تصویر پیش فرض سفارشی آلبوم خالی"
 
-#: ../../src/Repository/Model/Preference.php:834
+#: ../../src/Repository/Model/Preference.php:842
 msgid "Custom blank video default image"
 msgstr "تصویر پیش فرض سفارشی ویدیو خالی"
 
-#: ../../src/Repository/Model/Preference.php:835
+#: ../../src/Repository/Model/Preference.php:843
 msgid "Custom datetime"
 msgstr "زمان وتاریخ سفارشی"
 
-#: ../../src/Repository/Model/Preference.php:836
+#: ../../src/Repository/Model/Preference.php:844
 msgid "Custom URL - Favicon"
 msgstr "آدرس اینترنتی سفارشی - فاویکون"
 
-#: ../../src/Repository/Model/Preference.php:837
+#: ../../src/Repository/Model/Preference.php:845
 msgid "Custom URL - Login page background"
 msgstr "آدرس اینترنتی سفارشی - پس زمینه صفحه ورود"
 
-#: ../../src/Repository/Model/Preference.php:838
+#: ../../src/Repository/Model/Preference.php:846
 msgid "Custom URL - Login page logo"
 msgstr "آدرس اینترنتی سفارشی - لگو صفحه ورود"
 
-#: ../../src/Repository/Model/Preference.php:839
+#: ../../src/Repository/Model/Preference.php:847
 msgid "Custom URL - Logo"
 msgstr "آدرس اینترنتی سفارشی - لگو"
 
-#: ../../src/Repository/Model/Preference.php:840
+#: ../../src/Repository/Model/Preference.php:848
 msgid "Custom text footer"
 msgstr "متن پاورقی سفارشی"
 
-#: ../../src/Repository/Model/Preference.php:841
+#: ../../src/Repository/Model/Preference.php:849
 msgid "Custom timezone (Override PHP date.timezone)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:842
+#: ../../src/Repository/Model/Preference.php:850
 msgid "Use DAAP backend"
 msgstr "استفاده از بک اند DAAP"
 
-#: ../../src/Repository/Model/Preference.php:843
+#: ../../src/Repository/Model/Preference.php:851
 msgid "DAAP backend password"
 msgstr "گذرواژه بک اند DAAP"
 
-#: ../../src/Repository/Model/Preference.php:844
+#: ../../src/Repository/Model/Preference.php:852
 msgid "Democratic - Clear votes for expired user sessions"
 msgstr "آزاد - پاکسازی آراء برای جلسات منقضی شده کاربر"
 
-#: ../../src/Repository/Model/Preference.php:845
+#: ../../src/Repository/Model/Preference.php:853
 msgid "Democratic - Use smartlists for base playlist"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:846
+#: ../../src/Repository/Model/Preference.php:854
 msgid "Limit direct play to maximum media count"
 msgstr "پخش مستقیم را به حداکثر تعداد رسانه محدود کنید"
 
-#: ../../src/Repository/Model/Preference.php:847
+#: ../../src/Repository/Model/Preference.php:855
 msgid "Custom metadata - Define field list"
 msgstr "متادیتای سفارشی - تعریف لیست فیلدها"
 
-#: ../../src/Repository/Model/Preference.php:848
+#: ../../src/Repository/Model/Preference.php:856
 msgid "Custom metadata - Disable these fields"
 msgstr "متادیتای سفارشی - غیرفعالسازی این فیلدها"
 
-#: ../../src/Repository/Model/Preference.php:851
+#: ../../src/Repository/Model/Preference.php:859
 msgid "Allow Downloads"
 msgstr "اجازه دانلودها"
 
-#: ../../src/Repository/Model/Preference.php:854
+#: ../../src/Repository/Model/Preference.php:862
 msgid "Force HTTP playback regardless of port"
 msgstr "بدون در نظر گرفتن پورت، بازپخش HTTP اجباری"
 
-#: ../../src/Repository/Model/Preference.php:856
+#: ../../src/Repository/Model/Preference.php:864
 msgid "Allow Geolocation"
 msgstr "اجازه مکان یابی جغرافیایی"
 
-#: ../../src/Repository/Model/Preference.php:861
+#: ../../src/Repository/Model/Preference.php:869
 msgid "Hide the Genre column in browse table rows"
 msgstr "پنهان کردن ستون ژانر در مرور ردیف های جدول"
 
-#: ../../src/Repository/Model/Preference.php:862
+#: ../../src/Repository/Model/Preference.php:870
 msgid "Hide the Song Artist column for Albums with one Artist"
 msgstr "پنهان کردن ستون هنرمند آهنگ برای آلبوم ها با یک هنرمند"
 
-#: ../../src/Repository/Model/Preference.php:863
+#: ../../src/Repository/Model/Preference.php:871
 msgid "Show Albums of the Moment"
 msgstr "نمایش آلبوم هایی از لحظات خاص"
 
-#: ../../src/Repository/Model/Preference.php:864
+#: ../../src/Repository/Model/Preference.php:872
 msgid "Show Videos of the Moment"
 msgstr "نمایش ویدیوهایی از لحظات خاص"
 
-#: ../../src/Repository/Model/Preference.php:865
+#: ../../src/Repository/Model/Preference.php:873
 msgid "Show Now Playing"
 msgstr "نمایش در حال پخش"
 
-#: ../../src/Repository/Model/Preference.php:866
+#: ../../src/Repository/Model/Preference.php:874
 msgid "Show Recently Played"
 msgstr "نمایش اخیراً پخش شده"
 
-#: ../../src/Repository/Model/Preference.php:871
+#: ../../src/Repository/Model/Preference.php:879
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr "مرور الفبایی به صورت پیش فرض برای آیتم های زیر کتابخانه (آلبوم ، هنرمند ، ...)"
 
-#: ../../src/Repository/Model/Preference.php:872
+#: ../../src/Repository/Model/Preference.php:880
 msgid "Library item context menu"
 msgstr "کتابخانه آیتم منوی زمینه"
 
-#: ../../src/Repository/Model/Preference.php:875
+#: ../../src/Repository/Model/Preference.php:883
 msgid "Localplay Type"
 msgstr "نوع پخش محلی"
 
-#: ../../src/Repository/Model/Preference.php:876
+#: ../../src/Repository/Model/Preference.php:884
 msgid "Localplay Access"
 msgstr "دسترسی پخش محلی"
 
-#: ../../src/Repository/Model/Preference.php:877
+#: ../../src/Repository/Model/Preference.php:885
 msgid "Lock Songs"
 msgstr "قفل کردن آهنگ ها"
 
-#: ../../src/Repository/Model/Preference.php:882
+#: ../../src/Repository/Model/Preference.php:890
 msgid "Allow E-mail notifications"
 msgstr "اعلان های ایمیل مجاز"
 
-#: ../../src/Repository/Model/Preference.php:883
+#: ../../src/Repository/Model/Preference.php:891
 msgid "Now Playing filtered per user"
 msgstr "در حال پخش فیلتر شده برای هر کاربر"
 
-#: ../../src/Repository/Model/Preference.php:884
+#: ../../src/Repository/Model/Preference.php:892
 msgid "Offset Limit"
 msgstr "محدودیت افست"
 
-#: ../../src/Repository/Model/Preference.php:885
+#: ../../src/Repository/Model/Preference.php:893
 msgid "Set the amount of items Album/Video of the Moment will display"
 msgstr "تنظیم مقدار زمان آیتم هایی که در آلبوم / ویدیوی لحظه های خاص نمایش داده می شود"
 
-#: ../../src/Repository/Model/Preference.php:893
+#: ../../src/Repository/Model/Preference.php:901
 msgid "Playlist Method"
 msgstr "روشهای لیست پخش"
 
-#: ../../src/Repository/Model/Preference.php:894
+#: ../../src/Repository/Model/Preference.php:902
 msgid "Playlist Type"
 msgstr "نوع لیست پخش"
 
-#: ../../src/Repository/Model/Preference.php:895
+#: ../../src/Repository/Model/Preference.php:903
 msgid "Playback Type"
 msgstr "نوع بازپخش"
 
-#: ../../src/Repository/Model/Preference.php:896
+#: ../../src/Repository/Model/Preference.php:904
 msgid "# latest episodes to keep"
 msgstr "# آخرین قسمت سریال برای نگهداری"
 
-#: ../../src/Repository/Model/Preference.php:897
+#: ../../src/Repository/Model/Preference.php:905
 msgid "# episodes to download when new episodes are available"
 msgstr "# سریال ها برای بارگیری در صورت در دسترس بودن قسمت های جدید"
 
-#: ../../src/Repository/Model/Preference.php:898
+#: ../../src/Repository/Model/Preference.php:906
 msgid "Popular Threshold"
 msgstr "آستانه پر بیننده ترین‌ها"
 
-#: ../../src/Repository/Model/Preference.php:899
+#: ../../src/Repository/Model/Preference.php:907
 msgid "Rate Limit"
 msgstr "محدودیت نرخ انتقال"
 
-#: ../../src/Repository/Model/Preference.php:910
+#: ../../src/Repository/Model/Preference.php:918
 msgid "Share links default expiration days (0=never)"
 msgstr "روزهای انقضای پیش فرض پیوندهای به اشتراک گذاری (0 = هرگز)"
 
-#: ../../src/Repository/Model/Preference.php:911
+#: ../../src/Repository/Model/Preference.php:919
 msgid "Allow Share"
 msgstr "اشتراک گذاری مجاز"
 
-#: ../../src/Repository/Model/Preference.php:913
+#: ../../src/Repository/Model/Preference.php:921
 msgid "Show 'Album Artists' link in the main sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:914
+#: ../../src/Repository/Model/Preference.php:922
 msgid "Show 'Artists' link in the main sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:915
+#: ../../src/Repository/Model/Preference.php:923
 msgid "Show donate button in footer"
 msgstr "نمایش دکمه اهدأ کردن در پائین صفحه"
 
-#: ../../src/Repository/Model/Preference.php:916
+#: ../../src/Repository/Model/Preference.php:924
 msgid "Show the login / registration links in the site header"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:917
+#: ../../src/Repository/Model/Preference.php:925
 msgid "Show License"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:918
+#: ../../src/Repository/Model/Preference.php:926
 msgid "Show lyrics"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:919
+#: ../../src/Repository/Model/Preference.php:927
 msgid "Show Album original year on links (if available)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:920
+#: ../../src/Repository/Model/Preference.php:928
 msgid "Show # played"
 msgstr "نمایش # پخش شده"
 
-#: ../../src/Repository/Model/Preference.php:921
+#: ../../src/Repository/Model/Preference.php:929
 msgid "Show playlist owner username in titles"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:922
+#: ../../src/Repository/Model/Preference.php:930
 msgid "Show # skipped"
 msgstr "نمایش # رد شده"
 
-#: ../../src/Repository/Model/Preference.php:923
+#: ../../src/Repository/Model/Preference.php:931
 msgid "Show Album subtitle on links (if available)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:924
+#: ../../src/Repository/Model/Preference.php:932
 msgid "Light sidebar by default"
 msgstr "به طور پیش فرض نوار کناری سبک"
 
-#: ../../src/Repository/Model/Preference.php:925
+#: ../../src/Repository/Model/Preference.php:933
 msgid "Website Title"
 msgstr "عنوان وب سایت"
 
-#: ../../src/Repository/Model/Preference.php:926
+#: ../../src/Repository/Model/Preference.php:934
 msgid "Artist slideshow inactivity time"
 msgstr "زمان بی تحرکی اسلاید شو هنرمند"
 
-#: ../../src/Repository/Model/Preference.php:927
+#: ../../src/Repository/Model/Preference.php:935
 msgid "Show current song in Web player page title"
 msgstr "نمایش نام آهنگ فعلی در عنوان صفحه پخش کننده وب"
 
-#: ../../src/Repository/Model/Preference.php:928
+#: ../../src/Repository/Model/Preference.php:936
 msgid "Statistics Day Threshold"
 msgstr "آستانه  آمار روزانه"
 
-#: ../../src/Repository/Model/Preference.php:929
+#: ../../src/Repository/Model/Preference.php:937
 msgid "Enable URL Rewriting"
 msgstr "خواندن و نوشتن آدرس اینترنتی فعال"
 
-#: ../../src/Repository/Model/Preference.php:936
+#: ../../src/Repository/Model/Preference.php:944
 msgid ""
 "Force Subsonic streams to download. (Enable scrobble in your client to "
 "record stats)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:937
+#: ../../src/Repository/Model/Preference.php:945
 msgid "Use Subsonic backend"
 msgstr "استفاده از بک اند Subsonic"
 
-#: ../../src/Repository/Model/Preference.php:940
+#: ../../src/Repository/Model/Preference.php:948
 msgid "Theme color"
 msgstr "رنگ تم و قالب"
 
-#: ../../src/Repository/Model/Preference.php:941
+#: ../../src/Repository/Model/Preference.php:949
 msgid "Theme"
 msgstr "قالب، تم"
 
-#: ../../src/Repository/Model/Preference.php:942
+#: ../../src/Repository/Model/Preference.php:950
 msgid "Top menu"
 msgstr "منو بالایی"
 
-#: ../../src/Repository/Model/Preference.php:943
+#: ../../src/Repository/Model/Preference.php:951
 msgid "Transcode Bitrate"
 msgstr "نرخ بیت کدگذاری"
 
-#: ../../src/Repository/Model/Preference.php:946
+#: ../../src/Repository/Model/Preference.php:954
 msgid "Fix header position on compatible themes"
 msgstr "تثبیت کردن موقعیت هدر روی تم ها و قالب های سازگار"
 
-#: ../../src/Repository/Model/Preference.php:947
+#: ../../src/Repository/Model/Preference.php:955
 msgid "Only add unique items to playlists"
 msgstr "فقط آیتم های منحصر به فرد به لیست پخش اضافه شود"
 
-#: ../../src/Repository/Model/Preference.php:948
+#: ../../src/Repository/Model/Preference.php:956
 msgid "Upload Access Level"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:949
+#: ../../src/Repository/Model/Preference.php:957
 msgid "Allow users to edit uploaded songs"
 msgstr "ویرایش آهنگ های بارگذاری شده مجاز برای کاربران"
 
-#: ../../src/Repository/Model/Preference.php:950
+#: ../../src/Repository/Model/Preference.php:958
 msgid "Allow users to remove uploaded songs"
 msgstr "حذف آهنگ های بارگذاری شده مجاز برای کاربران"
 
-#: ../../src/Repository/Model/Preference.php:951
+#: ../../src/Repository/Model/Preference.php:959
 msgid "Rename uploaded file according to catalog pattern"
 msgstr "تغییر نام فایل بارگذاری شده با توجه به الگوی مجموعه وکاتالوگ"
 
-#: ../../src/Repository/Model/Preference.php:952
+#: ../../src/Repository/Model/Preference.php:960
 msgid "Destination catalog"
 msgstr "مجموعه وکاتالوگ هدف"
 
-#: ../../src/Repository/Model/Preference.php:953
+#: ../../src/Repository/Model/Preference.php:961
 msgid "Post-upload script (current directory = upload target directory)"
 msgstr "اسکریپت پس از بارگذاری (فهرست فعلی = فهرست مقصد بارگذاری)"
 
-#: ../../src/Repository/Model/Preference.php:954
+#: ../../src/Repository/Model/Preference.php:962
 msgid "Create a subdirectory per user"
 msgstr "ایجاد یک زیر شاخه برای هر کاربر"
 
-#: ../../src/Repository/Model/Preference.php:955
+#: ../../src/Repository/Model/Preference.php:963
 msgid "Consider the user sender as the track's artist"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:957
+#: ../../src/Repository/Model/Preference.php:965
 msgid "Use UPnP backend"
 msgstr "استفاده از بک اند UPnP"
 
-#: ../../src/Repository/Model/Preference.php:958
+#: ../../src/Repository/Model/Preference.php:966
 msgid "Browse by Original Year for albums (falls back to Year)"
 msgstr "مرور بر اساس سال اصلی آلبوم ها (برمیگردد به سال)"
 
-#: ../../src/Repository/Model/Preference.php:959
+#: ../../src/Repository/Model/Preference.php:967
 msgid ""
 "Use an alternative playback action for streaming if you have issues with "
 "playing music"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:961
+#: ../../src/Repository/Model/Preference.php:969
 msgid "Use WebDAV backend"
 msgstr "استفاده از بک اند WebDAV"
 
-#: ../../src/Repository/Model/Preference.php:962
+#: ../../src/Repository/Model/Preference.php:970
 msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
 msgstr "اجازه رمزگشایی جاوا اسکریپت (Aurora.js) در پخش کننده وب"
 
-#: ../../src/Repository/Model/Preference.php:963
+#: ../../src/Repository/Model/Preference.php:971
 msgid "Confirmation when closing current playing window"
 msgstr "تأیید گرفتن هنگام بستن پنجره پخش فعلی"
 
-#: ../../src/Repository/Model/Preference.php:964
+#: ../../src/Repository/Model/Preference.php:972
 msgid "Authorize Flash Web Player"
 msgstr "اجازه اجرای فایل فلش در پخش کننده وب"
 
-#: ../../src/Repository/Model/Preference.php:965
+#: ../../src/Repository/Model/Preference.php:973
 msgid "Authorize HTML5 Web Player"
 msgstr "اجازه اجرای HTML5 در پخش کننده وب"
 
-#: ../../src/Repository/Model/Preference.php:966
+#: ../../src/Repository/Model/Preference.php:974
 msgid "Auto-pause between tabs"
 msgstr "مکث خودکار بین برگه ها"
 
-#: ../../src/Repository/Model/Preference.php:967
+#: ../../src/Repository/Model/Preference.php:975
 msgid ""
 "Remove tracks before the current playlist item in the webplayer when played"
 msgstr ""
 
-#: ../../src/Repository/Model/Query.php:323
+#: ../../src/Repository/Model/Query.php:335
 msgid "Browse was not found or expired, try reloading the page"
 msgstr "مرور پیدا نشد یا منقضی شده است ، سعی کنید صفحه را دوباره بارگیری کنید"
 
@@ -10194,434 +10225,434 @@ msgstr "%s از 5"
 msgid "Current rating"
 msgstr "رتبه بندی فعلی"
 
-#: ../../src/Repository/Model/Search.php:115
+#: ../../src/Repository/Model/Search.php:130
 msgid "0 Stars"
 msgstr "0 ستاره"
 
-#: ../../src/Repository/Model/Search.php:203
+#: ../../src/Repository/Model/Search.php:218
 msgid "is greater than or equal to"
 msgstr "بزرگتر یا برابر است با"
 
-#: ../../src/Repository/Model/Search.php:209
+#: ../../src/Repository/Model/Search.php:224
 msgid "is less than or equal to"
 msgstr "کمتر یا برابر است با"
 
-#: ../../src/Repository/Model/Search.php:215
+#: ../../src/Repository/Model/Search.php:230
 msgid "equals"
 msgstr "برابر"
 
-#: ../../src/Repository/Model/Search.php:221
+#: ../../src/Repository/Model/Search.php:236
 msgid "does not equal"
 msgstr "برابر نیست"
 
-#: ../../src/Repository/Model/Search.php:227
+#: ../../src/Repository/Model/Search.php:242
 msgid "is greater than"
 msgstr "بزرگتر است از"
 
-#: ../../src/Repository/Model/Search.php:233
+#: ../../src/Repository/Model/Search.php:248
 msgid "is less than"
 msgstr "کمتر است از"
 
-#: ../../src/Repository/Model/Search.php:239
-#: ../../src/Repository/Model/Search.php:245
+#: ../../src/Repository/Model/Search.php:254
+#: ../../src/Repository/Model/Search.php:260
 msgid "is true"
 msgstr "درست است"
 
-#: ../../src/Repository/Model/Search.php:251
+#: ../../src/Repository/Model/Search.php:266
 msgid "is false"
 msgstr "نادرست است"
 
-#: ../../src/Repository/Model/Search.php:257
-#: ../../src/Repository/Model/Search.php:325
+#: ../../src/Repository/Model/Search.php:272
+#: ../../src/Repository/Model/Search.php:340
 msgid "contains"
 msgstr "حاوی"
 
-#: ../../src/Repository/Model/Search.php:265
-#: ../../src/Repository/Model/Search.php:333
+#: ../../src/Repository/Model/Search.php:280
+#: ../../src/Repository/Model/Search.php:348
 msgid "does not contain"
 msgstr "شامل نمی شود"
 
-#: ../../src/Repository/Model/Search.php:273
-#: ../../src/Repository/Model/Search.php:341
+#: ../../src/Repository/Model/Search.php:288
+#: ../../src/Repository/Model/Search.php:356
 msgid "starts with"
 msgstr "شروع شده با"
 
-#: ../../src/Repository/Model/Search.php:281
-#: ../../src/Repository/Model/Search.php:349
+#: ../../src/Repository/Model/Search.php:296
+#: ../../src/Repository/Model/Search.php:364
 msgid "ends with"
 msgstr "پایان یافته با"
 
-#: ../../src/Repository/Model/Search.php:289
-#: ../../src/Repository/Model/Search.php:357
-#: ../../src/Repository/Model/Search.php:369
-#: ../../src/Repository/Model/Search.php:381
+#: ../../src/Repository/Model/Search.php:304
+#: ../../src/Repository/Model/Search.php:372
+#: ../../src/Repository/Model/Search.php:384
+#: ../../src/Repository/Model/Search.php:396
 msgid "is"
 msgstr "هست"
 
-#: ../../src/Repository/Model/Search.php:295
-#: ../../src/Repository/Model/Search.php:363
-#: ../../src/Repository/Model/Search.php:375
-#: ../../src/Repository/Model/Search.php:387
+#: ../../src/Repository/Model/Search.php:310
+#: ../../src/Repository/Model/Search.php:378
+#: ../../src/Repository/Model/Search.php:390
+#: ../../src/Repository/Model/Search.php:402
 msgid "is not"
 msgstr "نیست"
 
-#: ../../src/Repository/Model/Search.php:301
+#: ../../src/Repository/Model/Search.php:316
 msgid "sounds like"
 msgstr "مثل صداها"
 
-#: ../../src/Repository/Model/Search.php:307
+#: ../../src/Repository/Model/Search.php:322
 msgid "does not sound like"
 msgstr "مثل صدا نیست"
 
-#: ../../src/Repository/Model/Search.php:313
+#: ../../src/Repository/Model/Search.php:328
 msgid "matches regular expression"
 msgstr "با عبارات منظم مطابقت دارد"
 
-#: ../../src/Repository/Model/Search.php:319
+#: ../../src/Repository/Model/Search.php:334
 msgid "does not match regular expression"
 msgstr "با عبارات منظم مطابقت ندارد"
 
-#: ../../src/Repository/Model/Search.php:393
+#: ../../src/Repository/Model/Search.php:408
 msgid "before"
 msgstr "قبل از"
 
-#: ../../src/Repository/Model/Search.php:399
+#: ../../src/Repository/Model/Search.php:414
 msgid "after"
 msgstr "بعد از"
 
-#: ../../src/Repository/Model/Search.php:405
+#: ../../src/Repository/Model/Search.php:420
 msgid "before (x) days ago"
 msgstr "قبل از (فلان) روز پیش"
 
-#: ../../src/Repository/Model/Search.php:411
+#: ../../src/Repository/Model/Search.php:426
 msgid "after (x) days ago"
 msgstr "پس از (فلان) روز بعد"
 
-#: ../../src/Repository/Model/Search.php:434
+#: ../../src/Repository/Model/Search.php:449
 msgid "has loved"
 msgstr "دوست داشته شده"
 
-#: ../../src/Repository/Model/Search.php:440
+#: ../../src/Repository/Model/Search.php:455
 msgid "has rated 5 stars"
 msgstr "دارای رتبه 5 ستاره"
 
-#: ../../src/Repository/Model/Search.php:446
+#: ../../src/Repository/Model/Search.php:461
 msgid "has rated 4 stars"
 msgstr "دارای رتبه 4 ستاره"
 
-#: ../../src/Repository/Model/Search.php:452
+#: ../../src/Repository/Model/Search.php:467
 msgid "has rated 3 stars"
 msgstr "دارای رتبه 3 ستاره"
 
-#: ../../src/Repository/Model/Search.php:458
+#: ../../src/Repository/Model/Search.php:473
 msgid "has rated 2 stars"
 msgstr "دارای رتبه 2 ستاره"
 
-#: ../../src/Repository/Model/Search.php:464
+#: ../../src/Repository/Model/Search.php:479
 msgid "has rated 1 star"
 msgstr "دارای رتبه 1 ستاره"
 
-#: ../../src/Repository/Model/Search.php:470
+#: ../../src/Repository/Model/Search.php:485
 msgid "has not rated"
 msgstr "رتبه بندی نشده است"
 
-#: ../../src/Repository/Model/Search.php:582
+#: ../../src/Repository/Model/Search.php:597
 msgid "Any searchable text"
 msgstr "هر متن قابل جستجو"
 
-#: ../../src/Repository/Model/Search.php:584
+#: ../../src/Repository/Model/Search.php:599
 msgid "Song Data"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:592
-#: ../../src/Repository/Model/Search.php:733
-#: ../../src/Repository/Model/Search.php:806
-#: ../../src/Repository/Model/Search.php:923
-#: ../../src/Repository/Model/Search.php:961
+#: ../../src/Repository/Model/Search.php:607
+#: ../../src/Repository/Model/Search.php:748
+#: ../../src/Repository/Model/Search.php:821
+#: ../../src/Repository/Model/Search.php:938
+#: ../../src/Repository/Model/Search.php:976
 msgid "Length (in minutes)"
 msgstr "طول (در دقیقه)"
 
-#: ../../src/Repository/Model/Search.php:597
-#: ../../src/Repository/Model/Search.php:737
-#: ../../src/Repository/Model/Search.php:814
+#: ../../src/Repository/Model/Search.php:612
+#: ../../src/Repository/Model/Search.php:752
+#: ../../src/Repository/Model/Search.php:829
 msgid "Ratings"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:599
-#: ../../src/Repository/Model/Search.php:739
-#: ../../src/Repository/Model/Search.php:816
+#: ../../src/Repository/Model/Search.php:614
+#: ../../src/Repository/Model/Search.php:754
+#: ../../src/Repository/Model/Search.php:831
 msgid "My Rating"
 msgstr "رتبه بندی من"
 
-#: ../../src/Repository/Model/Search.php:600
-#: ../../src/Repository/Model/Search.php:740
-#: ../../src/Repository/Model/Search.php:817
+#: ../../src/Repository/Model/Search.php:615
+#: ../../src/Repository/Model/Search.php:755
+#: ../../src/Repository/Model/Search.php:832
 msgid "Rating (Average)"
 msgstr "رتبه بندی (میانگین)"
 
-#: ../../src/Repository/Model/Search.php:601
-#: ../../src/Repository/Model/Search.php:742
+#: ../../src/Repository/Model/Search.php:616
+#: ../../src/Repository/Model/Search.php:757
 msgid "My Rating (Album)"
 msgstr "رتبه بندی من (آلبوم)"
 
-#: ../../src/Repository/Model/Search.php:602
-#: ../../src/Repository/Model/Search.php:819
+#: ../../src/Repository/Model/Search.php:617
+#: ../../src/Repository/Model/Search.php:834
 msgid "My Rating (Artist)"
 msgstr "رتبه بندی من (هنرمند)"
 
-#: ../../src/Repository/Model/Search.php:603
+#: ../../src/Repository/Model/Search.php:618
 msgid "My Favorite Songs"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:604
+#: ../../src/Repository/Model/Search.php:619
 msgid "My Favorite Albums"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:605
+#: ../../src/Repository/Model/Search.php:620
 msgid "My Favorite Artists"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:607
+#: ../../src/Repository/Model/Search.php:622
 msgid "Favorites (Album)"
 msgstr "موردعلاقه ها (آلبوم)"
 
-#: ../../src/Repository/Model/Search.php:608
+#: ../../src/Repository/Model/Search.php:623
 msgid "Favorites (Artist)"
 msgstr "موردعلاقه ها (هنرمند)"
 
-#: ../../src/Repository/Model/Search.php:610
-#: ../../src/Repository/Model/Search.php:745
-#: ../../src/Repository/Model/Search.php:822
+#: ../../src/Repository/Model/Search.php:625
+#: ../../src/Repository/Model/Search.php:760
+#: ../../src/Repository/Model/Search.php:837
 msgid "Another User"
 msgstr "کاربر دیگر"
 
-#: ../../src/Repository/Model/Search.php:611
+#: ../../src/Repository/Model/Search.php:626
 msgid "Another User (Album)"
 msgstr "کاربر دیگر (آلبوم)"
 
-#: ../../src/Repository/Model/Search.php:612
+#: ../../src/Repository/Model/Search.php:627
 msgid "Another User (Artist)"
 msgstr "کاربر دیگر (هنرمند)"
 
-#: ../../src/Repository/Model/Search.php:615
-#: ../../src/Repository/Model/Search.php:748
-#: ../../src/Repository/Model/Search.php:825
-#: ../../src/Repository/Model/Search.php:925
-#: ../../src/Repository/Model/Search.php:963
+#: ../../src/Repository/Model/Search.php:630
+#: ../../src/Repository/Model/Search.php:763
+#: ../../src/Repository/Model/Search.php:840
+#: ../../src/Repository/Model/Search.php:940
+#: ../../src/Repository/Model/Search.php:978
 msgid "Play History"
 msgstr ""
 
 #. HINT: Number of times object has been played
-#: ../../src/Repository/Model/Search.php:617
-#: ../../src/Repository/Model/Search.php:750
-#: ../../src/Repository/Model/Search.php:827
-#: ../../src/Repository/Model/Search.php:927
-#: ../../src/Repository/Model/Search.php:965
+#: ../../src/Repository/Model/Search.php:632
+#: ../../src/Repository/Model/Search.php:765
+#: ../../src/Repository/Model/Search.php:842
+#: ../../src/Repository/Model/Search.php:942
+#: ../../src/Repository/Model/Search.php:980
 msgid "# Played"
 msgstr ""
 
 #. HINT: Number of times object has been skipped
-#: ../../src/Repository/Model/Search.php:619
-#: ../../src/Repository/Model/Search.php:929
-#: ../../src/Repository/Model/Search.php:967
+#: ../../src/Repository/Model/Search.php:634
+#: ../../src/Repository/Model/Search.php:944
+#: ../../src/Repository/Model/Search.php:982
 msgid "# Skipped"
 msgstr ""
 
 #. HINT: Number of times object has been played OR skipped
-#: ../../src/Repository/Model/Search.php:621
-#: ../../src/Repository/Model/Search.php:931
-#: ../../src/Repository/Model/Search.php:969
+#: ../../src/Repository/Model/Search.php:636
+#: ../../src/Repository/Model/Search.php:946
+#: ../../src/Repository/Model/Search.php:984
 msgid "# Played or Skipped"
 msgstr "# پخش شده یا ردکرده"
 
 #. HINT: Percentage of (Times Played / Times skipped) * 100
-#: ../../src/Repository/Model/Search.php:623
+#: ../../src/Repository/Model/Search.php:638
 msgid "Played/Skipped ratio"
 msgstr "نسبت پخش شده / ردکرده"
 
-#: ../../src/Repository/Model/Search.php:624
-#: ../../src/Repository/Model/Search.php:751
-#: ../../src/Repository/Model/Search.php:828
-#: ../../src/Repository/Model/Search.php:932
-#: ../../src/Repository/Model/Search.php:970
+#: ../../src/Repository/Model/Search.php:639
+#: ../../src/Repository/Model/Search.php:766
+#: ../../src/Repository/Model/Search.php:843
+#: ../../src/Repository/Model/Search.php:947
+#: ../../src/Repository/Model/Search.php:985
 msgid "My Last Play"
 msgstr "آخرین پخش من"
 
-#: ../../src/Repository/Model/Search.php:625
-#: ../../src/Repository/Model/Search.php:752
-#: ../../src/Repository/Model/Search.php:829
-#: ../../src/Repository/Model/Search.php:933
-#: ../../src/Repository/Model/Search.php:971
+#: ../../src/Repository/Model/Search.php:640
+#: ../../src/Repository/Model/Search.php:767
+#: ../../src/Repository/Model/Search.php:844
+#: ../../src/Repository/Model/Search.php:948
+#: ../../src/Repository/Model/Search.php:986
 msgid "My Last Skip"
 msgstr "آخرین ردشده من"
 
-#: ../../src/Repository/Model/Search.php:626
-#: ../../src/Repository/Model/Search.php:753
-#: ../../src/Repository/Model/Search.php:830
-#: ../../src/Repository/Model/Search.php:934
-#: ../../src/Repository/Model/Search.php:972
+#: ../../src/Repository/Model/Search.php:641
+#: ../../src/Repository/Model/Search.php:768
+#: ../../src/Repository/Model/Search.php:845
+#: ../../src/Repository/Model/Search.php:949
+#: ../../src/Repository/Model/Search.php:987
 msgid "My Last Play or Skip"
 msgstr "آخرین پخش یا ردشده من"
 
-#: ../../src/Repository/Model/Search.php:628
-#: ../../src/Repository/Model/Search.php:755
-#: ../../src/Repository/Model/Search.php:832
-#: ../../src/Repository/Model/Search.php:936
-#: ../../src/Repository/Model/Search.php:974
+#: ../../src/Repository/Model/Search.php:643
+#: ../../src/Repository/Model/Search.php:770
+#: ../../src/Repository/Model/Search.php:847
+#: ../../src/Repository/Model/Search.php:951
+#: ../../src/Repository/Model/Search.php:989
 msgid "Played by Me"
 msgstr "پخش شده توسط من"
 
-#: ../../src/Repository/Model/Search.php:629
+#: ../../src/Repository/Model/Search.php:644
 msgid "Played by Me (Album)"
 msgstr "پخش شده توسط من (آلبوم)"
 
-#: ../../src/Repository/Model/Search.php:630
-#: ../../src/Repository/Model/Search.php:833
+#: ../../src/Repository/Model/Search.php:645
+#: ../../src/Repository/Model/Search.php:848
 msgid "Played by Me (Artist)"
 msgstr "پخش شده توسط من (هنرمند)"
 
-#: ../../src/Repository/Model/Search.php:631
-#: ../../src/Repository/Model/Search.php:756
-#: ../../src/Repository/Model/Search.php:834
-#: ../../src/Repository/Model/Search.php:937
-#: ../../src/Repository/Model/Search.php:975
+#: ../../src/Repository/Model/Search.php:646
+#: ../../src/Repository/Model/Search.php:771
+#: ../../src/Repository/Model/Search.php:849
+#: ../../src/Repository/Model/Search.php:952
+#: ../../src/Repository/Model/Search.php:990
 msgid "Recently played"
 msgstr "آخرین پخش شده"
 
-#: ../../src/Repository/Model/Search.php:635
+#: ../../src/Repository/Model/Search.php:650
 msgid "Album Genre"
 msgstr "ژانر آلبوم"
 
-#: ../../src/Repository/Model/Search.php:636
+#: ../../src/Repository/Model/Search.php:651
 msgid "Artist Genre"
 msgstr "ژانر هنرمند"
 
-#: ../../src/Repository/Model/Search.php:637
-#: ../../src/Repository/Model/Search.php:761
-#: ../../src/Repository/Model/Search.php:839
+#: ../../src/Repository/Model/Search.php:652
+#: ../../src/Repository/Model/Search.php:776
+#: ../../src/Repository/Model/Search.php:854
 msgid "No Genre"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:650
-#: ../../src/Repository/Model/Search.php:770
-#: ../../src/Repository/Model/Search.php:852
-#: ../../src/Repository/Model/Search.php:939
-#: ../../src/Repository/Model/Search.php:977
+#: ../../src/Repository/Model/Search.php:665
+#: ../../src/Repository/Model/Search.php:785
+#: ../../src/Repository/Model/Search.php:867
+#: ../../src/Repository/Model/Search.php:954
+#: ../../src/Repository/Model/Search.php:992
 msgid "File Data"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:681
-#: ../../src/Repository/Model/Search.php:860
+#: ../../src/Repository/Model/Search.php:696
+#: ../../src/Repository/Model/Search.php:875
 msgid "Recently added"
 msgstr "آخرین افزوده شده"
 
-#: ../../src/Repository/Model/Search.php:682
+#: ../../src/Repository/Model/Search.php:697
 msgid "Recently updated"
 msgstr "آخرین به روز شده"
 
-#: ../../src/Repository/Model/Search.php:683
-#: ../../src/Repository/Model/Search.php:775
-#: ../../src/Repository/Model/Search.php:857
+#: ../../src/Repository/Model/Search.php:698
+#: ../../src/Repository/Model/Search.php:790
+#: ../../src/Repository/Model/Search.php:872
 msgid "Possible Duplicate"
 msgstr "امکان تکرار"
 
-#: ../../src/Repository/Model/Search.php:684
-#: ../../src/Repository/Model/Search.php:858
+#: ../../src/Repository/Model/Search.php:699
+#: ../../src/Repository/Model/Search.php:873
 msgid "Duplicate Album Tracks"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:685
-#: ../../src/Repository/Model/Search.php:776
+#: ../../src/Repository/Model/Search.php:700
+#: ../../src/Repository/Model/Search.php:791
 msgid "Possible Duplicate Albums"
 msgstr "امکان تکرار آلبوم ها"
 
-#: ../../src/Repository/Model/Search.php:686
+#: ../../src/Repository/Model/Search.php:701
 msgid "Orphaned Album"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:696
-#: ../../src/Repository/Model/Search.php:786
-#: ../../src/Repository/Model/Search.php:870
+#: ../../src/Repository/Model/Search.php:711
+#: ../../src/Repository/Model/Search.php:801
+#: ../../src/Repository/Model/Search.php:885
 msgid "MusicBrainz"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:698
-#: ../../src/Repository/Model/Search.php:788
+#: ../../src/Repository/Model/Search.php:713
+#: ../../src/Repository/Model/Search.php:803
 msgid "MusicBrainz ID (Album)"
 msgstr "شناسه MusicBrainz (آلبوم)"
 
-#: ../../src/Repository/Model/Search.php:699
-#: ../../src/Repository/Model/Search.php:872
+#: ../../src/Repository/Model/Search.php:714
+#: ../../src/Repository/Model/Search.php:887
 msgid "MusicBrainz ID (Artist)"
 msgstr "شناسه MusicBrainz (هنرمند)"
 
-#: ../../src/Repository/Model/Search.php:701
+#: ../../src/Repository/Model/Search.php:716
 msgid "Metadata"
 msgstr "متادیتا"
 
-#: ../../src/Repository/Model/Search.php:726
+#: ../../src/Repository/Model/Search.php:741
 msgid "Artist Data"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:728
+#: ../../src/Repository/Model/Search.php:743
 msgid "Album Title"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:734
+#: ../../src/Repository/Model/Search.php:749
 msgid "Album Count"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:735
-#: ../../src/Repository/Model/Search.php:812
+#: ../../src/Repository/Model/Search.php:750
+#: ../../src/Repository/Model/Search.php:827
 msgid "Song Count"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:741
-#: ../../src/Repository/Model/Search.php:818
+#: ../../src/Repository/Model/Search.php:756
+#: ../../src/Repository/Model/Search.php:833
 msgid "My Rating (Song)"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:760
-#: ../../src/Repository/Model/Search.php:838
+#: ../../src/Repository/Model/Search.php:775
+#: ../../src/Repository/Model/Search.php:853
 msgid "Song Genre"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:773
-#: ../../src/Repository/Model/Search.php:855
+#: ../../src/Repository/Model/Search.php:788
+#: ../../src/Repository/Model/Search.php:870
 msgid "Image Width"
 msgstr "عرض تصویر"
 
-#: ../../src/Repository/Model/Search.php:774
-#: ../../src/Repository/Model/Search.php:856
+#: ../../src/Repository/Model/Search.php:789
+#: ../../src/Repository/Model/Search.php:871
 msgid "Image Height"
 msgstr "ارتفاع تصویر"
 
-#: ../../src/Repository/Model/Search.php:789
-#: ../../src/Repository/Model/Search.php:873
+#: ../../src/Repository/Model/Search.php:804
+#: ../../src/Repository/Model/Search.php:888
 msgid "MusicBrainz ID (Song)"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:799
+#: ../../src/Repository/Model/Search.php:814
 msgid "Album Data"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:859
+#: ../../src/Repository/Model/Search.php:874
 msgid "Duplicate MusicBrainz Release Group"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:896
+#: ../../src/Repository/Model/Search.php:911
 msgid "public"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:897
+#: ../../src/Repository/Model/Search.php:912
 msgid "private"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:913
+#: ../../src/Repository/Model/Search.php:928
 msgid "Episode Count"
 msgstr ""
 
-#: ../../src/Repository/Model/Share.php:274
+#: ../../src/Repository/Model/Share.php:280
 msgid "Share Edit"
 msgstr "ویرایش اشتراک گذاری"
 
@@ -10639,7 +10670,7 @@ msgstr "شما به تازگی پیام جدیدی از %1$s بر محتوای %
 msgid "by"
 msgstr "توسط"
 
-#: ../../src/Repository/Model/Song.php:1876
+#: ../../src/Repository/Model/Song.php:1885
 msgid "Track MusicBrainzID"
 msgstr "شناسه ترک MusicBrainz"
 
@@ -10651,739 +10682,739 @@ msgstr "نام کاربری ضروری میباشد"
 msgid "User avatar"
 msgstr "آواتار کاربر"
 
-#: ../../src/Repository/Model/Video.php:938
+#: ../../src/Repository/Model/Video.php:940
 msgid "Afar"
 msgstr "Afar"
 
-#: ../../src/Repository/Model/Video.php:939
+#: ../../src/Repository/Model/Video.php:941
 msgid "Abkhazian"
 msgstr "Abkhazian"
 
-#: ../../src/Repository/Model/Video.php:940
+#: ../../src/Repository/Model/Video.php:942
 msgid "Avestan"
 msgstr "Avestan"
 
-#: ../../src/Repository/Model/Video.php:941
+#: ../../src/Repository/Model/Video.php:943
 msgid "Afrikaans"
 msgstr "Afrikaans"
 
-#: ../../src/Repository/Model/Video.php:942
+#: ../../src/Repository/Model/Video.php:944
 msgid "Akan"
 msgstr "Akan"
 
-#: ../../src/Repository/Model/Video.php:943
+#: ../../src/Repository/Model/Video.php:945
 msgid "Amharic"
 msgstr "Amharic"
 
-#: ../../src/Repository/Model/Video.php:944
+#: ../../src/Repository/Model/Video.php:946
 msgid "Aragonese"
 msgstr "Aragonese"
 
-#: ../../src/Repository/Model/Video.php:945
+#: ../../src/Repository/Model/Video.php:947
 msgid "Arabic"
 msgstr "Arabic"
 
-#: ../../src/Repository/Model/Video.php:946
+#: ../../src/Repository/Model/Video.php:948
 msgid "Assamese"
 msgstr "Assamese"
 
-#: ../../src/Repository/Model/Video.php:947
+#: ../../src/Repository/Model/Video.php:949
 msgid "Avaric"
 msgstr "Avaric"
 
-#: ../../src/Repository/Model/Video.php:948
+#: ../../src/Repository/Model/Video.php:950
 msgid "Aymara"
 msgstr "Aymara"
 
-#: ../../src/Repository/Model/Video.php:949
+#: ../../src/Repository/Model/Video.php:951
 msgid "Azerbaijani"
 msgstr "Azerbaijani"
 
-#: ../../src/Repository/Model/Video.php:950
+#: ../../src/Repository/Model/Video.php:952
 msgid "Bashkir"
 msgstr "Bashkir"
 
-#: ../../src/Repository/Model/Video.php:951
+#: ../../src/Repository/Model/Video.php:953
 msgid "Belarusian"
 msgstr "Belarusian"
 
-#: ../../src/Repository/Model/Video.php:952
+#: ../../src/Repository/Model/Video.php:954
 msgid "Bulgarian"
 msgstr "Bulgarian"
 
-#: ../../src/Repository/Model/Video.php:953
+#: ../../src/Repository/Model/Video.php:955
 msgid "Bihari"
 msgstr "Bihari"
 
-#: ../../src/Repository/Model/Video.php:954
+#: ../../src/Repository/Model/Video.php:956
 msgid "Bislama"
 msgstr "Bislama"
 
-#: ../../src/Repository/Model/Video.php:955
+#: ../../src/Repository/Model/Video.php:957
 msgid "Bambara"
 msgstr "Bambara"
 
-#: ../../src/Repository/Model/Video.php:956
+#: ../../src/Repository/Model/Video.php:958
 msgid "Bengali"
 msgstr "Bengali"
 
-#: ../../src/Repository/Model/Video.php:957
+#: ../../src/Repository/Model/Video.php:959
 msgid "Tibetan"
 msgstr "Tibetan"
 
-#: ../../src/Repository/Model/Video.php:958
+#: ../../src/Repository/Model/Video.php:960
 msgid "Breton"
 msgstr "Breton"
 
-#: ../../src/Repository/Model/Video.php:959
+#: ../../src/Repository/Model/Video.php:961
 msgid "Bosnian"
 msgstr "Bosnian"
 
-#: ../../src/Repository/Model/Video.php:960
+#: ../../src/Repository/Model/Video.php:962
 msgid "Catalan"
 msgstr "Catalan"
 
-#: ../../src/Repository/Model/Video.php:961
+#: ../../src/Repository/Model/Video.php:963
 msgid "Chechen"
 msgstr "Chechen"
 
-#: ../../src/Repository/Model/Video.php:962
+#: ../../src/Repository/Model/Video.php:964
 msgid "Chamorro"
 msgstr "Chamorro"
 
-#: ../../src/Repository/Model/Video.php:963
+#: ../../src/Repository/Model/Video.php:965
 msgid "Corsican"
 msgstr "Corsican"
 
-#: ../../src/Repository/Model/Video.php:964
+#: ../../src/Repository/Model/Video.php:966
 msgid "Cree"
 msgstr "Cree"
 
-#: ../../src/Repository/Model/Video.php:965
+#: ../../src/Repository/Model/Video.php:967
 msgid "Czech"
 msgstr "Czech"
 
-#: ../../src/Repository/Model/Video.php:966
+#: ../../src/Repository/Model/Video.php:968
 msgid "Church Slavic"
 msgstr "Church Slavic"
 
-#: ../../src/Repository/Model/Video.php:967
+#: ../../src/Repository/Model/Video.php:969
 msgid "Chuvash"
 msgstr "Chuvash"
 
-#: ../../src/Repository/Model/Video.php:968
+#: ../../src/Repository/Model/Video.php:970
 msgid "Welsh"
 msgstr "Welsh"
 
-#: ../../src/Repository/Model/Video.php:969
+#: ../../src/Repository/Model/Video.php:971
 msgid "Danish"
 msgstr "Danish"
 
-#: ../../src/Repository/Model/Video.php:970
+#: ../../src/Repository/Model/Video.php:972
 msgid "German"
 msgstr "German"
 
-#: ../../src/Repository/Model/Video.php:971
+#: ../../src/Repository/Model/Video.php:973
 msgid "Divehi"
 msgstr "Divehi"
 
-#: ../../src/Repository/Model/Video.php:972
+#: ../../src/Repository/Model/Video.php:974
 msgid "Dzongkha"
 msgstr "Dzongkha"
 
-#: ../../src/Repository/Model/Video.php:973
+#: ../../src/Repository/Model/Video.php:975
 msgid "Ewe"
 msgstr "Ewe"
 
-#: ../../src/Repository/Model/Video.php:974
+#: ../../src/Repository/Model/Video.php:976
 msgid "Greek"
 msgstr "Greek"
 
-#: ../../src/Repository/Model/Video.php:975
+#: ../../src/Repository/Model/Video.php:977
 msgid "English"
 msgstr "English"
 
-#: ../../src/Repository/Model/Video.php:976
+#: ../../src/Repository/Model/Video.php:978
 msgid "Esperanto"
 msgstr "Esperanto"
 
-#: ../../src/Repository/Model/Video.php:977
+#: ../../src/Repository/Model/Video.php:979
 msgid "Spanish"
 msgstr "Spanish"
 
-#: ../../src/Repository/Model/Video.php:978
+#: ../../src/Repository/Model/Video.php:980
 msgid "Estonian"
 msgstr "Estonian"
 
-#: ../../src/Repository/Model/Video.php:979
+#: ../../src/Repository/Model/Video.php:981
 msgid "Basque"
 msgstr "Basque"
 
-#: ../../src/Repository/Model/Video.php:980
+#: ../../src/Repository/Model/Video.php:982
 msgid "Persian"
 msgstr "Persian"
 
-#: ../../src/Repository/Model/Video.php:981
+#: ../../src/Repository/Model/Video.php:983
 msgid "Fulah"
 msgstr "Fulah"
 
-#: ../../src/Repository/Model/Video.php:982
+#: ../../src/Repository/Model/Video.php:984
 msgid "Finnish"
 msgstr "Finnish"
 
-#: ../../src/Repository/Model/Video.php:983
+#: ../../src/Repository/Model/Video.php:985
 msgid "Fijian"
 msgstr "Fijian"
 
-#: ../../src/Repository/Model/Video.php:984
+#: ../../src/Repository/Model/Video.php:986
 msgid "Faroese"
 msgstr "Faroese"
 
-#: ../../src/Repository/Model/Video.php:985
+#: ../../src/Repository/Model/Video.php:987
 msgid "French"
 msgstr "French"
 
-#: ../../src/Repository/Model/Video.php:986
+#: ../../src/Repository/Model/Video.php:988
 msgid "Western Frisian"
 msgstr "Western Frisian"
 
-#: ../../src/Repository/Model/Video.php:987
+#: ../../src/Repository/Model/Video.php:989
 msgid "Irish"
 msgstr "Irish"
 
-#: ../../src/Repository/Model/Video.php:988
+#: ../../src/Repository/Model/Video.php:990
 msgid "Scottish Gaelic"
 msgstr "Scottish Gaelic"
 
-#: ../../src/Repository/Model/Video.php:989
+#: ../../src/Repository/Model/Video.php:991
 msgid "Galician"
 msgstr "Galician"
 
-#: ../../src/Repository/Model/Video.php:990
+#: ../../src/Repository/Model/Video.php:992
 msgid "Guarani"
 msgstr "Guarani"
 
-#: ../../src/Repository/Model/Video.php:991
+#: ../../src/Repository/Model/Video.php:993
 msgid "Gujarati"
 msgstr "Gujarati"
 
-#: ../../src/Repository/Model/Video.php:992
+#: ../../src/Repository/Model/Video.php:994
 msgid "Manx"
 msgstr "Manx"
 
-#: ../../src/Repository/Model/Video.php:993
+#: ../../src/Repository/Model/Video.php:995
 msgid "Hausa"
 msgstr "Hausa"
 
-#: ../../src/Repository/Model/Video.php:994
+#: ../../src/Repository/Model/Video.php:996
 msgid "Hebrew"
 msgstr "Hebrew"
 
-#: ../../src/Repository/Model/Video.php:995
+#: ../../src/Repository/Model/Video.php:997
 msgid "Hindi"
 msgstr "Hindi"
 
-#: ../../src/Repository/Model/Video.php:996
+#: ../../src/Repository/Model/Video.php:998
 msgid "Hiri Motu"
 msgstr "Hiri Motu"
 
-#: ../../src/Repository/Model/Video.php:997
+#: ../../src/Repository/Model/Video.php:999
 msgid "Croatian"
 msgstr "Croatian"
 
-#: ../../src/Repository/Model/Video.php:998
+#: ../../src/Repository/Model/Video.php:1000
 msgid "Haitian"
 msgstr "Haitian"
 
-#: ../../src/Repository/Model/Video.php:999
+#: ../../src/Repository/Model/Video.php:1001
 msgid "Hungarian"
 msgstr "Hungarian"
 
-#: ../../src/Repository/Model/Video.php:1000
+#: ../../src/Repository/Model/Video.php:1002
 msgid "Armenian"
 msgstr "Armenian"
 
-#: ../../src/Repository/Model/Video.php:1001
+#: ../../src/Repository/Model/Video.php:1003
 msgid "Herero"
 msgstr "Herero"
 
-#: ../../src/Repository/Model/Video.php:1002
+#: ../../src/Repository/Model/Video.php:1004
 msgid "Interlingua (International Auxiliary Language Association)"
 msgstr "Interlingua (International Auxiliary Language Association)"
 
-#: ../../src/Repository/Model/Video.php:1003
+#: ../../src/Repository/Model/Video.php:1005
 msgid "Indonesian"
 msgstr "Indonesian"
 
-#: ../../src/Repository/Model/Video.php:1004
+#: ../../src/Repository/Model/Video.php:1006
 msgid "Interlingue"
 msgstr "Interlingue"
 
-#: ../../src/Repository/Model/Video.php:1005
+#: ../../src/Repository/Model/Video.php:1007
 msgid "Igbo"
 msgstr "Igbo"
 
-#: ../../src/Repository/Model/Video.php:1006
+#: ../../src/Repository/Model/Video.php:1008
 msgid "Sichuan Yi"
 msgstr "Sichuan Yi"
 
-#: ../../src/Repository/Model/Video.php:1007
+#: ../../src/Repository/Model/Video.php:1009
 msgid "Inupiaq"
 msgstr "Inupiaq"
 
-#: ../../src/Repository/Model/Video.php:1008
+#: ../../src/Repository/Model/Video.php:1010
 msgid "Ido"
 msgstr "Ido"
 
-#: ../../src/Repository/Model/Video.php:1009
+#: ../../src/Repository/Model/Video.php:1011
 msgid "Icelandic"
 msgstr "Icelandic"
 
-#: ../../src/Repository/Model/Video.php:1010
+#: ../../src/Repository/Model/Video.php:1012
 msgid "Italian"
 msgstr "Italian"
 
-#: ../../src/Repository/Model/Video.php:1011
+#: ../../src/Repository/Model/Video.php:1013
 msgid "Inuktitut"
 msgstr "Inuktitut"
 
-#: ../../src/Repository/Model/Video.php:1012
+#: ../../src/Repository/Model/Video.php:1014
 msgid "Japanese"
 msgstr "Japanese"
 
-#: ../../src/Repository/Model/Video.php:1013
+#: ../../src/Repository/Model/Video.php:1015
 msgid "Javanese"
 msgstr "Javanese"
 
-#: ../../src/Repository/Model/Video.php:1014
+#: ../../src/Repository/Model/Video.php:1016
 msgid "Georgian"
 msgstr "Georgian"
 
-#: ../../src/Repository/Model/Video.php:1015
+#: ../../src/Repository/Model/Video.php:1017
 msgid "Kongo"
 msgstr "Kongo"
 
-#: ../../src/Repository/Model/Video.php:1016
+#: ../../src/Repository/Model/Video.php:1018
 msgid "Kikuyu"
 msgstr "Kikuyu"
 
-#: ../../src/Repository/Model/Video.php:1017
+#: ../../src/Repository/Model/Video.php:1019
 msgid "Kwanyama"
 msgstr "Kwanyama"
 
-#: ../../src/Repository/Model/Video.php:1018
+#: ../../src/Repository/Model/Video.php:1020
 msgid "Kazakh"
 msgstr "Kazakh"
 
-#: ../../src/Repository/Model/Video.php:1019
+#: ../../src/Repository/Model/Video.php:1021
 msgid "Kalaallisut"
 msgstr "Kalaallisut"
 
-#: ../../src/Repository/Model/Video.php:1020
+#: ../../src/Repository/Model/Video.php:1022
 msgid "Khmer"
 msgstr "Khmer"
 
-#: ../../src/Repository/Model/Video.php:1021
+#: ../../src/Repository/Model/Video.php:1023
 msgid "Kannada"
 msgstr "Kannada"
 
-#: ../../src/Repository/Model/Video.php:1022
+#: ../../src/Repository/Model/Video.php:1024
 msgid "Korean"
 msgstr "Korean"
 
-#: ../../src/Repository/Model/Video.php:1023
+#: ../../src/Repository/Model/Video.php:1025
 msgid "Kanuri"
 msgstr "Kanuri"
 
-#: ../../src/Repository/Model/Video.php:1024
+#: ../../src/Repository/Model/Video.php:1026
 msgid "Kashmiri"
 msgstr "Kashmiri"
 
-#: ../../src/Repository/Model/Video.php:1025
+#: ../../src/Repository/Model/Video.php:1027
 msgid "Kurdish"
 msgstr "Kurdish"
 
-#: ../../src/Repository/Model/Video.php:1026
+#: ../../src/Repository/Model/Video.php:1028
 msgid "Komi"
 msgstr "Komi"
 
-#: ../../src/Repository/Model/Video.php:1027
+#: ../../src/Repository/Model/Video.php:1029
 msgid "Cornish"
 msgstr "Cornish"
 
-#: ../../src/Repository/Model/Video.php:1028
+#: ../../src/Repository/Model/Video.php:1030
 msgid "Kirghiz"
 msgstr "Kirghiz"
 
-#: ../../src/Repository/Model/Video.php:1029
+#: ../../src/Repository/Model/Video.php:1031
 msgid "Latin"
 msgstr "Latin"
 
-#: ../../src/Repository/Model/Video.php:1030
+#: ../../src/Repository/Model/Video.php:1032
 msgid "Luxembourgish"
 msgstr "Luxembourgish"
 
-#: ../../src/Repository/Model/Video.php:1031
+#: ../../src/Repository/Model/Video.php:1033
 msgid "Ganda"
 msgstr "Ganda"
 
-#: ../../src/Repository/Model/Video.php:1032
+#: ../../src/Repository/Model/Video.php:1034
 msgid "Limburgish"
 msgstr "Limburgish"
 
-#: ../../src/Repository/Model/Video.php:1033
+#: ../../src/Repository/Model/Video.php:1035
 msgid "Lingala"
 msgstr "Lingala"
 
-#: ../../src/Repository/Model/Video.php:1034
+#: ../../src/Repository/Model/Video.php:1036
 msgid "Lao"
 msgstr "Lao"
 
-#: ../../src/Repository/Model/Video.php:1035
+#: ../../src/Repository/Model/Video.php:1037
 msgid "Lithuanian"
 msgstr "Lithuanian"
 
-#: ../../src/Repository/Model/Video.php:1036
+#: ../../src/Repository/Model/Video.php:1038
 msgid "Luba-Katanga"
 msgstr "Luba-Katanga"
 
-#: ../../src/Repository/Model/Video.php:1037
+#: ../../src/Repository/Model/Video.php:1039
 msgid "Latvian"
 msgstr "Latvian"
 
-#: ../../src/Repository/Model/Video.php:1038
+#: ../../src/Repository/Model/Video.php:1040
 msgid "Malagasy"
 msgstr "Malagasy"
 
-#: ../../src/Repository/Model/Video.php:1039
+#: ../../src/Repository/Model/Video.php:1041
 msgid "Marshallese"
 msgstr "Marshallese"
 
-#: ../../src/Repository/Model/Video.php:1040
+#: ../../src/Repository/Model/Video.php:1042
 msgid "Maori"
 msgstr "Maori"
 
-#: ../../src/Repository/Model/Video.php:1041
+#: ../../src/Repository/Model/Video.php:1043
 msgid "Macedonian"
 msgstr "Macedonian"
 
-#: ../../src/Repository/Model/Video.php:1042
+#: ../../src/Repository/Model/Video.php:1044
 msgid "Malayalam"
 msgstr "Malayalam"
 
-#: ../../src/Repository/Model/Video.php:1043
+#: ../../src/Repository/Model/Video.php:1045
 msgid "Mongolian"
 msgstr "Mongolian"
 
-#: ../../src/Repository/Model/Video.php:1044
+#: ../../src/Repository/Model/Video.php:1046
 msgid "Marathi"
 msgstr "Marathi"
 
-#: ../../src/Repository/Model/Video.php:1045
+#: ../../src/Repository/Model/Video.php:1047
 msgid "Malay"
 msgstr "Malay"
 
-#: ../../src/Repository/Model/Video.php:1046
+#: ../../src/Repository/Model/Video.php:1048
 msgid "Maltese"
 msgstr "Maltese"
 
-#: ../../src/Repository/Model/Video.php:1047
+#: ../../src/Repository/Model/Video.php:1049
 msgid "Burmese"
 msgstr "Burmese"
 
-#: ../../src/Repository/Model/Video.php:1048
+#: ../../src/Repository/Model/Video.php:1050
 msgid "Nauru"
 msgstr "Nauru"
 
-#: ../../src/Repository/Model/Video.php:1049
+#: ../../src/Repository/Model/Video.php:1051
 msgid "Norwegian Bokmal"
 msgstr "Norwegian Bokmal"
 
-#: ../../src/Repository/Model/Video.php:1050
+#: ../../src/Repository/Model/Video.php:1052
 msgid "North Ndebele"
 msgstr "North Ndebele"
 
-#: ../../src/Repository/Model/Video.php:1051
+#: ../../src/Repository/Model/Video.php:1053
 msgid "Nepali"
 msgstr "Nepali"
 
-#: ../../src/Repository/Model/Video.php:1052
+#: ../../src/Repository/Model/Video.php:1054
 msgid "Ndonga"
 msgstr "Ndonga"
 
-#: ../../src/Repository/Model/Video.php:1053
+#: ../../src/Repository/Model/Video.php:1055
 msgid "Dutch"
 msgstr "Dutch"
 
-#: ../../src/Repository/Model/Video.php:1054
+#: ../../src/Repository/Model/Video.php:1056
 msgid "Norwegian Nynorsk"
 msgstr "Norwegian Nynorsk"
 
-#: ../../src/Repository/Model/Video.php:1055
+#: ../../src/Repository/Model/Video.php:1057
 msgid "Norwegian"
 msgstr "Norwegian"
 
-#: ../../src/Repository/Model/Video.php:1056
+#: ../../src/Repository/Model/Video.php:1058
 msgid "South Ndebele"
 msgstr "South Ndebele"
 
-#: ../../src/Repository/Model/Video.php:1057
+#: ../../src/Repository/Model/Video.php:1059
 msgid "Navajo"
 msgstr "Navajo"
 
-#: ../../src/Repository/Model/Video.php:1058
+#: ../../src/Repository/Model/Video.php:1060
 msgid "Chichewa"
 msgstr "Chichewa"
 
-#: ../../src/Repository/Model/Video.php:1059
+#: ../../src/Repository/Model/Video.php:1061
 msgid "Occitan"
 msgstr "Occitan"
 
-#: ../../src/Repository/Model/Video.php:1060
+#: ../../src/Repository/Model/Video.php:1062
 msgid "Ojibwa"
 msgstr "Ojibwa"
 
-#: ../../src/Repository/Model/Video.php:1061
+#: ../../src/Repository/Model/Video.php:1063
 msgid "Oromo"
 msgstr "Oromo"
 
-#: ../../src/Repository/Model/Video.php:1062
+#: ../../src/Repository/Model/Video.php:1064
 msgid "Oriya"
 msgstr "Oriya"
 
-#: ../../src/Repository/Model/Video.php:1063
+#: ../../src/Repository/Model/Video.php:1065
 msgid "Ossetian"
 msgstr "Ossetian"
 
-#: ../../src/Repository/Model/Video.php:1064
+#: ../../src/Repository/Model/Video.php:1066
 msgid "Panjabi"
 msgstr "Panjabi"
 
-#: ../../src/Repository/Model/Video.php:1065
+#: ../../src/Repository/Model/Video.php:1067
 msgid "Pali"
 msgstr "Pali"
 
-#: ../../src/Repository/Model/Video.php:1066
+#: ../../src/Repository/Model/Video.php:1068
 msgid "Polish"
 msgstr "Polish"
 
-#: ../../src/Repository/Model/Video.php:1067
+#: ../../src/Repository/Model/Video.php:1069
 msgid "Pashto"
 msgstr "Pashto"
 
-#: ../../src/Repository/Model/Video.php:1068
+#: ../../src/Repository/Model/Video.php:1070
 msgid "Portuguese"
 msgstr "Portuguese"
 
-#: ../../src/Repository/Model/Video.php:1069
+#: ../../src/Repository/Model/Video.php:1071
 msgid "Quechua"
 msgstr "Quechua"
 
-#: ../../src/Repository/Model/Video.php:1070
+#: ../../src/Repository/Model/Video.php:1072
 msgid "Raeto-Romance"
 msgstr "Raeto-Romance"
 
-#: ../../src/Repository/Model/Video.php:1071
+#: ../../src/Repository/Model/Video.php:1073
 msgid "Kirundi"
 msgstr "Kirundi"
 
-#: ../../src/Repository/Model/Video.php:1072
+#: ../../src/Repository/Model/Video.php:1074
 msgid "Romanian"
 msgstr "Romanian"
 
-#: ../../src/Repository/Model/Video.php:1073
+#: ../../src/Repository/Model/Video.php:1075
 msgid "Russian"
 msgstr "Russian"
 
-#: ../../src/Repository/Model/Video.php:1074
+#: ../../src/Repository/Model/Video.php:1076
 msgid "Kinyarwanda"
 msgstr "Kinyarwanda"
 
-#: ../../src/Repository/Model/Video.php:1075
+#: ../../src/Repository/Model/Video.php:1077
 msgid "Sanskrit"
 msgstr "Sanskrit"
 
-#: ../../src/Repository/Model/Video.php:1076
+#: ../../src/Repository/Model/Video.php:1078
 msgid "Sardinian"
 msgstr "Sardinian"
 
-#: ../../src/Repository/Model/Video.php:1077
+#: ../../src/Repository/Model/Video.php:1079
 msgid "Sindhi"
 msgstr "Sindhi"
 
-#: ../../src/Repository/Model/Video.php:1078
+#: ../../src/Repository/Model/Video.php:1080
 msgid "Northern Sami"
 msgstr "Northern Sami"
 
-#: ../../src/Repository/Model/Video.php:1079
+#: ../../src/Repository/Model/Video.php:1081
 msgid "Sango"
 msgstr "Sango"
 
-#: ../../src/Repository/Model/Video.php:1080
+#: ../../src/Repository/Model/Video.php:1082
 msgid "Sinhala"
 msgstr "Sinhala"
 
-#: ../../src/Repository/Model/Video.php:1081
+#: ../../src/Repository/Model/Video.php:1083
 msgid "Slovak"
 msgstr "Slovak"
 
-#: ../../src/Repository/Model/Video.php:1082
+#: ../../src/Repository/Model/Video.php:1084
 msgid "Slovenian"
 msgstr "Slovenian"
 
-#: ../../src/Repository/Model/Video.php:1083
+#: ../../src/Repository/Model/Video.php:1085
 msgid "Samoan"
 msgstr "Samoan"
 
-#: ../../src/Repository/Model/Video.php:1084
+#: ../../src/Repository/Model/Video.php:1086
 msgid "Shona"
 msgstr "Shona"
 
-#: ../../src/Repository/Model/Video.php:1085
+#: ../../src/Repository/Model/Video.php:1087
 msgid "Somali"
 msgstr "Somali"
 
-#: ../../src/Repository/Model/Video.php:1086
+#: ../../src/Repository/Model/Video.php:1088
 msgid "Albanian"
 msgstr "Albanian"
 
-#: ../../src/Repository/Model/Video.php:1087
+#: ../../src/Repository/Model/Video.php:1089
 msgid "Serbian"
 msgstr "Serbian"
 
-#: ../../src/Repository/Model/Video.php:1088
+#: ../../src/Repository/Model/Video.php:1090
 msgid "Swati"
 msgstr "Swati"
 
-#: ../../src/Repository/Model/Video.php:1089
+#: ../../src/Repository/Model/Video.php:1091
 msgid "Southern Sotho"
 msgstr "Southern Sotho"
 
-#: ../../src/Repository/Model/Video.php:1090
+#: ../../src/Repository/Model/Video.php:1092
 msgid "Sundanese"
 msgstr "Sundanese"
 
-#: ../../src/Repository/Model/Video.php:1091
+#: ../../src/Repository/Model/Video.php:1093
 msgid "Swedish"
 msgstr "Swedish"
 
-#: ../../src/Repository/Model/Video.php:1092
+#: ../../src/Repository/Model/Video.php:1094
 msgid "Swahili"
 msgstr "Swahili"
 
-#: ../../src/Repository/Model/Video.php:1093
+#: ../../src/Repository/Model/Video.php:1095
 msgid "Tamil"
 msgstr "Tamil"
 
-#: ../../src/Repository/Model/Video.php:1094
+#: ../../src/Repository/Model/Video.php:1096
 msgid "Telugu"
 msgstr "Telugu"
 
-#: ../../src/Repository/Model/Video.php:1095
+#: ../../src/Repository/Model/Video.php:1097
 msgid "Tajik"
 msgstr "Tajik"
 
-#: ../../src/Repository/Model/Video.php:1096
+#: ../../src/Repository/Model/Video.php:1098
 msgid "Thai"
 msgstr "Thai"
 
-#: ../../src/Repository/Model/Video.php:1097
+#: ../../src/Repository/Model/Video.php:1099
 msgid "Tigrinya"
 msgstr "Tigrinya"
 
-#: ../../src/Repository/Model/Video.php:1098
+#: ../../src/Repository/Model/Video.php:1100
 msgid "Turkmen"
 msgstr "Turkmen"
 
-#: ../../src/Repository/Model/Video.php:1099
+#: ../../src/Repository/Model/Video.php:1101
 msgid "Tagalog"
 msgstr "Tagalog"
 
-#: ../../src/Repository/Model/Video.php:1100
+#: ../../src/Repository/Model/Video.php:1102
 msgid "Tswana"
 msgstr "Tswana"
 
-#: ../../src/Repository/Model/Video.php:1101
+#: ../../src/Repository/Model/Video.php:1103
 msgid "Tonga"
 msgstr "Tonga"
 
-#: ../../src/Repository/Model/Video.php:1102
+#: ../../src/Repository/Model/Video.php:1104
 msgid "Turkish"
 msgstr "Turkish"
 
-#: ../../src/Repository/Model/Video.php:1103
+#: ../../src/Repository/Model/Video.php:1105
 msgid "Tsonga"
 msgstr "Tsonga"
 
-#: ../../src/Repository/Model/Video.php:1104
+#: ../../src/Repository/Model/Video.php:1106
 msgid "Tatar"
 msgstr "Tatar"
 
-#: ../../src/Repository/Model/Video.php:1105
+#: ../../src/Repository/Model/Video.php:1107
 msgid "Twi"
 msgstr "Twi"
 
-#: ../../src/Repository/Model/Video.php:1106
+#: ../../src/Repository/Model/Video.php:1108
 msgid "Tahitian"
 msgstr "Tahitian"
 
-#: ../../src/Repository/Model/Video.php:1107
+#: ../../src/Repository/Model/Video.php:1109
 msgid "Uighur"
 msgstr "Uighur"
 
-#: ../../src/Repository/Model/Video.php:1108
+#: ../../src/Repository/Model/Video.php:1110
 msgid "Ukrainian"
 msgstr "Ukrainian"
 
-#: ../../src/Repository/Model/Video.php:1109
+#: ../../src/Repository/Model/Video.php:1111
 msgid "Urdu"
 msgstr "Urdu"
 
-#: ../../src/Repository/Model/Video.php:1110
+#: ../../src/Repository/Model/Video.php:1112
 msgid "Uzbek"
 msgstr "Uzbek"
 
-#: ../../src/Repository/Model/Video.php:1111
+#: ../../src/Repository/Model/Video.php:1113
 msgid "Venda"
 msgstr "Venda"
 
-#: ../../src/Repository/Model/Video.php:1112
+#: ../../src/Repository/Model/Video.php:1114
 msgid "Vietnamese"
 msgstr "Vietnamese"
 
-#: ../../src/Repository/Model/Video.php:1113
+#: ../../src/Repository/Model/Video.php:1115
 msgid "Volapuk"
 msgstr "Volapuk"
 
-#: ../../src/Repository/Model/Video.php:1114
+#: ../../src/Repository/Model/Video.php:1116
 msgid "Walloon"
 msgstr "Walloon"
 
-#: ../../src/Repository/Model/Video.php:1115
+#: ../../src/Repository/Model/Video.php:1117
 msgid "Wolof"
 msgstr "Wolof"
 
-#: ../../src/Repository/Model/Video.php:1116
+#: ../../src/Repository/Model/Video.php:1118
 msgid "Xhosa"
 msgstr "Xhosa"
 
-#: ../../src/Repository/Model/Video.php:1117
+#: ../../src/Repository/Model/Video.php:1119
 msgid "Yiddish"
 msgstr "Yiddish"
 
-#: ../../src/Repository/Model/Video.php:1118
+#: ../../src/Repository/Model/Video.php:1120
 msgid "Yoruba"
 msgstr "Yoruba"
 
-#: ../../src/Repository/Model/Video.php:1119
+#: ../../src/Repository/Model/Video.php:1121
 msgid "Zhuang"
 msgstr "Zhuang"
 
-#: ../../src/Repository/Model/Video.php:1120
+#: ../../src/Repository/Model/Video.php:1122
 msgid "Chinese"
 msgstr "Chinese"
 
-#: ../../src/Repository/Model/Video.php:1121
+#: ../../src/Repository/Model/Video.php:1123
 msgid "Zulu"
 msgstr "Zulu"
 

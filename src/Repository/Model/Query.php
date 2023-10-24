@@ -119,6 +119,7 @@ class Query
             'total_count',
             'total_skip',
             'album',
+            'album_disk',
             'artist',
             'random',
             'rating'
@@ -161,6 +162,7 @@ class Query
             'release_type',
             'song_count',
             'subtitle',
+            'time',
             'total_count',
             'year',
             'rating'
@@ -174,7 +176,8 @@ class Query
             'album_count',
             'total_count',
             'random',
-            'rating'
+            'rating',
+            'time'
         ),
         'playlist' => array(
             'last_update',
@@ -2203,9 +2206,19 @@ class Query
                         $sql = "`song`.`$field`";
                         break;
                     case 'album':
+                        $sql   = "`album`.`name` $order, `song`.`track`";
+                        $order = '';
+                        $this->set_join('LEFT', "`album`", "`album`.`id`", "`song`.`album`", 100);
+                        break;
+                    case 'album_disk':
+                        $sql   = "`album`.`name` $order, `album_disk`.`disk`, `song`.`track`";
+                        $order = '';
+                        $this->set_join('LEFT', "`album`", "`album`.`id`", "`song`.`album`", 100);
+                        $this->set_join('LEFT', '`album_disk`', '`album`.`id`', '`album_disk`.`album_id`', 100);
+                        break;
                     case 'artist':
-                        $sql = "`$field`.`name`";
-                        $this->set_join('LEFT', "`$field`", "`$field`.`id`", "`song`.`$field`", 100);
+                        $sql = "`artist`.`name`";
+                        $this->set_join('LEFT', "`artist`", "`artist`.`id`", "`song`.`artist`", 100);
                         break;
                     case 'rating':
                         $sql = "`rating`.`rating`";
@@ -2329,6 +2342,7 @@ class Query
                     case 'song_count':
                     case 'album_count':
                     case 'total_count':
+                    case 'time':
                         $sql = "`artist`.`$field`";
                         break;
                     case 'rating':
