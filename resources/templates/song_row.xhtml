@@ -29,11 +29,17 @@
     </td>
     <tal:block tal:condition="IS_TABLE_VIEW">
         <td tal:condition="not:IS_HIDE_ARTIST" class="cel_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
-        <td tal:condition="not:IS_HIDE_ALBUM" class="cel_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
+        <tal:block tal:condition="not:IS_HIDE_ALBUM">
+            <td tal:condition="IS_ALBUM_GROUP" class="cel_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
+            <td tal:condition="not:IS_ALBUM_GROUP" class="cel_album" tal:content="structure SONG/getAlbumDiskLink">ALBUM LINK</td>
+        </tal:block>
     </tal:block>
     <tal:block tal:condition="not:IS_TABLE_VIEW">
         <td class="mash_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
-        <td tal:condition="not:IS_HIDE_ALBUM" class="mash_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
+        <tal:block tal:condition="not:IS_HIDE_ALBUM">
+            <td tal:condition="IS_ALBUM_GROUP" class="mash_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
+            <td tal:condition="not:IS_ALBUM_GROUP" class="mash_album" tal:content="structure SONG/getAlbumDiskLink">ALBUM LINK</td>
+        </tal:block>
     </tal:block>
     <td tal:condition="not:IS_HIDE_YEAR" class="cel_year" tal:content="SONG/getYear">YEAR</td>
     <tal:block tal:condition="IS_TABLE_VIEW">
