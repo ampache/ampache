@@ -75,7 +75,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             } ?>
             <?php if (!$hide_album) {
                 ++$thcount; ?>
-            <th class="<?php echo $cel_album; ?> essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=' . $albumString . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
+            <th class="<?php echo $cel_album; ?> essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=' . $albumString . $argument_param, T_('Album'), 'sort_song_' . $albumString . $browse->id); ?></th>
             <?php
             } ?>
             <?php if (!$hide_year) {
