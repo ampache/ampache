@@ -1743,23 +1743,25 @@ class Subsonic_Api
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
             foreach ($object_ids as $subsonic_id) {
-                $time     = isset($input['time']) ? (int) $input['time'] / 1000 : time();
-                $previous = Stats::get_last_play($user->id, $client, $time);
-                $media    = Subsonic_Xml_Data::_getAmpacheObject($subsonic_id);
-                $type     = Subsonic_Xml_Data::_getAmpacheType($subsonic_id);
+                $time      = isset($input['time']) ? (int) $input['time'] / 1000 : time();
+                $previous  = Stats::get_last_play($user->id, $client, $time);
+                $prev_obj  = $previous['object_id'] ?? 0;
+                $prev_date = $previous['date'] ?? 0;
+                $type      = Subsonic_Xml_Data::_getAmpacheType($subsonic_id);
+                $media     = Subsonic_Xml_Data::_getAmpacheObject($subsonic_id);
                 $media->format();
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
                 Stream::insert_now_playing((int) $media->id, (int) $user->id, ((int)$media->time), $user->username, $type, ((int)$time));
                 // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
-                if ($submission && get_class($media) == Song::class && ($previous['object_id'] != $media->id) && (($time - $previous['date']) > 5)) {
+                if ($submission && get_class($media) == Song::class && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
                     // stream has finished
                     debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                     User::save_mediaplay($user, $media);
                 }
-                // Submission is false and not a repeat. let repeats go though to saveplayqueue
-                if ((!$submission) && $media->id && ($previous['object_id'] != $media->id) && (($time - $previous['date']) > 5)) {
+                // Submission is false and not a repeat. let repeats go through to saveplayqueue
+                if ((!$submission) && $media->id && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
                     $media->set_played($user->id, $client, array(), $time);
                 }
             }
