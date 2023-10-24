@@ -51,7 +51,10 @@ class User_Playlist extends database_object
         if (!$user_id) {
             return false;
         }
-
+        $client = $client ?? $this->get_latest();
+        if (empty($client)) {
+            return false;
+        }
         $this->user   = (int)$user_id;
         $this->client = substr($client ?? $this->get_latest(), 0, 254);
 
@@ -152,7 +155,7 @@ class User_Playlist extends database_object
     /**
      * get_latest
      * get the most recent playqueue for the user
-     * @return int
+     * @return string
      */
     public function get_latest()
     {
@@ -160,7 +163,7 @@ class User_Playlist extends database_object
         $db_results = Dba::read($sql, array($this->user));
         $results    = Dba::fetch_assoc($db_results);
 
-        return $results['playqueue_client'];
+        return $results['playqueue_client'] ?? '';
     } // get_count
 
     /**
