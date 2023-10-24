@@ -17,9 +17,9 @@
 -- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.1.20
--- Generation Time: Sep 29, 2023 at 06:09 AM
--- Server version: 10.5.19-MariaDB-0+deb11u2
+-- Host: 192.168.1.9
+-- Generation Time: Oct 24, 2023 at 03:57 AM
+-- Server version: 8.0.31
 -- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -549,7 +549,8 @@ CREATE TABLE IF NOT EXISTS `label_asso` (
   `label` int(11) UNSIGNED NOT NULL,
   `artist` int(11) UNSIGNED NOT NULL,
   `creation_date` int(11) UNSIGNED DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `label_asso_label_IDX` (`label`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1471,7 +1472,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600040'),
+('db_version', '600041'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
