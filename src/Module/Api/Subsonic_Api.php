@@ -1306,22 +1306,18 @@ class Subsonic_Api
     public static function updateplaylist($input, $user)
     {
         unset($user);
-        $playlistId = self::_check_parameter($input, 'playlistId');
-        $name       = $input['name'];
-        $public     = ($input['public'] === "true");
+        $playlistId        = self::_check_parameter($input, 'playlistId');
+        $name              = $input['name'] ?? '';
+        $public            = (array_key_exists('public', $input) && $input['public'] === "true");
+        $songIdToAdd       = $input['songIdToAdd'] ?? array();
+        $songIndexToRemove = $input['songIndexToRemove'] ?? array();
 
         if (!Subsonic_Xml_Data::_isSmartPlaylist($playlistId)) {
-            $songIdToAdd = array();
-            if (is_array($input['songIdToAdd'])) {
-                $songIdToAdd = $input['songIdToAdd'];
-            } elseif (is_string($input['songIdToAdd'])) {
-                $songIdToAdd = explode(',', $input['songIdToAdd']);
+            if (is_string($songIdToAdd)) {
+                $songIdToAdd = explode(',', $songIdToAdd);
             }
-            $songIndexToRemove = array();
-            if (is_array($input['songIndexToRemove'])) {
-                $songIndexToRemove = $input['songIndexToRemove'];
-            } elseif (is_string($input['songIndexToRemove'])) {
-                $songIndexToRemove = explode(',', $input['songIndexToRemove']);
+            if (is_string($songIndexToRemove)) {
+                $songIndexToRemove = explode(',', $songIndexToRemove);
             }
             self::_updatePlaylist(Subsonic_Xml_Data::_getAmpacheId($playlistId), $name, $songIdToAdd, $songIndexToRemove, $public);
 
@@ -1453,7 +1449,7 @@ class Subsonic_Api
     {
         unset($user);
         $fileid  = self::_check_parameter($input, 'id', true);
-        $bitRate = $input['bitRate'];
+        $bitRate = $input['bitRate'] ?? false;
         $media   = array();
         if (Subsonic_Xml_Data::_isSong($fileid)) {
             $media['object_type'] = 'song';
@@ -1812,8 +1808,11 @@ class Subsonic_Api
         }
         $description = $input['description'] ?? '';
         if (AmpConfig::get('share')) {
-            $expire_days = (isset($input['expires'])) ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000) : null;
-            $object_type = null;
+            $share_expire = AmpConfig::get('share_expire', 7);
+            $expire_days  = (isset($input['expires']))
+                ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000)
+                : $share_expire;
+            $object_type  = null;
             if (is_array($object_id) && Subsonic_Xml_Data::_isSong($object_id[0])) {
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
                 $song_id     = Subsonic_Xml_Data::_getAmpacheId($object_id[0]);
@@ -1872,18 +1871,20 @@ class Subsonic_Api
         if (!$share_id) {
             return;
         }
-        $description = $input['description'];
+        $description = $input['description'] ?? '';
 
         if (AmpConfig::get('share')) {
             $share = new Share(Subsonic_Xml_Data::_getAmpacheId($share_id));
             if ($share->id > 0) {
-                $expires = (isset($input['expires'])) ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000) : $share->expire_days;
+                $expires = (isset($input['expires']))
+                    ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000)
+                    : $share->expire_days;
                 $data    = array(
                     'max_counter' => $share->max_counter,
                     'expire' => $expires,
                     'allow_stream' => $share->allow_stream,
                     'allow_download' => $share->allow_download,
-                    'description' => $description ?: $share->description,
+                    'description' => $description ?? $share->description,
                 );
                 if ($share->update($data, $user)) {
                     $response = Subsonic_Xml_Data::addSubsonicResponse('updateshare');
@@ -2425,7 +2426,11 @@ class Subsonic_Api
             } else {
                 $update_user = User::get_from_username((string)$username);
             }
-            Subsonic_Xml_Data::addUser($response, $update_user);
+            if (!$user) {
+                $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getUser');
+            } else {
+                Subsonic_Xml_Data::addUser($response, $update_user);
+            }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'getuser');
         }
@@ -2464,11 +2469,11 @@ class Subsonic_Api
         $username     = self::_check_parameter($input, 'username');
         $password     = self::_check_parameter($input, 'password');
         $email        = urldecode((string)self::_check_parameter($input, 'email'));
-        $adminRole    = ($input['adminRole'] == 'true');
-        $downloadRole = ($input['downloadRole'] == 'true');
-        $uploadRole   = ($input['uploadRole'] == 'true');
-        $coverArtRole = ($input['coverArtRole'] == 'true');
-        $shareRole    = ($input['shareRole'] == 'true');
+        $adminRole    = (array_key_exists('adminRole', $input) && $input['adminRole'] == 'true');
+        $downloadRole = (array_key_exists('downloadRole', $input) && $input['downloadRole'] == 'true');
+        $uploadRole   = (array_key_exists('uploadRole', $input) && $input['uploadRole'] == 'true');
+        $coverArtRole = (array_key_exists('coverArtRole', $input) && $input['coverArtRole'] == 'true');
+        $shareRole    = (array_key_exists('shareRole', $input) && $input['shareRole'] == 'true');
         //$ldapAuthenticated = $input['ldapAuthenticated'];
         //$settingsRole = $input['settingsRole'];
         //$streamRole = $input['streamRole'];
