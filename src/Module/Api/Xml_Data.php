@@ -571,7 +571,7 @@ class Xml_Data
             $string .= "<browse id=\"" . $object['id'] . "\">\n" .
                 "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
                 "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n" .
-                "\t<basename><![CDATA[" . $basename . "]]></basename>\n</list>\n";
+                "\t<basename><![CDATA[" . $basename . "]]></basename>\n</browse>\n";
         } // end foreach objects
 
         return self::output_xml($string);
