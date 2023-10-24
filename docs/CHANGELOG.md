@@ -2,7 +2,7 @@
 
 ## Ampache 6.1.0
 
-First up, Auto Update notifications are fixed
+First up, AutoUpdate notifications are fixed
 
 This update has a big focus on browsing and sorting classes
 
@@ -39,7 +39,7 @@ Album sorting has finally been restored to all pages!
 * Rating `album_disk` objects would not refresh the value
 * Creating a new`album_disk` inserting the song id instead of the album id
 * SQL generation for browse sorting with comma and space in the text
-* Autoupdate notifications
+* AutoUpdate notifications
 * Fix a lot of code Runtime Errors
 * Handle GatherSpotify exceptions and empty results
 * Browse
@@ -54,7 +54,7 @@ Album sorting has finally been restored to all pages!
 
 ## API 6.1.0
 
-Two new nethods have been added
+Two new methods have been added
 
 The bookmark methods have had a bit of a rework as they were not very useful
 
@@ -97,12 +97,12 @@ Finally the issues with setting your auth token in the http header have been fix
   * Fix lots of Runtime Error's on missing optional data
 * API5
   * Fix lots of Runtime Error's on missing optional data
-  * bookemark_edit: missing user id in data array
+  * bookmark_edit: missing user id in data array
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
 * API6
   * Fix lots of Runtime Error's on missing optional data
   * catalog_folder didn't get the group of items correctly
-  * bookemark_edit: missing user id in data array
+  * bookmark_edit: missing user id in data array
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
 
 ## Ampache 6.0.3
