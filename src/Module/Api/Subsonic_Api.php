@@ -2422,7 +2422,7 @@ class Subsonic_Api
             } else {
                 $update_user = User::get_from_username((string)$username);
             }
-            if (!$user) {
+            if (!$update_user) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getUser');
             } else {
                 Subsonic_Xml_Data::addUser($response, $update_user);
@@ -2761,7 +2761,7 @@ class Subsonic_Api
                 Stream::garbage_collection();
                 Stream::insert_now_playing((int)$media->id, (int)$user_id, ((int)$media->time - $position), $user->username, $type, ($time - $position));
 
-                if ($previous['object_id'] == $media->id) {
+                if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->id) {
                     $time_diff = $time - $previous['date'];
                     $old_play  = $time_diff > $media->time * 5;
                     // shift the start time if it's an old play or has been pause/played
