@@ -93,6 +93,34 @@ Destroy a session using the auth parameter.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/goodbye.xml)
 
+### lost_password
+
+Email a new password to the user (if allowed) using a reset token.
+
+```php
+   $username;
+   $key = hash('sha256', 'email');
+   auth = hash('sha256', $username . $key);
+```
+
+| Input  | Type    | Description                 | Optional |
+|--------|---------|-----------------------------|---------:|
+| 'auth' | string  | password reset token        |       NO |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 ### ping
 
 This can be called without being authenticated, it is useful for determining if what the status of the server is, and what version it is running/compatible with
@@ -154,34 +182,6 @@ Register as a new user if allowed. (Requires the username, password and email.)
 | 'password' | string  | hash('sha256', $password)         |       NO |
 | 'email'    | string  | e.g. user@gmail.com               |       NO |
 | 'fullname' | string  |                                   |      YES |
-
-* return
-
-```XML
-<root>
-    <success>
-</root>
-```
-
-* throws
-
-```XML
-<root><error></root>
-```
-
-### lost_password
-
-Email a new password to the user (if allowed) using a reset token.
-
-```php
-   $username;
-   $key = hash('sha256', 'email');
-   auth = hash('sha256', $username . $key);
-```
-
-| Input  | Type    | Description                 | Optional |
-|--------|---------|-----------------------------|---------:|
-| 'auth' | string  | password reset token        |       NO |
 
 * return
 

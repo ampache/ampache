@@ -89,6 +89,32 @@ Destroy a session using the auth parameter.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/goodbye.json)
 
+### lost_password
+
+Email a new password to the user (if allowed) using a reset token.
+
+```php
+   $username;
+   $key = hash('sha256', 'email');
+   auth = hash('sha256', $username . $key);
+```
+
+| Input  | Type    | Description                 | Optional |
+|--------|---------|-----------------------------|---------:|
+| 'auth' | string  | password reset token        |       NO |
+
+* return
+
+```JSON
+"success": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
 ### ping
 
 This can be called without being authenticated, it is useful for determining if what the status of the server is, and what version it is running/compatible with
@@ -148,32 +174,6 @@ Register as a new user if allowed. (Requires the username, password and email.)
 | 'fullname' | string  |                                   |      YES |
 
 * return object
-
-```JSON
-"success": ""
-```
-
-* throws object
-
-```JSON
-"error": ""
-```
-
-### lost_password
-
-Email a new password to the user (if allowed) using a reset token.
-
-```php
-   $username;
-   $key = hash('sha256', 'email');
-   auth = hash('sha256', $username . $key);
-```
-
-| Input  | Type    | Description                 | Optional |
-|--------|---------|-----------------------------|---------:|
-| 'auth' | string  | password reset token        |       NO |
-
-* return
 
 ```JSON
 "success": ""
