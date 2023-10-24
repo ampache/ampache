@@ -1029,8 +1029,8 @@ class Subsonic_Api
     {
         unset($user);
         $genre  = self::_check_parameter($input, 'genre');
-        $count  = $input['count'];
-        $offset = $input['offset'];
+        $count  = $input['count'] ?? '';
+        $offset = $input['offset'] ?? '';
 
         $tag = Tag::construct_from_name($genre);
         if ($tag->id) {
@@ -1267,11 +1267,9 @@ class Subsonic_Api
     public static function createplaylist($input, $user)
     {
         $playlistId = $input['playlistId'] ?? null;
-        $name       = $input['name'];
-        $songIdList = array();
-        if (is_array($input['songId'])) {
-            $songIdList = $input['songId'];
-        } elseif (is_string($input['songId'])) {
+        $name       = $input['name'] ?? '';
+        $songIdList = $input['songId'] ?? array();
+        if (is_string($input['songId'])) {
             $songIdList = explode(',', $input['songId']);
         }
 
@@ -1588,8 +1586,8 @@ class Subsonic_Api
      */
     public static function getlyrics($input, $user)
     {
-        $artist = $input['artist'];
-        $title  = $input['title'];
+        $artist = $input['artist'] ?? false;
+        $title  = $input['title'] ?? false;
 
         if (!$artist && !$title) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'getlyrics');
@@ -1698,21 +1696,17 @@ class Subsonic_Api
         if (!$object_id) {
             return;
         }
-        $rating = $input['rating'];
+        $rating = (int)($input['rating'] ?? -1);
         $robj   = null;
         if (Subsonic_Xml_Data::_isArtist($object_id)) {
             $robj = new Rating(Subsonic_Xml_Data::_getAmpacheId($object_id), "artist");
-        } else {
-            if (Subsonic_Xml_Data::_isAlbum($object_id)) {
-                $robj = new Rating(Subsonic_Xml_Data::_getAmpacheId($object_id), "album");
-            } else {
-                if (Subsonic_Xml_Data::_isSong($object_id)) {
-                    $robj = new Rating(Subsonic_Xml_Data::_getAmpacheId($object_id), "song");
-                }
-            }
+        } elseif (Subsonic_Xml_Data::_isAlbum($object_id)) {
+            $robj = new Rating(Subsonic_Xml_Data::_getAmpacheId($object_id), "album");
+        } elseif (Subsonic_Xml_Data::_isSong($object_id)) {
+            $robj = new Rating(Subsonic_Xml_Data::_getAmpacheId($object_id), "song");
         }
 
-        if ($robj != null) {
+        if ($robj != null && ($rating >= 0 && $rating <= 5)) {
             $robj->set_rating($rating, $user->id);
 
             $response = Subsonic_Xml_Data::addSubsonicResponse('setrating');
@@ -2526,14 +2520,14 @@ class Subsonic_Api
     public static function updateuser($input, $user)
     {
         $username = self::_check_parameter($input, 'username');
-        $password = $input['password'];
+        $password = $input['password'] ?? false;
         $email    = urldecode((string)self::_check_parameter($input, 'email'));
         //$ldapAuthenticated = $input['ldapAuthenticated'];
-        $adminRole    = ($input['adminRole'] == 'true');
-        $downloadRole = ($input['downloadRole'] == 'true');
-        $uploadRole   = ($input['uploadRole'] == 'true');
-        $coverArtRole = ($input['coverArtRole'] == 'true');
-        $shareRole    = ($input['shareRole'] == 'true');
+        $adminRole    = (array_key_exists('adminRole', $input) && $input['adminRole'] == 'true');
+        $downloadRole = (array_key_exists('downloadRole', $input) && $input['downloadRole'] == 'true');
+        $uploadRole   = (array_key_exists('uploadRole', $input) && $input['uploadRole'] == 'true');
+        $coverArtRole = (array_key_exists('coverArtRole', $input) && $input['coverArtRole'] == 'true');
+        $shareRole    = (array_key_exists('shareRole', $input) && $input['shareRole'] == 'true');
         $maxbitrate   = (int)($input['maxBitRate'] ?? 0);
 
         if ($user->access === 100) {
@@ -2730,8 +2724,10 @@ class Subsonic_Api
      */
     public static function getplayqueue($input, $user)
     {
-        $response = Subsonic_Xml_Data::addSubsonicResponse('getplayqueue');
-        Subsonic_Xml_Data::addPlayQueue($response, $user->id, $user->username);
+        $response  = Subsonic_Xml_Data::addSubsonicResponse('getplayqueue');
+        $client    = scrub_in($input['c'] ?? 'Subsonic');
+        $playQueue = new User_Playlist($user->id, $client);
+        Subsonic_Xml_Data::addPlayQueue($response, $playQueue, $user->username);
         self::_apiOutput($input, $response);
     }
 
@@ -2744,11 +2740,13 @@ class Subsonic_Api
      */
     public static function saveplayqueue($input, $user)
     {
-        $current = (int)$input['current'];
+        $current = (int)($input['current'] ?? 0);
         $media   = Subsonic_Xml_Data::_getAmpacheObject($current);
         if ($media->id) {
             $response       = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
-            $position       = (int)((int)$input['position'] / 1000);
+            $position       = (array_key_exists('position', $input))
+                ? (int)((int)$input['position'] / 1000)
+                : 0;
             $client         = scrub_in($input['c'] ?? 'Subsonic');
             $user_id        = $user->id;
             $playqueue_time = (int)(User::get_user_data($user->id, 'playqueue_time')['playqueue_time'] ?? 0);

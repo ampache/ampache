@@ -805,12 +805,11 @@ class Subsonic_Xml_Data
      * addPlayQueue
      * current="133" position="45000" username="admin" changed="2015-02-18T15:22:22.825Z" changedBy="android"
      * @param SimpleXMLElement $xml
-     * @param int $user_id
+     * @param User_Playlist $playQueue
      * @param string $username
      */
-    public static function addPlayQueue($xml, $user_id, $username)
+    public static function addPlayQueue($xml, $playQueue, $username)
     {
-        $playQueue = new User_Playlist($user_id);
         $items     = $playQueue->get_items();
         if (!empty($items)) {
             $current    = $playQueue->get_current_object();
@@ -1024,7 +1023,9 @@ class Subsonic_Xml_Data
         $xusers = $xml->addChild('users');
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            self::addUser($xusers, $user);
+            if (!$user) {
+                self::addUser($xusers, $user);
+            }
         }
     }
 
