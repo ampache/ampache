@@ -209,8 +209,8 @@ final class ApiHandler implements ApiHandlerInterface
          * login via this interface so we do have an exception for action=login
          */
         if (
-            $gatekeeper->sessionExists() === false &&
-            !$is_public
+            !$is_public &&
+            $gatekeeper->sessionExists() === false
         ) {
             $this->logger->warning(
                 sprintf('Invalid Session attempt to API [%s]', $action),
