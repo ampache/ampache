@@ -1318,6 +1318,7 @@ class Query
                 case 'video':
                 case 'artist':
                 case 'album':
+                case 'album_disk':
                 case 'song':
                 case 'song_artist':
                 case 'song_album':
