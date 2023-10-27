@@ -825,7 +825,8 @@ class Json_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $JSON = [];
+        $count = 0;
+        $JSON  = [];
         foreach ($objects as $bookmark_id) {
             $bookmark               = new Bookmark($bookmark_id);
             $bookmark_user          = $bookmark->getUserName();
@@ -850,16 +851,17 @@ class Json_Data
                 $user = new User($bookmark_user);
                 switch ($bookmark_object_type) {
                     case 'song':
-                        $JSON['song'] = self::songs(array($bookmark_object_id), $user, true, false);
+                        $JSON[$count]['song'] = self::songs(array($bookmark_object_id), $user, true, false);
                         break;
                     case 'podcast_episode':
-                        $JSON['podcast_episode'] = self::podcast_episodes(array($bookmark_object_id), $user, true, false);
+                        $JSON[$count]['podcast_episode'] = self::podcast_episodes(array($bookmark_object_id), $user, true, false);
                         break;
                     case 'video':
-                        $JSON['video'] = self::videos(array($bookmark_object_id), $user, false);
+                        $JSON[$count]['video'] = self::videos(array($bookmark_object_id), $user, false);
                         break;
                 }
             }
+            $count++;
         } // end foreach
         if ($object) {
             $output["bookmark"] = $JSON;
