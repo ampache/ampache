@@ -851,13 +851,13 @@ class Json_Data
                 $user = new User($bookmark_user);
                 switch ($bookmark_object_type) {
                     case 'song':
-                        $JSON[$count]['song'] = self::songs(array($bookmark_object_id), $user, true, false);
+                        $JSON[$count]['song'] = self::songs(array($bookmark_object_id), $user, false, false);
                         break;
                     case 'podcast_episode':
-                        $JSON[$count]['podcast_episode'] = self::podcast_episodes(array($bookmark_object_id), $user, true, false);
+                        $JSON[$count]['podcast_episode'] = self::podcast_episodes(array($bookmark_object_id), $user, false, false);
                         break;
                     case 'video':
-                        $JSON[$count]['video'] = self::videos(array($bookmark_object_id), $user, false);
+                        $JSON[$count]['video'] = self::videos(array($bookmark_object_id), $user, false, false);
                         break;
                 }
             }
@@ -866,7 +866,7 @@ class Json_Data
         if ($object) {
             $output["bookmark"] = $JSON;
         } else {
-            $output = $JSON[0] ?? array();
+            $output = $JSON ?? array();
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
@@ -1224,10 +1224,11 @@ class Json_Data
      *
      * @param  integer[] $objects Video id's to include
      * @param  User      $user
+     * @param boolean $encode
      * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "video"
+     * @return array|string    JSON Object "video"
      */
-    public static function videos($objects, $user, $object = true): string
+    public static function videos($objects, $user, $encode = true, $object = true)
     {
         $output = array(
             "total_count" => count($objects)
@@ -1259,6 +1260,9 @@ class Json_Data
                 "playcount" => (int)$video->total_count
             );
         } // end foreach
+        if (!$encode) {
+            return $JSON;
+        }
         if ($object) {
             $output["video"] = $JSON;
         } else {
