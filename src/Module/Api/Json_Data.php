@@ -866,7 +866,7 @@ class Json_Data
         if ($object) {
             $output["bookmark"] = $JSON;
         } else {
-            $output = $JSON ?? array();
+            $output = $JSON[0] ?? array();
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
