@@ -70,7 +70,7 @@ final class VideoMethod
 
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::videos(array($object_id), $user, false);
+                echo Json_Data::videos(array($object_id), $user, true, false);
                 break;
             default:
                 echo Xml_Data::videos(array($object_id), $user);

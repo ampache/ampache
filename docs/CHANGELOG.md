@@ -39,6 +39,7 @@ Album sorting has finally been restored to all pages!
 * Rating `album_disk` objects would not refresh the value
 * Creating a new`album_disk` inserting the song id instead of the album id
 * SQL generation for browse sorting with comma and space in the text
+* album_disk `disk_count` wasn't updated
 * AutoUpdate notifications
 * Fix a lot of code Runtime Errors
 * Handle GatherSpotify exceptions and empty results
@@ -51,6 +52,8 @@ Album sorting has finally been restored to all pages!
 * Search
   * Respect limits for subsearches again
   * `search_user_id` fallback for searches without a user
+* Subsonic
+  * Runtime Errors when you have not done things before
 
 ## API 6.1.0
 
@@ -78,11 +81,13 @@ Finally the issues with setting your auth token in the http header have been fix
   * bookmark_edit: show error on missing bookmark instead of empty object
   * bookmark_delete: show error on missing bookmark instead of empty object
 * API6
+  * get_bookmark: Don't return single JSON bookmarks as an object
   * bookmark_create: Remove `client` parameter default value ('AmpacheAPI')
   * bookmark_edit
     * Remove `client` parameter default value ('AmpacheAPI')
     * show error on missing bookmark instead of empty object
     * add bookmark as a valid `object_type`
+    * Don't return single JSON bookmarks as an object
   * bookmark_delete
     * Remove `client` parameter default value ('AmpacheAPI')
     * show error on missing bookmark instead of empty object
@@ -97,13 +102,17 @@ Finally the issues with setting your auth token in the http header have been fix
   * Fix lots of Runtime Error's on missing optional data
 * API5
   * Fix lots of Runtime Error's on missing optional data
-  * bookmark_edit: missing user id in data array
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+  * bookmark_edit
+    * Missing user id in data array
+    * Not able to edit all bookmarks
 * API6
   * Fix lots of Runtime Error's on missing optional data
   * catalog_folder didn't get the group of items correctly
-  * bookmark_edit: missing user id in data array
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+  * bookmark_edit
+    * Missing user id in data array
+    * Not able to edit all bookmarks
 
 ## Ampache 6.0.3
 

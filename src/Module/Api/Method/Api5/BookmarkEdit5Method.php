@@ -110,7 +110,7 @@ final class BookmarkEdit5Method
             return false;
         }
         // edit it
-        Bookmark::edit($object, $user->id, $time);
+        Bookmark::edit($results[0], $object, $time);
 
         ob_end_clean();
         switch ($input['api_format']) {
