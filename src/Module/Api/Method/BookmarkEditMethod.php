@@ -114,12 +114,12 @@ final class BookmarkEditMethod
             return false;
         }
         // edit it
-        Bookmark::edit($object, $user->id, $time);
+        Bookmark::edit($results[0], $object, $time);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($results, $include);
+                echo Json_Data::bookmarks($results, $include, false);
                 break;
             default:
                 echo Xml_Data::bookmarks($results, $include);
