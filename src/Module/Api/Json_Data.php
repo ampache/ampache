@@ -829,7 +829,7 @@ class Json_Data
         $JSON  = [];
         foreach ($objects as $bookmark_id) {
             $bookmark               = new Bookmark($bookmark_id);
-            $bookmark_user          = $bookmark->getUserName();
+            $bookmark_username      = $bookmark->getUserName();
             $bookmark_object_type   = $bookmark->object_type;
             $bookmark_object_id     = (string)$bookmark->object_id;
             $bookmark_position      = $bookmark->position;
@@ -839,7 +839,7 @@ class Json_Data
             // Build this element
             $JSON[] = [
                 "id" => (string)$bookmark_id,
-                "owner" => $bookmark_user,
+                "owner" => $bookmark_username,
                 "object_type" => $bookmark_object_type,
                 "object_id" => $bookmark_object_id,
                 "position" => $bookmark_position,
@@ -848,7 +848,7 @@ class Json_Data
                 "update_date" => $bookmark_update_date
             ];
             if ($include) {
-                $user = new User($bookmark_user);
+                $user = User::get_from_username($bookmark_username);
                 switch ($bookmark_object_type) {
                     case 'song':
                         $JSON[$count]['song'] = self::songs(array($bookmark_object_id), $user, false, false);
