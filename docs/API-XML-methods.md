@@ -555,6 +555,7 @@ Get information about bookmarked media this user is allowed to manage.
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmarks.xml)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmarks%20\(with%20include\).xml)
 
 ### bookmark
 
@@ -580,6 +581,7 @@ Get a single bookmark by bookmark_id
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark.xml)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark%20\(with%20include\).xml)
 
 ### bookmark_create
 
@@ -1248,6 +1250,7 @@ Get the bookmark from it's object_id and object_type.
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_bookmark.xml)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_bookmark%20\(with%20include\).xml)
 
 ### get_indexes
 

@@ -98,6 +98,7 @@ Finally the issues with setting your auth token in the http header have been fix
 * ALL
   * handshake: auth failure with header token
   * playlist_generate: Don't error when optional `mode` and `format` are not set
+  * advanced_search: runtime error on empty data type
 * API4
   * Fix lots of Runtime Error's on missing optional data
 * API5
