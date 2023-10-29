@@ -93,6 +93,7 @@ final class AdvancedSearchMethod
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;
+        $data['type']   = $type;
         $results        = Search::run($data, $user);
         if (empty($results)) {
             Api::empty($type, $input['api_format']);
