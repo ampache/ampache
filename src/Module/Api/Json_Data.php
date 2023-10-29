@@ -851,13 +851,13 @@ class Json_Data
                 $user = User::get_from_username($bookmark_username);
                 switch ($bookmark_object_type) {
                     case 'song':
-                        $JSON[$count]['song'] = self::songs(array($bookmark_object_id), $user, false, false);
+                        $JSON[$count]['song'] = self::songs(array((int)$bookmark_object_id), $user, false, false);
                         break;
                     case 'podcast_episode':
-                        $JSON[$count]['podcast_episode'] = self::podcast_episodes(array($bookmark_object_id), $user, false, false);
+                        $JSON[$count]['podcast_episode'] = self::podcast_episodes(array((int)$bookmark_object_id), $user, false, false);
                         break;
                     case 'video':
-                        $JSON[$count]['video'] = self::videos(array($bookmark_object_id), $user, false, false);
+                        $JSON[$count]['video'] = self::videos(array((int)$bookmark_object_id), $user, false, false);
                         break;
                 }
             }
