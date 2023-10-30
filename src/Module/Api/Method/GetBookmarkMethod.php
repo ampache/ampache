@@ -50,7 +50,7 @@ final class GetBookmarkMethod
      * @param array $input
      * @param User $user
      * filter  = (string) object_id to find
-     * type    = (string) object_type ('song', 'video', 'podcast_episode')
+     * type    = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      * include = (integer) 0,1, if true include the object in the bookmark //optional
      * @return boolean
      */
@@ -68,7 +68,7 @@ final class GetBookmarkMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), array('bookmark', 'song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 

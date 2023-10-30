@@ -27,6 +27,7 @@ namespace Ampache\Module\Util;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
@@ -59,6 +60,7 @@ final class ObjectTypeToClassNameMapper
         'playlist' => Playlist::class,
         'artist' => Artist::class,
         'art' => Art::class,
+        'bookmark' => Bookmark::class,
         'search' => Search::class,
         'video' => Video::class,
         'share' => Share::class,
