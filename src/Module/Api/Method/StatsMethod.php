@@ -101,7 +101,7 @@ final class StatsMethod
         } elseif (array_key_exists('user_id', $input)) {
             $user = new User((int)$input['user_id']);
         }
-        if (!$user->id || $user->id < 1) {
+        if (!$user instanceof User || $user->id < 1) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), 'user'), '4710', self::ACTION, 'type', $input['api_format']);
 
