@@ -124,9 +124,15 @@ class Bookmark extends database_object
      */
     public static function create(array $data, int $userId, int $updateDate)
     {
+        $comment = scrub_in($data['comment']);
+        // delete duplicates first
+        $sql = "DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?;";
+        Dba::write($sql, array($userId, $comment, $data['object_type'], $data['object_id']));
+
+        //insert the new bookmark
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($userId, $data['position'], scrub_in($data['comment']), $data['object_type'], $data['object_id'], time(), $updateDate));
+        return Dba::write($sql, array($userId, $data['position'], $comment, $data['object_type'], $data['object_id'], time(), $updateDate));
     }
 
     /**
