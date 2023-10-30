@@ -83,7 +83,9 @@ Finally the issues with setting your auth token in the http header have been fix
   * bookmark_edit: show error on missing bookmark instead of empty object
   * bookmark_delete: show error on missing bookmark instead of empty object
 * API6
-  * get_bookmark: Don't return single JSON bookmarks as an object
+  * get_bookmark
+    * add bookmark as a valid `object_type`
+    * Don't return single JSON bookmarks as an object
   * bookmark_create: Remove `client` parameter default value ('AmpacheAPI')
   * bookmark_edit
     * Remove `client` parameter default value ('AmpacheAPI')
