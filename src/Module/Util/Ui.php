@@ -736,6 +736,7 @@ class Ui implements UiInterface
             case 'api_hide_dupe_searches':
             case 'autoupdate':
             case 'autoupdate_lastversion_new':
+            case 'bookmark_latest':
             case 'broadcast_by_default':
             case 'browse_filter':
             case 'browser_notify':

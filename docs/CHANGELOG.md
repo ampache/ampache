@@ -14,8 +14,9 @@ Album sorting has finally been restored to all pages!
 
 * Translations 2023-10
 * Read more tag frames for `disksubtitle`
-* Database 600041
+* Database 600042
   * Index `label` column on the `label_asso` table
+  * Add user preference `bookmark_latest`, Only keep the latest media bookmark
 * Config version 69
   * Add `user_create_streamtoken` (Add a `streamtoken` to the account when a new user is created)
 * Browse
@@ -72,7 +73,9 @@ Finally the issues with setting your auth token in the http header have been fix
   * New Method: lost_password (Allows a non-admin user to reset their password)
   * bookmark_create: Add `include` parameter (if true include the object in the bookmark)
   * bookmark_edit: Add `include` parameter (if true include the object in the bookmark)
-  * get_bookmark: Add `include` parameter (if true include the object in the bookmark)
+  * get_bookmark
+    * Add `include` parameter (if true include the object in the bookmark)
+    * Add `all` parameter (if true include every bookmark for the object)
   * bookmarks
     * Add parameter `client` to filter by specific groups of bookmarks
     * Add `include` parameter (if true include the object in the bookmark)
