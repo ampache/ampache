@@ -28,6 +28,8 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 
 final class AdminUpdateDatabaseCommand extends Command
 {
@@ -107,6 +109,9 @@ final class AdminUpdateDatabaseCommand extends Command
 
                 return;
             }
+            // catch some missing data after a successful update
+            Album::update_table_counts();
+            Artist::update_table_counts();
         }
 
         if (Update::need_update()) {
