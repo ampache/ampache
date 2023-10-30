@@ -31,6 +31,8 @@ Album sorting has finally been restored to all pages!
 * Restore `album` sort links again when split by group
 * Default visibility for new playlists is `public`
 * Garbage collect empty labels. (Keep user-generated labels)
+* CLI
+  * `-t|--garbage` don't collect garbage for each catalog, just do it at the end
 * Subsonic
   * createplaylist: Default visibility for new lists is `public`
 

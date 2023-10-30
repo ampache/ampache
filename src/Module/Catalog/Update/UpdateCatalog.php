@@ -75,9 +75,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $catalogType = '';
             $catalogName = '';
         }
-        $db_results = $this->lookupCatalogs($catalogType, $catalogName);
-        $external   = false;
-        $changed    = 0;
+        $db_results   = $this->lookupCatalogs($catalogType, $catalogName);
+        $external     = false;
+        $changed      = 0;
+        $gather_types = array();
 
         ob_end_clean();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -260,6 +261,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
             }
+            if (!in_array($catalog->gather_types, $gather_types)) {
+                $gather_types[] = $catalog->gather_types;
+            }
         }
         if ($collectGarbage === true || (($cleanup === true || $verification === true) && $changed > 0)) {
             $interactor->info(
@@ -281,7 +285,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 true
             );
             // clean up after the action
-            Catalog::update_catalog_map($catalog->gather_types);
+            foreach ($gather_types as $media_type) {
+                Catalog::update_catalog_map($media_type);
+            }
             Catalog::garbage_collect_mapping();
             Catalog::garbage_collect_filters();
             $interactor->info(
