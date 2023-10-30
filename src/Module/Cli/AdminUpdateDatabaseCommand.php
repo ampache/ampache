@@ -109,9 +109,6 @@ final class AdminUpdateDatabaseCommand extends Command
 
                 return;
             }
-            // catch some missing data after a successful update
-            Album::update_table_counts();
-            Artist::update_table_counts();
         }
 
         if (Update::need_update()) {
