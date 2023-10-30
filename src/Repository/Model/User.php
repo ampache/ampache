@@ -186,20 +186,21 @@ class User extends database_object
             return false;
         }
 
-        $this->id = (int)($user_id);
-        $info     = $this->has_info();
+        $info = $this->has_info();
         if (!empty($info)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
+            $this->id = (int)($user_id);
+
+            // Make sure the Full name is always filled
+            if (strlen((string)$this->fullname) < 1) {
+                $this->fullname = $this->username;
+            }
+            return true;
         }
 
-        // Make sure the Full name is always filled
-        if (strlen((string)$this->fullname) < 1) {
-            $this->fullname = $this->username;
-        }
-
-        return true;
+        return false;
     } // Constructor
 
     public function getId(): int
