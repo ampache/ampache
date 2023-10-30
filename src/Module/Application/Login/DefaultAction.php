@@ -195,7 +195,6 @@ final class DefaultAction implements ApplicationActionInterface
         $user = null;
         if (!empty($username) && isset($auth)) {
             $user = User::get_from_username($username);
-
             if ($user instanceof User && $user->disabled) {
                 // if user disabled
                 $auth['success'] = false;
@@ -222,7 +221,7 @@ final class DefaultAction implements ApplicationActionInterface
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 }
-            } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && !$user instanceof User) {
+            } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && !$user->id) {
                 // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
                 $access   = User::access_name_to_level($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
                 $fullname = array_key_exists('name', $auth) ? $auth['name'] : '';
@@ -259,13 +258,13 @@ final class DefaultAction implements ApplicationActionInterface
             } // end if auto_create
 
             // This allows stealing passwords validated by external means such as LDAP
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) && isset($auth) && $auth['success'] && isset($password) && $user instanceof User) {
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) && isset($auth) && $auth['success'] && isset($password) && $user->id) {
                 $user->update_password($password);
             }
         }
 
         /* If the authentication was a success */
-        if (isset($auth) && $auth['success'] && $user instanceof User) {
+        if (isset($auth) && $auth['success'] && $user->id) {
             // $auth->info are the fields specified in the config file
             //   to retrieve for each user
             Session::create($auth);

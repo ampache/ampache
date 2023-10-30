@@ -344,13 +344,11 @@ final class Play2Action implements ApplicationActionInterface
         }
 
         // did you pass a specific user id? (uid)
-        $user_id = ($user instanceof User)
-            ? $user->id
-            : $user_id;
+        $user_id = $user->id ?? $user_id;
 
         if (!$share_id) {
             // No explicit authentication, use session
-            if (!$user instanceof User) {
+            if (!$user->id) {
                 $user = new User($user_id);
             }
 
