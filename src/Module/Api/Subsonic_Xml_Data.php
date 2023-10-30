@@ -1023,7 +1023,7 @@ class Subsonic_Xml_Data
         $xusers = $xml->addChild('users');
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            if ($user->id) {
+            if ($user) {
                 self::addUser($xusers, $user);
             }
         }

@@ -99,7 +99,7 @@ final class UpdateUserAction implements ApplicationActionInterface
         }
 
         $user = $gatekeeper->getUser();
-        if ($user->id) {
+        if ($user) {
             $this->ui->show(
                 'show_preferences.inc.php',
                 [

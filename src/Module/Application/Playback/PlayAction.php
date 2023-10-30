@@ -270,7 +270,7 @@ final class PlayAction implements ApplicationActionInterface
         // If explicit user authentication was passed
         if (!empty($session_id)) {
             $user = $this->userRepository->findByStreamToken(trim($session_id));
-            if ($user->id) {
+            if ($user) {
                 $user_auth = true;
                 $agent     = (!empty($client))
                     ? $client
@@ -292,7 +292,7 @@ final class PlayAction implements ApplicationActionInterface
             }
         } elseif (!empty($apikey)) {
             $user = $this->userRepository->findByApiKey(trim($apikey));
-            if ($user->id) {
+            if ($user) {
                 $user_auth = true;
             }
         } elseif (!empty($username) && !empty($password)) {
