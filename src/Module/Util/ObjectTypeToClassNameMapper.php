@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Personal_Video;
@@ -42,6 +43,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\TVShow_Episode;
+use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\Model\Wanted;
@@ -56,34 +58,37 @@ final class ObjectTypeToClassNameMapper
     private const OBJECT_TYPE_MAPPING = [
         'album' => Album::class,
         'album_disk' => AlbumDisk::class,
-        'song' => Song::class,
-        'playlist' => Playlist::class,
-        'artist' => Artist::class,
         'art' => Art::class,
+        'artist' => Artist::class,
         'bookmark' => Bookmark::class,
-        'search' => Search::class,
-        'video' => Video::class,
-        'share' => Share::class,
+        'clip' => Clip::class,
+        'genre' => Tag::class,
+        'label' => Label::class,
+        'license' => License::class,
+        'live_stream' => Live_Stream::class,
         'movie' => Movie::class,
         'personal_video' => Personal_Video::class,
-        'user' => User::class,
-        'live_stream' => Live_Stream::class,
-        'podcast_episode' => Podcast_Episode::class,
-        'tvshow_episode' => TVShow_Episode::class,
-        'clip' => Clip::class,
-        'label' => Label::class,
+        'playlist' => Playlist::class,
         'podcast' => Podcast::class,
-        'genre' => Tag::class,
-        'tag' => Tag::class,
+        'podcast_episode' => Podcast_Episode::class,
+        'search' => Search::class,
+        'share' => Share::class,
+        'song' => Song::class,
         'tag_hidden' => Tag::class,
+        'tag' => Tag::class,
+        'tvshow_episode' => TVShow_Episode::class,
+        'tvshow_season' => TVShow_Season::class,
+        'user' => User::class,
+        'video' => Video::class,
         'wanted' => Wanted::class,
     ];
 
     public const VIDEO_TYPES = [
-        TVShow_Episode::class => 'tvshow_episode',
-        Movie::class => 'movie',
         Clip::class => 'clip',
+        Movie::class => 'movie',
         Personal_Video::class => 'personal_video',
+        TVShow_Episode::class => 'tvshow_episode',
+        TVShow_Season::class => 'tvshow_season',
         Video::class => 'video',
     ];
 
