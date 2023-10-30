@@ -897,7 +897,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=184 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=185 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -1026,7 +1026,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (180, 'show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse'),
 (181, 'show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface'),
 (182, 'use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player'),
-(183, 'custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', 25, 'string', 'interface', 'custom');
+(183, 'custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', 25, 'string', 'interface', 'custom'),
+(184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options', NULL);
 
 -- --------------------------------------------------------
 
@@ -1472,7 +1473,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600041'),
+('db_version', '600042'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1736,7 +1737,9 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 179, '1'),
 (-1, 180, '1'),
 (-1, 181, '1'),
-(-1, 182, '0');
+(-1, 182, '0'),
+(-1, 183, ''),
+(-1, 184, '0');
 
 -- --------------------------------------------------------
 
