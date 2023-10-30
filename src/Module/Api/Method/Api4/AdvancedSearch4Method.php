@@ -69,15 +69,15 @@ final class AdvancedSearch4Method
     {
         ob_end_clean();
 
-        $data           = $input;
-        $data['offset'] = 0;
-        $data['limit']  = 0;
-        $results        = Search::run($data, $user);
-
         $type = 'song';
         if (isset($input['type'])) {
             $type = $input['type'];
         }
+        $data           = $input;
+        $data['offset'] = 0;
+        $data['limit']  = 0;
+        $data['type']   = $type;
+        $results        = Search::run($data, $user);
 
         switch ($input['api_format']) {
             case 'json':

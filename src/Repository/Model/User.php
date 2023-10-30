@@ -241,16 +241,15 @@ class User extends database_object
             return User::get_from_cache('user', $this->id);
         }
 
-        $data = array();
-        // If the ID is -1 then
+        // If the ID is -1 then send back generic data
         if ($this->id == '-1') {
-            $data['username']             = 'System';
-            $data['fullname']             = 'Ampache User';
-            $data['access']               = '25';
-            $data['catalog_filter_group'] = 0;
-            $data['catalogs']             = self::get_user_catalogs(-1);
-
-            return $data;
+            return array(
+                'username' => 'System',
+                'fullname' => 'Ampache User',
+                'access' => '25',
+                'catalog_filter_group' => 0,
+                'catalogs' => self::get_user_catalogs(-1)
+            );
         }
 
         $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
@@ -1054,6 +1053,11 @@ class User extends database_object
             $sql .= ", `city`";
             $params[] = $city;
         }
+        $user_create_streamtoken = AmpConfig::get('user_create_streamtoken', false);
+        if ($user_create_streamtoken) {
+            $sql .= ", `streamtoken`";
+            $params[] = bin2hex(random_bytes(20));
+        }
 
         $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?, ?";
 
@@ -1064,6 +1068,9 @@ class User extends database_object
             $sql .= ", ?";
         }
         if (!empty($city)) {
+            $sql .= ", ?";
+        }
+        if ($user_create_streamtoken) {
             $sql .= ", ?";
         }
 

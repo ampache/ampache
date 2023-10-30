@@ -546,6 +546,7 @@ Get information about bookmarked media this user is allowed to manage.
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/bookmarks.json)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmarks%20\(with%20include\).json)
 
 ### bookmark
 
@@ -570,7 +571,8 @@ Get a single bookmark by bookmark_id
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark.json)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark%20\(with%20include\).json)
 
 ### bookmark_create
 
@@ -1178,12 +1180,14 @@ returns the songs for this genre
 ### get_bookmark
 
 Get the bookmark from it's object_id and object_type.
+By default; get only the most recent bookmark. Use `all` to retrieve all media bookmarks for the object.
 
-| Input     | Type    | Description                                      | Optional |
-|-----------|---------|--------------------------------------------------|---------:|
-| 'filter'  | string  | $object_id to find                               |       NO |
-| 'type'    | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
-| 'include' | integer | 0,1, if true include the object in the bookmark  |      YES |
+| Input     | Type    | Description                                        | Optional |
+|-----------|---------|----------------------------------------------------|---------:|
+| 'filter'  | string  | $object_id to find                                 |       NO |
+| 'type'    | string  | `song`, `video`, `podcast_episode` (object_type)   |       NO |
+| 'include' | integer | 0,1, if true include the object in the bookmark    |      YES |
+| 'all'     | integer | 0,1, if true include every bookmark for the object |      YES |
 
 * return array
 
@@ -1198,6 +1202,7 @@ Get the bookmark from it's object_id and object_type.
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_bookmark.json)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_bookmark%20\(with%20include\).json)
 
 ### get_indexes
 

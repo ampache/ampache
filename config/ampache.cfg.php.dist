@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 68
+config_version = 69
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -224,6 +224,12 @@ require_localnet_session = "true"
 ; By default Ampache pages can only be displayed in a frame on the same origin as the page itself.
 ; DEFAULT: "false"
 ;disable_xframe_sameorigin = "true"
+
+; Add a STREAMTOKEN to the account when a new user is created
+; Streamtoken's allow a user to play without having a valid session (links do not expire)
+; https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams
+; DEFAULT: "false"
+;user_create_streamtoken = "true"
 
 ;#########################################################
 ; Metadata                                               #

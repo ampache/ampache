@@ -28,6 +28,8 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 
 final class AdminUpdateDatabaseCommand extends Command
 {

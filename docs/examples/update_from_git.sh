@@ -28,6 +28,9 @@ git pull
 ### Check for database updates
 php bin/cli admin:updateDatabase -e
 
+### Clean up your garbage data
+php bin/cli run:updateCatalog -t
+
 ### Don't use php8.2? you need the old composer
 #cp -f $AMPACHEDIR/composer_old.json $AMPACHEDIR/composer.json
 

@@ -677,7 +677,7 @@ class Json5_Data
         $JSON = [];
         foreach ($bookmarks as $bookmark_id) {
             $bookmark               = new Bookmark($bookmark_id);
-            $bookmark_user          = $bookmark->getUserName();
+            $bookmark_username      = $bookmark->getUserName();
             $bookmark_object_type   = $bookmark->object_type;
             $bookmark_object_id     = (string)$bookmark->object_id;
             $bookmark_position      = $bookmark->position;
@@ -687,7 +687,7 @@ class Json5_Data
             // Build this element
             $JSON[] = [
                 "id" => (string)$bookmark_id,
-                "owner" => $bookmark_user,
+                "owner" => $bookmark_username,
                 "object_type" => $bookmark_object_type,
                 "object_id" => $bookmark_object_id,
                 "position" => $bookmark_position,

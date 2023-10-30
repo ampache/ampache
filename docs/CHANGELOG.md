@@ -14,8 +14,11 @@ Album sorting has finally been restored to all pages!
 
 * Translations 2023-10
 * Read more tag frames for `disksubtitle`
-* Database 600041
+* Database 600042
   * Index `label` column on the `label_asso` table
+  * Add user preference `bookmark_latest`, Only keep the latest media bookmark
+* Config version 69
+  * Add `user_create_streamtoken` (Add a `streamtoken` to the account when a new user is created)
 * Browse
   * Sort `artist` by time
   * Sort `album` by disk, time, version
@@ -28,6 +31,8 @@ Album sorting has finally been restored to all pages!
 * Restore `album` sort links again when split by group
 * Default visibility for new playlists is `public`
 * Garbage collect empty labels. (Keep user-generated labels)
+* CLI
+  * `-t|--garbage` don't collect garbage for each catalog, just do it at the end
 * Subsonic
   * createplaylist: Default visibility for new lists is `public`
 
@@ -70,7 +75,9 @@ Finally the issues with setting your auth token in the http header have been fix
   * New Method: lost_password (Allows a non-admin user to reset their password)
   * bookmark_create: Add `include` parameter (if true include the object in the bookmark)
   * bookmark_edit: Add `include` parameter (if true include the object in the bookmark)
-  * get_bookmark: Add `include` parameter (if true include the object in the bookmark)
+  * get_bookmark
+    * Add `include` parameter (if true include the object in the bookmark)
+    * Add `all` parameter (if true include every bookmark for the object)
   * bookmarks
     * Add parameter `client` to filter by specific groups of bookmarks
     * Add `include` parameter (if true include the object in the bookmark)
@@ -81,7 +88,9 @@ Finally the issues with setting your auth token in the http header have been fix
   * bookmark_edit: show error on missing bookmark instead of empty object
   * bookmark_delete: show error on missing bookmark instead of empty object
 * API6
-  * get_bookmark: Don't return single JSON bookmarks as an object
+  * get_bookmark
+    * add bookmark as a valid `object_type`
+    * Don't return single JSON bookmarks as an object
   * bookmark_create: Remove `client` parameter default value ('AmpacheAPI')
   * bookmark_edit
     * Remove `client` parameter default value ('AmpacheAPI')
@@ -98,6 +107,7 @@ Finally the issues with setting your auth token in the http header have been fix
 * ALL
   * handshake: auth failure with header token
   * playlist_generate: Don't error when optional `mode` and `format` are not set
+  * advanced_search: runtime error on empty data type
 * API4
   * Fix lots of Runtime Error's on missing optional data
 * API5

@@ -158,7 +158,7 @@ class Wanted extends database_object
         $results = array();
         if (!empty($martist)) {
             foreach ($martist->{'release-groups'} as $group) {
-                if (in_array(strtolower((string)$group->{'primary-type'}), $types)) {
+                if (is_array($types) && in_array(strtolower((string)$group->{'primary-type'}), $types)) {
                     $add     = true;
                     $g_count = count($group->{'secondary-types'});
 

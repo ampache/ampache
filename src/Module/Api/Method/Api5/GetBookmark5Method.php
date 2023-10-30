@@ -95,7 +95,7 @@ final class GetBookmark5Method
             'object_type' => $type,
             'comment' => null
         );
-        $results = Bookmark::get_bookmark($object);
+        $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
             Api5::empty('bookmark', $input['api_format']);
 
