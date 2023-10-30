@@ -58,7 +58,7 @@ final class BookmarkMethod
         }
         $bookmark_id = static::getBookmarkRepository()->getBookmark((int)$input['filter'], $user->getId());
         if ($bookmark_id === 0) {
-            Api::empty('bookmark', $input['filter']);
+            Api::empty('bookmark', $input['api_format']);
 
             return false;
         }
