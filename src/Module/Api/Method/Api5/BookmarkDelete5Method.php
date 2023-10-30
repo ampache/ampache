@@ -96,7 +96,7 @@ final class BookmarkDelete5Method
             'comment' => $comment
         );
 
-        $find = Bookmark::get_bookmark($object);
+        $find = Bookmark::getBookmarks($object);
         if (empty($find)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'bookmark', $input['api_format']);

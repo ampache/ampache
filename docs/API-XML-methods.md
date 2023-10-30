@@ -1228,12 +1228,14 @@ returns the songs for this genre
 ### get_bookmark
 
 Get the bookmark from it's object_id and object_type.
+By default; get only the most recent bookmark. Use `all` to retrieve all media bookmarks for the object.
 
-| Input     | Type    | Description                                      | Optional |
-|-----------|---------|--------------------------------------------------|---------:|
-| 'filter'  | string  | $object_id to find                               |       NO |
-| 'type'    | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
-| 'include' | integer | 0,1, if true include the object in the bookmark  |      YES |
+| Input     | Type    | Description                                        | Optional |
+|-----------|---------|----------------------------------------------------|---------:|
+| 'filter'  | string  | $object_id to find                                 |       NO |
+| 'type'    | string  | `song`, `video`, `podcast_episode` (object_type)   |       NO |
+| 'include' | integer | 0,1, if true include the object in the bookmark    |      YES |
+| 'all'     | integer | 0,1, if true include every bookmark for the object |      YES |
 
 * return
 
