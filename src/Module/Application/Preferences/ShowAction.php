@@ -47,7 +47,7 @@ final class ShowAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
 
         $this->ui->showHeader();
-        if ($user) {
+        if ($user->id) {
             $this->ui->show(
                 'show_preferences.inc.php',
                 [
