@@ -16,6 +16,8 @@ Album sorting has finally been restored to all pages!
 * Read more tag frames for `disksubtitle`
 * Database 600041
   * Index `label` column on the `label_asso` table
+* Config version 69
+  * Add `user_create_streamtoken` (Add a `streamtoken` to the account when a new user is created)
 * Browse
   * Sort `artist` by time
   * Sort `album` by disk, time, version

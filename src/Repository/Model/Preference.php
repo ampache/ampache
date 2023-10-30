@@ -1190,6 +1190,7 @@ class Preference extends database_object
             'use_now_playing_embedded',
             'use_original_year',
             'user_agreement',
+            'user_create_streamtoken',
             'user_no_email_confirm',
             'use_rss',
             'wanted',
