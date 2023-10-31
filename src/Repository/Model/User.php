@@ -50,7 +50,7 @@ class User extends database_object
     /**
      * @var integer $id
      */
-    public int $id = 0;
+    public $id;
     /**
      * @var string $username
      */
@@ -186,7 +186,8 @@ class User extends database_object
             return false;
         }
 
-        $info = $this->has_info();
+        $this->id = (int)($user_id);
+        $info     = $this->has_info();
         if (!empty($info)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
