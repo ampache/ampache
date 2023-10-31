@@ -68,7 +68,7 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
             : Core::get_global('user');
 
         // an empty string is an empty global
-        if ($user == '' || $user == null) {
+        if ($user == '' || $user == null || $user->id === 0) {
             return false;
         }
 
