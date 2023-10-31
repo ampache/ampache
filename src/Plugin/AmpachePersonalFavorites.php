@@ -178,9 +178,9 @@ class AmpachePersonalFavorites
         $data = $user->prefs;
 
         $this->user      = $user;
-        $this->display   = ($data['personalfav_display'] == '1');
-        $this->playlist  = $data['personalfav_playlist'];
-        $this->smartlist = $data['personalfav_smartlist'];
+        $this->display   = (array_key_exists('personalfav_display', $data) && $data['personalfav_display'] == '1');
+        $this->playlist  = $data['personalfav_playlist'] ?? '';
+        $this->smartlist = $data['personalfav_smartlist'] ?? '';
 
         return true;
     }
