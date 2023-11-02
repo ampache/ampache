@@ -64,6 +64,11 @@ final class SearchSongsMethod
         $data['rule_1_operator'] = 0;
 
         $results = Search::run($data, $user);
+        if (empty($results)) {
+            Api::empty('song', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {

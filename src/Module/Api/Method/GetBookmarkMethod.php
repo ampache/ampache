@@ -61,7 +61,7 @@ final class GetBookmarkMethod
         if (!Api::check_parameter($input, array('filter', 'type'), self::ACTION)) {
             return false;
         }
-        $object_id = (int) $input['filter'];
+        $object_id = (int)$input['filter'];
         $type      = $input['type'];
         $include   = (bool)($input['include'] ?? false);
         $all       = (bool)($input['all'] ?? false);
