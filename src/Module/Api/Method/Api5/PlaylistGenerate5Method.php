@@ -78,7 +78,8 @@ final class PlaylistGenerate5Method
 
             return false;
         }
-        // count for search rules
+        $offset     = (int)($input['offset'] ?? 0);
+        $limit      = (int)($input['limit'] ?? 0);
         $rule_count = 1;
         $data       = array(
             'type' => 'song'
@@ -139,12 +140,12 @@ final class PlaylistGenerate5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
+                Json5_Data::set_offset($offset);
+                Json5_Data::set_limit($limit);
                 break;
             default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
+                Xml5_Data::set_offset($offset);
+                Xml5_Data::set_limit($limit);
         }
 
         // get db data
@@ -152,8 +153,8 @@ final class PlaylistGenerate5Method
         shuffle($results);
 
         //slice the array if there is a limit
-        if ((int) $input['limit'] > 0) {
-            $results = array_slice($results, 0, (int) $input['limit']);
+        if ($limit > 0) {
+            $results = array_slice($results, 0, $limit);
         }
         if (empty($results)) {
             Api5::empty($format, $input['api_format']);

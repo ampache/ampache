@@ -64,8 +64,8 @@ final class TimelineMethod
             return false;
         }
         $username = $input['username'];
-        $limit    = (int) ($input['limit']);
-        $since    = (int) ($input['since']);
+        $limit    = (int)($input['limit'] ?? 0);
+        $since    = (int)($input['since'] ?? 0);
 
         if (!empty($username)) {
             if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
