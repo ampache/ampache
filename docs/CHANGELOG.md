@@ -105,6 +105,7 @@ Finally the issues with setting your auth token in the http header have been fix
 ### Fixed
 
 * ALL
+  * Some JSON methods with empty results would not show `total_count` in results
   * handshake: auth failure with header token
   * playlist_generate: Don't error when optional `mode` and `format` are not set
   * advanced_search: runtime error on empty data type
@@ -113,6 +114,8 @@ Finally the issues with setting your auth token in the http header have been fix
 * API5
   * Fix lots of Runtime Error's on missing optional data
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+  * download: random search/playlist didn't use the `id` parameter
+  * stream: random search/playlist didn't use the `id` parameter
   * bookmark_edit
     * Missing user id in data array
     * Not able to edit all bookmarks
@@ -120,6 +123,8 @@ Finally the issues with setting your auth token in the http header have been fix
   * Fix lots of Runtime Error's on missing optional data
   * catalog_folder didn't get the group of items correctly
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+  * download: random search/playlist didn't use the `id` parameter
+  * stream: random search/playlist didn't use the `id` parameter
   * bookmark_edit
     * Missing user id in data array
     * Not able to edit all bookmarks

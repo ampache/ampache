@@ -51,8 +51,8 @@ final class FriendsTimeline4Method
     public static function friends_timeline(array $input, User $user)
     {
         if (AmpConfig::get('sociable')) {
-            $limit = (int) ($input['limit']);
-            $since = (int) ($input['since']);
+            $limit = (int)($input['limit'] ?? 0);
+            $since = (int)($input['since'] ?? 0);
 
             if ($user->id > 0) {
                 $results = static::getUseractivityRepository()->getActivities($user->id, $limit, $since);

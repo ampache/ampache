@@ -77,7 +77,7 @@ final class DownloadMethod
             $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if ($type == 'search' || $type == 'playlist') {
-            $song_id = Random::get_single_song($type, $user, (int)$_REQUEST['random_id']);
+            $song_id = Random::get_single_song($type, $user, $object_id);
             $media   = new Song($song_id);
             $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
