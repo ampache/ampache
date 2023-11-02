@@ -70,6 +70,11 @@ final class LastShoutsMethod
         $results  = (!empty($username))
             ? Shoutbox::get_top($limit, $username)
             : Shoutbox::get_top($limit);
+        if (empty($results)) {
+            Api::empty('shout', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {

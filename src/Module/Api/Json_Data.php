@@ -157,7 +157,10 @@ class Json_Data
      */
     public static function empty($type): string
     {
-        return json_encode(array($type => array()), JSON_PRETTY_PRINT);
+        return json_encode(array(
+            "total_count" => 0,
+            $type => array()
+        ), JSON_PRETTY_PRINT);
     } // empty
 
     /**
