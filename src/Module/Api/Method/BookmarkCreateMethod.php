@@ -113,6 +113,8 @@ final class BookmarkCreateMethod
 
             return false;
         }
+        // only return the most recent bookmark
+        $results = array_slice($results, 0, 1);
 
         ob_end_clean();
         switch ($input['api_format']) {
