@@ -61,14 +61,19 @@ class AlbumsMethodTest extends MockeryTestCase
 
     public function testHandleThrowExceptionIfListIsEmpty(): void
     {
-        $this->expectException(ResultEmptyException::class);
-        $this->expectExceptionMessage('No Results');
+        ob_start();
 
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $browse     = $this->mock(Browse::class);
         $user       = $this->mock(User::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $result  = '';
+        $include = [];
+        $limit   = 0;
+        $offset  = 0;
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->with(null, false)
@@ -89,14 +94,43 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
-        $this->subject->handle(
-            $gatekeeper,
+        $output->shouldReceive('albums')
+            ->with(
+                [],
+                $include,
+                $user,
+                true,
+                true,
+                $limit,
+                $offset
+            )
+            ->once()
+            ->andReturn($result);
+
+        $this->streamFactory->shouldReceive('createStream')
+            ->with($result)
+            ->once()
+            ->andReturn($stream);
+
+        $response->shouldReceive('withBody')
+            ->with($stream)
+            ->once()
+            ->andReturnSelf();
+
+        $this->assertSame(
             $response,
-            $output,
-            [
-                'exact' => true
-            ],
-            $user
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                [
+                    'exact' => true,
+                    'include' => $include,
+                    'limit' => $limit,
+                    'offset' => $offset,
+                ],
+                $user
+            )
         );
     }
 
