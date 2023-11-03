@@ -93,7 +93,7 @@ class Bookmark extends database_object
     }
 
     /**
-     * get_bookmarks
+     * getBookmarks
      * @param array $data
      * @return integer[]
      */
