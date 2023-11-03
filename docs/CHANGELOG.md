@@ -38,7 +38,7 @@ Use `php bin/installer htaccess -e` to update your htaccess files
 * CLI
   * `-t|--garbage` don't collect garbage for each catalog, just do it at the end
 * Subsonic
-  * Updates Apache .htaccess.dist to support Subsonic clients that don't use *.view for calls
+  * Updated Apache .htaccess.dist to support Subsonic clients that don't use *.view for calls
   * createplaylist: Default visibility for new lists is `public`
 
 ### Fixed

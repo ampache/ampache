@@ -1180,7 +1180,7 @@ returns the songs for this genre
 ### get_bookmark
 
 Get the bookmark from it's object_id and object_type.
-By default; get only the most recent bookmark. Use `all` to retrieve all media bookmarks for the object.
+By default; get only the most recent bookmark. Use `all` to retrieve all media bookmarks for the object in a bookmark array.
 
 | Input     | Type    | Description                                        | Optional |
 |-----------|---------|----------------------------------------------------|---------:|
@@ -1189,7 +1189,20 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 | 'include' | integer | 0,1, if true include the object in the bookmark    |      YES |
 | 'all'     | integer | 0,1, if true include every bookmark for the object |      YES |
 
-* return array
+* DEFAULT return object (all=False)
+
+```JSON
+"id": "",
+"owner": "",
+"object_type": "",
+"object_id": "",
+"position": 0,
+"client": "client",
+"creation_date": 0,
+"update_date": 0
+```
+
+* return array (all=True)
 
 ```JSON
 "bookmark": []
