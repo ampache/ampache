@@ -53,6 +53,7 @@ Use `php bin/installer htaccess -e` to update your htaccess files
 * AutoUpdate notifications
 * Fix a lot of code Runtime Errors
 * Handle GatherSpotify exceptions and empty results
+* Catalog was not garbage collecting the bookmarks table
 * Browse
   * **Massive** code quality updates to the browse/query class
   * Don't overwrite a browse box title if set
@@ -118,6 +119,7 @@ Finally the issues with setting your auth token in the http header have been fix
   * Fix lots of Runtime Error's on missing optional data
 * API5
   * Fix lots of Runtime Error's on missing optional data
+  * video: error type was song instead of filter
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
   * download: random search/playlist didn't use the `id` parameter
   * stream: random search/playlist didn't use the `id` parameter
@@ -126,6 +128,7 @@ Finally the issues with setting your auth token in the http header have been fix
     * Not able to edit all bookmarks
 * API6
   * Fix lots of Runtime Error's on missing optional data
+  * video: error type was song instead of filter
   * catalog_folder didn't get the group of items correctly
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
   * download: random search/playlist didn't use the `id` parameter

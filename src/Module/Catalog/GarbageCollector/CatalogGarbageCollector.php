@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Catalog\GarbageCollector;
 
 use Ampache\Module\Util\Recommendation;
+use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -54,6 +55,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 {
     private AlbumRepositoryInterface $albumRepository;
 
+    private BookmarkRepositoryInterface $bookmarkRepository;
+
     private ShoutRepositoryInterface $shoutRepository;
 
     private UserActivityRepositoryInterface $useractivityRepository;
@@ -62,11 +65,13 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
+        BookmarkRepositoryInterface $bookmarkRepository,
         ShoutRepositoryInterface $shoutRepository,
         UserActivityRepositoryInterface $useractivityRepository,
         UserRepositoryInterface $userRepository
     ) {
         $this->albumRepository        = $albumRepository;
+        $this->bookmarkRepository     = $bookmarkRepository;
         $this->shoutRepository        = $shoutRepository;
         $this->useractivityRepository = $useractivityRepository;
         $this->userRepository         = $userRepository;
@@ -79,6 +84,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->albumRepository->collectGarbage();
         Video::garbage_collection();
         Podcast_Episode::garbage_collection();
+        $this->bookmarkRepository->collectGarbage();
         Wanted::garbage_collection();
         Art::garbage_collection();
         Stats::garbage_collection();
