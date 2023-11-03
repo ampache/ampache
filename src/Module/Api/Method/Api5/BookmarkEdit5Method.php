@@ -57,13 +57,13 @@ final class BookmarkEdit5Method
      */
     public static function bookmark_edit(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter', 'position'), self::ACTION)) {
+        if (!Api5::check_parameter($input, array('filter', 'type', 'position'), self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT) ?? 0;
-        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : 'AmpacheAPI';
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api5::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -94,6 +94,7 @@ final class BookmarkEdit5Method
             return false;
         }
         $object = array(
+            'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
@@ -101,14 +102,15 @@ final class BookmarkEdit5Method
         );
 
         // check for the bookmark first
-        $results = Bookmark::get_bookmark($object);
+        $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
-            Api5::empty('bookmark', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'bookmark', $input['api_format']);
 
             return false;
         }
         // edit it
-        Bookmark::edit($object, $user->id, $time);
+        Bookmark::edit($results[0], $object, $time);
 
         ob_end_clean();
         switch ($input['api_format']) {

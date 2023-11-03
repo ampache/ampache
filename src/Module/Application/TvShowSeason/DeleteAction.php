@@ -52,7 +52,7 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $tvshow_season_id = (int) $request->getQueryParams()['tvshow_season_id'] ?? 0;
+        $tvshow_season_id = (int)($request->getQueryParams()['tvshow_season_id'] ?? 0);
 
         $this->ui->showHeader();
         if ($tvshow_season_id < 1) {

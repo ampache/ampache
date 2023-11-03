@@ -61,7 +61,7 @@ final class LastShouts4Method
             return false;
         }
         unset($user);
-        $limit = (int) ($input['limit']);
+        $limit = (int)($input['limit'] ?? 0);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold', 10);
         }

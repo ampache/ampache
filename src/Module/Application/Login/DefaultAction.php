@@ -212,7 +212,7 @@ final class DefaultAction implements ApplicationActionInterface
                     $auth['success'] = false;
                     AmpError::add('general', T_('User is already logged in'));
 
-                    $this->logger->info(
+                    $this->logger->notice(
                         sprintf(
                             '%s is already logged in from %s and attempted to login from %s',
                             scrub_out($username),
@@ -236,7 +236,7 @@ final class DefaultAction implements ApplicationActionInterface
                 $user_id = User::create($username, $fullname, $email, $website, hash('sha256', bin2hex(random_bytes(20))), $access, $dfg, $state, $city);
                 if ($user_id > 0) {
                     // tell me you're creating the user
-                    $this->logger->info(
+                    $this->logger->notice(
                         sprintf(
                             'Created missing user %s',
                             scrub_out($username)

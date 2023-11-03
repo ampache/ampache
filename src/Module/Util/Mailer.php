@@ -47,7 +47,7 @@ final class Mailer implements MailerInterface
     /**
      * is_mail_enabled
      *
-     * Check that the mail feature is enabled
+     * Check that the mail feature is enabled. By default, you people to configure their mail settings first
      * @return boolean
      */
     public static function is_mail_enabled()
@@ -56,7 +56,6 @@ final class Mailer implements MailerInterface
             return true;
         }
 
-        // by default you actually want people to set up mail first
         return false;
     }
 

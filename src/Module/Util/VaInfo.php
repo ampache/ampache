@@ -929,8 +929,8 @@ final class VaInfo implements VaInfoInterface
     /**
      * _parse_general
      *
-     * Gather and return the general information about a file (vbr/cbr,
-     * sample rate, channels, etc.)
+     * Gather and return the general information about a file
+     * (vbr/cbr, sample rate, channels, etc.)
      * @param $tags
      * @return array
      */
@@ -948,10 +948,10 @@ final class VaInfo implements VaInfoInterface
             if ($parsed['mode'] == 'con') {
                 $parsed['mode'] = 'cbr';
             }
-            $parsed['bitrate']       = $tags['audio']['bitrate'] ?? null;
-            $parsed['channels']      = (int) $tags['audio']['channels'] ?? null;
-            $parsed['rate']          = (int) $tags['audio']['sample_rate'] ?? null;
-            $parsed['audio_codec']   = $tags['audio']['dataformat'] ?? null;
+            $parsed['bitrate']     = $tags['audio']['bitrate'] ?? null;
+            $parsed['channels']    = (!empty($tags['audio']['channels'])) ? (int)$tags['audio']['channels'] : null;
+            $parsed['rate']        = (!empty($tags['audio']['sample_rate'])) ? (int)$tags['audio']['sample_rate'] : null;
+            $parsed['audio_codec'] = $tags['audio']['dataformat'] ?? null;
         }
         if (array_key_exists('video', $tags)) {
             $parsed['video_codec']   = $tags['video']['dataformat'] ?? null;
@@ -962,9 +962,9 @@ final class VaInfo implements VaInfoInterface
             $parsed['frame_rate']    = $tags['video']['frame_rate'] ?? null;
             $parsed['video_bitrate'] = $tags['video']['bitrate'] ?? null;
         }
-        $parsed['size']          = $this->_forcedSize ?? $tags['filesize'] ?? null;
-        $parsed['encoding']      = $tags['encoding'] ?? null;
-        $parsed['mime']          = $tags['mime_type'] ?? null;
+        $parsed['size']     = $this->_forcedSize ?? $tags['filesize'] ?? null;
+        $parsed['encoding'] = $tags['encoding'] ?? null;
+        $parsed['mime']     = $tags['mime_type'] ?? null;
         if (($parsed['size'] && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags))) {
             $parsed['time'] = (($parsed['size'] - $tags['avdataoffset']) * 8) / $tags['bitrate'];
         } elseif (array_key_exists('playtime_seconds', $tags) && $tags['playtime_seconds'] > 0) {
@@ -1070,8 +1070,8 @@ final class VaInfo implements VaInfoInterface
                     // Pass the array through
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
-                case 'disksubtitle':
-                    $parsed['discsubtitle'] = $data[0];
+                case 'discsubtitle':
+                    $parsed['disksubtitle'] = $data[0];
                     break;
                 case 'partofset':
                     $elements             = explode('/', $data[0]);
@@ -1477,6 +1477,10 @@ final class VaInfo implements VaInfoInterface
                         break;
                     case 'original_year':
                         $parsed['original_year'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                    case 'discsubtitle':
+                    case 'setsubtitle':
+                        $parsed['disksubtitle'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'barcode':
                         $parsed['barcode'] = $id3v2['comments']['text'][$txxx['description']];

@@ -94,8 +94,7 @@ final class TagAction implements ApplicationActionInterface
             require_once Ui::find_template('show_tagcloud.inc.php');
 
             $this->ui->showBoxBottom();
-
-            $type = $browse2->get_type();
+            $type = $browse2->get_content_div();
 
             require_once Ui::find_template('browse_content.inc.php');
 

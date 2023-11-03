@@ -52,8 +52,9 @@ final class BookmarkCreateMethod
      * filter   = (string) object_id
      * type     = (string) object_type ('song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
-     * client   = (string) Agent string Default: 'AmpacheAPI' //optional
+     * client   = (string) Agent string //optional
      * date     = (integer) UNIXTIME() //optional
+     * include  = (integer) 0,1, if true include the object in the bookmark //optional
      * @return boolean
      */
     public static function bookmark_create(array $input, User $user): bool
@@ -64,8 +65,9 @@ final class BookmarkCreateMethod
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = $input['position'];
-        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
+        $include   = (bool)($input['include'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
@@ -96,29 +98,31 @@ final class BookmarkCreateMethod
             return false;
         }
         $object = array(
+            'user' => $user->getId(),
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => $position,
-            'user' => $user->getId()
+            'position' => $position
         );
 
         // create it then retrieve it
         Bookmark::create($object, $user->getId(), $time);
-        $results = Bookmark::get_bookmark($object);
+        $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
             Api::empty('bookmark', $input['api_format']);
 
             return false;
         }
+        // only return the most recent bookmark
+        $results = array_slice($results, 0, 1);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($results);
+                echo Json_Data::bookmarks($results, $include);
                 break;
             default:
-                echo Xml_Data::bookmarks($results);
+                echo Xml_Data::bookmarks($results, $include);
         }
 
         return true;

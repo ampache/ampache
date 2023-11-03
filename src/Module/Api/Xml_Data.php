@@ -571,7 +571,7 @@ class Xml_Data
             $string .= "<browse id=\"" . $object['id'] . "\">\n" .
                 "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
                 "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n" .
-                "\t<basename><![CDATA[" . $basename . "]]></basename>\n</list>\n";
+                "\t<basename><![CDATA[" . $basename . "]]></basename>\n</browse>\n";
         } // end foreach objects
 
         return self::output_xml($string);
@@ -871,14 +871,30 @@ class Xml_Data
      * This returns bookmarks to the user, in a pretty xml document with the information
      *
      * @param  integer[] $bookmarks Bookmark id's to include
+     * @param  boolean $include if true include the object in the bookmark
      * @return string    return xml
      */
-    public static function bookmarks($bookmarks): string
+    public static function bookmarks($bookmarks, $include = false): string
     {
         $string = "";
         foreach ($bookmarks as $bookmark_id) {
             $bookmark = new Bookmark($bookmark_id);
-            $string .= "<bookmark id=\"$bookmark_id\">\n\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n\t<object_id>" . $bookmark->object_id . "</object_id>\n\t<position>" . $bookmark->position . "</position>\n\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n</bookmark>\n";
+            $string .= "<bookmark id=\"$bookmark_id\">\n\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n\t<object_id>" . $bookmark->object_id . "</object_id>\n\t<position>" . $bookmark->position . "</position>\n\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n";
+            if ($include) {
+                $user = User::get_from_username($bookmark->getUserName());
+                switch ($bookmark->object_type) {
+                    case 'song':
+                        $string .= self::songs(array($bookmark->object_id), $user, false);
+                        break;
+                    case 'podcast_episode':
+                        $string .= self::podcast_episodes(array($bookmark->object_id), $user, false);
+                        break;
+                    case 'video':
+                        $string .= self::videos(array($bookmark->object_id), $user, false);
+                        break;
+                }
+            }
+            $string .= "</bookmark>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -1061,14 +1077,15 @@ class Xml_Data
      *
      * @param  integer[] $videos Video id's to include
      * @param  User      $user
+     * @param  boolean   $full_xml
      * @return string    return xml
      */
-    public static function videos($videos, $user): string
+    public static function videos($videos, $user, $full_xml = true): string
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n" : '';
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);

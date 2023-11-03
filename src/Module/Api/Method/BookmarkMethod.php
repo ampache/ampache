@@ -3,7 +3,7 @@
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,59 +25,62 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\BookmarkRepositoryInterface;
 
 /**
- * Class PlaylistCreateMethod
+ * Class BookmarkMethod
  * @package Lib\ApiMethods
  */
-final class PlaylistCreateMethod
+final class BookmarkMethod
 {
-    public const ACTION = 'playlist_create';
+    public const ACTION = 'bookmark';
 
     /**
-     * playlist_create
-     * MINIMUM_API_VERSION=380001
+     * bookmark
+     * MINIMUM_API_VERSION=6.1.0
      *
-     * Create a new playlist and return it
+     * Get a single bookmark
      *
      * @param array $input
      * @param User $user
-     * name = (string) Playlist name
-     * type = (string) 'public', 'private'
+     * filter  = (string) bookmark_id
+     * include = (integer) 0,1, if true include the object in the bookmark //optional
      * @return boolean
      */
-    public static function playlist_create(array $input, User $user): bool
+    public static function bookmark(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('name'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $name = $input['name'];
-        $type = (isset($input['type'])) ? $input['type'] : 'private';
-        if ($type != 'private') {
-            $type = 'public';
-        }
-
-        $object_id = Playlist::create($name, $type, $user->id, false);
-        if (!$object_id) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+        $bookmark_id = static::getBookmarkRepository()->getBookmark((int)$input['filter'], $user->getId());
+        if ($bookmark_id === 0) {
+            Api::empty('bookmark', $input['api_format']);
 
             return false;
         }
-        Catalog::count_table('playlist');
+        $include = (bool)($input['include'] ?? false);
+        $results = array($bookmark_id);
+
+        ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::playlists(array($object_id), $user, false, false);
+                echo Json_Data::bookmarks($results, $include, false);
                 break;
             default:
-                echo Xml_Data::playlists(array($object_id), $user);
+                echo Xml_Data::bookmarks($results, $include);
         }
 
         return true;
+    }
+
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
     }
 }

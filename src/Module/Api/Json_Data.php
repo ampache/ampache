@@ -157,7 +157,10 @@ class Json_Data
      */
     public static function empty($type): string
     {
-        return json_encode(array($type => array()), JSON_PRETTY_PRINT);
+        return json_encode(array(
+            "total_count" => 0,
+            $type => array()
+        ), JSON_PRETTY_PRINT);
     } // empty
 
     /**
@@ -812,10 +815,11 @@ class Json_Data
      * This returns bookmarks to the user, in a pretty json document with the information
      *
      * @param  integer[] $objects Bookmark id's to include
+     * @param  boolean   $include if true include the object in the bookmark
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "bookmark"
      */
-    public static function bookmarks($objects, $object = true): string
+    public static function bookmarks($objects, $include = false, $object = true): string
     {
         $output = array(
             "total_count" => count($objects)
@@ -824,10 +828,11 @@ class Json_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $JSON = [];
+        $count = 0;
+        $JSON  = [];
         foreach ($objects as $bookmark_id) {
             $bookmark               = new Bookmark($bookmark_id);
-            $bookmark_user          = $bookmark->getUserName();
+            $bookmark_username      = $bookmark->getUserName();
             $bookmark_object_type   = $bookmark->object_type;
             $bookmark_object_id     = (string)$bookmark->object_id;
             $bookmark_position      = $bookmark->position;
@@ -837,7 +842,7 @@ class Json_Data
             // Build this element
             $JSON[] = [
                 "id" => (string)$bookmark_id,
-                "owner" => $bookmark_user,
+                "owner" => $bookmark_username,
                 "object_type" => $bookmark_object_type,
                 "object_id" => $bookmark_object_id,
                 "position" => $bookmark_position,
@@ -845,6 +850,21 @@ class Json_Data
                 "creation_date" => $bookmark_creation_date,
                 "update_date" => $bookmark_update_date
             ];
+            if ($include) {
+                $user = User::get_from_username($bookmark_username);
+                switch ($bookmark_object_type) {
+                    case 'song':
+                        $JSON[$count]['song'] = self::songs(array((int)$bookmark_object_id), $user, false, false);
+                        break;
+                    case 'podcast_episode':
+                        $JSON[$count]['podcast_episode'] = self::podcast_episodes(array((int)$bookmark_object_id), $user, false, false);
+                        break;
+                    case 'video':
+                        $JSON[$count]['video'] = self::videos(array((int)$bookmark_object_id), $user, false, false);
+                        break;
+                }
+            }
+            $count++;
         } // end foreach
         if ($object) {
             $output["bookmark"] = $JSON;
@@ -1076,7 +1096,7 @@ class Json_Data
         $output = array(
             "total_count" => count($objects)
         );
-        Stream::set_session($_REQUEST['auth']);
+        Stream::set_session($_REQUEST['auth'] ?? '');
         $playlist_track = 0;
 
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
@@ -1095,7 +1115,7 @@ class Json_Data
             $rating       = new Rating($song_id, 'song');
             $user_rating  = $rating->get_user_rating($user->getId());
             $flag         = new Userflag($song_id, 'song');
-            $art_url      = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url      = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songType     = $song->type;
             $songMime     = $song->mime;
             $songBitrate  = $song->bitrate;
@@ -1207,10 +1227,11 @@ class Json_Data
      *
      * @param  integer[] $objects Video id's to include
      * @param  User      $user
+     * @param boolean $encode
      * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "video"
+     * @return array|string    JSON Object "video"
      */
-    public static function videos($objects, $user, $object = true): string
+    public static function videos($objects, $user, $encode = true, $object = true)
     {
         $output = array(
             "total_count" => count($objects)
@@ -1242,6 +1263,9 @@ class Json_Data
                 "playcount" => (int)$video->total_count
             );
         } // end foreach
+        if (!$encode) {
+            return $JSON;
+        }
         if ($object) {
             $output["video"] = $JSON;
         } else {
@@ -1278,7 +1302,7 @@ class Json_Data
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songType    = $song->type;
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;

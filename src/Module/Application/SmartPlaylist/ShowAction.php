@@ -50,9 +50,7 @@ final class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist = $this->modelFactory->createSearch(
-            (int) $request->getParsedBody()['playlist_id'] ?? 0
-        );
+        $playlist = $this->modelFactory->createSearch((int)($request->getParsedBody()['playlist_id'] ?? 0));
 
         $this->ui->showHeader();
 

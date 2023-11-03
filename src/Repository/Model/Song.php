@@ -450,7 +450,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
         $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $disksubtitle     = $results['disksubtitle'];
+        $disksubtitle     = $results['disksubtitle'] ?? null;
         $year             = Catalog::normalize_year($results['year'] ?? 0);
         $comment          = $results['comment'];
         $tags             = $results['genre']; // multiple genre support makes this an array
@@ -555,9 +555,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $song_id = (int)Dba::insert_id();
         $artists = array((int)$artist_id, (int)$albumartist_id);
 
-        // create the album_disk
-        $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?)";
-        Dba::write($sql, array($song_id, $disk, $catalog));
+        // create the album_disk (if missing)
+        AlbumDisk::check($album_id, $disk, $catalog, $disksubtitle);
 
         // map the song to catalog album and artist maps
         Catalog::update_map((int)$catalog, 'song', $song_id);

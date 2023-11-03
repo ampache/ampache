@@ -29,6 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -38,14 +39,18 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
@@ -54,7 +59,7 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $action = Core::get_request('action');
+        $action = $this->requestParser->getFromRequest('action');
 
         if (!Core::is_session_started()) {
             session_start();

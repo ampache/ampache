@@ -152,8 +152,8 @@ class Ui implements UiInterface
     /**
      * clean_utf8
      *
-     * Removes characters that aren't valid in XML (which is a subset of valid
-     * UTF-8, but close enough for our purposes.)
+     * Removes characters that aren't valid in XML
+     * (which is a subset of valid UTF-8, but close enough for our purposes.)
      * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
      * @param string $string
      * @return string
@@ -736,6 +736,7 @@ class Ui implements UiInterface
             case 'api_hide_dupe_searches':
             case 'autoupdate':
             case 'autoupdate_lastversion_new':
+            case 'bookmark_latest':
             case 'broadcast_by_default':
             case 'browse_filter':
             case 'browser_notify':

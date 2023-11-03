@@ -46,12 +46,17 @@ final class BookmarksMethod
      * Get information about bookmarked media this user is allowed to manage.
      *
      * @param array $input
+     * client = (string) Filter results to a specific comment/client name //optional
+     * include = (integer) 0,1, if true include the object in the bookmark //optional
      * @param User $user
      * @return boolean
      */
     public static function bookmarks(array $input, User $user): bool
     {
-        $results = static::getBookmarkRepository()->getBookmarks($user->getId());
+        $include = (bool)($input['include'] ?? false);
+        $results = (!empty($input['client']))
+            ? static::getBookmarkRepository()->getBookmarksByComment($user->getId(), (string)scrub_in($input['client']))
+            : static::getBookmarkRepository()->getBookmarks($user->getId());
         if (empty($results)) {
             Api::empty('bookmark', $input['api_format']);
 
@@ -61,10 +66,10 @@ final class BookmarksMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($results);
+                echo Json_Data::bookmarks($results, $include);
                 break;
             default:
-                echo Xml_Data::bookmarks($results);
+                echo Xml_Data::bookmarks($results, $include);
         }
 
         return true;

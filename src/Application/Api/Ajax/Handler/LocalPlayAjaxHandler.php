@@ -27,6 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -35,15 +36,23 @@ use Ampache\Module\Util\Ui;
 
 final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
+    public function __construct(
+        RequestParserInterface $requestParser
+    ) {
+        $this->requestParser   = $requestParser;
+    }
+
     public function handle(): void
     {
         $results = array();
-        $action  = Core::get_request('action');
+        $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
         switch ($action) {
             case 'set_instance':
-                // Make sure they they are allowed to do this
+                // Make sure they are allowed to do this
                 if (!Access::check('localplay', 5)) {
                     debug_event('localplay.ajax', 'Error attempted to set instance without required level', 1);
 

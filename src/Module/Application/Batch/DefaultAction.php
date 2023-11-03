@@ -157,7 +157,7 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         if (!User::stream_control($media_ids)) {
-            $this->logger->info(
+            $this->logger->notice(
                 'Access denied: Stream control failed for user ' . Core::get_global('user')->username,
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );

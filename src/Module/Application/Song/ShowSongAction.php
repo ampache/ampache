@@ -69,7 +69,7 @@ final class ShowSongAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $this->ui->showHeader();
 
-        $song = $this->modelFactory->createSong((int) $request->getQueryParams()['song_id'] ?? 0);
+        $song = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
         $song->format();
         $song->fill_ext_info();
 

@@ -27,17 +27,27 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 
 final class PodcastAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
+    public function __construct(
+        RequestParserInterface $requestParser
+    ) {
+        $this->requestParser   = $requestParser;
+    }
+
     public function handle(): void
     {
         $results = array();
+        $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'sync':
                 if (!Access::check('interface', 75)) {
                     debug_event('podcast.ajax', Core::get_global('user')->username . ' attempted to sync podcast', 1);

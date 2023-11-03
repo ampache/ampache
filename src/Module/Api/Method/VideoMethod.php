@@ -63,14 +63,14 @@ final class VideoMethod
         $video     = new Video($object_id);
         if (!$video->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'song', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::videos(array($object_id), $user, false);
+                echo Json_Data::videos(array($object_id), $user, true, false);
                 break;
             default:
                 echo Xml_Data::videos(array($object_id), $user);

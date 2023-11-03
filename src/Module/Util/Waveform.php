@@ -304,7 +304,9 @@ class Waveform
         // checking whether a mono or stereo wav
         $channel = hexdec(substr($heading[6], 0, 2));
 
-        $ratio = ($channel == 2 ? 40 : 80);
+        $ratio = ($channel == 2)
+            ? 40
+            : 80;
 
         // start putting together the initial canvas
         // $data_size = (size_of_file - header_bytes_read) / skipped_bytes + 1

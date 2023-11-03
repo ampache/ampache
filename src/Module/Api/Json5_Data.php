@@ -677,7 +677,7 @@ class Json5_Data
         $JSON = [];
         foreach ($bookmarks as $bookmark_id) {
             $bookmark               = new Bookmark($bookmark_id);
-            $bookmark_user          = $bookmark->getUserName();
+            $bookmark_username      = $bookmark->getUserName();
             $bookmark_object_type   = $bookmark->object_type;
             $bookmark_object_id     = (string)$bookmark->object_id;
             $bookmark_position      = $bookmark->position;
@@ -687,7 +687,7 @@ class Json5_Data
             // Build this element
             $JSON[] = [
                 "id" => (string)$bookmark_id,
-                "owner" => $bookmark_user,
+                "owner" => $bookmark_username,
                 "object_type" => $bookmark_object_type,
                 "object_id" => $bookmark_object_id,
                 "position" => $bookmark_position,
@@ -895,7 +895,7 @@ class Json5_Data
         }
 
         Song::build_cache($songs);
-        Stream::set_session($_REQUEST['auth']);
+        Stream::set_session($_REQUEST['auth'] ?? '');
 
         $JSON           = [];
         $playlist_track = 0;
@@ -912,7 +912,7 @@ class Json5_Data
             $rating      = new Rating($song_id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($song_id, 'song');
-            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
@@ -1064,7 +1064,7 @@ class Json5_Data
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime    = $song->mime;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 

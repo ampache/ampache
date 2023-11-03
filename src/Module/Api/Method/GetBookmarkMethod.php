@@ -46,11 +46,14 @@ final class GetBookmarkMethod
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get the bookmark from it's object_id and object_type.
+     * By default; get only the most recent bookmark. (use all to retrieve all media bookmarks for the object)
      *
      * @param array $input
      * @param User $user
-     * filter = (string) object_id to find
-     * type   = (string) object_type ('song', 'video', 'podcast_episode')
+     * filter  = (string) object_id to find
+     * type    = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
+     * include = (integer) 0,1, if true include the object in the bookmark //optional
+     * all     = (integer) 0,1, if true every bookmark related to the object //optional
      * @return boolean
      */
     public static function get_bookmark(array $input, User $user): bool
@@ -58,15 +61,17 @@ final class GetBookmarkMethod
         if (!Api::check_parameter($input, array('filter', 'type'), self::ACTION)) {
             return false;
         }
-        $object_id = (int) $input['filter'];
+        $object_id = (int)$input['filter'];
         $type      = $input['type'];
+        $include   = (bool)($input['include'] ?? false);
+        $all       = (bool)($input['all'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), array('bookmark', 'song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
@@ -93,22 +98,26 @@ final class GetBookmarkMethod
         $object = array(
             'user' => $user->id,
             'object_id' => $object_id,
-            'object_type' => $type
+            'object_type' => $type,
+            'comment' => null
         );
-        $results = Bookmark::get_bookmark($object);
+        $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
             Api::empty('bookmark', $input['api_format']);
 
             return false;
         }
+        if (!$all) {
+            $results = array_slice($results, 0, 1);
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($results);
+                echo Json_Data::bookmarks($results, $include, $all);
                 break;
             default:
-                echo Xml_Data::bookmarks($results);
+                echo Xml_Data::bookmarks($results, $include);
         }
 
         return true;

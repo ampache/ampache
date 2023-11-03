@@ -1,5 +1,142 @@
 # CHANGELOG
 
+## Ampache 6.1.0
+
+First up, AutoUpdate notifications are fixed
+
+This update has a big focus on browsing and sorting classes
+
+Code improvements have made it a lot easier to identify (and solve) some long running issues
+
+Album sorting has finally been restored to all pages!
+
+If you use Subsonic we noticed some clients don't use *.view. The /rest htaccess file has been updated to support this.
+
+Use `php bin/installer htaccess -e` to update your htaccess files
+
+### Added
+
+* Translations 2023-10
+* Read more tag frames for `disksubtitle`
+* Database 600042
+  * Index `label` column on the `label_asso` table
+  * Add user preference `bookmark_latest`, Only keep the latest media bookmark
+* Config version 69
+  * Add `user_create_streamtoken` (Add a `streamtoken` to the account when a new user is created)
+* Browse
+  * Sort `artist` by time
+  * Sort `album` by disk, time, version
+  * Sort `podcast`, `podcast_episode`, `playlist` and `search` by rating
+  * Sort `song` by album_disk
+  * Added `album_disk` sorting
+
+### Changed
+
+* Restore `album` sort links again when split by group
+* Default visibility for new playlists is `public`
+* Garbage collect empty labels. (Keep user-generated labels)
+* CLI
+  * `-t|--garbage` don't collect garbage for each catalog, just do it at the end
+* Subsonic
+  * Updated Apache .htaccess.dist to support Subsonic clients that don't use *.view for calls
+  * createplaylist: Default visibility for new lists is `public`
+
+### Fixed
+
+* Header auth with a Bearer token would always fail
+* Song rows were showing album links instead of album_disk
+* Null artist time's not updating
+* Rating `album_disk` objects would not refresh the value
+* Creating a new`album_disk` inserting the song id instead of the album id
+* SQL generation for browse sorting with comma and space in the text
+* album_disk `disk_count` wasn't updated
+* AutoUpdate notifications
+* Fix a lot of code Runtime Errors
+* Handle GatherSpotify exceptions and empty results
+* Catalog was not garbage collecting the bookmarks table
+* Browse
+  * **Massive** code quality updates to the browse/query class
+  * Don't overwrite a browse box title if set
+  * Sorting and filtering on works correctly
+  * Genre browse page HTML div name using bad names
+  * `album_disk` was sorting album
+* Search
+  * Respect limits for subsearches again
+  * `search_user_id` fallback for searches without a user
+* Subsonic
+  * Runtime Errors when you have not done things before
+
+## API 6.1.0
+
+Two new methods have been added
+
+The bookmark methods have had a bit of a rework as they were not very useful
+
+Finally the issues with setting your auth token in the http header have been fixed
+
+### Added
+
+* API6
+  * New Method: bookmark (Get single bookmark by bookmark_id)
+  * New Method: lost_password (Allows a non-admin user to reset their password)
+  * bookmark_create: Add `include` parameter (if true include the object in the bookmark)
+  * bookmark_edit: Add `include` parameter (if true include the object in the bookmark)
+  * get_bookmark
+    * Add `include` parameter (if true include the object in the bookmark)
+    * Add `all` parameter (if true include every bookmark for the object)
+  * bookmarks
+    * Add parameter `client` to filter by specific groups of bookmarks
+    * Add `include` parameter (if true include the object in the bookmark)
+
+### Changed
+
+* API5
+  * bookmark_edit: show error on missing bookmark instead of empty object
+  * bookmark_delete: show error on missing bookmark instead of empty object
+* API6
+  * get_bookmark
+    * add bookmark as a valid `object_type`
+    * Don't return single JSON bookmarks as an object
+  * bookmark_create: Remove `client` parameter default value ('AmpacheAPI')
+  * bookmark_edit
+    * Remove `client` parameter default value ('AmpacheAPI')
+    * show error on missing bookmark instead of empty object
+    * add bookmark as a valid `object_type`
+    * Don't return single JSON bookmarks as an object
+  * bookmark_delete
+    * Remove `client` parameter default value ('AmpacheAPI')
+    * show error on missing bookmark instead of empty object
+    * add bookmark as a valid `object_type`
+
+### Fixed
+
+* ALL
+  * Some JSON methods with empty results would not show `total_count` in results
+  * handshake: auth failure with header token
+  * playlist_generate: Don't error when optional `mode` and `format` are not set
+  * advanced_search: runtime error on empty data type
+* API4
+  * Fix lots of Runtime Error's on missing optional data
+* API5
+  * Fix lots of Runtime Error's on missing optional data
+  * video: error type was song instead of filter
+  * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+  * download: random search/playlist didn't use the `id` parameter
+  * stream: random search/playlist didn't use the `id` parameter
+  * bookmark_edit
+    * Missing user id in data array
+    * Not able to edit all bookmarks
+* API6
+  * Fix lots of Runtime Error's on missing optional data
+  * video: error type was song instead of filter
+  * catalog_folder didn't get the group of items correctly
+  * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+  * download: random search/playlist didn't use the `id` parameter
+  * stream: random search/playlist didn't use the `id` parameter
+  * bookmark_edit
+    * Missing user id in data array
+    * Not able to edit all bookmarks
+
 ## Ampache 6.0.3
 
 ### Added
@@ -44,6 +181,7 @@
 ### Fixed
 
 * ALL
+  * Fixed Bearer token auth on all methods
   * handshake: runtime errors with bad username
   * handshake: Don't error on empty data counts
   * ping: Don't error on empty data counts

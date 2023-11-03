@@ -54,14 +54,14 @@ final class Download4Method
         if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;
         }
-        $fileid   = $input['id'];
-        $type     = $input['type'];
-        $format   = $input['format'];
-        $original = $format && $format != 'raw';
+        $fileid       = $input['id'];
+        $type         = $input['type'];
+        $format       = $input['format'];
+        $transcode_to = $format && $format != 'raw';
 
         $url    = '';
         $params = '&client=api&action=download&cache=1';
-        if ($original && $type == 'song') {
+        if ($transcode_to && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
         if ($format && $type == 'song') {

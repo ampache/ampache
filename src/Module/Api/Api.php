@@ -55,6 +55,7 @@ class Api
         Method\BookmarkCreateMethod::ACTION => Method\BookmarkCreateMethod::class,
         Method\BookmarkDeleteMethod::ACTION => Method\BookmarkDeleteMethod::class,
         Method\BookmarkEditMethod::ACTION => Method\BookmarkEditMethod::class,
+        Method\BookmarkMethod::ACTION => Method\BookmarkMethod::class,
         Method\BookmarksMethod::ACTION => Method\BookmarksMethod::class,
         Method\BrowseMethod::ACTION => Method\BrowseMethod::class,
         Method\CatalogActionMethod::ACTION => Method\CatalogActionMethod::class,
@@ -72,6 +73,7 @@ class Api
         Method\FlagMethod::ACTION => Method\FlagMethod::class,
         Method\FollowersMethod::ACTION => Method\FollowersMethod::class,
         Method\FollowingMethod::ACTION => Method\FollowingMethod::class,
+        Method\LostPasswordMethod::ACTION => Method\LostPasswordMethod::class,
         Method\FriendsTimelineMethod::ACTION => Method\FriendsTimelineMethod::class,
         Method\GenreAlbumsMethod::ACTION => Method\GenreAlbumsMethod::class,
         Method\GenreArtistsMethod::ACTION => Method\GenreArtistsMethod::class,
@@ -172,12 +174,12 @@ class Api
     /**
      * @var string $version
      */
-    public static $version = '6.0.3'; // AMPACHE_VERSION
+    public static $version = '6.1.0'; // AMPACHE_VERSION
 
     /**
      * @var string $version_numeric
      */
-    public static $version_numeric = '603000'; // AMPACHE_VERSION
+    public static $version_numeric = '610000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
@@ -339,7 +341,7 @@ class Api
      * check_access
      *
      * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id)
+     * 'interface', 100, $user->id
      *
      * @param string $type
      * @param integer $level

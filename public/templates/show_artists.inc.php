@@ -67,7 +67,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_add essential"></th>
             <th class="cel_songs optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=song_count', T_('Songs'), 'artist_sort_song_count'); ?></th>
             <th class="cel_albums optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album_count', T_('Albums'), 'artist_sort_album_count'); ?></th>
-            <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
+            <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('time'), 'artist_sort_time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', T_('Played'), 'artist_sort_total_count'); ?></th>
             <?php } ?>

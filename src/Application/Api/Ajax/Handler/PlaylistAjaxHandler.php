@@ -29,16 +29,25 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Playlist;
 
 final class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
+    public function __construct(
+        RequestParserInterface $requestParser
+    ) {
+        $this->requestParser   = $requestParser;
+    }
+
     public function handle(): void
     {
         $results = array();
-        $action  = Core::get_request('action');
+        $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
         switch ($action) {
@@ -75,7 +84,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     if (empty($name)) {
                         $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
                     }
-                    $playlist_id = (int)Playlist::create($name, 'private');
+                    $playlist_id = (int)Playlist::create($name, 'public');
                     if ($playlist_id < 1) {
                         break;
                     }

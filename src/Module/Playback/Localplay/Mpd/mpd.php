@@ -307,8 +307,7 @@ class mpd
      * SendCommand
      *
      * Sends a generic command to the MPD server. Several command constants
-     * are pre-defined for use (see self::COMMAND_* constant definitions
-     * above).
+     * are pre-defined for use (see self::COMMAND_* constant definitions above).
      * @param $command
      * @param $arguments
      * @param boolean $refresh_info
@@ -508,8 +507,12 @@ class mpd
         }
 
         // Forcibly prevent out of range errors
-        $value = $value > 0 ? $value : 0;
-        $value = $value < 100 ? $value : 100;
+        $value = ($value > 0)
+            ? $value
+            : 0;
+        $value = ($value < 100)
+            ? $value
+            : 100;
 
         // If we're not compatible with SETVOL, we'll try adjusting
         // using VOLUME

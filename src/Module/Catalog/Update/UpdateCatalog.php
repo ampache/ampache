@@ -71,13 +71,14 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ];
 
         // don't look at catalogs without an action
-        if (!$addNew && !$addArt && !$importPlaylists && !$cleanup && !$missing && !$verification && !$collectGarbage) {
+        if (!$addNew && !$addArt && !$importPlaylists && !$cleanup && !$missing && !$verification) {
             $catalogType = '';
             $catalogName = '';
         }
-        $db_results = $this->lookupCatalogs($catalogType, $catalogName);
-        $external   = false;
-        $changed    = 0;
+        $db_results   = $this->lookupCatalogs($catalogType, $catalogName);
+        $external     = false;
+        $changed      = 0;
+        $gather_types = array();
 
         ob_end_clean();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -260,34 +261,39 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
             }
-            if ($collectGarbage === true || (($cleanup === true || $verification === true) && $changed > 0)) {
-                $interactor->info(
-                    T_('Garbage Collection'),
-                    true
-                );
-                $this->catalogGarbageCollector->collect();
-                Catalog::clean_empty_albums();
-                Album::update_album_artist();
-                Catalog::update_counts();
-                $interactor->info(
-                    '------------------',
-                    true
-                );
+            if (!in_array($catalog->gather_types, $gather_types)) {
+                $gather_types[] = $catalog->gather_types;
             }
-            if ($changed > 0 || ($collectGarbage === true && $missing !== true)) {
-                $interactor->info(
-                    T_('Update table mapping, counts and delete garbage data'),
-                    true
-                );
-                // clean up after the action
-                Catalog::update_catalog_map($catalog->gather_types);
-                Catalog::garbage_collect_mapping();
-                Catalog::garbage_collect_filters();
-                $interactor->info(
-                    '------------------',
-                    true
-                );
+        }
+        if ($collectGarbage === true || (($cleanup === true || $verification === true) && $changed > 0)) {
+            $interactor->info(
+                T_('Garbage Collection'),
+                true
+            );
+            $this->catalogGarbageCollector->collect();
+            Catalog::clean_empty_albums();
+            Album::update_album_artist();
+            Catalog::update_counts();
+            $interactor->info(
+                '------------------',
+                true
+            );
+        }
+        if ($changed > 0 || ($collectGarbage === true && $missing !== true)) {
+            $interactor->info(
+                T_('Update table mapping, counts and delete garbage data'),
+                true
+            );
+            // clean up after the action
+            foreach ($gather_types as $media_type) {
+                Catalog::update_catalog_map($media_type);
             }
+            Catalog::garbage_collect_mapping();
+            Catalog::garbage_collect_filters();
+            $interactor->info(
+                '------------------',
+                true
+            );
         }
         if ($optimizeDatabase === true) {
             ob_start();

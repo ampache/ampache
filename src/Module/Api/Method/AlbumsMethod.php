@@ -92,11 +92,6 @@ final class AlbumsMethod implements MethodInterface
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
         $results = $browse->get_objects();
-        if ($results === []) {
-            throw new ResultEmptyException(
-                T_('No Results')
-            );
-        }
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);

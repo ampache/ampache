@@ -73,7 +73,7 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -81,7 +81,7 @@ class Graph
      * @return string
      */
     protected function get_user_sql_where(
-        $user = 0,
+        $user_id = 0,
         $object_type = null,
         $object_id = 0,
         $start_date = null,
@@ -97,9 +97,8 @@ class Graph
         }
 
         $sql = "WHERE `object_count`.`date` >= " . $start_date . " AND `object_count`.`date` <= " . $end_date;
-        if ($user > 0) {
-            $user = (int)($user);
-            $sql .= " AND `object_count`.`user` = " . $user;
+        if ($user_id > 0) {
+            $sql .= " AND `object_count`.`user` = " . $user_id;
         }
 
         $object_id = (int)($object_id);
@@ -197,7 +196,7 @@ class Graph
     /**
      * @param string $fct
      * @param Data $MyData
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -232,7 +231,7 @@ class Graph
      * get_user_all_pts
      * @param string $fct
      * @param Data $MyData
-     * @param integer $user
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -242,21 +241,20 @@ class Graph
     protected function get_user_all_pts(
         $fct,
         Data $MyData,
-        $user = 0,
+        $user_id = 0,
         $object_type = null,
         $object_id = 0,
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
     ) {
-        $values = $this->get_all_pts($fct, $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
-
+        $values = $this->get_all_pts($fct, $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         $ustats = User::count();
         // Only display other users if the graph is not for a specific user and user count is small
-        if (!$user && $ustats['users'] < 10) {
+        if ($user_id < 1 && $ustats['users'] < 10) {
             $userArray = $this->getUserRepository()->getValidArray();
-            foreach ($userArray as $user) {
-                $user_values = $this->get_all_type_pts($fct, $user['id'], $object_type, $object_id, $start_date, $end_date,
+            foreach ($userArray as $validUser) {
+                $user_values = $this->get_all_type_pts($fct, $validUser['id'], $object_type, $object_id, $start_date, $end_date,
                     $zoom);
                 foreach ($values as $date => $value) {
                     if (array_key_exists($date, $user_values)) {
@@ -264,7 +262,7 @@ class Graph
                     } else {
                         $value = 0;
                     }
-                    $MyData->addPoints($value, $user['username']);
+                    $MyData->addPoints($value, $validUser['username']);
                 }
             }
         }
@@ -313,7 +311,7 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -322,7 +320,7 @@ class Graph
      * @return array
      */
     protected function get_user_hits_pts(
-        $user = 0,
+        $user_id = 0,
         $object_type = 'song',
         $object_id = 0,
         $start_date = null,
@@ -330,7 +328,7 @@ class Graph
         $zoom = 'day'
     ) {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
-        $where      = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
+        $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, COUNT(`object_count`.`id`) AS `hits` FROM `object_count` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
@@ -343,7 +341,7 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -353,7 +351,7 @@ class Graph
      * @return array
      */
     protected function get_user_object_count_pts(
-        $user = 0,
+        $user_id = 0,
         $object_type = 'song',
         $object_id = 0,
         $start_date = null,
@@ -362,7 +360,7 @@ class Graph
         $column = 'size'
     ) {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
-        $where      = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
+        $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
@@ -375,7 +373,7 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -383,13 +381,13 @@ class Graph
      * @param string $zoom
      * @return array
      */
-    protected function get_user_bandwidth_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    protected function get_user_bandwidth_pts($user_id = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
-        return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom);
+        return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -398,14 +396,14 @@ class Graph
      * @return array
      */
     protected function get_user_time_pts(
-        $user = 0,
+        $user_id = 0,
         $object_type = 'song',
         $object_id = 0,
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
     ) {
-        return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom, 'time');
+        return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, 'time');
     }
 
     /**
@@ -471,7 +469,7 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -480,7 +478,7 @@ class Graph
      * @return array
      */
     protected function get_geolocation_pts(
-        $user = 0,
+        $user_id = 0,
         $object_type = '',
         $object_id = 0,
         $start_date = null,
@@ -489,7 +487,7 @@ class Graph
     ) {
         $pts = array();
 
-        $where = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
+        $where = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
         if ($object_type === '') {
             $where .= " AND `object_type` IN ('song', 'video')";
         }
@@ -615,7 +613,7 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -645,7 +643,7 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -655,7 +653,7 @@ class Graph
      * @param integer $height
      */
     public function render_user_bandwidth(
-        $user = 0,
+        $user_id = 0,
         $object_type = null,
         $object_id = 0,
         $start_date = null,
@@ -665,8 +663,7 @@ class Graph
         $height = 0
     ) {
         $MyData = new Data();
-        $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user, $object_type, $object_id, $start_date,
-            $end_date, $zoom);
+        $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         $MyData->setAxisName(0, "Bandwidth");
         $MyData->setAxisDisplay(0, AXIS_FORMAT_TRAFFIC);
@@ -675,15 +672,15 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param integer $start_date
      * @param integer $end_date
      * @return integer
      */
-    public function get_total_bandwidth($user = 0, $start_date = null, $end_date = null)
+    public function get_total_bandwidth($user_id = 0, $start_date = null, $end_date = null)
     {
         $total  = 0;
-        $values = $this->get_all_type_pts('get_user_bandwidth_pts', $user, null, 0, $start_date, $end_date, 'month');
+        $values = $this->get_all_type_pts('get_user_bandwidth_pts', $user_id, null, 0, $start_date, $end_date, 'month');
         foreach ($values as $date => $value) {
             $total += $value;
         }
@@ -692,15 +689,15 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param integer $start_date
      * @param integer $end_date
      * @return integer
      */
-    public function get_total_time($user = 0, $start_date = null, $end_date = null)
+    public function get_total_time($user_id = 0, $start_date = null, $end_date = null)
     {
         $total  = 0;
-        $values = $this->get_all_type_pts('get_user_time_pts', $user, null, 0, $start_date, $end_date, 'month');
+        $values = $this->get_all_type_pts('get_user_time_pts', $user_id, null, 0, $start_date, $end_date, 'month');
         foreach ($values as $date => $value) {
             $total += $value;
         }
@@ -709,15 +706,15 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param integer $start_date
      * @param integer $end_date
      * @return integer
      */
-    public function get_total_hits($user = 0, $start_date = null, $end_date = null)
+    public function get_total_hits($user_id = 0, $start_date = null, $end_date = null)
     {
         $total  = 0;
-        $values = $this->get_all_type_pts('get_user_hits_pts', $user, null, 0, $start_date, $end_date, 'month');
+        $values = $this->get_all_type_pts('get_user_hits_pts', $user_id, null, 0, $start_date, $end_date, 'month');
         foreach ($values as $date => $value) {
             $total += $value;
         }
@@ -787,7 +784,7 @@ class Graph
     }
 
     /**
-     * @param integer $user
+     * @param int $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param integer $start_date
@@ -795,14 +792,14 @@ class Graph
      * @param string $zoom
      */
     public function display_map(
-        $user = 0,
+        $user_id = 0,
         $object_type = null,
         $object_id = 0,
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
     ) {
-        $pts = $this->get_geolocation_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom);
+        $pts = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         foreach (Plugin::get_plugins('display_map') as $plugin_name) {
             $plugin = new Plugin($plugin_name);

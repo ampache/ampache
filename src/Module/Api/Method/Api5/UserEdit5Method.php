@@ -38,7 +38,7 @@ final class UserEdit5Method
 
     /**
      * user_edit
-     * MINIMUM_API_VERSION=600000
+     * MINIMUM_API_VERSION=6.0.0
      *
      * Update an existing user.
      * Takes the username with optional parameters.

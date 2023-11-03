@@ -17,7 +17,11 @@ Binary methods will also return:
 
 ## Auth Methods
 
-Auth methods are used for authenticating or checking the status of your session in an Ampache server
+Auth methods are used for authenticating or checking the status of your session in an Ampache server.
+
+Remember that the auth parameter does not need to be sent as a parameter in the URL.
+
+[HTTP header authentication](https://ampache.org/api/#http-header-authentication) is supported for the auth parameter where present.
 
 ### handshake
 
@@ -84,6 +88,32 @@ Destroy a session using the auth parameter.
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/goodbye.json)
+
+### lost_password
+
+Email a new password to the user (if allowed) using a reset token.
+
+```php
+   $username;
+   $key = hash('sha256', 'email');
+   auth = hash('sha256', $username . $key);
+```
+
+| Input  | Type    | Description                 | Optional |
+|--------|---------|-----------------------------|---------:|
+| 'auth' | string  | password reset token        |       NO |
+
+* return
+
+```JSON
+"success": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
 
 ### ping
 
@@ -158,24 +188,6 @@ Register as a new user if allowed. (Requires the username, password and email.)
 ## Non-Data Methods
 
 These methods take no parameters beyond your auth key to return information
-
-### bookmarks
-
-Get information about bookmarked media this user is allowed to manage.
-
-* return array
-
-```JSON
-"bookmark": []
-```
-
-* throws object
-
-```JSON
-"error": ""
-```
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/bookmarks.json)
 
 ### system_update
 
@@ -512,6 +524,56 @@ This returns the songs of the specified artist
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/artist_songs.json)
 
+### bookmarks
+
+Get information about bookmarked media this user is allowed to manage.
+
+| Input      | Type    | Description                                     | Optional |
+|------------|---------|-------------------------------------------------|---------:|
+| 'client'   | string  | filter by the agent/client name                 |      YES |
+| 'include'  | integer | 0,1, if true include the object in the bookmark |      YES |
+
+* return array
+
+```JSON
+"bookmark": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/bookmarks.json)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmarks%20\(with%20include\).json)
+
+### bookmark
+
+Get a single bookmark by bookmark_id
+
+| Input      | Type    | Description                                     | Optional |
+|------------|---------|-------------------------------------------------|---------:|
+| 'filter'   | string  | bookmark_id                                     |      YES |
+| 'include'  | integer | 0,1, if true include the object in the bookmark |      YES |
+
+* return
+
+```XML
+<root>
+    <bookmark>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark.json)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark%20\(with%20include\).json)
+
 ### bookmark_create
 
 Create a placeholder for the current media that you can return to later.
@@ -521,8 +583,9 @@ Create a placeholder for the current media that you can return to later.
 | 'filter'   | string  | $object_id to find                               |       NO |
 | 'type'     | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
 | 'position' | integer | current track time in seconds                    |       NO |
-| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')            |      YES |
+| 'client'   | string  | Agent string.                                    |      YES |
 | 'date'     | integer | update time (Default: UNIXTIME())                |      YES |
+| 'include'  | integer | 0,1, if true include the object in the bookmark  |      YES |
 
 * return array
 
@@ -546,7 +609,7 @@ Delete an existing bookmark. (if it exists)
 |----------|--------|--------------------------------------------------|---------:|
 | 'filter' | string | $object_id to delete                             |       NO |
 | 'type'   | string | `song`, `video`, `podcast_episode` (object_type) |       NO |
-| 'client' | string | Agent string. (Default: 'AmpacheAPI')            |      YES |
+| 'client' | string | Agent string.                                    |      YES |
 
 * return object
 
@@ -571,8 +634,9 @@ Edit a placeholder for the current media that you can return to later.
 | 'filter'   | string  | $object_id to find                               |       NO |
 | 'type'     | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
 | 'position' | integer | current track time in seconds                    |       NO |
-| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')            |      YES |
+| 'client'   | string  | Agent string.                                    |      YES |
 | 'date'     | integer | update time (Default: UNIXTIME())                |      YES |
+| 'include'  | integer | 0,1, if true include the object in the bookmark  |      YES |
 
 * return array
 
@@ -1116,13 +1180,29 @@ returns the songs for this genre
 ### get_bookmark
 
 Get the bookmark from it's object_id and object_type.
+By default; get only the most recent bookmark. Use `all` to retrieve all media bookmarks for the object in a bookmark array.
 
-| Input    | Type   | Description                                      | Optional |
-|----------|--------|--------------------------------------------------|---------:|
-| 'filter' | string | $object_id to find                               |       NO |
-| 'type'   | string | `song`, `video`, `podcast_episode` (object_type) |       NO |
+| Input     | Type    | Description                                        | Optional |
+|-----------|---------|----------------------------------------------------|---------:|
+| 'filter'  | string  | $object_id to find                                 |       NO |
+| 'type'    | string  | `song`, `video`, `podcast_episode` (object_type)   |       NO |
+| 'include' | integer | 0,1, if true include the object in the bookmark    |      YES |
+| 'all'     | integer | 0,1, if true include every bookmark for the object |      YES |
 
-* return array
+* DEFAULT return object (all=False)
+
+```JSON
+"id": "",
+"owner": "",
+"object_type": "",
+"object_id": "",
+"position": 0,
+"client": "client",
+"creation_date": 0,
+"update_date": 0
+```
+
+* return array (all=True)
 
 ```JSON
 "bookmark": []
@@ -1135,6 +1215,7 @@ Get the bookmark from it's object_id and object_type.
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_bookmark.json)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_bookmark%20\(with%20include\).json)
 
 ### get_indexes
 

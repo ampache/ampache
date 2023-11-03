@@ -77,11 +77,6 @@ class Browse extends Query
     );
 
     /**
-     * @var boolean $show_header
-     */
-    public $show_header;
-
-    /**
      * @var integer $duration
      */
     public $duration;
@@ -101,7 +96,6 @@ class Browse extends Query
             $this->set_use_alpha(false);
             $this->set_grid_view(true);
         }
-        $this->show_header = true;
     }
 
     public function getId(): int
@@ -123,8 +117,7 @@ class Browse extends Query
 
     /**
      * is_valid_type
-     * This sets the current browse object to a 'simple' browse method
-     * which means use the base query provided and expand from there
+     * Validate the browse is a type of object you can actually browse
      *
      * @param string $type
      * @return bool
@@ -177,7 +170,7 @@ class Browse extends Query
             $name = 'browse_current_' . $this->get_type();
             if (array_key_exists($name, $_SESSION) && array_key_exists('start', $_SESSION[$name]) && $_SESSION[$name]['start'] > 0) {
                 // Checking if value is suitable
-                $start = $_SESSION[$name]['start'];
+                $start = (int)($_SESSION[$name]['start'] ?? 0);
                 if ($this->get_offset() > 0) {
                     $set_page = floor($start / $this->get_offset());
                     if ($this->get_total() > $this->get_offset()) {
@@ -248,8 +241,8 @@ class Browse extends Query
         }
 
         // Set the correct classes based on type
-        $class = "box browse_" . $type;
-        debug_event(self::class, 'Show objects called for type {' . $type . '}', 5);
+        $class = "box browse_" . $type . '_' . $this->id;
+        debug_event(self::class, 'show_objects called. browse {' . $this->id . '} type {' . $type . '}', 5);
 
         // hide some of the useless columns in a browse
         $hide_columns   = array();
@@ -271,17 +264,18 @@ class Browse extends Query
                 : '';
         }
 
+        $box_title       = $this->get_title('');
         $limit_threshold = $this->get_threshold();
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':
-                $box_title = T_('Songs') . $match;
+                $box_title = $this->get_title(T_('Songs') . $match);
                 Song::build_cache($object_ids, $limit_threshold);
                 $box_req = Ui::find_template('show_songs.inc.php');
                 break;
             case 'album':
                 Album::build_cache($object_ids);
-                $box_title     = T_('Albums') . $match;
+                $box_title     = $this->get_title(T_('Albums') . $match);
                 $group_release = false;
                 if (is_array($argument)) {
                     if (array_key_exists('title', $argument)) {
@@ -294,7 +288,7 @@ class Browse extends Query
                 $box_req = Ui::find_template('show_albums.inc.php');
                 break;
             case 'album_disk':
-                $box_title     = T_('Albums') . $match;
+                $box_title     = $this->get_title(T_('Albums') . $match);
                 $group_release = false;
                 if (is_array($argument)) {
                     if (array_key_exists('title', $argument)) {
@@ -307,139 +301,140 @@ class Browse extends Query
                 $box_req = Ui::find_template('show_album_disks.inc.php');
                 break;
             case 'user':
-                $box_title = T_('Browse Users') . $match;
+                $box_title = $this->get_title(T_('Browse Users') . $match);
                 $box_req   = Ui::find_template('show_users.inc.php');
                 break;
             case 'artist':
                 if ($this->is_album_artist()) {
-                    $box_title = T_('Album Artist') . $match;
+                    $box_title = $this->get_title(T_('Album Artist') . $match);
                 } elseif ($this->is_song_artist()) {
-                    $box_title = T_('Song Artist') . $match;
+                    $box_title = $this->get_title(T_('Song Artist') . $match);
                 } else {
-                    $box_title = T_('Artist') . $match;
+                    $box_title = $this->get_title(T_('Artist') . $match);
                 }
                 Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = Ui::find_template('show_artists.inc.php');
                 break;
             case 'live_stream':
-                $box_title = T_('Radio Stations') . $match;
+                $box_title = $this->get_title(T_('Radio Stations') . $match);
                 $box_req   = Ui::find_template('show_live_streams.inc.php');
                 break;
             case 'playlist':
                 Playlist::build_cache($object_ids);
-                $box_title = T_('Playlists') . $match;
+                $box_title = $this->get_title(T_('Playlists') . $match);
                 $box_req   = Ui::find_template('show_playlists.inc.php');
                 break;
             case 'playlist_media':
-                $box_title = T_('Playlist Items') . $match;
+                $box_title = $this->get_title(T_('Playlist Items') . $match);
                 $box_req   = Ui::find_template('show_playlist_medias.inc.php');
                 break;
             case 'playlist_localplay':
-                $box_title = T_('Current Playlist');
+                $box_title = $this->get_title(T_('Current Playlist'));
                 $box_req   = Ui::find_template('show_localplay_playlist.inc.php');
                 Ui::show_box_bottom();
                 break;
             case 'smartplaylist':
-                $box_title = T_('Smart Playlists') . $match;
+                $box_title = $this->get_title(T_('Smart Playlists') . $match);
                 $box_req   = Ui::find_template('show_searches.inc.php');
                 break;
             case 'catalog':
-                $box_title = T_('Catalogs');
+                $box_title = $this->get_title(T_('Catalogs'));
                 $box_req   = Ui::find_template('show_catalogs.inc.php');
                 break;
             case 'shoutbox':
-                $box_title = T_('Shoutbox Records');
+                $box_title = $this->get_title(T_('Shoutbox Records'));
                 $box_req   = Ui::find_template('show_manage_shoutbox.inc.php');
                 break;
             case 'tag':
                 Tag::build_cache($object_ids);
-                $box_title = T_('Genres');
+                $box_title = $this->get_title(T_('Genres'));
                 $box_req   = Ui::find_template('show_tagcloud.inc.php');
                 break;
             case 'tag_hidden':
                 Tag::build_cache($object_ids);
-                $box_title = T_('Genres');
+                $box_title = $this->get_title(T_('Genres'));
                 $box_req   = Ui::find_template('show_tagcloud_hidden.inc.php');
                 break;
             case 'video':
                 Video::build_cache($object_ids);
                 $video_type = 'video';
-                $box_title  = T_('Videos');
+                $box_title  = $this->get_title(T_('Videos'));
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'democratic':
-                $box_title = T_('Democratic Playlist');
+                $box_title = $this->get_title(T_('Democratic Playlist'));
                 $box_req   = Ui::find_template('show_democratic_playlist.inc.php');
                 break;
             case 'wanted':
-                $box_title = T_('Wanted Albums');
+                $box_title = $this->get_title(T_('Wanted Albums'));
                 $box_req   = Ui::find_template('show_wanted_albums.inc.php');
                 break;
             case 'share':
-                $box_title = T_('Shares');
+                $box_title = $this->get_title(T_('Shares'));
                 $box_req   = Ui::find_template('show_shared_objects.inc.php');
                 break;
             case 'song_preview':
-                $box_title = T_('Songs');
+                $box_title = $this->get_title(T_('Songs'));
                 $box_req   = Ui::find_template('show_song_previews.inc.php');
                 break;
             case 'broadcast':
-                $box_title = T_('Broadcasts');
+                $box_title = $this->get_title(T_('Broadcasts'));
                 $box_req   = Ui::find_template('show_broadcasts.inc.php');
                 break;
             case 'license':
-                $box_title = T_('Media Licenses');
+                $box_title = $this->get_title(T_('Media Licenses'));
                 $box_req   = Ui::find_template('show_manage_license.inc.php');
                 break;
             case 'tvshow':
-                $box_title = T_('TV Shows');
+                $box_title = $this->get_title(T_('TV Shows'));
                 $box_req   = Ui::find_template('show_tvshows.inc.php');
                 break;
             case 'tvshow_season':
-                $box_title = T_('Seasons');
+                $box_title = $this->get_title(T_('Seasons'));
                 $box_req   = Ui::find_template('show_tvshow_seasons.inc.php');
                 break;
             case 'tvshow_episode':
-                $box_title  = T_('Episodes');
+                $box_title  = $this->get_title(T_('Episodes'));
                 $video_type = $type;
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'movie':
-                $box_title  = T_('Movies');
+                $box_title  = $this->get_title(T_('Movies'));
                 $video_type = $type;
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'clip':
-                $box_title  = T_('Clips');
+                $box_title  = $this->get_title(T_('Clips'));
                 $video_type = $type;
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'personal_video':
-                $box_title  = T_('Personal Videos');
+                $box_title  = $this->get_title(T_('Personal Videos'));
                 $video_type = $type;
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'label':
-                $box_title = T_('Labels');
+                $box_title = $this->get_title(T_('Labels'));
                 $box_req   = Ui::find_template('show_labels.inc.php');
                 break;
             case 'pvmsg':
-                $box_title = T_('Private Messages');
+                $box_title = $this->get_title(T_('Private Messages'));
                 $box_req   = Ui::find_template('show_pvmsgs.inc.php');
                 break;
             case 'podcast':
-                $box_title = T_('Podcasts');
+                $box_title = $this->get_title(T_('Podcasts'));
                 $box_req   = Ui::find_template('show_podcasts.inc.php');
                 break;
             case 'podcast_episode':
-                $box_title = T_('Podcast Episodes');
+                $box_title = $this->get_title(T_('Podcast Episodes'));
                 $box_req   = Ui::find_template('show_podcast_episodes.inc.php');
                 break;
         } // end switch on type
 
         Ajax::start_container($this->get_content_div(), 'browse_content');
         if ($this->is_show_header()) {
-            if (isset($box_req) && isset($box_title)) {
+            if (isset($box_req) && !empty($box_title)) {
+                $this->set_title($box_title);
                 Ui::show_box_top($box_title, $class);
             }
         }
@@ -701,7 +696,7 @@ class Browse extends Query
      */
     public function set_show_header($show_header)
     {
-        $this->show_header = $show_header;
+        $this->_state['show_header'] = $show_header;
     }
 
     /**
@@ -719,7 +714,7 @@ class Browse extends Query
      */
     public function is_show_header()
     {
-        return $this->show_header;
+        return $this->_state['show_header'];
     }
 
     /**
@@ -746,6 +741,15 @@ class Browse extends Query
 
     /**
      *
+     * @param string $title
+     */
+    public function set_title($title)
+    {
+        $this->_state['title'] = $title;
+    }
+
+    /**
+     *
      * @return string
      */
     public function get_threshold()
@@ -755,6 +759,20 @@ class Browse extends Query
         }
 
         return '';
+    }
+
+    /**
+     *
+     * @param string $default
+     * @return string
+     */
+    public function get_title($default)
+    {
+        if ($this->_state['title'] !== null) {
+            return (string)$this->_state['title'];
+        }
+
+        return $default;
     }
 
     /**

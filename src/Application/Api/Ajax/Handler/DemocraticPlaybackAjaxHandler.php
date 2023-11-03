@@ -27,12 +27,21 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Democratic;
 
 final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
+    public function __construct(
+        RequestParserInterface $requestParser
+    ) {
+        $this->requestParser   = $requestParser;
+    }
+
     public function handle(): void
     {
         $democratic = Democratic::get_current_playlist();
@@ -40,9 +49,10 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
 
         $show_browse = false;
         $results     = array();
+        $action      = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'delete_vote':
                 $democratic->remove_vote($_REQUEST['row_id']);
                 $show_browse = true;

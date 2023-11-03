@@ -66,9 +66,7 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $license = $this->modelFactory->createLicense(
-            (int) $request->getQueryParams()['license_id'] ?? 0
-        );
+        $license = $this->modelFactory->createLicense((int)($request->getQueryParams()['license_id'] ?? 0));
 
         $this->licenseRepository->delete($license->id);
 

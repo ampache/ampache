@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnusedPrivateMethodInspection */
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -702,7 +702,7 @@ class Update
         $update_string = "* Add ui option ('subsonic_always_download') Force Subsonic streams to download. (Enable scrobble in your client to record stats)";
         $version[]     = array('version' => '510005', 'description' => $update_string);
 
-        $update_string = "* Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions<br />* Add ui option ('api_force_version') to to force a specific API response (even if that version is disabled)";
+        $update_string = "* Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions<br />* Add ui option ('api_force_version') to force a specific API response (even if that version is disabled)";
         $version[]     = array('version' => '520000', 'description' => $update_string);
 
         $update_string = "* Make sure preference names are always unique";
@@ -902,6 +902,12 @@ class Update
 
         $update_string = "* Add `disksubtitle` to `song_data` and `album_disk` table";
         $version[]     = array('version' => '600040', 'description' => $update_string);
+
+        $update_string = "* Index `label` column on the `label_asso` table";
+        $version[]     = array('version' => '600041', 'description' => $update_string);
+
+        $update_string = "* Add user preference `bookmark_latest`, Only keep the latest media bookmark";
+        $version[]     = array('version' => '600042', 'description' => $update_string);
 
         return $version;
     }
@@ -1224,8 +1230,8 @@ class Update
     /**
      * _update_360010
      *
-     * MBz NGS means collaborations have more than one MBID (the ones
-     * belonging to the underlying artists).  We need a bigger column.
+     * MBz NGS means collaborations have more than one MBID
+     * (the ones belonging to the underlying artists).  We need a bigger column.
      */
     private static function _update_360010(Interactor $interactor = null): bool
     {
@@ -5601,5 +5607,32 @@ class Update
         }
 
         return true;
+    }
+
+    /** _update_600041
+     *
+     * Index `label` column on the `label_asso` table
+     */
+    private static function _update_600041(Interactor $interactor = null): bool
+    {
+        $sql = "CREATE INDEX `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`);";
+
+        return (self::_write($interactor, $sql) !== false);
+    }
+
+    /** _update_600042
+     *
+     * Add user preference `bookmark_latest`, Only keep the latest media bookmark
+     */
+    private static function _update_600042(Interactor $interactor = null): bool
+    {
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('bookmark_latest', '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options')";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
+
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 } // end update.class

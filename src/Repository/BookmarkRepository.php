@@ -43,6 +43,40 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
         return $ids;
     }
 
+    /**
+     * @param int $userId
+     * @param string $comment
+     * @return int[]
+     */
+    public function getBookmarksByComment(int $userId, string $comment): array
+    {
+        $ids = [];
+
+        $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `comment` = ?";
+        $db_results = Dba::read($sql, array($userId, $comment));
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $ids[] = (int) $results['id'];
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @param int $bookmarkId
+     * @param int $userId
+     * @return int
+     */
+    public function getBookmark(int $bookmarkId, int $userId): int
+    {
+        $sql        = "SELECT `id` FROM `bookmark` WHERE `id` = ? AND `user` = ?";
+        $db_results = Dba::read($sql, array($bookmarkId, $userId));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
+
     public function delete(int $bookmarkId): bool
     {
         $sql = "DELETE FROM `bookmark` WHERE `id` = ?";

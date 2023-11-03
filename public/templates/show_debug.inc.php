@@ -34,7 +34,10 @@ global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 $web_path    = AmpConfig::get('web_path');
 // don't share the database password
-$configuration['database_password'] = '*********'; ?>
+$configuration['database_password'] = '*********';
+// check your versions
+$current_version = AutoUpdate::get_current_version();
+$latest_version  = AutoUpdate::get_latest_version(); ?>
 <?php Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
@@ -59,13 +62,13 @@ $configuration['database_password'] = '*********'; ?>
         </ul>
     </div>
     <?php Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
-    <div><?php echo T_('Installed Ampache version'); ?>: <?php echo AutoUpdate::get_current_version(); ?>.</div>
-    <div><?php echo T_('Latest Ampache version'); ?>: <?php echo AutoUpdate::get_latest_version(); ?>.</div>
+    <div><?php echo T_('Installed Ampache version'); ?>: <?php echo $current_version; ?>.</div>
+    <div><?php echo T_('Latest Ampache version'); ?>: <?php echo $latest_version; ?>.</div>
 <?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
     <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
 } ?>
     <div><a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
-<?php if (AutoUpdate::is_update_available()) {
+<?php if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
     AutoUpdate::show_new_version();
 } ?>
     <br />

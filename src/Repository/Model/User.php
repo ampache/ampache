@@ -237,30 +237,27 @@ class User extends database_object
      */
     private function has_info()
     {
-        $user_id = (int)($this->id);
-
-        if (User::is_cached('user', $user_id)) {
-            return User::get_from_cache('user', $user_id);
+        if (User::is_cached('user', $this->id)) {
+            return User::get_from_cache('user', $this->id);
         }
 
-        $data = array();
-        // If the ID is -1 then
-        if ($user_id == '-1') {
-            $data['username']             = 'System';
-            $data['fullname']             = 'Ampache User';
-            $data['access']               = '25';
-            $data['catalog_filter_group'] = 0;
-            $data['catalogs']             = self::get_user_catalogs(-1);
-
-            return $data;
+        // If the ID is -1 then send back generic data
+        if ($this->id == '-1') {
+            return array(
+                'username' => 'System',
+                'fullname' => 'Ampache User',
+                'access' => '25',
+                'catalog_filter_group' => 0,
+                'catalogs' => self::get_user_catalogs(-1)
+            );
         }
 
         $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, array($user_id));
+        $db_results = Dba::read($sql, array($this->id));
 
         $data = Dba::fetch_assoc($db_results);
 
-        User::add_to_cache('user', $user_id, $data);
+        User::add_to_cache('user', $this->id, $data);
 
         return $data;
     } // has_info
@@ -358,6 +355,17 @@ class User extends database_object
     {
         return static::getUserRepository()->idByEmail($emailAddress);
     } // id_from_email
+
+    /**
+     * id_from_token
+     * This returns a built user from a reset token.
+     * @param string $token
+     * @return int
+     */
+    public static function id_from_token($token)
+    {
+        return static::getUserRepository()->idByResetToken($token);
+    } // id_from_username
 
     /**
      * get_user_catalogs
@@ -1045,6 +1053,11 @@ class User extends database_object
             $sql .= ", `city`";
             $params[] = $city;
         }
+        $user_create_streamtoken = AmpConfig::get('user_create_streamtoken', false);
+        if ($user_create_streamtoken) {
+            $sql .= ", `streamtoken`";
+            $params[] = bin2hex(random_bytes(20));
+        }
 
         $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?, ?";
 
@@ -1055,6 +1068,9 @@ class User extends database_object
             $sql .= ", ?";
         }
         if (!empty($city)) {
+            $sql .= ", ?";
+        }
+        if ($user_create_streamtoken) {
             $sql .= ", ?";
         }
 

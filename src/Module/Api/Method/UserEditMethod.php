@@ -44,7 +44,7 @@ final class UserEditMethod
 
     /**
      * user_edit
-     * MINIMUM_API_VERSION=600000
+     * MINIMUM_API_VERSION=6.0.0
      *
      * Update an existing user.
      * Takes the username with optional parameters.
@@ -52,7 +52,7 @@ final class UserEditMethod
      * @param array $input
      * @param User $user
      * username          = (string) $username
-     * password          = (string) hash('sha256', $password)) //optional
+     * password          = (string) hash('sha256', $password) //optional
      * fullname          = (string) $fullname //optional
      * email             = (string) $email //optional
      * website           = (string) $website //optional

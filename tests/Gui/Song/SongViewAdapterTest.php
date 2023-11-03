@@ -324,6 +324,22 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
+    public function testGetAlbumDiskLinkReturnsValue(): void
+    {
+        $value = 'some-album-link';
+
+        $this->song->f_album_disk_link = $value;
+
+        $this->song->shouldReceive('get_f_album_disk_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getAlbumDiskLink()
+        );
+    }
     public function testGetYearReturnsValues(): void
     {
         $value = 666;

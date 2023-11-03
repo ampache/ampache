@@ -306,8 +306,7 @@ final class Session implements SessionInterface
             default:
                 session_regenerate_id();
 
-                // Before refresh we don't have the cookie so we
-                // have to use session ID
+                // Before refresh we don't have the cookie so we have to use session ID
                 $key = session_id();
                 break;
         } // end switch on data type

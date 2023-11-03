@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
@@ -92,16 +93,22 @@ class Bookmark extends database_object
     }
 
     /**
-     * get_bookmark
+     * getBookmarks
      * @param array $data
      * @return integer[]
      */
-    public static function get_bookmark($data)
+    public static function getBookmarks($data)
     {
         $bookmarks   = array();
-        $comment_sql = isset($data['comment']) ? "AND `comment` = '" . scrub_in($data['comment']) . "'" : "";
-        $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql;
-        $db_results  = Dba::read($sql, array($data['user'], $data['object_type'], $data['object_id']));
+        if ($data['object_type'] !== 'bookmark') {
+            $comment_sql = (!empty($data['comment'])) ? "AND `comment` = '" . scrub_in($data['comment']) . "'" : "";
+            $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql . ' ORDER BY `update_date` DESC;';
+            $db_results  = Dba::read($sql, array($data['user'], $data['object_type'], $data['object_id']));
+        } else {
+            // bookmarks are per user
+            $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `id` = ?;";
+            $db_results = Dba::read($sql, array($data['user'], $data['object_id']));
+        }
         while ($results = Dba::fetch_assoc($db_results)) {
             $bookmarks[] = (int) $results['id'];
         }
@@ -118,23 +125,31 @@ class Bookmark extends database_object
      */
     public static function create(array $data, int $userId, int $updateDate)
     {
+        $comment = scrub_in($data['comment']);
+        if (AmpConfig::get('bookmark_latest', false)) {
+            // delete duplicates first
+            $sql = "DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?;";
+            Dba::write($sql, array($userId, $comment, $data['object_type'], $data['object_id']));
+        }
+
+        //insert the new bookmark
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($userId, $data['position'], scrub_in($data['comment']), $data['object_type'], $data['object_id'], time(), $updateDate));
+        return Dba::write($sql, array($userId, $data['position'], $comment, $data['object_type'], $data['object_id'], $updateDate, $updateDate));
     }
 
     /**
      * edit
+     * @param integer $bookmarkId
      * @param array $data
-     * @param integer $userId
      * @param integer $updateDate
      * @return PDOStatement|boolean
      */
-    public static function edit($data, int $userId, int $updateDate)
+    public static function edit(int $bookmarkId, array $data, int $updateDate)
     {
-        $sql      = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
+        $sql = "UPDATE `bookmark` SET `position` = ?, `comment` = ?, `update_date` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($data['position'], $updateDate, $userId, scrub_in($data['comment']),  $data['object_type'], $data['object_id']));
+        return Dba::write($sql, array($data['position'], scrub_in($data['comment']), $updateDate, $bookmarkId));
     }
 
     /**

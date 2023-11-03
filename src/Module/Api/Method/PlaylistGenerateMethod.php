@@ -67,15 +67,20 @@ final class PlaylistGenerateMethod
     public static function playlist_generate(array $input, User $user): bool
     {
         // parameter defaults
-        $mode   = (in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? $input['mode'] : 'random';
-        $format = (in_array($input['format'], array('song', 'index', 'id'), true)) ? $input['format'] : 'song';
+        $mode   = (array_key_exists('mode', $input) && in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true))
+            ? $input['mode']
+            : 'random';
+        $format = (array_key_exists('format', $input) && in_array($input['format'], array('song', 'index', 'id'), true))
+            ? $input['format']
+            : 'song';
         // confirm the correct data
         if (!in_array($format, array('song', 'index', 'id'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $format), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
-
+        $offset     = (int)($input['offset'] ?? 0);
+        $limit      = (int)($input['limit'] ?? 0);
         $rule_count = 1;
         $data       = array(
             'type' => 'song'
@@ -136,12 +141,12 @@ final class PlaylistGenerateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
-                Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_offset($offset);
+                Json_Data::set_limit($limit);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
-                Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_offset($offset);
+                Xml_Data::set_limit($limit);
         }
 
         // get db data
@@ -149,8 +154,8 @@ final class PlaylistGenerateMethod
         shuffle($results);
 
         //slice the array if there is a limit
-        if ((int) $input['limit'] > 0) {
-            $results = array_slice($results, 0, (int) $input['limit']);
+        if ($limit > 0) {
+            $results = array_slice($results, 0, $limit);
         }
         if (empty($results)) {
             Api::empty($format, $input['api_format']);

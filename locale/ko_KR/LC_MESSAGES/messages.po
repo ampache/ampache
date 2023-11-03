@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2023-09-25 16:17+1000\n"
+"POT-Creation-Date: 2023-09-29 12:25+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: LEE Hwanyong <hwan@ajou.ac.kr>, 2022\n"
 "Language-Team: Korean (Korea) (http://app.transifex.com/ampache/ampache/language/ko_KR/)\n"
@@ -56,8 +56,8 @@ msgstr "전체 재생목록"
 #: ../../public/templates/show_songs.inc.php:65
 #: ../../public/templates/show_songs.inc.php:164
 #: ../../public/templates/show_top_tracks.inc.php:55
-#: ../../src/Repository/Model/Search.php:729
-#: ../../src/Repository/Model/Search.php:803
+#: ../../src/Repository/Model/Search.php:744
+#: ../../src/Repository/Model/Search.php:818
 msgid "Song Title"
 msgstr "노래 제목"
 
@@ -82,8 +82,8 @@ msgstr "노래 제목"
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:117
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:145
 #: ../../src/Module/Api/Upnp_Api.php:629
-#: ../../src/Repository/Model/Browse.php:288
-#: ../../src/Repository/Model/Browse.php:295
+#: ../../src/Repository/Model/Browse.php:284
+#: ../../src/Repository/Model/Browse.php:297
 msgid "Albums"
 msgstr "앨범들"
 
@@ -111,12 +111,12 @@ msgstr "앨범들"
 #: ../../public/templates/show_tagcloud.inc.php:32
 #: ../../public/templates/show_wanted_albums.inc.php:32
 #: ../../src/Module/Util/AmpacheRss.php:306
-#: ../../src/Repository/Model/AlbumDisk.php:373
+#: ../../src/Repository/Model/AlbumDisk.php:377
 #: ../../src/Repository/Model/Album.php:605
 #: ../../src/Repository/Model/Artist.php:549
-#: ../../src/Repository/Model/Browse.php:311
+#: ../../src/Repository/Model/Browse.php:319
 #: ../../src/Repository/Model/Clip.php:180
-#: ../../src/Repository/Model/Song.php:1881
+#: ../../src/Repository/Model/Song.php:1890
 msgid "Artist"
 msgstr "아티스트"
 
@@ -124,9 +124,9 @@ msgstr "아티스트"
 #: ../../public/templates/show_add_live_stream.inc.php:56
 #: ../../public/templates/show_add_podcast.inc.php:38
 #: ../../public/templates/show_export.inc.php:44
-#: ../../src/Repository/Model/Search.php:693
-#: ../../src/Repository/Model/Search.php:783
-#: ../../src/Repository/Model/Search.php:867
+#: ../../src/Repository/Model/Search.php:708
+#: ../../src/Repository/Model/Search.php:798
+#: ../../src/Repository/Model/Search.php:882
 msgid "Catalog"
 msgstr "카탈로그"
 
@@ -202,11 +202,11 @@ msgstr "쿠키"
 #: ../../public/templates/show_plugins.inc.php:33
 #: ../../public/templates/show_plugins.inc.php:73
 #: ../../src/Module/Cli/AdminAddUserCommand.php:46
-#: ../../src/Repository/Model/Search.php:727
-#: ../../src/Repository/Model/Search.php:894
-#: ../../src/Repository/Model/Search.php:912
-#: ../../src/Repository/Model/Search.php:953
-#: ../../src/Repository/Model/Search.php:991
+#: ../../src/Repository/Model/Search.php:742
+#: ../../src/Repository/Model/Search.php:909
+#: ../../src/Repository/Model/Search.php:927
+#: ../../src/Repository/Model/Search.php:968
+#: ../../src/Repository/Model/Search.php:1006
 msgid "Name"
 msgstr "이름"
 
@@ -289,7 +289,7 @@ msgstr "음악을 사랑하면서"
 #: ../../src/Config/functions.php:587
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:63
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:104
-#: ../../src/Repository/Model/Catalog.php:2398
+#: ../../src/Repository/Model/Catalog.php:2426
 msgid "Error"
 msgstr "오류"
 
@@ -396,10 +396,10 @@ msgstr "아티스트들"
 #: ../../public/templates/sidebar.inc.php:66
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:205
 #: ../../src/Module/Api/Upnp_Api.php:671
-#: ../../src/Repository/Model/Browse.php:322
-#: ../../src/Repository/Model/Search.php:639
-#: ../../src/Repository/Model/Search.php:763
-#: ../../src/Repository/Model/Search.php:841
+#: ../../src/Repository/Model/Browse.php:330
+#: ../../src/Repository/Model/Search.php:654
+#: ../../src/Repository/Model/Search.php:778
+#: ../../src/Repository/Model/Search.php:856
 msgid "Playlists"
 msgstr "재생목록들"
 
@@ -427,17 +427,17 @@ msgstr "재생목록들"
 #: ../../public/templates/sidebar.inc.php:60
 #: ../../src/Gui/Song/SongViewAdapter.php:356
 #: ../../src/Module/Application/Browse/TagAction.php:84
-#: ../../src/Repository/Model/Browse.php:348
-#: ../../src/Repository/Model/Browse.php:353
+#: ../../src/Repository/Model/Browse.php:356
+#: ../../src/Repository/Model/Browse.php:361
 msgid "Genres"
 msgstr "장르"
 
 #: ../../public/templates/header.inc.php:64
 #: ../../public/templates/show_form_userflag.inc.php:38
 #: ../../public/templates/sidebar.inc.php:78
-#: ../../src/Repository/Model/Search.php:606
-#: ../../src/Repository/Model/Search.php:743
-#: ../../src/Repository/Model/Search.php:820
+#: ../../src/Repository/Model/Search.php:621
+#: ../../src/Repository/Model/Search.php:758
+#: ../../src/Repository/Model/Search.php:835
 msgid "Favorites"
 msgstr "선호"
 
@@ -500,16 +500,16 @@ msgstr "임의 재생"
 #: ../../public/templates/header.inc.php:150
 #: ../../public/templates/show_manage_democratic.inc.php:34
 #: ../../public/templates/sidebar.inc.php:65
-#: ../../src/Repository/Model/Search.php:642
-#: ../../src/Repository/Model/Search.php:766
-#: ../../src/Repository/Model/Search.php:844
-#: ../../src/Repository/Model/Search.php:893
+#: ../../src/Repository/Model/Search.php:657
+#: ../../src/Repository/Model/Search.php:781
+#: ../../src/Repository/Model/Search.php:859
+#: ../../src/Repository/Model/Search.php:908
 msgid "Playlist"
 msgstr "재생목록"
 
 #: ../../public/templates/header.inc.php:151
-#: ../../src/Repository/Model/Search.php:646
-#: ../../src/Repository/Model/Search.php:848
+#: ../../src/Repository/Model/Search.php:661
+#: ../../src/Repository/Model/Search.php:863
 msgid "Smart Playlist"
 msgstr "지능형 재생목록"
 
@@ -533,7 +533,7 @@ msgstr "설정"
 #: ../../public/templates/show_edit_filter.inc.php:60
 #: ../../public/templates/show_manage_filters.inc.php:44
 #: ../../public/templates/sidebar_admin.inc.php:41
-#: ../../src/Repository/Model/Browse.php:339
+#: ../../src/Repository/Model/Browse.php:347
 msgid "Catalogs"
 msgstr "카탈로그"
 
@@ -565,7 +565,7 @@ msgid "Modules"
 msgstr "모듈"
 
 #: ../../public/templates/header.inc.php:160
-#: ../../src/Repository/Model/Browse.php:383
+#: ../../src/Repository/Model/Browse.php:391
 msgid "Media Licenses"
 msgstr "미디어 라이센스"
 
@@ -610,9 +610,9 @@ msgstr "탐색하기"
 #: ../../src/Gui/Song/SongViewAdapter.php:351
 #: ../../src/Gui/Song/SongViewAdapter.php:353
 #: ../../src/Module/Util/AmpacheRss.php:306
-#: ../../src/Repository/Model/AlbumDisk.php:378
+#: ../../src/Repository/Model/AlbumDisk.php:382
 #: ../../src/Repository/Model/Album.php:610
-#: ../../src/Repository/Model/Search.php:586
+#: ../../src/Repository/Model/Search.php:601
 msgid "Album"
 msgstr "앨범"
 
@@ -634,7 +634,7 @@ msgstr "통계"
 #: ../../public/templates/show_recently_skipped.inc_user.php:165
 #: ../../public/templates/show_tagcloud_hidden.inc.php:33
 #: ../../public/templates/show_tagcloud.inc.php:34
-#: ../../src/Repository/Model/Catalog.php:2374
+#: ../../src/Repository/Model/Catalog.php:2402
 msgid "Song"
 msgstr "노래"
 
@@ -659,7 +659,7 @@ msgstr "기본"
 #: ../../public/templates/show_search_bar.inc.php:47
 #: ../../public/templates/sidebar.inc.php:50
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:234
-#: ../../src/Repository/Model/Browse.php:415
+#: ../../src/Repository/Model/Browse.php:423
 msgid "Labels"
 msgstr "레이블"
 
@@ -675,14 +675,14 @@ msgstr "대시보드"
 #: ../../public/templates/show_podcast_episodes.inc.php:98
 #: ../../src/Repository/Model/Podcast_Episode.php:227
 #: ../../src/Repository/Model/Podcast.php:178
-#: ../../src/Repository/Model/Search.php:911
-#: ../../src/Repository/Model/Search.php:954
+#: ../../src/Repository/Model/Search.php:926
+#: ../../src/Repository/Model/Search.php:969
 msgid "Podcast"
 msgstr "팟캐스트"
 
 #: ../../public/templates/header.inc.php:171
-#: ../../src/Repository/Model/Search.php:916
-#: ../../src/Repository/Model/Search.php:952
+#: ../../src/Repository/Model/Search.php:931
+#: ../../src/Repository/Model/Search.php:967
 msgid "Podcast Episode"
 msgstr "팟캐스트 에피소드"
 
@@ -690,7 +690,7 @@ msgstr "팟캐스트 에피소드"
 #: ../../public/templates/show_form_browse.inc.php:56
 #: ../../public/templates/sidebar.inc.php:52
 #: ../../src/Module/Api/Upnp_Api.php:713
-#: ../../src/Repository/Model/Browse.php:317
+#: ../../src/Repository/Model/Browse.php:325
 msgid "Radio Stations"
 msgstr "라디오 방송국들"
 
@@ -919,9 +919,9 @@ msgstr "알파벳"
 
 #: ../../public/templates/list_header.inc.php:148
 #: ../../public/templates/show_get_art.inc.php:103
-#: ../../src/Repository/Model/Search.php:417
-#: ../../src/Repository/Model/Search.php:422
-#: ../../src/Repository/Model/Search.php:428
+#: ../../src/Repository/Model/Search.php:432
+#: ../../src/Repository/Model/Search.php:437
+#: ../../src/Repository/Model/Search.php:443
 msgid "Limit"
 msgstr "제한"
 
@@ -1031,7 +1031,7 @@ msgstr "임의 재생목록"
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:239
 #: ../../src/Gui/Song/SongViewAdapter.php:335
 #: ../../src/Repository/Model/Broadcast.php:394
-#: ../../src/Repository/Model/Share.php:275
+#: ../../src/Repository/Model/Share.php:281
 msgid "Delete"
 msgstr "삭제"
 
@@ -1041,7 +1041,7 @@ msgstr "아이템 없음"
 
 #: ../../public/templates/rightbar.inc.php:146
 #: ../../public/templates/show_recently_played.inc.php:190
-#: ../../src/Repository/Model/Browse.php:469
+#: ../../src/Repository/Model/Browse.php:477
 msgid "More"
 msgstr "더 보기"
 
@@ -1116,7 +1116,7 @@ msgstr "사용자"
 #: ../../public/templates/show_import_playlist.inc.php:37
 #: ../../public/templates/show_playlists.inc.php:57
 #: ../../public/templates/show_searches.inc.php:51
-#: ../../src/Repository/Model/Search.php:899
+#: ../../src/Repository/Model/Search.php:914
 msgid "Type"
 msgstr "형태"
 
@@ -1200,7 +1200,7 @@ msgstr "실행"
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:216
 #: ../../src/Gui/Song/SongViewAdapter.php:294
 #: ../../src/Repository/Model/Broadcast.php:393
-#: ../../src/Repository/Model/Share.php:274
+#: ../../src/Repository/Model/Share.php:280
 msgid "Edit"
 msgstr "편집"
 
@@ -1258,8 +1258,8 @@ msgstr "웹사이트"
 #: ../../public/templates/show_podcast_episodes.inc.php:61
 #: ../../public/templates/show_podcast_episodes.inc.php:105
 #: ../../public/templates/show_user_registration.inc.php:122
-#: ../../src/Repository/Model/Search.php:922
-#: ../../src/Repository/Model/Search.php:960
+#: ../../src/Repository/Model/Search.php:937
+#: ../../src/Repository/Model/Search.php:975
 msgid "State"
 msgstr "주"
 
@@ -1430,9 +1430,9 @@ msgstr "자동-등록 필드"
 #: ../../public/templates/show_edit_album_row.inc.php:39
 #: ../../public/templates/show_edit_catalog.inc.php:38
 #: ../../src/Gui/Song/SongViewAdapter.php:349
-#: ../../src/Repository/Model/Browse.php:307
-#: ../../src/Repository/Model/Search.php:588
-#: ../../src/Repository/Model/Search.php:801
+#: ../../src/Repository/Model/Browse.php:315
+#: ../../src/Repository/Model/Search.php:603
+#: ../../src/Repository/Model/Search.php:816
 msgid "Album Artist"
 msgstr "앨범 아티스트"
 
@@ -1443,7 +1443,7 @@ msgstr "앨범 아티스트"
 #: ../../public/templates/show_manage_shoutbox.inc.php:35
 #: ../../public/templates/show_manage_shoutbox.inc.php:62
 #: ../../src/Gui/Song/SongViewAdapter.php:371
-#: ../../src/Repository/Model/Search.php:594
+#: ../../src/Repository/Model/Search.php:609
 msgid "Comment"
 msgstr "언급"
 
@@ -1451,7 +1451,7 @@ msgstr "언급"
 #: ../../public/templates/show_edit_album_row.inc.php:98
 #: ../../public/templates/show_edit_catalog.inc.php:40
 #: ../../src/Gui/Song/SongViewAdapter.php:385
-#: ../../src/Repository/Model/Search.php:811
+#: ../../src/Repository/Model/Search.php:826
 msgid "Catalog Number"
 msgstr "카탈로그 숫자"
 
@@ -1466,8 +1466,8 @@ msgstr "트랙 (0 padded)"
 #: ../../public/templates/show_edit_catalog.inc.php:42
 #: ../../public/templates/show_song_previews.inc.php:33
 #: ../../src/Gui/Song/SongViewAdapter.php:358
-#: ../../src/Repository/Model/AlbumDisk.php:408
-#: ../../src/Repository/Model/AlbumDisk.php:421
+#: ../../src/Repository/Model/AlbumDisk.php:412
+#: ../../src/Repository/Model/AlbumDisk.php:425
 msgid "Disk"
 msgstr "디스크"
 
@@ -1475,10 +1475,10 @@ msgstr "디스크"
 #: ../../public/templates/show_broadcasts.inc.php:35
 #: ../../public/templates/show_edit_broadcast_row.inc.php:40
 #: ../../public/templates/show_edit_catalog.inc.php:43
-#: ../../src/Repository/Model/Search.php:633
-#: ../../src/Repository/Model/Search.php:758
-#: ../../src/Repository/Model/Search.php:836
-#: ../../src/Repository/Model/Search.php:1012
+#: ../../src/Repository/Model/Search.php:648
+#: ../../src/Repository/Model/Search.php:773
+#: ../../src/Repository/Model/Search.php:851
+#: ../../src/Repository/Model/Search.php:1027
 #: ../../src/Repository/Model/Tag.php:955
 msgid "Genre"
 msgstr "장르"
@@ -1508,10 +1508,10 @@ msgstr "장르"
 #: ../../public/templates/show_top_tracks.inc.php:64
 #: ../../public/templates/show_wanted_albums.inc.php:33
 #: ../../src/Gui/Song/SongViewAdapter.php:360
-#: ../../src/Repository/Model/AlbumDisk.php:383
+#: ../../src/Repository/Model/AlbumDisk.php:387
 #: ../../src/Repository/Model/Album.php:615
-#: ../../src/Repository/Model/Search.php:591
-#: ../../src/Repository/Model/Search.php:804
+#: ../../src/Repository/Model/Search.php:606
+#: ../../src/Repository/Model/Search.php:819
 msgid "Year"
 msgstr "년"
 
@@ -1519,28 +1519,28 @@ msgstr "년"
 #: ../../public/templates/show_edit_album_row.inc.php:106
 #: ../../public/templates/show_edit_catalog.inc.php:46
 #: ../../src/Gui/Song/SongViewAdapter.php:361
-#: ../../src/Repository/Model/Search.php:805
+#: ../../src/Repository/Model/Search.php:820
 msgid "Original Year"
 msgstr "원년"
 
 #: ../../public/templates/show_add_catalog.inc.php:59
 #: ../../public/templates/show_edit_album_row.inc.php:86
 #: ../../public/templates/show_edit_catalog.inc.php:47
-#: ../../src/Repository/Model/Search.php:807
+#: ../../src/Repository/Model/Search.php:822
 msgid "Release Type"
 msgstr "배포 형태"
 
 #: ../../public/templates/show_add_catalog.inc.php:60
 #: ../../public/templates/show_edit_album_row.inc.php:90
 #: ../../public/templates/show_edit_catalog.inc.php:48
-#: ../../src/Repository/Model/Search.php:808
+#: ../../src/Repository/Model/Search.php:823
 msgid "Release Status"
 msgstr "배포 상태"
 
 #: ../../public/templates/show_add_catalog.inc.php:61
 #: ../../public/templates/show_edit_album_row.inc.php:94
 #: ../../public/templates/show_edit_catalog.inc.php:49
-#: ../../src/Repository/Model/Search.php:809
+#: ../../src/Repository/Model/Search.php:824
 msgid "Release Comment"
 msgstr ""
 
@@ -1548,7 +1548,7 @@ msgstr ""
 #: ../../public/templates/show_edit_album_row.inc.php:102
 #: ../../public/templates/show_edit_catalog.inc.php:50
 #: ../../src/Gui/Song/SongViewAdapter.php:386
-#: ../../src/Repository/Model/Search.php:810
+#: ../../src/Repository/Model/Search.php:825
 msgid "Barcode"
 msgstr "바코드"
 
@@ -1556,7 +1556,7 @@ msgstr "바코드"
 #: ../../public/templates/show_edit_catalog.inc.php:52
 #: ../../public/templates/sidebar.inc.php:57
 #: ../../src/Module/Api/Upnp_Api.php:1009
-#: ../../src/Repository/Model/Browse.php:387
+#: ../../src/Repository/Model/Browse.php:395
 msgid "TV Shows"
 msgstr "TV 쇼"
 
@@ -1620,10 +1620,10 @@ msgstr "에피소드"
 #: ../../src/Gui/Song/SongViewAdapter.php:347
 #: ../../src/Module/Util/AmpacheRss.php:306
 #: ../../src/Repository/Model/Podcast_Episode.php:232
-#: ../../src/Repository/Model/Search.php:585
-#: ../../src/Repository/Model/Search.php:800
-#: ../../src/Repository/Model/Song.php:1886
-#: ../../src/Repository/Model/Video.php:374
+#: ../../src/Repository/Model/Search.php:600
+#: ../../src/Repository/Model/Search.php:815
+#: ../../src/Repository/Model/Song.php:1895
+#: ../../src/Repository/Model/Video.php:375
 msgid "Title"
 msgstr "제목"
 
@@ -1725,9 +1725,9 @@ msgstr "라벨 추가하기"
 #: ../../public/templates/show_edit_artist_row.inc.php:39
 #: ../../public/templates/show_edit_label_row.inc.php:36
 #: ../../public/templates/show_edit_song_row.inc.php:72
-#: ../../src/Repository/Model/Search.php:697
-#: ../../src/Repository/Model/Search.php:787
-#: ../../src/Repository/Model/Search.php:871
+#: ../../src/Repository/Model/Search.php:712
+#: ../../src/Repository/Model/Search.php:802
+#: ../../src/Repository/Model/Search.php:886
 msgid "MusicBrainz ID"
 msgstr "MusicBrainz 아이디"
 
@@ -1737,7 +1737,7 @@ msgstr "MusicBrainz 아이디"
 #: ../../public/templates/show_labels.inc.php:55
 #: ../../public/templates/show_labels.inc.php:83
 #: ../../public/templates/show_podcast_episode.inc.php:111
-#: ../../src/Repository/Model/Search.php:992
+#: ../../src/Repository/Model/Search.php:1007
 msgid "Category"
 msgstr "분류"
 
@@ -1811,7 +1811,7 @@ msgstr "생성된 태그"
 #: ../../public/templates/show_partial_movie.inc.php:22
 #: ../../public/templates/show_partial_personal_video.inc.php:24
 #: ../../public/templates/show_partial_tvshow_episode.inc.php:26
-#: ../../src/Repository/Model/Search.php:730
+#: ../../src/Repository/Model/Search.php:745
 msgid "Summary"
 msgstr "요약"
 
@@ -1835,7 +1835,7 @@ msgstr "국가"
 #: ../../public/templates/show_test.inc.php:62
 #: ../../public/templates/show_user.inc.php:113
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:74
-#: ../../src/Repository/Model/Catalog.php:2374
+#: ../../src/Repository/Model/Catalog.php:2402
 msgid "Status"
 msgstr "상태"
 
@@ -1991,8 +1991,8 @@ msgstr "공유 만들기"
 
 #: ../../public/templates/show_add_share.inc.php:42
 #: ../../public/templates/show_edit_share_row.inc.php:32
-#: ../../src/Repository/Model/Share.php:519
-#: ../../src/Repository/Model/Share.php:523
+#: ../../src/Repository/Model/Share.php:525
+#: ../../src/Repository/Model/Share.php:529
 msgid "Share"
 msgstr "공유"
 
@@ -2050,7 +2050,7 @@ msgstr "파일 태그를 읽으려면 아티스트 및 앨범 필드를 비워 �
 
 #: ../../public/templates/show_add_upload.inc.php:204
 #: ../../public/templates/show_edit_song_row.inc.php:106
-#: ../../src/Repository/Model/Search.php:679
+#: ../../src/Repository/Model/Search.php:694
 msgid "Music License"
 msgstr "음악 라이센스"
 
@@ -2093,7 +2093,7 @@ msgstr "사용자 추가"
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:194
 #: ../../src/Module/User/Registration.php:68
 #: ../../src/Module/User/Registration.php:82
-#: ../../src/Repository/Model/Search.php:1002
+#: ../../src/Repository/Model/Search.php:1017
 msgid "Username"
 msgstr "사용자이름"
 
@@ -2236,11 +2236,11 @@ msgstr "Musicbrainz에서 찾기 ..."
 #: ../../public/templates/show_videos.inc.php:59
 #: ../../public/templates/show_videos.inc.php:104
 #: ../../src/Gui/Song/SongViewAdapter.php:415
-#: ../../src/Repository/Model/Search.php:627
-#: ../../src/Repository/Model/Search.php:754
-#: ../../src/Repository/Model/Search.php:831
-#: ../../src/Repository/Model/Search.php:935
-#: ../../src/Repository/Model/Search.php:973
+#: ../../src/Repository/Model/Search.php:642
+#: ../../src/Repository/Model/Search.php:769
+#: ../../src/Repository/Model/Search.php:846
+#: ../../src/Repository/Model/Search.php:950
+#: ../../src/Repository/Model/Search.php:988
 msgid "Played"
 msgstr "재생됨"
 
@@ -2410,7 +2410,7 @@ msgstr "앨범 편집하기"
 #: ../../src/Gui/Song/SongViewAdapter.php:239
 #: ../../src/Module/System/AutoUpdate.php:334
 #: ../../src/Module/System/AutoUpdate.php:336
-#: ../../src/Repository/Model/Share.php:272
+#: ../../src/Repository/Model/Share.php:278
 msgid "Download"
 msgstr "내려받기"
 
@@ -2437,8 +2437,8 @@ msgstr "내려받기"
 #: ../../src/Application/Api/Ajax/Handler/IndexAjaxHandler.php:412
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:177
 #: ../../src/Module/Api/Upnp_Api.php:650
-#: ../../src/Repository/Model/Browse.php:282
-#: ../../src/Repository/Model/Browse.php:375
+#: ../../src/Repository/Model/Browse.php:278
+#: ../../src/Repository/Model/Browse.php:383
 msgid "Songs"
 msgstr "노래들"
 
@@ -2631,9 +2631,9 @@ msgstr "유사한 노래들"
 #: ../../public/templates/show_songs.inc.php:167
 #: ../../public/templates/show_top_tracks.inc.php:58
 #: ../../src/Gui/Song/SongViewAdapter.php:348
-#: ../../src/Repository/Model/Browse.php:309
-#: ../../src/Repository/Model/Search.php:587
-#: ../../src/Repository/Model/Search.php:802
+#: ../../src/Repository/Model/Browse.php:317
+#: ../../src/Repository/Model/Search.php:602
+#: ../../src/Repository/Model/Search.php:817
 msgid "Song Artist"
 msgstr "가수"
 
@@ -2669,7 +2669,7 @@ msgstr "새 아트 선택하기"
 #: ../../public/templates/show_disabled_songs.inc.php:32
 #: ../../public/templates/show_disabled_songs.inc.php:59
 #: ../../public/templates/show_pvmsg_row.inc.php:29
-#: ../../src/Repository/Model/Catalog.php:382
+#: ../../src/Repository/Model/Catalog.php:405
 msgid "Select"
 msgstr "선택"
 
@@ -2782,6 +2782,7 @@ msgstr "가기"
 #: ../../src/Gui/Song/SongViewAdapter.php:406
 #: ../../src/Module/Catalog/Catalog_dropbox.php:148
 #: ../../src/Module/Catalog/Catalog_local.php:146
+#: ../../src/Module/Cli/AddCatalogCommand.php:43
 #: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:47
 msgid "Path"
 msgstr "경로"
@@ -3010,7 +3011,7 @@ msgid "%s Playlist"
 msgstr "%s 재생목록"
 
 #: ../../public/templates/show_democratic.inc.php:32
-#: ../../src/Repository/Model/Browse.php:363
+#: ../../src/Repository/Model/Browse.php:371
 msgid "Democratic Playlist"
 msgstr "기본 재생 목록"
 
@@ -3102,12 +3103,12 @@ msgstr "이 파일 또는 폴더에 쓸 수 있는 사용 권한이 없습니다
 #: ../../public/templates/show_import_playlist.inc.php:32
 #: ../../public/templates/show_video.inc.php:144
 #: ../../src/Gui/Song/SongViewAdapter.php:407
-#: ../../src/Repository/Model/Search.php:651
-#: ../../src/Repository/Model/Search.php:771
-#: ../../src/Repository/Model/Search.php:853
-#: ../../src/Repository/Model/Search.php:883
-#: ../../src/Repository/Model/Search.php:940
-#: ../../src/Repository/Model/Search.php:978
+#: ../../src/Repository/Model/Search.php:666
+#: ../../src/Repository/Model/Search.php:786
+#: ../../src/Repository/Model/Search.php:868
+#: ../../src/Repository/Model/Search.php:898
+#: ../../src/Repository/Model/Search.php:955
+#: ../../src/Repository/Model/Search.php:993
 msgid "Filename"
 msgstr "파일명"
 
@@ -3138,12 +3139,12 @@ msgid "Add tags to sub songs"
 msgstr "하위 노래에 태그 달기"
 
 #: ../../public/templates/show_edit_artist_row.inc.php:53
-#: ../../src/Repository/Model/Search.php:732
+#: ../../src/Repository/Model/Search.php:747
 msgid "Place Formed"
 msgstr "장소 구성됨"
 
 #: ../../public/templates/show_edit_artist_row.inc.php:57
-#: ../../src/Repository/Model/Search.php:731
+#: ../../src/Repository/Model/Search.php:746
 msgid "Year Formed"
 msgstr "연도 구성됨"
 
@@ -3216,7 +3217,7 @@ msgstr "승인"
 #: ../../public/templates/show_edit_search_row.inc.php:57
 #: ../../public/templates/show_playlists.inc.php:62
 #: ../../public/templates/show_searches.inc.php:54
-#: ../../src/Repository/Model/Search.php:901
+#: ../../src/Repository/Model/Search.php:916
 msgid "Owner"
 msgstr "소유자"
 
@@ -3234,7 +3235,7 @@ msgid "Feed"
 msgstr "피드"
 
 #: ../../public/templates/show_edit_podcast_row.inc.php:43
-#: ../../src/Repository/Model/Preference.php:868
+#: ../../src/Repository/Model/Preference.php:876
 msgid "Language"
 msgstr "언어"
 
@@ -3274,13 +3275,13 @@ msgstr "언급"
 #: ../../public/templates/show_song_previews.inc.php:32
 #: ../../src/Gui/Song/SongViewAdapter.php:357
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:74
-#: ../../src/Repository/Model/Search.php:590
+#: ../../src/Repository/Model/Search.php:605
 msgid "Track"
 msgstr "트랙"
 
 #: ../../public/templates/show_edit_song_row.inc.php:84
 #: ../../src/Gui/Song/SongViewAdapter.php:355
-#: ../../src/Repository/Model/Search.php:589
+#: ../../src/Repository/Model/Search.php:604
 msgid "Composer"
 msgstr "작곡자"
 
@@ -3290,8 +3291,8 @@ msgstr "작곡자"
 #: ../../src/Gui/Song/SongViewAdapter.php:378
 #: ../../src/Gui/Song/SongViewAdapter.php:380
 #: ../../src/Repository/Model/Label.php:250
-#: ../../src/Repository/Model/Search.php:593
-#: ../../src/Repository/Model/Search.php:990
+#: ../../src/Repository/Model/Search.php:608
+#: ../../src/Repository/Model/Search.php:1005
 msgid "Label"
 msgstr "레이블"
 
@@ -3414,7 +3415,7 @@ msgstr "앨범 아티스트"
 
 #: ../../public/templates/show_form_browse.inc.php:53
 #: ../../public/templates/sidebar.inc.php:51
-#: ../../src/Repository/Model/Browse.php:379
+#: ../../src/Repository/Model/Browse.php:387
 msgid "Broadcasts"
 msgstr "방송"
 
@@ -3422,7 +3423,7 @@ msgstr "방송"
 #: ../../public/templates/show_form_search.inc.php:71
 #: ../../public/templates/sidebar.inc.php:54
 #: ../../src/Module/Api/Upnp_Api.php:734
-#: ../../src/Repository/Model/Browse.php:423
+#: ../../src/Repository/Model/Browse.php:431
 msgid "Podcasts"
 msgstr "팻캐스트"
 
@@ -3435,8 +3436,8 @@ msgstr "팻캐스트"
 #: ../../public/templates/show_form_search.inc.php:72
 #: ../../public/templates/show_form_userflag.inc.php:50
 #: ../../public/templates/sidebar.inc.php:64
-#: ../../src/Repository/Model/Browse.php:427
-#: ../../src/Repository/Model/Search.php:915
+#: ../../src/Repository/Model/Browse.php:435
+#: ../../src/Repository/Model/Search.php:930
 msgid "Podcast Episodes"
 msgstr "팟캐스트 에피소드"
 
@@ -3451,7 +3452,7 @@ msgstr "팟캐스트 에피소드"
 #: ../../public/templates/show_form_userflag.inc.php:53
 #: ../../public/templates/show_random.inc.php:65
 #: ../../public/templates/sidebar.inc.php:55
-#: ../../src/Repository/Model/Browse.php:359
+#: ../../src/Repository/Model/Browse.php:367
 msgid "Videos"
 msgstr "비디오들"
 
@@ -3498,7 +3499,7 @@ msgid "Save as Smart Playlist"
 msgstr "지능형 재생목록으로 저장하기"
 
 #: ../../public/templates/show_form_search.inc.php:110
-#: ../../public/templates/show_search.inc.php:83
+#: ../../public/templates/show_search.inc.php:84
 msgid "Save as Playlist"
 msgstr "재생목록으로 저장하기"
 
@@ -3527,8 +3528,8 @@ msgid "Direct URL to Image"
 msgstr "이미지 직접 URL"
 
 #: ../../public/templates/show_get_art.inc.php:81
-#: ../../src/Repository/Model/Search.php:772
-#: ../../src/Repository/Model/Search.php:854
+#: ../../src/Repository/Model/Search.php:787
+#: ../../src/Repository/Model/Search.php:869
 msgid "Local Image"
 msgstr "내부 이미지"
 
@@ -3650,7 +3651,7 @@ msgid "Show Album"
 msgstr "앨범 보기"
 
 #: ../../public/templates/show_html5_player.inc.php:220
-#: ../../src/Repository/Model/Song.php:1833
+#: ../../src/Repository/Model/Song.php:1842
 msgid "Show Lyrics"
 msgstr "가사 보기"
 
@@ -3925,7 +3926,7 @@ msgid ""
 msgstr "Ampache를 음악 모임용 프로그램으로 쓸때 추천할 만한 설정"
 
 #: ../../public/templates/show_install_config.inc.php:134
-#: ../../src/Repository/Model/Preference.php:944
+#: ../../src/Repository/Model/Preference.php:952
 msgid "Allow Transcoding"
 msgstr "트랜스코딩 허용하기"
 
@@ -4466,9 +4467,9 @@ msgstr "기간"
 #: ../../public/templates/show_playlists.inc.php:54
 #: ../../public/templates/show_searches.inc.php:49
 #: ../../src/Gui/Playlist/NewPlaylistDialogAdapter.php:89
-#: ../../src/Repository/Model/Search.php:648
-#: ../../src/Repository/Model/Search.php:768
-#: ../../src/Repository/Model/Search.php:850
+#: ../../src/Repository/Model/Search.php:663
+#: ../../src/Repository/Model/Search.php:783
+#: ../../src/Repository/Model/Search.php:865
 msgid "Playlist Name"
 msgstr "재생목록 이름"
 
@@ -4527,8 +4528,8 @@ msgstr "팟캐스트 에피소드 편집"
 #: ../../public/templates/show_podcast_episode.inc.php:113
 #: ../../public/templates/show_podcast_episodes.inc.php:60
 #: ../../public/templates/show_podcast_episodes.inc.php:104
-#: ../../src/Repository/Model/Search.php:941
-#: ../../src/Repository/Model/Search.php:979
+#: ../../src/Repository/Model/Search.php:956
+#: ../../src/Repository/Model/Search.php:994
 msgid "Publication Date"
 msgstr "발매 날짜"
 
@@ -4552,7 +4553,7 @@ msgstr "크기"
 
 #: ../../public/templates/show_podcast_episode.inc.php:123
 #: ../../src/Gui/Song/SongViewAdapter.php:387
-#: ../../src/Repository/Model/Search.php:670
+#: ../../src/Repository/Model/Search.php:685
 msgid "Bitrate"
 msgstr "비트레이트"
 
@@ -4589,7 +4590,7 @@ msgstr "팟캐스트 편집하기"
 #: ../../public/templates/show_tvshow_seasons.inc.php:83
 #: ../../public/templates/show_tvshows.inc.php:53
 #: ../../public/templates/show_tvshows.inc.php:93
-#: ../../src/Repository/Model/Browse.php:395
+#: ../../src/Repository/Model/Browse.php:403
 msgid "Episodes"
 msgstr "에피소드"
 
@@ -4670,6 +4671,7 @@ msgstr "불러오기 시간:"
 #: ../../public/templates/show_random_album_disks.inc.php:35
 #: ../../public/templates/show_random_albums.inc.php:35
 #: ../../public/templates/show_random_videos.inc.php:36
+#: ../../public/templates/show_search.inc.php:82
 msgid "Refresh"
 msgstr "갱신"
 
@@ -4865,7 +4867,7 @@ msgstr "전체 추가하기"
 msgid "Smart Playlist Edit"
 msgstr "지능형 재생목록 편집"
 
-#: ../../public/templates/show_search.inc.php:82
+#: ../../public/templates/show_search.inc.php:83
 msgid "Save Changes"
 msgstr "변경사항 저장하기"
 
@@ -5229,7 +5231,7 @@ msgstr "TV 쇼 편집하기"
 #: ../../public/templates/show_tvshow.inc.php:104
 #: ../../public/templates/show_tvshows.inc.php:54
 #: ../../public/templates/show_tvshows.inc.php:94
-#: ../../src/Repository/Model/Browse.php:391
+#: ../../src/Repository/Model/Browse.php:399
 msgid "Seasons"
 msgstr "시즌"
 
@@ -5283,9 +5285,9 @@ msgstr "사용한 유효 키가 정확하지 않음"
 #: ../../public/templates/show_user.inc.php:51
 #: ../../public/templates/show_users.inc.php:75
 #: ../../src/Module/Util/Ui.php:1088
-#: ../../src/Repository/Model/Catalog.php:1031
-#: ../../src/Repository/Model/Catalog.php:1032
-#: ../../src/Repository/Model/Catalog.php:1033
+#: ../../src/Repository/Model/Catalog.php:1054
+#: ../../src/Repository/Model/Catalog.php:1055
+#: ../../src/Repository/Model/Catalog.php:1056
 #: ../../src/Repository/Model/User.php:1115
 msgid "Never"
 msgstr "아니오"
@@ -5300,7 +5302,7 @@ msgstr "아니오"
 #: ../../src/Repository/Model/TVShow_Episode.php:89
 #: ../../src/Repository/Model/User.php:1120
 #: ../../src/Repository/Model/User.php:1201
-#: ../../src/Repository/Model/Video.php:913
+#: ../../src/Repository/Model/Video.php:915
 msgid "Unknown"
 msgstr "알수없음"
 
@@ -5434,9 +5436,9 @@ msgstr "최근 갱신됨"
 
 #: ../../public/templates/show_video.inc.php:150
 #: ../../src/Gui/Song/SongViewAdapter.php:413
-#: ../../src/Repository/Model/Search.php:671
-#: ../../src/Repository/Model/Search.php:942
-#: ../../src/Repository/Model/Search.php:980
+#: ../../src/Repository/Model/Search.php:686
+#: ../../src/Repository/Model/Search.php:957
+#: ../../src/Repository/Model/Search.php:995
 msgid "Added"
 msgstr "추가됨"
 
@@ -5453,7 +5455,7 @@ msgid "Manage Licenses"
 msgstr "라이센스 관리"
 
 #: ../../public/templates/sidebar_admin.inc.php:65
-#: ../../src/Repository/Model/Browse.php:302
+#: ../../src/Repository/Model/Browse.php:310
 msgid "Browse Users"
 msgstr "사용자 탐색"
 
@@ -5508,13 +5510,13 @@ msgstr "음악 클립"
 
 #: ../../public/templates/sidebar.inc.php:58
 #: ../../src/Module/Api/Upnp_Api.php:1067
-#: ../../src/Repository/Model/Browse.php:400
+#: ../../src/Repository/Model/Browse.php:408
 msgid "Movies"
 msgstr "영화"
 
 #: ../../public/templates/sidebar.inc.php:59
 #: ../../src/Module/Api/Upnp_Api.php:1089
-#: ../../src/Repository/Model/Browse.php:410
+#: ../../src/Repository/Model/Browse.php:418
 msgid "Personal Videos"
 msgstr "개인 비디오"
 
@@ -5525,7 +5527,7 @@ msgstr "올리기"
 
 #: ../../public/templates/sidebar.inc.php:67
 #: ../../src/Module/Api/Upnp_Api.php:692
-#: ../../src/Repository/Model/Browse.php:335
+#: ../../src/Repository/Model/Browse.php:343
 msgid "Smart Playlists"
 msgstr "지능형 재생목록들"
 
@@ -5539,7 +5541,7 @@ msgstr "희망사항"
 
 #: ../../public/templates/sidebar.inc.php:80
 #: ../../src/Module/Application/Stats/ShareAction.php:67
-#: ../../src/Repository/Model/Browse.php:371
+#: ../../src/Repository/Model/Browse.php:379
 msgid "Shares"
 msgstr "공유"
 
@@ -5830,7 +5832,7 @@ msgid "R128 Album Gain"
 msgstr ""
 
 #: ../../src/Gui/Song/SongViewAdapter.php:422
-#: ../../src/Repository/Model/Search.php:595
+#: ../../src/Repository/Model/Search.php:610
 msgid "Lyrics"
 msgstr "가사"
 
@@ -5884,7 +5886,7 @@ msgstr "필수 매개변수를 생략함"
 #. title", 1298376)
 #: ../../src/Module/Api/Api5.php:305 ../../src/Module/Api/Api.php:329
 #: ../../src/Module/Api/Json5_Data.php:228
-#: ../../src/Module/Api/Json_Data.php:228
+#: ../../src/Module/Api/Json_Data.php:237
 #: ../../src/Module/Api/Method/AdvancedSearchMethod.php:88
 #: ../../src/Module/Api/Method/AlbumMethod.php:86
 #: ../../src/Module/Api/Method/Api5/AdvancedSearch5Method.php:87
@@ -6081,13 +6083,13 @@ msgstr "로그인 실패: 타임스탬프가 범위를 벗어남"
 
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:108
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:119
-#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:189
+#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:190
 msgid "Error Invalid Handshake - "
 msgstr "잘못된 핸드셰이크 오류 -"
 
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:118
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:119
-#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:189
+#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:190
 msgid "Invalid Username/Password"
 msgstr "유효하지 않은 사용자이름/비밀번호"
 
@@ -6507,12 +6509,12 @@ msgid "Enable: allow_public_registration"
 msgstr ""
 
 #: ../../src/Module/Api/Upnp_Api.php:1045
-#: ../../src/Repository/Model/Browse.php:405
+#: ../../src/Repository/Model/Browse.php:413
 msgid "Clips"
 msgstr "단편들"
 
 #: ../../src/Module/Api/Xml3_Data.php:684
-#: ../../src/Module/Api/Xml4_Data.php:1021
+#: ../../src/Module/Api/Xml4_Data.php:1020
 #: ../../src/Module/Api/Xml5_Data.php:1208
 #: ../../src/Module/Api/Xml_Data.php:1330
 msgid "Ampache XSPF Playlist"
@@ -6721,7 +6723,7 @@ msgstr "카탈로그를 삭제함"
 #: ../../src/Module/Application/TvShow/ConfirmDeleteAction.php:82
 #: ../../src/Module/Application/TvShowSeason/ConfirmDeleteAction.php:77
 #: ../../src/Module/Application/Video/ConfirmDeleteAction.php:79
-#: ../../src/Module/Catalog/Catalog_Seafile.php:546
+#: ../../src/Module/Catalog/Catalog_Seafile.php:545
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:376
 msgid "There Was a Problem"
 msgstr "문제 발생"
@@ -7111,8 +7113,8 @@ msgstr "해당 아티스트와 관련 파일을 삭제합니다"
 #: ../../src/Plugin/AmpacheMusicBrainz.php:96
 #: ../../src/Plugin/AmpacheTheaudiodb.php:75
 #: ../../src/Plugin/AmpacheTheaudiodb.php:103
-#: ../../src/Repository/Model/Preference.php:880
-#: ../../src/Repository/Model/Preference.php:939
+#: ../../src/Repository/Model/Preference.php:888
+#: ../../src/Repository/Model/Preference.php:947
 msgid "Overwrite Artist names that match an mbid"
 msgstr "mbid와 일치하는 아티스트 이름 덮어쓰기"
 
@@ -7375,7 +7377,7 @@ msgid "Your search has been saved as a Playlist with the name %s"
 msgstr " 검색 결과를 %s 이름으로 재생목록에 저장하였습니다"
 
 #: ../../src/Module/Application/Search/SaveAsPlaylistAction.php:106
-#: ../../src/Repository/Model/Catalog.php:3700
+#: ../../src/Repository/Model/Catalog.php:3728
 msgid "Failed to create playlist"
 msgstr "재생목록 생성 실패"
 
@@ -7578,21 +7580,21 @@ msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr "카탈로그 개신 완료. 전체 미디어: [%s]"
 
 #: ../../src/Module/Catalog/Catalog_dropbox.php:577
-#: ../../src/Module/Catalog/Catalog_Seafile.php:463
+#: ../../src/Module/Catalog/Catalog_Seafile.php:462
 #, php-format
 msgid "Updated song: \"%s\""
 msgstr "업데이트된 노래 : %s"
 
 #: ../../src/Module/Catalog/Catalog_dropbox.php:580
-#: ../../src/Module/Catalog/Catalog_Seafile.php:466
+#: ../../src/Module/Catalog/Catalog_Seafile.php:465
 #, php-format
 msgid "Song up to date: \"%s\""
 msgstr "최신 노래 : \"%s\""
 
 #. HINT: filename (File path)
 #: ../../src/Module/Catalog/Catalog_dropbox.php:584
-#: ../../src/Module/Catalog/Catalog_Seafile.php:470
-#: ../../src/Module/Catalog/Catalog_Seafile.php:560
+#: ../../src/Module/Catalog/Catalog_Seafile.php:469
+#: ../../src/Module/Catalog/Catalog_Seafile.php:559
 #, php-format
 msgid "Removing song: \"%s\""
 msgstr "제거 중인 노래: \"%s\""
@@ -7602,7 +7604,7 @@ msgid "API Error: cannot connect to Dropbox."
 msgstr "API 오류: Dropbox에 접속할 수 없음"
 
 #: ../../src/Module/Catalog/Catalog_local.php:220
-#: ../../src/Module/Catalog/Catalog_local.php:1135
+#: ../../src/Module/Catalog/Catalog_local.php:1133
 msgid "Path was not specified"
 msgstr "경로가 지정되지 않음"
 
@@ -7633,7 +7635,7 @@ msgstr " \"%s\" 용 필터 사이즈 확인 불가능"
 
 #. HINT: filename (file path)
 #: ../../src/Module/Catalog/Catalog_local.php:402
-#: ../../src/Module/Catalog/Catalog_local.php:692
+#: ../../src/Module/Catalog/Catalog_local.php:690
 #, php-format
 msgid "The file couldn't be read. Does it exist? %s"
 msgstr "%s 파일을 읽을 수 없음. 존재 여부 확인"
@@ -7658,31 +7660,31 @@ msgstr "카탈로그 갱신됨"
 msgid "Total Time: [%s] Total Media: [%s] Media Per Second: [%s]"
 msgstr "전체 시간: [%s]  전체 미디어: [%s] 초당 미디어: [%s]"
 
-#: ../../src/Module/Catalog/Catalog_local.php:723
+#: ../../src/Module/Catalog/Catalog_local.php:721
 msgid "Catalog root unreadable, stopping clean"
 msgstr "카탈로그 루트 읽기 불능, 정리 중단"
 
-#: ../../src/Module/Catalog/Catalog_local.php:762
+#: ../../src/Module/Catalog/Catalog_local.php:760
 msgid "All files would be removed. Doing nothing"
 msgstr "전체 파일을 삭제합니다."
 
 #. HINT: filename (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:859
+#: ../../src/Module/Catalog/Catalog_local.php:857
 #, php-format
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "파일이 없거나 0입니다: %s"
 
-#: ../../src/Module/Catalog/Catalog_local.php:1142
+#: ../../src/Module/Catalog/Catalog_local.php:1140
 msgid "Specified path is inside an existing catalog"
 msgstr "지정 경로가 기존 카탈로그 안에 있음"
 
 #. HINT: directory (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:1151
+#: ../../src/Module/Catalog/Catalog_local.php:1149
 #, php-format
 msgid "The folder couldn't be read. Does it exist? %s"
 msgstr "%s 폴더를 읽을 수 없음. 존재 여부 확인"
 
-#: ../../src/Module/Catalog/Catalog_local.php:1166
+#: ../../src/Module/Catalog/Catalog_local.php:1164
 msgid "Catalog root unreadable, stopping check"
 msgstr ""
 
@@ -7733,8 +7735,8 @@ msgstr "노래 %s 추가할 수 없음"
 #: ../../src/Module/Catalog/Catalog_remote.php:326
 #: ../../src/Module/Catalog/Catalog_subsonic.php:309
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:124
-#: ../../src/Repository/Model/Catalog.php:2396
-#: ../../src/Repository/Model/Search.php:672
+#: ../../src/Repository/Model/Catalog.php:2424
+#: ../../src/Repository/Model/Search.php:687
 msgid "Updated"
 msgstr "수정됨"
 
@@ -7823,36 +7825,36 @@ msgstr "Seafile 원격 갱신 실행 중"
 msgid "Total Media: [%s]"
 msgstr "전체 미디어: [%s]"
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:311
+#: ../../src/Module/Catalog/Catalog_Seafile.php:310
 msgid "No media was updated, did you respect the patterns?"
 msgstr "갱신된 미리어가 없음. 이 패턴을 따를 것인가요?"
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:338
+#: ../../src/Module/Catalog/Catalog_Seafile.php:337
 #, php-format
 msgid "Skipping existing song: %s"
 msgstr " 이미 존재하는 노래 %s 를 건너 뛰기"
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:345
+#: ../../src/Module/Catalog/Catalog_Seafile.php:344
 #, php-format
 msgid "Adding a new song: %s"
 msgstr "새 노래 %s를 추가하는 중"
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:361
+#: ../../src/Module/Catalog/Catalog_Seafile.php:360
 #, php-format
 msgid "Could not add song: %s"
 msgstr " %s 노래를 추가할 수 없음"
 
 #. HINT: %1 filename (File path), %2 Error Message
-#: ../../src/Module/Catalog/Catalog_Seafile.php:547
+#: ../../src/Module/Catalog/Catalog_Seafile.php:546
 #, php-format
 msgid "There was an error while checking this song \"%1$s\": %2$s"
 msgstr " \"%1$s\" 노래를 점검하는 중 오류가 발생함 : %2$s"
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:557
+#: ../../src/Module/Catalog/Catalog_Seafile.php:556
 #, php-format
 msgid "Keeping song: %s"
 msgstr "%s 노래를 유지함"
@@ -7886,6 +7888,15 @@ msgstr "Seafile을 검증할 수 없음"
 #, php-format
 msgid "Could not find the Seafile library called \"%s\", no media was updated"
 msgstr "\"%s\" Seafile 라이브러리를 찾을 수 없어 미디어 갱신 안됨"
+
+#: ../../src/Module/Catalog/Update/AddCatalog.php:85
+#: ../../src/Repository/Model/Catalog.php:1230
+msgid "Failed to create the catalog, check the debug logs"
+msgstr "카탈로그 생성 실패, 디버그 기록을 보시오"
+
+#: ../../src/Module/Catalog/Update/AddCatalog.php:104
+msgid "Catalog created"
+msgstr ""
 
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:63
 msgid "Deactivated PHP memory limit"
@@ -7977,6 +7988,30 @@ msgstr "제거 중인 파일: \"%s\""
 #, php-format
 msgid "Reading File: \"%s\""
 msgstr "파일 읽는 중: \"%s\""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:37
+msgid "Create a local media catalog"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:42
+msgid "Catalog name"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:44
+msgid "Catalog Media Type (optional)"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:45
+msgid "Filename Pattern (optional)"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:46
+msgid "Folder Pattern (optional)"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:47
+msgid "Create a local music catalog called `some-catalog`"
+msgstr ""
 
 #: ../../src/Module/Cli/AdminAddUserCommand.php:38
 msgid "Add a User"
@@ -8491,7 +8526,7 @@ msgid "No changes have been made"
 msgstr "변경된 내용이 없습니다."
 
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:97
-#: ../../src/Repository/Model/Preference.php:867
+#: ../../src/Repository/Model/Preference.php:875
 msgid "HTTPQ Active Instance"
 msgstr "HTTPQ 활성 인스턴스"
 
@@ -8526,12 +8561,12 @@ msgid "Paused"
 msgstr "잠시 멈추었습니다"
 
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:98
-#: ../../src/Repository/Model/Preference.php:881
+#: ../../src/Repository/Model/Preference.php:889
 msgid "MPD Active Instance"
 msgstr "MPD 활성 인스턴스"
 
 #: ../../src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php:95
-#: ../../src/Repository/Model/Preference.php:956
+#: ../../src/Repository/Model/Preference.php:964
 msgid "UPnP Active Instance"
 msgstr "UPnP 활성 인스턴스"
 
@@ -8540,12 +8575,12 @@ msgid "URL"
 msgstr "URL"
 
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:94
-#: ../../src/Repository/Model/Preference.php:960
+#: ../../src/Repository/Model/Preference.php:968
 msgid "VLC Active Instance"
 msgstr "VLC 활성 인스턴스"
 
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:100
-#: ../../src/Repository/Model/Preference.php:968
+#: ../../src/Repository/Model/Preference.php:976
 msgid "XBMC Active Instance"
 msgstr "XBMC 활성 인스턴스"
 
@@ -8595,7 +8630,7 @@ msgstr ""
 
 #: ../../src/Module/Song/SongSorter.php:109
 #: ../../src/Module/Song/SongSorter.php:183
-#: ../../src/Repository/Model/Catalog.php:3425
+#: ../../src/Repository/Model/Catalog.php:3453
 #, php-format
 msgid "%d file updated."
 msgid_plural "%d files updated."
@@ -8966,23 +9001,23 @@ msgstr "API5만 허용"
 msgid "Allow API6 Only"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:967 ../../src/Repository/Model/Search.php:116
+#: ../../src/Module/Util/Ui.php:967 ../../src/Repository/Model/Search.php:131
 msgid "1 Star"
 msgstr "별 1개"
 
-#: ../../src/Module/Util/Ui.php:968 ../../src/Repository/Model/Search.php:117
+#: ../../src/Module/Util/Ui.php:968 ../../src/Repository/Model/Search.php:132
 msgid "2 Stars"
 msgstr "별 2개"
 
-#: ../../src/Module/Util/Ui.php:969 ../../src/Repository/Model/Search.php:118
+#: ../../src/Module/Util/Ui.php:969 ../../src/Repository/Model/Search.php:133
 msgid "3 Stars"
 msgstr "별 3개"
 
-#: ../../src/Module/Util/Ui.php:970 ../../src/Repository/Model/Search.php:119
+#: ../../src/Module/Util/Ui.php:970 ../../src/Repository/Model/Search.php:134
 msgid "4 Stars"
 msgstr "별 4개"
 
-#: ../../src/Module/Util/Ui.php:971 ../../src/Repository/Model/Search.php:120
+#: ../../src/Module/Util/Ui.php:971 ../../src/Repository/Model/Search.php:135
 msgid "5 Stars"
 msgstr "별 5개"
 
@@ -9044,12 +9079,12 @@ msgid "Song preview from 7digital"
 msgstr "7digital의 노래 미리 보기"
 
 #: ../../src/Plugin/Ampache7digital.php:66
-#: ../../src/Repository/Model/Preference.php:791
+#: ../../src/Repository/Model/Preference.php:799
 msgid "7digital consumer key"
 msgstr "7digital 고객 키"
 
 #: ../../src/Plugin/Ampache7digital.php:67
-#: ../../src/Repository/Model/Preference.php:792
+#: ../../src/Repository/Model/Preference.php:800
 msgid "7digital secret"
 msgstr "7digital 비밀번호"
 
@@ -9058,27 +9093,27 @@ msgid "Amazon art search"
 msgstr "아마존 아트 검색"
 
 #: ../../src/Plugin/AmpacheAmazon.php:68
-#: ../../src/Repository/Model/Preference.php:807
+#: ../../src/Repository/Model/Preference.php:815
 msgid "Amazon base url"
 msgstr "아마존 기본 url"
 
 #: ../../src/Plugin/AmpacheAmazon.php:69
-#: ../../src/Repository/Model/Preference.php:811
+#: ../../src/Repository/Model/Preference.php:819
 msgid "Amazon max results pages"
 msgstr "아마존 최대 결과 쪽"
 
 #: ../../src/Plugin/AmpacheAmazon.php:70
-#: ../../src/Repository/Model/Preference.php:810
+#: ../../src/Repository/Model/Preference.php:818
 msgid "Amazon Access Key ID"
 msgstr "아마존 접근 키 ID"
 
 #: ../../src/Plugin/AmpacheAmazon.php:71
-#: ../../src/Repository/Model/Preference.php:809
+#: ../../src/Repository/Model/Preference.php:817
 msgid "Amazon Secret Access Key"
 msgstr "아마존 비밀 접근 키"
 
 #: ../../src/Plugin/AmpacheAmazon.php:72
-#: ../../src/Repository/Model/Preference.php:808
+#: ../../src/Repository/Model/Preference.php:816
 msgid "Amazon associate tag"
 msgstr "아마존 연관 태그"
 
@@ -9087,12 +9122,12 @@ msgid "URL shorteners on shared links with Bit.ly"
 msgstr "Bit.ly와 연결된 URL 단축"
 
 #: ../../src/Plugin/AmpacheBitly.php:69
-#: ../../src/Repository/Model/Preference.php:824
+#: ../../src/Repository/Model/Preference.php:832
 msgid "Bit.ly Username"
 msgstr "Bit.ly 사용자이름"
 
 #: ../../src/Plugin/AmpacheBitly.php:70
-#: ../../src/Repository/Model/Preference.php:823
+#: ../../src/Repository/Model/Preference.php:831
 msgid "Bit.ly API key"
 msgstr "Bit.ly API 키"
 
@@ -9101,13 +9136,13 @@ msgid "Catalog favorites on homepage"
 msgstr "홈페이지 카탈로그 선호"
 
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:73
-#: ../../src/Repository/Model/Preference.php:831
+#: ../../src/Repository/Model/Preference.php:839
 msgid "Catalog favorites max items"
 msgstr "최대 카탈로그 아이템"
 
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:74
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:103
-#: ../../src/Repository/Model/Preference.php:830
+#: ../../src/Repository/Model/Preference.php:838
 msgid "Catalog favorites grid view display"
 msgstr "그리드 보기 화면"
 
@@ -9124,12 +9159,12 @@ msgid "Discogs metadata integration"
 msgstr "Discog 메타데이타 검증"
 
 #: ../../src/Plugin/AmpacheDiscogs.php:65
-#: ../../src/Repository/Model/Preference.php:849
+#: ../../src/Repository/Model/Preference.php:857
 msgid "Discogs consumer key"
 msgstr "Discogs 고객 키"
 
 #: ../../src/Plugin/AmpacheDiscogs.php:66
-#: ../../src/Repository/Model/Preference.php:850
+#: ../../src/Repository/Model/Preference.php:858
 msgid "Discogs secret"
 msgstr "Discogs 시크릿"
 
@@ -9142,7 +9177,7 @@ msgid "Flattr donation button on user page"
 msgstr "Flattr 기부 버튼"
 
 #: ../../src/Plugin/AmpacheFlattr.php:68
-#: ../../src/Repository/Model/Preference.php:852
+#: ../../src/Repository/Model/Preference.php:860
 msgid "Flattr User ID"
 msgstr "Flattr 사용자 아이디"
 
@@ -9155,7 +9190,7 @@ msgid "Artist photos from Flickr"
 msgstr "Flickr에서 가져온 아티스트 사진"
 
 #: ../../src/Plugin/Ampacheflickr.php:64
-#: ../../src/Repository/Model/Preference.php:853
+#: ../../src/Repository/Model/Preference.php:861
 msgid "Flickr API key"
 msgstr "Flickr API 키"
 
@@ -9164,7 +9199,7 @@ msgid "Friend's Timeline on homepage"
 msgstr "홈페이지의 친구 타임라인"
 
 #: ../../src/Plugin/AmpacheFriendsTimeline.php:71
-#: ../../src/Repository/Model/Preference.php:855
+#: ../../src/Repository/Model/Preference.php:863
 msgid "Friends timeline max items"
 msgstr "친구 타임라인 최대 아이템"
 
@@ -9177,7 +9212,7 @@ msgid "Google Analytics statistics"
 msgstr "구글 애널리틱스 통계"
 
 #: ../../src/Plugin/AmpacheGoogleAnalytics.php:66
-#: ../../src/Repository/Model/Preference.php:858
+#: ../../src/Repository/Model/Preference.php:866
 msgid "Google Analytics Tracking ID"
 msgstr "구글 애널리틱스 추적 아이디"
 
@@ -9186,7 +9221,7 @@ msgid "Show user's location with Google Maps"
 msgstr "구글맵에서 사용자 위치 보여주기"
 
 #: ../../src/Plugin/AmpacheGoogleMaps.php:65
-#: ../../src/Repository/Model/Preference.php:857
+#: ../../src/Repository/Model/Preference.php:865
 msgid "Google Maps API key"
 msgstr "구글 지도 API 키"
 
@@ -9207,12 +9242,12 @@ msgid "Automatically download accepted Wanted List albums with Headphones"
 msgstr "Headphones에서 수락한 희망 목록 앨범 자동으로 받기"
 
 #: ../../src/Plugin/AmpacheHeadphones.php:69
-#: ../../src/Repository/Model/Preference.php:860
+#: ../../src/Repository/Model/Preference.php:868
 msgid "Headphones URL"
 msgstr "Headphones URL"
 
 #: ../../src/Plugin/AmpacheHeadphones.php:70
-#: ../../src/Repository/Model/Preference.php:859
+#: ../../src/Repository/Model/Preference.php:867
 msgid "Headphones API key"
 msgstr "Headphones API 키"
 
@@ -9221,13 +9256,13 @@ msgid "Scrobble songs you play to your Last.FM account"
 msgstr "Last.FM 계정에서 재생한 노래 스크로블하기"
 
 #: ../../src/Plugin/AmpacheLastfm.php:76
-#: ../../src/Repository/Model/Preference.php:869
+#: ../../src/Repository/Model/Preference.php:877
 msgid "Last.FM Submit Challenge"
 msgstr "Last.FM 도전 보내기"
 
 #: ../../src/Plugin/AmpacheLastfm.php:77
 #: ../../src/Plugin/AmpacheLastfm.php:119
-#: ../../src/Repository/Model/Preference.php:870
+#: ../../src/Repository/Model/Preference.php:878
 msgid "Last.FM Grant URL"
 msgstr "Last.FM URL 수락"
 
@@ -9240,7 +9275,7 @@ msgid "Scrobble songs you play to your Libre.FM Account"
 msgstr "Libre.FM 계정에서 재생한 노래 스크로블하기"
 
 #: ../../src/Plugin/Ampachelibrefm.php:76
-#: ../../src/Repository/Model/Preference.php:873
+#: ../../src/Repository/Model/Preference.php:881
 msgid "Libre.FM Submit Challenge"
 msgstr "Libre.FM 도전 보내기"
 
@@ -9254,7 +9289,7 @@ msgid "Scrobble songs you play to your ListenBrainz Account"
 msgstr "ListenBrainz 계정에서 재생한 음악 스크로블하기"
 
 #: ../../src/Plugin/Ampachelistenbrainz.php:73
-#: ../../src/Repository/Model/Preference.php:874
+#: ../../src/Repository/Model/Preference.php:882
 msgid "ListenBrainz User Token"
 msgstr "ListenBrainz 사용자 토큰"
 
@@ -9276,12 +9311,12 @@ msgid "Matomo statistics"
 msgstr "Matomo 통계"
 
 #: ../../src/Plugin/AmpacheMatomo.php:68
-#: ../../src/Repository/Model/Preference.php:878
+#: ../../src/Repository/Model/Preference.php:886
 msgid "Matomo Site ID"
 msgstr "Matomo 사이트 아이디"
 
 #: ../../src/Plugin/AmpacheMatomo.php:69
-#: ../../src/Repository/Model/Preference.php:879
+#: ../../src/Repository/Model/Preference.php:887
 msgid "Matomo URL"
 msgstr "Matomo URL"
 
@@ -9298,12 +9333,12 @@ msgid "PayPal donation button on user page"
 msgstr "사용자 페이지에 PayPal 기부 달기"
 
 #: ../../src/Plugin/AmpachePaypal.php:69
-#: ../../src/Repository/Model/Preference.php:886
+#: ../../src/Repository/Model/Preference.php:894
 msgid "PayPal ID"
 msgstr "PayPal 아이디"
 
 #: ../../src/Plugin/AmpachePaypal.php:70
-#: ../../src/Repository/Model/Preference.php:887
+#: ../../src/Repository/Model/Preference.php:895
 msgid "PayPal Currency Code"
 msgstr "PayPal 통화 코드"
 
@@ -9316,17 +9351,17 @@ msgid "Personal favorites on homepage"
 msgstr "홈페이지에 대한 개인 선호"
 
 #: ../../src/Plugin/AmpachePersonalFavorites.php:73
-#: ../../src/Repository/Model/Preference.php:888
+#: ../../src/Repository/Model/Preference.php:896
 msgid "Personal favorites on the homepage"
 msgstr "홈페이지에 대한 개인 선호"
 
 #: ../../src/Plugin/AmpachePersonalFavorites.php:74
-#: ../../src/Repository/Model/Preference.php:889
+#: ../../src/Repository/Model/Preference.php:897
 msgid "Favorite Playlists"
 msgstr "가장 좋아하는 재생목록"
 
 #: ../../src/Plugin/AmpachePersonalFavorites.php:75
-#: ../../src/Repository/Model/Preference.php:890
+#: ../../src/Repository/Model/Preference.php:898
 msgid "Favorite Smartlists"
 msgstr "가장 좋아하는 Smart목록"
 
@@ -9339,12 +9374,12 @@ msgid "Piwik statistics"
 msgstr "Piwik 통계"
 
 #: ../../src/Plugin/AmpachePiwik.php:68
-#: ../../src/Repository/Model/Preference.php:891
+#: ../../src/Repository/Model/Preference.php:899
 msgid "Piwik Site ID"
 msgstr "Piwik 사이트 아이디"
 
 #: ../../src/Plugin/AmpachePiwik.php:69
-#: ../../src/Repository/Model/Preference.php:892
+#: ../../src/Repository/Model/Preference.php:900
 msgid "Piwik URL"
 msgstr "Piwik URL"
 
@@ -9353,49 +9388,49 @@ msgid "Raise the album and artist rating to match the highest song rating"
 msgstr "가장 높은 노래 등급에 맞게 앨범 및 아티스트 등급 올리기"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:82
-#: ../../src/Repository/Model/Preference.php:907
+#: ../../src/Repository/Model/Preference.php:915
 msgid "Minimum star rating to match"
 msgstr "일치하는 최소 별 등급"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:84
 #: ../../src/Plugin/AmpacheRatingMatch.php:127
-#: ../../src/Repository/Model/Preference.php:901
+#: ../../src/Repository/Model/Preference.php:909
 msgid "When you love a track, flag the album and artist"
 msgstr "트랙을 사랑할 때 앨범과 아티스트에 플래그를 지정합니다."
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:86
 #: ../../src/Plugin/AmpacheRatingMatch.php:130
-#: ../../src/Repository/Model/Preference.php:902
+#: ../../src/Repository/Model/Preference.php:910
 msgid "Match rule for 1 Star ($play,$skip)"
 msgstr "별 1개의 일치 규칙 ($play,$skip)"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:87
 #: ../../src/Plugin/AmpacheRatingMatch.php:131
-#: ../../src/Repository/Model/Preference.php:903
+#: ../../src/Repository/Model/Preference.php:911
 msgid "Match rule for 2 Stars"
 msgstr "별 2개의 일치 규칙"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:88
 #: ../../src/Plugin/AmpacheRatingMatch.php:132
-#: ../../src/Repository/Model/Preference.php:904
+#: ../../src/Repository/Model/Preference.php:912
 msgid "Match rule for 3 Stars"
 msgstr "별 3개의 일치 규칙"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:89
 #: ../../src/Plugin/AmpacheRatingMatch.php:133
-#: ../../src/Repository/Model/Preference.php:905
+#: ../../src/Repository/Model/Preference.php:913
 msgid "Match rule for 4 Stars"
 msgstr "별 4개의 일치 규칙"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:90
 #: ../../src/Plugin/AmpacheRatingMatch.php:134
-#: ../../src/Repository/Model/Preference.php:906
+#: ../../src/Repository/Model/Preference.php:914
 msgid "Match rule for 5 Stars"
 msgstr "별 5개의 일치 규칙"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:91
 #: ../../src/Plugin/AmpacheRatingMatch.php:135
-#: ../../src/Repository/Model/Preference.php:900
+#: ../../src/Repository/Model/Preference.php:908
 msgid "Match rule for Flags"
 msgstr "플래그 일치 규칙"
 
@@ -9409,12 +9444,12 @@ msgid "RSS View"
 msgstr "RSS 보기"
 
 #: ../../src/Plugin/AmpacheRSSView.php:68
-#: ../../src/Repository/Model/Preference.php:908
+#: ../../src/Repository/Model/Preference.php:916
 msgid "RSS Feed URL"
 msgstr "RSS 피드 URL"
 
 #: ../../src/Plugin/AmpacheRSSView.php:69
-#: ../../src/Repository/Model/Preference.php:909
+#: ../../src/Repository/Model/Preference.php:917
 msgid "RSS Feed max items"
 msgstr "RSS 피드 최대 아이템들"
 
@@ -9423,7 +9458,7 @@ msgid "Shoutbox on homepage"
 msgstr "사이트의 Shoutbox"
 
 #: ../../src/Plugin/AmpacheShoutHome.php:68
-#: ../../src/Repository/Model/Preference.php:912
+#: ../../src/Repository/Model/Preference.php:920
 msgid "Shoutbox on homepage max items"
 msgstr "사이트의 Shoutbox 최대 아이템들"
 
@@ -9432,12 +9467,12 @@ msgid "Control bandwidth per user"
 msgstr "사용자당 대역폭 조절하기"
 
 #: ../../src/Plugin/AmpacheStreamBandwidth.php:67
-#: ../../src/Repository/Model/Preference.php:931
+#: ../../src/Repository/Model/Preference.php:939
 msgid "Stream control maximal bandwidth (month)"
 msgstr "(월) 최대 대역폭 스트림 제어"
 
 #: ../../src/Plugin/AmpacheStreamBandwidth.php:68
-#: ../../src/Repository/Model/Preference.php:930
+#: ../../src/Repository/Model/Preference.php:938
 msgid "Stream control bandwidth history (days)"
 msgstr "(일) 대역폭 흔적 제어"
 
@@ -9446,12 +9481,12 @@ msgid "Control hits per user"
 msgstr "사용자별 접속 빈도 제어"
 
 #: ../../src/Plugin/AmpacheStreamHits.php:66
-#: ../../src/Repository/Model/Preference.php:933
+#: ../../src/Repository/Model/Preference.php:941
 msgid "Stream control maximal hits"
 msgstr "최대 접속 빈도 스트림 제어"
 
 #: ../../src/Plugin/AmpacheStreamHits.php:67
-#: ../../src/Repository/Model/Preference.php:932
+#: ../../src/Repository/Model/Preference.php:940
 msgid "Stream control hits history (days)"
 msgstr "(일) 접속빈도 흔적 스트림 제어"
 
@@ -9460,12 +9495,12 @@ msgid "Control time per user"
 msgstr "사용자당 횟수 제어"
 
 #: ../../src/Plugin/AmpacheStreamTime.php:67
-#: ../../src/Repository/Model/Preference.php:935
+#: ../../src/Repository/Model/Preference.php:943
 msgid "Stream control maximal time (minutes)"
 msgstr "최대 스트림 제어 시간 (분)"
 
 #: ../../src/Plugin/AmpacheStreamTime.php:68
-#: ../../src/Repository/Model/Preference.php:934
+#: ../../src/Repository/Model/Preference.php:942
 msgid "Stream control time history (days)"
 msgstr "(일) 시간 흔적 스트림 제어"
 
@@ -9474,7 +9509,7 @@ msgid "TheAudioDb metadata integration"
 msgstr "TheAudioDb 메타데이타 집적"
 
 #: ../../src/Plugin/AmpacheTheaudiodb.php:74
-#: ../../src/Repository/Model/Preference.php:938
+#: ../../src/Repository/Model/Preference.php:946
 msgid "TheAudioDb API key"
 msgstr "TheAudioDb API 키"
 
@@ -9483,7 +9518,7 @@ msgid "TVDb metadata integration"
 msgstr "TVDb 메타데이타 집적"
 
 #: ../../src/Plugin/AmpacheTvdb.php:66
-#: ../../src/Repository/Model/Preference.php:945
+#: ../../src/Repository/Model/Preference.php:953
 msgid "TVDb API key"
 msgstr "TVDb API 키"
 
@@ -9496,26 +9531,26 @@ msgid "URL shorteners on shared links with YOURLS"
 msgstr "YOURLS로 공유할때 URL 줄이기"
 
 #: ../../src/Plugin/AmpacheYourls.php:70
-#: ../../src/Repository/Model/Preference.php:970
+#: ../../src/Repository/Model/Preference.php:978
 msgid "YOURLS domain name"
 msgstr "YOURS 도메인 이름"
 
 #: ../../src/Plugin/AmpacheYourls.php:71
-#: ../../src/Repository/Model/Preference.php:971
+#: ../../src/Repository/Model/Preference.php:979
 msgid "YOURLS use IDN"
 msgstr "YOURS IDN 사용"
 
 #: ../../src/Plugin/AmpacheYourls.php:72
-#: ../../src/Repository/Model/Preference.php:969
+#: ../../src/Repository/Model/Preference.php:977
 msgid "YOURLS API key"
 msgstr "YOURS API 키"
 
-#: ../../src/Repository/Model/AlbumDisk.php:363
+#: ../../src/Repository/Model/AlbumDisk.php:367
 #: ../../src/Repository/Model/Album.php:595
 msgid "Album MusicBrainzID"
 msgstr "앨범 MusicBrainzID"
 
-#: ../../src/Repository/Model/AlbumDisk.php:368
+#: ../../src/Repository/Model/AlbumDisk.php:372
 #: ../../src/Repository/Model/Album.php:600
 msgid "Release Group MusicBrainzID"
 msgstr "MusicBrainzID 군 배포"
@@ -9548,64 +9583,60 @@ msgstr "방송"
 msgid "Unbroadcast"
 msgstr "방송하지않기"
 
-#: ../../src/Repository/Model/Browse.php:326
+#: ../../src/Repository/Model/Browse.php:334
 #: ../../src/Repository/Model/playlist_object.php:304
 msgid "Playlist Items"
 msgstr "재생목록 아이템들"
 
-#: ../../src/Repository/Model/Browse.php:330
+#: ../../src/Repository/Model/Browse.php:338
 msgid "Current Playlist"
 msgstr "현재 재생목록"
 
-#: ../../src/Repository/Model/Browse.php:343
+#: ../../src/Repository/Model/Browse.php:351
 msgid "Shoutbox Records"
 msgstr "샤우트박스 기록"
 
-#: ../../src/Repository/Model/Browse.php:367
+#: ../../src/Repository/Model/Browse.php:375
 msgid "Wanted Albums"
 msgstr "희망 앨범들"
 
-#: ../../src/Repository/Model/Browse.php:419
+#: ../../src/Repository/Model/Browse.php:427
 msgid "Private Messages"
 msgstr "개인 메시지"
 
-#: ../../src/Repository/Model/Catalog.php:1161
+#: ../../src/Repository/Model/Catalog.php:1184
 msgid "day"
 msgid_plural "days"
 msgstr[0] "일"
 
-#: ../../src/Repository/Model/Catalog.php:1163
+#: ../../src/Repository/Model/Catalog.php:1186
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "시간"
 
-#: ../../src/Repository/Model/Catalog.php:1208
-msgid "Failed to create the catalog, check the debug logs"
-msgstr "카탈로그 생성 실패, 디버그 기록을 보시오"
-
-#: ../../src/Repository/Model/Catalog.php:2400
+#: ../../src/Repository/Model/Catalog.php:2428
 msgid "No Update Needed"
 msgstr "갱신 필요없음"
 
-#: ../../src/Repository/Model/Catalog.php:3394
+#: ../../src/Repository/Model/Catalog.php:3422
 msgid "Catalog Cleaned"
 msgstr "카탈로그 정리됨"
 
-#: ../../src/Repository/Model/Catalog.php:3395
+#: ../../src/Repository/Model/Catalog.php:3423
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] "%d 파일 제거됨"
 
-#: ../../src/Repository/Model/Catalog.php:3424
+#: ../../src/Repository/Model/Catalog.php:3452
 msgid "Catalog Verified"
 msgstr "카탈로그 확인됨"
 
-#: ../../src/Repository/Model/Catalog.php:3718
+#: ../../src/Repository/Model/Catalog.php:3746
 msgid "No valid songs found in playlist file"
 msgstr "재생목록에 유효한 노래가 없음"
 
-#: ../../src/Repository/Model/Catalog.php:4280
+#: ../../src/Repository/Model/Catalog.php:4308
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
@@ -9647,20 +9678,20 @@ msgid "Update Plugins automatically"
 msgstr ""
 
 #: ../../src/Repository/Model/Podcast_Episode.php:158
-#: ../../src/Repository/Model/Search.php:918
-#: ../../src/Repository/Model/Search.php:956
+#: ../../src/Repository/Model/Search.php:933
+#: ../../src/Repository/Model/Search.php:971
 msgid "skipped"
 msgstr ""
 
 #: ../../src/Repository/Model/Podcast_Episode.php:161
-#: ../../src/Repository/Model/Search.php:919
-#: ../../src/Repository/Model/Search.php:957
+#: ../../src/Repository/Model/Search.php:934
+#: ../../src/Repository/Model/Search.php:972
 msgid "pending"
 msgstr ""
 
 #: ../../src/Repository/Model/Podcast_Episode.php:164
-#: ../../src/Repository/Model/Search.php:920
-#: ../../src/Repository/Model/Search.php:958
+#: ../../src/Repository/Model/Search.php:935
+#: ../../src/Repository/Model/Search.php:973
 msgid "completed"
 msgstr ""
 
@@ -9684,482 +9715,482 @@ msgstr "피드에 접근할 수 없음"
 msgid "Can not read the feed"
 msgstr "피드를 읽을 수 없음"
 
-#: ../../src/Repository/Model/Preference.php:793
+#: ../../src/Repository/Model/Preference.php:801
 msgid "Ajax page load"
 msgstr "Ajax 페이지 불러옴"
 
-#: ../../src/Repository/Model/Preference.php:794
+#: ../../src/Repository/Model/Preference.php:802
 msgid "Album - Group multiple disks"
 msgstr "앨범 - 여러 디스크 모으기"
 
-#: ../../src/Repository/Model/Preference.php:795
+#: ../../src/Repository/Model/Preference.php:803
 msgid "Album - Group per release type sort"
 msgstr "앨범 - 배포 형태당 그룹 정렬"
 
-#: ../../src/Repository/Model/Preference.php:796
+#: ../../src/Repository/Model/Preference.php:804
 msgid "Album - Group per release type"
 msgstr "앨범 - 배포 형태로 모음"
 
-#: ../../src/Repository/Model/Preference.php:797
+#: ../../src/Repository/Model/Preference.php:805
 msgid "Album - Default sort"
 msgstr "앨범 - 기본 정렬"
 
-#: ../../src/Repository/Model/Preference.php:798
+#: ../../src/Repository/Model/Preference.php:806
 msgid "Allow Democratic Play"
 msgstr "기본 재생 허용"
 
-#: ../../src/Repository/Model/Preference.php:799
+#: ../../src/Repository/Model/Preference.php:807
 msgid "Allow Localplay Play"
 msgstr "내부 재생 연주 허용하기"
 
-#: ../../src/Repository/Model/Preference.php:800
+#: ../../src/Repository/Model/Preference.php:808
 msgid "Share Recently Played information - Allow access to streaming agent"
 msgstr "최근 재생 정보 공유하기 - 스트리밍 에이전트 접근 허용하기"
 
-#: ../../src/Repository/Model/Preference.php:801
+#: ../../src/Repository/Model/Preference.php:809
 msgid "Share Now Playing information"
 msgstr "현재 재생정보 공유하기"
 
-#: ../../src/Repository/Model/Preference.php:802
+#: ../../src/Repository/Model/Preference.php:810
 msgid "Share Recently Played information"
 msgstr "최근 재생 정보 공유하기"
 
-#: ../../src/Repository/Model/Preference.php:803
+#: ../../src/Repository/Model/Preference.php:811
 msgid ""
 "Share Recently Played information - Allow access to streaming date/time"
 msgstr "최근 재생 정보 공유하기 - 스트리밍 날짜/시간 접근 허용하기"
 
-#: ../../src/Repository/Model/Preference.php:804
+#: ../../src/Repository/Model/Preference.php:812
 msgid "Allow Streaming"
 msgstr "스트리밍 허용하기"
 
-#: ../../src/Repository/Model/Preference.php:805
+#: ../../src/Repository/Model/Preference.php:813
 msgid "Allow user uploads"
 msgstr "사용자 업로드 허용하기"
 
-#: ../../src/Repository/Model/Preference.php:806
+#: ../../src/Repository/Model/Preference.php:814
 msgid "Allow Video Features"
 msgstr "비디오 특성 허용"
 
-#: ../../src/Repository/Model/Preference.php:812
+#: ../../src/Repository/Model/Preference.php:820
 msgid "Allow Ampache API3 responses"
 msgstr "Ampache API3 응답 허용"
 
-#: ../../src/Repository/Model/Preference.php:813
+#: ../../src/Repository/Model/Preference.php:821
 msgid "Allow Ampache API4 responses"
 msgstr "Ampache API4 응답 허용"
 
-#: ../../src/Repository/Model/Preference.php:814
+#: ../../src/Repository/Model/Preference.php:822
 msgid "Allow Ampache API5 responses"
 msgstr "Ampache API5 응답 허용"
 
-#: ../../src/Repository/Model/Preference.php:815
+#: ../../src/Repository/Model/Preference.php:823
 msgid "Allow Ampache API6 responses"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:816
+#: ../../src/Repository/Model/Preference.php:824
 msgid "Force a specific API response no matter what version you send"
 msgstr "보내는 버전에 관계없이 특정 API 응답 강제 실행"
 
-#: ../../src/Repository/Model/Preference.php:817
+#: ../../src/Repository/Model/Preference.php:825
 msgid "Hide playlists in Subsonic and API clients that start with this string"
 msgstr "이 문자열로 시작하는 Subsonic 및 API 클라이언트에서 재생 목록 숨기기"
 
-#: ../../src/Repository/Model/Preference.php:818
+#: ../../src/Repository/Model/Preference.php:826
 msgid "Hide smartlists that match playlist names in Subsonic and API clients"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:819
+#: ../../src/Repository/Model/Preference.php:827
 msgid "AutoUpdate last check time"
 msgstr "자동갱신 점검 시간"
 
-#: ../../src/Repository/Model/Preference.php:820
+#: ../../src/Repository/Model/Preference.php:828
 msgid "AutoUpdate last version from last check is newer"
 msgstr "마지막 점검 때 자동 갱신한 최근 버전이 최신임"
 
-#: ../../src/Repository/Model/Preference.php:821
+#: ../../src/Repository/Model/Preference.php:829
 msgid "AutoUpdate last version from last check"
 msgstr "지난번 점검부터 확인하여 최근 버전 자동 갱신하기"
 
-#: ../../src/Repository/Model/Preference.php:822
+#: ../../src/Repository/Model/Preference.php:830
 msgid "Check for Ampache updates automatically"
 msgstr "자동으로 Ampache 갱신 점검하기"
 
-#: ../../src/Repository/Model/Preference.php:825
+#: ../../src/Repository/Model/Preference.php:833
 msgid "Broadcast web player by default"
 msgstr "브로드캐스트 웹 재생기 기본 설정"
 
-#: ../../src/Repository/Model/Preference.php:826
+#: ../../src/Repository/Model/Preference.php:834
 msgid "Show filter box on browse"
 msgstr "브라우저에 필터상자 보이기"
 
-#: ../../src/Repository/Model/Preference.php:827
+#: ../../src/Repository/Model/Preference.php:835
 msgid "Web Player browser notifications timeout (seconds)"
 msgstr "웹 재생기 브라우저 안내 만료 시간 설정 (초)"
 
-#: ../../src/Repository/Model/Preference.php:828
+#: ../../src/Repository/Model/Preference.php:836
 msgid "Web Player browser notifications"
 msgstr "웹 재생기 브라우저 안내"
 
-#: ../../src/Repository/Model/Preference.php:829
+#: ../../src/Repository/Model/Preference.php:837
 msgid "Check library item at import time and disable duplicates"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:832
+#: ../../src/Repository/Model/Preference.php:840
 msgid "Cache computed SQL data (eg. media hits stats) using a cron"
 msgstr "크론을 사용하여 계산된 SQL 데이터 (예: 미디어 적중 통계) 캐시"
 
-#: ../../src/Repository/Model/Preference.php:833
+#: ../../src/Repository/Model/Preference.php:841
 msgid "Custom blank album default image"
 msgstr "사용자용 앨범 기본 이미지"
 
-#: ../../src/Repository/Model/Preference.php:834
+#: ../../src/Repository/Model/Preference.php:842
 msgid "Custom blank video default image"
 msgstr "사용자용 비디오 기본 이미지"
 
-#: ../../src/Repository/Model/Preference.php:835
+#: ../../src/Repository/Model/Preference.php:843
 msgid "Custom datetime"
 msgstr "사용자 지정 날짜 시간"
 
-#: ../../src/Repository/Model/Preference.php:836
+#: ../../src/Repository/Model/Preference.php:844
 msgid "Custom URL - Favicon"
 msgstr "사용자 URL - Favicon"
 
-#: ../../src/Repository/Model/Preference.php:837
+#: ../../src/Repository/Model/Preference.php:845
 msgid "Custom URL - Login page background"
 msgstr "사용자 URL - 로그인 화면 배경"
 
-#: ../../src/Repository/Model/Preference.php:838
+#: ../../src/Repository/Model/Preference.php:846
 msgid "Custom URL - Login page logo"
 msgstr "사용자 URL - 로그인 화면 로고"
 
-#: ../../src/Repository/Model/Preference.php:839
+#: ../../src/Repository/Model/Preference.php:847
 msgid "Custom URL - Logo"
 msgstr "사용자 URL - 로고"
 
-#: ../../src/Repository/Model/Preference.php:840
+#: ../../src/Repository/Model/Preference.php:848
 msgid "Custom text footer"
 msgstr "사용자 텍스트 하단"
 
-#: ../../src/Repository/Model/Preference.php:841
+#: ../../src/Repository/Model/Preference.php:849
 msgid "Custom timezone (Override PHP date.timezone)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:842
+#: ../../src/Repository/Model/Preference.php:850
 msgid "Use DAAP backend"
 msgstr "DAAP 백엔드 사용하기"
 
-#: ../../src/Repository/Model/Preference.php:843
+#: ../../src/Repository/Model/Preference.php:851
 msgid "DAAP backend password"
 msgstr "DAAP 백엔드 암호"
 
-#: ../../src/Repository/Model/Preference.php:844
+#: ../../src/Repository/Model/Preference.php:852
 msgid "Democratic - Clear votes for expired user sessions"
 msgstr "기본 - 만료된 사용자 세션에 대한 투표 지우기"
 
-#: ../../src/Repository/Model/Preference.php:845
+#: ../../src/Repository/Model/Preference.php:853
 msgid "Democratic - Use smartlists for base playlist"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:846
+#: ../../src/Repository/Model/Preference.php:854
 msgid "Limit direct play to maximum media count"
 msgstr "최대 미디어 숫자에 맞춰 직접 재생 제한하기"
 
-#: ../../src/Repository/Model/Preference.php:847
+#: ../../src/Repository/Model/Preference.php:855
 msgid "Custom metadata - Define field list"
 msgstr "사용자 메타데이타 - 필드 목록 정의하기"
 
-#: ../../src/Repository/Model/Preference.php:848
+#: ../../src/Repository/Model/Preference.php:856
 msgid "Custom metadata - Disable these fields"
 msgstr "사용자 메타데이타 - 이 필드 사용 안함"
 
-#: ../../src/Repository/Model/Preference.php:851
+#: ../../src/Repository/Model/Preference.php:859
 msgid "Allow Downloads"
 msgstr "내려받기 허용"
 
-#: ../../src/Repository/Model/Preference.php:854
+#: ../../src/Repository/Model/Preference.php:862
 msgid "Force HTTP playback regardless of port"
 msgstr "포트 상관없이 HTTP 재생 강제하기"
 
-#: ../../src/Repository/Model/Preference.php:856
+#: ../../src/Repository/Model/Preference.php:864
 msgid "Allow Geolocation"
 msgstr "지역 위치 허용하기"
 
-#: ../../src/Repository/Model/Preference.php:861
+#: ../../src/Repository/Model/Preference.php:869
 msgid "Hide the Genre column in browse table rows"
 msgstr "테이블 행 찾아보기에서 장르 열 숨기기"
 
-#: ../../src/Repository/Model/Preference.php:862
+#: ../../src/Repository/Model/Preference.php:870
 msgid "Hide the Song Artist column for Albums with one Artist"
 msgstr "솔로 아티스트 앨범의 노래 아티스트 열 숨기기"
 
-#: ../../src/Repository/Model/Preference.php:863
+#: ../../src/Repository/Model/Preference.php:871
 msgid "Show Albums of the Moment"
 msgstr "순간 포착 앨범 보이기"
 
-#: ../../src/Repository/Model/Preference.php:864
+#: ../../src/Repository/Model/Preference.php:872
 msgid "Show Videos of the Moment"
 msgstr "순간 포착 비디오 보이기"
 
-#: ../../src/Repository/Model/Preference.php:865
+#: ../../src/Repository/Model/Preference.php:873
 msgid "Show Now Playing"
 msgstr "현재 재생 중 보이기"
 
-#: ../../src/Repository/Model/Preference.php:866
+#: ../../src/Repository/Model/Preference.php:874
 msgid "Show Recently Played"
 msgstr "최근 재생한 것 보이기"
 
-#: ../../src/Repository/Model/Preference.php:871
+#: ../../src/Repository/Model/Preference.php:879
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr "다음 라이브러리 항목(앨범, 아티스트 등)에 대한 가나다 순 검색"
 
-#: ../../src/Repository/Model/Preference.php:872
+#: ../../src/Repository/Model/Preference.php:880
 msgid "Library item context menu"
 msgstr "라이브러리 아이템 컨텍스트 메뉴"
 
-#: ../../src/Repository/Model/Preference.php:875
+#: ../../src/Repository/Model/Preference.php:883
 msgid "Localplay Type"
 msgstr "내부 재생 유형"
 
-#: ../../src/Repository/Model/Preference.php:876
+#: ../../src/Repository/Model/Preference.php:884
 msgid "Localplay Access"
 msgstr "내부 재생 접근"
 
-#: ../../src/Repository/Model/Preference.php:877
+#: ../../src/Repository/Model/Preference.php:885
 msgid "Lock Songs"
 msgstr "노래 잠그기"
 
-#: ../../src/Repository/Model/Preference.php:882
+#: ../../src/Repository/Model/Preference.php:890
 msgid "Allow E-mail notifications"
 msgstr "이메일 공지 허용"
 
-#: ../../src/Repository/Model/Preference.php:883
+#: ../../src/Repository/Model/Preference.php:891
 msgid "Now Playing filtered per user"
 msgstr "사용자별로 필터하여 재생 중"
 
-#: ../../src/Repository/Model/Preference.php:884
+#: ../../src/Repository/Model/Preference.php:892
 msgid "Offset Limit"
 msgstr "차이값 제한"
 
-#: ../../src/Repository/Model/Preference.php:885
+#: ../../src/Repository/Model/Preference.php:893
 msgid "Set the amount of items Album/Video of the Moment will display"
 msgstr "Album/Video of the Moment에 표시할 항목의 양 설정하기"
 
-#: ../../src/Repository/Model/Preference.php:893
+#: ../../src/Repository/Model/Preference.php:901
 msgid "Playlist Method"
 msgstr "재생목록 방법"
 
-#: ../../src/Repository/Model/Preference.php:894
+#: ../../src/Repository/Model/Preference.php:902
 msgid "Playlist Type"
 msgstr "재생목록 형태"
 
-#: ../../src/Repository/Model/Preference.php:895
+#: ../../src/Repository/Model/Preference.php:903
 msgid "Playback Type"
 msgstr "재생 형태"
 
-#: ../../src/Repository/Model/Preference.php:896
+#: ../../src/Repository/Model/Preference.php:904
 msgid "# latest episodes to keep"
 msgstr "유지할 최근 에피소드 #"
 
-#: ../../src/Repository/Model/Preference.php:897
+#: ../../src/Repository/Model/Preference.php:905
 msgid "# episodes to download when new episodes are available"
 msgstr "새 에피소드를 이용할 수 있을때 다운받는 에피소드 #"
 
-#: ../../src/Repository/Model/Preference.php:898
+#: ../../src/Repository/Model/Preference.php:906
 msgid "Popular Threshold"
 msgstr "인기도 처리"
 
-#: ../../src/Repository/Model/Preference.php:899
+#: ../../src/Repository/Model/Preference.php:907
 msgid "Rate Limit"
 msgstr "평가 제한"
 
-#: ../../src/Repository/Model/Preference.php:910
+#: ../../src/Repository/Model/Preference.php:918
 msgid "Share links default expiration days (0=never)"
 msgstr "공유 링크 기본 해제 날 ( 0 = 해제 안함 )"
 
-#: ../../src/Repository/Model/Preference.php:911
+#: ../../src/Repository/Model/Preference.php:919
 msgid "Allow Share"
 msgstr "공유 허용"
 
-#: ../../src/Repository/Model/Preference.php:913
+#: ../../src/Repository/Model/Preference.php:921
 msgid "Show 'Album Artists' link in the main sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:914
+#: ../../src/Repository/Model/Preference.php:922
 msgid "Show 'Artists' link in the main sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:915
+#: ../../src/Repository/Model/Preference.php:923
 msgid "Show donate button in footer"
 msgstr "하단에 기부 버튼 보이기"
 
-#: ../../src/Repository/Model/Preference.php:916
+#: ../../src/Repository/Model/Preference.php:924
 msgid "Show the login / registration links in the site header"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:917
+#: ../../src/Repository/Model/Preference.php:925
 msgid "Show License"
 msgstr "라이센스 보여주기"
 
-#: ../../src/Repository/Model/Preference.php:918
+#: ../../src/Repository/Model/Preference.php:926
 msgid "Show lyrics"
 msgstr "가사 보기"
 
-#: ../../src/Repository/Model/Preference.php:919
+#: ../../src/Repository/Model/Preference.php:927
 msgid "Show Album original year on links (if available)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:920
+#: ../../src/Repository/Model/Preference.php:928
 msgid "Show # played"
 msgstr "재생된 # 보여주기"
 
-#: ../../src/Repository/Model/Preference.php:921
+#: ../../src/Repository/Model/Preference.php:929
 msgid "Show playlist owner username in titles"
 msgstr "제목에 재생 목록 소유자 사용자 이름 표시"
 
-#: ../../src/Repository/Model/Preference.php:922
+#: ../../src/Repository/Model/Preference.php:930
 msgid "Show # skipped"
 msgstr "건너뛴 # 보여주기"
 
-#: ../../src/Repository/Model/Preference.php:923
+#: ../../src/Repository/Model/Preference.php:931
 msgid "Show Album subtitle on links (if available)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:924
+#: ../../src/Repository/Model/Preference.php:932
 msgid "Light sidebar by default"
 msgstr "기본 사이드바"
 
-#: ../../src/Repository/Model/Preference.php:925
+#: ../../src/Repository/Model/Preference.php:933
 msgid "Website Title"
 msgstr "웹사이트 제목"
 
-#: ../../src/Repository/Model/Preference.php:926
+#: ../../src/Repository/Model/Preference.php:934
 msgid "Artist slideshow inactivity time"
 msgstr "아티스트 슬라이드쇼 비활 시간"
 
-#: ../../src/Repository/Model/Preference.php:927
+#: ../../src/Repository/Model/Preference.php:935
 msgid "Show current song in Web player page title"
 msgstr "웹 재생기 제목에서 현재 노래 보이기"
 
-#: ../../src/Repository/Model/Preference.php:928
+#: ../../src/Repository/Model/Preference.php:936
 msgid "Statistics Day Threshold"
 msgstr "일일 통계"
 
-#: ../../src/Repository/Model/Preference.php:929
+#: ../../src/Repository/Model/Preference.php:937
 msgid "Enable URL Rewriting"
 msgstr "URL 다시 쓰기 가능"
 
-#: ../../src/Repository/Model/Preference.php:936
+#: ../../src/Repository/Model/Preference.php:944
 msgid ""
 "Force Subsonic streams to download. (Enable scrobble in your client to "
 "record stats)"
 msgstr "Subsonic 스트림을 강제로 다운로드하기 (클라이언트에서 통계를 기록하도록 scrobble 사용)."
 
-#: ../../src/Repository/Model/Preference.php:937
+#: ../../src/Repository/Model/Preference.php:945
 msgid "Use Subsonic backend"
 msgstr "Subsonic 백엔드 사용하기"
 
-#: ../../src/Repository/Model/Preference.php:940
+#: ../../src/Repository/Model/Preference.php:948
 msgid "Theme color"
 msgstr "테마 색상"
 
-#: ../../src/Repository/Model/Preference.php:941
+#: ../../src/Repository/Model/Preference.php:949
 msgid "Theme"
 msgstr "주제"
 
-#: ../../src/Repository/Model/Preference.php:942
+#: ../../src/Repository/Model/Preference.php:950
 msgid "Top menu"
 msgstr "탑 메뉴"
 
-#: ../../src/Repository/Model/Preference.php:943
+#: ../../src/Repository/Model/Preference.php:951
 msgid "Transcode Bitrate"
 msgstr "트랜스코드 비트 비율"
 
-#: ../../src/Repository/Model/Preference.php:946
+#: ../../src/Repository/Model/Preference.php:954
 msgid "Fix header position on compatible themes"
 msgstr "호환 주제에 대해 헤더 포지션 수정하기"
 
-#: ../../src/Repository/Model/Preference.php:947
+#: ../../src/Repository/Model/Preference.php:955
 msgid "Only add unique items to playlists"
 msgstr "재생 목록에 고유 항목만 추가하기"
 
-#: ../../src/Repository/Model/Preference.php:948
+#: ../../src/Repository/Model/Preference.php:956
 msgid "Upload Access Level"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:949
+#: ../../src/Repository/Model/Preference.php:957
 msgid "Allow users to edit uploaded songs"
 msgstr "사용자가 업로드된 노래 편집할 수 있게 허용하기"
 
-#: ../../src/Repository/Model/Preference.php:950
+#: ../../src/Repository/Model/Preference.php:958
 msgid "Allow users to remove uploaded songs"
 msgstr "사용자가 업로드한 노래 삭제할 수 있게 허용하기"
 
-#: ../../src/Repository/Model/Preference.php:951
+#: ../../src/Repository/Model/Preference.php:959
 msgid "Rename uploaded file according to catalog pattern"
 msgstr "카탈로그 패턴에 따라 업로드한 파일 이름 변경하기"
 
-#: ../../src/Repository/Model/Preference.php:952
+#: ../../src/Repository/Model/Preference.php:960
 msgid "Destination catalog"
 msgstr "대상 카탈로그"
 
-#: ../../src/Repository/Model/Preference.php:953
+#: ../../src/Repository/Model/Preference.php:961
 msgid "Post-upload script (current directory = upload target directory)"
 msgstr "업로드 후 스크립트 ( 현재 디렉토리 = 업로드 대상 디렉토리 )"
 
-#: ../../src/Repository/Model/Preference.php:954
+#: ../../src/Repository/Model/Preference.php:962
 msgid "Create a subdirectory per user"
 msgstr "사용자당 하위 디렉토리 생성하기"
 
-#: ../../src/Repository/Model/Preference.php:955
+#: ../../src/Repository/Model/Preference.php:963
 msgid "Consider the user sender as the track's artist"
 msgstr "사용자 발송인을 트랙의 아티스트로 간주합니다."
 
-#: ../../src/Repository/Model/Preference.php:957
+#: ../../src/Repository/Model/Preference.php:965
 msgid "Use UPnP backend"
 msgstr "UPnP 백엔드 사용하기"
 
-#: ../../src/Repository/Model/Preference.php:958
+#: ../../src/Repository/Model/Preference.php:966
 msgid "Browse by Original Year for albums (falls back to Year)"
 msgstr "원래 연도별로 앨범 찾아보기 (연도로 돌아가기)"
 
-#: ../../src/Repository/Model/Preference.php:959
+#: ../../src/Repository/Model/Preference.php:967
 msgid ""
 "Use an alternative playback action for streaming if you have issues with "
 "playing music"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:961
+#: ../../src/Repository/Model/Preference.php:969
 msgid "Use WebDAV backend"
 msgstr "WebDAV 백엔드 사용하기"
 
-#: ../../src/Repository/Model/Preference.php:962
+#: ../../src/Repository/Model/Preference.php:970
 msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
 msgstr "웹 재생기에서 자바스크립드 디코더(Aurora.js) 인증하기"
 
-#: ../../src/Repository/Model/Preference.php:963
+#: ../../src/Repository/Model/Preference.php:971
 msgid "Confirmation when closing current playing window"
 msgstr "현재 재생 창 닫을때 확인"
 
-#: ../../src/Repository/Model/Preference.php:964
+#: ../../src/Repository/Model/Preference.php:972
 msgid "Authorize Flash Web Player"
 msgstr "플래시 웹 재생기 인증하기"
 
-#: ../../src/Repository/Model/Preference.php:965
+#: ../../src/Repository/Model/Preference.php:973
 msgid "Authorize HTML5 Web Player"
 msgstr "HTML5 웹 재생기 인증하기"
 
-#: ../../src/Repository/Model/Preference.php:966
+#: ../../src/Repository/Model/Preference.php:974
 msgid "Auto-pause between tabs"
 msgstr "탭 사이에 자동 멈춤"
 
-#: ../../src/Repository/Model/Preference.php:967
+#: ../../src/Repository/Model/Preference.php:975
 msgid ""
 "Remove tracks before the current playlist item in the webplayer when played"
 msgstr ""
 
-#: ../../src/Repository/Model/Query.php:323
+#: ../../src/Repository/Model/Query.php:335
 msgid "Browse was not found or expired, try reloading the page"
 msgstr "검색할 수 없거나 만료됨, 페이지를 다시 읽으세요"
 
@@ -10181,434 +10212,434 @@ msgstr " 5 중 %s "
 msgid "Current rating"
 msgstr "현재 등급"
 
-#: ../../src/Repository/Model/Search.php:115
+#: ../../src/Repository/Model/Search.php:130
 msgid "0 Stars"
 msgstr "별 0개"
 
-#: ../../src/Repository/Model/Search.php:203
+#: ../../src/Repository/Model/Search.php:218
 msgid "is greater than or equal to"
 msgstr "크거나 같은"
 
-#: ../../src/Repository/Model/Search.php:209
+#: ../../src/Repository/Model/Search.php:224
 msgid "is less than or equal to"
 msgstr "작거나 같은"
 
-#: ../../src/Repository/Model/Search.php:215
+#: ../../src/Repository/Model/Search.php:230
 msgid "equals"
 msgstr "동일합니다."
 
-#: ../../src/Repository/Model/Search.php:221
+#: ../../src/Repository/Model/Search.php:236
 msgid "does not equal"
 msgstr "동일하지 않습니다."
 
-#: ../../src/Repository/Model/Search.php:227
+#: ../../src/Repository/Model/Search.php:242
 msgid "is greater than"
 msgstr "보다 큰"
 
-#: ../../src/Repository/Model/Search.php:233
+#: ../../src/Repository/Model/Search.php:248
 msgid "is less than"
 msgstr "보다 작은"
 
-#: ../../src/Repository/Model/Search.php:239
-#: ../../src/Repository/Model/Search.php:245
+#: ../../src/Repository/Model/Search.php:254
+#: ../../src/Repository/Model/Search.php:260
 msgid "is true"
 msgstr "이 참인"
 
-#: ../../src/Repository/Model/Search.php:251
+#: ../../src/Repository/Model/Search.php:266
 msgid "is false"
 msgstr "이 거짓인"
 
-#: ../../src/Repository/Model/Search.php:257
-#: ../../src/Repository/Model/Search.php:325
+#: ../../src/Repository/Model/Search.php:272
+#: ../../src/Repository/Model/Search.php:340
 msgid "contains"
 msgstr "포함한다"
 
-#: ../../src/Repository/Model/Search.php:265
-#: ../../src/Repository/Model/Search.php:333
+#: ../../src/Repository/Model/Search.php:280
+#: ../../src/Repository/Model/Search.php:348
 msgid "does not contain"
 msgstr "포함하지 않는다"
 
-#: ../../src/Repository/Model/Search.php:273
-#: ../../src/Repository/Model/Search.php:341
+#: ../../src/Repository/Model/Search.php:288
+#: ../../src/Repository/Model/Search.php:356
 msgid "starts with"
 msgstr "로 시작하다"
 
-#: ../../src/Repository/Model/Search.php:281
-#: ../../src/Repository/Model/Search.php:349
+#: ../../src/Repository/Model/Search.php:296
+#: ../../src/Repository/Model/Search.php:364
 msgid "ends with"
 msgstr "로 끝난다"
 
-#: ../../src/Repository/Model/Search.php:289
-#: ../../src/Repository/Model/Search.php:357
-#: ../../src/Repository/Model/Search.php:369
-#: ../../src/Repository/Model/Search.php:381
+#: ../../src/Repository/Model/Search.php:304
+#: ../../src/Repository/Model/Search.php:372
+#: ../../src/Repository/Model/Search.php:384
+#: ../../src/Repository/Model/Search.php:396
 msgid "is"
 msgstr "인"
 
-#: ../../src/Repository/Model/Search.php:295
-#: ../../src/Repository/Model/Search.php:363
-#: ../../src/Repository/Model/Search.php:375
-#: ../../src/Repository/Model/Search.php:387
+#: ../../src/Repository/Model/Search.php:310
+#: ../../src/Repository/Model/Search.php:378
+#: ../../src/Repository/Model/Search.php:390
+#: ../../src/Repository/Model/Search.php:402
 msgid "is not"
 msgstr "아닌"
 
-#: ../../src/Repository/Model/Search.php:301
+#: ../../src/Repository/Model/Search.php:316
 msgid "sounds like"
 msgstr "와 같다"
 
-#: ../../src/Repository/Model/Search.php:307
+#: ../../src/Repository/Model/Search.php:322
 msgid "does not sound like"
 msgstr "와 같지 않다"
 
-#: ../../src/Repository/Model/Search.php:313
+#: ../../src/Repository/Model/Search.php:328
 msgid "matches regular expression"
 msgstr "정규 표현과 일치합니다."
 
-#: ../../src/Repository/Model/Search.php:319
+#: ../../src/Repository/Model/Search.php:334
 msgid "does not match regular expression"
 msgstr "정규 표현과 일치하지 않습니다."
 
-#: ../../src/Repository/Model/Search.php:393
+#: ../../src/Repository/Model/Search.php:408
 msgid "before"
 msgstr "이전"
 
-#: ../../src/Repository/Model/Search.php:399
+#: ../../src/Repository/Model/Search.php:414
 msgid "after"
 msgstr "이후"
 
-#: ../../src/Repository/Model/Search.php:405
+#: ../../src/Repository/Model/Search.php:420
 msgid "before (x) days ago"
 msgstr "이전 (x) 전 "
 
-#: ../../src/Repository/Model/Search.php:411
+#: ../../src/Repository/Model/Search.php:426
 msgid "after (x) days ago"
 msgstr "이후 (x) 전"
 
-#: ../../src/Repository/Model/Search.php:434
+#: ../../src/Repository/Model/Search.php:449
 msgid "has loved"
 msgstr "좋아합니다."
 
-#: ../../src/Repository/Model/Search.php:440
+#: ../../src/Repository/Model/Search.php:455
 msgid "has rated 5 stars"
 msgstr "평점 5점"
 
-#: ../../src/Repository/Model/Search.php:446
+#: ../../src/Repository/Model/Search.php:461
 msgid "has rated 4 stars"
 msgstr "평점 4점"
 
-#: ../../src/Repository/Model/Search.php:452
+#: ../../src/Repository/Model/Search.php:467
 msgid "has rated 3 stars"
 msgstr "평점 3점"
 
-#: ../../src/Repository/Model/Search.php:458
+#: ../../src/Repository/Model/Search.php:473
 msgid "has rated 2 stars"
 msgstr "평점 2점"
 
-#: ../../src/Repository/Model/Search.php:464
+#: ../../src/Repository/Model/Search.php:479
 msgid "has rated 1 star"
 msgstr "평점 1점"
 
-#: ../../src/Repository/Model/Search.php:470
+#: ../../src/Repository/Model/Search.php:485
 msgid "has not rated"
 msgstr "평점 없음"
 
-#: ../../src/Repository/Model/Search.php:582
+#: ../../src/Repository/Model/Search.php:597
 msgid "Any searchable text"
 msgstr "찾을 만한 문서"
 
-#: ../../src/Repository/Model/Search.php:584
+#: ../../src/Repository/Model/Search.php:599
 msgid "Song Data"
 msgstr "노래 데이터"
 
-#: ../../src/Repository/Model/Search.php:592
-#: ../../src/Repository/Model/Search.php:733
-#: ../../src/Repository/Model/Search.php:806
-#: ../../src/Repository/Model/Search.php:923
-#: ../../src/Repository/Model/Search.php:961
+#: ../../src/Repository/Model/Search.php:607
+#: ../../src/Repository/Model/Search.php:748
+#: ../../src/Repository/Model/Search.php:821
+#: ../../src/Repository/Model/Search.php:938
+#: ../../src/Repository/Model/Search.php:976
 msgid "Length (in minutes)"
 msgstr "길이(분)"
 
-#: ../../src/Repository/Model/Search.php:597
-#: ../../src/Repository/Model/Search.php:737
-#: ../../src/Repository/Model/Search.php:814
+#: ../../src/Repository/Model/Search.php:612
+#: ../../src/Repository/Model/Search.php:752
+#: ../../src/Repository/Model/Search.php:829
 msgid "Ratings"
 msgstr "등급"
 
-#: ../../src/Repository/Model/Search.php:599
-#: ../../src/Repository/Model/Search.php:739
-#: ../../src/Repository/Model/Search.php:816
+#: ../../src/Repository/Model/Search.php:614
+#: ../../src/Repository/Model/Search.php:754
+#: ../../src/Repository/Model/Search.php:831
 msgid "My Rating"
 msgstr "평가"
 
-#: ../../src/Repository/Model/Search.php:600
-#: ../../src/Repository/Model/Search.php:740
-#: ../../src/Repository/Model/Search.php:817
+#: ../../src/Repository/Model/Search.php:615
+#: ../../src/Repository/Model/Search.php:755
+#: ../../src/Repository/Model/Search.php:832
 msgid "Rating (Average)"
 msgstr "평가(평균)"
 
-#: ../../src/Repository/Model/Search.php:601
-#: ../../src/Repository/Model/Search.php:742
+#: ../../src/Repository/Model/Search.php:616
+#: ../../src/Repository/Model/Search.php:757
 msgid "My Rating (Album)"
 msgstr "평가(앨범)"
 
-#: ../../src/Repository/Model/Search.php:602
-#: ../../src/Repository/Model/Search.php:819
+#: ../../src/Repository/Model/Search.php:617
+#: ../../src/Repository/Model/Search.php:834
 msgid "My Rating (Artist)"
 msgstr "평가(아티스트)"
 
-#: ../../src/Repository/Model/Search.php:603
+#: ../../src/Repository/Model/Search.php:618
 msgid "My Favorite Songs"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:604
+#: ../../src/Repository/Model/Search.php:619
 msgid "My Favorite Albums"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:605
+#: ../../src/Repository/Model/Search.php:620
 msgid "My Favorite Artists"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:607
+#: ../../src/Repository/Model/Search.php:622
 msgid "Favorites (Album)"
 msgstr "즐겨찾기 (앨범)"
 
-#: ../../src/Repository/Model/Search.php:608
+#: ../../src/Repository/Model/Search.php:623
 msgid "Favorites (Artist)"
 msgstr "즐겨찾기 (아티스트)"
 
-#: ../../src/Repository/Model/Search.php:610
-#: ../../src/Repository/Model/Search.php:745
-#: ../../src/Repository/Model/Search.php:822
+#: ../../src/Repository/Model/Search.php:625
+#: ../../src/Repository/Model/Search.php:760
+#: ../../src/Repository/Model/Search.php:837
 msgid "Another User"
 msgstr "다른 사용자"
 
-#: ../../src/Repository/Model/Search.php:611
+#: ../../src/Repository/Model/Search.php:626
 msgid "Another User (Album)"
 msgstr "다른 사용자 (앨범)"
 
-#: ../../src/Repository/Model/Search.php:612
+#: ../../src/Repository/Model/Search.php:627
 msgid "Another User (Artist)"
 msgstr "다른 사용자 (아티스트)"
 
-#: ../../src/Repository/Model/Search.php:615
-#: ../../src/Repository/Model/Search.php:748
-#: ../../src/Repository/Model/Search.php:825
-#: ../../src/Repository/Model/Search.php:925
-#: ../../src/Repository/Model/Search.php:963
+#: ../../src/Repository/Model/Search.php:630
+#: ../../src/Repository/Model/Search.php:763
+#: ../../src/Repository/Model/Search.php:840
+#: ../../src/Repository/Model/Search.php:940
+#: ../../src/Repository/Model/Search.php:978
 msgid "Play History"
 msgstr "재생 이력"
 
 #. HINT: Number of times object has been played
-#: ../../src/Repository/Model/Search.php:617
-#: ../../src/Repository/Model/Search.php:750
-#: ../../src/Repository/Model/Search.php:827
-#: ../../src/Repository/Model/Search.php:927
-#: ../../src/Repository/Model/Search.php:965
+#: ../../src/Repository/Model/Search.php:632
+#: ../../src/Repository/Model/Search.php:765
+#: ../../src/Repository/Model/Search.php:842
+#: ../../src/Repository/Model/Search.php:942
+#: ../../src/Repository/Model/Search.php:980
 msgid "# Played"
 msgstr ""
 
 #. HINT: Number of times object has been skipped
-#: ../../src/Repository/Model/Search.php:619
-#: ../../src/Repository/Model/Search.php:929
-#: ../../src/Repository/Model/Search.php:967
+#: ../../src/Repository/Model/Search.php:634
+#: ../../src/Repository/Model/Search.php:944
+#: ../../src/Repository/Model/Search.php:982
 msgid "# Skipped"
 msgstr ""
 
 #. HINT: Number of times object has been played OR skipped
-#: ../../src/Repository/Model/Search.php:621
-#: ../../src/Repository/Model/Search.php:931
-#: ../../src/Repository/Model/Search.php:969
+#: ../../src/Repository/Model/Search.php:636
+#: ../../src/Repository/Model/Search.php:946
+#: ../../src/Repository/Model/Search.php:984
 msgid "# Played or Skipped"
 msgstr "재생된 혹은 건너뛴 #"
 
 #. HINT: Percentage of (Times Played / Times skipped) * 100
-#: ../../src/Repository/Model/Search.php:623
+#: ../../src/Repository/Model/Search.php:638
 msgid "Played/Skipped ratio"
 msgstr "재생된/건너뛴 비율"
 
-#: ../../src/Repository/Model/Search.php:624
-#: ../../src/Repository/Model/Search.php:751
-#: ../../src/Repository/Model/Search.php:828
-#: ../../src/Repository/Model/Search.php:932
-#: ../../src/Repository/Model/Search.php:970
+#: ../../src/Repository/Model/Search.php:639
+#: ../../src/Repository/Model/Search.php:766
+#: ../../src/Repository/Model/Search.php:843
+#: ../../src/Repository/Model/Search.php:947
+#: ../../src/Repository/Model/Search.php:985
 msgid "My Last Play"
 msgstr "최근 재생"
 
-#: ../../src/Repository/Model/Search.php:625
-#: ../../src/Repository/Model/Search.php:752
-#: ../../src/Repository/Model/Search.php:829
-#: ../../src/Repository/Model/Search.php:933
-#: ../../src/Repository/Model/Search.php:971
+#: ../../src/Repository/Model/Search.php:640
+#: ../../src/Repository/Model/Search.php:767
+#: ../../src/Repository/Model/Search.php:844
+#: ../../src/Repository/Model/Search.php:948
+#: ../../src/Repository/Model/Search.php:986
 msgid "My Last Skip"
 msgstr "최근 건너뜀"
 
-#: ../../src/Repository/Model/Search.php:626
-#: ../../src/Repository/Model/Search.php:753
-#: ../../src/Repository/Model/Search.php:830
-#: ../../src/Repository/Model/Search.php:934
-#: ../../src/Repository/Model/Search.php:972
+#: ../../src/Repository/Model/Search.php:641
+#: ../../src/Repository/Model/Search.php:768
+#: ../../src/Repository/Model/Search.php:845
+#: ../../src/Repository/Model/Search.php:949
+#: ../../src/Repository/Model/Search.php:987
 msgid "My Last Play or Skip"
 msgstr "최근 재생 또는 건너뜀"
 
-#: ../../src/Repository/Model/Search.php:628
-#: ../../src/Repository/Model/Search.php:755
-#: ../../src/Repository/Model/Search.php:832
-#: ../../src/Repository/Model/Search.php:936
-#: ../../src/Repository/Model/Search.php:974
+#: ../../src/Repository/Model/Search.php:643
+#: ../../src/Repository/Model/Search.php:770
+#: ../../src/Repository/Model/Search.php:847
+#: ../../src/Repository/Model/Search.php:951
+#: ../../src/Repository/Model/Search.php:989
 msgid "Played by Me"
 msgstr "사용자가 재생함"
 
-#: ../../src/Repository/Model/Search.php:629
+#: ../../src/Repository/Model/Search.php:644
 msgid "Played by Me (Album)"
 msgstr "사용자가 재생함(앨범)"
 
-#: ../../src/Repository/Model/Search.php:630
-#: ../../src/Repository/Model/Search.php:833
+#: ../../src/Repository/Model/Search.php:645
+#: ../../src/Repository/Model/Search.php:848
 msgid "Played by Me (Artist)"
 msgstr "사용자가 재생함(아티스트)"
 
-#: ../../src/Repository/Model/Search.php:631
-#: ../../src/Repository/Model/Search.php:756
-#: ../../src/Repository/Model/Search.php:834
-#: ../../src/Repository/Model/Search.php:937
-#: ../../src/Repository/Model/Search.php:975
+#: ../../src/Repository/Model/Search.php:646
+#: ../../src/Repository/Model/Search.php:771
+#: ../../src/Repository/Model/Search.php:849
+#: ../../src/Repository/Model/Search.php:952
+#: ../../src/Repository/Model/Search.php:990
 msgid "Recently played"
 msgstr "최근에 재생함"
 
-#: ../../src/Repository/Model/Search.php:635
+#: ../../src/Repository/Model/Search.php:650
 msgid "Album Genre"
 msgstr "앨범 장르"
 
-#: ../../src/Repository/Model/Search.php:636
+#: ../../src/Repository/Model/Search.php:651
 msgid "Artist Genre"
 msgstr "아티스트 장르"
 
-#: ../../src/Repository/Model/Search.php:637
-#: ../../src/Repository/Model/Search.php:761
-#: ../../src/Repository/Model/Search.php:839
+#: ../../src/Repository/Model/Search.php:652
+#: ../../src/Repository/Model/Search.php:776
+#: ../../src/Repository/Model/Search.php:854
 msgid "No Genre"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:650
-#: ../../src/Repository/Model/Search.php:770
-#: ../../src/Repository/Model/Search.php:852
-#: ../../src/Repository/Model/Search.php:939
-#: ../../src/Repository/Model/Search.php:977
+#: ../../src/Repository/Model/Search.php:665
+#: ../../src/Repository/Model/Search.php:785
+#: ../../src/Repository/Model/Search.php:867
+#: ../../src/Repository/Model/Search.php:954
+#: ../../src/Repository/Model/Search.php:992
 msgid "File Data"
 msgstr "파일 데이터"
 
-#: ../../src/Repository/Model/Search.php:681
-#: ../../src/Repository/Model/Search.php:860
+#: ../../src/Repository/Model/Search.php:696
+#: ../../src/Repository/Model/Search.php:875
 msgid "Recently added"
 msgstr "최근에 추가됨"
 
-#: ../../src/Repository/Model/Search.php:682
+#: ../../src/Repository/Model/Search.php:697
 msgid "Recently updated"
 msgstr "최근에 업데이트 됨"
 
-#: ../../src/Repository/Model/Search.php:683
-#: ../../src/Repository/Model/Search.php:775
-#: ../../src/Repository/Model/Search.php:857
+#: ../../src/Repository/Model/Search.php:698
+#: ../../src/Repository/Model/Search.php:790
+#: ../../src/Repository/Model/Search.php:872
 msgid "Possible Duplicate"
 msgstr "중복 가능"
 
-#: ../../src/Repository/Model/Search.php:684
-#: ../../src/Repository/Model/Search.php:858
+#: ../../src/Repository/Model/Search.php:699
+#: ../../src/Repository/Model/Search.php:873
 msgid "Duplicate Album Tracks"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:685
-#: ../../src/Repository/Model/Search.php:776
+#: ../../src/Repository/Model/Search.php:700
+#: ../../src/Repository/Model/Search.php:791
 msgid "Possible Duplicate Albums"
 msgstr "중복 앨범 가능"
 
-#: ../../src/Repository/Model/Search.php:686
+#: ../../src/Repository/Model/Search.php:701
 msgid "Orphaned Album"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:696
-#: ../../src/Repository/Model/Search.php:786
-#: ../../src/Repository/Model/Search.php:870
+#: ../../src/Repository/Model/Search.php:711
+#: ../../src/Repository/Model/Search.php:801
+#: ../../src/Repository/Model/Search.php:885
 msgid "MusicBrainz"
 msgstr "MusicBrainz"
 
-#: ../../src/Repository/Model/Search.php:698
-#: ../../src/Repository/Model/Search.php:788
+#: ../../src/Repository/Model/Search.php:713
+#: ../../src/Repository/Model/Search.php:803
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz 아이디 (앨범)"
 
-#: ../../src/Repository/Model/Search.php:699
-#: ../../src/Repository/Model/Search.php:872
+#: ../../src/Repository/Model/Search.php:714
+#: ../../src/Repository/Model/Search.php:887
 msgid "MusicBrainz ID (Artist)"
 msgstr "MusicBrainz 아이디 (아티스트)"
 
-#: ../../src/Repository/Model/Search.php:701
+#: ../../src/Repository/Model/Search.php:716
 msgid "Metadata"
 msgstr "메타데이타"
 
-#: ../../src/Repository/Model/Search.php:726
+#: ../../src/Repository/Model/Search.php:741
 msgid "Artist Data"
 msgstr "아티스트 데이터"
 
-#: ../../src/Repository/Model/Search.php:728
+#: ../../src/Repository/Model/Search.php:743
 msgid "Album Title"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:734
+#: ../../src/Repository/Model/Search.php:749
 msgid "Album Count"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:735
-#: ../../src/Repository/Model/Search.php:812
+#: ../../src/Repository/Model/Search.php:750
+#: ../../src/Repository/Model/Search.php:827
 msgid "Song Count"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:741
-#: ../../src/Repository/Model/Search.php:818
+#: ../../src/Repository/Model/Search.php:756
+#: ../../src/Repository/Model/Search.php:833
 msgid "My Rating (Song)"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:760
-#: ../../src/Repository/Model/Search.php:838
+#: ../../src/Repository/Model/Search.php:775
+#: ../../src/Repository/Model/Search.php:853
 msgid "Song Genre"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:773
-#: ../../src/Repository/Model/Search.php:855
+#: ../../src/Repository/Model/Search.php:788
+#: ../../src/Repository/Model/Search.php:870
 msgid "Image Width"
 msgstr "이미지 폭"
 
-#: ../../src/Repository/Model/Search.php:774
-#: ../../src/Repository/Model/Search.php:856
+#: ../../src/Repository/Model/Search.php:789
+#: ../../src/Repository/Model/Search.php:871
 msgid "Image Height"
 msgstr "이미지 크기"
 
-#: ../../src/Repository/Model/Search.php:789
-#: ../../src/Repository/Model/Search.php:873
+#: ../../src/Repository/Model/Search.php:804
+#: ../../src/Repository/Model/Search.php:888
 msgid "MusicBrainz ID (Song)"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:799
+#: ../../src/Repository/Model/Search.php:814
 msgid "Album Data"
 msgstr "앨범 데이터"
 
-#: ../../src/Repository/Model/Search.php:859
+#: ../../src/Repository/Model/Search.php:874
 msgid "Duplicate MusicBrainz Release Group"
 msgstr "MusicBrainz 배포 그룹 복사하기"
 
-#: ../../src/Repository/Model/Search.php:896
+#: ../../src/Repository/Model/Search.php:911
 msgid "public"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:897
+#: ../../src/Repository/Model/Search.php:912
 msgid "private"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:913
+#: ../../src/Repository/Model/Search.php:928
 msgid "Episode Count"
 msgstr ""
 
-#: ../../src/Repository/Model/Share.php:274
+#: ../../src/Repository/Model/Share.php:280
 msgid "Share Edit"
 msgstr "편집 공유"
 
@@ -10626,7 +10657,7 @@ msgstr " 컨텐츠 %2$s 의 %1$s 에서 새 샤우트를 받음"
 msgid "by"
 msgstr "에"
 
-#: ../../src/Repository/Model/Song.php:1876
+#: ../../src/Repository/Model/Song.php:1885
 msgid "Track MusicBrainzID"
 msgstr "트랙 MusicBrainzID"
 
@@ -10638,739 +10669,739 @@ msgstr "사용자 이름이 필요함"
 msgid "User avatar"
 msgstr "사용자 아바타"
 
-#: ../../src/Repository/Model/Video.php:938
+#: ../../src/Repository/Model/Video.php:940
 msgid "Afar"
 msgstr "가장 끝에 있는"
 
-#: ../../src/Repository/Model/Video.php:939
+#: ../../src/Repository/Model/Video.php:941
 msgid "Abkhazian"
 msgstr "압하스어"
 
-#: ../../src/Repository/Model/Video.php:940
+#: ../../src/Repository/Model/Video.php:942
 msgid "Avestan"
 msgstr "아베스타 어"
 
-#: ../../src/Repository/Model/Video.php:941
+#: ../../src/Repository/Model/Video.php:943
 msgid "Afrikaans"
 msgstr "아프리칸스어"
 
-#: ../../src/Repository/Model/Video.php:942
+#: ../../src/Repository/Model/Video.php:944
 msgid "Akan"
 msgstr "아칸어"
 
-#: ../../src/Repository/Model/Video.php:943
+#: ../../src/Repository/Model/Video.php:945
 msgid "Amharic"
 msgstr "암하라어"
 
-#: ../../src/Repository/Model/Video.php:944
+#: ../../src/Repository/Model/Video.php:946
 msgid "Aragonese"
 msgstr "아라곤어"
 
-#: ../../src/Repository/Model/Video.php:945
+#: ../../src/Repository/Model/Video.php:947
 msgid "Arabic"
 msgstr "아랍어"
 
-#: ../../src/Repository/Model/Video.php:946
+#: ../../src/Repository/Model/Video.php:948
 msgid "Assamese"
 msgstr "아삼어"
 
-#: ../../src/Repository/Model/Video.php:947
+#: ../../src/Repository/Model/Video.php:949
 msgid "Avaric"
 msgstr "아바르어"
 
-#: ../../src/Repository/Model/Video.php:948
+#: ../../src/Repository/Model/Video.php:950
 msgid "Aymara"
 msgstr "아이마라어"
 
-#: ../../src/Repository/Model/Video.php:949
+#: ../../src/Repository/Model/Video.php:951
 msgid "Azerbaijani"
 msgstr "아제르바이잔어"
 
-#: ../../src/Repository/Model/Video.php:950
+#: ../../src/Repository/Model/Video.php:952
 msgid "Bashkir"
 msgstr "바슈키르어"
 
-#: ../../src/Repository/Model/Video.php:951
+#: ../../src/Repository/Model/Video.php:953
 msgid "Belarusian"
 msgstr "벨라루스어"
 
-#: ../../src/Repository/Model/Video.php:952
+#: ../../src/Repository/Model/Video.php:954
 msgid "Bulgarian"
 msgstr "불가리어"
 
-#: ../../src/Repository/Model/Video.php:953
+#: ../../src/Repository/Model/Video.php:955
 msgid "Bihari"
 msgstr "비하르어"
 
-#: ../../src/Repository/Model/Video.php:954
+#: ../../src/Repository/Model/Video.php:956
 msgid "Bislama"
 msgstr "비슬라마어"
 
-#: ../../src/Repository/Model/Video.php:955
+#: ../../src/Repository/Model/Video.php:957
 msgid "Bambara"
 msgstr "밤바라어"
 
-#: ../../src/Repository/Model/Video.php:956
+#: ../../src/Repository/Model/Video.php:958
 msgid "Bengali"
 msgstr "벵골어"
 
-#: ../../src/Repository/Model/Video.php:957
+#: ../../src/Repository/Model/Video.php:959
 msgid "Tibetan"
 msgstr "티베트어"
 
-#: ../../src/Repository/Model/Video.php:958
+#: ../../src/Repository/Model/Video.php:960
 msgid "Breton"
 msgstr "브르타뉴어"
 
-#: ../../src/Repository/Model/Video.php:959
+#: ../../src/Repository/Model/Video.php:961
 msgid "Bosnian"
 msgstr "보스니아어"
 
-#: ../../src/Repository/Model/Video.php:960
+#: ../../src/Repository/Model/Video.php:962
 msgid "Catalan"
 msgstr "카탈로니아어"
 
-#: ../../src/Repository/Model/Video.php:961
+#: ../../src/Repository/Model/Video.php:963
 msgid "Chechen"
 msgstr "체첸어"
 
-#: ../../src/Repository/Model/Video.php:962
+#: ../../src/Repository/Model/Video.php:964
 msgid "Chamorro"
 msgstr "차모르어"
 
-#: ../../src/Repository/Model/Video.php:963
+#: ../../src/Repository/Model/Video.php:965
 msgid "Corsican"
 msgstr "코르시카어"
 
-#: ../../src/Repository/Model/Video.php:964
+#: ../../src/Repository/Model/Video.php:966
 msgid "Cree"
 msgstr "크리어"
 
-#: ../../src/Repository/Model/Video.php:965
+#: ../../src/Repository/Model/Video.php:967
 msgid "Czech"
 msgstr "체코어"
 
-#: ../../src/Repository/Model/Video.php:966
+#: ../../src/Repository/Model/Video.php:968
 msgid "Church Slavic"
 msgstr "교회 슬라브어"
 
-#: ../../src/Repository/Model/Video.php:967
+#: ../../src/Repository/Model/Video.php:969
 msgid "Chuvash"
 msgstr "츄바시어"
 
-#: ../../src/Repository/Model/Video.php:968
+#: ../../src/Repository/Model/Video.php:970
 msgid "Welsh"
 msgstr "웨일스어"
 
-#: ../../src/Repository/Model/Video.php:969
+#: ../../src/Repository/Model/Video.php:971
 msgid "Danish"
 msgstr "덴마크어"
 
-#: ../../src/Repository/Model/Video.php:970
+#: ../../src/Repository/Model/Video.php:972
 msgid "German"
 msgstr "독일어"
 
-#: ../../src/Repository/Model/Video.php:971
+#: ../../src/Repository/Model/Video.php:973
 msgid "Divehi"
 msgstr "디베히어"
 
-#: ../../src/Repository/Model/Video.php:972
+#: ../../src/Repository/Model/Video.php:974
 msgid "Dzongkha"
 msgstr "종카어"
 
-#: ../../src/Repository/Model/Video.php:973
+#: ../../src/Repository/Model/Video.php:975
 msgid "Ewe"
 msgstr "어웨어"
 
-#: ../../src/Repository/Model/Video.php:974
+#: ../../src/Repository/Model/Video.php:976
 msgid "Greek"
 msgstr "그리스어"
 
-#: ../../src/Repository/Model/Video.php:975
+#: ../../src/Repository/Model/Video.php:977
 msgid "English"
 msgstr "영어"
 
-#: ../../src/Repository/Model/Video.php:976
+#: ../../src/Repository/Model/Video.php:978
 msgid "Esperanto"
 msgstr "에스페란토어"
 
-#: ../../src/Repository/Model/Video.php:977
+#: ../../src/Repository/Model/Video.php:979
 msgid "Spanish"
 msgstr "스페인어"
 
-#: ../../src/Repository/Model/Video.php:978
+#: ../../src/Repository/Model/Video.php:980
 msgid "Estonian"
 msgstr "에스토니아어"
 
-#: ../../src/Repository/Model/Video.php:979
+#: ../../src/Repository/Model/Video.php:981
 msgid "Basque"
 msgstr "바스크어"
 
-#: ../../src/Repository/Model/Video.php:980
+#: ../../src/Repository/Model/Video.php:982
 msgid "Persian"
 msgstr "페르시아어"
 
-#: ../../src/Repository/Model/Video.php:981
+#: ../../src/Repository/Model/Video.php:983
 msgid "Fulah"
 msgstr "풀라어"
 
-#: ../../src/Repository/Model/Video.php:982
+#: ../../src/Repository/Model/Video.php:984
 msgid "Finnish"
 msgstr "핀란드어"
 
-#: ../../src/Repository/Model/Video.php:983
+#: ../../src/Repository/Model/Video.php:985
 msgid "Fijian"
 msgstr "피지어"
 
-#: ../../src/Repository/Model/Video.php:984
+#: ../../src/Repository/Model/Video.php:986
 msgid "Faroese"
 msgstr "페로어"
 
-#: ../../src/Repository/Model/Video.php:985
+#: ../../src/Repository/Model/Video.php:987
 msgid "French"
 msgstr "프랑스어"
 
-#: ../../src/Repository/Model/Video.php:986
+#: ../../src/Repository/Model/Video.php:988
 msgid "Western Frisian"
 msgstr "프라지아어"
 
-#: ../../src/Repository/Model/Video.php:987
+#: ../../src/Repository/Model/Video.php:989
 msgid "Irish"
 msgstr "아일랜드어"
 
-#: ../../src/Repository/Model/Video.php:988
+#: ../../src/Repository/Model/Video.php:990
 msgid "Scottish Gaelic"
 msgstr "스코틀랜드게일어"
 
-#: ../../src/Repository/Model/Video.php:989
+#: ../../src/Repository/Model/Video.php:991
 msgid "Galician"
 msgstr "갈라시아어"
 
-#: ../../src/Repository/Model/Video.php:990
+#: ../../src/Repository/Model/Video.php:992
 msgid "Guarani"
 msgstr "과라니어"
 
-#: ../../src/Repository/Model/Video.php:991
+#: ../../src/Repository/Model/Video.php:993
 msgid "Gujarati"
 msgstr "구자라트어"
 
-#: ../../src/Repository/Model/Video.php:992
+#: ../../src/Repository/Model/Video.php:994
 msgid "Manx"
 msgstr "맨섬어"
 
-#: ../../src/Repository/Model/Video.php:993
+#: ../../src/Repository/Model/Video.php:995
 msgid "Hausa"
 msgstr "하우사어"
 
-#: ../../src/Repository/Model/Video.php:994
+#: ../../src/Repository/Model/Video.php:996
 msgid "Hebrew"
 msgstr "히브리어"
 
-#: ../../src/Repository/Model/Video.php:995
+#: ../../src/Repository/Model/Video.php:997
 msgid "Hindi"
 msgstr "힌디어"
 
-#: ../../src/Repository/Model/Video.php:996
+#: ../../src/Repository/Model/Video.php:998
 msgid "Hiri Motu"
 msgstr "히리 모투어"
 
-#: ../../src/Repository/Model/Video.php:997
+#: ../../src/Repository/Model/Video.php:999
 msgid "Croatian"
 msgstr "크로아티아어"
 
-#: ../../src/Repository/Model/Video.php:998
+#: ../../src/Repository/Model/Video.php:1000
 msgid "Haitian"
 msgstr "아이티어"
 
-#: ../../src/Repository/Model/Video.php:999
+#: ../../src/Repository/Model/Video.php:1001
 msgid "Hungarian"
 msgstr "헝그리어"
 
-#: ../../src/Repository/Model/Video.php:1000
+#: ../../src/Repository/Model/Video.php:1002
 msgid "Armenian"
 msgstr "아르메니아어"
 
-#: ../../src/Repository/Model/Video.php:1001
+#: ../../src/Repository/Model/Video.php:1003
 msgid "Herero"
 msgstr "헤레로어"
 
-#: ../../src/Repository/Model/Video.php:1002
+#: ../../src/Repository/Model/Video.php:1004
 msgid "Interlingua (International Auxiliary Language Association)"
 msgstr "인테르링구아 (과학자용 인공 국제어)"
 
-#: ../../src/Repository/Model/Video.php:1003
+#: ../../src/Repository/Model/Video.php:1005
 msgid "Indonesian"
 msgstr "인도네시아어"
 
-#: ../../src/Repository/Model/Video.php:1004
+#: ../../src/Repository/Model/Video.php:1006
 msgid "Interlingue"
 msgstr "인테르링구아"
 
-#: ../../src/Repository/Model/Video.php:1005
+#: ../../src/Repository/Model/Video.php:1007
 msgid "Igbo"
 msgstr "이그보우어"
 
-#: ../../src/Repository/Model/Video.php:1006
+#: ../../src/Repository/Model/Video.php:1008
 msgid "Sichuan Yi"
 msgstr "쓰촨어"
 
-#: ../../src/Repository/Model/Video.php:1007
+#: ../../src/Repository/Model/Video.php:1009
 msgid "Inupiaq"
 msgstr "이누피아크어"
 
-#: ../../src/Repository/Model/Video.php:1008
+#: ../../src/Repository/Model/Video.php:1010
 msgid "Ido"
 msgstr "이도어"
 
-#: ../../src/Repository/Model/Video.php:1009
+#: ../../src/Repository/Model/Video.php:1011
 msgid "Icelandic"
 msgstr "아이슬란드어"
 
-#: ../../src/Repository/Model/Video.php:1010
+#: ../../src/Repository/Model/Video.php:1012
 msgid "Italian"
 msgstr "이탈리아어"
 
-#: ../../src/Repository/Model/Video.php:1011
+#: ../../src/Repository/Model/Video.php:1013
 msgid "Inuktitut"
 msgstr "이뉴잇족어"
 
-#: ../../src/Repository/Model/Video.php:1012
+#: ../../src/Repository/Model/Video.php:1014
 msgid "Japanese"
 msgstr "일본어"
 
-#: ../../src/Repository/Model/Video.php:1013
+#: ../../src/Repository/Model/Video.php:1015
 msgid "Javanese"
 msgstr "자바어"
 
-#: ../../src/Repository/Model/Video.php:1014
+#: ../../src/Repository/Model/Video.php:1016
 msgid "Georgian"
 msgstr "그루지야어"
 
-#: ../../src/Repository/Model/Video.php:1015
+#: ../../src/Repository/Model/Video.php:1017
 msgid "Kongo"
 msgstr "콩고어"
 
-#: ../../src/Repository/Model/Video.php:1016
+#: ../../src/Repository/Model/Video.php:1018
 msgid "Kikuyu"
 msgstr "키쿠유어"
 
-#: ../../src/Repository/Model/Video.php:1017
+#: ../../src/Repository/Model/Video.php:1019
 msgid "Kwanyama"
 msgstr "콴야마어"
 
-#: ../../src/Repository/Model/Video.php:1018
+#: ../../src/Repository/Model/Video.php:1020
 msgid "Kazakh"
 msgstr "카자흐어"
 
-#: ../../src/Repository/Model/Video.php:1019
+#: ../../src/Repository/Model/Video.php:1021
 msgid "Kalaallisut"
 msgstr "그린란드어"
 
-#: ../../src/Repository/Model/Video.php:1020
+#: ../../src/Repository/Model/Video.php:1022
 msgid "Khmer"
 msgstr "크메르어"
 
-#: ../../src/Repository/Model/Video.php:1021
+#: ../../src/Repository/Model/Video.php:1023
 msgid "Kannada"
 msgstr "칸나다어"
 
-#: ../../src/Repository/Model/Video.php:1022
+#: ../../src/Repository/Model/Video.php:1024
 msgid "Korean"
 msgstr "한국어"
 
-#: ../../src/Repository/Model/Video.php:1023
+#: ../../src/Repository/Model/Video.php:1025
 msgid "Kanuri"
 msgstr "카누리어"
 
-#: ../../src/Repository/Model/Video.php:1024
+#: ../../src/Repository/Model/Video.php:1026
 msgid "Kashmiri"
 msgstr "카슈미르어"
 
-#: ../../src/Repository/Model/Video.php:1025
+#: ../../src/Repository/Model/Video.php:1027
 msgid "Kurdish"
 msgstr "쿠르드어"
 
-#: ../../src/Repository/Model/Video.php:1026
+#: ../../src/Repository/Model/Video.php:1028
 msgid "Komi"
 msgstr "코미어"
 
-#: ../../src/Repository/Model/Video.php:1027
+#: ../../src/Repository/Model/Video.php:1029
 msgid "Cornish"
 msgstr "콘월어"
 
-#: ../../src/Repository/Model/Video.php:1028
+#: ../../src/Repository/Model/Video.php:1030
 msgid "Kirghiz"
 msgstr "키르기스어"
 
-#: ../../src/Repository/Model/Video.php:1029
+#: ../../src/Repository/Model/Video.php:1031
 msgid "Latin"
 msgstr "라틴어"
 
-#: ../../src/Repository/Model/Video.php:1030
+#: ../../src/Repository/Model/Video.php:1032
 msgid "Luxembourgish"
 msgstr "룩셈부르크어"
 
-#: ../../src/Repository/Model/Video.php:1031
+#: ../../src/Repository/Model/Video.php:1033
 msgid "Ganda"
 msgstr "간다어"
 
-#: ../../src/Repository/Model/Video.php:1032
+#: ../../src/Repository/Model/Video.php:1034
 msgid "Limburgish"
 msgstr "림뷔르흐어"
 
-#: ../../src/Repository/Model/Video.php:1033
+#: ../../src/Repository/Model/Video.php:1035
 msgid "Lingala"
 msgstr "링갈라어"
 
-#: ../../src/Repository/Model/Video.php:1034
+#: ../../src/Repository/Model/Video.php:1036
 msgid "Lao"
 msgstr "라오어"
 
-#: ../../src/Repository/Model/Video.php:1035
+#: ../../src/Repository/Model/Video.php:1037
 msgid "Lithuanian"
 msgstr "리투아니아어"
 
-#: ../../src/Repository/Model/Video.php:1036
+#: ../../src/Repository/Model/Video.php:1038
 msgid "Luba-Katanga"
 msgstr "루바-카탄가어"
 
-#: ../../src/Repository/Model/Video.php:1037
+#: ../../src/Repository/Model/Video.php:1039
 msgid "Latvian"
 msgstr "라트비아어"
 
-#: ../../src/Repository/Model/Video.php:1038
+#: ../../src/Repository/Model/Video.php:1040
 msgid "Malagasy"
 msgstr "마다가스카르어"
 
-#: ../../src/Repository/Model/Video.php:1039
+#: ../../src/Repository/Model/Video.php:1041
 msgid "Marshallese"
 msgstr "마셜어"
 
-#: ../../src/Repository/Model/Video.php:1040
+#: ../../src/Repository/Model/Video.php:1042
 msgid "Maori"
 msgstr "마오리어"
 
-#: ../../src/Repository/Model/Video.php:1041
+#: ../../src/Repository/Model/Video.php:1043
 msgid "Macedonian"
 msgstr "마케도니아어"
 
-#: ../../src/Repository/Model/Video.php:1042
+#: ../../src/Repository/Model/Video.php:1044
 msgid "Malayalam"
 msgstr "말라얄람어"
 
-#: ../../src/Repository/Model/Video.php:1043
+#: ../../src/Repository/Model/Video.php:1045
 msgid "Mongolian"
 msgstr "몽골어"
 
-#: ../../src/Repository/Model/Video.php:1044
+#: ../../src/Repository/Model/Video.php:1046
 msgid "Marathi"
 msgstr "마라티어"
 
-#: ../../src/Repository/Model/Video.php:1045
+#: ../../src/Repository/Model/Video.php:1047
 msgid "Malay"
 msgstr "말레이어"
 
-#: ../../src/Repository/Model/Video.php:1046
+#: ../../src/Repository/Model/Video.php:1048
 msgid "Maltese"
 msgstr "몰타어"
 
-#: ../../src/Repository/Model/Video.php:1047
+#: ../../src/Repository/Model/Video.php:1049
 msgid "Burmese"
 msgstr "버마어"
 
-#: ../../src/Repository/Model/Video.php:1048
+#: ../../src/Repository/Model/Video.php:1050
 msgid "Nauru"
 msgstr "나우루어"
 
-#: ../../src/Repository/Model/Video.php:1049
+#: ../../src/Repository/Model/Video.php:1051
 msgid "Norwegian Bokmal"
 msgstr "노르웨이 보그몰어"
 
-#: ../../src/Repository/Model/Video.php:1050
+#: ../../src/Repository/Model/Video.php:1052
 msgid "North Ndebele"
 msgstr "북부 은데벨레어"
 
-#: ../../src/Repository/Model/Video.php:1051
+#: ../../src/Repository/Model/Video.php:1053
 msgid "Nepali"
 msgstr "네팔어"
 
-#: ../../src/Repository/Model/Video.php:1052
+#: ../../src/Repository/Model/Video.php:1054
 msgid "Ndonga"
 msgstr "아프리카 반투족어"
 
-#: ../../src/Repository/Model/Video.php:1053
+#: ../../src/Repository/Model/Video.php:1055
 msgid "Dutch"
 msgstr "네덜란드어"
 
-#: ../../src/Repository/Model/Video.php:1054
+#: ../../src/Repository/Model/Video.php:1056
 msgid "Norwegian Nynorsk"
 msgstr "노르웨이 뉘노르스크어"
 
-#: ../../src/Repository/Model/Video.php:1055
+#: ../../src/Repository/Model/Video.php:1057
 msgid "Norwegian"
 msgstr "노르웨이어"
 
-#: ../../src/Repository/Model/Video.php:1056
+#: ../../src/Repository/Model/Video.php:1058
 msgid "South Ndebele"
 msgstr "남부 은데벨레어"
 
-#: ../../src/Repository/Model/Video.php:1057
+#: ../../src/Repository/Model/Video.php:1059
 msgid "Navajo"
 msgstr "나바호어"
 
-#: ../../src/Repository/Model/Video.php:1058
+#: ../../src/Repository/Model/Video.php:1060
 msgid "Chichewa"
 msgstr "체와어"
 
-#: ../../src/Repository/Model/Video.php:1059
+#: ../../src/Repository/Model/Video.php:1061
 msgid "Occitan"
 msgstr "프로방스어"
 
-#: ../../src/Repository/Model/Video.php:1060
+#: ../../src/Repository/Model/Video.php:1062
 msgid "Ojibwa"
 msgstr "오지브웨이어"
 
-#: ../../src/Repository/Model/Video.php:1061
+#: ../../src/Repository/Model/Video.php:1063
 msgid "Oromo"
 msgstr "오로모어"
 
-#: ../../src/Repository/Model/Video.php:1062
+#: ../../src/Repository/Model/Video.php:1064
 msgid "Oriya"
 msgstr "오리아어"
 
-#: ../../src/Repository/Model/Video.php:1063
+#: ../../src/Repository/Model/Video.php:1065
 msgid "Ossetian"
 msgstr "오세트어"
 
-#: ../../src/Repository/Model/Video.php:1064
+#: ../../src/Repository/Model/Video.php:1066
 msgid "Panjabi"
 msgstr "펀자브어"
 
-#: ../../src/Repository/Model/Video.php:1065
+#: ../../src/Repository/Model/Video.php:1067
 msgid "Pali"
 msgstr "팔리어"
 
-#: ../../src/Repository/Model/Video.php:1066
+#: ../../src/Repository/Model/Video.php:1068
 msgid "Polish"
 msgstr "폴란드어"
 
-#: ../../src/Repository/Model/Video.php:1067
+#: ../../src/Repository/Model/Video.php:1069
 msgid "Pashto"
 msgstr "파슈토어"
 
-#: ../../src/Repository/Model/Video.php:1068
+#: ../../src/Repository/Model/Video.php:1070
 msgid "Portuguese"
 msgstr "포르투갈어"
 
-#: ../../src/Repository/Model/Video.php:1069
+#: ../../src/Repository/Model/Video.php:1071
 msgid "Quechua"
 msgstr "케추아어"
 
-#: ../../src/Repository/Model/Video.php:1070
+#: ../../src/Repository/Model/Video.php:1072
 msgid "Raeto-Romance"
 msgstr "로만시어"
 
-#: ../../src/Repository/Model/Video.php:1071
+#: ../../src/Repository/Model/Video.php:1073
 msgid "Kirundi"
 msgstr "키룬디어"
 
-#: ../../src/Repository/Model/Video.php:1072
+#: ../../src/Repository/Model/Video.php:1074
 msgid "Romanian"
 msgstr "루마니아어"
 
-#: ../../src/Repository/Model/Video.php:1073
+#: ../../src/Repository/Model/Video.php:1075
 msgid "Russian"
 msgstr "러시아어"
 
-#: ../../src/Repository/Model/Video.php:1074
+#: ../../src/Repository/Model/Video.php:1076
 msgid "Kinyarwanda"
 msgstr "키냐르완다어"
 
-#: ../../src/Repository/Model/Video.php:1075
+#: ../../src/Repository/Model/Video.php:1077
 msgid "Sanskrit"
 msgstr "산스크리트어"
 
-#: ../../src/Repository/Model/Video.php:1076
+#: ../../src/Repository/Model/Video.php:1078
 msgid "Sardinian"
 msgstr "사르데냐어"
 
-#: ../../src/Repository/Model/Video.php:1077
+#: ../../src/Repository/Model/Video.php:1079
 msgid "Sindhi"
 msgstr "신드어"
 
-#: ../../src/Repository/Model/Video.php:1078
+#: ../../src/Repository/Model/Video.php:1080
 msgid "Northern Sami"
 msgstr "북부 사미어"
 
-#: ../../src/Repository/Model/Video.php:1079
+#: ../../src/Repository/Model/Video.php:1081
 msgid "Sango"
 msgstr "상고어"
 
-#: ../../src/Repository/Model/Video.php:1080
+#: ../../src/Repository/Model/Video.php:1082
 msgid "Sinhala"
 msgstr "싱할라어"
 
-#: ../../src/Repository/Model/Video.php:1081
+#: ../../src/Repository/Model/Video.php:1083
 msgid "Slovak"
 msgstr "슬로바키아어"
 
-#: ../../src/Repository/Model/Video.php:1082
+#: ../../src/Repository/Model/Video.php:1084
 msgid "Slovenian"
 msgstr "슬로베니아어"
 
-#: ../../src/Repository/Model/Video.php:1083
+#: ../../src/Repository/Model/Video.php:1085
 msgid "Samoan"
 msgstr "사모아어"
 
-#: ../../src/Repository/Model/Video.php:1084
+#: ../../src/Repository/Model/Video.php:1086
 msgid "Shona"
 msgstr "쇼나어"
 
-#: ../../src/Repository/Model/Video.php:1085
+#: ../../src/Repository/Model/Video.php:1087
 msgid "Somali"
 msgstr "소말리아어"
 
-#: ../../src/Repository/Model/Video.php:1086
+#: ../../src/Repository/Model/Video.php:1088
 msgid "Albanian"
 msgstr "알바니아어"
 
-#: ../../src/Repository/Model/Video.php:1087
+#: ../../src/Repository/Model/Video.php:1089
 msgid "Serbian"
 msgstr "세르비아어"
 
-#: ../../src/Repository/Model/Video.php:1088
+#: ../../src/Repository/Model/Video.php:1090
 msgid "Swati"
 msgstr "스와트어"
 
-#: ../../src/Repository/Model/Video.php:1089
+#: ../../src/Repository/Model/Video.php:1091
 msgid "Southern Sotho"
 msgstr "남부 소토어"
 
-#: ../../src/Repository/Model/Video.php:1090
+#: ../../src/Repository/Model/Video.php:1092
 msgid "Sundanese"
 msgstr "순다어"
 
-#: ../../src/Repository/Model/Video.php:1091
+#: ../../src/Repository/Model/Video.php:1093
 msgid "Swedish"
 msgstr "스웨덴어"
 
-#: ../../src/Repository/Model/Video.php:1092
+#: ../../src/Repository/Model/Video.php:1094
 msgid "Swahili"
 msgstr "스와힐리어"
 
-#: ../../src/Repository/Model/Video.php:1093
+#: ../../src/Repository/Model/Video.php:1095
 msgid "Tamil"
 msgstr "타밀어"
 
-#: ../../src/Repository/Model/Video.php:1094
+#: ../../src/Repository/Model/Video.php:1096
 msgid "Telugu"
 msgstr "텔루구어"
 
-#: ../../src/Repository/Model/Video.php:1095
+#: ../../src/Repository/Model/Video.php:1097
 msgid "Tajik"
 msgstr "타지크어"
 
-#: ../../src/Repository/Model/Video.php:1096
+#: ../../src/Repository/Model/Video.php:1098
 msgid "Thai"
 msgstr "타이어"
 
-#: ../../src/Repository/Model/Video.php:1097
+#: ../../src/Repository/Model/Video.php:1099
 msgid "Tigrinya"
 msgstr "티그리냐어"
 
-#: ../../src/Repository/Model/Video.php:1098
+#: ../../src/Repository/Model/Video.php:1100
 msgid "Turkmen"
 msgstr "투르크멘어"
 
-#: ../../src/Repository/Model/Video.php:1099
+#: ../../src/Repository/Model/Video.php:1101
 msgid "Tagalog"
 msgstr "타갈로그어"
 
-#: ../../src/Repository/Model/Video.php:1100
+#: ../../src/Repository/Model/Video.php:1102
 msgid "Tswana"
 msgstr "츠와나어"
 
-#: ../../src/Repository/Model/Video.php:1101
+#: ../../src/Repository/Model/Video.php:1103
 msgid "Tonga"
 msgstr "통가어"
 
-#: ../../src/Repository/Model/Video.php:1102
+#: ../../src/Repository/Model/Video.php:1104
 msgid "Turkish"
 msgstr "터키어"
 
-#: ../../src/Repository/Model/Video.php:1103
+#: ../../src/Repository/Model/Video.php:1105
 msgid "Tsonga"
 msgstr "총가어"
 
-#: ../../src/Repository/Model/Video.php:1104
+#: ../../src/Repository/Model/Video.php:1106
 msgid "Tatar"
 msgstr "타타르어"
 
-#: ../../src/Repository/Model/Video.php:1105
+#: ../../src/Repository/Model/Video.php:1107
 msgid "Twi"
 msgstr "트위어"
 
-#: ../../src/Repository/Model/Video.php:1106
+#: ../../src/Repository/Model/Video.php:1108
 msgid "Tahitian"
 msgstr "타히티어"
 
-#: ../../src/Repository/Model/Video.php:1107
+#: ../../src/Repository/Model/Video.php:1109
 msgid "Uighur"
 msgstr "위구르어"
 
-#: ../../src/Repository/Model/Video.php:1108
+#: ../../src/Repository/Model/Video.php:1110
 msgid "Ukrainian"
 msgstr "우크라이나어"
 
-#: ../../src/Repository/Model/Video.php:1109
+#: ../../src/Repository/Model/Video.php:1111
 msgid "Urdu"
 msgstr "우르두어"
 
-#: ../../src/Repository/Model/Video.php:1110
+#: ../../src/Repository/Model/Video.php:1112
 msgid "Uzbek"
 msgstr "우즈베크어"
 
-#: ../../src/Repository/Model/Video.php:1111
+#: ../../src/Repository/Model/Video.php:1113
 msgid "Venda"
 msgstr "벤다어"
 
-#: ../../src/Repository/Model/Video.php:1112
+#: ../../src/Repository/Model/Video.php:1114
 msgid "Vietnamese"
 msgstr "베트남어"
 
-#: ../../src/Repository/Model/Video.php:1113
+#: ../../src/Repository/Model/Video.php:1115
 msgid "Volapuk"
 msgstr "볼라퓌크어"
 
-#: ../../src/Repository/Model/Video.php:1114
+#: ../../src/Repository/Model/Video.php:1116
 msgid "Walloon"
 msgstr "왈론어"
 
-#: ../../src/Repository/Model/Video.php:1115
+#: ../../src/Repository/Model/Video.php:1117
 msgid "Wolof"
 msgstr "월로프어"
 
-#: ../../src/Repository/Model/Video.php:1116
+#: ../../src/Repository/Model/Video.php:1118
 msgid "Xhosa"
 msgstr "코사어"
 
-#: ../../src/Repository/Model/Video.php:1117
+#: ../../src/Repository/Model/Video.php:1119
 msgid "Yiddish"
 msgstr "이디시어"
 
-#: ../../src/Repository/Model/Video.php:1118
+#: ../../src/Repository/Model/Video.php:1120
 msgid "Yoruba"
 msgstr "요루바어"
 
-#: ../../src/Repository/Model/Video.php:1119
+#: ../../src/Repository/Model/Video.php:1121
 msgid "Zhuang"
 msgstr "좡어"
 
-#: ../../src/Repository/Model/Video.php:1120
+#: ../../src/Repository/Model/Video.php:1122
 msgid "Chinese"
 msgstr "중국어"
 
-#: ../../src/Repository/Model/Video.php:1121
+#: ../../src/Repository/Model/Video.php:1123
 msgid "Zulu"
 msgstr "줄루어"
 

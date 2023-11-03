@@ -25,6 +25,6 @@ use Ampache\Module\Api\Ajax;
 /** @var string $type */
 
 // Because sometimes you just need a container?>
-<?php Ajax::start_container('browse_content_' . $type, 'browse_content'); ?>
+<?php Ajax::start_container($type, 'browse_content'); ?>
 
 <?php Ajax::end_container(); ?>

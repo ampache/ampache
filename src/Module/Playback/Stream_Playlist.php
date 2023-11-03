@@ -200,6 +200,9 @@ class Stream_Playlist
      */
     public static function media_to_url($media, $additional_params = '', $urltype = 'web', $user = null)
     {
+        if (!array_key_exists('object_type', $media) || !array_key_exists('object_id', $media)) {
+            return null;
+        }
         $type       = $media['object_type'];
         $object_id  = $media['object_id'];
         $class_name = ObjectTypeToClassNameMapper::map($type);

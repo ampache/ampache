@@ -63,7 +63,7 @@ final class BookmarkCreate5Method
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = $input['position'];
-        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : 'AmpacheAPI';
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api5::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -95,16 +95,16 @@ final class BookmarkCreate5Method
             return false;
         }
         $object = array(
+            'user' => $user->getId(),
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => $position,
-            'user' => $user->getId()
+            'position' => $position
         );
 
         // create it then retrieve it
         Bookmark::create($object, $user->getId(), $time);
-        $results = Bookmark::get_bookmark($object);
+        $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
             Api5::empty('bookmark', $input['api_format']);
 

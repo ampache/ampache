@@ -85,9 +85,20 @@ $key = hash('sha256', 'myapikey');
 $passphrase = hash('sha256', $user . $key);
 ```
 
+## HTTP Header Authentication
+
+Ampache supports sending your auth parameter to the server using a Bearer Token.
+
+The `auth` parameter does not need to be sent with your URL. We will check your header for a token first
+
+```Text
+GET https://demo.ampache.dev/server/json.server.php?action=handshake&version=6.0.0 HTTP/1.1
+Authorization: Bearer 000111112233334444455556667777788888899aaaaabbbbcccccdddeeeeeeff
+```
+
 ### Other handshake-related stuff
 
-#### Ampache sheme
+#### Ampache scheme
 
 To standardize how to transfer Ampache connection information, the following Ampache scheme is defined.
 
@@ -208,6 +219,7 @@ All Auth methods return HTTP 200 responses
 * goodbye
 * ping
 * register **Api6**
+* lost_password **Api6.1**
 
 ### Non-Data Methods
 

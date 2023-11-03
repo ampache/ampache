@@ -68,16 +68,16 @@ final class StreamMethod
         $object_id = (int) $input['id'];
 
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
-        $format        = $input['format']; // mp3, flv or raw
-        $original      = $format && $format != 'raw';
-        $timeOffset    = $input['offset'];
-        $contentLength = (int) $input['length']; // Force content-length guessing if transcode
+        $format        = $input['format'] ?? null; // mp3, flv or raw
+        $transcode_to  = $format && $format != 'raw';
+        $timeOffset    = $input['offset'] ?? null;
+        $contentLength = (int)($input['length'] ?? 0); // Force content-length guessing if transcode
 
         $params = '&client=api';
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
-        if ($original && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($transcode_to && in_array($type, array('song', 'search', 'playlist'))) {
             $params .= '&format=' . $format;
         }
         if ($maxBitRate > 0 && in_array($type, array('song', 'search', 'playlist'))) {
@@ -97,7 +97,7 @@ final class StreamMethod
             $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if ($type == 'search' || $type == 'playlist') {
-            $song_id = Random::get_single_song($type, $user, (int)$_REQUEST['random_id']);
+            $song_id = Random::get_single_song($type, $user, $object_id);
             $media   = new Song($song_id);
             $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
