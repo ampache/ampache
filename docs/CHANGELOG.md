@@ -10,6 +10,10 @@ Code improvements have made it a lot easier to identify (and solve) some long ru
 
 Album sorting has finally been restored to all pages!
 
+If you use Subsonic we noticed some clients don't use *.view. The /rest htaccess file has been updated to support this.
+
+Use `php bin/installer htaccess -e` to update your htaccess files
+
 ### Added
 
 * Translations 2023-10
@@ -34,6 +38,7 @@ Album sorting has finally been restored to all pages!
 * CLI
   * `-t|--garbage` don't collect garbage for each catalog, just do it at the end
 * Subsonic
+  * Updates Apache .htaccess.dist to support Subsonic clients that don't use *.view for calls
   * createplaylist: Default visibility for new lists is `public`
 
 ### Fixed
