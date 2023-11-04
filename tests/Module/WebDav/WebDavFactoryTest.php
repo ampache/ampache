@@ -28,16 +28,15 @@ use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\Server;
 
 class WebDavFactoryTest extends MockeryTestCase
 {
-    /** @var AuthenticationManagerInterface|MockInterface|null */
-    private $authenticationManager;
+    private AuthenticationManagerInterface&MockInterface $authenticationManager;
 
-    /** @var WebDavFactory|null */
-    private ?WebDavFactory $subject;
+    private WebDavFactory $subject;
 
     public function setUp(): void
     {
@@ -48,9 +47,7 @@ class WebDavFactoryTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @dataProvider methodDataProvider
-     */
+    #[DataProvider(methodName: 'methodDataProvider')]
     public function testFactoryMethods(string $method, string $expected_instance_name, array $params): void
     {
         static::assertInstanceOf(
@@ -59,7 +56,7 @@ class WebDavFactoryTest extends MockeryTestCase
         );
     }
 
-    public function methodDataProvider(): array
+    public static function methodDataProvider(): array
     {
         return [
             ['createWebDavAuth', WebDavAuth::class, []],

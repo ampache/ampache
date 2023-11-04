@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Config;
 
 use Ampache\MockeryTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ConfigContainerTest extends MockeryTestCase
 {
@@ -187,9 +188,7 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @dataProvider featureEnabledDataProvider
-     */
+    #[DataProvider(methodName: 'featureEnabledDataProvider')]
     public function testIsFeatureEnabledReturnsExpectedState(
         $value,
         bool $state
@@ -204,7 +203,7 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
-    public function featureEnabledDataProvider(): array
+    public static function featureEnabledDataProvider(): array
     {
         return [
             [true, true],

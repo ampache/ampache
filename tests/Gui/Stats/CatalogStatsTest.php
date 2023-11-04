@@ -25,12 +25,11 @@ declare(strict_types=1);
 namespace Ampache\Gui\Stats;
 
 use Ampache\MockeryTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CatalogStatsTest extends MockeryTestCase
 {
-    /**
-     * @dataProvider methodDataProvider
-     */
+    #[DataProvider(methodName: 'methodDataProvider')]
     public function testArrayAccessorsReturnData(
         string $methodName,
         string $arrayKey,
@@ -53,7 +52,7 @@ class CatalogStatsTest extends MockeryTestCase
         );
     }
 
-    public function methodDataProvider(): array
+    public static function methodDataProvider(): array
     {
         return [
             ['getConnectedCount', 'connected', 666, 0],
