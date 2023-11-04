@@ -900,8 +900,9 @@ class Playlist extends playlist_object
             }
         }
         // look for public ones
+        $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
         $sql        = "SELECT `id`, `name` FROM `search` WHERE (`type`='public' OR `user` = ?)";
-        $db_results = Dba::read($sql, array(Core::get_global('user')->id));
+        $db_results = Dba::read($sql, array($user_id));
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['name'] == $this->name) {
                 return (int)$row['id'];

@@ -68,13 +68,13 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
 $talFactory = $dic->get(TalFactoryInterface::class);
 $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
-
+$user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
 foreach ($object_ids as $playlist_id) {
     $libitem = new Playlist($playlist_id);
     $libitem->format();
 
     // Don't show empty playlist if not admin or the owner
-    if (Access::check('interface', 100) || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
+    if (Access::check('interface', 100) || $libitem->get_user_owner() == $user_id || $libitem->get_media_count() > 0) { ?>
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
             <?php $content = $talFactory->createTalView()
         ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
