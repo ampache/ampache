@@ -3647,12 +3647,12 @@ abstract class Catalog extends database_object
         $web_path = AmpConfig::get('web_path');
         if (isset($files)) {
             foreach ($files as $file) {
-                $found = false;
-                $file  = trim((string)$file);
-                $orig  = $file;
+                $found    = false;
+                $file     = trim((string)$file);
+                $orig     = $file;
+                $url_data = Stream_Url::parse($file);
                 // Check to see if it's a url from this ampache instance
-                if (!empty($web_path) && substr($file, 0, strlen($web_path)) == $web_path) {
-                    $url_data   = Stream_Url::parse($file);
+                if (array_key_exists('id', $url_data) && !empty($web_path) && substr($file, 0, strlen($web_path)) == $web_path) {
                     $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
                     $db_results = Dba::read($sql, array($url_data['id']));
                     if (Dba::num_rows($db_results) && (int)$url_data['id'] > 0) {
