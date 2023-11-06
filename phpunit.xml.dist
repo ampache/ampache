@@ -1,28 +1,18 @@
 <?xml version="1.0"?>
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.4/phpunit.xsd"
 	backupGlobals="true"
-	backupStaticAttributes="false"
 	bootstrap="tests/bootstrap.php"
-	cacheResult="true"
 	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	forceCoversAnnotation="false"
-	processIsolation="false"
-	stopOnError="false"
-	stopOnFailure="false"
-	stopOnIncomplete="false"
-	stopOnSkipped="false"
-	stopOnRisky="false">
-	<coverage cacheDirectory="build/coverageCache">
+>
+	<coverage cacheDirectory="build/coverageCache" />
+	<source>
 		<include>
-			<directory suffix=".php">src</directory>
+			<directory>src</directory>
 		</include>
 		<exclude>
 			<directory suffix="service_definition.php">src</directory>
 		</exclude>
-	</coverage>
+	</source>
 </phpunit>
