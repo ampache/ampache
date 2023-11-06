@@ -1150,9 +1150,10 @@ class User extends database_object
 
             $this->f_usage = Ui::format_bytes($user_data['play_size'], 2, 2);
 
+            $recent_user_ip = $this->getIpHistoryRepository()->getRecentIpForUser($this);
             // Get Users Last ip
-            if (count($data = $this->getIpHistoryRepository()->getHistory($this->getId()))) {
-                $user_ip          = inet_ntop($data['0']['ip']);
+            if ($recent_user_ip !== null) {
+                $user_ip          = inet_ntop($recent_user_ip);
                 $this->ip_history = (!empty($user_ip) && filter_var($user_ip, FILTER_VALIDATE_IP)) ? $user_ip : T_('Invalid');
             } else {
                 $this->ip_history = T_('Not Enough Data');

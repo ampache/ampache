@@ -20,8 +20,11 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -30,32 +33,69 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
+use ArrayIterator;
 use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowIpHistoryActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private MockInterface&UiInterface $ui;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
+    private MockInterface&ModelFactoryInterface $modelFactory;
 
-    /** @var IpHistoryRepositoryInterface|MockInterface|null */
-    private MockInterface $ipHistoryRepository;
+    private MockInterface&IpHistoryRepositoryInterface $ipHistoryRepository;
 
-    private ?ShowIpHistoryAction $subject;
+    private ConfigContainerInterface&MockObject $configContainer;
+
+    private ShowIpHistoryAction $subject;
 
     public function setUp(): void
     {
         $this->ui                  = $this->mock(UiInterface::class);
         $this->modelFactory        = $this->mock(ModelFactoryInterface::class);
         $this->ipHistoryRepository = $this->mock(IpHistoryRepositoryInterface::class);
+        $this->configContainer     = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new ShowIpHistoryAction(
             $this->ui,
             $this->modelFactory,
-            $this->ipHistoryRepository
+            $this->ipHistoryRepository,
+            $this->configContainer,
+        );
+    }
+
+    public function testRunShowErrorIfUserDoesNotExist(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $userId = -1;
+
+        static::expectOutputString('You have requested an object that does not exist');
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['user_id' => (string) $userId]);
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
         );
     }
 
@@ -78,10 +118,13 @@ class ShowIpHistoryActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $user       = $this->mock(User::class);
+        $user       = $this->createMock(User::class);
 
-        $userId  = 666;
-        $history = ['some-history'];
+        $userId                   = 666;
+        $history                  = new ArrayIterator(['some-history']);
+        $userIpCardinalitySetting = 42;
+        $userFullName             = 'some-name';
+        $webPath                  = 'some-path';
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
@@ -98,22 +141,42 @@ class ShowIpHistoryActionTest extends MockeryTestCase
             ->once()
             ->andReturn($user);
 
+        $user->expects(static::once())
+            ->method('get_fullname')
+            ->willReturn($userFullName);
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with('user_ip_cardinality')
+            ->willReturn((string) $userIpCardinalitySetting);
+        $this->configContainer->expects(static::once())
+            ->method('getWebPath')
+            ->willReturn($webPath);
+
         $this->ipHistoryRepository->shouldReceive('getHistory')
-            ->with($userId, 0, true)
+            ->with($user, $userIpCardinalitySetting, true)
             ->once()
             ->andReturn($history);
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
+        $this->ui->shouldReceive('showBoxTop')
+            ->with(sprintf('%s IP History', $userFullName))
+            ->once();
         $this->ui->shouldReceive('show')
             ->with(
                 'show_ip_history.inc.php',
                 [
-                    'working_user' => $user,
-                    'history' => $history
+                    'workingUser' => $user,
+                    'history' => $history,
+                    'showAll' => false,
+                    'webPath' => $webPath,
                 ]
             )
+            ->once();
+        $this->ui->shouldReceive('showBoxBottom')
+            ->withNoArgs()
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
@@ -131,10 +194,16 @@ class ShowIpHistoryActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $user       = $this->mock(User::class);
+        $user       = $this->createMock(User::class);
 
-        $userId  = 666;
-        $history = ['some-history'];
+        $userId       = 666;
+        $history      = new ArrayIterator(['some-history']);
+        $webPath      = 'some-path';
+        $userFullName = 'some-name';
+
+        $this->configContainer->expects(static::once())
+            ->method('getWebPath')
+            ->willReturn($webPath);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
@@ -151,22 +220,34 @@ class ShowIpHistoryActionTest extends MockeryTestCase
             ->once()
             ->andReturn($user);
 
+        $user->expects(static::once())
+            ->method('get_fullname')
+            ->willReturn($userFullName);
+
         $this->ipHistoryRepository->shouldReceive('getHistory')
-            ->with($userId)
+            ->with($user)
             ->once()
             ->andReturn($history);
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
+        $this->ui->shouldReceive('showBoxTop')
+            ->with(sprintf('%s IP History', $userFullName))
+            ->once();
         $this->ui->shouldReceive('show')
             ->with(
                 'show_ip_history.inc.php',
                 [
-                    'working_user' => $user,
-                    'history' => $history
+                    'workingUser' => $user,
+                    'history' => $history,
+                    'showAll' => true,
+                    'webPath' => $webPath,
                 ]
             )
+            ->once();
+        $this->ui->shouldReceive('showBoxBottom')
+            ->withNoArgs()
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()

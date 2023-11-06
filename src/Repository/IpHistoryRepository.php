@@ -24,41 +24,69 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\User;
+use Generator;
 
 final class IpHistoryRepository implements IpHistoryRepositoryInterface
 {
     /**
-     * This returns the ip_history from the last AmpConfig::get('user_ip_cardinality') days
+     * This returns the ip_history for the provided user
      *
-     * @param int $userId
-     * @param int $count
-     * @param bool $distinct
-     * @return array
+     * @return Generator<array{ip: string, date: int}>
      */
     public function getHistory(
-        int $userId,
-        int $count = 1,
+        User $user,
+        int $limit = 1,
         bool $distinct = false
-    ): array {
-        $count     = $count ? (int)($count) : (int)(AmpConfig::get('user_ip_cardinality'));
-        $limit_sql = ($count > 0) ? " LIMIT " . (string)($count) : '';
+    ): Generator {
+        $group_sql = '';
+        $limit_sql = '';
 
-        $group_sql = "";
-        if ($distinct) {
-            $group_sql = "GROUP BY `ip`, `date`";
+        if ($limit > 0) {
+            $limit_sql = sprintf(' LIMIT %d', $limit);
+        }
+
+        if ($distinct === true) {
+            $group_sql = ' GROUP BY ip, date';
         }
 
         /* Select ip history */
-        $sql = "SELECT `ip`, `date` FROM `ip_history` WHERE `user`='$userId' $group_sql ORDER BY `date` DESC$limit_sql";
+        $sql = sprintf(
+            'SELECT ip, date FROM ip_history WHERE user = ? %s ORDER BY date DESC %s',
+            $group_sql,
+            $limit_sql,
+        );
 
-        $db_results = Dba::read($sql);
-        $results    = array();
+        $db_results = Dba::read(
+            $sql,
+            [
+                $user->getId(),
+            ]
+        );
+
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row;
+            yield [
+                'ip' => $row['ip'],
+                'date' => (int) $row['date']
+            ];
         }
+    }
 
-        return $results;
+    /**
+     * Returns the most recent ip-address used by the provided user
+     *
+     * @return string|null Most recent ip-address or null if no data is available
+     */
+    public function getRecentIpForUser(User $user): ?string
+    {
+        $result = Dba::read(
+            'SELECT ip FROM ip_history WHERE user = ? ORDER BY date DESC LIMIT 1',
+            [
+                $user->getId(),
+            ]
+        );
+
+        return Dba::fetch_assoc($result)['ip'] ?? null;
     }
 }
