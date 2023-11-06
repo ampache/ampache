@@ -60,7 +60,7 @@ final class RecordPlay4Method
         $api_user  = User::get_from_username(Session::username($input['auth']));
         $play_user = (isset($input['user']) && (int) $input['user'] > 0)
             ? new User((int) $input['user'])
-            : User::get_from_username((string) $input['user']);
+            : User::get_from_username((string)($input['user'] ?? ''));
 
         // If you are setting plays for other users make sure we have an admin
         if ($play_user->id !== $api_user->id && !Api4::check_access('interface', 100, $api_user->id, 'record_play', $input['api_format'])) {

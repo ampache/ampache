@@ -63,8 +63,8 @@ final class TimelineMethod
             return false;
         }
         $username = $input['username'];
-        $limit    = (int) ($input['limit']);
-        $since    = (int) ($input['since']);
+        $limit    = (int)($input['limit'] ?? 0);
+        $since    = (int)($input['since'] ?? 0);
 
         if (!empty($username)) {
             $user = User::get_from_username($username);

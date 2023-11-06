@@ -69,9 +69,9 @@ final class PlaylistGenerate4Method
         $user   = User::get_from_username(Session::username($input['auth']));
         $array  = array();
 
-        // count for search rules
-        $rule_count = 1;
-
+        $offset        = (int)($input['offset'] ?? 0);
+        $limit         = (int)($input['limit'] ?? 0);
+        $rule_count    = 1;
         $array['type'] = 'song';
         debug_event(self::class, 'playlist_generate ' . $mode, 5);
         if (in_array($mode, array('forgotten', 'recent'), true)) {
@@ -133,8 +133,8 @@ final class PlaylistGenerate4Method
         shuffle($song_ids);
 
         //slice the array if there is a limit
-        if ((int) $input['limit'] > 0) {
-            $song_ids = array_slice($song_ids, 0, (int) $input['limit']);
+        if ($limit > 0) {
+            $song_ids = array_slice($song_ids, 0, $limit);
         }
 
         // output formatted XML
@@ -142,26 +142,26 @@ final class PlaylistGenerate4Method
             case 'id':
                 switch ($input['api_format']) {
                     case 'json':
-                        Json4_Data::set_offset($input['offset'] ?? 0);
-                        Json4_Data::set_limit($input['limit'] ?? 0);
+                        Json4_Data::set_offset($offset);
+                        Json4_Data::set_limit($limit);
                         echo json_encode($song_ids, JSON_PRETTY_PRINT);
                     break;
                     default:
-                        Xml4_Data::set_offset($input['offset'] ?? 0);
-                        Xml4_Data::set_limit($input['limit'] ?? 0);
+                        Xml4_Data::set_offset($offset);
+                        Xml4_Data::set_limit($limit);
                         echo Xml4_Data::keyed_array($song_ids, false, 'id');
                 }
                 break;
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        Json4_Data::set_offset($input['offset'] ?? 0);
-                        Json4_Data::set_limit($input['limit'] ?? 0);
+                        Json4_Data::set_offset($offset);
+                        Json4_Data::set_limit($limit);
                         echo Json4_Data::indexes($song_ids, 'song', $user);
                     break;
                     default:
-                        Xml4_Data::set_offset($input['offset'] ?? 0);
-                        Xml4_Data::set_limit($input['limit'] ?? 0);
+                        Xml4_Data::set_offset($offset);
+                        Xml4_Data::set_limit($limit);
                         echo Xml4_Data::indexes($song_ids, 'song', $user);
                 }
                 break;
@@ -169,13 +169,13 @@ final class PlaylistGenerate4Method
             default:
                 switch ($input['api_format']) {
                     case 'json':
-                        Json4_Data::set_offset($input['offset'] ?? 0);
-                        Json4_Data::set_limit($input['limit'] ?? 0);
+                        Json4_Data::set_offset($offset);
+                        Json4_Data::set_limit($limit);
                         echo Json4_Data::songs($song_ids, $user);
                     break;
                     default:
-                        Xml4_Data::set_offset($input['offset'] ?? 0);
-                        Xml4_Data::set_limit($input['limit'] ?? 0);
+                        Xml4_Data::set_offset($offset);
+                        Xml4_Data::set_limit($limit);
                         echo Xml4_Data::songs($song_ids, $user);
                 }
         }
