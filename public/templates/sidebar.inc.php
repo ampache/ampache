@@ -94,8 +94,8 @@ $t_logout          = T_('Log out'); ?>
     }
     if ($is_session) {
         $sidebar_items[] = array('id' => 'preferences', 'title' => $t_preferences, 'icon' => 'edit', 'access' => 5);
-        $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
-    } ?>
+    }
+    $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75); ?>
     <?php foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
             $active    = ('sidebar_' . $item['id'] == $class_name) ? ' active' : '';
