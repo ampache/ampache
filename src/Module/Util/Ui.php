@@ -275,7 +275,7 @@ class Ui implements UiInterface
             $name       = $name[0];
         }
 
-        $title    = $title ?: T_(ucfirst($name));
+        $title    = $title ?? T_(ucfirst($name));
         $icon_url = self::_find_icon($name);
         $icontype = pathinfo($icon_url, PATHINFO_EXTENSION);
         if (isset($hover_name)) {
@@ -300,7 +300,7 @@ class Ui implements UiInterface
                 $svgicon->addAttribute('id', $id_attrib);
             }
 
-            $class_attrib = ($class_attrib) ?: 'icon icon-' . $name;
+            $class_attrib = ($class_attrib) ?? 'icon icon-' . $name;
             $svgicon->addAttribute('class', $class_attrib);
 
             $tag = explode("\n", $svgicon->asXML(), 2)[1];
@@ -371,7 +371,7 @@ class Ui implements UiInterface
             $name       = $name[0];
         }
 
-        $title = $title ?: ucfirst($name);
+        $title = $title ?? ucfirst($name);
 
         $image_url = self::_find_image($name);
         $imagetype = pathinfo($image_url, PATHINFO_EXTENSION);
@@ -399,7 +399,7 @@ class Ui implements UiInterface
                 $svgimage->addAttribute('id', $id_attrib);
             }
 
-            $class_attrib = ($class_attrib) ?: 'image image-' . $name;
+            $class_attrib = ($class_attrib) ?? 'image image-' . $name;
             $svgimage->addAttribute('class', $class_attrib);
 
             $tag = explode("\n", $svgimage->asXML(), 2)[1];
@@ -554,7 +554,7 @@ class Ui implements UiInterface
             echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get('web_path') . "/favicon.ico";
+        $favicon = AmpConfig::get('custom_favicon', false) ?? AmpConfig::get('web_path') . "/favicon.ico";
         echo "<link rel='shortcut icon' href='" . $favicon . "' />\n";
     }
 

@@ -272,9 +272,9 @@ class Waveform
         }
 
         $detail     = 5;
-        $width      = AmpConfig::get('waveform_width') ?: 400;
-        $height     = AmpConfig::get('waveform_height') ?: 32;
-        $foreground = AmpConfig::get('waveform_color') ?: '#FF0000';
+        $width      = AmpConfig::get('waveform_width') ?? 400;
+        $height     = AmpConfig::get('waveform_height') ?? 32;
+        $foreground = AmpConfig::get('waveform_color') ?? '#FF0000';
         $draw_flat  = true;
 
         // generate foreground color

@@ -81,7 +81,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
         $processed = [];
 
         /* See if we are looking for a specific filename */
-        $preferred_filename = ($this->configContainer->get('album_art_preferred_filename')) ?: 'folder.jpg';
+        $preferred_filename = ($this->configContainer->get('album_art_preferred_filename')) ?? 'folder.jpg';
         $artist_filename    = $this->configContainer->get('artist_art_preferred_filename');
         $artist_art_folder  = $this->configContainer->get('artist_art_folder');
 

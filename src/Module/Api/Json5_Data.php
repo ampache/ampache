@@ -1082,7 +1082,7 @@ class Json5_Data
                 "art" => $art_url,
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => ($rating->get_average_rating() ?: null),
+                "averagerating" => ($rating->get_average_rating() ?? null),
                 "playcount" => (int)$song->total_count,
                 "vote" => $democratic->get_vote($row_id)
             );

@@ -1335,7 +1335,7 @@ class Json_Data
                 "size" => (int)$song->size,
                 "art" => $art_url,
                 "rating" => $user_rating,
-                "averagerating" => ($rating->get_average_rating() ?: null),
+                "averagerating" => ($rating->get_average_rating() ?? null),
                 "playcount" => (int)$song->total_count,
                 "vote" => $democratic->get_vote($row_id)
             );

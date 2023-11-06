@@ -216,7 +216,7 @@ class AmpacheRss
         $data = Stream::get_now_playing();
 
         $results    = array();
-        $format     = AmpConfig::get('rss_format') ?: '%t - %a - %A';
+        $format     = AmpConfig::get('rss_format') ?? '%t - %a - %A';
         $string_map = array(
             '%t' => 'title',
             '%a' => 'artist',

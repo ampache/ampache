@@ -74,7 +74,7 @@ foreach ($data as $row) {
     if ($is_allowed_recent) {
         // add the time if you've allowed it
         if ($is_allowed_time) {
-            $interval = (int) (time() - $row['date']);
+            $interval = (int) (time() - ($row['date'] ?? 0));
 
             if ($interval < 60) {
                 $time_string = sprintf(nT_('%d second ago', '%d seconds ago', $interval), $interval);

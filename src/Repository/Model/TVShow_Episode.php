@@ -178,7 +178,7 @@ class TVShow_Episode extends Video
         $season = new TVShow_Season($this->season);
         $season->format($details);
 
-        $this->f_name        = ($this->original_name ?: $this->f_name);
+        $this->f_name        = ($this->original_name ?? $this->f_name);
         $this->f_link        = '<a href="' . $this->get_link() . '">' . scrub_out($this->f_name) . '</a>';
         $this->f_season      = $season->f_name;
         $this->f_season_link = $season->f_link;

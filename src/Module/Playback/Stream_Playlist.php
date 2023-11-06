@@ -549,7 +549,7 @@ class Stream_Playlist
     public function get_asx_string()
     {
         $ret = '<ASX VERSION="3.0" BANNERBAR="auto">' . "\n";
-        $ret .= "<TITLE>" . ($this->title ?: T_("Ampache ASX Playlist")) . "</TITLE>\n";
+        $ret .= "<TITLE>" . ($this->title ?? T_("Ampache ASX Playlist")) . "</TITLE>\n";
         $ret .= '<PARAM NAME="Encoding" VALUE="utf-8"' . "></PARAM>\n";
 
         foreach ($this->urls as $url) {

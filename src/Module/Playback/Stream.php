@@ -190,7 +190,7 @@ class Stream
             $bit_rate = floor($max_bitrate / $active_streams);
 
             // Exit if this would be insane
-            if ($bit_rate < ($min_bitrate ?: 8)) {
+            if ($bit_rate < ($min_bitrate ?? 8)) {
                 debug_event(self::class, 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
                 header('HTTP/1.1 503 Service Temporarily Unavailable');
 
@@ -261,7 +261,7 @@ class Stream
         $options = array()
     ) {
         $target = self::get_transcode_format($source, $target, $player, $media_type);
-        $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
+        $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?? AmpConfig::get('transcode_cmd');
         if (empty($cmd)) {
             debug_event(self::class, 'A valid transcode_cmd is required to transcode', 5);
 
