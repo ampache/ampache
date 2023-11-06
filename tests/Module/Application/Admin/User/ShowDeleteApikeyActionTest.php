@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,18 +29,19 @@ use Ampache\Module\Util\UiInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class ShowDeleteAvatarActionTest extends TestCase
+class ShowDeleteApikeyActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
+
     private MockObject&UiInterface $ui;
 
-    private ShowDeleteAvatarAction $subject;
+    private ShowDeleteApikeyAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui = $this->createMock(UiInterface::class);
 
-        $this->subject = new ShowDeleteAvatarAction(
+        $this->subject = new ShowDeleteApikeyAction(
             $this->ui,
         );
     }
@@ -52,14 +54,14 @@ class ShowDeleteAvatarActionTest extends TestCase
                     ->method('showConfirmation')
                     ->with(
                         'Are You Sure?',
-                        'This Avatar will be deleted',
+                        'This Token will be deleted',
                         sprintf(
                             'admin/users.php?action=%s&user_id=%d',
-                            DeleteAvatarAction::REQUEST_KEY,
+                            DeleteApikeyAction::REQUEST_KEY,
                             $userId
                         ),
                         1,
-                        'delete_avatar'
+                        'delete_apikey'
                     );
             }
         );
