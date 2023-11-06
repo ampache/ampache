@@ -47,7 +47,7 @@ final class User3Method
         $username = $input['username'];
         if (!empty($username)) {
             $user = User::get_from_username($username);
-            if ($user !== null) {
+            if ($user instanceof User) {
                 ob_end_clean();
                 echo Xml3_Data::user($user);
             } else {

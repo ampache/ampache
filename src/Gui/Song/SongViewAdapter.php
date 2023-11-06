@@ -241,10 +241,10 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canDisplayStats(): bool
     {
-        $owner = $this->song->get_user_owner();
+        $owner_id = $this->song->get_user_owner();
 
         return (
-            (($owner !== null && !empty($GLOBALS['user'])) && $owner == $GLOBALS['user']->id) ||
+            (($owner_id !== null && !empty($GLOBALS['user'])) && $owner_id == $GLOBALS['user']->id) ||
             $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
         ) &&
         $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&

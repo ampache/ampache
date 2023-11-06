@@ -483,7 +483,7 @@ class Share extends database_object
     }
 
     /**
-     * @return mixed
+     * @return int|null
      */
     public function get_user_owner()
     {

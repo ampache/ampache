@@ -59,12 +59,12 @@ class Stats
      * clear
      *
      * This clears all stats for _everything_.
-     * @param integer $user
+     * @param int $user_id
      */
-    public static function clear($user = 0)
+    public static function clear($user_id = 0)
     {
-        if ($user > 0) {
-            Dba::write("DELETE FROM `object_count` WHERE `user` = ?;", array($user));
+        if ($user_id > 0) {
+            Dba::write("DELETE FROM `object_count` WHERE `user` = ?;", array($user_id));
         } else {
             Dba::write("TRUNCATE `object_count`;");
         }

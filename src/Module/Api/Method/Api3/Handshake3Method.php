@@ -84,9 +84,9 @@ final class Handshake3Method
             $client   = static::getUserRepository()->findByApiKey(trim($passphrase));
             $username = false;
         } else {
-            $client  = User::get_from_username($username);
+            $client = User::get_from_username($username);
         }
-        if ($client) {
+        if ($client instanceof User) {
             $user_id = $client->id;
         }
 
@@ -128,7 +128,7 @@ final class Handshake3Method
                 }
             }
 
-            if ($client) {
+            if ($client instanceof User) {
                 // Create the session
                 $data             = array();
                 $data['username'] = $client->username;

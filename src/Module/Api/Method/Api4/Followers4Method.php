@@ -65,7 +65,7 @@ final class Followers4Method
         $username = $input['username'];
         if (!empty($username)) {
             $user = User::get_from_username($username);
-            if ($user !== null) {
+            if ($user instanceof User) {
                 $results = static::getUserFollowerRepository()->getFollowers($user->id);
                 if (!count($results)) {
                     Api4::message('error', 'User `' . $username . '` has no followers.', '400', $input['api_format']);

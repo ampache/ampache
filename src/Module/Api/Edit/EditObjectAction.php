@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\database_object;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -91,11 +92,11 @@ final class EditObjectAction extends AbstractEditAction
             'edit_object: {' . $object_type . '} {' . $object_id . '}',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
-
+        /* @var library_item $libitem */
         $className  = ObjectTypeToClassNameMapper::map($object_type);
         $libitem    = new $className($_POST['id']);
         if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
-            // TODO: improve this uniqueless check
+            // TODO: improve this uniqueness check
             if (isset($_POST['user'])) {
                 unset($_POST['user']);
             }

@@ -272,7 +272,7 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @return null
+     * @return int|null
      */
     public function get_user_owner()
     {

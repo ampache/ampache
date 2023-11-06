@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\library_item;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -93,6 +94,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $object_id,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
+        /* @var library_item $libitem */
         $libitem = new $className($object_id);
         if (method_exists($libitem, 'format')) {
             $libitem->format();

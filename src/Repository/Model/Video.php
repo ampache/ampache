@@ -511,7 +511,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * Get item's owner.
-     * @return integer|null
+     * @return int|null
      */
     public function get_user_owner()
     {

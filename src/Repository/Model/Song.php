@@ -2121,7 +2121,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get item's owner.
-     * @return integer|null
+     * @return int|null
      */
     public function get_user_owner()
     {

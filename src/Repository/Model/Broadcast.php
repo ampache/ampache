@@ -320,7 +320,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item's owner.
-     * @return integer|null
+     * @return int|null
      */
     public function get_user_owner()
     {

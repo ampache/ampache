@@ -53,7 +53,7 @@ final class Stats3Method
         $username = $input['username'];
         // override your user if you're looking at others
         if (array_key_exists('username', $input)) {
-            $user    = User::get_from_username($input['username']);
+            $user = User::get_from_username($input['username']);
         }
         $results = null;
         if ($type == "newest") {
@@ -67,7 +67,7 @@ final class Stats3Method
                 } else {
                     if ($type == "recent") {
                         if (!empty($username)) {
-                            if ($user !== null) {
+                            if ($user instanceof User) {
                                 $results = $user->get_recently_played('album', $limit);
                             } else {
                                 debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);

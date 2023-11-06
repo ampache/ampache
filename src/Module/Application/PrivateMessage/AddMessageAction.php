@@ -84,7 +84,7 @@ final class AddMessageAction implements ApplicationActionInterface
         $message = trim(strip_tags(filter_var($data['message'] ?? '', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
         $to_user = User::get_from_username($data['to_user'] ?? '');
 
-        if (!$to_user->id) {
+        if (!$to_user) {
             AmpError::add('to_user', T_('Unknown user'));
         }
         if (empty($subject)) {

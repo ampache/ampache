@@ -278,7 +278,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     }
 
     /**
-     * @return mixed|null
+     * @return int|null
      */
     public function get_user_owner()
     {

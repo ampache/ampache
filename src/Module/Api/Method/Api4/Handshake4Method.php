@@ -92,7 +92,7 @@ final class Handshake4Method
         } else {
             $client  = User::get_from_username($username);
         }
-        if ($client) {
+        if ($client instanceof User) {
             $user_id = $client->id;
         }
 
@@ -134,7 +134,7 @@ final class Handshake4Method
                 }
             }
 
-            if ($client) {
+            if ($client instanceof User) {
                 // Create the session
                 $data             = array();
                 $data['username'] = $client->username;

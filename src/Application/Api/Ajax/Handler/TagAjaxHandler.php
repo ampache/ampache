@@ -31,6 +31,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -157,11 +158,12 @@ final class TagAjaxHandler implements AjaxHandlerInterface
         }
 
         if (InterfaceImplementationChecker::is_library_item($object_type)) {
+            /* @var library_item $libitem */
             $class_name = ObjectTypeToClassNameMapper::map($object_type);
             $libitem    = new $class_name($object_id);
-            $owner      = $libitem->get_user_owner();
+            $owner_id   = $libitem->get_user_owner();
 
-            return ($owner !== null && $owner == $uid);
+            return ($owner_id !== null && $owner_id == $uid);
         }
 
         return false;

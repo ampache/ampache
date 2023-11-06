@@ -303,7 +303,7 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
         // try the session ID as well
-        if ($user == null) {
+        if (!$user instanceof User) {
             $user = User::get_from_username(Session::username($session_id));
         }
 

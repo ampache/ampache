@@ -381,7 +381,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     }
 
     /**
-     * @return mixed|null
+     * @return int|null
      */
     public function get_user_owner()
     {

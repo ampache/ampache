@@ -1639,7 +1639,7 @@ class Subsonic_Api
                 $update_user = User::get_from_username((string)$username);
             }
 
-            if ($update_user !== null) {
+            if ($update_user instanceof User) {
                 // Get Session key
                 $avatar = $update_user->get_avatar(true);
                 if (isset($avatar['url']) && !empty($avatar['url'])) {

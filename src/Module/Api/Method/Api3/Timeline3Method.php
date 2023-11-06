@@ -53,7 +53,7 @@ final class Timeline3Method
 
             if (!empty($username)) {
                 $user = User::get_from_username($username);
-                if ($user !== null) {
+                if ($user instanceof User) {
                     if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
                         $results = static::getUseractivityRepository()->getActivities(
                             $user->id,

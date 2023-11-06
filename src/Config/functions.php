@@ -769,9 +769,9 @@ function return_referer()
  * @param boolean $allow_add
  * @param integer $song_id
  * @param boolean $allow_none
- * @param string $user
+ * @param string $user_id
  */
-function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
+function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
 {
     static $album_id_cnt = 0;
 
@@ -784,9 +784,9 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
 
     $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix` FROM `album`";
     $params = array();
-    if ($user !== null) {
+    if ($user_id !== null) {
         $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
-        $params[] = $user;
+        $params[] = $user_id;
     }
     $sql .= "ORDER BY `album`.`name`";
     $db_results = Dba::read($sql, $params);

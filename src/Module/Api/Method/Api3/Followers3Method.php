@@ -49,7 +49,7 @@ final class Followers3Method
             $username = $input['username'];
             if (!empty($username)) {
                 $user = User::get_from_username($username);
-                if ($user !== null) {
+                if ($user instanceof User) {
                     $results = static::getUserFollowerRepository()->getFollowers($user->id);
                     ob_end_clean();
                     echo Xml3_Data::users($results);

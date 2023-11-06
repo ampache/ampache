@@ -28,6 +28,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 
 final class PrivilegeChecker implements PrivilegeCheckerInterface
 {
@@ -68,7 +69,7 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
             : Core::get_global('user');
 
         // an empty string is an empty global
-        if ($user == '' || $user == null || $user->id === 0) {
+        if (!$user instanceof User || $user == '' || $user->id === 0) {
             return false;
         }
 

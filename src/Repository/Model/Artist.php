@@ -524,12 +524,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         $sql        = "SELECT `user` FROM `artist` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($artist_id));
-        $user       = 0;
+        $user_id    = 0;
         if ($results = Dba::fetch_assoc($db_results)) {
-            $user = (int)$results['user'];
+            $user_id = (int)$results['user'];
         }
 
-        return ($user > 0);
+        return ($user_id > 0);
     }
 
     /**
@@ -748,7 +748,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Get item's owner.
-     * @return integer|null
+     * @return int|null
      */
     public function get_user_owner()
     {

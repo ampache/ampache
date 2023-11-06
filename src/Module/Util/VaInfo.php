@@ -1269,7 +1269,7 @@ final class VaInfo implements VaInfoInterface
                     // look for set ratings using email address
                     foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
                         $rating_user = User::get_from_email(array_map('trim', preg_split("/^rating:/", $user_rating))[1] ?? false);
-                        if ($rating_user !== null) {
+                        if ($rating_user instanceof User) {
                             $parsed['rating'][$rating_user->id] = floor($data[0] * 5 / 100);
                         }
                     }

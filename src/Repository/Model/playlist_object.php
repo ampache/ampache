@@ -253,7 +253,7 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return integer
+     * @return int|null
      */
     public function get_user_owner()
     {

@@ -40,7 +40,7 @@ interface library_item extends playable_item
     public function get_keywords();
 
     /**
-     * @return mixed
+     * @return int|null
      */
     public function get_user_owner();
 

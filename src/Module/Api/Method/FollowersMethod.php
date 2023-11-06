@@ -65,7 +65,7 @@ final class FollowersMethod
         unset($user);
         $username = $input['username'];
         $leadUser = User::get_from_username($username);
-        if (!$leadUser->id) {
+        if (!$leadUser) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);

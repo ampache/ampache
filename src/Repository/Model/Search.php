@@ -93,7 +93,7 @@ class Search extends playlist_object
      */
     public function __construct($search_id = 0, $object_type = 'song', ?User $user = null)
     {
-        $this->search_user = ($user !== null)
+        $this->search_user = ($user instanceof User)
             ? $user
             : Core::get_global('user');
 
