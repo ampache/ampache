@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
@@ -36,6 +37,8 @@ final class ShowEditAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'show_edit';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
@@ -43,10 +46,12 @@ final class ShowEditAction extends AbstractUserAction
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
@@ -60,7 +65,8 @@ final class ShowEditAction extends AbstractUserAction
 
         $this->ui->showHeader();
 
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $user_id = (int)$this->requestParser->getFromRequest('user_id');
+        $client  = $this->modelFactory->createUser($user_id);
         $client->format();
 
         $this->ui->show(

@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Shout;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -40,22 +41,28 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_add_shout';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ShoutRepositoryInterface $shoutRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ShoutRepositoryInterface $shoutRepository
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->shoutRepository = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $object_type = $this->requestParser->getFromRequest('type');
+        $object_id   = (int)$this->requestParser->getFromRequest('id');
         // Get our object first
-        $object = Shoutbox::get_object($_REQUEST['type'], (int) Core::get_request('id'));
+        $object = Shoutbox::get_object($object_type, $object_id);
 
         $this->ui->showHeader();
 

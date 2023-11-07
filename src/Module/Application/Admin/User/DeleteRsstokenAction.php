@@ -37,6 +37,8 @@ final class DeleteRsstokenAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'delete_rsstoken';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
@@ -44,10 +46,12 @@ final class DeleteRsstokenAction extends AbstractUserAction
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
@@ -64,7 +68,8 @@ final class DeleteRsstokenAction extends AbstractUserAction
         }
         $this->ui->showHeader();
 
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $user_id = (int)$this->requestParser->getFromRequest('user_id');
+        $client  = $this->modelFactory->createUser($user_id);
         $client->delete_rsstoken();
 
         $this->ui->showConfirmation(

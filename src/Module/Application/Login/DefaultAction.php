@@ -26,6 +26,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Util\EnvironmentInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -50,6 +51,8 @@ final class DefaultAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'default';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private AuthenticationManagerInterface $authenticationManager;
@@ -63,6 +66,7 @@ final class DefaultAction implements ApplicationActionInterface
     private EnvironmentInterface $environment;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         AuthenticationManagerInterface $authenticationManager,
         ResponseFactoryInterface $responseFactory,
@@ -70,6 +74,7 @@ final class DefaultAction implements ApplicationActionInterface
         NetworkCheckerInterface $networkChecker,
         EnvironmentInterface $environment
     ) {
+        $this->requestParser         = $requestParser;
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
         $this->responseFactory       = $responseFactory;
@@ -173,7 +178,7 @@ final class DefaultAction implements ApplicationActionInterface
                     }
                 }
             }
-        } elseif (Core::get_request('step') == '2') {
+        } elseif ($this->requestParser->getFromRequest('step') == '2') {
             $auth_mod = $_REQUEST['auth_mod'];
 
             $auth = $this->authenticationManager->postAuth($auth_mod);
