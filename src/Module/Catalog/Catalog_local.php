@@ -531,7 +531,7 @@ class Catalog_local extends Catalog
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
                     debug_event('local.catalog', 'Processing playlist: ' . $full_file, 5);
-                    $result = self::import_playlist($full_file, -1, 'public');
+                    $result = Catalog::import_playlist($full_file, -1, 'public');
                     if ($result['success']) {
                         $file = basename($full_file);
                         echo "\n$full_file\n";
