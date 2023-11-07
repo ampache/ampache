@@ -24,50 +24,42 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders the confirmation dialogue for api-key generation
+ */
 final class ShowGenerateApikeyAction extends AbstractUserAction
 {
+    use UserAdminApplicationTrait;
+
     public const REQUEST_KEY = 'show_generate_apikey';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private readonly UiInterface $ui,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
-        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
-        if ($userId < 1) {
-            echo T_('You have requested an object that does not exist');
-        } else {
-            $this->ui->showConfirmation(
-                T_('Are You Sure?'),
-                T_('This will replace your existing API key'),
-                sprintf(
-                    'admin/users.php?action=%s&user_id=%d',
-                    GenerateApikeyAction::REQUEST_KEY,
-                    $userId
-                ),
-                1,
-                'generate_apikey'
-            );
-        }
-        $this->ui->showQueryStats();
-        $this->ui->showFooter();
-
-        return null;
+        return $this->showGenericUserConfirmation(
+            $request,
+            function (int $userId): void {
+                $this->ui->showConfirmation(
+                    T_('Are You Sure?'),
+                    T_('This will replace your existing API key'),
+                    sprintf(
+                        'admin/users.php?action=%s&user_id=%d',
+                        GenerateApikeyAction::REQUEST_KEY,
+                        $userId
+                    ),
+                    1,
+                    'generate_apikey'
+                );
+            }
+        );
     }
 }
