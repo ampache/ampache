@@ -39,8 +39,6 @@ final class Playlists3Method
     /**
      * playlists
      * This returns playlists based on the specified filter
-     * @param array $input
-     * @param User $user
      */
     public static function playlists(array $input, User $user)
     {

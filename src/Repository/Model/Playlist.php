@@ -53,7 +53,7 @@ class Playlist extends playlist_object
      * Constructor
      * This takes a playlist_id as an optional argument and gathers the information
      * if not playlist_id is passed returns false (or if it isn't found
-     * @param integer $object_id
+     * @param int $object_id
      */
     public function __construct($object_id)
     {
@@ -103,12 +103,12 @@ class Playlist extends playlist_object
     /**
      * get_playlists
      * Returns a list of playlists accessible by the user.
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $playlist_name
-     * @param boolean $like
-     * @param boolean $includePublic
-     * @param boolean $includeHidden
-     * @return integer[]
+     * @param bool $like
+     * @param bool $includePublic
+     * @param bool $includeHidden
+     * @return int[]
      */
     public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true)
     {
@@ -166,8 +166,8 @@ class Playlist extends playlist_object
     /**
      * get_playlist_array
      * Returns a list of playlists accessible by the user with formatted name.
-     * @param integer $user_id
-     * @return integer[]
+     * @param int $user_id
+     * @return int[]
      */
     public static function get_playlist_array($user_id = null)
     {
@@ -204,7 +204,7 @@ class Playlist extends playlist_object
      * get_details
      * Returns a keyed array of playlist id and name accessible by the user.
      * @param string $type
-     * @param integer $user_id
+     * @param int $user_id
      * @return array
      */
     public static function get_details($type = 'playlist', $user_id = null)
@@ -227,10 +227,10 @@ class Playlist extends playlist_object
     /**
      * get_smartlists
      * Returns a list of searches accessible by the user.
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $playlist_name
-     * @param boolean $like
-     * @param boolean $includeHidden
+     * @param bool $like
+     * @param bool $includeHidden
      * @return array
      */
     public static function get_smartlists($user_id = null, $playlist_name = '', $like = true, $includeHidden = true)
@@ -286,7 +286,7 @@ class Playlist extends playlist_object
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
-     * @param boolean $details
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -475,7 +475,7 @@ class Playlist extends playlist_object
     /**
     * get_total_duration
     * Get the total duration of all songs.
-    * @return integer
+    * @return int
     */
     public function get_total_duration()
     {
@@ -500,7 +500,7 @@ class Playlist extends playlist_object
      * update
      * This function takes a key'd array of data and runs updates
      * @param array $data
-     * @return integer
+     * @return int
      */
     public function update(array $data)
     {
@@ -576,7 +576,7 @@ class Playlist extends playlist_object
      * This is the generic update function, it does the escaping and error checking
      * @param string $field
      * @param string|int $value
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     private function _update_item($field, $value)
     {
@@ -592,8 +592,8 @@ class Playlist extends playlist_object
     /**
      * update_track_number
      * This takes a playlist_data.id and a track (int) and updates the track value
-     * @param integer $track_id
-     * @param integer $index
+     * @param int $track_id
+     * @param int $index
      */
     public function update_track_number($track_id, $index)
     {
@@ -680,7 +680,7 @@ class Playlist extends playlist_object
      * This function creates an empty playlist, gives it a name and type
      * @param string $name
      * @param string $type
-     * @param integer $user_id
+     * @param int $user_id
      * @return int
      */
     public static function check($name, $type, $user_id = null)
@@ -758,7 +758,7 @@ class Playlist extends playlist_object
     /**
      * set_last
      *
-     * @param integer $count
+     * @param int $count
      * @param string $column
      */
     private function set_last($count, $column)
@@ -773,7 +773,7 @@ class Playlist extends playlist_object
      * delete_all
      *
      * this deletes all tracks from a playlist, you specify the playlist.id here
-     * @return boolean
+     * @return bool
      */
     public function delete_all()
     {
@@ -788,9 +788,9 @@ class Playlist extends playlist_object
 
     /**
      * delete_song
-     * @param integer $object_id
+     * @param int $object_id
      * this deletes a single track, you specify the playlist_data.id here
-     * @return boolean
+     * @return bool
      */
     public function delete_song($object_id)
     {
@@ -806,8 +806,8 @@ class Playlist extends playlist_object
     /**
      * delete_track
      * this deletes a single track, you specify the playlist_data.id here
-     * @param integer $object_id
-     * @return boolean
+     * @param int $object_id
+     * @return bool
      */
     public function delete_track($object_id)
     {
@@ -823,8 +823,8 @@ class Playlist extends playlist_object
     /**
      * delete_track_number
      * this deletes a single track by it's track #, you specify the playlist_data.track here
-     * @param integer $track
-     * @return boolean
+     * @param int $track
+     * @return bool
      */
     public function delete_track_number($track)
     {
@@ -840,9 +840,9 @@ class Playlist extends playlist_object
     /**
      * set_by_track_number
      * this deletes a single track by it's track #, you specify the playlist_data.track here
-     * @param integer $object_id
-     * @param integer $track
-     * @return boolean
+     * @param int $object_id
+     * @param int $track
+     * @return bool
      */
     public function set_by_track_number($object_id, $track)
     {
@@ -858,9 +858,9 @@ class Playlist extends playlist_object
     /**
      * has_item
      * look for the track id or the object id in a playlist
-     * @param integer $object
-     * @param integer $track
-     * @return boolean
+     * @param int $object
+     * @param int $track
+     * @return bool
      */
     public function has_item($object = null, $track = null)
     {
@@ -887,7 +887,6 @@ class Playlist extends playlist_object
      * has_search
      * Look for a saved smartlist with the same name as this playlist that the user can access
      * @param int $playlist_user
-     * @return int
      */
     public function has_search($playlist_user): int
     {
@@ -971,9 +970,9 @@ class Playlist extends playlist_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

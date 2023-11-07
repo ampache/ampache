@@ -24,7 +24,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
@@ -50,7 +49,7 @@ use Ampache\Module\Util\Ui;
 $current_user = Core::get_global('user');
 $last_seen    = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date  = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $allow_upload = Upload::can_upload($current_user);
 $client->format();
 Ui::show_box_top($client->get_fullname()); ?>
@@ -83,7 +82,7 @@ if (AmpConfig::get('sociable')) {
     <dd>
         <?php echo $client->get_fullname(); ?>
         <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>

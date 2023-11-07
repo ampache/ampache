@@ -24,77 +24,46 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\MockeryTestCase;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Mockery\MockInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class ShowGenerateStreamtokenActionTest extends MockeryTestCase
+class ShowGenerateStreamtokenActionTest extends TestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    use UserAdminConfirmationTestTrait;
 
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
+    private MockObject&UiInterface $ui;
 
-    private ?ShowGenerateStreamtokenAction $subject;
+    private ShowGenerateStreamtokenAction $subject;
 
     public function setUp(): void
     {
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui = $this->createMock(UiInterface::class);
 
         $this->subject = new ShowGenerateStreamtokenAction(
             $this->ui,
-            $this->configContainer
         );
     }
 
-    public function testRunRendersConfirmation(): void
+
+    public function testHandleRendersConfirmation(): void
     {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $userId = 42;
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['user_id' => (string) $userId]);
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showConfirmation')
-            ->with(
-                'Are You Sure?',
-                'This will replace your existing token. Links with the old token might not work properly',
-                sprintf(
-                    'admin/users.php?action=%s&user_id=%d',
-                    GenerateStreamtokenAction::REQUEST_KEY,
-                    $userId
-                ),
-                1,
-                'generate_streamtoken'
-            )
-        ->once();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
+        $this->createConfirmationExpectations(
+            function (int $userId): void {
+                $this->ui->expects(static::once())
+                    ->method('showConfirmation')
+                    ->with(
+                        'Are You Sure?',
+                        'This will replace your existing token. Links with the old token might not work properly',
+                        sprintf(
+                            'admin/users.php?action=%s&user_id=%d',
+                            GenerateStreamtokenAction::REQUEST_KEY,
+                            $userId
+                        ),
+                        1,
+                        'generate_streamtoken'
+                    );
+            }
         );
     }
 }

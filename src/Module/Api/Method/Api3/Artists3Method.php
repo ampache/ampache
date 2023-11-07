@@ -40,8 +40,6 @@ final class Artists3Method
      * artists
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
-     * @param array $input
-     * @param User $user
      */
     public static function artists(array $input, User $user)
     {

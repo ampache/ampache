@@ -28,11 +28,11 @@ use Ampache\Repository\Model\TVShow_Season;
     <form method="post" id="edit_tvshow_season_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Season') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Season'); ?></td>
                 <td><input type="number" name="season_number" value="<?php echo scrub_out($libitem->season_number); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('TV Show') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('TV Show'); ?></td>
                 <td><?php show_tvshow_select('tvshow', $libitem->tvshow); ?></td>
             </tr>
         </table>

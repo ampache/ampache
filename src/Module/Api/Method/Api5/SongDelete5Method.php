@@ -44,10 +44,7 @@ final class SongDelete5Method
      *
      * Delete an existing song.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of song to delete
-     * @return boolean
      */
     public static function song_delete(array $input, User $user): bool
     {

@@ -84,7 +84,7 @@ class AmpacheTvdb
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return boolean
+     * @return bool
      */
     public function load($user)
     {
@@ -204,7 +204,7 @@ class AmpacheTvdb
     /**
      * @param $type
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function gather_arts($type, $options = array(), $limit = 5)

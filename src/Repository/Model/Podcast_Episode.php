@@ -87,7 +87,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * Constructor
      *
      * Podcast Episode class
-     * @param integer $episode_id
+     * @param int $episode_id
      */
     public function __construct($episode_id = null)
     {
@@ -132,7 +132,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -142,8 +142,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * format
      * this function takes the object and formats some values
-     * @param boolean $details
-     * @return boolean
+     * @param bool $details
+     * @return bool
      */
     public function format($details = true)
     {
@@ -406,8 +406,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -431,7 +431,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * update
      * This takes a key'd array of data and updates the current podcast episode
      * @param array $data
-     * @return integer
+     * @return int
      */
     public function update(array $data)
     {
@@ -457,11 +457,11 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $agent
      * @param array $location
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function set_played($user_id, $agent, $location, $date = null)
     {
@@ -481,10 +481,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     } // set_played
 
     /**
-     * @param integer $user
+     * @param int $user
      * @param string $agent
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function check_play_history($user, $agent, $date)
     {
@@ -494,8 +494,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * update_played
      * sets the played flag
-     * @param boolean $new_played
-     * @param integer $id
+     * @param bool $new_played
+     * @param int $id
      */
     public static function update_played($new_played, $id)
     {
@@ -506,7 +506,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * update_file
      * sets the file path
      * @param string $path
-     * @param integer $id
+     * @param int $id
      */
     public static function update_file($path, $id)
     {
@@ -522,7 +522,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param string $field
      * @param string|int $value
      * @param int $episode_id
-     * @return boolean
+     * @return bool
      */
     private static function _update_item($field, $value, $episode_id)
     {
@@ -570,7 +570,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * else, this is the true function
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
+     * @param bool $local
      * @param int|string $uid
      * @return string
      */
@@ -641,7 +641,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * change_state
      * @param string $state
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public function change_state($state)
     {

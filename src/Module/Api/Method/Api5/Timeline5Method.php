@@ -45,12 +45,9 @@ final class Timeline5Method
      *
      * This gets a user timeline from their username
      *
-     * @param array $input
-     * @param User $user
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
-     * @return boolean
      */
     public static function timeline(array $input, User $user): bool
     {

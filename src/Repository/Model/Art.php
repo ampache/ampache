@@ -60,7 +60,7 @@ class Art extends database_object
     );
 
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -68,7 +68,7 @@ class Art extends database_object
      */
     public $type;
     /**
-     * @var integer $uid
+     * @var int $uid
      */
     public $uid; // UID of the object not ID because it's not the ART.ID
     /**
@@ -97,7 +97,7 @@ class Art extends database_object
      * Constructor
      * Art constructor, takes the UID of the object and the
      * object type.
-     * @param integer $uid
+     * @param int $uid
      * @param string $type
      * @param string $kind
      */
@@ -117,7 +117,7 @@ class Art extends database_object
 
     /**
      * @param string $type
-     * @return boolean
+     * @return bool
      */
     public static function is_valid_type($type)
     {
@@ -133,9 +133,9 @@ class Art extends database_object
      * This attempts to reduce # of queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
-     * @param integer[] $object_ids
+     * @param int[] $object_ids
      * @param string $type
-     * @return boolean
+     * @return bool
      */
     public static function build_cache($object_ids, $type = null)
     {
@@ -181,7 +181,7 @@ class Art extends database_object
      * test_image
      * Runs some sanity checks on the putative image
      * @param string $source
-     * @return boolean
+     * @return bool
      * @throws RuntimeException
      */
     public static function test_image($source)
@@ -230,8 +230,8 @@ class Art extends database_object
      * look in the database and will return the thumb if it
      * exists, if it doesn't depending on settings it will try
      * to create it.
-     * @param boolean $raw
-     * @param boolean $fallback
+     * @param bool $raw
+     * @param bool $fallback
      * @return string
      */
     public function get($raw = false, $fallback = false)
@@ -253,7 +253,7 @@ class Art extends database_object
      * This pulls the information out from the database, depending
      * on if we want to resize and if there is not a thumbnail go
      * ahead and try to resize
-     * @return boolean
+     * @return bool
      */
     public function has_db_info($fallback = false)
     {
@@ -314,10 +314,10 @@ class Art extends database_object
 
     /**
      * This check if an object has an associated image in db.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
      * @param string $kind
-     * @return boolean
+     * @return bool
      */
     public static function has_db($object_id, $object_type, $kind = 'default')
     {
@@ -350,7 +350,7 @@ class Art extends database_object
      * the database. You must also pass the mime type.
      * @param string $source
      * @param string $mime
-     * @return boolean
+     * @return bool
      */
     public function insert($source, $mime = '')
     {
@@ -525,7 +525,7 @@ class Art extends database_object
     /**
      * check_dimensions
      * @param array $dimensions
-     * @return boolean
+     * @return bool
      */
     public static function check_dimensions($dimensions)
     {
@@ -580,7 +580,7 @@ class Art extends database_object
      * @param string $type
      * @param string $uid
      * @param string $kind
-     * @param boolean $autocreate
+     * @param bool $autocreate
      * @return false|string
      */
     public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
@@ -625,10 +625,10 @@ class Art extends database_object
      * @param string $source
      * @param string $sizetext
      * @param string $type
-     * @param integer $uid
+     * @param int $uid
      * @param $kind
      * @param $mime
-     * @return boolean
+     * @return bool
      */
     private static function write_to_dir($source, $sizetext, $type, $uid, $kind, $mime)
     {
@@ -678,7 +678,7 @@ class Art extends database_object
      * read_from_dir
      * @param $sizetext
      * @param string $type
-     * @param integer $uid
+     * @param int $uid
      * @param string $kind
      * @param $mime
      * @return string|null
@@ -763,7 +763,7 @@ class Art extends database_object
      * @param string $source
      * @param string $mime
      * @param array $size
-     * @return boolean
+     * @return bool
      */
     public function save_thumb($source, $mime, $size)
     {
@@ -1056,10 +1056,10 @@ class Art extends database_object
     /**
      * url
      * This returns the constructed URL for the art in question
-     * @param integer $uid
+     * @param int $uid
      * @param string $type
      * @param string $sid
-     * @param integer|null $thumb
+     * @param int|null $thumb
      * @return string
      */
     public static function url($uid, $type, $sid = null, $thumb = null)
@@ -1135,7 +1135,7 @@ class Art extends database_object
      * garbage_collection
      * This cleans up art that no longer has a corresponding object
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -1187,9 +1187,9 @@ class Art extends database_object
     /**
      * Migrate an object associate images to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
@@ -1201,10 +1201,10 @@ class Art extends database_object
     /**
      * Duplicate an object associate images to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
+     * @param int $old_object_id
+     * @param int $new_object_id
      * @param string $new_object_type
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id, $new_object_type = null)
     {
@@ -1303,7 +1303,7 @@ class Art extends database_object
 
     /**
      * Get thumb size from thumb type.
-     * @param integer $thumb
+     * @param int $thumb
      * @return array
      */
     public static function get_thumb_size($thumb)
@@ -1407,13 +1407,13 @@ class Art extends database_object
     /**
      * Display an item art.
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $name
-     * @param integer $thumb
+     * @param int $thumb
      * @param string $link
-     * @param boolean $show_default
+     * @param bool $show_default
      * @param string $kind
-     * @return boolean
+     * @return bool
      */
     public static function display(
         $object_type,
@@ -1479,7 +1479,7 @@ class Art extends database_object
         }
 
         if ($prettyPhoto) {
-            /* @var library_item $libitem */
+            /** @var library_item $libitem */
             $class_name  = ObjectTypeToClassNameMapper::map($object_type);
             $libitem     = new $class_name($object_id);
             echo "<div class=\"item_art_actions\">";
@@ -1504,11 +1504,11 @@ class Art extends database_object
      * Display an item art, bypassing the return value.
      * @deprecated Temporary as legacy Art::display outputs boolean when used with return
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $name
-     * @param integer $thumb
+     * @param int $thumb
      * @param string $link
-     * @param boolean $show_default
+     * @param bool $show_default
      * @param string $kind
      * @return string
      */
@@ -1553,7 +1553,7 @@ class Art extends database_object
 
     /**
      * Get the object details for the art table
-     * @param  array $data
+     * @param array $data
      * @return string
      */
     public static function get_raw_image($data)

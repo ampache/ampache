@@ -47,10 +47,7 @@ final class FollowersMethod
      * This gets followers of the user
      * Error when user not found or no followers
      *
-     * @param array $input
-     * @param User $user
      * username = (string) $username
-     * @return boolean
      */
     public static function followers(array $input, User $user): bool
     {

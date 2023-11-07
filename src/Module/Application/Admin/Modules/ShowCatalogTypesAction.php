@@ -29,7 +29,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -54,11 +53,14 @@ final class ShowCatalogTypesAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $catalogs = Catalog::get_catalog_types();
+        $catalog_types = Catalog::get_catalog_types();
 
         $this->ui->showBoxTop(T_('Catalog Types'), 'box box_catalog_types');
 
-        require_once Ui::find_template('show_catalog_types.inc.php');
+        $this->ui->show(
+            'show_catalog_types.inc.php',
+            ['catalog_types' => $catalog_types]
+        );
 
         $this->ui->showBoxBottom();
 

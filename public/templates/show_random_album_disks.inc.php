@@ -31,7 +31,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var int[] $albumDisks */
 
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $button   = Ajax::button('?page=index&action=random_albums', 'random', T_('Refresh'), 'random_refresh'); ?>
 <?php Ui::show_box_top(T_('Albums of the Moment') . ' ' . $button, 'box box_random_albums'); ?>
 <?php
@@ -41,7 +41,7 @@ if (!empty($albumDisks)) {
         $albumDisk->format();
         $show_play = true; ?>
     <div class="random_album">
-        <div id="album_<?php echo $album_disk_id ?>" class="art_album libitem_menu">
+        <div id="album_<?php echo $album_disk_id; ?>" class="art_album libitem_menu">
             <?php $thumb = 1;
         if (!Ui::is_grid_view('album')) {
             $thumb     = 11;

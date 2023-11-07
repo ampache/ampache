@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\SmartPlaylist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,13 +49,20 @@ final class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist = $this->modelFactory->createSearch((int)($request->getParsedBody()['playlist_id'] ?? 0));
+        $playlist = $this->modelFactory->createSearch(
+            (int)($request->getQueryParams()['playlist_id'] ?? 0)
+        );
+
+        $playlist->format();
 
         $this->ui->showHeader();
-
-        $object_ids = $playlist->get_items();
-        require_once  Ui::find_template('show_search.inc.php');
-
+        $this->ui->show(
+            'show_search.inc.php',
+            [
+                'playlist' => $playlist,
+                'object_ids' => $playlist->get_items()
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

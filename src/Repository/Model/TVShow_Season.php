@@ -130,8 +130,8 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     /**
      * format
      * this function takes the object and formats some values
-     * @param boolean $details
-     * @return boolean
+     * @param bool $details
+     * @return bool
      */
     public function format($details = true)
     {
@@ -270,7 +270,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -306,8 +306,8 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -333,7 +333,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      * Checks for an existing tv show season; if none exists, insert one.
      * @param $tvshow
      * @param $season_number
-     * @param boolean $readonly
+     * @param bool $readonly
      * @return string|null
      */
     public static function check($tvshow, $season_number, $readonly = false)
@@ -432,7 +432,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     /**
      * @param $tvshow_id
      * @param $season_id
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function update_tvshow($tvshow_id, $season_id)
     {

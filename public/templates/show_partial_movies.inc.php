@@ -22,5 +22,5 @@
 
 use Ampache\Module\Api\Ajax;
 
-?>
+/** @var Ampache\Repository\Model\Browse $browse */ ?>
 <th class="cel_year optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=movie&sort=year', T_('Year'), 'sort_video_year'); ?></th>

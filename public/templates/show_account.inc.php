@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\User $client */
 
-$web_path       = AmpConfig::get('web_path');
+$web_path       = (string)AmpConfig::get('web_path', '');
 $display_fields = (array) AmpConfig::get('registration_display_fields');
 $access100      = Access::check('interface', 100); ?>
 <?php echo AmpError::display('general'); ?>

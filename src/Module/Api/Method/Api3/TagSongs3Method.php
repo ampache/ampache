@@ -39,8 +39,6 @@ final class TagSongs3Method
     /**
      * tag_songs
      * returns the songs for this tag
-     * @param array $input
-     * @param User $user
      */
     public static function tag_songs(array $input, User $user)
     {

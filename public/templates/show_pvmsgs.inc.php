@@ -25,6 +25,9 @@ use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
 $thcount = 5; ?>
 <script>
     function getSelectionArray()
@@ -47,7 +50,7 @@ $thcount = 5; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="label">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="label">
     <thead>
         <tr class="th-top">
             <th class="cel_select essential persist"></th>
@@ -63,7 +66,7 @@ $thcount = 5; ?>
         /* Foreach through every label that has been passed to us */
         foreach ($object_ids as $pvmg_id) {
             $libitem = new PrivateMsg($pvmg_id); ?>
-        <tr id="label_<?php echo $libitem->getId(); ?>" class="<?php echo (!$libitem->isRead()) ? "unread" : "" ?>">
+        <tr id="label_<?php echo $libitem->getId(); ?>" class="<?php echo (!$libitem->isRead()) ? "unread" : ""; ?>">
             <?php require Ui::find_template('show_pvmsg_row.inc.php'); ?>
         </tr>
         <?php

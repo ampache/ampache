@@ -50,11 +50,11 @@ $cel_counter = "cel_counter"; ?>
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <th class="<?php echo $cel_artist; ?>"><?php echo T_('Artist'); ?></th>
             <th class="cel_add"></th>
-            <th class="cel_songs"><?php echo T_('Songs');  ?></th>
+            <th class="cel_songs"><?php echo T_('Songs'); ?></th>
             <th class="cel_albums"><?php echo T_('Albums'); ?></th>
             <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played') ?></th>
+                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played'); ?></th>
                 <?php } ?>
             <?php if (!$hide_genres) {
                 ++$thcount; ?>
@@ -96,7 +96,7 @@ foreach ($object_ids as $artist_id) {
         </tr>
         <?php
 } ?>
-        <?php $web_path = AmpConfig::get('web_path');
+        <?php $web_path = (string)AmpConfig::get('web_path', '');
 /* Foreach through every missing artist that has been passed to us */
 foreach ($missing_objects as $missing) { ?>
         <tr id="missing_artist_<?php echo $missing['mbid']; ?>">
@@ -116,7 +116,7 @@ foreach ($missing_objects as $missing) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="<?php echo $cel_artist; ?>"><?php echo T_('Artist'); ?></th>
             <th class="cel_add"></th>
-            <th class="cel_songs"> <?php echo T_('Songs');  ?> </th>
+            <th class="cel_songs"> <?php echo T_('Songs'); ?> </th>
             <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
             <th class="<?php echo $cel_time; ?>"> <?php echo T_('Time'); ?> </th>
             <?php if (!$hide_genres) { ?>

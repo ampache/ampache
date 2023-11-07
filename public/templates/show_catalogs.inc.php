@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="catalog">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="catalog">
     <thead>
         <tr class="th-top">
             <th class="cel_catalog essential persist"><?php echo T_('Name'); ?></th>

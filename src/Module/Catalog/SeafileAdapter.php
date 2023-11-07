@@ -95,7 +95,7 @@ class SeafileAdapter
     // do we have all the info we need?
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function ready()
     {
@@ -105,7 +105,7 @@ class SeafileAdapter
     // create API client object & find library
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function prepare()
     {
@@ -251,7 +251,7 @@ class SeafileAdapter
      * Returns number added, or -1 on failure
      * @param $func
      * @param string $path
-     * @return integer
+     * @return int
      */
     public function for_all_files($func, $path = '/')
     {
@@ -300,7 +300,7 @@ class SeafileAdapter
 
     /**
      * @param $file
-     * @param boolean $partial
+     * @param bool $partial
      * @return string
      */
     public function download($file, $partial = false)

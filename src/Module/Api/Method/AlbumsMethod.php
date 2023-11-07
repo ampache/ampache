@@ -62,8 +62,6 @@ final class AlbumsMethod implements MethodInterface
      * @param GatekeeperInterface $gatekeeper
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
-     * @param array $input
-     * @param User $user
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = Api::set_filter(date) //optional
@@ -72,8 +70,6 @@ final class AlbumsMethod implements MethodInterface
      * limit   = (integer) //optional
      * include = (array|string) 'songs' //optional
      * @return ResponseInterface
-     *
-     * @throws ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,

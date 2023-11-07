@@ -45,10 +45,7 @@ final class LiveStream5Method
      *
      * This returns a single live_stream based on UID
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of live_stream
-     * @return boolean
      */
     public static function live_stream(array $input, User $user): bool
     {

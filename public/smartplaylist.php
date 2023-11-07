@@ -29,7 +29,6 @@ use Ampache\Module\Application\SmartPlaylist\CreatePlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\DeletePlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\RefreshPlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\ShowAction;
-use Ampache\Module\Application\SmartPlaylist\ShowPlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\UpdatePlaylistAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
@@ -43,7 +42,6 @@ $dic->get(ApplicationRunner::class)->run(
         ShowAction::REQUEST_KEY => ShowAction::class,
         RefreshPlaylistAction::REQUEST_KEY => RefreshPlaylistAction::class,
         UpdatePlaylistAction::REQUEST_KEY => UpdatePlaylistAction::class,
-        ShowPlaylistAction::REQUEST_KEY => ShowPlaylistAction::class,
         SaveAsPlaylistAction::REQUEST_KEY => SaveAsPlaylistAction::class,
         DeletePlaylistAction::REQUEST_KEY => DeletePlaylistAction::class,
         CreatePlaylistAction::REQUEST_KEY => CreatePlaylistAction::class,

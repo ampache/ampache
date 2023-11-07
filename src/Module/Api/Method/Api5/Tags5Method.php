@@ -40,9 +40,6 @@ final class Tags5Method
      * MINIMUM_API_VERSION=380001
      *
      * This returns the genres (Tags) based on the specified filter
-     *
-     * @param array $input
-     * @param User $user
      */
     public static function tags(array $input, User $user)
     {

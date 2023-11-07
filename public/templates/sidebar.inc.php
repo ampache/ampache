@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 /** require@ src/Application/Api/Ajax/Handler/IndexAjaxHandler.php */
 /** require@ src/Application/Api/Ajax/Handler/LocalPlayAjaxHandler.php */
 
-$web_path         = AmpConfig::get('web_path');
+$web_path         = (string)AmpConfig::get('web_path', '');
 $is_session       = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
@@ -145,7 +145,7 @@ $(function() {
             if ($header.children(".header-img").hasClass("collapsed")) {
                 sbstate = "collapsed";
             }
-            Cookies.set('sb_' + $header.children(".header-img").attr('id'), sbstate, {<?php echo $cookie_string ?>});
+            Cookies.set('sb_' + $header.children(".header-img").attr('id'), sbstate, {<?php echo $cookie_string; ?>});
         });
     });
 });

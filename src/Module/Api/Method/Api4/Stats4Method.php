@@ -53,15 +53,12 @@ final class Stats4Method
      * This method has partial backwards compatibility with older api versions
      * but should be updated to follow the current input values
      *
-     * @param array $input
-     * @param User $user
      * type     = (string)  'song'|'album'|'artist'
      * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
      * user_id  = (integer) //optional
      * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) //optional
-     * @return boolean
      */
     public static function stats(array $input, User $user): bool
     {

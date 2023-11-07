@@ -41,7 +41,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     protected const DB_TABLENAME = 'video';
 
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -49,11 +49,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $title;
     /**
-     * @var boolean $played
+     * @var bool $played
      */
     public $played;
     /**
-     * @var boolean $enabled
+     * @var bool $enabled
      */
     public $enabled;
     /**
@@ -61,7 +61,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $file;
     /**
-     * @var integer $size
+     * @var int $size
      */
     public $size;
     /**
@@ -73,15 +73,15 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $audio_codec;
     /**
-     * @var integer $resolution_x
+     * @var int $resolution_x
      */
     public $resolution_x;
     /**
-     * @var integer $resolution_y
+     * @var int $resolution_y
      */
     public $resolution_y;
     /**
-     * @var integer $time
+     * @var int $time
      */
     public $time;
     /**
@@ -89,15 +89,15 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $mime;
     /**
-     * @var integer $release_date
+     * @var int $release_date
      */
     public $release_date;
     /**
-     * @var integer $catalog
+     * @var int $catalog
      */
     public $catalog;
     /**
-     * @var integer $bitrate
+     * @var int $bitrate
      */
     public $bitrate;
     /**
@@ -105,15 +105,15 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $mode;
     /**
-     * @var integer $channels
+     * @var int $channels
      */
     public $channels;
     /**
-     * @var integer $display_x
+     * @var int $display_x
      */
     public $display_x;
     /**
-     * @var integer $display_x
+     * @var int $display_x
      */
     public $display_y;
     /**
@@ -121,7 +121,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $frame_rate;
     /**
-     * @var integer $video_bitrate
+     * @var int $video_bitrate
      */
     public $video_bitrate;
 
@@ -134,7 +134,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $tags;
     /**
-     * @var integer $total_count
+     * @var int $total_count
      */
     public $total_count;
     /**
@@ -146,11 +146,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $has_art;
     /**
-     * @var integer $f_release_date
+     * @var int $f_release_date
      */
     public $update_time;
     /**
-     * @var integer $f_release_date
+     * @var int $f_release_date
      */
     public $addition_time;
     /**
@@ -230,7 +230,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * Constructor
      * This pulls the information from the database and returns
      * a constructed object
-     * @param integer|null $video_id
+     * @param int|null $video_id
      */
     public function __construct($video_id = null)
     {
@@ -260,7 +260,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * Create a video strongly typed object from its id.
-     * @param integer $video_id
+     * @param int $video_id
      * @return Video
      */
     public static function create_from_id($video_id)
@@ -282,8 +282,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
-     * @param integer[] $ids
-     * @return boolean
+     * @param int[] $ids
+     * @return bool
      */
     public static function build_cache($ids)
     {
@@ -305,7 +305,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * format
      * This formats a video object so that it is human readable
-     * @param boolean $details
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -502,7 +502,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -537,8 +537,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -586,7 +586,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * like a hack, might need to adjust it in the future
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
+     * @param bool $local
      * @param int|string $uid
      * @param string $streamToken
      * @return string
@@ -689,7 +689,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return integer
+     * @return int
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
@@ -744,7 +744,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return integer
+     * @return int
      */
     private static function insert_video_type(array $data, $gtypes, $options = array())
     {
@@ -769,7 +769,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * update
      * This takes a key'd array of data as input and updates a video entry
      * @param array $data
-     * @return integer
+     * @return int
      */
     public function update(array $data)
     {
@@ -799,7 +799,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     } // update
 
     /**
-     * @param integer $video_id
+     * @param int $video_id
      * @param Video $new_video
      */
     public static function update_video($video_id, Video $new_video)
@@ -815,7 +815,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * update_video_counts
      *
-     * @param integer $video_id
+     * @param int $video_id
      */
     public static function update_video_counts($video_id)
     {
@@ -846,8 +846,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * generate_preview
      * Generate video preview image from a video file
-     * @param integer $video_id
-     * @param boolean $overwrite
+     * @param int $video_id
+     * @param bool $overwrite
      */
     public static function generate_preview($video_id, $overwrite = false)
     {
@@ -863,11 +863,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $agent
      * @param array $location
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function set_played($user_id, $agent, $location, $date = null)
     {
@@ -888,10 +888,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
     } // set_played
 
     /**
-     * @param integer $user
+     * @param int $user
      * @param string $agent
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function check_play_history($user, $agent, $date)
     {
@@ -1183,8 +1183,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * update_utime
      * sets a new update time
-     * @param integer $video_id
-     * @param integer $time
+     * @param int $video_id
+     * @param int $time
      */
     public static function update_utime($video_id, $time = 0)
     {
@@ -1198,8 +1198,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * update_played
      * sets the played flag
-     * @param boolean $new_played
-     * @param integer $song_id
+     * @param bool $new_played
+     * @param int $song_id
      */
     public static function update_played($new_played, $song_id)
     {
@@ -1216,7 +1216,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param string|int $value
      * @param int $video_id
      * @param int $level
-     * @return boolean
+     * @return bool
      */
     private static function _update_item($field, $value, $video_id, $level)
     {

@@ -41,8 +41,6 @@ final class Catalogs4Method
      *
      * Get information about catalogs this user is allowed to manage.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) set $filter_type //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional

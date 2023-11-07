@@ -32,7 +32,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -76,7 +75,7 @@ final class AddLabelAction implements ApplicationActionInterface
 
         $label_id = Label::create($_POST);
         if (!$label_id) {
-            require_once Ui::find_template('show_add_label.inc.php');
+            $this->ui->show('show_add_label.inc.php');
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),

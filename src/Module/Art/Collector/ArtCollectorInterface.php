@@ -30,7 +30,7 @@ interface ArtCollectorInterface
      * This tries to get the art in question
      * @param Art $art
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function collect(Art $art, array $options = [], int $limit = 0): array;

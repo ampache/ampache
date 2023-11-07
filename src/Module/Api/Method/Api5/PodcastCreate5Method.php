@@ -46,11 +46,8 @@ final class PodcastCreate5Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * @param array $input
-     * @param User $user
      * url     = (string) rss url for podcast
      * catalog = (string) podcast catalog
-     * @return boolean
      */
     public static function podcast_create(array $input, User $user): bool
     {

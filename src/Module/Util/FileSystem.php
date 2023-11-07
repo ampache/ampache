@@ -94,7 +94,7 @@ class FileSystem
 
     /**
      * @param $fs_id
-     * @param boolean $with_root
+     * @param bool $with_root
      * @return array
      * @throws Exception
      */
@@ -198,7 +198,7 @@ class FileSystem
     /**
      * @param $fs_id
      * @param string $name
-     * @param boolean $mkdir
+     * @param bool $mkdir
      * @return array
      * @throws Exception
      */

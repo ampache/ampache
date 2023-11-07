@@ -49,7 +49,7 @@ class UPnPDevice
     /**
      * Reads description URL from session
      * @param $descriptionUrl
-     * @return boolean
+     * @return bool
      */
     private function restoreDescriptionUrl($descriptionUrl)
     {
@@ -167,7 +167,7 @@ class UPnPDevice
      * helper function for calls that require only an instance id
      * @param $command
      * @param string $type
-     * @param integer $instance_id
+     * @param int $instance_id
      * @return string
      */
     public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0)

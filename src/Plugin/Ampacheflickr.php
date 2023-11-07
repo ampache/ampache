@@ -116,7 +116,7 @@ class Ampacheflickr
     /**
      * @param $type
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function gather_arts($type, $options = array(), $limit = 5)
@@ -151,7 +151,7 @@ class Ampacheflickr
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return boolean
+     * @return bool
      */
     public function load($user)
     {

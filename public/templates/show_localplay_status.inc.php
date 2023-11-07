@@ -22,16 +22,22 @@
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
+/** @var Localplay $localplay */
+/** @var array $objects */
+
+Ajax::start_container('localplay_status');
+Ui::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status');
 $status = $localplay->status();
-?>
-<?php Ajax::start_container('localplay_status'); ?>
-<?php Ui::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status'); ?>
-<?php if ($status) {
-    $now_playing = ($status) ? $status['track_title'] : '';
+if (!empty($status)) {
+    $now_playing = $status['track_title'] ?? '';
     if (!empty($status['track_album'])) {
-        $now_playing .= ' - ' . $status['track_album'] . ' - ' . $status['track_artist'];
+        $now_playing .= ' - ' . $status['track_album'];
+    }
+    if (!empty($status['track_artist'])) {
+        $now_playing .= ' - ' . $status['track_artist'];
     } ?>
 <?php echo T_('Now Playing'); ?>:&nbsp;<i><?php echo $now_playing; ?></i>
 <div id="information_actions">
@@ -54,12 +60,11 @@ $status = $localplay->status();
         </li>
     </ul>
 </div>
-<?php
-} ?>
-<?php $browse = new Browse();
+<?php }
+$browse = new Browse();
 $browse->set_type('playlist_localplay');
 $browse->set_static_content(true);
 $browse->show_objects($objects);
-$browse->store(); ?>
-<?php Ui::show_box_bottom(); ?>
-<?php Ajax::end_container(); ?>
+$browse->store();
+Ui::show_box_bottom();
+Ajax::end_container(); ?>

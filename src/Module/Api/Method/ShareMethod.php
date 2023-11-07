@@ -45,10 +45,7 @@ final class ShareMethod
      *
      * Get the share from it's id.
      *
-     * @param array $input
-     * @param User $user
      * filter = (integer) Share ID number
-     * @return boolean
      */
     public static function share(array $input, User $user): bool
     {

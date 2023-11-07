@@ -26,10 +26,10 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var bool $has_failed */
 /** @var string $message */
 /** @var Ampache\Repository\Model\Song|Ampache\Repository\Model\Album|Ampache\Repository\Model\AlbumDisk|Ampache\Repository\Model\Playlist|Ampache\Repository\Model\Video $object */
 
-$has_failed     = $message ?? false;
 $allow_stream   = $_REQUEST['allow_stream'] ?? false;
 $allow_download = $_REQUEST['allow_download'] ?? false;
 
@@ -40,7 +40,7 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Share'); ?></td>
-    <td><?php echo $object->get_f_link() ?? '' ?></td>
+    <td><?php echo $object->get_f_link() ?? ''; ?></td>
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>
@@ -68,7 +68,7 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
     <td><input type="checkbox" name="allow_download" value="1" <?php echo ($allow_stream || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
 <?php } ?>
-<?php if ($has_failed) { ?>
+<?php if ($has_failed !== false) { ?>
 <tr>
     <td>&nbsp;</td>
     <td><p class="alert alert-danger"><?php echo $message; ?></p></td>

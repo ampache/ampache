@@ -29,7 +29,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -68,7 +67,14 @@ final class ShowAction implements ApplicationActionInterface
             $podcast->format();
             $object_ids  = $podcast->get_episodes();
             $object_type = 'podcast_episode';
-            require_once Ui::find_template('show_podcast.inc.php');
+            $this->ui->show(
+                'show_podcast.inc.php',
+                [
+                    'podcast' => $podcast,
+                    'object_ids' => $object_ids,
+                    'object_type' => $object_type
+                ]
+            );
         }
 
         $this->ui->showQueryStats();

@@ -42,11 +42,8 @@ final class UpdateFromTags4Method
      *
      * updates a single album, artist, song from the tag data
      *
-     * @param array $input
-     * @param User $user
      * type = (string) 'artist'|'album'|'song'
      * id   = (integer) $artist_id, $album_id, $song_id
-     * @return boolean
      */
     public static function update_from_tags(array $input, User $user): bool
     {

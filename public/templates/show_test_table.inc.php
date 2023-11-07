@@ -29,12 +29,11 @@ use Ampache\Module\Util\Ui;
  * debug_wresult
  *
  * Convenience function to format the output.
- * @param boolean $status
+ @param bool $status
  * @param string $value
  * @param string $comment
- * @return string
  */
-function debug_wresult($status = false, $value = null, $comment = '')
+function debug_wresult($status = false, $value = null, $comment = ''): string
 {
     $class = $status ? 'success' : 'warning';
 

@@ -22,7 +22,7 @@
 
 use Ampache\Module\Api\Ajax;
 
-?>
+/** @var Ampache\Repository\Model\Browse $browse */ ?>
 <th class="cel_episode optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow_episode&sort=episode', T_('Episode'), 'sort_video_episode'); ?></th>
 <th class="cel_season optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow_episode&sort=season', T_('Season'), 'sort_video_season'); ?></th>
 <th class="cel_tvshow optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow_episode&sort=tvshow', T_('TV Show'), 'sort_video_tvshow'); ?></th>

@@ -236,9 +236,9 @@ class Preference extends database_object
     /**
      * get_by_user
      * Return a preference for specific user identifier
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $pref_name
-     * @return integer|string
+     * @return int|string
      */
     public static function get_by_user($user_id, $pref_name)
     {
@@ -268,11 +268,11 @@ class Preference extends database_object
      * update
      * This updates a single preference from the given name or id
      * @param string $preference
-     * @param integer $user_id
+     * @param int $user_id
      * @param array|string $value
-     * @param boolean $applytoall
-     * @param boolean $applytodefault
-     * @return boolean
+     * @param bool $applytoall
+     * @param bool $applytodefault
+     * @return bool
      */
     public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false)
     {
@@ -322,7 +322,7 @@ class Preference extends database_object
      * This takes a preference ID and updates the level required to update it (performed by an admin)
      * @param $preference
      * @param $level
-     * @return boolean
+     * @return bool
      */
     public static function update_level($preference, $level)
     {
@@ -345,9 +345,9 @@ class Preference extends database_object
     /**
      * update_all
      * This takes a preference id and a value and updates all users with the new info
-     * @param integer $preference_id
+     * @param int $preference_id
      * @param string $value
-     * @return boolean
+     * @return bool
      */
     public static function update_all($preference_id, $value)
     {
@@ -369,7 +369,7 @@ class Preference extends database_object
      * exists
      * This just checks to see if a preference currently exists
      * @param string $preference
-     * @return integer
+     * @return int
      */
     public static function exists($preference)
     {
@@ -386,7 +386,7 @@ class Preference extends database_object
      * This checks to see if the current user has access to modify this preference
      * as defined by the preference name
      * @param $preference
-     * @return boolean
+     * @return bool
      */
     public static function has_access($preference)
     {
@@ -476,7 +476,7 @@ class Preference extends database_object
     /**
      * get_all
      * This returns a nice flat array of all of the possible preferences for the specified user
-     * @param integer $user_id
+     * @param int $user_id
      * @return array
      */
     public static function get_all($user_id)
@@ -509,7 +509,7 @@ class Preference extends database_object
      * get
      * This returns a nice flat array of all of the possible preferences for the specified user
      * @param string $pref_name
-     * @param integer $user_id
+     * @param int $user_id
      * @return array
      */
     public static function get($pref_name, $user_id)
@@ -544,12 +544,12 @@ class Preference extends database_object
      * it does NOT sync up the users, that should be done independently
      * @param string $name
      * @param string $description
-     * @param string|integer $default
-     * @param integer $level
+     * @param string|int $default
+     * @param int $level
      * @param string $type
      * @param string $category
      * @param string $subcategory
-     * @return boolean
+     * @return bool
      */
     public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null)
     {
@@ -584,7 +584,7 @@ class Preference extends database_object
     /**
      * delete
      * This deletes the specified preference, a name or a ID can be passed
-     * @param string|integer $preference
+     * @param string|int $preference
      */
     public static function delete($preference)
     {
@@ -988,8 +988,8 @@ class Preference extends database_object
     /**
      * load_from_session
      * This loads the preferences from the session rather then creating a connection to the database
-     * @param integer $uid
-     * @return boolean
+     * @param int $uid
+     * @return bool
      */
     public static function load_from_session($uid = -1)
     {
@@ -1023,7 +1023,7 @@ class Preference extends database_object
      * This is currently only used by the debug view, could be used other places.. wouldn't be a half
      * bad idea
      * @param $key
-     * @return boolean
+     * @return bool
      */
     public static function is_boolean($key)
     {
@@ -1223,7 +1223,7 @@ class Preference extends database_object
      * init
      * This grabs the preferences and then loads them into conf it should be run on page load
      * to initialize the needed variables
-     * @return boolean
+     * @return bool
      */
     public static function init()
     {

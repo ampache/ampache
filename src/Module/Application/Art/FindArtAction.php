@@ -30,7 +30,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -154,10 +153,26 @@ final class FindArtAction extends AbstractArtAction
             } // end foreach
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
-            require_once Ui::find_template('show_arts.inc.php');
+            $this->ui->show(
+                'show_arts.inc.php',
+                [
+                    'images' => $images,
+                    'object_type' => $object_type,
+                    'object_id' => $object_id,
+                    'burl' => $burl
+                ]
+            );
         }
 
-        require_once Ui::find_template('show_get_art.inc.php');
+        $this->ui->show(
+            'show_get_art.inc.php',
+            [
+                'item' => $item,
+                'object_type' => $object_type,
+                'object_id' => $object_id,
+                'burl' => $burl
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

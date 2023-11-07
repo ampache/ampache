@@ -167,7 +167,7 @@ class AmpacheRss
      * get_display
      * This dumps out some html and an icon for the type of rss that we specify
      * @param string $type
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $title
      * @param array|null $params
      * @return string
@@ -418,7 +418,7 @@ class AmpacheRss
     /**
      * pubdate_recently_played
      * This just returns the 'newest' Recently Played entry
-     * @return integer
+     * @return int
      */
     public static function pubdate_recently_played()
     {

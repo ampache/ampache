@@ -42,7 +42,7 @@ class Wanted extends database_object
     /* Variables from DB */
 
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -50,7 +50,7 @@ class Wanted extends database_object
      */
     public $mbid;
     /**
-     * @var integer $artist
+     * @var int $artist
      */
     public $artist;
     /**
@@ -66,7 +66,7 @@ class Wanted extends database_object
      */
     public $year;
     /**
-     * @var boolean $accepted
+     * @var bool $accepted
      */
     public $accepted;
     /**
@@ -74,7 +74,7 @@ class Wanted extends database_object
      */
     public $release_mbid;
     /**
-     * @var integer $user
+     * @var int $user
      */
     public $user;
 
@@ -102,7 +102,7 @@ class Wanted extends database_object
 
     /**
      * Constructor
-     * @param integer $wanted_id
+     * @param int $wanted_id
      */
     public function __construct($wanted_id)
     {
@@ -248,7 +248,7 @@ class Wanted extends database_object
     /**
      * Get wanted release by mbid.
      * @param string $mbid
-     * @return integer
+     * @return int
      */
     public static function get_wanted($mbid)
     {
@@ -264,7 +264,7 @@ class Wanted extends database_object
     /**
      * Get wanted release by name.
      * @param string $name
-     * @return integer
+     * @return int
      */
     public static function get_wanted_by_name($name)
     {
@@ -322,10 +322,10 @@ class Wanted extends database_object
     /**
      * Add a new wanted release.
      * @param string $mbid
-     * @param integer $artist
+     * @param int $artist
      * @param string $artist_mbid
      * @param string $name
-     * @param integer $year
+     * @param int $year
      */
     public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {
@@ -371,7 +371,7 @@ class Wanted extends database_object
 
     /**
      * Load wanted release data.
-     * @param boolean $track_details
+     * @param bool $track_details
      */
     public function load_all($track_details = true)
     {
@@ -485,9 +485,9 @@ class Wanted extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

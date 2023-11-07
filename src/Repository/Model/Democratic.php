@@ -82,7 +82,7 @@ class Democratic extends Tmp_Playlist
      * build_vote_cache
      * This builds a vote cache of the objects we've got in the playlist
      * @param $ids
-     * @return boolean
+     * @return bool
      */
     public static function build_vote_cache($ids)
     {
@@ -189,7 +189,7 @@ class Democratic extends Tmp_Playlist
      *
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function get_items($limit = null)
@@ -239,8 +239,8 @@ class Democratic extends Tmp_Playlist
      * Most of the time this will just be the top entry, but if there is a
      * base_playlist and no items in the playlist then it returns a random
      * entry from the base_playlist
-     * @param integer $offset
-     * @return integer|null
+     * @param int $offset
+     * @return int|null
      */
     public function get_next_object($offset = 0)
     {
@@ -278,7 +278,7 @@ class Democratic extends Tmp_Playlist
     /**
      * get_uid_from_object_id
      * This takes an object_id and an object type and returns the ID for the row
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
      * @return int|null
      */
@@ -333,9 +333,9 @@ class Democratic extends Tmp_Playlist
     /**
      * has_vote
      * This checks to see if the current user has already voted on this object
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $type
-     * @return boolean
+     * @return bool
      */
     public function has_vote($object_id, $type = 'song')
     {
@@ -363,9 +363,9 @@ class Democratic extends Tmp_Playlist
     /**
      * _add_vote
      * This takes a object id and user and actually inserts the row
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
-     * @return boolean
+     * @return bool
      */
     private function _add_vote($object_id, $object_type = 'song')
     {
@@ -403,7 +403,7 @@ class Democratic extends Tmp_Playlist
      * As that's what we'll have most the time, no need to check if they've got an existing
      * vote for this, just remove anything that is there
      * @param $row_id
-     * @return boolean
+     * @return bool
      */
     public function remove_vote($row_id)
     {
@@ -428,7 +428,7 @@ class Democratic extends Tmp_Playlist
      * delete_votes
      * This removes the votes for the specified object on the current playlist
      * @param $row_id
-     * @return boolean
+     * @return bool
      */
     public function delete_votes($row_id)
     {
@@ -444,9 +444,9 @@ class Democratic extends Tmp_Playlist
     /**
      * delete_from_oid
      * This takes an OID and type and removes the object from the democratic playlist
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
-     * @return boolean
+     * @return bool
      */
     public function delete_from_oid($object_id, $object_type)
     {
@@ -464,8 +464,8 @@ class Democratic extends Tmp_Playlist
     /**
      * delete
      * This deletes a democratic playlist
-     * @param integer $democratic_id
-     * @return boolean
+     * @param int $democratic_id
+     * @return bool
      */
     public static function delete($democratic_id)
     {
@@ -484,7 +484,7 @@ class Democratic extends Tmp_Playlist
      * update
      * This updates an existing democratic playlist item. It takes a key'd array just like create
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public function update(array $data)
     {
@@ -510,7 +510,7 @@ class Democratic extends Tmp_Playlist
      * create
      * This is the democratic play create function it inserts this into the democratic table
      * @param array $data
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function create($data)
     {
@@ -555,7 +555,7 @@ class Democratic extends Tmp_Playlist
      * clear
      * This is really just a wrapper function, it clears the entire playlist
      * including all votes etc.
-     * @return boolean
+     * @return bool
      */
     public function clear()
     {
@@ -578,7 +578,7 @@ class Democratic extends Tmp_Playlist
     /**
      * clean_votes
      * This removes in left over garbage in the votes table
-     * @return boolean
+     * @return bool
      */
     public function clear_votes()
     {
@@ -591,8 +591,8 @@ class Democratic extends Tmp_Playlist
     /**
      * get_vote
      * This returns the current count for a specific song
-     * @param integer $id
-     * @return integer
+     * @param int $id
+     * @return int
      */
     public function get_vote($id)
     {

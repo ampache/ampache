@@ -43,7 +43,7 @@ class Useractivity extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
-     * @param integer $useract_id
+     * @param int $useract_id
      */
     public function __construct($useract_id)
     {
@@ -66,8 +66,8 @@ class Useractivity extends database_object
 
     /**
      * this attempts to build a cache of the data from the passed activities all in one query
-     * @param integer[] $ids
-     * @return boolean
+     * @param int[] $ids
+     * @return bool
      */
     public static function build_cache($ids)
     {
@@ -89,9 +89,9 @@ class Useractivity extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

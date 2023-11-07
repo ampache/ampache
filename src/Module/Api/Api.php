@@ -259,10 +259,10 @@ class Api
      * end users--so we have to do a little extra work to make them work
      * internally.
      * @param string $filter
-     * @param integer|string|boolean|null $value
-     * @return boolean
+     * @param int|string|bool|null $value
+     * @param Browse|null $browse
      */
-    public static function set_filter($filter, $value, ?Browse $browse = null)
+    public static function set_filter($filter, $value, $browse = null): bool
     {
         if (!strlen((string)$value)) {
             return false;
@@ -316,7 +316,7 @@ class Api
      * @param array $input
      * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
-     * @return boolean
+     * @return bool
      */
     public static function check_parameter($input, $parameters, $method)
     {
@@ -344,11 +344,11 @@ class Api
      * 'interface', 100, $user->id
      *
      * @param string $type
-     * @param integer $level
-     * @param integer $user_id
+     * @param int $level
+     * @param int $user_id
      * @param string $method
      * @param string $format
-     * @return boolean
+     * @return bool
      */
     public static function check_access($type, $level, $user_id, $method, $format = 'xml')
     {

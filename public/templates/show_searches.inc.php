@@ -26,7 +26,8 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-?>
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */ ?>
 <div id="information_actions">
     <ul>
         <?php if (Access::check('interface', 25)) { ?>
@@ -42,7 +43,7 @@ use Ampache\Module\Util\Ui;
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="smartplaylist">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="smartplaylist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>

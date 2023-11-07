@@ -44,15 +44,12 @@ final class PlaylistEdit4Method
      * This modifies name and type of playlist.
      * Changed name and type to optional and the playlist id is mandatory
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
      * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
-     * @return boolean
      */
     public static function playlist_edit(array $input, User $user): bool
     {

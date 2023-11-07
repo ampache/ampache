@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,9 +45,7 @@ final class ShowImportPlaylistAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-
-        require_once Ui::find_template('show_import_playlist.inc.php');
-
+        $this->ui->show('show_import_playlist.inc.php');
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

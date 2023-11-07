@@ -28,7 +28,6 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -61,7 +60,13 @@ final class SortTrackAction implements ApplicationActionInterface
         /* Sort the tracks */
         $playlist->sort_tracks();
         $object_ids = $playlist->get_items();
-        require_once Ui::find_template('show_playlist.inc.php');
+        $this->ui->show(
+            'show_playlist.inc.php',
+            [
+                'playlist' => $playlist,
+                'object_ids' => $object_ids
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

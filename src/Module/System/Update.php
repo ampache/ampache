@@ -257,7 +257,6 @@ class Update
     /**
      * _set_versions
      * Set the list of database updates used by self::$versions
-     * @return array
      */
     private static function _set_versions(): array
     {
@@ -1012,7 +1011,6 @@ class Update
      * @param Interactor|null $interactor
      * @param string $sql
      * @param array $params
-     * @return boolean
      */
     private static function _write($interactor, $sql, $params = array()): bool
     {
@@ -2148,7 +2146,6 @@ class Update
      * _update_370005
      *
      * Add new column album_artist into table album
-     *
      */
     private static function _update_370005(Interactor $interactor = null): bool
     {
@@ -2159,7 +2156,6 @@ class Update
      * _update_370006
      *
      * Add random and limit options to smart playlists
-     *
      */
     private static function _update_370006(Interactor $interactor = null): bool
     {
@@ -2203,7 +2199,6 @@ class Update
      * _update_370008
      *
      * Add UPnP backend preference
-     *
      */
     private static function _update_370008(Interactor $interactor = null): bool
     {
@@ -2603,7 +2598,6 @@ class Update
      * _update_370027
      *
      * Move column album_artist from table song to table album
-     *
      */
     private static function _update_370027(Interactor $interactor = null): bool
     {
@@ -2624,7 +2618,6 @@ class Update
      * _update_370028
      *
      * Add width and height in table image
-     *
      */
     private static function _update_370028(Interactor $interactor = null): bool
     {
@@ -2652,7 +2645,6 @@ class Update
      * _update_370029
      *
      * Set image column from image table as nullable.
-     *
      */
     private static function _update_370029(Interactor $interactor = null): bool
     {

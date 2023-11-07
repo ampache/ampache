@@ -89,7 +89,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
 <div class="form-group">
     <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL Port (optional)'); ?></label>
     <div class="col-sm-8">
-        <input type="text" class="form-control" id="local_port" name="local_port" value="<?php echo scrub_out($_REQUEST['local_port']);?>"/>
+        <input type="text" class="form-control" id="local_port" name="local_port" value="<?php echo scrub_out($_REQUEST['local_port']); ?>"/>
     </div>
 </div>
 <div class="form-group">
@@ -256,7 +256,7 @@ echo debug_result(check_config_values($results)); ?></div>
                 &nbsp;
 
                 <div class="col-sm-4"></div>
-                <?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . $_REQUEST['local_db'] ?? '' . "&local_host=" . $_REQUEST['local_host'] ?? ''; ?>
+                <?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . ($_REQUEST['local_db'] ?? '') . "&local_host=" . ($_REQUEST['local_host'] ?? ''); ?>
                 <div class="col-sm-8">
                     <a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
                 </div>

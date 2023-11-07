@@ -40,8 +40,6 @@ final class ArtistSongs3Method
     /**
      * artist_songs
      * This returns the songs of the specified artist
-     * @param array $input
-     * @param User $user
      */
     public static function artist_songs(array $input, User $user)
     {

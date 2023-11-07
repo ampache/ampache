@@ -46,11 +46,8 @@ final class GetArt4Method
      *
      * Get an art image.
      *
-     * @param array $input
-     * @param User $user
      * id   = (string) $object_id
      * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast'
-     * @return boolean
      */
     public static function get_art(array $input, User $user): bool
     {

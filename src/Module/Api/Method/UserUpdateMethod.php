@@ -42,8 +42,6 @@ final class UserUpdateMethod
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * @param array $input
-     * @param User $user
      * username          = (string) $username
      * password          = (string) hash('sha256', $password)) //optional
      * fullname          = (string) $fullname //optional
@@ -58,7 +56,6 @@ final class UserUpdateMethod
      * reset_apikey      = (integer) 0,1 true to reset a user Api Key //optional
      * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
      * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
-     * @return boolean
      */
     public static function user_update(array $input, User $user): bool
     {

@@ -150,7 +150,7 @@ final class Session implements SessionInterface
      * This saves the session information into the database.
      * @param $key
      * @param $value
-     * @return boolean
+     * @return bool
      */
     public static function write($key, $value)
     {
@@ -172,7 +172,7 @@ final class Session implements SessionInterface
      *
      * This removes the specified session from the database.
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public static function destroy($key)
     {
@@ -363,7 +363,7 @@ final class Session implements SessionInterface
      *
      * This checks for an existing session. If it's still valid we go ahead
      * and start it and return true.
-     * @return boolean
+     * @return bool
      */
     public static function check()
     {
@@ -415,7 +415,7 @@ final class Session implements SessionInterface
      * based on the type.
      * @param string $type
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public static function exists($type, $key)
     {
@@ -467,7 +467,7 @@ final class Session implements SessionInterface
      * This takes a SID and extends its expiration.
      * @param string $sid
      * @param string $type
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function extend($sid, $type = null)
     {
@@ -513,7 +513,7 @@ final class Session implements SessionInterface
      * This takes a SID and update associated username.
      * @param string $sid
      * @param string $username
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function update_username($sid, $username)
     {
@@ -528,7 +528,7 @@ final class Session implements SessionInterface
      * This takes a SID and update associated agent.
      * @param string $sid
      * @param string $agent
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function update_agent($sid, $agent)
     {
@@ -747,8 +747,8 @@ final class Session implements SessionInterface
      * storeTokenForUser
      * @param string $username
      * @param string $token
-     * @param integer $remember_length
-     * @return PDOStatement|boolean
+     * @param int $remember_length
+     * @return PDOStatement|bool
      */
     public static function storeTokenForUser($username, $token, $remember_length)
     {
@@ -759,7 +759,7 @@ final class Session implements SessionInterface
 
     /**
      * auth_remember
-     * @return boolean
+     * @return bool
      */
     public static function auth_remember()
     {

@@ -42,12 +42,9 @@ final class ArtistAlbumsMethod
      *
      * This returns the albums of an artist
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function artist_albums(array $input, User $user): bool
     {

@@ -36,7 +36,7 @@ interface playable_item
      * format
      *
      * Creates member variables for output
-     * @param boolean $details
+     * @param bool $details
      */
     public function format($details = true);
 
@@ -95,7 +95,7 @@ interface playable_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs();
 } // end playable_item.interface

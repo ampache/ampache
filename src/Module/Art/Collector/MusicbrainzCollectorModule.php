@@ -52,7 +52,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
      * Relationships
      *
      * @param Art $art
-     * @param integer $limit
+     * @param int $limit
      * @param array $data
      *
      * @return array

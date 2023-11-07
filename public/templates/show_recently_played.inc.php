@@ -36,7 +36,7 @@ global $dic;
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? -1;
 $link      = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $user_id) : '';
-$web_path  = AmpConfig::get('web_path');
+$web_path  = (string)AmpConfig::get('web_path', '');
 $is_admin  = Access::check('interface', 100);
 $showAlbum = AmpConfig::get('album_group');
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
@@ -124,7 +124,7 @@ foreach ($data as $row) {
                 <td class="cel_add">
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>
-                    <a id="<?php echo 'add_playlist_' . $count . '_' . $song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
+                    <a id="<?php echo 'add_playlist_' . $count . '_' . $song->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id; ?>')">
                         <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
                     </a>
                 </span>

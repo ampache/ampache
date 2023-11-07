@@ -40,16 +40,16 @@ $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $show_playlist_add = Access::check('interface', 25);
 $hide_genres       = AmpConfig::get('hide_genres');
 //mashup and grid view need different css
-$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="playlist">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="playlist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
             <?php if ($show_art) { ?>
-            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
+            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <?php } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>

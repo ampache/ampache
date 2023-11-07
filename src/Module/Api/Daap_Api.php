@@ -133,9 +133,9 @@ class Daap_Api
     /**
      * @param $curl
      * @param $data
-     * @return integer
+     * @return int
      */
-    public static function output_body($curl, $data)
+    public static function output_body($curl, $data): int
     {
         echo $data;
         ob_flush();
@@ -146,9 +146,9 @@ class Daap_Api
     /**
      * @param $curl
      * @param $header
-     * @return integer
+     * @return int
      */
-    public static function output_header($curl, $header)
+    public static function output_header($curl, $header): int
     {
         $rheader = trim((string)$header);
         $rhpart  = explode(':', $rheader);
@@ -360,7 +360,7 @@ class Daap_Api
     /**
      * databases
      * @param array $input
-     * @return boolean
+     * @return bool
      */
     public static function databases($input)
     {
@@ -855,9 +855,9 @@ class Daap_Api
 
     /**
      * @param $type
-     * @return integer
+     * @return int
      */
-    private static function get_type_id($type)
+    private static function get_type_id($type): int
     {
         switch ($type) {
             case 'byte':
@@ -918,7 +918,7 @@ class Daap_Api
 
     /**
      * @param $code
-     * @return boolean
+     * @return bool
      */
     public static function createError($code)
     {
@@ -942,9 +942,9 @@ class Daap_Api
 
     /**
      * @param string $tag
-     * @param integer $code
+     * @param int $code
      * @param string $msg
-     * @return boolean
+     * @return bool
      */
     public static function createApiError($tag, $code, $msg = '')
     {

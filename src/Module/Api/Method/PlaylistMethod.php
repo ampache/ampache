@@ -46,10 +46,7 @@ final class PlaylistMethod
      *
      * This returns a single playlist
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
-     * @return boolean
      */
     public static function playlist(array $input, User $user): bool
     {

@@ -25,13 +25,15 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\PodcastEpisode;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class ShowAction implements ApplicationActionInterface
 {
@@ -41,25 +43,43 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
+        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST) === false) {
+            return null;
+        }
         $this->ui->showHeader();
 
-        $episode = $this->modelFactory->createPodcastEpisode((int) $_REQUEST['podcast_episode']);
-        $episode->format();
-        require_once Ui::find_template('show_podcast_episode.inc.php');
+        $episode = $this->modelFactory->createPodcastEpisode((int)($_REQUEST['podcast_episode'] ?? 0));
+        if (!isset($episode->id)) {
+            $this->logger->warning(
+                'Requested an podcast_episode that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $episode->format();
+            $this->ui->show(
+                'show_podcast_episode.inc.php',
+                ['episode' => $episode]
+            );
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

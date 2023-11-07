@@ -44,7 +44,7 @@ use Ampache\Module\Util\Ui;
 // @deprecated
 global $dic;
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
-$web_path   = AmpConfig::get('web_path'); ?>
+$web_path   = (string)AmpConfig::get('web_path', ''); ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
@@ -70,7 +70,7 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
     <?php if ($show_playlist_add) {
         echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_artist_' . $libitem->id);
         echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id, 'random', T_('Random to Temporary Playlist'), 'random_artist_' . $libitem->id); ?>
-            <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id ?>')">
+            <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id; ?>')">
                 <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php
@@ -106,12 +106,12 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
     </a>
     <?php }
     if (canEditArtist($libitem, $gatekeeper->getUserId())) { ?>
-        <a id="<?php echo 'edit_artist_' . $libitem->id ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_artist_' . $libitem->id ?>', '<?php echo addslashes(T_('Artist Edit')) ?>', 'artist_')">
+        <a id="<?php echo 'edit_artist_' . $libitem->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_artist_' . $libitem->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', 'artist_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
     <?php }
     if (Catalog::can_remove($libitem)) { ?>
-        <a id="<?php echo 'delete_artist_' . $libitem->id ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $libitem->id; ?>">
+        <a id="<?php echo 'delete_artist_' . $libitem->id; ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
     <?php }

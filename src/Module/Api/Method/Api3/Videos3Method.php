@@ -39,8 +39,6 @@ final class Videos3Method
     /**
      * videos
      * This returns video objects!
-     * @param array $input
-     * @param User $user
      */
     public static function videos(array $input, User $user)
     {

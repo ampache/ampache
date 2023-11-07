@@ -31,7 +31,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -71,7 +70,14 @@ final class ShowEditAction implements ApplicationActionInterface
         $client = $this->modelFactory->createUser($shout->user);
         $client->format();
 
-        require_once Ui::find_template('show_edit_shout.inc.php');
+        $this->ui->show(
+            'show_edit_shout.inc.php',
+            [
+                'shout' => $shout,
+                'object' => $object,
+                'client' => $client
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

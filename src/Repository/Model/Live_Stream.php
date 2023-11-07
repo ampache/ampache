@@ -42,7 +42,7 @@ class Live_Stream extends database_object implements Media, library_item
     /* DB based variables */
 
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -70,7 +70,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public $codec;
     /**
-     * @var integer $catalog
+     * @var int $catalog
      */
     public $catalog;
 
@@ -99,7 +99,7 @@ class Live_Stream extends database_object implements Media, library_item
     /**
      * Constructor
      * This takes a flagged. id and then pulls in the information for said flag entry
-     * @param integer $stream_id
+     * @param int $stream_id
      */
     public function __construct($stream_id)
     {
@@ -123,7 +123,7 @@ class Live_Stream extends database_object implements Media, library_item
      * format
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
-     * @param boolean $details
+     * @param bool $details
      * @return true
      */
     public function format($details = true)
@@ -264,7 +264,7 @@ class Live_Stream extends database_object implements Media, library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -297,8 +297,8 @@ class Live_Stream extends database_object implements Media, library_item
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -313,7 +313,7 @@ class Live_Stream extends database_object implements Media, library_item
      * it depends on a ID element to determine which radio element it
      * should be updating
      * @param array $data
-     * @return boolean|integer
+     * @return bool|int
      */
     public function update(array $data)
     {
@@ -421,7 +421,7 @@ class Live_Stream extends database_object implements Media, library_item
      * This is needed by the media interface
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
+     * @param bool $local
      * @param string $sid
      * @param string $force_http
      * @return string
@@ -454,11 +454,11 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $agent
      * @param array $location
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function set_played($user_id, $agent, $location, $date = null)
     {
@@ -469,10 +469,10 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @param integer $user
+     * @param int $user
      * @param string $agent
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function check_play_history($user, $agent, $date)
     {

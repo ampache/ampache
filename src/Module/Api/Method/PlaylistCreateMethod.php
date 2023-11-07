@@ -46,11 +46,8 @@ final class PlaylistCreateMethod
      *
      * Create a new playlist and return it
      *
-     * @param array $input
-     * @param User $user
      * name = (string) Playlist name
      * type = (string) 'public', 'private'
-     * @return boolean
      */
     public static function playlist_create(array $input, User $user): bool
     {

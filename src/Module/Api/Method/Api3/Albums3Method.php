@@ -39,8 +39,6 @@ final class Albums3Method
     /**
      * albums
      * This returns albums based on the provided search filters
-     * @param array $input
-     * @param User $user
      */
     public static function albums(array $input, User $user)
     {

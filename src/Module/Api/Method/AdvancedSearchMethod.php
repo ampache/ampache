@@ -59,8 +59,6 @@ final class AdvancedSearchMethod
      * https://ampache.org/api/api-xml-methods
      * https://ampache.org/api/api-json-methods
      *
-     * @param array $input
-     * @param User $user
      * operator        = (string) 'and', 'or' (whether to match one rule or all)
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
@@ -69,7 +67,6 @@ final class AdvancedSearchMethod
      * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
      * offset          = (integer) //optional
      * limit           = (integer) //optional
-     * @return boolean
      */
     public static function advanced_search(array $input, User $user): bool
     {

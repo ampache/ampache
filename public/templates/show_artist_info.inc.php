@@ -48,7 +48,7 @@ if (count($dcol) > 0) {
     <?php if (array_key_exists('summary', $biography) && !empty($biography['summary'])) { ?>
         <?php echo nl2br(trim($biography['summary'])); ?>
         <?php
-    }?>
+    } ?>
 </div>
 <script>
     $(document).ready(function(){

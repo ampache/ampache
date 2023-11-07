@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\Core;
@@ -38,6 +39,8 @@ final class GenerateRsstokenAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'generate_rsstoken';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
@@ -47,11 +50,13 @@ final class GenerateRsstokenAction extends AbstractUserAction
     private UserKeyGeneratorInterface $userKeyGenerator;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
         UserKeyGeneratorInterface $userKeyGenerator
     ) {
+        $this->requestParser    = $requestParser;
         $this->ui               = $ui;
         $this->modelFactory     = $modelFactory;
         $this->configContainer  = $configContainer;
@@ -69,7 +74,8 @@ final class GenerateRsstokenAction extends AbstractUserAction
         }
         $this->ui->showHeader();
 
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $user_id = (int)$this->requestParser->getFromRequest('user_id');
+        $client  = $this->modelFactory->createUser($user_id);
 
         if ($client->id) {
             $this->userKeyGenerator->generateRssToken($client);

@@ -47,8 +47,6 @@ final class ListMethod
      *
      * This takes a named array of objects and returning `id`, `name`, `prefix` and `basename`
      *
-     * @param array $input
-     * @param User $user
      * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
@@ -57,7 +55,6 @@ final class ListMethod
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * @return boolean
      */
     public static function list(array $input, User $user): bool
     {

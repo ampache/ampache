@@ -23,7 +23,6 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -37,7 +36,7 @@ use Ampache\Module\Util\Ui;
 // playlists and searches come from the same 'playlist_media' browse but you can't reorder a search
 $playlist_id  = $playlist->id ?? '';
 $argument     = $argument ?? false;
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $seconds      = $browse->duration;
 $duration     = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
@@ -52,11 +51,11 @@ $count     = 1; ?>
     echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
 } ?>
     <form method="post" id="reorder_playlist_<?php echo $playlist_id; ?>">
-        <table id="reorder_playlist_table" class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start() ?>">
+        <table id="reorder_playlist_table" class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start(); ?>">
             <thead>
             <tr class="th-top">
                 <th class="cel_play essential"></th>
-                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
+                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
                 <th class="cel_title essential persist"><?php echo T_('Title'); ?></th>
                 <th class="cel_add essential"></th>
                 <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
@@ -79,7 +78,7 @@ $count     = 1; ?>
                     $libitem    = new $class_name($object['object_id']);
                     $libitem->format();
                     $playlist_track = (int)($object['track'] ?? $count); ?>
-                    <tr id="track_<?php echo($object['track_id'] ?? $count) ?>">
+                    <tr id="track_<?php echo($object['track_id'] ?? $count); ?>">
                         <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>
                     </tr>
                     <?php
@@ -90,7 +89,7 @@ $count     = 1; ?>
             <tfoot>
             <tr class="th-bottom">
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
-                <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
+                <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
                 <th class="cel_title"><?php echo T_('Title'); ?></th>
                 <th class="cel_add"></th>
                 <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>

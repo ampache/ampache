@@ -76,7 +76,7 @@ class Clip extends Video
      * _get_artist_id
      * Look-up an artist id from artist tag data... creates one if it doesn't exist already
      * @param array $data
-     * @return integer|null
+     * @return int|null
      */
     private static function _get_artist_id($data)
     {
@@ -124,7 +124,7 @@ class Clip extends Video
      * update
      * This takes a key'd array of data as input and updates a clip entry
      * @param array $data
-     * @return integer
+     * @return int
      */
     public function update(array $data)
     {
@@ -142,8 +142,8 @@ class Clip extends Video
     /**
      * format
      * this function takes the object and formats some values
-     * @param boolean $details
-     * @return boolean
+     * @param bool $details
+     * @return bool
      */
 
     public function format($details = true)
@@ -200,9 +200,9 @@ class Clip extends Video
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

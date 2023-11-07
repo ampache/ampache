@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Shout;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -31,7 +32,6 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,22 +41,28 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_add_shout';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ShoutRepositoryInterface $shoutRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ShoutRepositoryInterface $shoutRepository
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->shoutRepository = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $object_type = $this->requestParser->getFromRequest('type');
+        $object_id   = (int)$this->requestParser->getFromRequest('id');
         // Get our object first
-        $object = Shoutbox::get_object($_REQUEST['type'], (int) Core::get_request('id'));
+        $object = Shoutbox::get_object($object_type, $object_id);
 
         $this->ui->showHeader();
 
@@ -69,8 +75,9 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
             return null;
         }
-
         $object->format();
+
+        $data = '';
         if (get_class($object) == Song::class) {
             $data = $_REQUEST['offset'] ?? '';
         }
@@ -78,7 +85,15 @@ final class ShowAddShoutAction implements ApplicationActionInterface
         $shouts      = $this->shoutRepository->getBy($object_type, $object->id);
 
         // Now go ahead and display the page where we let them add a comment etc
-        require_once Ui::find_template('show_add_shout.inc.php');
+        $this->ui->show(
+            'show_add_shout.inc.php',
+            [
+                'data' => $data,
+                'object' => $object,
+                'object_type' => $object_type,
+                'shouts' => $shouts
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showHeader();

@@ -182,7 +182,7 @@ class Api4
      * @param array $input
      * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
-     * @return boolean
+     * @return bool
      */
     public static function check_parameter($input, $parameters, $method = '')
     {
@@ -208,11 +208,11 @@ class Api4
      * 'interface', 100, $user->id
      *
      * @param string $type
-     * @param integer $level
-     * @param integer $user_id
+     * @param int $level
+     * @param int $user_id
      * @param string $method
      * @param string $format
-     * @return boolean
+     * @return bool
      */
     public static function check_access($type, $level, $user_id, $method = '', $format = 'xml')
     {

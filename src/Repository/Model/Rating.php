@@ -61,7 +61,7 @@ class Rating extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the rating for
-     * @param integer $rating_id
+     * @param int $rating_id
      * @param string $type
      */
     public function __construct($rating_id, $type)
@@ -77,10 +77,6 @@ class Rating extends database_object
         return (int)($this->id ?? 0);
     }
 
-    /**
-     * @param $type
-     * @return bool
-     */
     public static function is_valid($type): bool
     {
         return in_array($type, self::RATING_TYPES);
@@ -91,7 +87,7 @@ class Rating extends database_object
      *
      * Remove ratings for items that no longer exist.
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -135,8 +131,8 @@ class Rating extends database_object
      * single query, saving on connection overhead
      * @param string $type
      * @param array $ids
-     * @param integer $user_id
-     * @return boolean
+     * @param int $user_id
+     * @return bool
      */
     public static function build_cache($type, $ids, $user_id = null)
     {
@@ -191,8 +187,8 @@ class Rating extends database_object
     /**
      * get_user_rating
      * Get a user's rating. If no userid is passed in, we use the currently logged in user.
-     * @param integer $user_id
-     * @return integer|null
+     * @param int $user_id
+     * @return int|null
      */
     public function get_user_rating($user_id = null)
     {
@@ -249,7 +245,7 @@ class Rating extends database_object
      * get_highest_sql
      * Get highest sql
      * @param string $input_type
-     * @param integer $user_id
+     * @param int $user_id
      * @return string
      */
     public static function get_highest_sql($input_type, $user_id = null)
@@ -283,8 +279,8 @@ class Rating extends database_object
      * get_highest
      * Get objects with the highest average rating.
      * @param string $input_type
-     * @param integer $count
-     * @param integer $offset
+     * @param int $count
+     * @param int $offset
      * @return array
      */
     public static function get_highest($input_type, $count = 0, $offset = 0, $user_id = null)
@@ -321,8 +317,8 @@ class Rating extends database_object
      * This function sets the rating for the current object.
      * If no user_id is passed in, we use the currently logged in user.
      * @param string $rating
-     * @param integer $user_id
-     * @return boolean
+     * @param int $user_id
+     * @return bool
      */
     public function set_rating($rating, $user_id = null)
     {
@@ -355,10 +351,10 @@ class Rating extends database_object
     /**
      * save_rating
      * Forward rating value to plugins
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
-     * @param integer $new_rating
-     * @param integer $user_id
+     * @param int $new_rating
+     * @param int $user_id
      */
     public static function save_rating($object_id, $object_type, $new_rating, $user_id)
     {
@@ -383,9 +379,9 @@ class Rating extends database_object
      * show
      * This takes an id and a type and displays the rating if ratings are
      * enabled.  If $show_global_rating is true, also show the average from all users.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $type
-     * @param boolean $show_global_rating
+     * @param bool $show_global_rating
      */
     public static function show($object_id, $type, $show_global_rating = false): string
     {
@@ -458,9 +454,9 @@ class Rating extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

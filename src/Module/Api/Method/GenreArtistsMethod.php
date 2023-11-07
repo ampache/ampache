@@ -45,12 +45,9 @@ final class GenreArtistsMethod
      *
      * This returns the artists associated with the genre in question as defined by the UID
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Album //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function genre_artists(array $input, User $user): bool
     {

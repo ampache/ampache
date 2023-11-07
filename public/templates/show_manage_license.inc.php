@@ -24,7 +24,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
+/** @var array $object_ids */
+
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <div id="information_actions">
     <ul>
         <li>

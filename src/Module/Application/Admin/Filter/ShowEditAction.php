@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,10 +51,20 @@ final class ShowEditAction extends AbstractFilterAction
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;
         }
+        $filter_id   = filter_input(INPUT_POST, 'filter_id', FILTER_SANITIZE_NUMBER_INT);
+        $filter_name = ($filter_id == 0)
+            ? 'DEFAULT'
+            : (string) scrub_in(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
 
         $this->ui->showHeader();
 
-        require_once Ui::find_template('show_edit_filter.inc.php');
+        $this->ui->show(
+            'show_edit_filter.inc.php',
+            [
+                'filter_id' => $filter_id,
+                'filter_name' => $filter_name
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

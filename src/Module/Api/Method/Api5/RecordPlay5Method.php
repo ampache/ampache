@@ -44,13 +44,10 @@ final class RecordPlay5Method
      * This allows other sources to record play history to Ampache.
      * Require 100 (Admin) permission to change other user's play history
      *
-     * @param array $input
-     * @param User $user
      * id     = (integer) $object_id
      * user   = (integer|string) $user_id OR $username //optional
      * client = (string) $agent //optional
      * date   = (integer) UNIXTIME() //optional
-     * @return boolean
      */
     public static function record_play(array $input, User $user): bool
     {

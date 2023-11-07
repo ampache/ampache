@@ -45,12 +45,9 @@ final class ArtistSongs4Method
      *
      * This returns the songs of the specified artist
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function artist_songs(array $input, User $user): bool
     {

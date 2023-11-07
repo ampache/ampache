@@ -42,7 +42,7 @@ use Ampache\Repository\Model\User;
         <?php echo Ui::get_icon('add', T_('Add')); ?>
         <?php echo T_('Show All'); ?>
     </a>
-<?php }?>
+<?php } ?>
 </li>
 </ul>
 </div>

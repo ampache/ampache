@@ -42,7 +42,7 @@ class Label extends database_object implements library_item
     /* Variables from DB */
 
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -78,15 +78,15 @@ class Label extends database_object implements library_item
      */
     public $country;
     /**
-     * @var integer $active
+     * @var int $active
      */
     public $active;
     /**
-     * @var integer $creation_date
+     * @var int $creation_date
      */
     public $creation_date;
     /**
-     * @var integer $user
+     * @var int $user
      */
     public $user;
 
@@ -107,7 +107,7 @@ class Label extends database_object implements library_item
      */
     public $artists;
     /**
-     * @var integer $artists
+     * @var int $artists
      */
     public $artist_count;
 
@@ -136,8 +136,8 @@ class Label extends database_object implements library_item
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -147,7 +147,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @param boolean $details
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -157,7 +157,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return array|integer[]
+     * @return array|int[]
      */
     public function get_catalogs()
     {
@@ -318,7 +318,7 @@ class Label extends database_object implements library_item
     /**
      * update
      * @param array $data
-     * @return integer
+     * @return int
      */
     public function update(array $data)
     {
@@ -397,7 +397,7 @@ class Label extends database_object implements library_item
 
     /**
      * get_artists
-     * @return integer[]
+     * @return int[]
      */
     public function get_artists()
     {
@@ -431,7 +431,7 @@ class Label extends database_object implements library_item
      * get_display
      * This returns a csv formatted version of the labels that we are given
      * @param $labels
-     * @param boolean $link
+     * @param bool $link
      * @return string
      */
     public static function get_display($labels, $link = false)
@@ -462,9 +462,9 @@ class Label extends database_object implements library_item
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

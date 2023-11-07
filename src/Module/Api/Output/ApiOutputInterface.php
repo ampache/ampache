@@ -63,13 +63,13 @@ interface ApiOutputInterface
     ): string;
 
     /**
-     * @param integer[] $albums
+     * @param int[] $albums
      * @param array $include
      * @param User $user
      * @param bool $encode
      * @param bool $asObject
-     * @param integer $limit
-     * @param integer $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return array|string
      */

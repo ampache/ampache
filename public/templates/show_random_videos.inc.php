@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var int[] $videos */
 
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $button   = Ajax::button('?page=index&action=random_videos', 'random', T_('Refresh'), 'random_video_refresh'); ?>
 <?php Ui::show_box_top(T_('Videos of the Moment') . ' ' . $button, 'box box_random_videos'); ?>
 <?php
@@ -41,7 +41,7 @@ if (!empty($videos)) {
         $video = Video::create_from_id($video_id);
         $video->format(); ?>
     <div class="random_video">
-        <div id="video_<?php echo $video_id ?>" class="art_album libitem_menu">
+        <div id="video_<?php echo $video_id; ?>" class="art_album libitem_menu">
             <?php $art_showed = false;
         if ($video->get_default_art_kind() == 'preview') {
             $art_showed = Art::display('video', $video->id, $video->f_full_title, 9, $video->get_link(), false, 'preview');

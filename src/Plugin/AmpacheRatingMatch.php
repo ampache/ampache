@@ -145,7 +145,7 @@ class AmpacheRatingMatch
      * save_rating
      * Rate an artist and album after rating the song
      * @param Rating $rating
-     * @param integer $new_rating
+     * @param int $new_rating
      */
     public function save_rating($rating, $new_rating)
     {
@@ -197,7 +197,7 @@ class AmpacheRatingMatch
      * set_flag
      * If you love a song you probably love the artist and the album right?
      * @param Song $song
-     * @param boolean $flagged
+     * @param bool $flagged
      */
     public function set_flag($song, $flagged)
     {
@@ -223,7 +223,7 @@ class AmpacheRatingMatch
      * save_mediaplay
      * check for extra star rules.
      * @param Song $song
-     * @return boolean
+     * @return bool
      */
     public function save_mediaplay($song)
     {
@@ -293,9 +293,9 @@ class AmpacheRatingMatch
      * rule_process
      * process the rule array and rate/flag depending on the outcome
      * @param array $rule_array
-     * @param integer $play_count
-     * @param integer $skip_count
-     * @return boolean
+     * @param int $play_count
+     * @param int $skip_count
+     * @return bool
      */
     public function rule_process($rule_array, $play_count, $skip_count)
     {
@@ -333,7 +333,7 @@ class AmpacheRatingMatch
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return boolean
+     * @return bool
      */
     public function load($user)
     {

@@ -133,7 +133,7 @@ class LocalPlay
      * is supported in the current player, if so it returns a 'skip to'
      * link, otherwise it returns just the text
      * @param string $name
-     * @param integer $object_id
+     * @param int $object_id
      * @return string
      */
     public function format_name($name, $object_id)
@@ -146,7 +146,7 @@ class LocalPlay
      * This returns true or false depending on if the specified controller
      * is currently enabled
      * @param $controller
-     * @return boolean
+     * @return bool
      */
     public static function is_enabled($controller)
     {
@@ -240,7 +240,7 @@ class LocalPlay
     /**
      * add
      * @param $object
-     * @return boolean
+     * @return bool
      */
     public function add($object)
     {
@@ -253,7 +253,7 @@ class LocalPlay
      * add_url
      * Add a URL to the Localplay module
      * @param Stream_Url $url
-     * @return boolean
+     * @return bool
      */
     public function add_url(Stream_Url $url)
     {
@@ -270,8 +270,8 @@ class LocalPlay
      * repeat
      * This turns the repeat feature of a Localplay method on or
      * off, takes a 0/1 value
-     * @param boolean $state
-     * @return boolean
+     * @param bool $state
+     * @return bool
      */
     public function repeat($state)
     {
@@ -288,8 +288,8 @@ class LocalPlay
      * random
      * This turns on the random feature of a Localplay method
      * It takes a 0/1 value
-     * @param boolean $state
-     * @return boolean
+     * @param bool $state
+     * @return bool
      */
     public function random($state)
     {
@@ -306,7 +306,6 @@ class LocalPlay
      * status
      * This returns current information about the state of the player
      * There is an expected array format
-     * @return array
      */
     public function status(): array
     {
@@ -346,7 +345,7 @@ class LocalPlay
      * as passed in the variable it is a 0 - 100 scale the controller is
      * responsible for adjusting the scale if necessary
      * @param $value
-     * @return boolean
+     * @return bool
      */
     public function volume_set($value)
     {
@@ -419,7 +418,7 @@ class LocalPlay
      * skip
      * This isn't a required function, it tells the daemon to skip to the specified song
      * @param $track_id
-     * @return boolean
+     * @return bool
      */
     public function skip($track_id)
     {
@@ -506,7 +505,7 @@ class LocalPlay
     /**
      * get_instance
      * This returns the specified instance
-     * @param integer $uid
+     * @param int $uid
      * @return array
      */
     public function get_instance($uid)
@@ -519,7 +518,7 @@ class LocalPlay
      * This updates the specified instance with a named array of data (_POST most likely)
      * @param $uid
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public function update_instance($uid, $data)
     {
@@ -560,8 +559,8 @@ class LocalPlay
      * delete_track
      * This removes songs from the players playlist it takes a single ID as provided
      * by the get command
-     * @param integer $object_id
-     * @return boolean
+     * @param int $object_id
+     * @return bool
      */
     public function delete_track($object_id)
     {

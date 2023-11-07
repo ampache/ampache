@@ -35,7 +35,6 @@ final class InstallationHelper implements InstallationHelperInterface
     /**
      * splits up a standard SQL dump file into distinct sql queries
      * @param string $sql
-     * @return array
      */
     private function split_sql($sql): array
     {
@@ -72,7 +71,7 @@ final class InstallationHelper implements InstallationHelperInterface
      * still need to install ampache. This function is
      * very important, we don't want to reinstall over top of an existing install
      * @param $configfile
-     * @return boolean
+     * @return bool
      */
     public function install_check_status($configfile)
     {
@@ -117,7 +116,7 @@ final class InstallationHelper implements InstallationHelperInterface
     } // install_check_status
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function install_check_server_apache()
     {
@@ -127,8 +126,8 @@ final class InstallationHelper implements InstallationHelperInterface
     /**
      * @param string $file
      * @param $web_path
-     * @param boolean $fix
-     * @return boolean|string
+     * @param bool $fix
+     * @return bool|string
      */
     public function install_check_rewrite_rules($file, $web_path, $fix = false)
     {
@@ -174,8 +173,8 @@ final class InstallationHelper implements InstallationHelperInterface
     /**
      * @param string $file
      * @param $web_path
-     * @param boolean $download
-     * @return boolean
+     * @param bool $download
+     * @return bool
      */
     public function install_rewrite_rules($file, $web_path, $download)
     {
@@ -207,12 +206,12 @@ final class InstallationHelper implements InstallationHelperInterface
      * Inserts the database using the values from Config.
      * @param string $db_user
      * @param string $db_pass
-     * @param boolean $create_db
-     * @param boolean $overwrite
-     * @param boolean $create_tables
+     * @param bool $create_db
+     * @param bool $overwrite
+     * @param bool $create_tables
      * @param string $charset
      * @param string $collation
-     * @return boolean
+     * @return bool
      */
     public function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8mb4', $collation = 'utf8mb4_unicode_ci')
     {
@@ -333,8 +332,8 @@ final class InstallationHelper implements InstallationHelperInterface
 
     /**
      * Attempts to write out the config file or offer it as a download.
-     * @param boolean $download
-     * @return boolean
+     * @param bool $download
+     * @return bool
      * @throws Exception
      */
     public function install_create_config($download = false)
@@ -393,7 +392,7 @@ final class InstallationHelper implements InstallationHelperInterface
      * @param string $username
      * @param string $password
      * @param string $password2
-     * @return boolean
+     * @return bool
      */
     public function install_create_account($username, $password, $password2)
     {
@@ -439,7 +438,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
     /**
      * @param string $command
-     * @return boolean
+     * @return bool
      */
     private function command_exists($command)
     {

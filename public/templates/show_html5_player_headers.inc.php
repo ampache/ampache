@@ -9,7 +9,7 @@ use Ampache\Module\Util\Ui;
 global $dic;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
-$web_path         = AmpConfig::get('web_path');
+$web_path         = (string)AmpConfig::get('web_path', '');
 $webplayer_debug  = (AmpConfig::get('webplayer_debug'))
     ? 'js'
     : 'min.js';
@@ -30,9 +30,9 @@ $jpplaylist = ($isLight)
     : '#202020';
 
 if ($iframed || $isShare) { ?>
-    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true); ?>" type="text/css" />
 <?php } else { ?>
-    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true) ?>" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true); ?>" type="text/css" />
 <?php } ?>
 <?php if (!$iframed) {
     require_once Ui::find_template('stylesheets.inc.php'); ?>
@@ -334,11 +334,11 @@ if ($iframed) { ?>
 
             if (replaygainNode != null) {
                 replaygainEnabled = !replaygainEnabled;
-                Cookies.set('replaygain', replaygainEnabled, {<?php echo $cookie_string ?>});
+                Cookies.set('replaygain', replaygainEnabled, {<?php echo $cookie_string; ?>});
                 ApplyReplayGain();
 
                 if (replaygainEnabled) {
-                    $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight ?>');
+                    $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight; ?>');
                 } else {
                     $('#replaygainbtn').css('box-shadow', '');
                 }
@@ -358,7 +358,7 @@ if ($iframed) { ?>
             }
 
             if (loopEnabled) {
-                $('#playlistloopbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight ?>');
+                $('#playlistloopbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight; ?>');
             } else {
                 $('#playlistloopbtn').css('box-shadow', '');
             }

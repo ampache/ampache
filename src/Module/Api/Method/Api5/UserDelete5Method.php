@@ -43,10 +43,7 @@ final class UserDelete5Method
      * Delete an existing user.
      * Takes the username in parameter.
      *
-     * @param array $input
-     * @param User $user
      * username = (string) $username)
-     * @return boolean
      */
     public static function user_delete(array $input, User $user): bool
     {

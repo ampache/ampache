@@ -39,7 +39,7 @@ class WebPlayer
     /**
      * Check if the playlist is a radio playlist.
      * @param Stream_Playlist $playlist
-     * @return boolean
+     * @return bool
      */
     public static function is_playlist_radio($playlist)
     {
@@ -57,7 +57,7 @@ class WebPlayer
     /**
      * Check if the playlist is a video playlist.
      * @param Stream_Playlist $playlist
-     * @return boolean
+     * @return bool
      */
     public static function is_playlist_video($playlist)
     {
@@ -67,7 +67,7 @@ class WebPlayer
     /**
      * Check if the playlist is a random playlist.
      * @param Stream_Playlist $playlist
-     * @return boolean
+     * @return bool
      */
     public static function is_playlist_random($playlist)
     {
@@ -77,7 +77,7 @@ class WebPlayer
     /**
      * Check if the playlist is a democratic playlist.
      * @param Stream_Playlist $playlist
-     * @return boolean
+     * @return bool
      */
     public static function is_playlist_democratic($playlist)
     {
@@ -147,7 +147,7 @@ class WebPlayer
      * @param array $urlinfo
      * @param array $types
      * @param string $file_type
-     * @param boolean $transcode
+     * @param bool $transcode
      * @return array
      */
     public static function get_media_types($urlinfo, $types, $file_type, $transcode)
@@ -190,7 +190,7 @@ class WebPlayer
      * @param array $urlinfo
      * @param string $force_type
      * @param array $transcode_cfg
-     * @return boolean
+     * @return bool
      */
     public static function can_transcode($media_type, $file_type, $types, $urlinfo, $transcode_cfg, $force_type = '')
     {

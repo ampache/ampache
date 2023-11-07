@@ -117,7 +117,7 @@ class Ui implements UiInterface
      * check_iconv
      *
      * Checks to see whether iconv is available;
-     * @return boolean
+     * @return bool
      */
     public static function check_iconv()
     {
@@ -133,7 +133,7 @@ class Ui implements UiInterface
      *
      * Stupid little cutesie thing to ratelimit output of long-running
      * operations.
-     * @return boolean
+     * @return bool
      */
     public static function check_ticker()
     {
@@ -616,7 +616,7 @@ class Ui implements UiInterface
 
     /**
      * @param $type
-     * @return boolean
+     * @return bool
      */
     public static function is_grid_view($type)
     {
@@ -635,9 +635,9 @@ class Ui implements UiInterface
      * @param string $title The Title of the message
      * @param string $text The details of the message
      * @param string $next_url Where to go next
-     * @param integer $cancel T/F show a cancel button that uses return_referer()
+     * @param int $cancel T/F show a cancel button that uses return_referer()
      * @param string $form_name
-     * @param boolean $visible
+     * @param bool $visible
      */
     public function showConfirmation(
         $title,

@@ -19,5 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+/** @var Ampache\Repository\Model\Movie $video */
+
 $videoprops[T_('Summary')]   = $video->summary;
 $videoprops[T_('Year')]      = $video->year;

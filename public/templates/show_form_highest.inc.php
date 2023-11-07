@@ -27,7 +27,7 @@ use Ampache\Repository\VideoRepositoryInterface;
 global $dic;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
-$web_path        = AmpConfig::get('web_path');
+$web_path        = (string)AmpConfig::get('web_path', '');
 $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
 $showAlbumArtist = AmpConfig::get('show_album_artist');
 $showArtist      = AmpConfig::get('show_artist');
@@ -38,19 +38,19 @@ $albumString     = (AmpConfig::get('album_group'))
 <h3 class="box-title"><?php echo T_('Top Rated'); ?></h3>
 
 <div class="category_options">
-    <a class="category <?php echo ($filter_str == 'highest_song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_song"><?php echo T_('Songs'); ?></a>
-    <a class="category <?php echo ($filter_str == 'highest_album_disk' || $filter_str == 'highest_album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
+    <a class="category <?php echo ($filter_str == 'highest_song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_song"><?php echo T_('Songs'); ?></a>
+    <a class="category <?php echo ($filter_str == 'highest_album_disk' || $filter_str == 'highest_album') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
     <?php if ($showArtist || $filter_str == 'highest_artist') { ?>
-        <a class="category <?php echo ($filter_str == 'highest_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_artist"><?php echo T_('Artists'); ?></a>
+        <a class="category <?php echo ($filter_str == 'highest_artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_artist"><?php echo T_('Artists'); ?></a>
     <?php } ?>
     <?php if ($showAlbumArtist || !$showArtist || $filter_str == 'highest_album_artist') { ?>
-        <a class="category <?php echo ($filter_str == 'highest_album_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_album_artist"><?php echo T_('Album Artists'); ?></a>
+        <a class="category <?php echo ($filter_str == 'highest_album_artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_album_artist"><?php echo T_('Album Artists'); ?></a>
     <?php } ?>
     <?php if (AmpConfig::get('podcast')) { ?>
-        <a class="category <?php echo ($filter_str == 'highest_podcast_episode') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
+        <a class="category <?php echo ($filter_str == 'highest_podcast_episode') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
     <?php }
     if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
-        <a class="category <?php echo ($filter_str == 'highest_video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_video"><?php echo T_('Videos'); ?></a>
+        <a class="category <?php echo ($filter_str == 'highest_video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_video"><?php echo T_('Videos'); ?></a>
     <?php } ?>
-    <a class="category <?php echo ($filter_str == 'highest_playlist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_playlist"><?php echo T_('Playlists'); ?></a>
+    <a class="category <?php echo ($filter_str == 'highest_playlist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=highest_playlist"><?php echo T_('Playlists'); ?></a>
 </div>

@@ -52,11 +52,11 @@ final class MediaServiceDescriptionApplication implements ApplicationInterface
             <deviceType>urn:schemas-upnp-org:device:MediaServer:1</deviceType>
             <friendlyName><?php echo scrub_out(AmpConfig::get('site_title')); ?></friendlyName>
             <manufacturer>ampache.org</manufacturer>
-            <manufacturerURL>http://ampache.org</manufacturerURL>
+            <manufacturerURL>https://ampache.org</manufacturerURL>
             <modelDescription>A web based audio/video streaming application and file manager allowing you to access your music and videos from anywhere, using almost any Internet enabled device.</modelDescription>
             <modelName>Ampache</modelName>
             <modelNumber><?php echo AmpConfig::get('version'); ?></modelNumber>
-            <modelURL>http://ampache.org</modelURL>
+            <modelURL>https://ampache.org</modelURL>
             <UDN>uuid:<?php echo Upnp_Api::get_uuidStr(); ?></UDN>
             <iconList>
                 <icon>

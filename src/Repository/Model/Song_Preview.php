@@ -64,7 +64,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * Constructor
      *
      * Song Preview class
-     * @param integer $object_id
+     * @param int $object_id
      */
     public function __construct($object_id)
     {
@@ -139,7 +139,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
      * @param array $song_ids
-     * @return boolean
+     * @return bool
      */
     public static function build_cache($song_ids)
     {
@@ -203,7 +203,7 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * get_artist_fullname
      * gets the name of $this->artist, allows passing of id
-     * @param integer $artist_id
+     * @param int $artist_id
      * @return string
      */
     public function get_artist_fullname($artist_id = 0)
@@ -221,8 +221,8 @@ class Song_Preview extends database_object implements Media, playable_item
      * This takes the current song object
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
-     * @param boolean $details
-     * @return boolean
+     * @param bool $details
+     * @return bool
      */
     public function format($details = true)
     {
@@ -341,7 +341,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -355,7 +355,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * else, this is the true function
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
+     * @param bool $local
      * @return string
      */
     public function play_url($additional_params = '', $player = '', $local = false)
@@ -418,11 +418,11 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $agent
      * @param array $location
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function set_played($user_id, $agent, $location, $date = null)
     {
@@ -433,10 +433,10 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @param integer $user
+     * @param int $user
      * @param string $agent
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function check_play_history($user, $agent, $date)
     {
@@ -465,7 +465,7 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function garbage_collection()
     {

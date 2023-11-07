@@ -29,11 +29,11 @@ use Ampache\Module\Authorization\Access;
     <form method="post" id="edit_label_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
                 <td>
                     <?php if (Access::check('interface', 50)) { ?>
                         <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
@@ -44,7 +44,7 @@ use Ampache\Module\Authorization\Access;
                 </td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Category') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Category'); ?></td>
                 <td>
                     <select name="category">
                         <option value="personal" <?php if (empty($libitem->category) || $libitem->category === "personal") {
@@ -87,23 +87,23 @@ use Ampache\Module\Authorization\Access;
                 </td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Summary'); ?></td>
                 <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Address') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Address'); ?></td>
                 <td><input type="text" name="address" value="<?php echo scrub_out($libitem->address); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Country') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Country'); ?></td>
                 <td><input type="text" name="country" value="<?php echo scrub_out($libitem->country); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('E-mail') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('E-mail'); ?></td>
                 <td><input type="text" name="email" value="<?php echo scrub_out($libitem->email); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Website') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Website'); ?></td>
                 <td><input type="text" name="website" value="<?php echo scrub_out($libitem->website); ?>" /></td>
             </tr>
             <tr>

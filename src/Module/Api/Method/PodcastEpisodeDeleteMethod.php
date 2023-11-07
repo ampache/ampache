@@ -45,10 +45,7 @@ final class PodcastEpisodeDeleteMethod
      *
      * Delete an existing podcast_episode.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of podcast_episode to delete
-     * @return boolean
      */
     public static function podcast_episode_delete(array $input, User $user): bool
     {

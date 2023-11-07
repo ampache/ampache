@@ -42,10 +42,7 @@ final class SystemPreference5Method
      *
      * Get your system preferences by name
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * @return boolean
      */
     public static function system_preference(array $input, User $user): bool
     {

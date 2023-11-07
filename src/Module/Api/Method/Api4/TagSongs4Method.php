@@ -41,12 +41,9 @@ final class TagSongs4Method
      *
      * returns the songs for this tag
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Tag
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function tag_songs(array $input, User $user): bool
     {

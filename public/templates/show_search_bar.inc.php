@@ -34,20 +34,20 @@ $t_search    = T_('Search'); ?>
         <input type="hidden" name="rule_1_operator" value="0" />
         <input type="hidden" name="object_type" value="song" />
         <select name="rule_1" id="searchStringRule">
-            <option value="anywhere"><?php echo T_('Anywhere')?></option>
-            <option value="title"><?php echo T_('Songs')?></option>
+            <option value="anywhere"><?php echo T_('Anywhere'); ?></option>
+            <option value="title"><?php echo T_('Songs'); ?></option>
             <?php if (AmpConfig::get('album_group')) { ?>
-                <option value="album"><?php echo $t_albums?></option>
+                <option value="album"><?php echo $t_albums; ?></option>
             <?php } else { ?>
-                <option value="album_disk"><?php echo $t_albums?></option>
+                <option value="album_disk"><?php echo $t_albums; ?></option>
             <?php } ?>
-            <option value="artist"><?php echo $t_artists?></option>
-            <option value="playlist"><?php echo $t_playlists?></option>
+            <option value="artist"><?php echo $t_artists; ?></option>
+            <option value="playlist"><?php echo $t_playlists; ?></option>
             <?php if (AmpConfig::get('label')) { ?>
-                <option value="label"><?php echo T_('Labels')?></option>
+                <option value="label"><?php echo T_('Labels'); ?></option>
             <?php } ?>
             <?php if (AmpConfig::get('wanted')) { ?>
-                <option value="missing_artist"><?php echo T_('Missing Artists')?></option>
+                <option value="missing_artist"><?php echo T_('Missing Artists'); ?></option>
             <?php } ?>
         </select>
         <?php if ($environment->isMobile()) {

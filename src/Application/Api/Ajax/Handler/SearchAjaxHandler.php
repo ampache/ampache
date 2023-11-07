@@ -209,7 +209,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $playlist  = new Playlist($playlistid);
                         $results[] = array(
                             'type' => T_('Playlists'),
-                            'link' => $web_path . '/playlist.php?action=show_playlist&playlist_id=' . $playlistid,
+                            'link' => $web_path . '/playlist.php?action=show&playlist_id=' . $playlistid,
                             'label' => $playlist->name,
                             'value' => $playlist->get_fullname(),
                             'rels' => '',

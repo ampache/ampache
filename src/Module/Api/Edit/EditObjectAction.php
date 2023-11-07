@@ -92,7 +92,7 @@ final class EditObjectAction extends AbstractEditAction
             'edit_object: {' . $object_type . '} {' . $object_id . '}',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
-        /* @var library_item $libitem */
+        /** @var library_item $libitem */
         $className  = ObjectTypeToClassNameMapper::map($object_type);
         $libitem    = new $className($_POST['id']);
         if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {

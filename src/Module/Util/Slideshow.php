@@ -40,9 +40,6 @@ final class Slideshow implements SlideshowInterface
         $this->modelFactory = $modelFactory;
     }
 
-    /**
-     * @return array
-     */
     public function getCurrentSlideshow(): array
     {
         $user_id = Core::get_global('user')->id ?? -1;

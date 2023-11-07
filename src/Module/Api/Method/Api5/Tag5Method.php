@@ -40,9 +40,6 @@ final class Tag5Method
      * MINIMUM_API_VERSION=380001
      *
      * This returns a single genre based on UID
-     *
-     * @param array $input
-     * @param User $user
      */
     public static function tag(array $input, User $user)
     {

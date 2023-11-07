@@ -35,8 +35,41 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\VideoRepositoryInterface;
 
+/** @var string $web_path */
+/** @var string $t_a_artists */
+/** @var string $t_albums */
+/** @var string $t_artists */
+/** @var string $t_broadcasts */
 /** @var string $t_browse */
+/** @var string $t_dashboards */
+/** @var string $t_democratic */
 /** @var string $t_expander */
+/** @var string $t_favorites */
+/** @var string $t_genres */
+/** @var string $t_information */
+/** @var string $t_labels */
+/** @var string $t_localplay */
+/** @var string $t_movies */
+/** @var string $t_musicClips */
+/** @var string $t_newest */
+/** @var string $t_personalVideos */
+/** @var string $t_playlists */
+/** @var string $t_podcastEpisodes */
+/** @var string $t_podcasts */
+/** @var string $t_popular */
+/** @var string $t_radioStations */
+/** @var string $t_random */
+/** @var string $t_recent */
+/** @var string $t_search */
+/** @var string $t_shares */
+/** @var string $t_smartPlaylists */
+/** @var string $t_songs */
+/** @var string $t_statistics */
+/** @var string $t_topRated */
+/** @var string $t_tvShows */
+/** @var string $t_uploads */
+/** @var string $t_videos */
+/** @var string $t_wanted */
 
 global $dic;
 $server_allow    = AmpConfig::get('allow_localplay_playback');
@@ -93,7 +126,7 @@ if ($text) {
     ${$text} = ' selected="selected"';
 } ?>
         <ul class="sb3" id="sb_home_browse">
-            <li id="sb_home_browse_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo $t_songs ?></a></li>
+            <li id="sb_home_browse_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo $t_songs; ?></a></li>
             <li id="sb_home_browse_album"><a href="<?php echo $web_path; ?>/browse.php?action=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
             <?php if ($showArtist) { ?>
                 <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo $t_artists; ?></a></li>
@@ -102,24 +135,24 @@ if ($text) {
                 <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo $t_a_artists; ?></a></li>
             <?php } ?>
             <?php if ($allowLabel) { ?>
-                <li id="sb_home_browse_label"><a href="<?php echo $web_path; ?>/browse.php?action=label"><?php echo $t_labels ?></a></li>
+                <li id="sb_home_browse_label"><a href="<?php echo $web_path; ?>/browse.php?action=label"><?php echo $t_labels; ?></a></li>
             <?php } ?>
             <?php if (AmpConfig::get('broadcast')) { ?>
-                <li id="sb_home_browse_broadcast"><a href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo $t_broadcasts ?></a></li>
+                <li id="sb_home_browse_broadcast"><a href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo $t_broadcasts; ?></a></li>
             <?php } ?>
             <?php if (AmpConfig::get('live_stream')) { ?>
-                <li id="sb_home_browse_radioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo $t_radioStations ?></a></li>
+                <li id="sb_home_browse_radioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo $t_radioStations; ?></a></li>
             <?php } ?>
             <?php if ($allowPodcast) { ?>
-                <li id="sb_home_browse_podcast"><a href="<?php echo $web_path; ?>/browse.php?action=podcast"><?php echo $t_podcasts ?></a></li>
-                <li id="sb_home_browse_podcast"><a href="<?php echo $web_path; ?>/browse.php?action=podcast_episode"><?php echo $t_podcastEpisodes ?></a></li>
+                <li id="sb_home_browse_podcast"><a href="<?php echo $web_path; ?>/browse.php?action=podcast"><?php echo $t_podcasts; ?></a></li>
+                <li id="sb_home_browse_podcast"><a href="<?php echo $web_path; ?>/browse.php?action=podcast_episode"><?php echo $t_podcastEpisodes; ?></a></li>
             <?php } ?>
             <?php if ($allowVideo) { ?>
-                <li id="sb_home_browse_video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo $t_videos ?></a></li>
+                <li id="sb_home_browse_video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo $t_videos; ?></a></li>
                 <?php } ?>
         <li id="sb_home_browse_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo $t_genres; ?></a></li>
             <?php if ($allow_upload) { ?>
-              <li id="sb_home_browse_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_uploads ?></a></li>
+              <li id="sb_home_browse_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_uploads; ?></a></li>
             <?php } ?>
         </ul>
     </li>
@@ -130,16 +163,16 @@ if ($text) {
             <?php echo Ui::get_icon('all', $t_expander, 'home_dashboard', 'header-img ' . $state_home_dashboard); ?>
         </h4>
         <ul class="sb3" id="sb_home_dashboard">
-            <li id="sb_home_dashboard_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $albumString; ?>"><?php echo $t_albums ?></a></li>
-            <li id="sb_home_dashboard_artists"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists ?></a></li>
+            <li id="sb_home_dashboard_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
+            <li id="sb_home_dashboard_artists"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists; ?></a></li>
             <?php if ($access25) { ?>
-            <li id="sb_home_dashboard_playlists"><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo $t_playlists ?></a></li>
+            <li id="sb_home_dashboard_playlists"><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo $t_playlists; ?></a></li>
             <?php } ?>
             <?php if ($allowPodcast) { ?>
-                <li id="sb_home_dashboard_podcast_episodes"><a href="<?php echo $web_path; ?>/mashup.php?action=podcast_episode"><?php echo $t_podcastEpisodes ?></a></li>
+                <li id="sb_home_dashboard_podcast_episodes"><a href="<?php echo $web_path; ?>/mashup.php?action=podcast_episode"><?php echo $t_podcastEpisodes; ?></a></li>
             <?php } ?>
             <?php if ($allowVideo) { ?>
-                <li id="sb_home_dashboard_videos"><a href="<?php echo $web_path; ?>/mashup.php?action=video"><?php echo $t_videos ?></a></li>
+                <li id="sb_home_dashboard_videos"><a href="<?php echo $web_path; ?>/mashup.php?action=video"><?php echo $t_videos; ?></a></li>
             <?php } ?>
         </ul>
     </li>
@@ -147,23 +180,23 @@ if ($text) {
     <?php if ($allowVideo) { ?>
         <li class="sb2_video">
             <h4 class="header">
-                <span class="sidebar-header-title"><?php echo $t_videos ?></span>
+                <span class="sidebar-header-title"><?php echo $t_videos; ?></span>
                 <?php echo Ui::get_icon('all', $t_expander, 'home_video', 'header-img ' . $state_home_video); ?>
             </h4>
             <ul class="sb3" id="sb_home_video">
           <?php if ($videoRepository->getItemCount(Clip::class)) { ?>
-                <li id="sb_home_video_clip"><a href="<?php echo $web_path; ?>/browse.php?action=clip"><?php echo $t_musicClips ?></a></li>
+                <li id="sb_home_video_clip"><a href="<?php echo $web_path; ?>/browse.php?action=clip"><?php echo $t_musicClips; ?></a></li>
           <?php } ?>
           <?php if ($videoRepository->getItemCount(TVShow_Episode::class)) { ?>
-                <li id="sb_home_video_tvShow"><a href="<?php echo $web_path; ?>/browse.php?action=tvshow"><?php echo $t_tvShows ?></a></li>
+                <li id="sb_home_video_tvShow"><a href="<?php echo $web_path; ?>/browse.php?action=tvshow"><?php echo $t_tvShows; ?></a></li>
           <?php } ?>
           <?php if ($videoRepository->getItemCount(Movie::class)) { ?>
-                <li id="sb_home_video_movie"><a href="<?php echo $web_path; ?>/browse.php?action=movie"><?php echo $t_movies ?></a></li>
+                <li id="sb_home_video_movie"><a href="<?php echo $web_path; ?>/browse.php?action=movie"><?php echo $t_movies; ?></a></li>
           <?php } ?>
           <?php if ($videoRepository->getItemCount(Personal_Video::class)) { ?>
-                <li id="sb_home_video_personal"><a href="<?php echo $web_path; ?>/browse.php?action=personal_video"><?php echo $t_personalVideos ?></a></li>
+                <li id="sb_home_video_personal"><a href="<?php echo $web_path; ?>/browse.php?action=personal_video"><?php echo $t_personalVideos; ?></a></li>
           <?php } ?>
-                <li id="sb_home_video_tagsVideo"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=video"><?php echo $t_genres ?></a></li>
+                <li id="sb_home_video_tagsVideo"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=video"><?php echo $t_genres; ?></a></li>
             </ul>
         </li>
     <?php } ?>
@@ -183,11 +216,11 @@ if ($text) {
               <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo $t_playlists; ?></a></li>
           <?php } ?>
           <?php if ($allowPodcast) { ?>
-              <li id="sb_home_search_podcast"><a href="<?php echo $web_path; ?>/search.php?type=podcast"><?php echo $t_podcasts ?></a></li>
-              <li id="sb_home_search_podcast_episode"><a href="<?php echo $web_path; ?>/search.php?type=podcast_episode"><?php echo $t_podcastEpisodes ?></a></li>
+              <li id="sb_home_search_podcast"><a href="<?php echo $web_path; ?>/search.php?type=podcast"><?php echo $t_podcasts; ?></a></li>
+              <li id="sb_home_search_podcast_episode"><a href="<?php echo $web_path; ?>/search.php?type=podcast_episode"><?php echo $t_podcastEpisodes; ?></a></li>
           <?php } ?>
           <?php if ($allowVideo) { ?>
-              <li id="sb_home_search_video"><a href="<?php echo $web_path; ?>/search.php?type=video"><?php echo $t_videos ?></a></li>
+              <li id="sb_home_search_video"><a href="<?php echo $web_path; ?>/search.php?type=video"><?php echo $t_videos; ?></a></li>
           <?php } ?>
               <li id="sb_home_random_advanced"><a href="<?php echo $web_path; ?>/random.php?action=advanced&type=song"><?php echo $t_random; ?></a></li>
         </ul>
@@ -203,13 +236,13 @@ if ($text) {
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
             <li id="sb_home_playlist_smartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo $t_smartPlaylists; ?></a></li>
             <?php if ($allowDemocratic) { ?>
-              <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo $t_democratic ?></a></li>
+              <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo $t_democratic; ?></a></li>
             <?php } ?>
             <?php if ($server_allow && $controller) { ?>
             <?php $localplay           = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $current_instance      = $localplay->current_instance();
                 $class                 = $current_instance ? '' : ' class="active_instance"'; ?>
-                <li id="sb_home_playlist_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo $t_localplay ?></a></li>
+                <li id="sb_home_playlist_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo $t_localplay; ?></a></li>
             <?php } ?>
         </ul>
         <?php } ?>
@@ -226,17 +259,17 @@ if ($text) {
             <li id="sb_home_information_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular_<?php echo $albumString; ?>"><?php echo $t_popular; ?></a></li>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
-                <li id="sb_home_information_highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest_<?php echo $albumString; ?>"><?php echo $t_topRated ?></a></li>
-                <li id="sb_home_information_userFlag"><a href="<?php echo $web_path?>/stats.php?action=userflag_<?php echo $albumString; ?>"><?php echo $t_favorites ?></a></li>
+                <li id="sb_home_information_highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest_<?php echo $albumString; ?>"><?php echo $t_topRated; ?></a></li>
+                <li id="sb_home_information_userFlag"><a href="<?php echo $web_path; ?>/stats.php?action=userflag_<?php echo $albumString; ?>"><?php echo $t_favorites; ?></a></li>
                 <?php } ?>
                 <?php if (AmpConfig::get('wanted')) { ?>
-                <li id="sb_home_information_wanted"><a href="<?php echo $web_path; ?>/stats.php?action=wanted"><?php echo $t_wanted ?></a></li>
+                <li id="sb_home_information_wanted"><a href="<?php echo $web_path; ?>/stats.php?action=wanted"><?php echo $t_wanted; ?></a></li>
                 <?php } ?>
                 <?php if (AmpConfig::get('share')) { ?>
-                <li id="sb_home_information_share"><a href="<?php echo $web_path; ?>/stats.php?action=share"><?php echo $t_shares ?></a></li>
+                <li id="sb_home_information_share"><a href="<?php echo $web_path; ?>/stats.php?action=share"><?php echo $t_shares; ?></a></li>
                 <?php } ?>
                 <?php if ($access50) { ?>
-                    <li id="sb_home_information_statistic"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo $t_statistics ?></a></li>
+                    <li id="sb_home_information_statistic"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo $t_statistics; ?></a></li>
                 <?php } ?>
             <?php } ?>
         </ul>

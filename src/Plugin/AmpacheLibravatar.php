@@ -78,7 +78,7 @@ class AmpacheLibravatar
 
     /**
      * @param $user
-     * @param integer $size
+     * @param int $size
      * @return string
      */
     public function get_avatar_url($user, $size = 80)
@@ -105,7 +105,7 @@ class AmpacheLibravatar
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return boolean
+     * @return bool
      */
     public function load($user)
     {

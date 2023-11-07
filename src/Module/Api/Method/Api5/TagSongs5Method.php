@@ -40,9 +40,6 @@ final class TagSongs5Method
      * MINIMUM_API_VERSION=380001
      *
      * returns the songs for this genre
-     *
-     * @param array $input
-     * @param User $user
      */
     public static function tag_songs(array $input, User $user)
     {

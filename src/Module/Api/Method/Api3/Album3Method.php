@@ -38,8 +38,6 @@ final class Album3Method
     /**
      * album
      * This returns a single album based on the UID provided
-     * @param array $input
-     * @param User $user
      */
     public static function album(array $input, User $user)
     {

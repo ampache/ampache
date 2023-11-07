@@ -87,7 +87,7 @@ class Search extends playlist_object
 
     /**
      * constructor
-     * @param integer $search_id // saved searches have rules already
+     * @param int $search_id // saved searches have rules already
      * @param string $object_type // map to self::VALID_TYPES
      * @param User|null $user
      */
@@ -1101,7 +1101,7 @@ class Search extends playlist_object
      * get_searches
      *
      * Return the IDs of all saved searches accessible by the current user.
-     * @param integer $user_id
+     * @param int $user_id
      * @return array
      */
     public static function get_searches($user_id = null)
@@ -1138,7 +1138,7 @@ class Search extends playlist_object
     /**
      * get_search_array
      * Returns a list of searches accessible by the user with formatted name.
-     * @param integer $user_id
+     * @param int $user_id
      * @return array
      */
     public static function get_search_array($user_id = null)
@@ -1180,7 +1180,7 @@ class Search extends playlist_object
      * results.
      * @param array $data
      * @param User $user
-     * @return integer[]
+     * @return int[]
      */
     public static function run($data, $user = null)
     {
@@ -1229,7 +1229,7 @@ class Search extends playlist_object
      * delete
      *
      * Does what it says on the tin.
-     * @return boolean
+     * @return bool
      */
     public function delete()
     {
@@ -1243,7 +1243,7 @@ class Search extends playlist_object
     /**
      * format
      * Gussy up the data
-     * @param boolean $details
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -1333,7 +1333,7 @@ class Search extends playlist_object
     /**
      * set_last
      *
-     * @param integer $count
+     * @param int $count
      * @param string $column
      */
     private function set_last($count, $column)
@@ -1350,7 +1350,7 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function get_random_items($limit = null)
@@ -1399,7 +1399,7 @@ class Search extends playlist_object
      * get_total_duration
      * Get the total duration of all songs.
      * @param array $songs
-     * @return integer
+     * @return int
      */
     public static function get_total_duration($songs)
     {
@@ -1700,7 +1700,7 @@ class Search extends playlist_object
      *
      * This function updates the saved search with the current settings.
      * @param array|null $data
-     * @return integer
+     * @return int
      */
     public function update(array $data = null)
     {
@@ -1744,7 +1744,7 @@ class Search extends playlist_object
      * @param array|string $data
      * @param string|false $type
      * @param array $operator
-     * @return array|boolean|integer|string|string[]|null
+     * @return array|bool|int|string|string[]|null
      */
     public function filter_data($data, $type, $operator)
     {

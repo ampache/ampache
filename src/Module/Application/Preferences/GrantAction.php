@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -39,14 +40,18 @@ final class GrantAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'grant';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
@@ -65,21 +70,21 @@ final class GrantAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $pluginName = mb_strtolower(Core::get_request('plugin'));
+        $plugin_name = mb_strtolower($this->requestParser->getFromRequest('plugin'));
 
         if (
-            Core::get_request('token') &&
-            in_array($pluginName, Plugin::get_plugins('save_mediaplay'))
+            $this->requestParser->getFromRequest('token') &&
+            in_array($plugin_name, Plugin::get_plugins('save_mediaplay'))
         ) {
             // we receive a token for a valid plugin, have to call getSession and obtain a session key
-            if ($plugin = new Plugin($pluginName)) {
+            if ($plugin = new Plugin($plugin_name)) {
                 $plugin->load($user);
-                if ($plugin->_plugin->get_session(Core::get_request('token'))) {
+                if ($plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))) {
                     $title    = T_('No Problem');
-                    $text     = T_('Your account has been updated') . ' : ' . $pluginName;
+                    $text     = T_('Your account has been updated') . ' : ' . $plugin_name;
                 } else {
                     $title    = T_('There Was a Problem');
-                    $text     = T_('Your account has not been updated') . ' : ' . $pluginName;
+                    $text     = T_('Your account has not been updated') . ' : ' . $plugin_name;
                 }
                 $next_url = sprintf(
                     '%s/preferences.php?tab=plugins',

@@ -46,7 +46,7 @@ class Registration
      * @param string $email
      * @param string $website
      * @param string $validation
-     * @return boolean
+     * @return bool
      */
     public static function send_confirmation($username, $fullname, $email, $website, $validation)
     {
@@ -94,7 +94,7 @@ class Registration
     /**
      * show_agreement
      * This shows the registration agreement, /config/registration_agreement.php
-     * @return boolean
+     * @return bool
      */
     public static function show_agreement()
     {

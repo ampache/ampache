@@ -94,7 +94,7 @@ class AmpacheAmazon
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return boolean
+     * @return bool
      */
     public function load($user)
     {
@@ -154,7 +154,7 @@ class AmpacheAmazon
      * Returns arts for what we're passed in.
      * @param string $type
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function gather_arts($type, $options = array(), $limit = 5)

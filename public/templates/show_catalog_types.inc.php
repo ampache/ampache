@@ -23,7 +23,9 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 
-$web_path = AmpConfig::get('web_path'); ?>
+/** @var array $catalog_types */
+
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <!-- Plugin we've found -->
 <table class="tabledata striped-rows">
     <thead>
@@ -36,7 +38,7 @@ $web_path = AmpConfig::get('web_path'); ?>
     </thead>
     <tbody>
         <?php
-        foreach ($catalogs as $type) {
+        foreach ($catalog_types as $type) {
             $catalog = Catalog::create_catalog_type($type);
             if ($catalog === null) {
                 continue;
@@ -56,7 +58,7 @@ $web_path = AmpConfig::get('web_path'); ?>
             <td class="cel_action"><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&amp;type=<?php echo urlencode($catalog->get_type()); ?>"><?php echo $action_txt; ?></a></td>
         </tr>
         <?php
-        } if (!count($catalogs)) { ?>
+        } if (!count($catalog_types)) { ?>
         <tr>
             <td colspan="4"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>

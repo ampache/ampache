@@ -24,7 +24,6 @@ use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 
 ?>
-
 <ul>
 <?php
     $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);

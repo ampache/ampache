@@ -25,6 +25,9 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
 $localplay->connect();
 $status = $localplay->status(); ?>

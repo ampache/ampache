@@ -232,11 +232,10 @@ class Api5
      * end users--so we have to do a little extra work to make them work
      * internally.
      * @param string $filter
-     * @param integer|string|boolean|null $value
+     * @param int|string|bool|null $value
      * @param Browse|null $browse
-     * @return boolean
      */
-    public static function set_filter($filter, $value, ?Browse $browse = null): bool
+    public static function set_filter($filter, $value, $browse = null): bool
     {
         if (!strlen((string)$value)) {
             return false;
@@ -290,7 +289,6 @@ class Api5
      * @param array $input
      * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
-     * @return boolean
      */
     public static function check_parameter($input, $parameters, $method): bool
     {
@@ -318,11 +316,10 @@ class Api5
      * 'interface', 100, $user->id
      *
      * @param string $type
-     * @param integer $level
-     * @param integer $user_id
+     * @param int $level
+     * @param int $user_id
      * @param string $method
      * @param string $format
-     * @return boolean
      */
     public static function check_access($type, $level, $user_id, $method, $format = 'xml'): bool
     {
@@ -343,7 +340,6 @@ class Api5
      * get the server counts for pings and handshakes
      *
      * @param string $token
-     * @return array
      */
     public static function server_details($token = ''): array
     {

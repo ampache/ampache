@@ -44,12 +44,9 @@ final class PreferenceEditMethod
      *
      * Edit a preference value and apply to all users if allowed
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * value  = (string|integer) Preference value
      * all    = (boolean) apply to all users //optional
-     * @return boolean
      */
     public static function preference_edit(array $input, User $user): bool
     {

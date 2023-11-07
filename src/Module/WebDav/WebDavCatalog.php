@@ -84,7 +84,7 @@ class WebDavCatalog extends DAV\Collection
     /**
      * childExists
      * @param string $name
-     * @return boolean
+     * @return bool
      */
     public function childExists($name)
     {

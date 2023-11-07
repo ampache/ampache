@@ -44,8 +44,6 @@ final class Artists4Method
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = Api::set_filter(date) //optional

@@ -43,11 +43,8 @@ final class DeletedVideos5Method
      * deleted_videos
      * This returns video objects that have been deleted
      *
-     * @param array $input
-     * @param User $user
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
      */
     public static function deleted_videos(array $input, User $user): bool
     {

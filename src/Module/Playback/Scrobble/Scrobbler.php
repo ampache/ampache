@@ -148,7 +148,7 @@ class Scrobbler
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
      * @param string $token
-     * @return boolean|SimpleXMLElement
+     * @return bool|SimpleXMLElement
      */
     public function get_session_key($token = null)
     {
@@ -201,7 +201,7 @@ class Scrobbler
      * @param $timestamp
      * @param $length
      * @param $track
-     * @return boolean
+     * @return bool
      */
     public function queue_track($artist, $album, $title, $timestamp, $length, $track)
     {
@@ -286,10 +286,10 @@ class Scrobbler
      * love
      * This takes care of spreading your love to the world
      * If passed the API key, session key combined with the signature
-     * @param boolean $is_loved
+     * @param bool $is_loved
      * @param string $artist
      * @param string $title
-     * @return boolean
+     * @return bool
      */
     public function love($is_loved, $artist = '', $title = '')
     {

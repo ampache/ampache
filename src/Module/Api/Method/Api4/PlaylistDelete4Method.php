@@ -42,10 +42,7 @@ final class PlaylistDelete4Method
      *
      * This deletes a playlist
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
-     * @return boolean
      */
     public static function playlist_delete(array $input, User $user): bool
     {

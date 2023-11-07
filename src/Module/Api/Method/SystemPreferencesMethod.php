@@ -42,10 +42,6 @@ final class SystemPreferencesMethod
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your system preferences
-     *
-     * @param array $input
-     * @param User $user
-     * @return boolean
      */
     public static function system_preferences(array $input, User $user): bool
     {

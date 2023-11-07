@@ -33,24 +33,24 @@ use Ampache\Module\Util\Ui;
 
 session_start();
 
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 8;
 $is_table     = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
-$cel_tags  = ($is_table) ? "cel_tags" : 'grid_tags';?>
-<?php if ($browse->is_show_header()) {
+$cel_tags  = ($is_table) ? "cel_tags" : 'grid_tags';
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="tvshow">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="tvshow">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'), 'tvshow_sort_name'); ?></th>
-            <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
+            <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
             <?php if (!$hide_genres) {
                 ++$thcount; ?>
@@ -90,7 +90,7 @@ $cel_tags  = ($is_table) ? "cel_tags" : 'grid_tags';?>
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'), 'tvshow_sort_name'); ?></th>
-            <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
+            <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
         <?php if (!$hide_genres) { ?>
                 <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>

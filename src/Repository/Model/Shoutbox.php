@@ -53,7 +53,7 @@ class Shoutbox
      * Constructor
      * This pulls the shoutbox information from the database and returns
      * a constructed object, uses user_shout table
-     * @param integer $shout_id
+     * @param int $shout_id
      */
     public function __construct($shout_id)
     {
@@ -71,8 +71,8 @@ class Shoutbox
     /**
      * has_info
      * does the db call, reads from the user_shout table
-     * @param integer $shout_id
-     * @return boolean
+     * @param int $shout_id
+     * @return bool
      */
     private function has_info($shout_id)
     {
@@ -92,9 +92,9 @@ class Shoutbox
      * get_top
      * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
      * number of objects shown
-     * @param integer $limit
+     * @param int $limit
      * @param string $username
-     * @return integer[]
+     * @return int[]
      */
     public static function get_top($limit, $username = null)
     {
@@ -146,7 +146,7 @@ class Shoutbox
      * get_object
      * This takes a type and an ID and returns a created object
      * @param string $type
-     * @param integer $object_id
+     * @param int $object_id
      * @return library_item|null
      */
     public static function get_object($type, $object_id)
@@ -190,7 +190,7 @@ class Shoutbox
      * create
      * This takes a key'd array of data as input and inserts a new shoutbox entry, it returns the auto_inc id
      * @param array $data
-     * @return boolean|string|null
+     * @return bool|string|null
      * @throws \PHPMailer\PHPMailer\Exception
      */
     public static function create(array $data)
@@ -213,7 +213,7 @@ class Shoutbox
 
         // Never send email in case of user impersonation
         if (!isset($data['user']) && $insert_id !== null) {
-            /* @var library_item $libitem */
+            /** @var library_item $libitem */
             $class_name    = ObjectTypeToClassNameMapper::map($data['object_type']);
             $libitem       = new $class_name($data['object_id']);
             $item_owner_id = $libitem->get_user_owner();
@@ -273,8 +273,8 @@ class Shoutbox
     }
 
     /**
-     * @param boolean $details
-     * @param boolean $jsbuttons
+     * @param bool $details
+     * @param bool $jsbuttons
      * @return string
      */
     public function get_display($details = true, $jsbuttons = false)
@@ -331,9 +331,9 @@ class Shoutbox
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

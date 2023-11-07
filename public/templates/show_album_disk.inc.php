@@ -45,7 +45,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
 $batch_dl   = Access::check_function('batch_download');
 $zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');
 // Title for this album
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $simple   = $albumDisk->get_fullname(true);
 $f_name   = $albumDisk->get_fullname(false, true);
 $title    = ($albumDisk->album_artist !== null)
@@ -151,9 +151,9 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php echo Ajax::button_with_text('?action=basket&type=album_disk_random&id=' . $albumDisk->id, 'random', $randtotemp, 'play_random_' . $albumDisk->id); ?>
         </li>
         <li>
-            <a id="<?php echo 'add_playlist_' . $albumDisk->id ?>" onclick="showPlaylistDialog(event, 'album_disk', '<?php echo $albumDisk->id ?>')">
-                <?php echo Ui::get_icon('playlist_add', $addtoexist); ?>
-                <?php echo $addtoexist ?>
+            <a id="<?php echo 'add_playlist_' . $albumDisk->id; ?>" onclick="showPlaylistDialog(event, 'album_disk', '<?php echo $albumDisk->id; ?>')">
+                <?php echo Ui::get_icon('playlist_add', $addtoexist);
+            echo $addtoexist; ?>
             </a>
         </li>
         <?php
@@ -204,14 +204,14 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             $t_upload = T_('Upload');
             if (Upload::can_upload($current_user) && $albumDisk->album_artist > 0) { ?>
                 <li>
-                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $albumDisk->album_artist; ?>&album=<?php echo $albumDisk->album_id ?>">
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $albumDisk->album_artist; ?>&album=<?php echo $albumDisk->album_id; ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>
                         <?php echo $t_upload; ?>
                     </a>
                 </li>
             <?php } ?>
             <li>
-                <a id="<?php echo 'edit_album_' . $albumDisk->album_id ?>" onclick="showEditDialog('album_row', '<?php echo $albumDisk->album_id ?>', '<?php echo 'edit_album_' . $albumDisk->album_id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', '')">
+                <a id="<?php echo 'edit_album_' . $albumDisk->album_id; ?>" onclick="showEditDialog('album_row', '<?php echo $albumDisk->album_id; ?>', '<?php echo 'edit_album_' . $albumDisk->album_id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
                     <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                     <?php echo T_('Edit Album'); ?>
                 </a>
@@ -232,7 +232,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (Catalog::can_remove($albumDisk)) {
             $delete = T_('Delete'); ?>
         <li>
-            <a id="<?php echo 'delete_album_' . $albumDisk->id ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $albumDisk->id; ?>">
+            <a id="<?php echo 'delete_album_' . $albumDisk->id; ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $albumDisk->id; ?>">
                 <?php echo Ui::get_icon('delete', $delete); ?>
                 <?php echo $delete; ?>
             </a>

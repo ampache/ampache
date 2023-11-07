@@ -134,7 +134,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param integer $song_id
+     * @param int $song_id
      * @return string
      */
     protected function getSongJS($song_id)
@@ -153,7 +153,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param ConnectionInterface $from
-     * @param integer $song_id
+     * @param int $song_id
      */
     protected function notifySong(ConnectionInterface $from, $song_id)
     {
@@ -176,7 +176,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param ConnectionInterface $from
-     * @param integer $song_position
+     * @param int $song_position
      */
     protected function notifySongPosition(ConnectionInterface $from, $song_position)
     {
@@ -199,7 +199,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param ConnectionInterface $from
-     * @param boolean $play
+     * @param bool $play
      */
     protected function notifyPlayerPlay(ConnectionInterface $from, $play)
     {
@@ -269,7 +269,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      * getRunningBroadcast
-     * @param integer $broadcast_id
+     * @param int $broadcast_id
      * @return Broadcast
      */
     protected function getRunningBroadcast($broadcast_id)
@@ -288,7 +288,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param ConnectionInterface $from
-     * @param integer $broadcast_id
+     * @param int $broadcast_id
      */
     protected function registerListener(ConnectionInterface $from, $broadcast_id)
     {
@@ -376,7 +376,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param ConnectionInterface $conn
-     * @return boolean
+     * @return bool
      */
     protected function isBroadcaster(ConnectionInterface $conn)
     {
@@ -445,7 +445,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      * echo_message
-     * @param boolean $verbose
+     * @param bool $verbose
      * @param string $message
      */
     private static function echo_message($verbose, $message)

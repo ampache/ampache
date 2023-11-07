@@ -69,7 +69,7 @@ if ($np_user->f_avatar_medium) {
     </div>
     <?php
         if (!empty($media->f_tags)) { ?>
-            <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_left">
+            <div id="np_song_tags_<?php echo $media->id; ?>" class="np_cell cel_left">
                 <label><?php echo T_('Genres'); ?></label>
                 <?php echo $media->f_tags; ?>
             </div>
@@ -77,7 +77,7 @@ if ($np_user->f_avatar_medium) {
 </div>
 
 <div class="np_group" id="np_group_3">
-  <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
+  <div id="album_<?php echo $media->album; ?>" class="np_cell cel_albumart libitem_menu">
       <?php
       if (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) {
           $playing = new Song($media->id);

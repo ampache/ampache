@@ -25,7 +25,8 @@ use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
+/** @var array $object_ids */
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">

@@ -43,10 +43,7 @@ final class Video5Method
      * video
      * This returns a single video
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of video
-     * @return boolean
      */
     public static function video(array $input, User $user): bool
     {

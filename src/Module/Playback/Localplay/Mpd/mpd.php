@@ -310,7 +310,7 @@ class mpd
      * are pre-defined for use (see self::COMMAND_* constant definitions above).
      * @param $command
      * @param $arguments
-     * @param boolean $refresh_info
+     * @param bool $refresh_info
      * @return string|bool
      */
     public function SendCommand($command, $arguments = null, $refresh_info = true)
@@ -376,7 +376,7 @@ class mpd
      * method. The syntax for queueing commands is identical to SendCommand.
      * @param $command
      * @param string $arguments
-     * @return boolean
+     * @return bool
      */
     public function QueueCommand($command, $arguments = '')
     {
@@ -440,7 +440,7 @@ class mpd
      *
      * Updates all class properties with the values from the MPD server.
      * NOTE: This function is automatically called on Connect()
-     * @return boolean
+     * @return bool
      */
     public function RefreshInfo()
     {
@@ -470,7 +470,7 @@ class mpd
      * Adjusts the mixer volume on the MPD by <value>, which can be a
      * positive (volume increase) or negative (volume decrease) value.
      * @param $value
-     * @return boolean|string
+     * @return bool|string
      */
     public function AdjustVolume($value)
     {
@@ -495,7 +495,7 @@ class mpd
      *
      * Sets the mixer volume to <value>, which should be between 1 - 100.
      * @param $value
-     * @return boolean|string
+     * @return bool|string
      */
     public function SetVolume($value)
     {
@@ -542,7 +542,7 @@ class mpd
      * places the results into a multidimensional array. If no directory is
      * specified the directory listing is at the base of the MPD music path.
      * @param string $dir
-     * @return array|boolean
+     * @return array|bool
      */
     public function GetDir($dir = '')
     {
@@ -561,7 +561,7 @@ class mpd
      * contains filenames of tracks to add to the end of the playlist. This
      * is used to add many, many tracks to the playlist in one swoop.
      * @param $trackArray
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLAddBulk($trackArray)
     {
@@ -582,7 +582,7 @@ class mpd
      * Adds the file <file> to the end of the playlist. <file> must be a
      * track in the MPD database.
      * @param string $filename
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLAdd($filename)
     {
@@ -599,7 +599,7 @@ class mpd
      * the playlist. This is used to reorder the songs in the playlist.
      * @param $current_position
      * @param $new_position
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLMoveTrack($current_position, $new_position)
     {
@@ -627,7 +627,7 @@ class mpd
     /**PLShuffle
      *
      * Randomly reorders the songs in the playlist.
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLShuffle()
     {
@@ -643,7 +643,7 @@ class mpd
      * Retrieves the playlist from <file>.m3u and loads it into the current
      * playlist.
      * @param $file
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLLoad($file)
     {
@@ -659,7 +659,7 @@ class mpd
      * Saves the playlist to <file>.m3u for later retrieval. The file is
      * saved in the MPD playlist directory.
      * @param $file
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLSave($file)
     {
@@ -674,7 +674,7 @@ class mpd
      * PLClear
      *
      * Empties the playlist.
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLClear()
     {
@@ -690,7 +690,7 @@ class mpd
      *
      * Removes track <id> from the playlist.
      * @param $id
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLRemove($id)
     {
@@ -711,7 +711,7 @@ class mpd
      * Enables 'loop' mode -- tells MPD continually loop the playlist. The
      * <repVal> parameter is either 1 (on) or 0 (off).
      * @param $value
-     * @return boolean|string
+     * @return bool|string
      */
     public function SetRepeat($value)
     {
@@ -729,7 +729,7 @@ class mpd
      * Enables 'randomize' mode -- tells MPD to play songs in the playlist
      * in random order. The parameter is either 1 (on) or 0 (off).
      * @param $value
-     * @return boolean|string
+     * @return bool|string
      */
     public function SetRandom($value)
     {
@@ -747,7 +747,7 @@ class mpd
      * Shuts down the MPD server (aka sends the KILL command). This closes
      * the current connection and prevents future communication with the
      * server.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Shutdown()
     {
@@ -770,7 +770,7 @@ class mpd
      * Tells MPD to rescan the music directory for new tracks and refresh
      * the Database. Tracks cannot be played unless they are in the MPD
      * database.
-     * @return boolean|string
+     * @return bool|string
      */
     public function DBRefresh()
     {
@@ -785,7 +785,7 @@ class mpd
      * Play
      *
      * Begins playing the songs in the MPD playlist.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Play()
     {
@@ -800,7 +800,7 @@ class mpd
      * Stop
      *
      * Stops playback.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Stop()
     {
@@ -815,7 +815,7 @@ class mpd
      * Pause
      *
      * Toggles pausing.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Pause()
     {
@@ -831,7 +831,7 @@ class mpd
      *
      * Skips directly to the <idx> song in the MPD playlist.
      * @param $idx
-     * @return boolean
+     * @return bool
      */
     public function SkipTo($idx)
     {
@@ -856,8 +856,8 @@ class mpd
      * the playlist. If <track> is not specified, the current track is
      * assumed.
      * @param $pos
-     * @param integer $track
-     * @return boolean
+     * @param int $track
+     * @return bool
      */
     public function SeekTo($pos, $track = -1)
     {
@@ -887,7 +887,7 @@ class mpd
      *
      * Skips to the next song in the MPD playlist. If not playing, returns
      * an error.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Next()
     {
@@ -903,7 +903,7 @@ class mpd
      *
      * Skips to the previous song in the MPD playlist. If not playing,
      * returns an error.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Previous()
     {
@@ -924,7 +924,7 @@ class mpd
      * that contains <string> will be returned in the results.
      * @param string $type
      * @param string $string
-     * @return array|boolean
+     * @return array|bool
      */
     public function Search($type, $string)
     {
@@ -958,7 +958,7 @@ class mpd
      * exactly matches <string> will be returned in the results.
      * @param string $type
      * @param string $string
-     * @return array|boolean
+     * @return array|bool
      */
     public function Find($type, $string)
     {
@@ -1002,7 +1002,7 @@ class mpd
      * GetArtists
      *
      * Returns the list of artists in the database in an associative array.
-     * @return array|boolean
+     * @return array|bool
      */
     public function GetArtists()
     {
@@ -1032,7 +1032,7 @@ class mpd
      * Optional parameter is an artist Name which will list all albums by a
      * particular artist.
      * @param $artist
-     * @return array|boolean
+     * @return array|bool
      */
     public function GetAlbums($artist = null)
     {
@@ -1067,7 +1067,7 @@ class mpd
      * Computes numeric value from a version string
      *
      * @param string $string
-     * @return float|integer
+     * @return float|int
      */
     private static function _computeVersionValue($string)
     {
@@ -1083,7 +1083,7 @@ class mpd
      * incompatibilities.
      * @param $cmd
      * @param $mpd_version
-     * @return boolean
+     * @return bool
      */
     private function _checkCompatibility($cmd, $mpd_version)
     {
@@ -1123,7 +1123,7 @@ class mpd
      *
      * Builds a multidimensional array with MPD response lists.
      * @param $response
-     * @return array|boolean
+     * @return array|bool
      */
     private static function _parseFileListResponse($response)
     {
@@ -1150,7 +1150,7 @@ class mpd
      * _parseResponse
      * Turns a response into an array
      * @param $response
-     * @return array|boolean
+     * @return array|bool
      */
     private static function _parseResponse($response)
     {
@@ -1175,7 +1175,7 @@ class mpd
      * Set error state
      * @param string $source
      * @param string $message
-     * @param integer $level
+     * @param int $level
      */
     private function _error($source, $message, $level = 1)
     {

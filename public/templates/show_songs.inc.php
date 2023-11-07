@@ -36,7 +36,8 @@ use Ampache\Module\Util\Ui;
 /** @var array $object_ids */
 /** @var array $hide_columns */
 /** @var string $argument_param */
-$web_path     = AmpConfig::get('web_path');
+
+$web_path     = (string)AmpConfig::get('web_path', '');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;
@@ -62,7 +63,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
+<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'sort_song_track' . $browse->id); ?></th>
@@ -198,7 +199,7 @@ foreach ($object_ids as $song_id) {
     </tfoot>
 </table>
 
-<?php show_table_render($argument); ?>
+<?php show_table_render($argument ?? false); ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

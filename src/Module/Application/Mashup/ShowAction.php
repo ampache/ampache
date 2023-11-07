@@ -27,10 +27,8 @@ namespace Ampache\Module\Application\Mashup;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -61,10 +59,7 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        require_once Ui::find_template('show_mashup.inc.php');
-
-        // Show the Footer
+        $this->ui->show('show_mashup.inc.php');
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

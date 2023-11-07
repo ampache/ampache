@@ -178,7 +178,7 @@ class Catalog_dropbox extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param integer $catalog_id
+     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -199,7 +199,7 @@ class Catalog_dropbox extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -345,7 +345,7 @@ class Catalog_dropbox extends Catalog
     /**
      * @param $dropbox
      * @param $path
-     * @return boolean
+     * @return bool
      */
     public function add_file($dropbox, $path)
     {
@@ -383,7 +383,7 @@ class Catalog_dropbox extends Catalog
      * Insert a song that isn't already in the database.
      * @param $dropbox
      * @param $path
-     * @return boolean
+     * @return bool
      * @throws DropboxClientException|Exception
      */
     private function insert_song($dropbox, $path)
@@ -444,7 +444,7 @@ class Catalog_dropbox extends Catalog
      * here
      * @param $dropbox
      * @param $path
-     * @return integer
+     * @return int
      * @throws DropboxClientException|Exception
      */
     public function insert_video($dropbox, $path)
@@ -508,7 +508,7 @@ class Catalog_dropbox extends Catalog
      * @param $path
      * @param $maxlen
      * @param $dropboxFile
-     * @return boolean
+     * @return bool
      * @throws DropboxClientException
      */
     public function download($dropbox, $path, $maxlen, $dropboxFile = null)
@@ -639,7 +639,7 @@ class Catalog_dropbox extends Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return boolean
+     * @return bool
      */
     public function move_catalog_proc($new_path)
     {
@@ -660,7 +660,7 @@ class Catalog_dropbox extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param $file
-     * @return boolean|mixed
+     * @return int|bool
      */
     public function check_remote_file($file)
     {
@@ -672,7 +672,7 @@ class Catalog_dropbox extends Catalog
         }
         $db_results = Dba::read($sql, array($file));
         if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['id'];
+            return (int)$results['id'];
         }
 
         return false;
@@ -743,9 +743,9 @@ class Catalog_dropbox extends Catalog
      * This runs through all of the albums and finds art for them
      * This runs through all of the needs art albums and tries
      * to find the art for them from the mp3s
-     * @param integer[]|null $songs
-     * @param integer[]|null $videos
-     * @return boolean
+     * @param int[]|null $songs
+     * @param int[]|null $videos
+     * @return bool
      * @throws DropboxClientException
      */
     public function gather_art($songs = null, $videos = null)

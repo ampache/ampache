@@ -28,27 +28,27 @@ use Ampache\Repository\Model\Podcast_Episode;
     <form method="post" id="edit_podcast_episode_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Title'); ?></td>
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Description') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Description'); ?></td>
                 <td><textarea name="description" cols="44" rows="4"><?php echo scrub_out($libitem->description); ?></textarea></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('GUID') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('GUID'); ?></td>
                 <td><input type="text" name="guid" value="<?php echo scrub_out($libitem->guid); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Author') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Author'); ?></td>
                 <td><input type="text" name="author" value="<?php echo scrub_out($libitem->author); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Category') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Category'); ?></td>
                 <td><input type="text" name="category" value="<?php echo scrub_out($libitem->category); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Website') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Website'); ?></td>
                 <td><input type="text" name="website" value="<?php echo scrub_out($libitem->website); ?>" /></td>
             </tr>
         </table>

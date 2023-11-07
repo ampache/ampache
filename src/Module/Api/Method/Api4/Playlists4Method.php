@@ -44,8 +44,6 @@ final class Playlists4Method
      *
      * This returns playlists based on the specified filter
      *
-     * @param array $input
-     * @param User $user
      * filter       = (string) Alpha-numeric search term (match all if missing) //optional
      * exact        = (integer) 0,1, if true filter is exact rather than fuzzy //optional
      * add          = Api::set_filter(date) //optional

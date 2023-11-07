@@ -21,8 +21,9 @@
  */
 
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Song_Preview;
 
-?>
+/** @var array $object_ids */ ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
@@ -35,7 +36,8 @@ use Ampache\Module\Util\Ui;
     </thead>
     <tbody>
         <?php
-        foreach ($object_ids as $libitem) { ?>
+        foreach ($object_ids as $preview_id) {
+            $libitem = new Song_Preview($preview_id); ?>
         <tr id="song_preview_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_song_preview_row.inc.php'); ?>
         </tr>

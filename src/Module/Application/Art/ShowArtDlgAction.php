@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Art;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -58,11 +57,19 @@ final class ShowArtDlgAction extends AbstractArtAction
             $burl = base64_decode(Core::get_get('burl'));
         }
 
-        $object_id   = $item->getId();
+        $object_id = $item->getId();
 
         $this->ui->showHeader();
 
-        require_once Ui::find_template('show_get_art.inc.php');
+        $this->ui->show(
+            'show_get_art.inc.php',
+            [
+                'item' => $item,
+                'object_type' => $object_type,
+                'object_id' => $object_id,
+                'burl' => $burl
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

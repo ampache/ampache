@@ -31,7 +31,7 @@ use Ampache\Module\Util\UiInterface;
 /** @var array<string, mixed> $preferences */
 
 $is_system = ($preferences['title'] === 'System');
-$is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin')) ?>
+$is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin')); ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
 <table class="tabledata striped-rows">
 <colgroup>
@@ -64,7 +64,7 @@ foreach ($preferences['prefs'] as $pref) {
         $lastsubcat = $pref['subcategory'];
         $fsubcat    = $lastsubcat;
         if (!empty($fsubcat)) { ?>
-                <tr><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)) ?></h5></td></tr>
+                <tr><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)); ?></h5></td></tr>
                 <?php
         }
     } ?>

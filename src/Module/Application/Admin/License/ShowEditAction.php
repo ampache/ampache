@@ -59,7 +59,10 @@ final class ShowEditAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $this->ui->show('show_edit_license.inc.php', ['license' => $license]);
+        $this->ui->show(
+            'show_edit_license.inc.php',
+            ['license' => $license]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

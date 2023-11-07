@@ -34,7 +34,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 ob_start();
 echo $playlist->get_fullname();
 $title    = ob_get_contents();
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $browse   = new Browse();
 $browse->set_type('playlist_media');
 $browse->add_supplemental_object('search', $playlist->id);
@@ -61,7 +61,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('search')
         </li>
 <?php if ($playlist->has_access()) { ?>
         <li>
-            <a id="<?php echo 'edit_playlist_' . $playlist->id ?>" onclick="showEditDialog('search_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_' . $playlist->id ?>', '<?php echo addslashes(T_('Smart Playlist Edit')) ?>', '')">
+            <a id="<?php echo 'edit_playlist_' . $playlist->id; ?>" onclick="showEditDialog('search_row', '<?php echo $playlist->id; ?>', '<?php echo 'edit_playlist_' . $playlist->id; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit'); ?>
             </a>
@@ -76,7 +76,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('search')
     </ul>
 </div>
 
-<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/smartplaylist.php?action=show_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
+<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/smartplaylist.php?action=show&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
     <?php require Ui::find_template('show_rules.inc.php'); ?>
     <div class="formValidation">
         <input class="button" type="submit" value="<?php echo T_('Refresh'); ?>" onClick="$('#hiddenaction').val('refresh_playlist');" />&nbsp;&nbsp;

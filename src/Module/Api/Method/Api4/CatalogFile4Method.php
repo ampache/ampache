@@ -51,12 +51,9 @@ final class CatalogFile4Method
      * Single file versions of catalog add, clean and verify.
      * Make sure you remember to urlencode those file names!
      *
-     * @param array $input
-     * @param User $user
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add'|'clean'|'verify'|'remove'
      * catalog = (integer) $catalog_id
-     * @return boolean
      */
     public static function catalog_file(array $input, User $user): bool
     {

@@ -26,15 +26,14 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Catalog;
 
-/** @var Ampache\Repository\Model\User $client */
+/** @var int $filter_id */
+/** @var string $filter_name */
 
 Ui::show_box_top(T_('Edit Catalog Filter'), 'box box_add_filter');
 
 if (!AmpConfig::get('catalog_filter')) {
     echo T_("Please enable 'catalog_filter' in your sever config file");
-} else {
-    $filter_id   = (int) Core::get_request('filter_id') ?? 0;
-    $filter_name = Core::get_request('filter_name'); ?>
+} else { ?>
     <p><?php echo T_("Catalog filters are a way to stop users accessing different catalogs"); ?></p>
     <p><?php echo T_("If you do not tick a catalog, it will be hidden from users that you assign to this filter"); ?></p>
 &nbsp;
@@ -45,13 +44,13 @@ if (!AmpConfig::get('catalog_filter')) {
             <td><?php echo T_('Filter Name'); ?>:</td>
             <?php if ($filter_name == 'DEFAULT') { ?>
                 <td><?php echo $filter_name; ?></td>
-                <input type="hidden" name="name" value="<?php echo $filter_name?>" />
-                <input type="hidden" name="filter_id" value="<?php echo $filter_id?>" />
+                <input type="hidden" name="name" value="<?php echo $filter_name; ?>" />
+                <input type="hidden" name="filter_id" value="<?php echo $filter_id; ?>" />
             <?php } else { ?>
                 <td>
-                    <input type="text" name="name" maxlength="128" value="<?php echo $filter_name ?>" >
+                    <input type="text" name="name" maxlength="128" value="<?php echo $filter_name; ?>" >
                     <?php echo AmpError::display('name'); ?>
-                    <input type="hidden" name="filter_id" value="<?php echo $filter_id?>" />
+                    <input type="hidden" name="filter_id" value="<?php echo $filter_id; ?>" />
                 </td>
             <?php } ?>
         </tr>

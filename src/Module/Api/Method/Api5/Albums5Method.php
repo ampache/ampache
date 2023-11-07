@@ -43,8 +43,6 @@ final class Albums5Method
      *
      * This returns albums based on the provided search filters
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = Api::set_filter(date) //optional
@@ -52,7 +50,6 @@ final class Albums5Method
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * include = (array|string) 'songs' //optional
-     * @return boolean
      */
 
     public static function albums(array $input, User $user): bool

@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\TvShow;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -56,7 +55,14 @@ final class ShowAction implements ApplicationActionInterface
         $tvshow->format();
         $object_ids  = $tvshow->get_seasons();
         $object_type = 'tvshow_season';
-        require_once Ui::find_template('show_tvshow.inc.php');
+        $this->ui->show(
+            'show_tvshow.inc.php',
+            [
+                'tvshow' => $tvshow,
+                'object_ids' => $object_ids,
+                'object_type' => $object_type
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

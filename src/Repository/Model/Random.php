@@ -71,7 +71,7 @@ class Random
      * playlist
      * This returns a random Playlist with songs little bit of extra
      * logic require
-     * @return integer
+     * @return int
      */
     public static function playlist()
     {
@@ -118,7 +118,7 @@ class Random
      * nothing special here...
      * @param string $limit
      * @param User $user
-     * @return integer[]
+     * @return int[]
      */
     public static function get_default($limit = '', $user = null)
     {
@@ -153,9 +153,9 @@ class Random
      * get_artist
      * This looks at the last artist played and then randomly picks a song from the
      * same artist
-     * @param integer $limit
+     * @param int $limit
      * @param User $user
-     * @return integer[]
+     * @return int[]
      */
     public static function get_artist($limit, $user = null)
     {
@@ -192,7 +192,7 @@ class Random
      * Get a random song from a playlist (that you own)
      * @param User $user
      * @param int $playlist_id
-     * @return integer[]
+     * @return int[]
      */
     public static function get_playlist($user, $playlist_id = 0)
     {
@@ -212,7 +212,7 @@ class Random
      * Get a random song from a search (that you own)
      * @param User $user
      * @param int $search_id
-     * @return integer[]
+     * @return int[]
      */
     public static function get_search($user, $search_id = 0)
     {

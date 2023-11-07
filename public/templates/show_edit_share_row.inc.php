@@ -29,25 +29,25 @@ use Ampache\Module\Authorization\Access;
     <form method="post" id="edit_share_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Share') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Share'); ?></td>
                 <td><?php echo $libitem->getObjectUrl(); ?></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Max Counter') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Max Counter'); ?></td>
                 <td><input type="text" name="max_counter" value="<?php echo scrub_out($libitem->max_counter); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Expiry Days') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Expiry Days'); ?></td>
                 <td><input type="text" name="expire" value="<?php echo scrub_out($libitem->expire_days); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($libitem->allow_stream) ? 'checked' : ''; ?> /> <?php echo T_('Allow Stream') ?></td>
+                <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($libitem->allow_stream) ? 'checked' : ''; ?> /> <?php echo T_('Allow Stream'); ?></td>
             </tr>
             <?php if ((($libitem->object_type == 'song' || $libitem->object_type == 'video') && (Access::check_function('download')) || Access::check_function('batch_download'))) { ?>
                     <tr>
                         <td class="edit_dialog_content_header"></td>
-                        <td><input type="checkbox" name="allow_download" value="1" <?php echo ($libitem->allow_download) ? 'checked' : ''; ?> /> <?php echo T_('Allow Download') ?></td>
+                        <td><input type="checkbox" name="allow_download" value="1" <?php echo ($libitem->allow_download) ? 'checked' : ''; ?> /> <?php echo T_('Allow Download'); ?></td>
                     </tr>
                 <?php } ?>
         </table>

@@ -45,11 +45,8 @@ final class DeletedPodcastEpisodes5Method
      *
      * This returns the episodes for a podcast that have been deleted
      *
-     * @param array $input
-     * @param User $user
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function deleted_podcast_episodes(array $input, User $user): bool
     {

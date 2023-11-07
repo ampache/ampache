@@ -40,7 +40,7 @@ trait Metadata
 
     /**
      * Determines if the functionality is enabled or not.
-     * @var boolean
+     * @var bool
      */
     protected $enableCustomMetadata;
 
@@ -100,7 +100,7 @@ trait Metadata
      */
     public function updateOrInsertMetadata(MetadataField $field, $data)
     {
-        /* @var Model\Metadata $metadata */
+        /** @var Model\Metadata $metadata */
         $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, ucfirst(ObjectTypeToClassNameMapper::reverseMap(get_class($this))));
         if ($metadata) {
             $object = reset($metadata);
@@ -114,7 +114,7 @@ trait Metadata
     /**
      *
      * @param string $name
-     * @param boolean $public
+     * @param bool $public
      * @return MetadataField
      * @throws ReflectionException
      */
@@ -133,7 +133,7 @@ trait Metadata
     /**
      *
      * @param string $propertie
-     * @param boolean $public
+     * @param bool $public
      * @return MetadataField
      * @throws ReflectionException
      */
@@ -151,7 +151,7 @@ trait Metadata
 
     /**
      *
-     * @return boolean
+     * @return bool
      */
     public static function isCustomMetadataEnabled()
     {

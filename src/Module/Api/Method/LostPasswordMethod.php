@@ -54,7 +54,7 @@ final class LostPasswordMethod
      *   $key = hash('sha256', 'email');
      *   auth = hash('sha256', $username . $key);
      * )
-     * @return boolean
+     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -80,7 +80,7 @@ final class LostPasswordMethod
             }
             // @todo replace by constructor injection
             global $dic;
-            /* @var NewPasswordSenderInterface $newPasswordSender */
+            /** @var NewPasswordSenderInterface $newPasswordSender */
             $newPasswordSender = $dic->get(NewPasswordSenderInterface::class);
             $current_ip        = Core::get_user_ip();
 

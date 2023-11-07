@@ -99,7 +99,7 @@ class Movie extends Video
      * update
      * This takes a key'd array of data as input and updates a movie entry
      * @param array $data
-     * @return integer
+     * @return int
      */
     public function update(array $data)
     {
@@ -130,8 +130,8 @@ class Movie extends Video
     /**
      * format
      * this function takes the object and formats some values
-     * @param boolean $details
-     * @return boolean
+     * @param bool $details
+     * @return bool
      */
 
     public function format($details = true)

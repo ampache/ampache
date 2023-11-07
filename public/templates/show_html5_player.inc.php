@@ -8,9 +8,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 
-// TODO remove me
-global $dic;
-
 /** @var bool $isVideo  */
 /** @var bool $isRadio */
 /** @var bool $isShare */
@@ -18,8 +15,10 @@ global $dic;
 /** @var bool $isRandom */
 /** @var Ampache\Module\Playback\Stream_Playlist $playlist */
 
+// TODO remove me
+global $dic;
 $environment   = $dic->get(EnvironmentInterface::class);
-$web_path      = AmpConfig::get('web_path');
+$web_path      = (string)AmpConfig::get('web_path', '');
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 7, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 7, path: '/', samesite: 'Strict'";
@@ -295,7 +294,7 @@ echo implode(',', $solutions); ?>",
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
-            Cookies.set('jp_volume', event.jPlayer.options.volume, {<?php echo $cookie_string ?>});
+            Cookies.set('jp_volume', event.jPlayer.options.volume, {<?php echo $cookie_string; ?>});
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.resize, function (event) {
@@ -489,31 +488,31 @@ if (!$isVideo) {
                         <?php if (Access::check('interface', 25)) { ?>
                             <div class="action_button">
                                 <a href="javascript:SaveToExistingPlaylist(event);">
-                                    <?php echo Ui::get_icon('playlist_add_all', addslashes(T_('Add All to playlist'))) ?>
+                                    <?php echo Ui::get_icon('playlist_add_all', addslashes(T_('Add All to playlist'))); ?>
                                 </a>
                             </div>
                         <?php } ?>
                         <div id="slideshow" class="slideshow action_button">
-                            <a href="javascript:SwapSlideshow();"><?php echo Ui::get_icon('image', addslashes(T_('Slideshow'))) ?></a>
+                            <a href="javascript:SwapSlideshow();"><?php echo Ui::get_icon('image', addslashes(T_('Slideshow'))); ?></a>
                         </div>
                         <div id="expandplaylistbtn" class="action_button">
-                            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_icon('multilines', addslashes(T_('Expand/Collapse playlist'))) ?></a>
+                            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_icon('multilines', addslashes(T_('Expand/Collapse playlist'))); ?></a>
                         </div>
                         <div id="playlistloopbtn" class="action_button">
-                            <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_icon('playlist_loop', addslashes(T_('Loop Playlist'))) ?></a>
+                            <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_icon('playlist_loop', addslashes(T_('Loop Playlist'))); ?></a>
                         </div>
                         <?php if (AmpConfig::get('webplayer_html5')) { ?>
                             <div class="action_button">
-                                <a href="javascript:ShowVisualizer();"><?php echo Ui::get_icon('visualizer', addslashes(T_('Visualizer'))) ?></a>
+                                <a href="javascript:ShowVisualizer();"><?php echo Ui::get_icon('visualizer', addslashes(T_('Visualizer'))); ?></a>
                             </div>
                             <div id="replaygainbtn" class="action_button">
-                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon($replaygain, addslashes(T_('ReplayGain'))) ?></a>
+                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon($replaygain, addslashes(T_('ReplayGain'))); ?></a>
                             </div>
                             <div id="vizfullbtn" class="action_button" style="visibility: hidden;">
-                                <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', addslashes(T_('Visualizer full-screen'))) ?></a>
+                                <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', addslashes(T_('Visualizer full-screen'))); ?></a>
                             </div>
                             <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
-                                <a href="javascript:ShowEqualizer();"><?php echo Ui::get_icon('equalizer', addslashes(T_('Equalizer'))) ?></a>
+                                <a href="javascript:ShowEqualizer();"><?php echo Ui::get_icon('equalizer', addslashes(T_('Equalizer'))); ?></a>
                             </div>
                         <?php } ?>
                     <?php } ?>

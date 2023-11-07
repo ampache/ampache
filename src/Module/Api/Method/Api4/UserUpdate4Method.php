@@ -46,8 +46,6 @@ final class UserUpdate4Method
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * @param array $input
-     * @param User $user
      * username   = (string) $username
      * password   = (string) hash('sha256', $password)) //optional
      * fullname   = (string) $fullname //optional
@@ -57,7 +55,6 @@ final class UserUpdate4Method
      * city       = (string) $city //optional
      * disable    = (integer) 0,1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
-     * @return boolean
      */
     public static function user_update(array $input, User $user): bool
     {

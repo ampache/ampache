@@ -44,12 +44,9 @@ final class GenreAlbums4Method
      *
      * This returns the albums associated with the genre in question
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Genre
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function genre_albums(array $input, User $user): bool
     {

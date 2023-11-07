@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = $browse->is_grid_view();
@@ -41,7 +41,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="video">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="video">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>

@@ -64,7 +64,7 @@ class Repository
 
     /**
      *
-     * @param integer $object_id
+     * @param int $object_id
      */
     public function findById($object_id)
     {
@@ -114,7 +114,7 @@ class Repository
     }
 
     /**
-     * @return string
+     * Get database table name from Class
      */
     private function getTableName(): string
     {
@@ -178,7 +178,7 @@ class Repository
     }
 
     /**
-     * @param integer $object_id
+     * @param int $object_id
      * @param $properties
      */
     protected function updateRecord($object_id, $properties)
@@ -194,7 +194,7 @@ class Repository
     }
 
     /**
-     * @param integer $object_id
+     * @param int $object_id
      */
     protected function deleteRecord($object_id)
     {
@@ -274,7 +274,7 @@ class Repository
 
     /**
      * camelCaseToUnderscore
-     * @param  string $string
+     * @param string $string
      * @return string
      */
     public function camelCaseToUnderscore($string)

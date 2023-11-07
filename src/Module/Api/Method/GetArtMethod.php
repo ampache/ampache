@@ -47,12 +47,9 @@ final class GetArtMethod
      *
      * Get an art image.
      *
-     * @param array $input
-     * @param User $user
      * id       = (string) $object_id
      * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
-     * @return boolean
      */
     public static function get_art(array $input, User $user): bool
     {

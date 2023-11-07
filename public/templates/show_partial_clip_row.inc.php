@@ -18,5 +18,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Repository\Model\Clip;
+
+/** @var Clip $libitem */ ?>
 <td class="cel_artist"><?php echo $libitem->f_artist; ?></td>

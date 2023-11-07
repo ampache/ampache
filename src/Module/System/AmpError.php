@@ -52,7 +52,7 @@ class AmpError
      * It can optionally clobber rather then adding to the error message
      * @param string $name
      * @param string $message
-     * @param integer $clobber
+     * @param int $clobber
      */
     public static function add($name, $message, $clobber = 0)
     {
@@ -84,7 +84,7 @@ class AmpError
     /**
      * occurred
      * This returns true / false if an error has occurred anywhere
-     * @return boolean
+     * @return bool
      */
     public static function occurred()
     {

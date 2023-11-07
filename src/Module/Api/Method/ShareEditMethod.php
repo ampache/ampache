@@ -44,14 +44,11 @@ final class ShareEditMethod
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
      *
-     * @param array $input
-     * @param User $user
      * filter      = (string) Alpha-numeric search term
      * stream      = (boolean) 0,1 //optional
      * download    = (boolean) 0,1 //optional
      * expires     = (integer) number of whole days before expiry //optional
      * description = (string) update description //optional
-     * @return boolean
      */
     public static function share_edit(array $input, User $user): bool
     {

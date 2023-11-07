@@ -44,10 +44,7 @@ final class UpdateArtistInfoMethod
      * Update artist information and fetch similar artists from last.fm
      * Make sure lastfm_api_key is set in your configuration file
      *
-     * @param array $input
-     * @param User $user
      * id = (integer) $artist_id
-     * @return boolean
      */
     public static function update_artist_info(array $input, User $user): bool
     {

@@ -52,12 +52,9 @@ final class CatalogFolderMethod
      * Single folder versions of catalog add, clean and verify.
      * Make sure you remember to urlencode those folder names!
      *
-     * @param array $input
-     * @param User $user
      * folder  = (string) urlencode(FULL path to local folder)
      * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id
-     * @return boolean
      */
     public static function catalog_folder(array $input, User $user): bool
     {

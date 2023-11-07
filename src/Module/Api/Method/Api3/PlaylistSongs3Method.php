@@ -39,8 +39,6 @@ final class PlaylistSongs3Method
     /**
      * playlist_songs
      * This returns the songs for a playlist
-     * @param array $input
-     * @param User $user
      */
     public static function playlist_songs(array $input, User $user)
     {

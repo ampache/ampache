@@ -44,11 +44,8 @@ final class Album5Method
      *
      * This returns a single album based on the UID provided
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) UID of Album
      * include = (array|string) 'songs' //optional
-     * @return boolean
      */
     public static function album(array $input, User $user): bool
     {

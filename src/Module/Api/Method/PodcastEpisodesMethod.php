@@ -46,12 +46,9 @@ final class PodcastEpisodesMethod
      *
      * This returns the episodes for a podcast
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of podcast
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function podcast_episodes(array $input, User $user): bool
     {

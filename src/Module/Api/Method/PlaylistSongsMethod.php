@@ -46,13 +46,10 @@ final class PlaylistSongsMethod
      *
      * This returns the songs for a playlist
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
      * random = (integer) 0,1, if true get random songs using limit //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function playlist_songs(array $input, User $user): bool
     {

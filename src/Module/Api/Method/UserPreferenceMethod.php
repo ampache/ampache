@@ -44,10 +44,7 @@ final class UserPreferenceMethod
      *
      * Get your user preference by name
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * @return boolean
      */
     public static function user_preference(array $input, User $user): bool
     {

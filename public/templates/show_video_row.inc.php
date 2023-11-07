@@ -76,7 +76,7 @@ if (!$art_showed) {
 <?php
     echo Ajax::button('?action=basket&type=video&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $libitem->id);
 if (Access::check('interface', 25)) { ?>
-        <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'video', '<?php echo $libitem->id ?>')">
+        <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'video', '<?php echo $libitem->id; ?>')">
             <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
     <?php } ?>
@@ -99,11 +99,11 @@ if ($video_type != 'video') {
 <?php if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
-                <span class="cel_rating" id="rating_<?php echo $libitem->id ?>_video">
-                    <?php echo Rating::show($libitem->id, 'video') ?>
+                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_video">
+                    <?php echo Rating::show($libitem->id, 'video'); ?>
                 </span>
-                <span class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_video">
-                    <?php echo Userflag::show($libitem->id, 'video') ?>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_video">
+                    <?php echo Userflag::show($libitem->id, 'video'); ?>
                 </span>
             <?php } ?>
         </td>
@@ -112,7 +112,7 @@ if ($video_type != 'video') {
 <a href="<?php echo $libitem->get_link(); ?>"><?php echo Ui::get_icon('preferences', T_('Video Information')); ?></a>
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
     if (AmpConfig::get('sociable')) { ?>
-        <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $libitem->id ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')) ?></a>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $libitem->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
     <?php
     }
 }
@@ -125,14 +125,14 @@ if (Access::check_function('download')) { ?>
     <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
 <?php }
 if (Access::check('interface', 50)) { ?>
-    <a id="<?php echo 'edit_video_' . $libitem->id ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_video_' . $libitem->id ?>', '<?php echo addslashes(T_('Video Edit')) ?>', 'video_')">
+    <a id="<?php echo 'edit_video_' . $libitem->id; ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_video_' . $libitem->id; ?>', '<?php echo addslashes(T_('Video Edit')); ?>', 'video_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php
 }
 if (Catalog::can_remove($libitem)) { ?>
-    <a id="<?php echo 'delete_video_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?> /video.php?action=delete&video_id=<?php echo $libitem->id ?>">
-        <?php echo Ui::get_icon('delete', T_('Delete')) ?>
+    <a id="<?php echo 'delete_video_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?> /video.php?action=delete&video_id=<?php echo $libitem->id; ?>">
+        <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
 <?php } ?>
 </td>

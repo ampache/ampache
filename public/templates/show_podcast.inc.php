@@ -34,6 +34,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Podcast $podcast */
+/** @var array $object_ids */
 /** @var string $object_type */
 
 $access75 = Access::check('interface', 75);
@@ -89,13 +90,11 @@ Art::display('podcast', $podcast->id, $podcast->get_fullname(), $thumb); ?>
                 </a>
             </li>
         <?php } ?>
-    <?php if (AmpConfig::get('use_rss')) {
-        ?>
+    <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
             <?php echo AmpacheRss::get_display('podcast', (Core::get_global('user')->id ?? -1), T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <li>
             <a href="<?php echo $podcast->website; ?>" target="_blank">
                 <?php echo Ui::get_icon('link', T_('Website')); ?>
@@ -103,7 +102,7 @@ Art::display('podcast', $podcast->id, $podcast->get_fullname(), $thumb); ?>
             </a>
         </li>
         <li>
-            <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo addslashes(T_('Podcast Edit')) ?>', '')">
+            <a id="<?php echo 'edit_podcast_' . $podcast->id; ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id; ?>', '<?php echo 'edit_podcast_' . $podcast->id; ?>', '<?php echo addslashes(T_('Podcast Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Podcast'); ?>
             </a>
@@ -114,7 +113,7 @@ Art::display('podcast', $podcast->id, $podcast->get_fullname(), $thumb); ?>
         <?php } ?>
         <?php if ($access75) { ?>
         <li>
-            <a id="<?php echo 'delete_podcast_' . $podcast->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $podcast->id; ?>">
+            <a id="<?php echo 'delete_podcast_' . $podcast->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $podcast->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>

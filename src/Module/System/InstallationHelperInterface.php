@@ -31,28 +31,28 @@ interface InstallationHelperInterface
      * still need to install ampache. This function is
      * very important, we don't want to reinstall over top of an existing install
      * @param $configfile
-     * @return boolean
+     * @return bool
      */
     public function install_check_status($configfile);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function install_check_server_apache();
 
     /**
      * @param string $file
      * @param $web_path
-     * @param boolean $fix
-     * @return boolean|string
+     * @param bool $fix
+     * @return bool|string
      */
     public function install_check_rewrite_rules($file, $web_path, $fix = false);
 
     /**
      * @param string $file
      * @param $web_path
-     * @param boolean $download
-     * @return boolean
+     * @param bool $download
+     * @return bool
      */
     public function install_rewrite_rules($file, $web_path, $download);
 
@@ -60,12 +60,12 @@ interface InstallationHelperInterface
      * Inserts the database using the values from Config.
      * @param string $db_user
      * @param string $db_pass
-     * @param boolean $create_db
-     * @param boolean $overwrite
-     * @param boolean $create_tables
+     * @param bool $create_db
+     * @param bool $overwrite
+     * @param bool $create_tables
      * @param string $charset
      * @param string $collation
-     * @return boolean
+     * @return bool
      */
     public function install_insert_db(
         $db_user = null,
@@ -79,8 +79,8 @@ interface InstallationHelperInterface
 
     /**
      * Attempts to write out the config file or offer it as a download.
-     * @param boolean $download
-     * @return boolean
+     * @param bool $download
+     * @return bool
      * @throws Exception
      */
     public function install_create_config($download = false);
@@ -90,7 +90,7 @@ interface InstallationHelperInterface
      * @param string $username
      * @param string $password
      * @param string $password2
-     * @return boolean
+     * @return bool
      */
     public function install_create_account($username, $password, $password2);
 

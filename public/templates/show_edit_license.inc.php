@@ -30,7 +30,7 @@ Ui::show_box_top(T_('Configure License')); ?>
 <?php } ?>
 <table class="tabledata">
 <tr>
-    <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
+    <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
     <td><input type="text" name="name" value="<?php if (isset($license)) {
         echo $license->name;
     } ?>" autofocus /></td>
@@ -42,7 +42,7 @@ Ui::show_box_top(T_('Configure License')); ?>
     } ?></textarea></td>
 </tr>
 <tr>
-    <td class="edit_dialog_content_header"><?php echo T_('External Link') ?></td>
+    <td class="edit_dialog_content_header"><?php echo T_('External Link'); ?></td>
     <td><input type="text" name="external_link" value="<?php if (isset($license)) {
         echo $license->external_link;
     } ?>" /></td>

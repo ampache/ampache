@@ -88,7 +88,7 @@ class WebDavFile extends DAV\File
 
     /**
      * getSize
-     * @return integer
+     * @return int
      */
     public function getSize()
     {

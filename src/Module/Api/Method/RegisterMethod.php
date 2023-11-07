@@ -51,7 +51,6 @@ final class RegisterMethod
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password)
      * email    = (string) $email
-     * @return boolean
      */
     public static function register(array $input): bool
     {

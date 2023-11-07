@@ -41,6 +41,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -60,6 +61,8 @@ final class PlayAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'play';
 
+    private RequestParserInterface $requestParser;
+
     private Horde_Browser $browser;
 
     private AuthenticationManagerInterface $authenticationManager;
@@ -71,12 +74,14 @@ final class PlayAction implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
         UserRepositoryInterface $userRepository,
         LoggerInterface $logger
     ) {
+        $this->requestParser         = $requestParser;
         $this->browser               = $browser;
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
@@ -858,7 +863,7 @@ final class PlayAction implements ApplicationActionInterface
             );
             $transcode_to = $transcode_settings['format'];
             $maxbitrate   = Stream::get_max_bitrate($media, $transcode_settings);
-            if (Core::get_request('content_length') == 'required') {
+            if ($this->requestParser->getFromRequest('content_length') == 'required') {
                 if ($media->time > 0 && $maxbitrate > 0) {
                     $stream_size = ($media->time * $maxbitrate * 1024) / 8;
                 } else {

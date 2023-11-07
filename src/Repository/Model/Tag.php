@@ -93,7 +93,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This takes an array of object ids and caches all of their information
      * in a single query, cuts down on the connections
      * @param array $ids
-     * @return boolean
+     * @return bool
      */
     public static function build_cache($ids)
     {
@@ -116,7 +116,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This builds a cache of the mappings for the specified object, no limit is given
      * @param string $type
      * @param $ids
-     * @return boolean
+     * @return bool
      * @params array $ids
      */
     public static function build_map_cache($type, $ids)
@@ -171,9 +171,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This is a wrapper function, it figures out what we need to add, be it a tag
      * and map, or just the mapping
      * @param string $type
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $value
-     * @param boolean $user
+     * @param bool $user
      * @return bool|int
      */
     public static function add($type, $object_id, $value, $user = true)
@@ -243,7 +243,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * update
      * Update the name of the tag
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public function update(array $data)
     {
@@ -305,8 +305,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * merge
      * merges this tag to another one.
-     * @param integer $merge_to
-     * @param boolean $is_persistent
+     * @param int $merge_to
+     * @param bool $is_persistent
      */
     public function merge($merge_to, $is_persistent)
     {
@@ -391,10 +391,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * add_tag_map
      * This adds a specific tag to the map for specified object
      * @param string $type
-     * @param integer|string $object_id
-     * @param integer|string $tag_id
-     * @param boolean $user
-     * @return boolean|int
+     * @param int|string $object_id
+     * @param int|string $tag_id
+     * @param bool $user
+     * @return bool|int
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
@@ -485,7 +485,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * tag_exists
      * This checks to see if a tag exists, this has nothing to do with objects or maps
      * @param string $value
-     * @return integer
+     * @return int
      */
     public static function tag_exists($value)
     {
@@ -511,9 +511,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This looks to see if the current mapping of the current object of the current tag of the current
      * user exists, lots of currents... taste good in scones.
      * @param string $type
-     * @param integer $object_id
-     * @param integer $tag_id
-     * @param integer $user
+     * @param int $object_id
+     * @param int $tag_id
+     * @param int $user
      * @return bool|int
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
@@ -539,8 +539,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * get_top_tags
      * This gets the top tags for the specified object using limit
      * @param string $type
-     * @param integer $object_id
-     * @param integer $limit
+     * @param int $object_id
+     * @param int $limit
      * @return array
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
@@ -567,8 +567,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * get_object_tags
      * Display all tags that apply to matching target type of the specified id
      * @param string $type
-     * @param integer $object_id
-     * @return array|boolean
+     * @param int $object_id
+     * @return array|bool
      */
     public static function get_object_tags($type, $object_id = null)
     {
@@ -598,7 +598,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param $tag_id
      * @param string $count
      * @param string $offset
-     * @return integer[]
+     * @return int[]
      */
     public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
     {
@@ -638,7 +638,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $type
      * @param string $count
      * @param string $offset
-     * @return integer[]
+     * @return int[]
      */
     public static function get_tag_ids($type, $count = '', $offset = '')
     {
@@ -676,7 +676,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
      * @param string $type
-     * @param integer $limit
+     * @param int $limit
      * @param string $order
      * @return array
      */
@@ -732,7 +732,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * it also takes a type so that it knows how to return it, this is used
      * by the formatting functions of the different objects
      * @param array $tags
-     * @param boolean $link
+     * @param bool $link
      * @param string $filter_type
      * @return string
      */
@@ -769,9 +769,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      *  (ex. tag1,tag2,tag3,..)
      * @param string $tags_comma
      * @param string $object_type
-     * @param integer $object_id
-     * @param boolean $overwrite
-     * @return boolean
+     * @param int $object_id
+     * @param bool $overwrite
+     * @return bool
      */
     public static function update_tag_list($tags_comma, $object_type, $object_id, $overwrite)
     {
@@ -861,7 +861,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This returns the count for the all objects associated with this tag
      * If a type is specific only counts for said type are returned
      * @param string $type
-     * @param integer $user_id
+     * @param int $user_id
      * @return array
      */
     public function count($type = '', $user_id = 0)
@@ -893,9 +893,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * remove_map
      * This will only remove tag maps for the current user
      * @param string $type
-     * @param integer $object_id
-     * @param boolean $user
-     * @return boolean
+     * @param int $object_id
+     * @param bool $user
+     * @return bool
      */
     public function remove_map($type, $object_id, $user = true)
     {
@@ -918,8 +918,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * remove_all_map
      * Clear all the tags from an object when there isn't anything there
      * @param string $object_type
-     * @param integer $object_id
-     * @return boolean
+     * @param int $object_id
+     * @return bool
      */
     public static function remove_all_map($object_type, $object_id)
     {
@@ -934,7 +934,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     } // remove_all_map
 
     /**
-     * @param boolean $details
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -1037,7 +1037,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -1072,8 +1072,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -1085,9 +1085,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

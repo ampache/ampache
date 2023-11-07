@@ -61,7 +61,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
      * results set is returned
      *
      * @param Art $art
-     * @param integer $limit
+     * @param int $limit
      * @param array $data
      *
      * @return array

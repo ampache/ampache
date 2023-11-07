@@ -43,13 +43,10 @@ final class Videos5Method
      * videos
      * This returns video objects!
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
      */
     public static function videos(array $input, User $user): bool
     {

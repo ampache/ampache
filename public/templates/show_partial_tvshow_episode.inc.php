@@ -20,6 +20,8 @@
  *
  */
 
+/** @var Ampache\Repository\Model\TVShow_Episode $video */
+
 $videoprops[T_('TV Show')]   = $video->f_tvshow_link;
 $videoprops[T_('Season')]    = $video->f_season_link;
 $videoprops[T_('Episode')]   = $video->episode_number;
