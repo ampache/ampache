@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\RequestParser;
 use Exception;
 
 /**
@@ -191,6 +192,8 @@ class Core
      * @param string $name
      * @param string $type
      * @return bool
+     *
+     * @see RequestParser::verifyForm()
      */
     public static function form_verify($name, $type = 'post')
     {

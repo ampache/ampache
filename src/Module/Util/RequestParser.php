@@ -24,6 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Module\System\Core;
+
 final class RequestParser implements RequestParserInterface
 {
     /**
@@ -36,5 +38,22 @@ final class RequestParser implements RequestParserInterface
         }
 
         return scrub_in($_REQUEST[$variable]);
+    }
+
+    /**
+     * Check if the form-submit is valid
+     *
+     * If the application expects a form-submit, check if it's actually
+     * a valid submit (by validating a session token).
+     * This method currently proxies the verification to a static method within
+     * the core-class to make it testable.
+     *
+     * @return bool True, if the form-submit is considered valid
+     *
+     * @see Core::form_verify()
+     */
+    public function verifyForm(string $formName): bool
+    {
+        return Core::form_verify($formName);
     }
 }

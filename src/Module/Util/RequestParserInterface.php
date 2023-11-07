@@ -28,4 +28,14 @@ interface RequestParserInterface
      * Return a $REQUEST variable instead of calling directly
      */
     public function getFromRequest(string $variable): string;
+
+    /**
+     * Check if the form-submit is valid
+     *
+     * If the application expects a form-submit, check if it's actually
+     * a valid submit (by validating a session token).
+     *
+     * @return bool True, if the form-submit is considered valid
+     */
+    public function verifyForm(string $formName): bool;
 }
