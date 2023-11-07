@@ -41,6 +41,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -60,6 +61,8 @@ final class Play2Action implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'play2';
 
+    private RequestParserInterface $requestParser;
+
     private Horde_Browser $browser;
 
     private AuthenticationManagerInterface $authenticationManager;
@@ -71,12 +74,14 @@ final class Play2Action implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
         UserRepositoryInterface $userRepository,
         LoggerInterface $logger
     ) {
+        $this->requestParser         = $requestParser;
         $this->browser               = $browser;
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
@@ -177,7 +182,7 @@ final class Play2Action implements ApplicationActionInterface
             // run_custom_play_action... whatever that is
             $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         }
-        //$this->logger->debug('Called for action: {' . Core::get_request('action') . '}', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        $this->logger->debug('Called for action: {' . $this->requestParser->getFromRequest('action') . '}', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         //$this->logger->debug('REQUEST: ' . print_r($_REQUEST, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         //$debug = array(
         //    'action' => $action,
@@ -266,7 +271,7 @@ final class Play2Action implements ApplicationActionInterface
         );
 
         if ($type == 'playlist') {
-            $playlist_type = scrub_in($_REQUEST['playlist_type']);
+            $playlist_type = $this->requestParser->getFromRequest('playlist_type');
             $object_id     = $session_id;
         }
 
@@ -282,15 +287,15 @@ final class Play2Action implements ApplicationActionInterface
         }
 
         // Authenticate the user if specified
-        $username = $_REQUEST['PHP_AUTH_USER'] ?? '';
+        $username = $this->requestParser->getFromRequest('PHP_AUTH_USER');
         if (empty($username)) {
-            $username = $_REQUEST['u'] ?? '';
+            $username = $this->requestParser->getFromRequest('u');
         }
-        $password = $_REQUEST['PHP_AUTH_PW'] ?? '';
+        $password = $this->requestParser->getFromRequest('PHP_AUTH_PW');
         if (empty($password)) {
-            $password = $_REQUEST['p'] ?? '';
+            $password = $this->requestParser->getFromRequest('p');
         }
-        $apikey    = $_REQUEST['apikey'] ?? '';
+        $apikey    = $this->requestParser->getFromRequest('apikey');
         $user      = null;
         $user_auth = false;
         // If explicit user authentication was passed
@@ -531,11 +536,11 @@ final class Play2Action implements ApplicationActionInterface
             } else {
                 // get a new random object and redirect to that object
                 if (array_key_exists('random_type', $_REQUEST)) {
-                    $rtype = $_REQUEST['random_type'];
+                    $rtype = $this->requestParser->getFromRequest('random_type');
                 } else {
                     $rtype = $type;
                 }
-                $object_id = Random::get_single_song($rtype, $user, (int)$_REQUEST['random_id']);
+                $object_id = Random::get_single_song($rtype, $user, (int)$this->requestParser->getFromRequest('random_id'));
             }
             $media = new Song($object_id);
             if ($media->id > 0) {
@@ -570,7 +575,7 @@ final class Play2Action implements ApplicationActionInterface
         if ($type == 'video') {
             $media = new Video($object_id);
             if (array_key_exists('subtitle', $_REQUEST)) {
-                $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
+                $subtitle = $media->get_subtitle_file($this->requestParser->getFromRequest('subtitle'));
             }
         } elseif ($type == 'song_preview') {
             $media = new Song_Preview($object_id);
@@ -852,9 +857,9 @@ final class Play2Action implements ApplicationActionInterface
             }
 
             if (array_key_exists('frame', $_REQUEST)) {
-                $troptions['frame'] = (float) $_REQUEST['frame'];
+                $troptions['frame'] = (float) $this->requestParser->getFromRequest('frame');
                 if (array_key_exists('duration', $_REQUEST)) {
-                    $troptions['duration'] = (float) $_REQUEST['duration'];
+                    $troptions['duration'] = (float) $this->requestParser->getFromRequest('duration');
                 }
             } elseif (array_key_exists('segment', $_REQUEST)) {
                 // 10 seconds segment. Should it be an option?
@@ -863,7 +868,7 @@ final class Play2Action implements ApplicationActionInterface
                     'Sending all data in one piece.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
+                $troptions['frame']    = (int) ($this->requestParser->getFromRequest('segment')) * $ssize;
                 $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time)
                     ? $ssize
                     : ($media->time - $troptions['frame']);
@@ -944,7 +949,7 @@ final class Play2Action implements ApplicationActionInterface
             }
         }
 
-        if (!isset($_REQUEST['segment'])) {
+        if (!empty($this->requestParser->getFromRequest('segment'))) {
             if ($media->time) {
                 header('X-Content-Duration: ' . $media->time);
             }

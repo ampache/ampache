@@ -130,7 +130,7 @@ final class DefaultAction implements ApplicationActionInterface
                     $name      = Core::get_global('user')->username . ' - Playlist';
                     break;
                 case 'browse':
-                    $object_id        = (int)Core::get_request('browse_id');
+                    $object_id        = (int)$this->requestParser->getFromRequest('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
                     $browse_media_ids = $browse->get_saved();
                     foreach ($browse_media_ids as $media_id) {

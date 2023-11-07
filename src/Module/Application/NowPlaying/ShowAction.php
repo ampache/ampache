@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,14 +41,18 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
     }
@@ -116,7 +121,7 @@ final class ShowAction implements ApplicationActionInterface
             $css,
             $refreshLimit
         );
-        $user_id = (int)Core::get_request('user_id');
+        $user_id = (int)$this->requestParser->getFromRequest('user_id');
         $results = Stream::get_now_playing($user_id);
 
         require Ui::find_template('show_now_playing.inc.php');

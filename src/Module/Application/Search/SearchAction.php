@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Search;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -39,6 +40,8 @@ final class SearchAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'search';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
@@ -46,10 +49,12 @@ final class SearchAction implements ApplicationActionInterface
     private MissingArtistFinderInterface $missingArtistFinder;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         MissingArtistFinderInterface $missingArtistFinder
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui                  = $ui;
         $this->modelFactory        = $modelFactory;
         $this->missingArtistFinder = $missingArtistFinder;
@@ -60,8 +65,8 @@ final class SearchAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // set the browse type BEFORE running the search (for the search bar)
-        $searchType = Core::get_request('type');
-        $rule_1     = Core::get_request('rule_1');
+        $searchType = $this->requestParser->getFromRequest('type');
+        $rule_1     = $this->requestParser->getFromRequest('rule_1');
         if (empty($searchType)) {
             $searchType = in_array($rule_1, Search::VALID_TYPES)
                 ? str_replace('_name', ' ', $rule_1)
