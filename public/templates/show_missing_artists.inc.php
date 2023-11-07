@@ -34,7 +34,7 @@ Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
     </thead>
     <tbody>
         <?php
-        if ($wartists) {
+        if (!empty($wartists)) {
             $web_path = AmpConfig::get('web_path');
             foreach ($wartists as $libitem) { ?>
         <tr id="wartist_<?php echo $libitem['mbid']; ?>">
@@ -45,9 +45,9 @@ Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
         <?php
             }
         } ?>
-        <?php if (!$wartists || !count($wartists)) { ?>
+        <?php if (empty($wartists) || !count($wartists)) { ?>
         <tr>
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
+            <td colspan="<?php echo 5; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>

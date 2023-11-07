@@ -68,8 +68,9 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
             return null;
         }
-
         $object->format();
+
+        $data = '';
         if (get_class($object) == Song::class) {
             $data = $_REQUEST['offset'] ?? '';
         }

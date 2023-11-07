@@ -67,14 +67,4 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 
         return null;
     }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
-    }
 }
