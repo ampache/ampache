@@ -76,7 +76,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('search')
     </ul>
 </div>
 
-<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/smartplaylist.php?action=show_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
+<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/smartplaylist.php?action=show&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
     <?php require Ui::find_template('show_rules.inc.php'); ?>
     <div class="formValidation">
         <input class="button" type="submit" value="<?php echo T_('Refresh'); ?>" onClick="$('#hiddenaction').val('refresh_playlist');" />&nbsp;&nbsp;

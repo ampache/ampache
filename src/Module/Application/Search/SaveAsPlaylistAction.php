@@ -95,7 +95,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
                     $playlist_name
                 ),
                 sprintf(
-                    '%1$s/playlist.php?action=show_playlist&playlist_id=%2$s',
+                    '%1$s/playlist.php?action=show&playlist_id=%2$s',
                     $this->configContainer->getWebPath(),
                     $playlist_id
                 )

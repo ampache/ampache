@@ -188,8 +188,8 @@ abstract class playlist_object extends database_object implements library_item
         if (!isset($this->link)) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = ($this instanceof Search)
-                ? $web_path . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id
-                : $web_path . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
+                ? $web_path . '/smartplaylist.php?action=show&playlist_id=' . $this->id
+                : $web_path . '/playlist.php?action=show&playlist_id=' . $this->id;
         }
 
         return $this->link;
