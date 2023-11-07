@@ -64,9 +64,10 @@ final class ShowArtDlgAction extends AbstractArtAction
         $this->ui->show(
             'show_get_art.inc.php',
             [
-                'burl' => $burl,
+                'item' => $item,
                 'object_type' => $object_type,
-                'object_id' => $object_id
+                'object_id' => $object_id,
+                'burl' => $burl
             ]
         );
 
