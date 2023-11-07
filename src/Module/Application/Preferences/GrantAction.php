@@ -70,21 +70,21 @@ final class GrantAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $pluginName = mb_strtolower($this->requestParser->getFromRequest('plugin'));
+        $plugin_name = mb_strtolower($this->requestParser->getFromRequest('plugin'));
 
         if (
             $this->requestParser->getFromRequest('token') &&
-            in_array($pluginName, Plugin::get_plugins('save_mediaplay'))
+            in_array($plugin_name, Plugin::get_plugins('save_mediaplay'))
         ) {
             // we receive a token for a valid plugin, have to call getSession and obtain a session key
-            if ($plugin = new Plugin($pluginName)) {
+            if ($plugin = new Plugin($plugin_name)) {
                 $plugin->load($user);
                 if ($plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))) {
                     $title    = T_('No Problem');
-                    $text     = T_('Your account has been updated') . ' : ' . $pluginName;
+                    $text     = T_('Your account has been updated') . ' : ' . $plugin_name;
                 } else {
                     $title    = T_('There Was a Problem');
-                    $text     = T_('Your account has not been updated') . ' : ' . $pluginName;
+                    $text     = T_('Your account has not been updated') . ' : ' . $plugin_name;
                 }
                 $next_url = sprintf(
                     '%s/preferences.php?tab=plugins',

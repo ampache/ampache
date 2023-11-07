@@ -71,13 +71,13 @@ final class UninstallPluginAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $plugin = $this->requestParser->getFromRequest('plugin');
+        $plugin_name = $this->requestParser->getFromRequest('plugin');
 
         /* Verify that this plugin exists */
         $plugins = Plugin::get_plugins();
-        if (!array_key_exists($plugin, $plugins)) {
+        if (!array_key_exists($plugin_name, $plugins)) {
             $this->logger->error(
-                sprintf('Error: Invalid Plugin: %s selected', $plugin),
+                sprintf('Error: Invalid Plugin: %s selected', $plugin_name),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
@@ -86,7 +86,7 @@ final class UninstallPluginAction implements ApplicationActionInterface
 
             return null;
         }
-        $plugin = new Plugin($plugin);
+        $plugin = new Plugin($plugin_name);
         $plugin->uninstall();
 
         // Don't trust the plugin to do it

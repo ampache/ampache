@@ -71,13 +71,13 @@ final class InstallPluginAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $plugin = $this->requestParser->getFromRequest('plugin');
+        $plugin_name = $this->requestParser->getFromRequest('plugin');
 
         /* Verify that this plugin exists */
         $plugins = Plugin::get_plugins();
-        if (!array_key_exists($plugin, $plugins)) {
+        if (!array_key_exists($plugin_name, $plugins)) {
             $this->logger->error(
-                sprintf('Error: Invalid Plugin: %s selected', $plugin),
+                sprintf('Error: Invalid Plugin: %s selected', $plugin_name),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
@@ -86,10 +86,10 @@ final class InstallPluginAction implements ApplicationActionInterface
 
             return null;
         }
-        $plugin = new Plugin($plugin);
+        $plugin = new Plugin($plugin_name);
         if (!$plugin->install()) {
             $this->logger->error(
-                sprintf('Error: Plugin Install Failed, %s', $plugin),
+                sprintf('Error: Plugin Install Failed, %s', $plugin_name),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
