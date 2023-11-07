@@ -42,8 +42,6 @@ final class Stats3Method
 
     /**
      * This get library stats.
-     * @param array $input
-     * @param User $user
      */
     public static function stats(array $input, User $user)
     {

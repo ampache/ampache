@@ -27,10 +27,9 @@ use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 
-global $dic;
-
 /** @var array $configuration */
 
+global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 $web_path    = (string)AmpConfig::get('web_path', '');
 // don't share the database password

@@ -43,8 +43,6 @@ final class PreferenceCreateMethod
      *
      * Add a new preference to your server
      *
-     * @param array $input
-     * @param User $user
      * This inserts a new preference into the preference table
      *
      * filter      = (string) preference name
@@ -54,7 +52,6 @@ final class PreferenceCreateMethod
      * description = (string) description of preference //optional
      * subcategory = (string) $subcategory //optional
      * level       = (integer) access level required to change the value (default 100) //optional
-     * @return boolean
      */
     public static function preference_create(array $input, User $user): bool
     {

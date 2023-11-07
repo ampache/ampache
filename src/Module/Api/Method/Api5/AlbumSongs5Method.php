@@ -44,13 +44,10 @@ class AlbumSongs5Method
      *
      * This returns the songs of a specified album
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Album
      * exact  = (integer) 0,1, if true don't group songs from different disks //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function album_songs(array $input, User $user): bool
     {

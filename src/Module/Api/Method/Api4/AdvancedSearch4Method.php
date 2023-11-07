@@ -55,8 +55,6 @@ final class AdvancedSearch4Method
      * Refer to the wiki for further information on rule_* types and data
      * https://github.com/ampache/ampache/wiki/XML-methods
      *
-     * @param array $input
-     * @param User $user
      * operator        = (string) 'and'|'or' (whether to match one rule or all)
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6

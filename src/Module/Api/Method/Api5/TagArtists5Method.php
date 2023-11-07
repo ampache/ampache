@@ -40,9 +40,6 @@ final class TagArtists5Method
      * MINIMUM_API_VERSION=380001
      *
      * This returns the artists associated with the genre in question as defined by the UID
-     *
-     * @param array $input
-     * @param User $user
      */
     public static function tag_artists(array $input, User $user)
     {

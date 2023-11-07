@@ -137,9 +137,9 @@ final class TagAjaxHandler implements AjaxHandlerInterface
     /**
      * can_edit_tag_map
      * @param string $object_type
-     * @param integer $object_id
-     * @param string|boolean $user
-     * @return boolean
+     * @param int $object_id
+     * @param string|bool $user
+     * @return bool
      */
     private static function can_edit_tag_map($object_type, $object_id, $user = true)
     {

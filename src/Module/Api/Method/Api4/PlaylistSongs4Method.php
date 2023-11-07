@@ -45,12 +45,9 @@ final class PlaylistSongs4Method
      *
      * This returns the songs for a playlist
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function playlist_songs(array $input, User $user): bool
     {

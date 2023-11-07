@@ -152,7 +152,7 @@ class Catalog_local extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param integer $catalog_id
+     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -172,7 +172,7 @@ class Catalog_local extends Catalog
      * This is useful when creating a new catalog to make sure we're not
      * doubling up here.
      * @param $path
-     * @return boolean|mixed
+     * @return int|bool
      */
     public static function get_from_path($path)
     {
@@ -184,7 +184,7 @@ class Catalog_local extends Catalog
         $component_path = $path;
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog_paths[$row['path']] = $row['catalog_id'];
+            $catalog_paths[$row['path']] = (int)$row['catalog_id'];
         }
 
         // Break it down into its component parts and start looking for a catalog
@@ -209,7 +209,7 @@ class Catalog_local extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -248,7 +248,7 @@ class Catalog_local extends Catalog
      * check id3 information against the db.
      * @param string $path
      * @param array $options
-     * @param integer $counter
+     * @param int $counter
      * @return int
      */
     public function add_files($path, $options, $counter = 0)
@@ -329,8 +329,8 @@ class Catalog_local extends Catalog
      *
      * @param $full_file
      * @param array $options
-     * @param integer $counter
-     * @return boolean
+     * @param int $counter
+     * @return bool
      * @throws Exception
      */
     public function add_file($full_file, $options, $counter = 0)
@@ -643,9 +643,9 @@ class Catalog_local extends Catalog
      * This verifies a chunk of the catalog, done to save
      * memory
      * @param string $tableName
-     * @param integer $chunk
-     * @param integer $chunk_size
-     * @return integer
+     * @param int $chunk
+     * @param int $chunk_size
+     * @return int
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size)
     {
@@ -887,7 +887,7 @@ class Catalog_local extends Catalog
      * Insert a song that isn't already in the database.
      * @param $file
      * @param array $options
-     * @return boolean|int
+     * @return bool|int
      * @throws Exception
      * @throws Exception
      */
@@ -1034,7 +1034,7 @@ class Catalog_local extends Catalog
      * here
      * @param $file
      * @param array $options
-     * @return integer
+     * @return int
      * @throws Exception
      * @throws Exception
      */
@@ -1125,7 +1125,7 @@ class Catalog_local extends Catalog
      * check_path
      * Checks the path to see if it's there or conflicting with an existing catalog
      * @param string $path
-     * @return boolean
+     * @return bool
      */
     public static function check_path($path)
     {
@@ -1193,7 +1193,7 @@ class Catalog_local extends Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location
      * @param string $new_path
-     * @return boolean
+     * @return bool
      */
     public function move_catalog_proc($new_path)
     {
@@ -1218,7 +1218,7 @@ class Catalog_local extends Catalog
 
     /**
      * cache_catalog_proc
-     * @return boolean
+     * @return bool
      */
     public function cache_catalog_proc()
     {

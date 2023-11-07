@@ -46,15 +46,12 @@ final class LiveStreamEditMethod
      *
      * Edit a live_stream (radio station) object.
      *
-     * @param array $input
-     * @param User $user
      * filter   = (string) object_id
      * name     = (string) Stream title //optional
      * url      = (string) URL of the http/s stream //optional
      * codec    = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac') //optional
      * catalog  = (int) Catalog ID to associate with this stream //optional
      * site_url = (string) Homepage URL of the stream //optional
-     * @return boolean
      */
     public static function live_stream_edit(array $input, User $user): bool
     {

@@ -114,7 +114,7 @@ function unhtmlentities($string)
  * value. We need a special function because PHP considers "false" to be true.
  *
  * @param string $string
- * @return boolean
+ * @return bool
  */
 function make_bool($string)
 {
@@ -132,7 +132,7 @@ function make_bool($string)
  * invert_bool
  * This returns the opposite of what you've got
  * @param $value
- * @return boolean
+ * @return bool
  */
 function invert_bool($value)
 {
@@ -344,7 +344,7 @@ function get_languages()
  * is_rtl
  * This checks whether to be a Right-To-Left language.
  * @param $locale
- * @return boolean
+ * @return bool
  */
 function is_rtl($locale)
 {
@@ -449,7 +449,7 @@ function get_web_path()
 
 /**
  * get_datetime
- * @param integer $time
+ * @param int $time
  * @param string $date_format
  * @param string $time_format
  * @param string $overwrite
@@ -477,7 +477,7 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
  * check_config_values
  * checks to make sure that they have at least set the needed variables
  * @param array $conf
- * @return boolean
+ * @return bool
  */
 function check_config_values($conf)
 {
@@ -520,7 +520,7 @@ function check_config_values($conf)
 
 /**
  * @param string $val
- * @return integer|string
+ * @return int|string
  */
 function return_bytes($val)
 {
@@ -544,7 +544,7 @@ function return_bytes($val)
 /**
  * check_config_writable
  * This checks whether we can write the config file
- * @return boolean
+ * @return bool
  */
 function check_config_writable()
 {
@@ -554,7 +554,7 @@ function check_config_writable()
 }
 
 /**
- * @return boolean
+ * @return bool
  */
 function check_htaccess_rest_writable()
 {
@@ -563,7 +563,7 @@ function check_htaccess_rest_writable()
 }
 
 /**
- * @return boolean
+ * @return bool
  */
 function check_htaccess_play_writable()
 {
@@ -574,7 +574,7 @@ function check_htaccess_play_writable()
 /**
  * debug_result
  * Convenience function to format the output.
- * @param string|boolean $status
+ * @param string|bool $status
  * @param string $value
  * @param string $comment
  * @return string
@@ -677,9 +677,9 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  * calls log event if both requirements are met.
  * @param string $type
  * @param string $message
- * @param integer $level
+ * @param int $level
  * @param string $username
- * @return boolean
+ * @return bool
  *
  * @deprecated Use LegacyLogger
  */
@@ -765,10 +765,10 @@ function return_referer()
  * This displays a select of every album that we've got in Ampache (which can be hella long).
  * It's used by the Edit page and takes a $name and an $album_id
  * @param string $name
- * @param integer $album_id
- * @param boolean $allow_add
- * @param integer $song_id
- * @param boolean $allow_none
+ * @param int $album_id
+ @param bool $allow_add
+ * @param int $song_id
+ @param bool $allow_none
  * @param string $user_id
  */
 function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
@@ -826,11 +826,11 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
  * @param string $name
- * @param integer $artist_id
- * @param boolean $allow_add
- * @param integer $song_id
- * @param boolean $allow_none
- * @param integer $user_id
+ * @param int $artist_id
+ @param bool $allow_add
+ * @param int $song_id
+ @param bool $allow_none
+ * @param int $user_id
  */
 function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
 {
@@ -883,10 +883,10 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
  * This is the same as show_album_select except it's *gasp* for tvshows! How
  * inventive!
  * @param string $name
- * @param integer $tvshow_id
- * @param boolean $allow_add
- * @param integer $season_id
- * @param boolean $allow_none
+ * @param int $tvshow_id
+ @param bool $allow_add
+ * @param int $season_id
+ @param bool $allow_none
  */
 function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false)
 {
@@ -927,10 +927,10 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
 /**
  * @param string $name
  * @param $season_id
- * @param boolean $allow_add
- * @param integer $video_id
- * @param boolean $allow_none
- * @return boolean
+ @param bool $allow_add
+ * @param int $video_id
+ @param bool $allow_none
+ * @return bool
  */
 function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false)
 {
@@ -980,9 +980,9 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  * @param string $name
- * @param integer $catalog_id
+ * @param int $catalog_id
  * @param string $style
- * @param boolean $allow_none
+ @param bool $allow_none
  * @param string $filter_type
  */
 function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = '')
@@ -1027,8 +1027,8 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
  * This displays a select of every album that we've got in Ampache (which can be hella long).
  * It's used by the Edit page and takes a $name and an $album_id
  * @param string $name
- * @param integer $license_id
- * @param integer $song_id
+ * @param int $license_id
+ * @param int $song_id
  */
 function show_license_select($name, $license_id = 0, $song_id = 0)
 {
@@ -1115,7 +1115,7 @@ function xoutput_headers()
 
 /**
  * @param array $array
- * @param boolean $callback
+ @param bool $callback
  * @param string $type
  * @return false|mixed|string
  */
@@ -1149,7 +1149,7 @@ function toggle_visible($element)
  * display_notification
  * Show a javascript notification to the user
  * @param string $message
- * @param integer $timeout
+ * @param int $timeout
  */
 function display_notification($message, $timeout = 5000)
 {
@@ -1192,8 +1192,8 @@ function show_now_playing()
 } // show_now_playing
 
 /**
- * @param boolean $render
- * @param boolean $force
+ @param bool $render
+ @param bool $force
  */
 function show_table_render($render = false, $force = false)
 {
@@ -1213,7 +1213,7 @@ function show_table_render($render = false, $force = false)
  * load_gettext
  * Sets up our local gettext settings.
  *
- * @return boolean
+ * @return bool
  */
 function load_gettext()
 {
@@ -1298,7 +1298,7 @@ function get_themes()
  * get_theme
  * get a single theme and read the config file then return the results
  * @param string $name
- * @return array|boolean|false|mixed|null
+ * @return array|bool|false|mixed|null
  */
 function get_theme($name)
 {

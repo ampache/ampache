@@ -46,8 +46,6 @@ final class CatalogAddMethod
      *
      * Create a new catalog
      *
-     * @param array $input
-     * @param User $user
      * name           = (string) catalog_name
      * path           = (string) URL or folder path for your catalog
      * type           = (string) catalog_type default: local ('local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote') //optional
@@ -56,7 +54,6 @@ final class CatalogAddMethod
      * folder_pattern = (string) Pattern used identify tags from the folder name. Default '%a/%A' //optional
      * username       = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
      * password       = (string) password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote') //optional
-     * @return bool
      */
     public static function catalog_add(array $input, User $user): bool
     {

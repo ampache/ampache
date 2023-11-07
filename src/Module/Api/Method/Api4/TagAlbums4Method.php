@@ -41,12 +41,9 @@ final class TagAlbums4Method
      *
      * This returns the albums associated with the tag in question
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Tag
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function tag_albums(array $input, User $user): bool
     {

@@ -28,7 +28,7 @@ class MetadataField extends DatabaseObject implements Model
 {
     /**
      * Database ID
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -40,7 +40,7 @@ class MetadataField extends DatabaseObject implements Model
 
     /**
      * Is the Tag public?
-     * @var boolean
+     * @var bool
      */
     protected $public = true;
 
@@ -81,7 +81,7 @@ class MetadataField extends DatabaseObject implements Model
 
     /**
      *
-     * @return boolean
+     * @return bool
      */
     public function isPublic()
     {

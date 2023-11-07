@@ -27,8 +27,11 @@ use Ampache\Module\System\Core;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 
+/** @var string $web_path */
 /** @var UserFollowStateRendererInterface $userFollowStateRenderer */
 /** @var User $libitem */
+/** @var string $last_seen */
+/** @var string $create_date */
 ?>
     <td class="cel_username">
         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $libitem->id; ?>">

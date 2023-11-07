@@ -39,8 +39,6 @@ final class FriendsTimeline3Method
     /**
      * friends_timeline
      * This get current user friends timeline
-     * @param array $input
-     * @param User $user
      */
     public static function friends_timeline(array $input, User $user)
     {

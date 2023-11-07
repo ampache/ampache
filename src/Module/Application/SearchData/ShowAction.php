@@ -83,9 +83,6 @@ final class ShowAction implements ApplicationActionInterface
 
     /**
      * @deprecated json_encode should do the trick here
-     *
-     * @param $array
-     * @return string
      */
     private function arrayToJSON($array): string
     {

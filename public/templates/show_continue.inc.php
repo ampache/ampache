@@ -22,10 +22,12 @@
 
 use Ampache\Module\Util\Ui;
 
-?>
+/** @var string $title */
+/** @var string $text */
+/** @var string $path */
 
-<?php Ui::show_box_top(scrub_out($title), 'box box_continue'); ?>
-<?php echo $text; ?>
+Ui::show_box_top(scrub_out($title), 'box box_continue');
+echo $text; ?>
     <br />
     <input type="button" value="<?php echo T_('Continue'); ?>" onClick="NavigateTo('<?php echo $path; ?>');" />
 <?php Ui::show_box_bottom(); ?>

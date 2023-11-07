@@ -142,7 +142,7 @@ class Catalog_subsonic extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param integer $catalog_id
+     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -163,7 +163,7 @@ class Catalog_subsonic extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -329,7 +329,7 @@ class Catalog_subsonic extends Catalog
     /**
      * @param $data
      * @param $song_Id
-     * @return boolean
+     * @return bool
      */
     public function insertArt($data, $song_Id)
     {
@@ -400,7 +400,7 @@ class Catalog_subsonic extends Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return boolean
+     * @return bool
      */
     public function move_catalog_proc($new_path)
     {
@@ -480,7 +480,7 @@ class Catalog_subsonic extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param array $song
-     * @return boolean|mixed
+     * @return int|bool
      */
     public function check_remote_song($song)
     {
@@ -490,7 +490,7 @@ class Catalog_subsonic extends Catalog
         $db_results = Dba::read($sql, array($url));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['id'];
+            return (int)$results['id'];
         }
 
         return false;
@@ -509,7 +509,7 @@ class Catalog_subsonic extends Catalog
 
     /**
      * @param $url
-     * @return integer
+     * @return int
      */
     public function url_to_songid($url)
     {

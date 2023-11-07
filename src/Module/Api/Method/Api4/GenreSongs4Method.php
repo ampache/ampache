@@ -44,12 +44,9 @@ final class GenreSongs4Method
      *
      * returns the songs for this genre
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Genre
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function genre_songs(array $input, User $user): bool
     {

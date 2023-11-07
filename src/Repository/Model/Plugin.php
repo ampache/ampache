@@ -56,7 +56,7 @@ class Plugin
      * has_info
 
      * @param string $cname
-     * @return boolean
+     * @return bool
      */
     public function has_info($cname)
     {
@@ -215,7 +215,7 @@ class Plugin
      * load
      * This calls the plugin's load function
      * @param User $user
-     * @return boolean
+     * @return bool
      */
     public function load($user)
     {
@@ -245,7 +245,7 @@ class Plugin
 
     /**
      * Check if an update is available.
-     * @return boolean
+     * @return bool
      */
     public static function is_update_available()
     {
@@ -296,7 +296,7 @@ class Plugin
      * set_plugin_version
      * This sets the plugin version in the update_info table
      * @param $version
-     * @return boolean
+     * @return bool
      */
     public function set_plugin_version($version)
     {

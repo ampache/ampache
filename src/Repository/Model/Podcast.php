@@ -66,7 +66,7 @@ class Podcast extends database_object implements library_item
     /**
      * Podcast
      * Takes the ID of the podcast and pulls the info from the db
-     * @param integer $podcast_id
+     * @param int $podcast_id
      */
     public function __construct($podcast_id = 0)
     {
@@ -92,7 +92,7 @@ class Podcast extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -135,8 +135,8 @@ class Podcast extends database_object implements library_item
     /**
      * format
      * this function takes the object and formats some values
-     * @param boolean $details
-     * @return boolean
+     * @param bool $details
+     * @return bool
      */
     public function format($details = true)
     {
@@ -300,8 +300,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -349,8 +349,8 @@ class Podcast extends database_object implements library_item
     /**
      * create
      * @param array $data
-     * @param boolean $return_id
-     * @return boolean|integer
+     * @param bool $return_id
+     * @return bool|int
      */
     public static function create(array $data, $return_id = false)
     {
@@ -476,8 +476,8 @@ class Podcast extends database_object implements library_item
     /**
      * add_episodes
      * @param SimpleXMLElement $episodes
-     * @param integer $lastSync
-     * @param boolean $gather
+     * @param int $lastSync
+     * @param bool $gather
      */
     public function add_episodes($episodes, $lastSync = 0, $gather = false)
     {
@@ -529,8 +529,8 @@ class Podcast extends database_object implements library_item
     /**
      * add_episode
      * @param SimpleXMLElement $episode
-     * @param integer $lastSync
-     * @return PDOStatement|boolean
+     * @param int $lastSync
+     * @return PDOStatement|bool
      */
     private function add_episode(SimpleXMLElement $episode, $lastSync = 0)
     {
@@ -629,8 +629,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * update_lastsync
-     * @param integer $time
-     * @return PDOStatement|boolean
+     * @param int $time
+     * @return PDOStatement|bool
      */
     private function update_lastsync($time)
     {
@@ -641,8 +641,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * sync_episodes
-     * @param boolean $gather
-     * @return boolean
+     * @param bool $gather
+     * @return bool
      */
     public function sync_episodes($gather = false)
     {
@@ -701,7 +701,7 @@ class Podcast extends database_object implements library_item
      * Get episode id from the source url.
      *
      * @param string $url
-     * @return integer
+     * @return int
      */
     public static function get_id_from_source($url)
     {
@@ -721,7 +721,7 @@ class Podcast extends database_object implements library_item
      * Get episode id from the guid.
      *
      * @param string $url
-     * @return integer
+     * @return int
      */
     public static function get_id_from_guid($url)
     {
@@ -743,7 +743,7 @@ class Podcast extends database_object implements library_item
      * @param int $podcast_id
      * @param string $title
      * @param int $time
-     * @return integer
+     * @return int
      */
     public static function get_id_from_title($podcast_id, $title, $time)
     {
@@ -764,7 +764,7 @@ class Podcast extends database_object implements library_item
      *
      * @param int $podcast_id
      * @param int $pubdate
-     * @return integer
+     * @return int
      */
     public static function get_id_from_pubdate($podcast_id, $pubdate)
     {
@@ -805,7 +805,7 @@ class Podcast extends database_object implements library_item
      * create_catalog_path
      * This returns the catalog types that are available
      * @param string $path
-     * @return boolean
+     * @return bool
      */
     private static function create_catalog_path($path)
     {

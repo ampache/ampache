@@ -31,7 +31,7 @@ class License
     protected const DB_TABLENAME = 'license';
 
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -51,7 +51,7 @@ class License
      * Constructor
      * This pulls the license information from the database and returns
      * a constructed object
-     * @param integer $license_id
+     * @param int $license_id
      */
     public function __construct($license_id)
     {
@@ -69,8 +69,8 @@ class License
     /**
      * has_info
      * does the db call, reads from the license table
-     * @param integer $license_id
-     * @return boolean
+     * @param int $license_id
+     * @return bool
      */
     private function has_info($license_id)
     {

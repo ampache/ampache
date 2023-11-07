@@ -43,8 +43,6 @@ final class Genres4Method
      *
      * This returns the tags (Genres) based on the specified filter
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional

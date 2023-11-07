@@ -40,8 +40,6 @@ final class Timeline3Method
     /**
      * timeline
      * This gets a user's timeline
-     * @param array $input
-     * @param User $user
      */
     public static function timeline(array $input, User $user)
     {

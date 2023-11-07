@@ -39,8 +39,6 @@ class AlbumSongs3Method
     /**
      * album_songs
      * This returns the songs of a specified album
-     * @param array $input
-     * @param User $user
      */
     public static function album_songs(array $input, User $user)
     {

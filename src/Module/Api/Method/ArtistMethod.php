@@ -45,11 +45,8 @@ final class ArtistMethod
      *
      * This returns a single artist based on the UID of said artist
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) Alpha-numeric search term
      * include = (array|string) 'albums', 'songs' //optional
-     * @return boolean
      */
     public static function artist(array $input, User $user): bool
     {

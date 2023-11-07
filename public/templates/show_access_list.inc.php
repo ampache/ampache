@@ -25,7 +25,8 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListTypeEnum;
 use Ampache\Module\Util\Ui;
 
-/** @var Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface $access $access */
+/** @var Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface $access */
+/** @var array $list */
 
 Ui::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');

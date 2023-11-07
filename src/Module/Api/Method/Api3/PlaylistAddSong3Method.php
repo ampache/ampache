@@ -39,8 +39,6 @@ final class PlaylistAddSong3Method
     /**
      * playlist_add_song
      * This add a song to a playlist
-     * @param array $input
-     * @param User $user
      */
     public static function playlist_add_song(array $input, User $user)
     {

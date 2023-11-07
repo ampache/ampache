@@ -53,7 +53,7 @@ final class Handshake3Method
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      * @param array $input
-     * @return boolean
+     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

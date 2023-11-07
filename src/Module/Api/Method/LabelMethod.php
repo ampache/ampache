@@ -46,10 +46,7 @@ final class LabelMethod
      *
      * This returns a single label based on UID
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of label
-     * @return boolean
      */
     public static function label(array $input, User $user): bool
     {

@@ -36,7 +36,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     /* Variables from DB */
     /**
-     * @var integer $id
+     * @var int $id
      */
     private $id;
 
@@ -51,27 +51,27 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
     private $message;
 
     /**
-     * @var integer $from_user
+     * @var int $from_user
      */
     private $from_user;
 
     /**
-     * @var integer $to_user
+     * @var int $to_user
      */
     private $to_user;
 
     /**
-     * @var integer $creation_date
+     * @var int $creation_date
      */
     private $creation_date;
 
     /**
-     * @var boolean $is_read
+     * @var bool $is_read
      */
     private $is_read;
 
     /**
-     * @param integer $pm_id
+     * @param int $pm_id
      */
     public function __construct($pm_id)
     {

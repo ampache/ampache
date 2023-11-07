@@ -37,7 +37,7 @@ abstract class playlist_object extends database_object implements library_item
 {
     // Database variables
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -45,7 +45,7 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $name;
     /**
-     * @var integer $user
+     * @var int $user
      */
     public $user;
     /**
@@ -85,7 +85,7 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * format
      * This takes the current playlist object and gussies it up a little bit so it is presentable to the users
-     * @param boolean $details
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -116,8 +116,8 @@ abstract class playlist_object extends database_object implements library_item
      * has_access
      * This function returns true or false if the current user
      * has access to this playlist
-     * @param integer $user_id
-     * @return boolean
+     * @param int $user_id
+     * @return bool
      */
     public function has_access($user_id = null)
     {
@@ -278,9 +278,9 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
-     * @param boolean $link
+     * @param int $thumb
+     * @param bool $force
+     * @param bool $link
      */
     public function display_art($thumb = 2, $force = false, $link = true)
     {
@@ -333,7 +333,7 @@ abstract class playlist_object extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {

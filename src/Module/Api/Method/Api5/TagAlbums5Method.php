@@ -40,9 +40,6 @@ final class TagAlbums5Method
      * MINIMUM_API_VERSION=380001
      *
      * This returns the albums associated with the genre in question
-     *
-     * @param array $input
-     * @param User $user
      */
     public static function tag_albums(array $input, User $user)
     {

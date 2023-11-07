@@ -50,9 +50,9 @@ class Bookmark extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull for
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
-     * @param integer $user_id
+     * @param int $user_id
      */
     public function __construct($object_id, $object_type = null, $user_id = null)
     {
@@ -95,7 +95,7 @@ class Bookmark extends database_object
     /**
      * getBookmarks
      * @param array $data
-     * @return integer[]
+     * @return int[]
      */
     public static function getBookmarks($data)
     {
@@ -119,9 +119,9 @@ class Bookmark extends database_object
     /**
      * create
      * @param array $data
-     * @param integer $userId
-     * @param integer $updateDate
-     * @return PDOStatement|boolean
+     * @param int $userId
+     * @param int $updateDate
+     * @return PDOStatement|bool
      */
     public static function create(array $data, int $userId, int $updateDate)
     {
@@ -140,10 +140,10 @@ class Bookmark extends database_object
 
     /**
      * edit
-     * @param integer $bookmarkId
+     * @param int $bookmarkId
      * @param array $data
-     * @param integer $updateDate
-     * @return PDOStatement|boolean
+     * @param int $updateDate
+     * @return PDOStatement|bool
      */
     public static function edit(int $bookmarkId, array $data, int $updateDate)
     {
@@ -155,9 +155,9 @@ class Bookmark extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

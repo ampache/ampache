@@ -45,11 +45,8 @@ final class LabelArtists5Method
      *
      * This returns all artists attached to a label ID
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) UID of label
      * include = (array|string) 'albums', 'songs' //optional
-     * @return boolean
      */
     public static function label_artists(array $input, User $user): bool
     {

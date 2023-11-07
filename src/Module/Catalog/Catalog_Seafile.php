@@ -177,7 +177,7 @@ class Catalog_Seafile extends Catalog
      * This creates a new catalog type entry for a catalog
      * @param $catalog_id
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -234,7 +234,7 @@ class Catalog_Seafile extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param integer $catalog_id
+     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -327,7 +327,7 @@ class Catalog_Seafile extends Catalog
      *
      * Insert a song that isn't already in the database.
      * @param $file
-     * @return boolean|int
+     * @return bool|int
      */
     private function insert_song($file)
     {
@@ -373,7 +373,7 @@ class Catalog_Seafile extends Catalog
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @param array $gather_types
-     * @param boolean $keep
+     * @param bool $keep
      * @return array
      * @throws Exception
      */
@@ -581,7 +581,7 @@ class Catalog_Seafile extends Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return boolean
+     * @return bool
      */
     public function move_catalog_proc($new_path)
     {
@@ -602,7 +602,7 @@ class Catalog_Seafile extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param $file
-     * @return boolean|mixed
+     * @return bool|mixed
      */
     public function check_remote_song($file)
     {

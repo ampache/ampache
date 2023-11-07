@@ -43,8 +43,6 @@ final class Albums4Method
      *
      * This returns albums based on the provided search filters
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = Api::set_filter(date) //optional

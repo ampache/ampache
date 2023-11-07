@@ -44,10 +44,6 @@ final class SystemUpdate5Method
      * MINIMUM_API_VERSION=400001
      *
      * Check Ampache for updates and run the update if there is one.
-     *
-     * @param array $input
-     * @param User $user
-     * @return boolean
      */
     public static function system_update(array $input, User $user): bool
     {

@@ -41,7 +41,7 @@ class Access
 
     // Variables from DB
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
 
@@ -61,12 +61,12 @@ class Access
     public $end;
 
     /**
-     * @var integer $level
+     * @var int $level
      */
     public $level;
 
     /**
-     * @var integer $user
+     * @var int $user
      */
     public $user;
 
@@ -76,7 +76,7 @@ class Access
     public $type;
 
     /**
-     * @var boolean $enabled
+     * @var bool $enabled
      *
      * @deprecated seems not to be in use
      */
@@ -86,7 +86,7 @@ class Access
      * constructor
      *
      * Takes an ID of the access_id dealie :)
-     * @param integer|null $access_id
+     * @param int|null $access_id
      */
     public function __construct($access_id)
     {
@@ -119,7 +119,7 @@ class Access
      *
      * This checks if specific functionality is enabled.
      * @param string $type
-     * @return boolean
+     * @return bool
      *
      * @deprecated See FunctionChecker::check
      */
@@ -141,9 +141,9 @@ class Access
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
      * @param string $type
-     * @param integer $level
-     * @param integer|null $user_id
-     * @return boolean
+     * @param int $level
+     * @param int|null $user_id
+     * @return bool
      *
      * @deprecated See PrivilegeChecker::check
      */

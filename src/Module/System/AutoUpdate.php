@@ -39,7 +39,7 @@ class AutoUpdate
 {
     /**
      * Check if current version is a development version.
-     * @return boolean
+     * @return bool
      */
     protected static function is_develop()
     {
@@ -60,7 +60,7 @@ class AutoUpdate
 
     /**
      * Check if current version is a git repository.
-     * @return boolean
+     * @return bool
      */
     protected static function is_git_repository()
     {
@@ -91,7 +91,7 @@ class AutoUpdate
 
     /**
      * Check if branch develop exists in git repository.
-     * @return boolean
+     * @return bool
      */
     protected static function is_branch_develop_exists()
     {
@@ -129,7 +129,7 @@ class AutoUpdate
 
     /**
      * Check if last GitHub check expired.
-     * @return boolean
+     * @return bool
      */
     protected static function lastcheck_expired()
     {
@@ -148,7 +148,7 @@ class AutoUpdate
 
     /**
      * Get latest available version from GitHub.
-     * @param boolean $force
+     * @param bool $force
      * @return string
      */
     public static function get_latest_version($force = false)
@@ -254,8 +254,8 @@ class AutoUpdate
 
     /**
      * Check if an update is available.
-     * @param boolean $force
-     * @return boolean
+     * @param bool $force
+     * @return bool
      */
     public static function is_update_available($force = false)
     {
@@ -347,7 +347,7 @@ class AutoUpdate
 
     /**
      * Update local git repository.
-     * @param boolean $api
+     * @param bool $api
      */
     public static function update_files($api = false)
     {

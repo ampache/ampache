@@ -29,8 +29,9 @@ use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-global $dic;
+/** @var array $data */
 
+global $dic;
 $ajax_page = $ajax_page ?? 'stats';
 $user_id   = $user_id ?? -1;
 $link      = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_skipped', $user_id) : '';

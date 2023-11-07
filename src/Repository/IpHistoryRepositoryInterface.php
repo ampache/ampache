@@ -26,11 +26,6 @@ interface IpHistoryRepositoryInterface
 {
     /**
      * This returns the ip_history from the last AmpConfig::get('user_ip_cardinality') days
-     *
-     * @param int $userId
-     * @param int $count
-     * @param bool $distinct
-     * @return array
      */
     public function getHistory(int $userId, int $count = 1, bool $distinct = false): array;
 }

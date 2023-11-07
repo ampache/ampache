@@ -63,7 +63,7 @@ class CliHandler extends Handler
 
     /**
      * Choose whether the -f argument from beets is applied. May be needed to use other commands than 'beet ls'
-     * @var boolean
+     * @var bool
      */
     protected $useCustomFields = true;
 
@@ -137,7 +137,7 @@ class CliHandler extends Handler
     /**
      * Assemble the command for CLI
      * @param string $command beets command (e.g. 'ls myArtist')
-     * @param boolean $disableCostomFields disables the -f switch for this time
+     * @param bool $disableCostomFields disables the -f switch for this time
      * @return string
      */
     protected function assembleCommand($command, $disableCostomFields = false)
@@ -157,7 +157,7 @@ class CliHandler extends Handler
     /**
      *
      * @param string $item
-     * @return boolean
+     * @return bool
      */
     protected function itemIsComlete($item)
     {

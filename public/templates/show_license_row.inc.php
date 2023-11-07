@@ -23,8 +23,8 @@
 use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
 
-/** @var License $libitem */
 /** @var string $web_path */
+/** @var License $libitem */
 ?>
 <tr id="license_<?php echo $libitem->id; ?>">
     <td class="cel_name"><?php echo $libitem->getLinkFormatted(); ?></td>

@@ -101,7 +101,7 @@ class Subsonic_Xml_Data
      * addError
      * Add a failed subsonic-response with error information.
      *
-     * @param integer $code Error code
+     * @param int $code Error code
      * @param string $function
      * @return SimpleXMLElement
      */
@@ -157,7 +157,7 @@ class Subsonic_Xml_Data
     /**
      * addMusicFolders
      * @param SimpleXMLElement $xml
-     * @param integer[] $catalogs
+     * @param int[] $catalogs
      */
     public static function addMusicFolders($xml, $catalogs)
     {
@@ -258,9 +258,9 @@ class Subsonic_Xml_Data
      * addArtist
      * @param SimpleXMLElement $xml
      * @param Artist $artist
-     * @param boolean $extra
-     * @param boolean $albums
-     * @param boolean $albumsSet
+     * @param bool $extra
+     * @param bool $albums
+     * @param bool $albumsSet
      */
     public static function addArtist($xml, $artist, $extra = false, $albums = false, $albumsSet = false)
     {
@@ -364,7 +364,7 @@ class Subsonic_Xml_Data
      * addAlbum
      * @param SimpleXMLElement $xml
      * @param Album $album
-     * @param boolean $songs
+     * @param bool $songs
      * @param string $elementName
      */
     public static function addAlbum($xml, $album, $songs = false, $elementName = "album")
@@ -426,7 +426,7 @@ class Subsonic_Xml_Data
     /**
      * addSong
      * @param SimpleXMLElement $xml
-     * @param integer $song_id
+     * @param int $song_id
      * @param string $elementName
      * @return SimpleXMLElement
      */
@@ -722,7 +722,7 @@ class Subsonic_Xml_Data
      * addPlaylist
      * @param SimpleXMLElement $xml
      * @param Playlist|Search $playlist
-     * @param boolean $songs
+     * @param bool $songs
      */
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
@@ -738,7 +738,7 @@ class Subsonic_Xml_Data
      * addPlaylist_Playlist
      * @param SimpleXMLElement $xml
      * @param Playlist $playlist
-     * @param boolean $songs
+     * @param bool $songs
      */
     private static function addPlaylist_Playlist($xml, $playlist, $songs = false)
     {
@@ -771,7 +771,7 @@ class Subsonic_Xml_Data
      * addPlaylist_Search
      * @param SimpleXMLElement $xml
      * @param Search $search
-     * @param boolean $songs
+     * @param bool $songs
      */
     private static function addPlaylist_Search($xml, $search, $songs = false)
     {
@@ -1275,7 +1275,7 @@ class Subsonic_Xml_Data
      * addPodcasts
      * @param SimpleXMLElement $xml
      * @param Podcast[] $podcasts
-     * @param boolean $includeEpisodes
+     * @param bool $includeEpisodes
      */
     public static function addPodcasts($xml, $podcasts, $includeEpisodes = true)
     {
@@ -1397,7 +1397,7 @@ class Subsonic_Xml_Data
     /**
      * addChatMessages
      * @param SimpleXMLElement $xml
-     * @param integer[] $messages
+     * @param int[] $messages
      */
     public static function addChatMessages($xml, $messages)
     {
@@ -1488,74 +1488,57 @@ class Subsonic_Xml_Data
         return $response;
     }
 
-    /**
-     * @param $artist_id
-     * @return integer
-     */
-    private static function _getArtistId($artist_id)
+    private static function _getArtistId($artist_id): int
     {
         return $artist_id + self::AMPACHEID_ARTIST;
     }
 
-    /**
-     * @param $album_id
-     * @return integer
-     */
-    private static function _getAlbumId($album_id)
+    private static function _getAlbumId($album_id): int
     {
         return $album_id + self::AMPACHEID_ALBUM;
     }
 
-    /**
-     * @param $song_id
-     * @return integer
-     */
-    private static function _getSongId($song_id)
+    private static function _getSongId($song_id): int
     {
         return $song_id + self::AMPACHEID_SONG;
     }
 
     /**
-     * @param integer $video_id
-     * @return integer
+     * @param int $video_id
      */
-    private static function _getVideoId($video_id)
+    private static function _getVideoId($video_id): int
     {
         return $video_id + Subsonic_Xml_Data::AMPACHEID_VIDEO;
     }
 
     /**
-     * @param integer $podcast_id
-     * @return integer
+     * @param int $podcast_id
      */
-    private static function _getPodcastId($podcast_id)
+    private static function _getPodcastId($podcast_id): int
     {
         return $podcast_id + self::AMPACHEID_PODCAST;
     }
 
     /**
-     * @param integer $episode_id
-     * @return integer
+     * @param int $episode_id
      */
-    private static function _getPodcastEpisodeId($episode_id)
+    private static function _getPodcastEpisodeId($episode_id): int
     {
         return $episode_id + self::AMPACHEID_PODCASTEP;
     }
 
     /**
-     * @param integer $plist_id
-     * @return integer
+     * @param int $plist_id
      */
-    private static function _getPlaylistId($plist_id)
+    private static function _getPlaylistId($plist_id): int
     {
         return $plist_id + self::AMPACHEID_PLAYLIST;
     }
 
     /**
-     * @param integer $plist_id
-     * @return integer
+     * @param int $plist_id
      */
-    private static function _getSmartPlaylistId($plist_id)
+    private static function _getSmartPlaylistId($plist_id): int
     {
         return $plist_id + self::AMPACHEID_SMARTPL;
     }
@@ -1563,9 +1546,8 @@ class Subsonic_Xml_Data
     /**
      * _cleanId
      * @param string $object_id
-     * @return integer
      */
-    private static function _cleanId($object_id)
+    private static function _cleanId($object_id): int
     {
         // Remove all al-, ar-, ... prefixes
         $tpos = strpos((string)$object_id, "-");
@@ -1573,7 +1555,7 @@ class Subsonic_Xml_Data
             $object_id = substr((string) $object_id, $tpos + 1);
         }
 
-        return (int) $object_id;
+        return (int)$object_id;
     }
 
     /**
@@ -1598,7 +1580,7 @@ class Subsonic_Xml_Data
     /**
      * _getAmpacheObject
      * Return the Ampache media object
-     * @param integer $object_id
+     * @param int $object_id
      * @return Song|Video|Podcast_Episode|null
      */
     public static function _getAmpacheObject($object_id)
@@ -1619,9 +1601,8 @@ class Subsonic_Xml_Data
     /**
      * _getAmpacheId
      * @param string $object_id
-     * @return integer
      */
-    public static function _getAmpacheId($object_id)
+    public static function _getAmpacheId($object_id): int
     {
         return (self::_cleanId($object_id) % self::AMPACHEID_ARTIST);
     }
@@ -1677,7 +1658,7 @@ class Subsonic_Xml_Data
 
     /**
      * @param string $artist_id
-     * @return boolean
+     * @return bool
      */
     public static function _isArtist($artist_id)
     {
@@ -1686,7 +1667,7 @@ class Subsonic_Xml_Data
 
     /**
      * @param string $album_id
-     * @return boolean
+     * @return bool
      */
     public static function _isAlbum($album_id)
     {
@@ -1695,7 +1676,7 @@ class Subsonic_Xml_Data
 
     /**
      * @param string $song_id
-     * @return boolean
+     * @return bool
      */
     public static function _isSong($song_id)
     {
@@ -1704,7 +1685,7 @@ class Subsonic_Xml_Data
 
     /**
      * @param string $video_id
-     * @return boolean
+     * @return bool
      */
     public static function _isVideo($video_id)
     {
@@ -1715,7 +1696,7 @@ class Subsonic_Xml_Data
 
     /**
      * @param string $podcast_id
-     * @return boolean
+     * @return bool
      */
     public static function _isPodcast($podcast_id)
     {
@@ -1724,7 +1705,7 @@ class Subsonic_Xml_Data
 
     /**
      * @param string $episode_id
-     * @return boolean
+     * @return bool
      */
     public static function _isPodcastEpisode($episode_id)
     {
@@ -1733,7 +1714,7 @@ class Subsonic_Xml_Data
 
     /**
      * @param string $plist_id
-     * @return boolean
+     * @return bool
      */
     public static function _isPlaylist($plist_id)
     {
@@ -1742,7 +1723,7 @@ class Subsonic_Xml_Data
 
     /**
      * @param string $plist_id
-     * @return boolean
+     * @return bool
      */
     public static function _isSmartPlaylist($plist_id)
     {
@@ -1753,7 +1734,7 @@ class Subsonic_Xml_Data
      * _setIfStarred
      * @param SimpleXMLElement $xml
      * @param string $objectType
-     * @param integer $object_id
+     * @param int $object_id
      */
     private static function _setIfStarred($xml, $objectType, $object_id)
     {
@@ -1769,7 +1750,7 @@ class Subsonic_Xml_Data
 
     /**
      * _getCatalogData
-     * @param integer $catalogId
+     * @param int $catalogId
      * @param string $file_Path
      * @return array
      */

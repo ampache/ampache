@@ -55,14 +55,14 @@ class Horde_Browser
     /**
      * Major version number.
      *
-     * @var integer
+     * @var int
      */
     private $_majorVersion = 0;
 
     /**
      * Minor version number.
      *
-     * @var integer
+     * @var int
      */
     private $_minorVersion = 0;
 
@@ -104,14 +104,14 @@ class Horde_Browser
     /**
      * Is this a mobile browser?
      *
-     * @var boolean
+     * @var bool
      */
     private $_mobile = false;
 
     /**
      * Is this a tablet browser?
      *
-     * @var boolean
+     * @var bool
      */
     private $_tablet = false;
 
@@ -639,7 +639,7 @@ class Horde_Browser
      *
      * @param string $browser The browser to check.
      *
-     * @return boolean  Is the given browser the same as the current?
+     * @return bool  Is the given browser the same as the current?
      */
     public function isBrowser($browser)
     {
@@ -667,7 +667,7 @@ class Horde_Browser
      *   - scrollbar_in_way
      *   - scroll_tds
      *   - windowed_controls
-     * @param boolean $value Special behavior parameter.
+     * @param bool $value Special behavior parameter.
      */
     private function setQuirk($quirk, $value = true)
     {
@@ -683,7 +683,7 @@ class Horde_Browser
      *
      * @param string $quirk The behavior to check.
      *
-     * @return boolean  Does the browser have the behavior set?
+     * @return bool  Does the browser have the behavior set?
      */
     private function hasQuirk($quirk)
     {
@@ -716,7 +716,7 @@ class Horde_Browser
      *   - utf
      *   - wml
      *   - xmlhttpreq
-     * @param boolean $value Special capability parameter.
+     * @param bool $value Special capability parameter.
      */
     public function setFeature($feature, $value = true)
     {
@@ -732,7 +732,7 @@ class Horde_Browser
      *
      * @param string $filename The filename of the download.
      * @param string $cType The content-type description of the file.
-     * @param boolean $inline True if inline, false if attachment.
+     * @param bool $inline True if inline, false if attachment.
      * @param string $cLength The content-length of this file.
      *
      * @return string[]

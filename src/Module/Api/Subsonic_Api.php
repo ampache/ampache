@@ -80,7 +80,7 @@ class Subsonic_Api
      * check_parameter
      * @param array $input
      * @param string $parameter
-     * @param boolean $addheader
+     * @param bool $addheader
      * @return false|mixed
      */
     private static function _check_parameter($input, $parameter, $addheader = false)
@@ -121,11 +121,8 @@ class Subsonic_Api
 
     /**
      * _output_body
-     * @param $curl
-     * @param $data
-     * @return integer
      */
-    public static function _output_body($curl, $data)
+    public static function _output_body($curl, $data): int
     {
         unset($curl);
         echo $data;
@@ -136,11 +133,8 @@ class Subsonic_Api
 
     /**
      * _output_header
-     * @param $curl
-     * @param $header
-     * @return integer
      */
-    public static function _output_header($curl, $header)
+    public static function _output_header($curl, $header): int
     {
         $rheader = trim((string)$header);
         $rhpart  = explode(':', $rheader);
@@ -404,7 +398,7 @@ class Subsonic_Api
      * has_Nested_Array
      * Used for xml2json to detect a sub-array
      * @param $properties
-     * @return boolean
+     * @return bool
      */
     private static function _hasNestedArray($properties)
     {
@@ -2860,8 +2854,8 @@ class Subsonic_Api
      * @param string $name
      * @param array $songsIdToAdd
      * @param array $songIndexToRemove
-     * @param boolean $public
-     * @param boolean $clearFirst
+     * @param bool $public
+     * @param bool $clearFirst
      */
     private static function _updatePlaylist(
         $playlist_id,
@@ -2902,7 +2896,7 @@ class Subsonic_Api
      * _setStar
      * @param array $input
      * @param User $user
-     * @param boolean $star
+     * @param bool $star
      */
     private static function _setStar($input, $user, $star)
     {

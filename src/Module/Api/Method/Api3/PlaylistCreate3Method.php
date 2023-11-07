@@ -40,8 +40,6 @@ final class PlaylistCreate3Method
     /**
      * playlist_create
      * Create a new playlist and return it
-     * @param array $input
-     * @param User $user
      */
     public static function playlist_create(array $input, User $user)
     {

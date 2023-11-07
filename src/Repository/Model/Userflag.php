@@ -48,7 +48,7 @@ class Userflag extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $type
      */
     public function __construct($object_id, $type)
@@ -70,8 +70,8 @@ class Userflag extends database_object
      * single query, saving on connection overhead
      * @param string $type
      * @param array $ids
-     * @param integer $user_id
-     * @return boolean
+     * @param int $user_id
+     * @return bool
      */
     public static function build_cache($type, $ids, $user_id = null)
     {
@@ -111,7 +111,7 @@ class Userflag extends database_object
      *
      * Remove userflag for items that no longer exist.
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -149,9 +149,9 @@ class Userflag extends database_object
 
     /**
      * get_flag
-     * @param integer $user_id
-     * @param boolean $get_date
-     * @return boolean|array
+     * @param int $user_id
+     * @param bool $get_date
+     * @return bool|array
      */
     public function get_flag($user_id = null, $get_date = null)
     {
@@ -193,9 +193,9 @@ class Userflag extends database_object
      * set_flag
      * This function sets the user flag for the current object.
      * If no user_id is passed in, we use the currently logged in user.
-     * @param boolean $flagged
-     * @param integer $user_id
-     * @return boolean
+     * @param bool $flagged
+     * @param int $user_id
+     * @return bool
      */
     public function set_flag($flagged, $user_id = null)
     {
@@ -239,7 +239,7 @@ class Userflag extends database_object
      * Forward flag to last.fm and Libre.fm (song only)
      * @param User $user
      * @param Song $song
-     * @param boolean $flagged
+     * @param bool $flagged
      */
     public static function save_flag($user, $song, $flagged)
     {
@@ -297,8 +297,8 @@ class Userflag extends database_object
      * Get the latest user flagged objects
      * @param string $type
      * @param string $user_id
-     * @param integer $count
-     * @param integer $offset
+     * @param int $count
+     * @param int $offset
      * @return array
      */
     public static function get_latest($type, $user_id = null, $count = 0, $offset = 0)
@@ -334,7 +334,7 @@ class Userflag extends database_object
      * show
      * This takes an id and a type and displays the flag state
      * enabled.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $type
      */
     public static function show($object_id, $type): string
@@ -374,9 +374,9 @@ class Userflag extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

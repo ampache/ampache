@@ -43,10 +43,7 @@ final class CatalogDeleteMethod
      *
      * Delete an existing catalog. (if it exists)
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) catalog_id to delete
-     * @return boolean
      */
     public static function catalog_delete(array $input, User $user): bool
     {

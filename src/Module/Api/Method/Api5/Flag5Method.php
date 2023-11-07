@@ -45,12 +45,9 @@ final class Flag5Method
      * Setting flag to true (1) will set the flag
      * Setting flag to false (0) will remove the flag
      *
-     * @param array $input
-     * @param User $user
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
-     * @return boolean
      */
     public static function flag(array $input, User $user): bool
     {

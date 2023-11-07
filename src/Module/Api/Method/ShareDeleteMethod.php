@@ -45,10 +45,7 @@ final class ShareDeleteMethod
      *
      * Delete an existing share.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of share to delete
-     * @return boolean
      */
     public static function share_delete(array $input, User $user): bool
     {

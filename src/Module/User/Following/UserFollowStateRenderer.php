@@ -38,8 +38,8 @@ final class UserFollowStateRenderer implements UserFollowStateRendererInterface
     /**
      * Get html code to display the follow/unfollow link
      *
-     * @param integer $userId
-     * @param integer $foreignUserId
+     * @param int $userId
+     * @param int $foreignUserId
      * @return string
      */
     public function render(

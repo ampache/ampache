@@ -45,8 +45,6 @@ final class ScrobbleMethod
      * Search for a song using text info and then record a play if found.
      * This allows other sources to record play history to Ampache
      *
-     * @param array $input
-     * @param User $user
      * song       = (string)  $song_name
      * artist     = (string)  $artist_name
      * album      = (string)  $album_name
@@ -55,7 +53,6 @@ final class ScrobbleMethod
      * albummbid  = (string)  $album_mbid //optional
      * date       = (integer) UNIXTIME() //optional
      * client     = (string)  $agent //optional
-     * @return boolean
      */
     public static function scrobble(array $input, User $user): bool
     {

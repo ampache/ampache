@@ -45,8 +45,6 @@ final class Playlists5Method
      *
      * This returns playlists based on the specified filter
      *
-     * @param array $input
-     * @param User $user
      * filter      = (string) Alpha-numeric search term (match all if missing) //optional
      * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
      * add         = Api::set_filter(date) //optional
@@ -55,7 +53,6 @@ final class Playlists5Method
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
-     * @return boolean
      */
     public static function playlists(array $input, User $user): bool
     {

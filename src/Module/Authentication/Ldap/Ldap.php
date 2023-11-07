@@ -175,7 +175,7 @@ class Ldap
      * @param $link
      * @param $base_dn
      * @param string $filter
-     * @param boolean $only_one_result
+     * @param bool $only_one_result
      * @return array
      * @throws LdapException
      */

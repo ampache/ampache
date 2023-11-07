@@ -58,7 +58,7 @@ final class LastFmCollectorModule implements CollectorModuleInterface
      * account but may in the future.
      *
      * @param Art $art
-     * @param integer $limit
+     * @param int $limit
      * @param array $data
      * @return array
      */

@@ -64,9 +64,9 @@ interface UiInterface
      * @param string $title The Title of the message
      * @param string $text The details of the message
      * @param string $next_url Where to go next
-     * @param integer $cancel T/F show a cancel button that uses return_referer()
+     * @param int $cancel T/F show a cancel button that uses return_referer()
      * @param string $form_name
-     * @param boolean $visible
+     * @param bool $visible
      */
     public function showConfirmation(
         $title,

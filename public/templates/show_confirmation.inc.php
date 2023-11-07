@@ -24,6 +24,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var string $title */
+/** @var string $text */
+/** @var string $path */
+/** @var string $form_name */
+/** @var int $cancel */
+
 $confirmation = Core::form_register($form_name); ?>
 <?php Ui::show_box_top(scrub_out($title), 'box box_confirmation'); ?>
 <?php echo $text; ?>

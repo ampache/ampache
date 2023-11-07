@@ -38,17 +38,17 @@ class AlbumDisk extends database_object implements library_item
     /* Variables from DB */
 
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
 
     /**
-     * @var integer $album_id
+     * @var int $album_id
      */
     public $album_id;
 
     /**
-     * @var integer $disk
+     * @var int $disk
      */
     public $disk;
 
@@ -58,32 +58,32 @@ class AlbumDisk extends database_object implements library_item
     public $disksubtitle;
 
     /**
-     * @var integer $time
+     * @var int $time
      */
     public $time;
 
     /**
-     * @var integer $song_count
+     * @var int $song_count
      */
     public $song_count;
 
     /**
-     * @var integer $total_count
+     * @var int $total_count
      */
     public $total_count;
 
     /**
-     * @var integer $total_duration
+     * @var int $total_duration
      */
     public $total_duration;
 
     /**
-     * @var integer $catalog_id
+     * @var int $catalog_id
      */
     public $catalog_id;
 
     /**
-     * @var integer $catalog
+     * @var int $catalog
      */
     public $catalog;
 
@@ -95,7 +95,7 @@ class AlbumDisk extends database_object implements library_item
     public $name;
 
     /**
-     * @var integer $album_artist
+     * @var int $album_artist
      */
     public $album_artist;
 
@@ -105,7 +105,7 @@ class AlbumDisk extends database_object implements library_item
     public array $album_artists;
 
     /**
-     * @var integer $year
+     * @var int $year
      */
     public $year;
 
@@ -145,17 +145,17 @@ class AlbumDisk extends database_object implements library_item
     public $barcode;
 
     /**
-     * @var integer $addition_time
+     * @var int $addition_time
      */
     public $addition_time;
 
     /**
-     * @var integer $original_year
+     * @var int $original_year
      */
     public $original_year;
 
     /**
-     * @var integer $disk_count
+     * @var int $disk_count
      */
     public $disk_count;
 
@@ -175,12 +175,12 @@ class AlbumDisk extends database_object implements library_item
     public $tags;
 
     /**
-     * @var integer $artist_count
+     * @var int $artist_count
      */
     public $artist_count;
 
     /**
-     * @var integer $song_artist_count
+     * @var int $song_artist_count
      */
     public $song_artist_count;
 
@@ -247,7 +247,7 @@ class AlbumDisk extends database_object implements library_item
      * to this album from the database it does not
      * pull the album or thumb art by default or
      * get any of the counts.
-     * @param integer $album_disk_id
+     * @param int $album_disk_id
      */
     public function __construct($album_disk_id)
     {
@@ -334,7 +334,7 @@ class AlbumDisk extends database_object implements library_item
      * This is the format function for this object. It sets cleaned up
      * album information with the base required
      * f_link, f_name
-     * @param boolean $details
+     * @param bool $details
      * @param string $limit_threshold
      */
     public function format($details = true, $limit_threshold = '')
@@ -605,7 +605,7 @@ class AlbumDisk extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -640,7 +640,7 @@ class AlbumDisk extends database_object implements library_item
      * get_id_array
      *
      * Get info from the album table with the minimum detail required for subsonic
-     * @param integer $album_id
+     * @param int $album_id
      * @return array
      */
     public static function get_id_array($album_id)
@@ -692,8 +692,8 @@ class AlbumDisk extends database_object implements library_item
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -719,7 +719,7 @@ class AlbumDisk extends database_object implements library_item
      * This function takes a key'd array of data and updates this object
      * as needed
      * @param array $data
-     * @return integer
+     * @return int
      */
     public function update(array $data)
     {
@@ -745,8 +745,8 @@ class AlbumDisk extends database_object implements library_item
     /**
      * sanitize_disk
      * Change letter disk numbers (like vinyl/cassette) to an integer
-     * @param string|integer $disk
-     * @return integer
+     * @param string|int $disk
+     * @return int
      */
     public static function sanitize_disk($disk)
     {

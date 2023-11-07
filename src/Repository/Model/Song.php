@@ -49,7 +49,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /* Variables from DB */
 
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -57,15 +57,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $file;
     /**
-     * @var integer $album
+     * @var int $album
      */
     public $album;
     /**
-     * @var integer $album_disk
+     * @var int $album_disk
      */
     public $album_disk;
     /**
-     * @var integer $artist
+     * @var int $artist
      */
     public $artist;
     /**
@@ -81,15 +81,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $title;
     /**
-     * @var integer $year
+     * @var int $year
      */
     public $year;
     /**
-     * @var integer $bitrate
+     * @var int $bitrate
      */
     public $bitrate;
     /**
-     * @var integer $rate
+     * @var int $rate
      */
     public $rate;
     /**
@@ -97,15 +97,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $mode;
     /**
-     * @var integer $size
+     * @var int $size
      */
     public $size;
     /**
-     * @var integer $time
+     * @var int $time
      */
     public $time;
     /**
-     * @var integer $track
+     * @var int $track
      */
     public $track;
     /**
@@ -129,19 +129,19 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $mime;
     /**
-     * @var boolean $played
+     * @var bool $played
      */
     public $played;
     /**
-     * @var boolean $enabled
+     * @var bool $enabled
      */
     public $enabled;
     /**
-     * @var integer $addition_time
+     * @var int $addition_time
      */
     public $addition_time;
     /**
-     * @var integer $update_time
+     * @var int $update_time
      */
     public $update_time;
     /**
@@ -150,19 +150,19 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $mbid;
     /**
-     * @var integer $catalog
+     * @var int $catalog
      */
     public $catalog;
     /**
-     * @var integer|null $waveform
+     * @var int|null $waveform
      */
     public $waveform;
     /**
-     * @var integer|null $user_upload
+     * @var int|null $user_upload
      */
     public $user_upload;
     /**
-     * @var integer|null $license
+     * @var int|null $license
      */
     public $license;
     /**
@@ -174,7 +174,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $catalog_number;
     /**
-     * @var integer $channels
+     * @var int $channels
      */
     public $channels;
 
@@ -215,11 +215,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $replaygain_album_peak;
     /**
-     * @var integer|null $r128_album_gain
+     * @var int|null $r128_album_gain
      */
     public $r128_album_gain;
     /**
-     * @var integer|null $r128_track_gain
+     * @var int|null $r128_track_gain
      */
     public $r128_track_gain;
     /**
@@ -243,7 +243,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $f_artist_full;
     /**
-     * @var integer $albumartist
+     * @var int $albumartist
      */
     public $albumartist;
     /**
@@ -333,7 +333,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $f_pattern;
     /**
-     * @var integer $count
+     * @var int $count
      */
     public $count;
     /**
@@ -360,7 +360,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /* Setting Variables */
     /**
-     * @var boolean $_fake
+     * @var bool $_fake
      */
     public $_fake = false; // If this is a 'construct_from_array' object
 
@@ -382,7 +382,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * Constructor
      *
      * Song class, for modifying a song.
-     * @param integer|null $songid
+     * @param int|null $songid
      */
     public function __construct($songid = null)
     {
@@ -424,7 +424,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      *
      * This inserts the song described by the passed array
      * @param array $results
-     * @return integer|boolean
+     * @return int|bool
      */
     public static function insert(array $results)
     {
@@ -669,9 +669,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
-     * @param integer[] $song_ids
+     * @param int[] $song_ids
      * @param string $limit_threshold
-     * @return boolean
+     * @return bool
      */
     public static function build_cache($song_ids, $limit_threshold = '')
     {
@@ -737,7 +737,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * has_info
-     * @return array|boolean
+     * @return array|bool
      */
     private function has_info()
     {
@@ -762,7 +762,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * has_id
      * @param int|string $song_id
-     * @return boolean
+     * @return bool
      */
     public static function has_id($song_id)
     {
@@ -920,7 +920,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * get_disabled
      *
      * Gets a list of the disabled songs for and returns an array of Songs
-     * @param integer $count
+     * @param int $count
      * @return Song[]
      */
     public static function get_disabled($count = 0)
@@ -943,7 +943,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * find
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public static function find($data)
     {
@@ -1001,7 +1001,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * Get duplicate information.
      * @param array $dupe
      * @param string $search_type
-     * @return integer[]
+     * @return int[]
      */
     public static function get_duplicate_info($dupe, $search_type)
     {
@@ -1036,7 +1036,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * get_album_fullname
      * gets the name of $this->album, allows passing of id
-     * @param integer $album_id
+     * @param int $album_id
      * @param bool $simple
      * @return string
      */
@@ -1068,7 +1068,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * get_album_catalog_number
      * gets the catalog_number of $this->album, allows passing of id
-     * @param integer $album_id
+     * @param int $album_id
      * @return string
      */
     public function get_album_catalog_number($album_id = null)
@@ -1084,8 +1084,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * get_album_original_year
      * gets the original_year of $this->album, allows passing of id
-     * @param integer $album_id
-     * @return integer
+     * @param int $album_id
+     * @return int
      */
     public function get_album_original_year($album_id = null)
     {
@@ -1100,7 +1100,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * get_album_barcode
      * gets the barcode of $this->album, allows passing of id
-     * @param integer $album_id
+     * @param int $album_id
      * @return string
      */
     public function get_album_barcode($album_id = null)
@@ -1134,7 +1134,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * get_album_artist_fullname
      * gets the name of $this->albumartist, allows passing of id
-     * @param integer $album_artist_id
+     * @param int $album_artist_id
      * @return string
      */
     public function get_album_artist_fullname($album_artist_id = 0)
@@ -1177,11 +1177,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $agent
      * @param array $location
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function set_played($user_id, $agent, $location, $date = null)
     {
@@ -1214,10 +1214,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * check_play_history
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param integer $user
+     * @param int $user
      * @param string $agent
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function check_play_history($user, $agent, $date)
     {
@@ -1355,7 +1355,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * This takes a key'd array of data does any cleaning it needs to
      * do and then calls the helper functions as needed.
      * @param array $data
-     * @return integer
+     * @return int
      */
     public function update(array $data)
     {
@@ -1432,7 +1432,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_song
      * this is the main updater for a song and updates
      * the "update_time" of the song
-     * @param integer $song_id
+     * @param int $song_id
      * @param Song $new_song
      */
     public static function update_song($song_id, Song $new_song)
@@ -1449,8 +1449,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_year
      * update the year tag
-     * @param integer $new_year
-     * @param integer $song_id
+     * @param int $new_year
+     * @param int $song_id
      */
     public static function update_year($new_year, $song_id)
     {
@@ -1461,7 +1461,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_label
      * This updates the label tag of the song
      * @param string $new_value
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_label($new_value, $song_id)
     {
@@ -1472,7 +1472,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_language
      * This updates the language tag of the song
      * @param string $new_lang
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_language($new_lang, $song_id)
     {
@@ -1483,7 +1483,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_comment
      * updates the comment field
      * @param string $new_comment
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_comment($new_comment, $song_id)
     {
@@ -1494,7 +1494,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_lyrics
      * updates the lyrics field
      * @param string $new_lyrics
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_lyrics($new_lyrics, $song_id)
     {
@@ -1505,7 +1505,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_title
      * updates the title field
      * @param string $new_title
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_title($new_title, $song_id)
     {
@@ -1516,7 +1516,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_composer
      * updates the composer field
      * @param string $new_composer
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_composer($new_composer, $song_id)
     {
@@ -1527,7 +1527,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_publisher
      * updates the publisher field
      * @param string $new_publisher
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_publisher($new_publisher, $song_id)
     {
@@ -1537,8 +1537,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_bitrate
      * updates the bitrate field
-     * @param integer $new_bitrate
-     * @param integer $song_id
+     * @param int $new_bitrate
+     * @param int $song_id
      */
     public static function update_bitrate($new_bitrate, $song_id)
     {
@@ -1548,8 +1548,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_rate
      * updates the rate field
-     * @param integer $new_rate
-     * @param integer $song_id
+     * @param int $new_rate
+     * @param int $song_id
      */
     public static function update_rate($new_rate, $song_id)
     {
@@ -1560,7 +1560,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_mode
      * updates the mode field
      * @param string $new_mode
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_mode($new_mode, $song_id)
     {
@@ -1570,8 +1570,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_size
      * updates the size field
-     * @param integer $new_size
-     * @param integer $song_id
+     * @param int $new_size
+     * @param int $song_id
      */
     public static function update_size($new_size, $song_id)
     {
@@ -1581,8 +1581,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_time
      * updates the time field
-     * @param integer $new_time
-     * @param integer $song_id
+     * @param int $new_time
+     * @param int $song_id
      */
     public static function update_time($new_time, $song_id)
     {
@@ -1592,8 +1592,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_track
      * this updates the track field
-     * @param integer $new_track
-     * @param integer $song_id
+     * @param int $new_track
+     * @param int $song_id
      */
     public static function update_track($new_track, $song_id)
     {
@@ -1604,7 +1604,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_mbid
      * updates mbid field
      * @param string $new_mbid
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_mbid($new_mbid, $song_id)
     {
@@ -1615,7 +1615,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * update_license
      * updates license field
      * @param string $new_license
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_license($new_license, $song_id)
     {
@@ -1675,8 +1675,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_utime
      * sets a new update time
-     * @param integer $song_id
-     * @param integer $time
+     * @param int $song_id
+     * @param int $time
      */
     public static function update_utime($song_id, $time = 0)
     {
@@ -1690,8 +1690,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_played
      * sets the played flag
-     * @param boolean $new_played
-     * @param integer $song_id
+     * @param bool $new_played
+     * @param int $song_id
      */
     public static function update_played($new_played, $song_id)
     {
@@ -1701,8 +1701,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_enabled
      * sets the enabled flag
-     * @param boolean $new_enabled
-     * @param integer $song_id
+     * @param bool $new_enabled
+     * @param int $song_id
      */
     public static function update_enabled($new_enabled, $song_id)
     {
@@ -1719,8 +1719,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param string|int $value
      * @param int $song_id
      * @param int $level
-     * @param boolean $check_owner
-     * @return PDOStatement|boolean
+     * @param bool $check_owner
+     * @return PDOStatement|bool
      */
     private static function _update_item($field, $value, $song_id, $level, $check_owner = false)
     {
@@ -1751,10 +1751,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * These are items that aren't used normally, and often large/informational only
      * @param string $field
      * @param string $value
-     * @param integer $song_id
-     * @param integer $level
-     * @param boolean $check_owner
-     * @return PDOStatement|boolean
+     * @param int $song_id
+     * @param int $level
+     * @param bool $check_owner
+     * @return PDOStatement|bool
      */
     private static function _update_ext_item($field, $value, $song_id, $level, $check_owner = false)
     {
@@ -1780,7 +1780,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * This takes the current song object
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
-     * @param boolean $details
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -1900,7 +1900,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get total count
-     * @return integer
+     * @return int
      */
     public function get_totalcount()
     {
@@ -2112,7 +2112,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -2159,8 +2159,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -2213,7 +2213,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * get_rel_path
      * returns the path of the song file stripped of the catalog path used for mpd playback
      * @param string $file_path
-     * @param integer $catalog_id
+     * @param int $catalog_id
      * @return string
      */
     public function get_rel_path($file_path = null, $catalog_id = 0)
@@ -2241,7 +2241,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * else, this is the true function
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
+     * @param bool $local
      * @param int|string $uid
      * @return string
      */
@@ -2357,7 +2357,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Run custom play action.
-     * @param integer $action_index
+     * @param int $action_index
      * @param string $codec
      * @return array
      */
@@ -2552,7 +2552,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
     public function remove(): bool
     {

@@ -39,8 +39,6 @@ final class Followers3Method
     /**
      * followers
      * This gets a user's followers
-     * @param array $input
-     * @param User $user
      */
     public static function followers(array $input, User $user)
     {

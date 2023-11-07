@@ -44,10 +44,7 @@ final class LiveStreamDeleteMethod
      *
      * Delete an existing live_stream (radio station). (if it exists)
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) object_id to delete
-     * @return boolean
      */
     public static function live_stream_delete(array $input, User $user): bool
     {

@@ -44,12 +44,9 @@ final class SearchSongs4Method
      *
      * This searches the songs and returns... songs
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Alpha-numeric search term
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function search_songs(array $input, User $user): bool
     {

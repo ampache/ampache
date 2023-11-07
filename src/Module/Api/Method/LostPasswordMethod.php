@@ -54,7 +54,7 @@ final class LostPasswordMethod
      *   $key = hash('sha256', 'email');
      *   auth = hash('sha256', $username . $key);
      * )
-     * @return boolean
+     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

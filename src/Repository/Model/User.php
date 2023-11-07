@@ -48,7 +48,7 @@ class User extends database_object
 
     // Basic Components
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -60,15 +60,15 @@ class User extends database_object
      */
     public $fullname;
     /**
-     * @var boolean $fullname_public
+     * @var bool $fullname_public
      */
     public $fullname_public;
     /**
-     * @var integer $access
+     * @var int $access
      */
     public int $access;
     /**
-     * @var boolean $disabled
+     * @var bool $disabled
      */
     public $disabled;
     /**
@@ -76,11 +76,11 @@ class User extends database_object
      */
     public $email;
     /**
-     * @var integer $last_seen
+     * @var int $last_seen
      */
     public $last_seen;
     /**
-     * @var integer $create_date
+     * @var int $create_date
      */
     public $create_date;
     /**
@@ -178,7 +178,7 @@ class User extends database_object
      * Constructor
      * This function is the constructor object for the user
      * class, it currently takes a username
-     * @param integer $user_id
+     * @param int $user_id
      */
     public function __construct($user_id = 0)
     {
@@ -372,7 +372,7 @@ class User extends database_object
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @param int $user_id
      * @param string $filter
-     * @return integer[]
+     * @return int[]
      */
     public static function get_user_catalogs($user_id, $filter = '')
     {
@@ -390,7 +390,7 @@ class User extends database_object
     /**
      * get_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs($filter)
     {
@@ -409,8 +409,8 @@ class User extends database_object
      * []['title'] = uppercase type name
      * []['prefs'] = array(array('name', 'display', 'value'));
      * []['admin'] = t/f value if this is an admin only section
-     * @param integer $type
-     * @param boolean $system
+     * @param int $type
+     * @param bool $system
      * @return array
      */
     public function get_preferences($type = 0, $system = false)
@@ -517,8 +517,8 @@ class User extends database_object
      * has_access
      * this function checks to see if this user has access
      * to the passed action (pass a level requirement)
-     * @param integer $needed_level
-     * @return boolean
+     * @param int $needed_level
+     * @return bool
      */
     public function has_access($needed_level)
     {
@@ -536,7 +536,7 @@ class User extends database_object
     /**
      * is_registered
      * Check if the user is registered
-     * @return boolean
+     * @return bool
      */
     public static function is_registered()
     {
@@ -559,7 +559,7 @@ class User extends database_object
      * This updates some background data for user specific function
      * @param int $user_id
      * @param string $key
-     * @param string|integer $value
+     * @param string|int $value
      */
     public static function set_user_data(int $user_id, string $key, $value)
     {
@@ -626,7 +626,7 @@ class User extends database_object
      * calls the mini ones does all the error checking and all that
      * good stuff
      * @param array $data
-     * @return boolean|int
+     * @return bool|int
      */
     public function update(array $data)
     {
@@ -713,7 +713,7 @@ class User extends database_object
      * Use this function to update the validation key
      * NOTE: crap this doesn't have update_item the humanity of it all
      * @param $new_validation
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public function update_validation($new_validation)
     {
@@ -912,7 +912,7 @@ class User extends database_object
      * update_access
      * updates their access level
      * @param $new_access
-     * @return boolean
+     * @return bool
      */
     public function update_access($new_access)
     {
@@ -1004,12 +1004,12 @@ class User extends database_object
      * @param string $email
      * @param string $website
      * @param string $password
-     * @param integer $access
+     * @param int $access
      * @param string $state
      * @param string $city
-     * @param boolean $disabled
-     * @param boolean $encrypted
-     * @return integer
+     * @param bool $disabled
+     * @param bool $encrypted
+     * @return int
      */
     public static function create(
         $username,
@@ -1119,7 +1119,7 @@ class User extends database_object
      * This function sets up the extra variables we need when we are displaying a
      * user for an admin, these should not be normally called when creating a
      * user object
-     * @param boolean $details
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -1175,7 +1175,7 @@ class User extends database_object
      * access_name_to_level
      * This takes the access name for the user and returns the level
      * @param string $name
-     * @return integer
+     * @return int
      */
     public static function access_name_to_level($name)
     {
@@ -1224,7 +1224,7 @@ class User extends database_object
      * Remove Duplicates from user, add in missing
      * If -1 is passed it also removes duplicates from the `preferences`
      * table.
-     * @param integer $user_id
+     * @param int $user_id
      */
     public static function fix_preferences($user_id)
     {
@@ -1306,7 +1306,7 @@ class User extends database_object
      * delete
      * deletes this user and everything associated with it. This will affect
      * ratings and total stats
-     * @return boolean
+     * @return bool
      */
     public function delete()
     {
@@ -1341,8 +1341,8 @@ class User extends database_object
      * delay how long since last_seen in seconds default of 20 min
      * calculates difference between now and last_seen
      * if less than delay, we consider them still online
-     * @param integer $delay
-     * @return boolean
+     * @param int $delay
+     * @return bool
      */
     public function is_online($delay = 1200)
     {
@@ -1354,9 +1354,9 @@ class User extends database_object
      * This gets the recently played items for this user respecting
      * the limit passed. ger recent by default or oldest if $newest is false.
      * @param string $type
-     * @param integer $count
-     * @param integer $offset
-     * @param boolean $newest
+     * @param int $count
+     * @param int $offset
+     * @param bool $newest
      * @return array
      */
     public function get_recently_played($type, $count, $offset = 0, $newest = true, $count_type = 'stream')
@@ -1436,7 +1436,7 @@ class User extends database_object
     /**
      * get_avatar
      * Get the user avatar
-     * @param boolean $local
+     * @param bool $local
      * @return array
      */
     public function get_avatar($local = false)
@@ -1478,7 +1478,7 @@ class User extends database_object
     /**
      * @param string $data
      * @param string $mime
-     * @return boolean
+     * @return bool
      */
     public function update_avatar($data, $mime = '')
     {
@@ -1491,7 +1491,7 @@ class User extends database_object
 
     /**
      *
-     * @return boolean
+     * @return bool
      */
     public function upload_avatar()
     {
@@ -1572,7 +1572,7 @@ class User extends database_object
      * Check all stream control plugins
      * @param array $media_ids
      * @param User|null $user
-     * @return boolean
+     * @return bool
      */
     public static function stream_control($media_ids, User $user = null)
     {

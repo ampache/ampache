@@ -76,7 +76,7 @@ class AmpConfig
      * get_rating_filter
      * Find out whether you are filtering ratings on your search
      * This function is used in mashup and random queries
-     * @return integer
+     * @return int
      */
     public static function get_rating_filter()
     {
@@ -97,8 +97,8 @@ class AmpConfig
      * This sets config values.
      * @param string $name
      * @param $value
-     * @param boolean $clobber
-     * @return boolean
+     * @param bool $clobber
+     * @return bool
      */
     public static function set($name, $value, $clobber = false)
     {
@@ -119,7 +119,7 @@ class AmpConfig
      * This is the same as the set function except it takes an array as
      * input.
      * @param array $array
-     * @param boolean $clobber
+     * @param bool $clobber
      */
     public static function set_by_array($array, $clobber = false)
     {
@@ -136,8 +136,8 @@ class AmpConfig
      * get_skip_timer
      *
      * pull the timer and check using the time of the song for %complete skips
-     * @param integer $previous_time
-     * @return integer
+     * @param int $previous_time
+     * @return int
      */
     public static function get_skip_timer($previous_time)
     {

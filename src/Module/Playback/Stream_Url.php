@@ -174,7 +174,6 @@ class Stream_Url extends MemoryObject
      * get_title
      * Get a translated title for the webplayer
      * @param string $url
-     * @return string
      */
     public static function get_title($url): string
     {

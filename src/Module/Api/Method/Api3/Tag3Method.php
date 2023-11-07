@@ -38,8 +38,6 @@ final class Tag3Method
     /**
      * tag
      * This returns a single tag based on UID
-     * @param array $input
-     * @param User $user
      */
     public static function tag(array $input, User $user)
     {

@@ -61,11 +61,6 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
         return $ids;
     }
 
-    /**
-     * @param int $bookmarkId
-     * @param int $userId
-     * @return int
-     */
     public function getBookmark(int $bookmarkId, int $userId): int
     {
         $sql        = "SELECT `id` FROM `bookmark` WHERE `id` = ? AND `user` = ?";

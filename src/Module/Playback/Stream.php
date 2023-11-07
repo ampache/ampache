@@ -46,7 +46,7 @@ class Stream
      * set_session
      *
      * This overrides the normal session value, without adding another session into the database, should be called with care
-     * @param integer|string $sid
+     * @param int|string $sid
      */
     public static function set_session($sid)
     {
@@ -161,7 +161,7 @@ class Stream
 
     /**
      * get_allowed_bitrate
-     * @return integer
+     * @return int
      */
     public static function get_allowed_bitrate()
     {
@@ -422,7 +422,7 @@ class Stream
      * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
      * @param Song|Podcast_Episode|Video $media
      * @param array $transcode_settings
-     * @return integer
+     * @return int
      */
     public static function get_max_bitrate($media, $transcode_settings)
     {
@@ -550,7 +550,7 @@ class Stream
      * validate_bitrate
      * this function takes a bitrate and returns a valid one
      * @param $bitrate
-     * @return integer
+     * @return int
      */
     public static function validate_bitrate($bitrate)
     {
@@ -575,12 +575,12 @@ class Stream
      * insert_now_playing
      *
      * This will insert the Now Playing data.
-     * @param integer $object_id
-     * @param integer $uid
-     * @param integer $length
+     * @param int $object_id
+     * @param int $uid
+     * @param int $length
      * @param string $sid
      * @param string $type
-     * @param integer $previous
+     * @param int $previous
      */
     public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null)
     {
@@ -597,7 +597,7 @@ class Stream
      *
      * There really isn't anywhere else for this function, shouldn't have
      * deleted it in the first place.
-     * @return boolean
+     * @return bool
      */
     public static function clear_now_playing()
     {
@@ -665,9 +665,9 @@ class Stream
      * check_lock_media
      *
      * This checks to see if the media is already being played.
-     * @param integer $media_id
+     * @param int $media_id
      * @param string $type
-     * @return boolean
+     * @return bool
      */
     public static function check_lock_media($media_id, $type)
     {
@@ -690,7 +690,7 @@ class Stream
      * reason this is here is because it deals with streaming rather than
      * playlist mojo. If something needs to happen this will echo the
      * javascript required to cause a reload of the iframe.
-     * @return boolean
+     * @return bool
      */
     public static function run_playlist_method()
     {
@@ -723,7 +723,7 @@ class Stream
     /**
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
-     * @param boolean $local
+     * @param bool $local
      * @param string $streamToken
      * @return string
      */

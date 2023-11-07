@@ -42,7 +42,7 @@ abstract class localplay_controller
 
     /**
      * Takes a single object_id and removes it from the playlist
-     * @param integer $object_id
+     * @param int $object_id
      * @return mixed
      */
     abstract public function delete_track($object_id);
@@ -65,9 +65,6 @@ abstract class localplay_controller
 
     abstract public function uninstall();
 
-    /**
-     * @return array
-     */
     abstract public function status(): array;
 
     // For display we need the following 'instance' functions

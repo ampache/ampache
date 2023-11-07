@@ -81,7 +81,7 @@ final class Cron
      *
      * run_cron_cache
      * Run live memory cache processes.
-     * @param integer $user_id
+     * @param int $user_id
      */
     public static function run_cron_cache(int $user_id = 0): void
     {

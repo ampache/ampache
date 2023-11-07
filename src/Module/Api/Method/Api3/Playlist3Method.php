@@ -38,8 +38,6 @@ final class Playlist3Method
     /**
      * playlist
      * This returns a single playlist
-     * @param array $input
-     * @param User $user
      */
     public static function playlist(array $input, User $user)
     {

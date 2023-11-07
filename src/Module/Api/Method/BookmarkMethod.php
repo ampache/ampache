@@ -45,11 +45,8 @@ final class BookmarkMethod
      *
      * Get a single bookmark
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) bookmark_id
      * include = (integer) 0,1, if true include the object in the bookmark //optional
-     * @return boolean
      */
     public static function bookmark(array $input, User $user): bool
     {

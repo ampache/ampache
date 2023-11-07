@@ -54,9 +54,6 @@ interface UserRepositoryInterface
 
     /**
      * This returns all valid users in an array (id => name).
-     *
-     * @param bool $includeDisabled
-     * @return array
      */
     public function getValidArray(bool $includeDisabled = false): array;
 

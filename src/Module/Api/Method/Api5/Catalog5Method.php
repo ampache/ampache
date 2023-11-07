@@ -43,10 +43,7 @@ final class Catalog5Method
      *
      * Get the catalogs from it's id.
      *
-     * @param array $input
-     * @param User $user
      * filter = (integer) Catalog ID number
-     * @return boolean
      */
     public static function catalog(array $input, User $user): bool
     {

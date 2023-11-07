@@ -88,7 +88,6 @@ class Core
      *
      * get_cookie
      * Return a $COOKIE variable instead of calling directly
-     *
      */
     public static function get_cookie($variable)
     {
@@ -191,7 +190,7 @@ class Core
      * continue
      * @param string $name
      * @param string $type
-     * @return boolean
+     * @return bool
      */
     public static function form_verify($name, $type = 'post')
     {
@@ -244,7 +243,7 @@ class Core
      * This generates a cryptographically secure token.
      * Returns a token of the required bytes length, as a string. Returns false
      * if it could not generate a cryptographically secure token.
-     * @param integer $length
+     * @param int $length
      * @return false|string
      * @throws Exception
      */
@@ -307,7 +306,7 @@ class Core
      * https://bugs.php.net/bug.php?id=49620
      *
      * @param string $path
-     * @return boolean
+     * @return bool
      */
     public static function is_readable($path)
     {
@@ -344,7 +343,7 @@ class Core
      * get_filesize
      * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
      * @param $filename
-     * @return integer
+     * @return int
      */
     public static function get_filesize($filename)
     {
@@ -399,7 +398,7 @@ class Core
      * is_session_started
      *
      * Universal function for checking session status.
-     * @return boolean
+     * @return bool
      */
     public static function is_session_started()
     {

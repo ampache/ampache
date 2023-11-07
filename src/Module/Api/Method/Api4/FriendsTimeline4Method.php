@@ -43,8 +43,6 @@ final class FriendsTimeline4Method
      *
      * This get current user friends timeline
      *
-     * @param array $input
-     * @param User $user
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
      */

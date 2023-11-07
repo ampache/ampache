@@ -23,6 +23,8 @@
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Util\Ui;
 
+/** @var int[] $shouts */
+
 Ui::show_box_top(T_('Shoutbox')); ?>
 <div id="shoutbox">
 <?php

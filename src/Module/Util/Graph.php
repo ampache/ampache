@@ -75,9 +75,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @return string
      */
     protected function get_user_sql_where(
@@ -114,10 +114,10 @@ class Graph
 
     /**
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $catalog
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $catalog
+     * @param int $start_date
+     * @param int $end_date
      * @return string
      */
     protected function get_catalog_sql_where(
@@ -152,11 +152,11 @@ class Graph
 
     /**
      * @param string $fct
-     * @param integer $id
+     * @param int $id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -198,11 +198,11 @@ class Graph
      * @param Data $MyData
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
-     * @param boolean $show_total
+     * @param bool $show_total
      * @return array
      */
     protected function get_all_pts(
@@ -233,9 +233,9 @@ class Graph
      * @param Data $MyData
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      */
     protected function get_user_all_pts(
@@ -271,11 +271,11 @@ class Graph
     /**
      * @param string $fct
      * @param Data $MyData
-     * @param integer $catalog
+     * @param int $catalog
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      */
     protected function get_catalog_all_pts(
@@ -313,9 +313,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -343,9 +343,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @param string $column
      * @return array
@@ -375,9 +375,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -389,9 +389,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -407,11 +407,11 @@ class Graph
     }
 
     /**
-     * @param integer $catalog
+     * @param int $catalog
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -438,11 +438,11 @@ class Graph
     }
 
     /**
-     * @param integer $catalog
+     * @param int $catalog
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -471,9 +471,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -510,8 +510,8 @@ class Graph
      * @param string $title
      * @param Data $MyData
      * @param string $zoom
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      */
     protected function render_graph($title, Data $MyData, $zoom, $width = 0, $height = 0)
     {
@@ -615,15 +615,15 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      */
     public function render_user_hits(
-        $user,
+        $user_id,
         $object_type,
         $object_id,
         $start_date = null,
@@ -633,7 +633,7 @@ class Graph
         $height = 0
     ) {
         $MyData = new Data();
-        $this->get_user_all_pts('get_user_hits_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date,
+        $this->get_user_all_pts('get_user_hits_pts', $MyData, $user_id, $object_type, $object_id, $start_date, $end_date,
             $zoom);
 
         $MyData->setAxisName(0, "Hits");
@@ -645,12 +645,12 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      */
     public function render_user_bandwidth(
         $user_id = 0,
@@ -673,9 +673,9 @@ class Graph
 
     /**
      * @param int $user_id
-     * @param integer $start_date
-     * @param integer $end_date
-     * @return integer
+     * @param int $start_date
+     * @param int $end_date
+     * @return int
      */
     public function get_total_bandwidth($user_id = 0, $start_date = null, $end_date = null)
     {
@@ -690,9 +690,9 @@ class Graph
 
     /**
      * @param int $user_id
-     * @param integer $start_date
-     * @param integer $end_date
-     * @return integer
+     * @param int $start_date
+     * @param int $end_date
+     * @return int
      */
     public function get_total_time($user_id = 0, $start_date = null, $end_date = null)
     {
@@ -707,9 +707,9 @@ class Graph
 
     /**
      * @param int $user_id
-     * @param integer $start_date
-     * @param integer $end_date
-     * @return integer
+     * @param int $start_date
+     * @param int $end_date
+     * @return int
      */
     public function get_total_hits($user_id = 0, $start_date = null, $end_date = null)
     {
@@ -723,14 +723,14 @@ class Graph
     }
 
     /**
-     * @param integer $catalog
+     * @param int $catalog
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      */
     public function render_catalog_files(
         $catalog = 0,
@@ -753,14 +753,14 @@ class Graph
     }
 
     /**
-     * @param integer $catalog
+     * @param int $catalog
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      */
     public function render_catalog_size(
         $catalog = 0,
@@ -786,9 +786,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      */
     public function display_map(

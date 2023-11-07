@@ -49,8 +49,6 @@ final class BrowseMethod
      * If you don't send any parameters you'll get a catalog list (the 'root' path)
      * Catalog ID is required on 'artist', 'album', 'podcast' so you can filter the browse correctly
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) object_id //optional
      * type    = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
      * catalog = (integer) catalog ID you are browsing // optional
@@ -58,7 +56,6 @@ final class BrowseMethod
      * update  = Api::set_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * @return boolean
      */
     public static function browse(array $input, User $user): bool
     {

@@ -47,7 +47,7 @@ class Upload
 
     /**
      * process
-     * @return boolean
+     * @return bool
      */
     public static function process()
     {
@@ -176,7 +176,7 @@ class Upload
      * can_upload
      * check settings and permissions for uploads
      * @param User|string|null $user
-     * @return boolean
+     * @return bool
      * @throws RuntimeException
      */
     public static function can_upload($user = null): bool
@@ -193,7 +193,7 @@ class Upload
     /**
      * rerror
      * @param string $file
-     * @return boolean
+     * @return bool
      * @throws RuntimeException
      */
     public static function rerror($file = null)
@@ -229,8 +229,8 @@ class Upload
     /**
      * check_artist
      * @param string $artist_name
-     * @param integer $user_id
-     * @return boolean|integer
+     * @param int $user_id
+     * @return bool|int
      */
     public static function check_artist($artist_name, $user_id)
     {
@@ -260,7 +260,7 @@ class Upload
      * check_album
      * @param string $album_name
      * @param int $artist_id
-     * @return boolean|integer
+     * @return bool|int
      */
     public static function check_album($album_name, $artist_id)
     {
@@ -282,7 +282,7 @@ class Upload
     /**
      * check_target_path
      * @param string $targetfile
-     * @return boolean|string
+     * @return bool|string
      */
     public static function check_target_path($targetfile)
     {
@@ -304,7 +304,7 @@ class Upload
     /**
      * check_target_dir
      * @param string $catalog_dir
-     * @return boolean|string
+     * @return bool|string
      */
     public static function check_target_dir($catalog_dir)
     {

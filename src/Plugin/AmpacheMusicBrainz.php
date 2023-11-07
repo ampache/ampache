@@ -109,7 +109,7 @@ class AmpacheMusicBrainz
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return boolean
+     * @return bool
      */
     public function load($user)
     {

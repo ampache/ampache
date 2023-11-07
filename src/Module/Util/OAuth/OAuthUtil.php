@@ -69,7 +69,7 @@ class OAuthUtil
      * May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
      * see http://code.google.com/p/oauth/issues/detail?id=163
      * @param $header
-     * @param boolean $oauth_parameters
+     * @param bool $oauth_parameters
      * @return array
      */
     public static function split_header($header, $oauth_parameters = true)

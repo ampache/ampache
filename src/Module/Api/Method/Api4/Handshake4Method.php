@@ -59,7 +59,7 @@ final class Handshake4Method
      * user      = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
      * version   = (string) $version //optional
-     * @return boolean
+     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

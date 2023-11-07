@@ -45,11 +45,8 @@ final class FriendsTimelineMethod
      *
      * This get current user friends timeline
      *
-     * @param array $input
-     * @param User $user
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
-     * @return boolean
      */
     public static function friends_timeline(array $input, User $user): bool
     {

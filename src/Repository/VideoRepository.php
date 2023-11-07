@@ -50,10 +50,6 @@ final class VideoRepository implements VideoRepositoryInterface
 
     /**
      * Return the number of entries in the database...
-     *
-     * @param string $type
-     *
-     * @return int
      */
     public function getItemCount(string $type): int
     {

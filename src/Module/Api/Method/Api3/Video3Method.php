@@ -38,8 +38,6 @@ final class Video3Method
     /**
      * video
      * This returns a single video
-     * @param array $input
-     * @param User $user
      */
     public static function video(array $input, User $user)
     {

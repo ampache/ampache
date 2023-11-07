@@ -90,9 +90,9 @@ class Upnp_Api
 
     /**
      * @param string $buf
-     * @param integer $delay
+     * @param int $delay
      * @param string $host
-     * @param integer $port
+     * @param int $port
      */
     private static function udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900)
     {
@@ -107,11 +107,11 @@ class Upnp_Api
     }
 
     /**
-     * @param integer $delay
+     * @param int $delay
      * @param string $host
-     * @param integer $port
+     * @param int $port
      * @param string $prefix
-     * @param boolean $alive
+     * @param bool $alive
      */
     public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT", $alive = true)
     {

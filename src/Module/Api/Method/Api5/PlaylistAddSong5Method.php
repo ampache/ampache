@@ -43,12 +43,9 @@ final class PlaylistAddSong5Method
      *
      * This adds a song to a playlist
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
      * song   = (string) UID of song to add to playlist
      * check  = (integer) 0,1 Check for duplicates //optional, default = 0
-     * @return boolean
      */
     public static function playlist_add_song(array $input, User $user): bool
     {

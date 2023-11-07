@@ -45,10 +45,7 @@ final class UserMethod
      *
      * This get a user's public information
      *
-     * @param array $input
-     * @param User $user
      * username = (string) $username
-     * @return boolean
      */
     public static function user(array $input, User $user): bool
     {

@@ -48,7 +48,7 @@ final class Mailer implements MailerInterface
      * is_mail_enabled
      *
      * Check that the mail feature is enabled. By default, you people to configure their mail settings first
-     * @return boolean
+     * @return bool
      */
     public static function is_mail_enabled()
     {
@@ -72,7 +72,7 @@ final class Mailer implements MailerInterface
      *
      * Checks whether what we have looks like a valid address.
      * @param string $address
-     * @return boolean
+     * @return bool
      */
     public static function validate_address($address)
     {
@@ -140,7 +140,7 @@ final class Mailer implements MailerInterface
      * send
      * This actually sends the mail, how amazing
      * @param PHPMailer $phpmailer
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
     public function send($phpmailer = null)
@@ -214,7 +214,7 @@ final class Mailer implements MailerInterface
 
     /**
      * @param $group_name
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
     public function send_to_group($group_name)

@@ -46,11 +46,8 @@ final class DeletedSongsMethod
      *
      * Returns songs that have been deleted from the server
      *
-     * @param array $input
-     * @param User $user
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function deleted_songs(array $input, User $user): bool
     {

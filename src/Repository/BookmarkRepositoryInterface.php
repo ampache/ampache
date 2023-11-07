@@ -39,7 +39,6 @@ interface BookmarkRepositoryInterface
     /**
      * @param int $bookmarkId
      * @param int $userId
-     * @return int
      */
     public function getBookmark(int $bookmarkId, int $userId): int;
 

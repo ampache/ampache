@@ -47,14 +47,14 @@ interface MailerInterface
      * send
      * This actually sends the mail, how amazing
      * @param PHPMailer $phpmailer
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
     public function send($phpmailer = null);
 
     /**
      * @param $group_name
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
     public function send_to_group($group_name);

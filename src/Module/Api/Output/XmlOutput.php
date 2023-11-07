@@ -83,13 +83,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param integer[] $albums
+     * @param int[] $albums
      * @param array $include
      * @param User $user
      * @param bool $encode
      * @param bool $asObject
-     * @param integer $limit
-     * @param integer $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return string
      */

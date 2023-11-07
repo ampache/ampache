@@ -118,7 +118,7 @@ class JsonHandler extends Handler
     /**
      * Check if the Json is complete to get a song
      * @param string $item
-     * @return boolean
+     * @return bool
      */
     public function itemIsComlete($item)
     {
@@ -146,7 +146,7 @@ class JsonHandler extends Handler
     /**
      * Compare the braces to ensure that we have a complete song object
      * @param string $item
-     * @return boolean
+     * @return bool
      */
     public function compareBraces($item)
     {
@@ -160,7 +160,7 @@ class JsonHandler extends Handler
      *
      * @param string $char
      * @param string $string
-     * @return integer
+     * @return int
      */
     public function countChar($char, $string)
     {

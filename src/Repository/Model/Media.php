@@ -49,7 +49,7 @@ interface Media
      * Returns the url to stream the specified object
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
+     * @param bool $local
      */
     public function play_url($additional_params = '', $player = '', $local = false);
 
@@ -74,19 +74,19 @@ interface Media
     public function get_stream_name();
 
     /**
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $agent
      * @param array $location
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function set_played($user_id, $agent, $location, $date = null);
 
     /**
-     * @param integer $user
+     * @param int $user
      * @param string $agent
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public function check_play_history($user, $agent, $date);
 

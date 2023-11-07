@@ -27,9 +27,8 @@ interface UserFollowStateRendererInterface
     /**
      * Get html code to display the follow/unfollow link
      *
-     * @param integer $userId
-     * @param integer $foreignUserId
-     * @return string
+     * @param int $userId
+     * @param int $foreignUserId
      */
     public function render(int $userId, int $foreignUserId): string;
 }

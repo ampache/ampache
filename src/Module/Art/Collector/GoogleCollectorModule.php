@@ -46,7 +46,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
      * Raw google search to retrieve the art, not very reliable
      *
      * @param Art $art
-     * @param integer $limit
+     * @param int $limit
      * @param array $data
      *
      * @return array

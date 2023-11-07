@@ -46,14 +46,11 @@ final class LiveStreamCreateMethod
      *
      * Create a live_stream (radio station) object.
      *
-     * @param array $input
-     * @param User $user
      * name     = (string) Stream title
      * url      = (string) URL of the http/s stream
      * codec    = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac')
      * catalog  = (int) Catalog ID to associate with this stream
      * site_url = (string) Homepage URL of the stream //optional
-     * @return boolean
      */
     public static function live_stream_create(array $input, User $user): bool
     {

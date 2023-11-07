@@ -38,8 +38,6 @@ final class Song3Method
     /**
      * song
      * returns a single song
-     * @param array $input
-     * @param User $user
      */
     public static function song(array $input, User $user)
     {

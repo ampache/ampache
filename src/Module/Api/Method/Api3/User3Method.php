@@ -38,8 +38,6 @@ final class User3Method
     /**
      * user
      * This get a user's public information
-     * @param array $input
-     * @param User $user
      */
     public static function user(array $input, User $user)
     {

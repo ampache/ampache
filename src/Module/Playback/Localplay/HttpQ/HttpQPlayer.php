@@ -62,7 +62,7 @@ class HttpQPlayer
      * with port 4800
      * @param string $host
      * @param string $password
-     * @param integer $port
+     * @param int $port
      */
     public function __construct($host = "localhost", $password = '', $port = 4800)
     {
@@ -161,7 +161,7 @@ class HttpQPlayer
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return boolean|null
+     * @return bool|null
      */
     public function skip($pos)
     {
@@ -357,7 +357,7 @@ class HttpQPlayer
      * This sets the volume as best it can, we go from a resolution
      * of 100 --> 255 so it's a little fuzzy
      * @param $value
-     * @return boolean
+     * @return bool
      */
     public function set_volume($value)
     {

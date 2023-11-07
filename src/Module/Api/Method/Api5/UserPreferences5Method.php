@@ -41,9 +41,6 @@ final class UserPreferences5Method
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your user preferences
-     *
-     * @param array $input
-     * @param User $user
      */
     public static function user_preferences(array $input, User $user)
     {

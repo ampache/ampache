@@ -37,9 +37,9 @@ class Metadata extends Repository
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

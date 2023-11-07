@@ -40,8 +40,6 @@ final class Rate3Method
     /**
      * rate
      * This rate a library item
-     * @param array $input
-     * @param User $user
      */
     public static function rate(array $input, User $user)
     {

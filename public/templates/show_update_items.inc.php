@@ -25,9 +25,10 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
-/** @var string $type */
 /** @var int $object_id */
 /** @var array|null $catalog_id */
+/** @var string $type */
+/** @var string $target_url */
 
 Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
 $return_id = Catalog::update_single_item($type, $object_id)['object_id'];

@@ -45,12 +45,9 @@ final class SharesMethod
      *
      * Get information about shared media this user is allowed to manage.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function shares(array $input, User $user): bool
     {

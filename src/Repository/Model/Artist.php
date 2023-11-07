@@ -42,7 +42,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /* Variables from DB */
 
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
 
@@ -62,22 +62,22 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $placeformed;
 
     /**
-     * @var integer $yearformed
+     * @var int $yearformed
      */
     public $yearformed;
 
     /**
-     * @var integer $last_update
+     * @var int $last_update
      */
     public $last_update;
 
     /**
-     * @var integer $songs
+     * @var int $songs
      */
     public $songs;
 
     /**
-     * @var integer $albums
+     * @var int $albums
      */
     public $albums;
 
@@ -92,22 +92,22 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $mbid; // MusicBrainz ID
 
     /**
-     * @var integer $catalog_id
+     * @var int $catalog_id
      */
     public $catalog_id;
 
     /**
-     * @var integer $time
+     * @var int $time
      */
     public $time;
 
     /**
-     * @var integer $user
+     * @var int $user
      */
     public $user;
 
     /**
-     * @var boolean $manual_update
+     * @var bool $manual_update
      */
     public $manual_update;
 
@@ -137,7 +137,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $f_labels;
 
     /**
-     * @var integer $total_count
+     * @var int $total_count
      */
     public $total_count;
 
@@ -163,22 +163,22 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     // Constructed vars
     /**
-     * @var boolean $_fake
+     * @var bool $_fake
      */
     public $_fake = false; // Set if construct_from_array() used
 
     /**
-     * @var integer $album_count
+     * @var int $album_count
      */
     public $album_count;
 
     /**
-     * @var integer $album_disk_count
+     * @var int $album_disk_count
      */
     public $album_disk_count;
 
     /**
-     * @var integer $song_count
+     * @var int $song_count
      */
     public $song_count;
 
@@ -191,8 +191,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Artist
      * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
-     * @param integer|null $artist_id
-     * @param integer $catalog_init
+     * @param int|null $artist_id
+     * @param int $catalog_init
      */
     public function __construct($artist_id = null, $catalog_init = 0)
     {
@@ -269,10 +269,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
-     * @param integer[] $ids
-     * @param boolean $extra
+     * @param int[] $ids
+     * @param bool $extra
      * @param string $limit_threshold
-     * @return boolean
+     * @return bool
      */
     public static function build_cache($ids, $extra = false, $limit_threshold = '')
     {
@@ -326,8 +326,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * get_time
      *
      * Get time for an artist's songs.
-     * @param integer $artist_id
-     * @return integer
+     * @param int $artist_id
+     * @return int
      */
     public static function get_time($artist_id)
     {
@@ -351,8 +351,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * get_song_count
      *
      * Get count for an artist's songs.
-     * @param integer $artist_id
-     * @return integer
+     * @param int $artist_id
+     * @return int
      */
     public static function get_song_count($artist_id)
     {
@@ -371,8 +371,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * get_album_count
      *
      * Get count for an artist's albums.
-     * @param integer $artist_id
-     * @return integer
+     * @param int $artist_id
+     * @return int
      */
     public static function get_album_count($artist_id)
     {
@@ -388,8 +388,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * get_album_disk_count
      *
      * Get count for an artist's albums.
-     * @param integer $artist_id
-     * @return integer
+     * @param int $artist_id
+     * @return int
      */
     public static function get_album_disk_count($artist_id)
     {
@@ -435,7 +435,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * get_id_array
      *
      * Get info from the artist table with the minimum detail required for subsonic
-     * @param integer $artist_id
+     * @param int $artist_id
      * @return array
      */
     public static function get_id_array($artist_id)
@@ -471,9 +471,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * information and formats the relevant values
      * so they can be displayed in a table for example
      * it changes the title into a full link.
-     * @param boolean $details
+     * @param bool $details
      * @param string $limit_threshold
-     * @return boolean
+     * @return bool
      */
     public function format($details = true, $limit_threshold = '')
     {
@@ -739,7 +739,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -775,8 +775,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -799,8 +799,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Checks for an existing artist; if none exists, insert one.
      * @param string $name
      * @param string $mbid
-     * @param boolean $readonly
-     * @return integer|null
+     * @param bool $readonly
+     * @return int|null
      */
     public static function check($name, $mbid = '', $readonly = false)
     {
@@ -902,7 +902,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      *
      * Checks for an existing artist by mbid; if none exists, insert one.
      * @param string $mbid
-     * @return integer
+     * @return int
      */
     public static function check_mbid($mbid)
     {
@@ -972,7 +972,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * This returns an ids of artists that have songs/albums mapped
      * @param string $object_type
      * @param int $object_id
-     * @return integer[]
+     * @return int[]
      */
     public static function get_artist_map($object_type, $object_id)
     {
@@ -1013,7 +1013,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * update
      * This takes a key'd array of data and updates the current artist
      * @param array $data
-     * @return integer
+     * @return int
      */
     public function update(array $data)
     {
@@ -1109,9 +1109,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Update artist information.
      * @param string $summary
      * @param string $placeformed
-     * @param integer $yearformed
-     * @param boolean $manual
-     * @return PDOStatement|boolean
+     * @param int $yearformed
+     * @param bool $manual
+     * @return PDOStatement|bool
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
     {
@@ -1132,8 +1132,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Update artist associated user_id.
-     * @param integer $user_id
-     * @return PDOStatement|boolean
+     * @param int $user_id
+     * @return PDOStatement|bool
      */
     public function update_artist_user($user_id)
     {
@@ -1146,7 +1146,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Update artist associated user.
      * @param string $name
      * @param string|null $prefix
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public function update_artist_name($name, $prefix)
     {
@@ -1157,7 +1157,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * update_artist_counts
-     *
      */
     public static function update_table_counts()
     {
@@ -1181,7 +1180,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Update artist last_update time.
-     * @param integer $object_id
+     * @param int $object_id
      */
     public static function set_last_update($object_id)
     {
@@ -1191,8 +1190,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Migrate an object's associate stats to a new object
-     * @param integer $old_object_id
-     * @param integer $new_object_id
+     * @param int $old_object_id
+     * @param int $new_object_id
      */
     public static function migrate($old_object_id, $new_object_id)
     {
@@ -1227,9 +1226,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * Migrate an object associated artist to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate_map($object_type, $old_object_id, $new_object_id)
     {

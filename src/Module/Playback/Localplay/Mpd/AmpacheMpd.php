@@ -118,7 +118,7 @@ class AmpacheMpd extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new MPD instance
      * @param array $data
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public function add_instance($data)
     {
@@ -134,7 +134,7 @@ class AmpacheMpd extends localplay_controller
      * delete_instance
      * This takes a UID and deletes the instance in question
      * @param $uid
-     * @return boolean
+     * @return bool
      */
     public function delete_instance($uid)
     {
@@ -184,7 +184,7 @@ class AmpacheMpd extends localplay_controller
      * This takes an ID and an array of data and updates the instance specified
      * @param $uid
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public function update_instance($uid, $data)
     {
@@ -219,7 +219,7 @@ class AmpacheMpd extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      * @param string $uid
-     * @return boolean
+     * @return bool
      */
     public function set_active_instance($uid)
     {
@@ -247,7 +247,7 @@ class AmpacheMpd extends localplay_controller
      * add_url
      * This is the new hotness
      * @param Stream_Url $url
-     * @return boolean
+     * @return bool
      */
     public function add_url(Stream_Url $url)
     {
@@ -275,8 +275,8 @@ class AmpacheMpd extends localplay_controller
      * delete_track
      * This must take a single ID (as returned by the get function)
      * and delete it from the current playlist
-     * @param integer $object_id
-     * @return boolean|string
+     * @param int $object_id
+     * @return bool|string
      */
     public function delete_track($object_id)
     {
@@ -316,7 +316,7 @@ class AmpacheMpd extends localplay_controller
      * skip
      * This tells MPD to skip to the specified song
      * @param $song
-     * @return boolean
+     * @return bool
      */
     public function skip($song)
     {
@@ -378,7 +378,7 @@ class AmpacheMpd extends localplay_controller
      * volume
      * This tells MPD to set the volume to the parameter
      * @param $volume
-     * @return boolean|string
+     * @return bool|string
      */
     public function volume($volume)
     {
@@ -390,7 +390,7 @@ class AmpacheMpd extends localplay_controller
      * This tells MPD to set the repeating the playlist (i.e. loop) to either
      * on or off.
      * @param $state
-     * @return boolean|string
+     * @return bool|string
      */
     public function repeat($state)
     {
@@ -402,7 +402,7 @@ class AmpacheMpd extends localplay_controller
      * This tells MPD to turn on or off the playing of songs from the
      * playlist in random order.
      * @param $onoff
-     * @return boolean|string
+     * @return bool|string
      */
     public function random($onoff)
     {
@@ -414,7 +414,7 @@ class AmpacheMpd extends localplay_controller
      * This tells MPD to move a song
      * @param $source
      * @param $destination
-     * @return boolean|string
+     * @return bool|string
      */
     public function move($source, $destination)
     {
@@ -518,9 +518,7 @@ class AmpacheMpd extends localplay_controller
 
     /**
      * get_status
-     * This returns bool/int values for features, loop, repeat and any other
-     * features that this Localplay method supports.
-     * @return array
+     * This returns bool/int values for features, loop, repeat and any other features that this Localplay method supports.
      */
     public function status(): array
     {

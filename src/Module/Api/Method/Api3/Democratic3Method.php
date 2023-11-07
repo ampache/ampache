@@ -39,8 +39,6 @@ final class Democratic3Method
     /**
      * democratic
      * This is for controlling democratic play
-     * @param array $input
-     * @param User $user
      */
     public static function democratic(array $input, User $user)
     {

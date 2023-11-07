@@ -45,8 +45,6 @@ final class Artists5Method
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
      *
-     * @param array $input
-     * @param User $user
      * filter       = (string) Alpha-numeric search term //optional
      * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add          = Api::set_filter(date) //optional
@@ -55,7 +53,6 @@ final class Artists5Method
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
      * offset       = (integer) //optional
      * limit        = (integer) //optional
-     * @return boolean
      */
     public static function artists(array $input, User $user): bool
     {

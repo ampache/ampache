@@ -40,12 +40,12 @@ use Ampache\Module\System\Dba;
 class Query
 {
     /**
-     * @var integer|string $id
+     * @var int|string $id
      */
     public $id;
 
     /**
-     * @var integer $catalog
+     * @var int $catalog
      */
     public $catalog;
 
@@ -329,8 +329,8 @@ class Query
     /**
      * constructor
      * This should be called
-     * @param integer|null $query_id
-     * @param boolean $cached
+     * @param int|null $query_id
+     * @param bool $cached
      */
     public function __construct($query_id = null, $cached = true)
     {
@@ -415,7 +415,7 @@ class Query
      * This saves the filter data we pass it.
      * @param string $key
      * @param mixed $value
-     * @return boolean
+     * @return bool
      */
     public function set_filter($key, $value)
     {
@@ -571,7 +571,7 @@ class Query
      * get_filter
      * returns the specified filter value
      * @param string $key
-     * @return string|boolean
+     * @return string|bool
      */
     public function get_filter($key)
     {
@@ -581,7 +581,7 @@ class Query
     /**
      * get_start
      * This returns the current value of the start
-     * @return integer
+     * @return int
      */
     public function get_start()
     {
@@ -591,7 +591,7 @@ class Query
     /**
      * get_offset
      * This returns the current offset
-     * @return integer
+     * @return int
      */
     public function get_offset()
     {
@@ -601,7 +601,7 @@ class Query
     /**
      * set_total
      * This sets the total number of objects
-     * @param integer $total
+     * @param int $total
      */
     public function set_total($total)
     {
@@ -614,7 +614,7 @@ class Query
      * If it's already cached used it. if they pass us an array then use
      * that.
      * @param array $objects
-     * @return integer
+     * @return int
      */
     public function get_total($objects = null)
     {
@@ -879,7 +879,7 @@ class Query
      * This sets the current sort(s)
      * @param string $sort
      * @param string $order
-     * @return boolean
+     * @return bool
      */
     public function set_sort($sort, $order = '')
     {
@@ -917,7 +917,7 @@ class Query
     /**
      * set_offset
      * This sets the current offset of this query
-     * @param integer $offset
+     * @param int $offset
      */
     public function set_offset($offset)
     {
@@ -926,7 +926,7 @@ class Query
 
     /**
      * set_catalog
-     * @param integer $catalog_number
+     * @param int $catalog_number
      */
     public function set_catalog($catalog_number)
     {
@@ -952,7 +952,7 @@ class Query
      * @param string $table
      * @param string $source
      * @param string $dest
-     * @param integer $priority
+     * @param int $priority
      */
     public function set_join($type, $table, $source, $dest, $priority)
     {
@@ -968,7 +968,7 @@ class Query
      * @param string $dest1
      * @param string $source2
      * @param string $dest2
-     * @param integer $priority
+     * @param int $priority
      */
     public function set_join_and($type, $table, $source1, $dest1, $source2, $dest2, $priority)
     {
@@ -986,7 +986,7 @@ class Query
      * @param string $dest2
      * @param string $source3
      * @param string $dest3
-     * @param integer $priority
+     * @param int $priority
      */
     public function set_join_and_and($type, $table, $source1, $dest1, $source2, $dest2, $source3, $dest3, $priority)
     {
@@ -1019,7 +1019,7 @@ class Query
      * set_is_simple
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
-     * @param boolean $value
+     * @param bool $value
      */
     public function set_is_simple($value)
     {
@@ -1031,7 +1031,7 @@ class Query
      * This sets true/false if the content of this browse
      * should be static, if they are then content filtering/altering
      * methods will be skipped
-     * @param boolean $value
+     * @param bool $value
      */
     public function set_static_content($value)
     {
@@ -1040,7 +1040,7 @@ class Query
 
     /**
      *
-     * @return boolean
+     * @return bool
      */
     public function is_static_content()
     {
@@ -1050,7 +1050,7 @@ class Query
     /**
      * is_simple
      * This returns whether or not the current browse type is set to static.
-     * @return boolean
+     * @return bool
      */
     public function is_simple()
     {
@@ -1124,9 +1124,9 @@ class Query
     /**
      * set_base_sql
      * This saves the base sql statement we are going to use.
-     * @param boolean $force
+     * @param bool $force
      * @param string $custom_base
-     * @return boolean
+     * @return bool
      */
     private function set_base_sql($force = false, $custom_base = '')
     {
@@ -1425,7 +1425,7 @@ class Query
      * This returns the sql statement we are going to use this has to be run
      * every time we get the objects because it depends on the filters and
      * the type of object we are currently browsing.
-     * @param boolean $limit
+     * @param bool $limit
      * @return string
      */
     public function get_sql($limit = true)
@@ -2163,8 +2163,8 @@ class Query
      * these should be limited as they are often intensive and
      * require additional queries per object... :(
      *
-     * @param integer $object_id
-     * @return boolean
+     * @param int $object_id
+     * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private function logic_filter($object_id)
@@ -2625,7 +2625,7 @@ class Query
      * This takes the existing objects, looks at the current
      * sort method and then re-sorts them This is internally
      * called by the set_sort() function
-     * @return boolean
+     * @return bool
      */
     private function resort_objects()
     {
@@ -2705,7 +2705,7 @@ class Query
      * This takes the full array of object ids, often passed into show and
      * if necessary it saves them
      * @param array $object_ids
-     * @return boolean
+     * @return bool
      */
     public function save_objects($object_ids)
     {

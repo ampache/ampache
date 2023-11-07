@@ -39,8 +39,6 @@ final class TagAlbums3Method
     /**
      * tag_albums
      * This returns the albums associated with the tag in question
-     * @param array $input
-     * @param User $user
      */
     public static function tag_albums(array $input, User $user)
     {

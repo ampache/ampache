@@ -46,12 +46,9 @@ final class BookmarkDeleteMethod
      *
      * Delete an existing bookmark. (if it exists)
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) object_id to delete
      * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode')
      * client = (string) Agent string //optional
-     * @return boolean
      */
     public static function bookmark_delete(array $input, User $user): bool
     {

@@ -56,7 +56,7 @@ class Stream_Playlist
     /**
      * Stream_Playlist constructor
      * If an ID is passed, it should be a stream session ID.
-     * @param integer|string $session_id
+     * @param int|string $session_id
      */
     public function __construct($session_id = null)
     {
@@ -89,7 +89,7 @@ class Stream_Playlist
 
     /**
      * @param Stream_URL $url
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     private function _add_url($url)
     {
@@ -117,7 +117,7 @@ class Stream_Playlist
 
     /**
      * @param array $urls
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     private function _add_urls($urls)
     {
@@ -161,7 +161,7 @@ class Stream_Playlist
     }
 
     /**
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function garbage_collection()
     {
@@ -351,7 +351,7 @@ class Stream_Playlist
 
     /**
      * check_autoplay_append
-     * @return boolean
+     * @return bool
      */
     public static function check_autoplay_append()
     {
@@ -361,7 +361,7 @@ class Stream_Playlist
 
     /**
      * check_autoplay_next
-     * @return boolean
+     * @return bool
      */
     public static function check_autoplay_next()
     {
@@ -371,8 +371,8 @@ class Stream_Playlist
 
     /**
      * @param $type
-     * @param boolean $redirect
-     * @return boolean
+     * @param bool $redirect
+     * @return bool
      */
     public function generate_playlist($type, $redirect = false)
     {
@@ -459,7 +459,7 @@ class Stream_Playlist
      * Add an array of urls. This is used for things that aren't coming
      * from media objects like democratic playlists
      * @param array $urls
-     * @return boolean
+     * @return bool
      */
     public function add_urls($urls = array())
     {

@@ -79,7 +79,7 @@ class Xml4_Data
      *
      * This takes an int and changes the offset
      *
-     * @param integer $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
+     * @param int $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
      */
     public static function set_offset($offset)
     {
@@ -91,8 +91,8 @@ class Xml4_Data
      *
      * This sets the limit for any ampache transactions
      *
-     * @param  integer $limit Set a limit on your results
-     * @return boolean
+     * @param int $limit Set a limit on your results
+     * @return bool
      */
     public static function set_limit($limit)
     {
@@ -110,8 +110,8 @@ class Xml4_Data
      *
      * This sets the type of Xml_Data we are working on
      *
-     * @param    string    $type    Xml_Data type
-     * @return    boolean
+     * @param string    $type    Xml_Data type
+     * @return bool
      */
     public static function set_type($type)
     {
@@ -129,9 +129,9 @@ class Xml4_Data
      *
      * This generates a standard XML Error message
      *
-     * @param    string    $code    Error code
-     * @param    string    $string    Error message
-     * @return    string    return error message xml
+     * @param string    $code    Error code
+     * @param string    $string    Error message
+     * @return string    return error message xml
      */
     public static function error($code, $string)
     {
@@ -145,8 +145,8 @@ class Xml4_Data
      *
      * This generates a standard XML Success message
      *
-     * @param    string    $string    success message
-     * @return    string    return success message xml
+     * @param string    $string    success message
+     * @return string    return success message xml
      */
     public static function success($string)
     {
@@ -175,7 +175,7 @@ class Xml4_Data
      * This returns the footer
      *
      * @see    _footer()
-     * @return    string    return xml
+     * @return string    return xml
      */
     public static function footer()
     {
@@ -219,7 +219,7 @@ class Xml4_Data
      * output_xml_from_array
      * This takes a one dimensional array and creates a XML document from it. For use primarily by the ajax mojo
      * @param $array
-     * @param boolean $callback
+     * @param bool $callback
      * @param string $type
      * @return string
      */
@@ -302,9 +302,9 @@ class Xml4_Data
      *
      * This will build an xml document from a key'd array,
      *
-     * @param  array $array (description here...)
-     * @param  boolean $callback (don't output xml when true)
-     * @param  string|boolean $object
+     * @param array $array (description here...)
+     * @param bool $callback (don't output xml when true)
+     * @param string|bool $object
      * @return string return xml
      */
     public static function keyed_array($array, $callback = false, $object = false)
@@ -341,11 +341,11 @@ class Xml4_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param  array   $objects Array of object_ids (Mixed string|int)
-     * @param  string  $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
-     * @param    User     $user
-     * @param  boolean $full_xml whether to return a full XML document or just the node
-     * @param  boolean $include include episodes from podcasts or tracks in a playlist
+     * @param array   $objects Array of object_ids (Mixed string|int)
+     * @param string  $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
+     * @param User     $user
+     * @param bool $full_xml whether to return a full XML document or just the node
+     * @param bool $include include episodes from podcasts or tracks in a playlist
      * @return string  return xml
      */
     public static function indexes($objects, $object_type, $user, $full_xml = true, $include = false)
@@ -454,8 +454,8 @@ class Xml4_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param    array    $licenses    (description here...)
-     * @return    string    return xml
+     * @param array    $licenses    (description here...)
+     * @return string    return xml
      */
     public static function licenses($licenses)
     {
@@ -477,8 +477,8 @@ class Xml4_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param    array    $tags    (description here...)
-     * @return    string    return xml
+     * @param array    $tags    (description here...)
+     * @return string    return xml
      */
     public static function tags($tags)
     {
@@ -504,9 +504,9 @@ class Xml4_Data
      *
      * @param array $artists (description here...)
      * @param array $include Array of other items to include
-     * @param    User     $user
-     * @param boolean $full_xml whether to return a full XML document or just the node
-     * @return    string    return xml
+     * @param User     $user
+     * @param bool $full_xml whether to return a full XML document or just the node
+     * @return string    return xml
      */
     public static function artists($artists, $include, $user, $full_xml = true)
     {
@@ -555,11 +555,11 @@ class Xml4_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param integer[] $albums (description here...)
+     * @param int[] $albums (description here...)
      * @param array $include Array of other items to include
      * @param User $user
-     * @param boolean $full_xml whether to return a full XML document or just the node
-     * @return    string    return xml
+     * @param bool $full_xml whether to return a full XML document or just the node
+     * @return string    return xml
      */
     public static function albums($albums, $include, $user, $full_xml = true)
     {
@@ -614,8 +614,8 @@ class Xml4_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param  array   $playlists Playlist id's to include
-     * @param  User    $user
+     * @param array   $playlists Playlist id's to include
+     * @param User    $user
      * @return string  return xml
      */
     public static function playlists($playlists, $user)
@@ -671,8 +671,8 @@ class Xml4_Data
      *
      * This returns shares to the user, in a pretty xml document with the information
      *
-     * @param    array    $shares    (description here...)
-     * @return    string    return xml
+     * @param array    $shares    (description here...)
+     * @return string    return xml
      */
     public static function shares($shares)
     {
@@ -694,7 +694,7 @@ class Xml4_Data
      *
      * This returns catalogs to the user, in a pretty xml document with the information
      *
-     * @param  integer[] $catalogs group of catalog id's
+     * @param int[] $catalogs group of catalog id's
      * @return string return xml
      */
     public static function catalogs($catalogs)
@@ -718,9 +718,9 @@ class Xml4_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param  array   $podcasts    (description here...)
-     * @param  User    $user
-     * @param  boolean $episodes include the episodes of the podcast //optional
+     * @param array   $podcasts    (description here...)
+     * @param User    $user
+     * @param bool $episodes include the episodes of the podcast //optional
      * @return string  return xml
      */
     public static function podcasts($podcasts, $user, $episodes = false)
@@ -755,9 +755,9 @@ class Xml4_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param  integer[] $podcast_episodes Podcast_Episode id's to include
-     * @param  User      $user
-     * @param  boolean   $full_xml whether to return a full XML document or just the node
+     * @param int[] $podcast_episodes Podcast_Episode id's to include
+     * @param User      $user
+     * @param bool   $full_xml whether to return a full XML document or just the node
      * @return string    return xml
      */
     public static function podcast_episodes($podcast_episodes, $user, $full_xml = true)
@@ -786,7 +786,7 @@ class Xml4_Data
      * This returns an xml document from an array of song ids. (Spiffy isn't it!)
      * @param int[] $songs
      * @param User $user
-     * @param boolean $full_xml
+     * @param bool $full_xml
      * @return string return xml
      */
     public static function songs($songs, $user, $full_xml = true)
@@ -848,7 +848,7 @@ class Xml4_Data
      *
      * @param array $videos (description here...)
      * @param User  $user
-     * @return   string   return xml
+     * @return string   return xml
      */
     public static function videos($videos, $user)
     {
@@ -879,7 +879,7 @@ class Xml4_Data
      *
      * @param array $object_ids Object IDs
      * @param User $user
-     * @return   string     return xml
+     * @return string     return xml
      */
     public static function democratic($object_ids, $user)
     {
@@ -914,8 +914,8 @@ class Xml4_Data
      *
      * This handles creating an xml document for a user
      *
-     * @param  User   $user User
-     * @param  bool   $fullinfo
+     * @param User   $user User
+     * @param bool   $fullinfo
      * @return string return xml
      */
     public static function user(User $user, $fullinfo)
@@ -939,8 +939,8 @@ class Xml4_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param    integer[]    $users    User identifier list
-     * @return    string    return xml
+     * @param int[]    $users    User identifier list
+     * @return string    return xml
      */
     public static function users($users)
     {
@@ -959,8 +959,8 @@ class Xml4_Data
      *
      * This handles creating an xml document for a shout list
      *
-     * @param    integer[]    $shouts    Shout identifier list
-     * @return    string    return xml
+     * @param int[]    $shouts    Shout identifier list
+     * @return string    return xml
      */
     public static function shouts($shouts)
     {
@@ -984,8 +984,8 @@ class Xml4_Data
      *
      * This handles creating an xml document for an activity list
      *
-     * @param    integer[]    $activities    Activity identifier list
-     * @return    string    return xml
+     * @param int[]    $activities    Activity identifier list
+     * @return string    return xml
      */
     public static function timeline($activities)
     {
@@ -1038,7 +1038,7 @@ class Xml4_Data
      *
      * this returns the footer for this document, these are pretty boring
      *
-     * @return    string    Footer xml tag
+     * @return string    Footer xml tag
      */
     private static function _footer()
     {

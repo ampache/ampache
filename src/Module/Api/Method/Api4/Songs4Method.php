@@ -45,8 +45,6 @@ final class Songs4Method
      * Returns songs based on the specified filter
      * All calls that return songs now include <playlisttrack> which can be used to identify track order.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add    = Api::set_filter(date) //optional

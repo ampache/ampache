@@ -154,7 +154,7 @@ final class VaInfo implements VaInfoInterface
      * //TODO: where did this go? param string $encodingId3v2
      * @param string $dirPattern
      * @param string $filePattern
-     * @param boolean $islocal
+     * @param bool $islocal
      */
     public function __construct(
         UserRepositoryInterface $userRepository,

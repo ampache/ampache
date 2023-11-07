@@ -45,9 +45,8 @@ abstract class database_object
     /**
      * get_info
      * retrieves the info from the database and puts it in the cache
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $table_name
-     * @return array
      */
     public function get_info($object_id, $table_name = ''): array
     {
@@ -80,8 +79,6 @@ abstract class database_object
 
     /**
      * getTableName
-     * @param $table_name
-     * @return string
      */
     private function getTableName($table_name): string
     {
@@ -109,7 +106,7 @@ abstract class database_object
      * this checks the cache to see if the specified object is there
      * @param string $index
      * @param string $object_id
-     * @return boolean
+     * @return bool
      */
     public static function is_cached($index, $object_id)
     {
@@ -125,7 +122,7 @@ abstract class database_object
      * get_from_cache
      * This attempts to retrieve the specified object from the cache we've got here
      * @param string $index
-     * @param integer|string $object_id
+     * @param int|string $object_id
      * @return array
      */
     public static function get_from_cache($index, $object_id)
@@ -144,9 +141,9 @@ abstract class database_object
      * add_to_cache
      * This adds the specified object to the specified index in the cache
      * @param string $index
-     * @param integer|string $object_id
+     * @param int|string $object_id
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public static function add_to_cache($index, $object_id, $data)
     {
@@ -175,7 +172,7 @@ abstract class database_object
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
      * @param string $index
-     * @param integer $object_id
+     * @param int $object_id
      */
     public static function remove_from_cache($index, $object_id = false)
     {

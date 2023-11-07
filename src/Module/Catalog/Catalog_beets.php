@@ -103,7 +103,7 @@ class Catalog_beets extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -144,7 +144,7 @@ class Catalog_beets extends Catalog
     /**
      * Check if a song was added before
      * @param array $song
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
     public function checkSong($song)

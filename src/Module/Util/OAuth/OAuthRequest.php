@@ -128,7 +128,7 @@ class OAuthRequest
     /**
      * @param string $name
      * @param $value
-     * @param boolean $allow_duplicates
+     * @param bool $allow_duplicates
      */
     public function set_parameter($name, $value, $allow_duplicates = true)
     {

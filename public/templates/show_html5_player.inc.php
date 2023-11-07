@@ -8,9 +8,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 
-// TODO remove me
-global $dic;
-
 /** @var bool $isVideo  */
 /** @var bool $isRadio */
 /** @var bool $isShare */
@@ -18,6 +15,8 @@ global $dic;
 /** @var bool $isRandom */
 /** @var Ampache\Module\Playback\Stream_Playlist $playlist */
 
+// TODO remove me
+global $dic;
 $environment   = $dic->get(EnvironmentInterface::class);
 $web_path      = (string)AmpConfig::get('web_path', '');
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))

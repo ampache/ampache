@@ -39,8 +39,6 @@ final class LastShouts3Method
     /**
      * last_shouts
      * This get the latest posted shouts
-     * @param array $input
-     * @param User $user
      */
     public static function last_shouts(array $input, User $user)
     {

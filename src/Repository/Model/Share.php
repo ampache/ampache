@@ -87,7 +87,7 @@ class Share extends database_object
      * delete_share
      * @param $share_id
      * @param User $user
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function delete_share($share_id, $user)
     {
@@ -124,14 +124,14 @@ class Share extends database_object
     }
 
     /**
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param boolean $allow_stream
-     * @param boolean $allow_download
+     * @param int $object_id
+     * @param bool $allow_stream
+     * @param bool $allow_download
      * @param int $expire_days
      * @param string $secret
-     * @param integer $max_counter
+     * @param int $max_counter
      * @param string $description
      * @return string|null
      */
@@ -325,7 +325,7 @@ class Share extends database_object
      * update
      * @param array $data
      * @param User $user
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public function update(array $data, $user)
     {
@@ -354,7 +354,7 @@ class Share extends database_object
 
     /**
      * save_access
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public function save_access()
     {
@@ -367,7 +367,7 @@ class Share extends database_object
      * is_valid
      * @param $secret
      * @param $action
-     * @return boolean
+     * @return bool
      */
     public function is_valid($secret, $action)
     {
@@ -419,8 +419,7 @@ class Share extends database_object
     /**
      * is_shared_media
      * Has this media object come from a shared object?
-     * @param $media_id
-     * @return boolean
+     * @param int|string $media_id
      */
     public function is_shared_media($media_id): bool
     {
@@ -493,8 +492,8 @@ class Share extends database_object
     /**
      * get_expiry
      * get the expiry date in days from a time()
-     * @param integer $time
-     * @return integer
+     * @param int $time
+     * @return int
      */
     public static function get_expiry($time = null)
     {
@@ -513,8 +512,8 @@ class Share extends database_object
 
     /**
      * @param string $object_type
-     * @param integer $object_id
-     * @param boolean $show_text
+     * @param int $object_id
+     * @param bool $show_text
      */
     public static function display_ui($object_type, $object_id, $show_text = true)
     {
@@ -536,9 +535,9 @@ class Share extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

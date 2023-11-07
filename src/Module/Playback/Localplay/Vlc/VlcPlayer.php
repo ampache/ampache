@@ -42,7 +42,7 @@ class VlcPlayer
      * i would change this to another value then standard 8080, it gets used by more things
      * @param string $host
      * @param string $password
-     * @param integer $port
+     * @param int $port
      */
     public function __construct($host = 'localhost', $password = '', $port = 8080)
     {
@@ -58,7 +58,7 @@ class VlcPlayer
      * $url        URL of the song
      * @param string $name
      * @param $url
-     * @return boolean
+     * @return bool
      */
     public function add($name, $url)
     {
@@ -137,7 +137,7 @@ class VlcPlayer
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return boolean|null
+     * @return bool|null
      */
     public function skip($pos)
     {
@@ -201,7 +201,7 @@ class VlcPlayer
      * repeat
      * This toggles the repeat state of VLC
      * @param $value
-     * @return boolean|null
+     * @return bool|null
      */
     public function repeat($value)
     {
@@ -218,7 +218,7 @@ class VlcPlayer
      * random
      * this toggles the random state of VLC
      * @param $value
-     * @return boolean
+     * @return bool
      */
     public function random($value)
     {
@@ -235,7 +235,7 @@ class VlcPlayer
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return boolean
+     * @return bool
      */
     public function delete_pos($track)
     {
@@ -275,7 +275,6 @@ class VlcPlayer
 
     /**
      * extract the full state from the xml file and send to status in vlccontroller for further parsing.
-     *
      */
     public function fullstate()
     {
@@ -323,7 +322,7 @@ class VlcPlayer
      * set_volume
      * This sets the volume as best it can, i think it's from 0 to 400, need more testing'
      * @param $value
-     * @return boolean
+     * @return bool
      */
     public function set_volume($value)
     {
@@ -433,7 +432,7 @@ class VlcPlayer
      * this function parses the xml page into an array thx to bin-co
      * warning VLC returns it's complete media lib if asked for playlist
      * @param $contents
-     * @param integer $get_attributes
+     * @param int $get_attributes
      * @param string $priority
      * @return array|void
      */

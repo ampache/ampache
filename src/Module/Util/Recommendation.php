@@ -66,7 +66,7 @@ class Recommendation
 
     /**
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
      * @return bool
      */
     public static function has_recommendation_cache($object_type, $object_id)
@@ -83,8 +83,8 @@ class Recommendation
 
     /**
      * @param string $type
-     * @param integer $object_id
-     * @param boolean $get_items
+     * @param int $object_id
+     * @param bool $get_items
      * @return array
      */
     protected static function get_recommendation_cache($type, $object_id, $get_items = false)
@@ -118,7 +118,7 @@ class Recommendation
     /**
      * delete_recommendation_cache
      * @param string $type
-     * @param integer $object_id
+     * @param int $object_id
      */
     protected static function delete_recommendation_cache($type, $object_id)
     {
@@ -132,7 +132,7 @@ class Recommendation
     /**
      * update_recommendation_cache
      * @param string $type
-     * @param integer $object_id
+     * @param int $object_id
      * @param $recommendations
      */
     protected static function update_recommendation_cache($type, $object_id, $recommendations)
@@ -158,9 +158,9 @@ class Recommendation
     /**
      * get_songs_like
      * Returns a list of similar songs
-     * @param integer $song_id
-     * @param integer $limit
-     * @param boolean $local_only
+     * @param int $song_id
+     * @param int $limit
+     * @param bool $local_only
      * @return array
      */
     public static function get_songs_like($song_id, $limit = 5, $local_only = true)
@@ -249,9 +249,9 @@ class Recommendation
     /**
      * get_artists_like
      * Returns a list of similar artists
-     * @param integer $artist_id
-     * @param integer $limit
-     * @param boolean $local_only
+     * @param int $artist_id
+     * @param int $limit
+     * @param bool $local_only
      * @return array
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
@@ -378,7 +378,7 @@ class Recommendation
     /**
      * get_artist_info
      * Returns artist information
-     * @param integer $artist_id
+     * @param int $artist_id
      * @return array
      */
     public static function get_artist_info($artist_id)
@@ -433,7 +433,7 @@ class Recommendation
     /**
      * get_album_info
      * Returns album information
-     * @param integer $album_id
+     * @param int $album_id
      * @return array
      */
     public static function get_album_info($album_id)
@@ -476,7 +476,7 @@ class Recommendation
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
+     * @param int $old_object_id
      */
     public static function migrate($object_type, $old_object_id)
     {

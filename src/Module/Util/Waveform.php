@@ -72,7 +72,7 @@ class Waveform
      * Get a song or podcast_episode waveform.
      * @param Song|Podcast_Episode $media
      * @param string $object_type
-     * @return string|null|boolean
+     * @return string|null|bool
      * @throws RuntimeException
      */
     public static function get($media, string $object_type)
@@ -157,7 +157,7 @@ class Waveform
 
     /**
      * Return full path of the Waveform file.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
      * @return false|string
      */
@@ -188,7 +188,7 @@ class Waveform
 
     /**
      * Return content of a Waveform file.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
      * @return string|false
      */
@@ -206,10 +206,10 @@ class Waveform
 
     /**
      * Save content of a Waveform into a file.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
      * @param string $waveform
-     * @return integer|boolean
+     * @return int|bool
      */
     public static function save_to_file($object_id, $object_type, $waveform)
     {
@@ -411,10 +411,10 @@ class Waveform
 
     /**
      * Save waveform to db.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
      * @param string $waveform
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     protected static function save_to_db($object_id, $object_type, $waveform)
     {

@@ -43,8 +43,6 @@ final class PodcastEdit4Method
      * Update the description and/or expiration date for an existing podcast.
      * Takes the podcast id to update with optional description and expires parameters.
      *
-     * @param array $input
-     * @param User $user
      * filter      = (string) Alpha-numeric search term
      * feed        = (string) feed url (xml!) //optional
      * title       = (string) title string //optional
@@ -52,7 +50,6 @@ final class PodcastEdit4Method
      * description = (string) //optional
      * generator   = (string) //optional
      * copyright   = (string) //optional
-     * @return boolean
      */
     public static function podcast_edit(array $input, User $user): bool
     {

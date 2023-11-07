@@ -35,8 +35,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\VideoRepositoryInterface;
 
-global $dic;
-
 /** @var string $web_path */
 /** @var string $t_a_artists */
 /** @var string $t_albums */
@@ -73,6 +71,7 @@ global $dic;
 /** @var string $t_videos */
 /** @var string $t_wanted */
 
+global $dic;
 $server_allow    = AmpConfig::get('allow_localplay_playback');
 $controller      = AmpConfig::get('localplay_controller');
 $videoRepository = $dic->get(VideoRepositoryInterface::class);

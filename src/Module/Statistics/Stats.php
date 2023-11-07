@@ -88,10 +88,10 @@ class Stats
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
+     * @param int $old_object_id
+     * @param int $new_object_id
      * @param int $child_id
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id, $child_id)
     {
@@ -195,13 +195,13 @@ class Stats
      * This inserts a new record for the specified object
      * with the specified information, amazing!
      * @param string $input_type
-     * @param integer $object_id
-     * @param integer $user_id
+     * @param int $object_id
+     * @param int $user_id
      * @param string $agent
      * @param array $location
      * @param string $count_type
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public static function insert(
         $input_type,
@@ -263,12 +263,12 @@ class Stats
      * is_already_inserted
      * Check if the same stat has not already been inserted within a graceful delay
      * @param string $type
-     * @param integer $object_id
-     * @param integer $user
+     * @param int $object_id
+     * @param int $user
      * @param string $agent
-     * @param integer $time
+     * @param int $time
      * @param bool $exact
-     * @return boolean
+     * @return bool
      */
     public static function is_already_inserted($type, $object_id, $user, $agent, $time, $exact = false)
     {
@@ -299,10 +299,10 @@ class Stats
      * get_object_count
      * Get count for an object
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $threshold
      * @param string $count_type
-     * @return integer
+     * @return int
      */
     public static function get_object_count($object_type, $object_id, $threshold = null, $count_type = 'stream')
     {
@@ -330,10 +330,10 @@ class Stats
      * get_object_total
      * Get count for an object
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $threshold
      * @param string $count_type
-     * @return integer
+     * @return int
      */
     public static function get_object_total($object_type, $object_id, $threshold = null, $count_type = 'stream')
     {
@@ -384,7 +384,7 @@ class Stats
      * optional user_id because when streaming we don't have $GLOBALS()
      * @param string $user_id
      * @param string $agent
-     * @param integer $date
+     * @param int $date
      * @return array
      */
     public static function get_last_play($user_id = '', $agent = '', $date = 0)
@@ -427,8 +427,8 @@ class Stats
      *
      * @param string $user_id
      * @param string $agent
-     * @param integer $original_date
-     * @param integer $new_date
+     * @param int $original_date
+     * @param int $new_date
      */
     public static function shift_last_play($user_id, $agent, $original_date, $new_date)
     {
@@ -445,9 +445,9 @@ class Stats
      * get_time
      *
      * get the time for the object (song, video, podcast_episode)
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
-     * @return integer
+     * @return int
      */
     public static function get_time($object_id, $object_type)
     {
@@ -467,12 +467,12 @@ class Stats
      * this sets the object_counts count type to skipped
      * Gets called when the next song is played in quick succession
      *
-     * @param integer $date
+     * @param int $date
      * @param string $agent
-     * @param integer $user_id
-     * @param integer $object_id
+     * @param int $user_id
+     * @param int $object_id
      * @param string $object_type
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function skip_last_play($date, $agent, $user_id, $object_id, $object_type)
     {
@@ -506,10 +506,10 @@ class Stats
      * this checks to see if the current object has been played recently by the user
      * @param string $object_type
      * @param Song|Podcast_Episode|Video $object
-     * @param integer $user
+     * @param int $user
      * @param string $agent
-     * @param integer $date
-     * @return boolean
+     * @param int $date
+     * @return bool
      */
     public static function has_played_history($object_type, $object, $user, $agent, $date)
     {
@@ -564,9 +564,9 @@ class Stats
      * get_object_history
      * This returns the objects that have happened for $user_id sometime after $time
      * used primarily by the democratic cooldown code
-     * @param integer $user_id
-     * @param integer $time
-     * @param boolean $newest
+     * @param int $user_id
+     * @param int $time
+     * @param bool $newest
      * @return array
      */
     public static function get_object_history($user_id, $time, $newest = true)
@@ -598,9 +598,9 @@ class Stats
      * @param string $input_type
      * @param string $threshold
      * @param string $count_type
-     * @param integer $user_id
-     * @param boolean $random
-     * @param boolean $addAdditionalColumns
+     * @param int $user_id
+     * @param bool $random
+     * @param bool $addAdditionalColumns
      * @return string
      */
     public static function get_top_sql(
@@ -707,11 +707,11 @@ class Stats
      * This returns the top X for type Y from the
      * last stats_threshold days
      * @param string $input_type
-     * @param integer $count
-     * @param integer $threshold
-     * @param integer $offset
-     * @param integer $user_id
-     * @param boolean $random
+     * @param int $count
+     * @param int $threshold
+     * @param int $offset
+     * @param int $user_id
+     * @param bool $random
      * @return array
      */
     public static function get_top($input_type, $count, $threshold, $offset = 0, $user_id = null, $random = false)
@@ -746,7 +746,7 @@ class Stats
      * This returns the get_recent sql
      * @param string $input_type
      * @param int $user_id
-     * @param boolean $newest
+     * @param bool $newest
      * @return string
      */
     public static function get_recent_sql($input_type, $user_id = null, $newest = true)
@@ -798,9 +798,9 @@ class Stats
      * get_recent
      * This returns the recent X for type Y
      * @param string $input_type
-     * @param integer $count
-     * @param integer $offset
-     * @param boolean $newest
+     * @param int $count
+     * @param int $offset
+     * @param bool $newest
      * @return array
      */
     public static function get_recent($input_type, $count = 0, $offset = 0, $newest = true)
@@ -835,7 +835,7 @@ class Stats
      * get_recently_played
      * This function returns the last X played media objects ('live_stream','podcast_episode','song','video')
      * It uses the popular threshold to figure out how many to pull it will only return unique object
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $count_type
      * @param string $object_type
      * @param bool $user_only
@@ -882,8 +882,8 @@ class Stats
      * If full is passed, doesn't limit based on date
      * @param string $count
      * @param string $input_type
-     * @param integer $user
-     * @param integer $full
+     * @param int $user
+     * @param int $full
      * @return array
      */
     public static function get_user($count, $input_type, $user, $full = 0)
@@ -946,7 +946,7 @@ class Stats
      * get_newest_sql
      * This returns the get_newest sql
      * @param string $input_type
-     * @param integer $catalog
+     * @param int $catalog
      * @return string
      */
     public static function get_newest_sql($input_type, $catalog = 0, $user_id = null)
@@ -1029,11 +1029,11 @@ class Stats
      * This returns an array of the newest artists/albums/whatever
      * in this Ampache instance
      * @param string $input_type
-     * @param integer $count
-     * @param integer $offset
-     * @param integer $catalog
-     * @param integer $user_id
-     * @return integer[]
+     * @param int $count
+     * @param int $offset
+     * @param int $catalog
+     * @param int $user_id
+     * @return int[]
      */
     public static function get_newest($input_type, $count = 0, $offset = 0, $catalog = 0, $user_id = null)
     {

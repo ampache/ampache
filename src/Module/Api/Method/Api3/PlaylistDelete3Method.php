@@ -39,8 +39,6 @@ final class PlaylistDelete3Method
     /**
      * playlist_delete
      * This delete a playlist
-     * @param array $input
-     * @param User $user
      */
     public static function playlist_delete(array $input, User $user)
     {

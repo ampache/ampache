@@ -45,13 +45,10 @@ final class Podcasts5Method
      *
      * Get information about podcasts.
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) Alpha-numeric search term
      * include = (string) 'episodes' (include episodes in the response) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * @return boolean
      */
     public static function podcasts(array $input, User $user): bool
     {

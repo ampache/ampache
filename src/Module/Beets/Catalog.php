@@ -42,13 +42,13 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 {
     /**
      * Added Songs counter
-     * @var integer
+     * @var int
      */
     protected $addedSongs = 0;
 
     /**
      * Verified Songs counter
-     * @var integer
+     * @var int
      */
     protected $verifiedSongs = 0;
 
@@ -73,7 +73,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param integer $catalog_id
+     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -102,9 +102,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * @param string $prefix Prefix like add, updated, verify and clean
-     * @param integer $count song count
+     * @param int $count song count
      * @param array $song Song array
-     * @param boolean $ignoreTicker ignoring the ticker for the last update
+     * @param bool $ignoreTicker ignoring the ticker for the last update
      */
     protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false)
     {
@@ -212,7 +212,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Add the song to the DB
      * @param array $song
-     * @return integer
+     * @return int
      */
     protected function insertSong($song)
     {
@@ -305,7 +305,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return boolean
+     * @return bool
      */
     public function move_catalog_proc($new_path)
     {
@@ -347,7 +347,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      *
      * @param string $path
-     * @return integer|boolean
+     * @return int|bool
      */
     protected function getIdFromPath($path)
     {

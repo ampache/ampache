@@ -22,5 +22,5 @@
 
 use Ampache\Module\Api\Ajax;
 
-?>
+/** @var Ampache\Repository\Model\Browse $browse */ ?>
 <th class="cel_location optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=personal_video&sort=location', T_('Location'), 'sort_video_location'); ?></th>

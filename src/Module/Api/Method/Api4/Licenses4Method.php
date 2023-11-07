@@ -45,13 +45,10 @@ final class Licenses4Method
      *
      * This returns the licenses  based on the specified filter
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function licenses(array $input, User $user): bool
     {

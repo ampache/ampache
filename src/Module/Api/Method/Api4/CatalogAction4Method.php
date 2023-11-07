@@ -44,11 +44,8 @@ final class CatalogAction4Method
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
      *
-     * @param array $input
-     * @param User $user
      * task    = (string) 'add_to_catalog'|'clean_catalog'
      * catalog = (integer) $catalog_id
-     * @return boolean
      */
     public static function catalog_action(array $input, User $user): bool
     {

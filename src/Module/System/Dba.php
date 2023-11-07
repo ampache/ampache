@@ -48,7 +48,7 @@ class Dba
      * query
      * @param string $sql
      * @param array $params
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function query($sql, $params = array())
     {
@@ -68,7 +68,7 @@ class Dba
      * _query
      * @param string $sql
      * @param array $params
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     private static function _query($sql, $params)
     {
@@ -120,7 +120,7 @@ class Dba
      * read
      * @param string $sql
      * @param array $params
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function read($sql, $params = array())
     {
@@ -131,7 +131,7 @@ class Dba
      * write
      * @param string $sql
      * @param array $params
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function write($sql, $params = array())
     {
@@ -184,7 +184,7 @@ class Dba
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
      * @param $resource
-     * @param boolean $finish
+     * @param bool $finish
      * @return array
      */
     public static function fetch_assoc($resource, $finish = true)
@@ -214,7 +214,7 @@ class Dba
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
      * @param $resource
-     * @param boolean $finish
+     * @param bool $finish
      * @return array
      */
     public static function fetch_row($resource, $finish = true)
@@ -239,7 +239,7 @@ class Dba
     /**
      * @param $resource
      * @param string $class
-     * @param boolean $finish
+     * @param bool $finish
      * @return array
      */
     public static function fetch_object($resource, $class = 'stdClass', $finish = true)
@@ -268,7 +268,7 @@ class Dba
      * just a count of rows returned by our select statement, this
      * doesn't work for updates or inserts.
      * @param $resource
-     * @return integer
+     * @return int
      */
     public static function num_rows($resource)
     {
@@ -300,7 +300,7 @@ class Dba
      *
      * This emulates the mysql_affected_rows function
      * @param $resource
-     * @return integer
+     * @return int
      */
     public static function affected_rows($resource)
     {
@@ -358,7 +358,7 @@ class Dba
      * _setup_dbh
      * @param null|PDO $dbh
      * @param string $database
-     * @return boolean
+     * @return bool
      */
     private static function _setup_dbh($dbh, $database)
     {
@@ -392,7 +392,7 @@ class Dba
      * check_database
      *
      * Make sure that we can connect to the database
-     * @return boolean
+     * @return bool
      */
     public static function check_database()
     {
@@ -414,7 +414,7 @@ class Dba
      *
      * Checks to make sure that you have inserted the database
      * and that the user you are using has access to it.
-     * @return boolean
+     * @return bool
      */
     public static function check_database_inserted()
     {
@@ -484,7 +484,7 @@ class Dba
      *
      * This nukes the dbh connection, this isn't used very often...
      * @param string $database
-     * @return boolean
+     * @return bool
      */
     public static function disconnect($database = '')
     {

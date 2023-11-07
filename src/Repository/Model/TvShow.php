@@ -154,8 +154,8 @@ class TvShow extends database_object implements library_item
     /**
      * format
      * this function takes the object and formats some values
-     * @param boolean $details
-     * @return boolean
+     * @param bool $details
+     * @return bool
      */
     public function format($details = true)
     {
@@ -284,7 +284,7 @@ class TvShow extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -317,8 +317,8 @@ class TvShow extends database_object implements library_item
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -334,8 +334,8 @@ class TvShow extends database_object implements library_item
      * @param string $name
      * @param $year
      * @param $tvshow_summary
-     * @param boolean $readonly
-     * @return integer|string|null
+     * @param bool $readonly
+     * @return int|string|null
      */
     public static function check($name, $year, $tvshow_summary, $readonly = false)
     {
@@ -388,7 +388,7 @@ class TvShow extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current tv show
      * @param array $data
-     * @return integer|string|null
+     * @return int|string|null
      */
     public function update(array $data)
     {
@@ -458,9 +458,9 @@ class TvShow extends database_object implements library_item
      *
      * Update tags of tv shows
      * @param string $tags_comma
-     * @param boolean $override_childs
-     * @param boolean $add_to_childs
-     * @param boolean $force_update
+     * @param bool $override_childs
+     * @param bool $add_to_childs
+     * @param bool $force_update
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
     {
