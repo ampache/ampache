@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Video $video */
 
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 
 Ui::show_box_top($video->get_fullname(), 'box box_video_details'); ?>
 <div class="item_right_info">

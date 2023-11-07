@@ -19,7 +19,7 @@ global $dic;
 /** @var Ampache\Module\Playback\Stream_Playlist $playlist */
 
 $environment   = $dic->get(EnvironmentInterface::class);
-$web_path      = AmpConfig::get('web_path');
+$web_path      = (string)AmpConfig::get('web_path', '');
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 7, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 7, path: '/', samesite: 'Strict'";

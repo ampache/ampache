@@ -26,7 +26,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var array $object_ids */
 
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <div id="information_actions">
     <ul>
         <li>

@@ -44,7 +44,7 @@ use Ampache\Module\Util\Ui;
 // @deprecated
 global $dic;
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
-$web_path   = AmpConfig::get('web_path'); ?>
+$web_path   = (string)AmpConfig::get('web_path', ''); ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">

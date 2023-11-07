@@ -9,7 +9,7 @@ use Ampache\Repository\VideoRepositoryInterface;
 global $dic;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
-$web_path        = AmpConfig::get('web_path');
+$web_path        = (string)AmpConfig::get('web_path', '');
 $filter_str      = $type ?? (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS); ?>
 
 <div class="category_options">

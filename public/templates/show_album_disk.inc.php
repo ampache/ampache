@@ -45,7 +45,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
 $batch_dl   = Access::check_function('batch_download');
 $zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');
 // Title for this album
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $simple   = $albumDisk->get_fullname(true);
 $f_name   = $albumDisk->get_fullname(false, true);
 $title    = ($albumDisk->album_artist !== null)

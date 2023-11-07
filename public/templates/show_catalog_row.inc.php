@@ -23,7 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 /** @var Ampache\Repository\Model\Catalog $libitem */
 
 if ($libitem->enabled) {

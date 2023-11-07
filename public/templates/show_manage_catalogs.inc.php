@@ -25,7 +25,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <?php Ui::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs'); ?>
 <div id="information_actions">
     <ul style="float: left;">

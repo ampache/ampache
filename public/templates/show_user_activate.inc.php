@@ -23,8 +23,10 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
+/** @var bool $validationResult */
+
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
     <head>

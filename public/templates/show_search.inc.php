@@ -34,7 +34,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 ob_start();
 echo $playlist->get_fullname();
 $title    = ob_get_contents();
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $browse   = new Browse();
 $browse->set_type('playlist_media');
 $browse->add_supplemental_object('search', $playlist->id);

@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
 // playlists and searches come from the same 'playlist_media' browse but you can't reorder a search
 $playlist_id  = $playlist->id ?? '';
 $argument     = $argument ?? false;
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $seconds      = $browse->duration;
 $duration     = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));

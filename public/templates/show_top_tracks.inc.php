@@ -37,7 +37,7 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 /** @var string $argument_param */
 /** @var Artist $artist */
 
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = true;

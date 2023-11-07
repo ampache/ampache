@@ -26,7 +26,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-/** @var integer|string $upload_max */
+/** @var int|string $upload_max */
 
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
@@ -34,7 +34,7 @@ Ui::show_box_top(T_('Upload'));
 $ajaxfs   = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
 $artist   = (int) (Core::get_request('artist'));
 $album    = (int) (Core::get_request('album'));
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $access50 = Access::check('interface', 50);
 $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 <div id="container" role="main">

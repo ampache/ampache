@@ -32,7 +32,7 @@ global $dic;
 /** @var array $configuration */
 
 $environment = $dic->get(EnvironmentInterface::class);
-$web_path    = AmpConfig::get('web_path');
+$web_path    = (string)AmpConfig::get('web_path', '');
 // don't share the database password
 $configuration['database_password'] = '*********';
 // check your versions

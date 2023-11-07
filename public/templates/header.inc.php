@@ -35,7 +35,7 @@ use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
-$web_path          = AmpConfig::get('web_path');
+$web_path          = (string)AmpConfig::get('web_path', '');
 $access100         = Access::check('interface', 100);
 $access25          = ($access100 || Access::check('interface', 25));
 $site_lang         = AmpConfig::get('lang');

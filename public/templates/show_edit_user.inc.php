@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Catalog;
 
 /** @var User $client */
 
-$web_path  = AmpConfig::get('web_path');
+$web_path  = (string)AmpConfig::get('web_path', '');
 $access100 = Access::check('interface', 100); ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>
 <?php echo AmpError::display('general'); ?>

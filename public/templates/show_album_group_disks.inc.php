@@ -42,7 +42,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 /** @var Album $album */
 /** @var bool $isAlbumEditable */
 
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 // Title for this album
 $f_album_name = $album->get_artist_fullname();
 $f_name       = $album->get_fullname(false, true);

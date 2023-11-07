@@ -30,7 +30,7 @@ use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
-$web_path        = AmpConfig::get('web_path');
+$web_path        = (string)AmpConfig::get('web_path', '');
 $limit           = $_REQUEST['limit'] ?? 0;
 $limit1          = ($limit == 1) ? 'selected="selected"' : '';
 $limit5          = ($limit == 5) ? 'selected="selected"' : '';

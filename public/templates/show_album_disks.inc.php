@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $limit_threshold */
 /** @var bool $group_release */
 
-$web_path          = AmpConfig::get('web_path');
+$web_path          = (string)AmpConfig::get('web_path', '');
 $access25          = Access::check('interface', 25);
 $show_playlist_add = $access25;
 $show_direct_play  = AmpConfig::get('directplay');

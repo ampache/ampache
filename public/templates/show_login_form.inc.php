@@ -31,7 +31,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 $dir      = is_rtl(AmpConfig::get('lang'))
     ? 'rtl'

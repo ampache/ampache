@@ -28,7 +28,7 @@ if (empty($logo_url)) {
     $logo_url = Ui::get_logo_url('dark');
 }
 
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <!DOCTYPE html>
 <html lang="en-US">
     <head>

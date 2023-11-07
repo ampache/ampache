@@ -35,7 +35,7 @@ Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
     <tbody>
         <?php
         if (!empty($wartists)) {
-            $web_path = AmpConfig::get('web_path');
+            $web_path = (string)AmpConfig::get('web_path', '');
             foreach ($wartists as $libitem) { ?>
         <tr id="wartist_<?php echo $libitem['mbid']; ?>">
             <td class="cel_artist">

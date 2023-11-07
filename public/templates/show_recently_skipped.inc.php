@@ -36,7 +36,7 @@ global $dic;
 $ajax_page = $ajax_page ?? 'stats';
 $user_id   = $user_id ?? -1;
 $link      = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_skipped', $user_id) : '';
-$web_path  = AmpConfig::get('web_path');
+$web_path  = (string)AmpConfig::get('web_path', '');
 $is_admin  = Access::check('interface', 100);
 UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
 <table class="tabledata striped-rows">

@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Search;
 /** @var array $object_ids */
 
 $democratic = Democratic::get_current_playlist();
-$web_path   = AmpConfig::get('web_path');
+$web_path   = (string)AmpConfig::get('web_path', '');
 $use_search = AmpConfig::get('demo_use_search');
 $access100  = Access::check('interface', 100);
 if ($browse->is_show_header()) {

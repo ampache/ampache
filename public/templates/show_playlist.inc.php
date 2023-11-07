@@ -47,7 +47,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 ob_start();
 echo $playlist->get_fullname();
 $title    = ob_get_contents();
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <div class="item_right_info">

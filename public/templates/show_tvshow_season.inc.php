@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
 /** @var array $object_ids */
 /** @var string $object_type */
 
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <?php
 $browse = new Browse();
 $browse->set_type($object_type);
