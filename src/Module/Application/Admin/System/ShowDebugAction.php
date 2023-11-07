@@ -33,7 +33,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -69,7 +68,10 @@ final class ShowDebugAction implements ApplicationActionInterface
         if (Core::get_request('autoupdate') == 'force') {
             AutoUpdate::get_latest_version(true);
         }
-        require_once Ui::find_template('show_debug.inc.php');
+        $this->ui->show(
+            'show_debug.inc.php',
+            ['configuration' => $configuration]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

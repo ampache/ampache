@@ -29,7 +29,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -57,10 +56,11 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $catalog->format();
-        $users    = static::getUserRepository()->getValidArray();
-        $users[0] = T_('Public Catalog');
 
-        require_once Ui::find_template('show_edit_catalog.inc.php');
+        $this->ui->show(
+            'show_edit_catalog.inc.php',
+            ['catalog' => $catalog]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

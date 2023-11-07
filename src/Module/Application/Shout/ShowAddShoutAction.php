@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -78,7 +77,15 @@ final class ShowAddShoutAction implements ApplicationActionInterface
         $shouts      = $this->shoutRepository->getBy($object_type, $object->id);
 
         // Now go ahead and display the page where we let them add a comment etc
-        require_once Ui::find_template('show_add_shout.inc.php');
+        $this->ui->show(
+            'show_add_shout.inc.php',
+            [
+                'data' => $data,
+                'object' => $object,
+                'object_type' => $object_type,
+                'shouts' => $shouts
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showHeader();

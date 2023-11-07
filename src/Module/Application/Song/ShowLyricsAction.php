@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Song;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -58,7 +57,11 @@ final class ShowLyricsAction implements ApplicationActionInterface
         $song->format();
         $song->fill_ext_info();
         $lyrics = $song->get_lyrics();
-        require_once Ui::find_template('show_lyrics.inc.php');
+
+        $this->ui->show(
+            'show_lyrics.inc.php',
+            ['lyrics' => $lyrics]
+        );
 
         // Show the Footer
         $this->ui->showQueryStats();

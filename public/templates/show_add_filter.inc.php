@@ -26,7 +26,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Catalog;
 
-/** @var Ampache\Repository\Model\User $client */
+/** @var string $filter_name */
 
 Ui::show_box_top(T_('Add Catalog Filter'), 'box box_add_filter');
 
@@ -41,7 +41,7 @@ if (!AmpConfig::get('catalog_filter')) {
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Filter Name'); ?>:</td>
-            <td><input type="text" name="name" maxlength="128" value="<?php echo $filtername ?? scrub_out(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
+            <td><input type="text" name="name" maxlength="128" value="<?php echo $filter_name; ?>" />
                 <?php echo AmpError::display('name'); ?>
             </td>
         </tr>

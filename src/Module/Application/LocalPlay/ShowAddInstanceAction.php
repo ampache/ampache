@@ -30,7 +30,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -68,7 +67,10 @@ final class ShowAddInstanceAction extends AbstractLocalPlayAction
         // Get the current Localplay fields
         $localplay = new LocalPlay($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER));
         $fields    = $localplay->get_instance_fields();
-        require_once Ui::find_template('show_localplay_add_instance.inc.php');
+        $this->ui->show(
+            'show_localplay_add_instance.inc.php',
+            ['fields' => $fields]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

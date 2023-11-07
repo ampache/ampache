@@ -24,8 +24,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Shoutbox $shout */
-/** @var Ampache\Repository\Model\User $client */
 /** @var Ampache\Repository\Model\library_item $object */
+/** @var Ampache\Repository\Model\User $client */
 
 Ui::show_box_top(T_('Edit Existing Shoutbox Post')); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/shout.php?action=edit_shout">

@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Video;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -51,7 +50,10 @@ final class ShowVideoAction implements ApplicationActionInterface
         $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $video->format();
 
-        require_once Ui::find_template('show_video.inc.php');
+        $this->ui->show(
+            'show_video.inc.php',
+            ['video' => $video]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

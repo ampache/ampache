@@ -34,6 +34,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Podcast $podcast */
+/** @var array $object_ids */
 /** @var string $object_type */
 
 $access75 = Access::check('interface', 75);

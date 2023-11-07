@@ -20,11 +20,9 @@
  *
  */
 
-// Don't show disabled medias to normal users
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
@@ -32,6 +30,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\playable_item $libitem */
 /** @var Playlist $playlist */
 /** @var int $playlist_track */
 /** @var int $search */
@@ -41,6 +40,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_time */
 /** @var bool $show_ratings */
 
+// Don't show disabled medias to normal users
 if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface', 50)) { ?>
 <td class="cel_play">
     <span class="cel_play_content"><?php echo '<b>' . $playlist_track . '</b>' ?></span>

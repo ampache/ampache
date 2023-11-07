@@ -22,7 +22,11 @@
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
+
+/** @var Localplay $localplay */
+/** @var array $object_ids */
 
 $status = $localplay->status();
 ?>

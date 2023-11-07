@@ -33,7 +33,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -86,7 +85,14 @@ final class ShowCreateAction implements ApplicationActionInterface
             $object     = new $class_name($object_id);
             if ($object->id) {
                 $object->format();
-                require_once Ui::find_template('show_add_share.inc.php');
+                $this->ui->show(
+                    'show_add_share.inc.php',
+                    [
+                        'has_failed' => false,
+                        'message' => '',
+                        $object
+                    ]
+                );
             }
         }
         $this->ui->showFooter();

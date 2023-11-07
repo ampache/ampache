@@ -26,15 +26,14 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Catalog;
 
-/** @var Ampache\Repository\Model\User $client */
+/** @var int $filter_id */
+/** @var string $filter_name */
 
 Ui::show_box_top(T_('Edit Catalog Filter'), 'box box_add_filter');
 
 if (!AmpConfig::get('catalog_filter')) {
     echo T_("Please enable 'catalog_filter' in your sever config file");
-} else {
-    $filter_id   = (int) Core::get_request('filter_id') ?? 0;
-    $filter_name = Core::get_request('filter_name'); ?>
+} else { ?>
     <p><?php echo T_("Catalog filters are a way to stop users accessing different catalogs"); ?></p>
     <p><?php echo T_("If you do not tick a catalog, it will be hidden from users that you assign to this filter"); ?></p>
 &nbsp;

@@ -26,8 +26,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var string $data */
-/** @var  Ampache\Repository\Model\library_item $object */
+/** @var Ampache\Repository\Model\library_item $object */
 /** @var string $object_type */
+/** @var int[] $shouts */
 ?>
 <div>
 <?php if (Access::check('interface', 25)) { ?>

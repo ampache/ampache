@@ -33,7 +33,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -88,7 +87,14 @@ final class CreateAction implements ApplicationActionInterface
             if ($object->id) {
                 $message = T_('Failed to create share');
                 $object->format();
-                require_once Ui::find_template('show_add_share.inc.php');
+                $this->ui->show(
+                    'show_add_share.inc.php',
+                    [
+                        'has_failed' => true,
+                        'message' => $message,
+                        'object' => $object
+                    ]
+                );
             } else {
                 $this->ui->showContinue(
                     T_('There Was a Problem'),

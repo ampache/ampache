@@ -29,7 +29,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -62,19 +61,24 @@ final class AddFilterAction extends AbstractFilterAction
 
         $this->ui->showHeader();
 
-        $filtername = (string) scrub_in(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        if (empty($filtername)) {
+        $filter_name = (string) scrub_in(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        if (empty($filter_name)) {
             AmpError::add('name', T_('A filter name is required'));
         }
 
         // make sure the filter doesn't already exist
-        if (Catalog::filter_name_exists($filtername)) {
+        if (Catalog::filter_name_exists($filter_name)) {
             AmpError::add('name', T_('That filter name already exists'));
         }
 
         // If we've got an error then show add form!
         if (AmpError::occurred()) {
-            require_once Ui::find_template('show_add_filter.inc.php');
+            $this->ui->show(
+                'show_add_filter.inc.php',
+                [
+                    'filter_name' => $filter_name
+                ]
+            );
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();
@@ -90,14 +94,14 @@ final class AddFilterAction extends AbstractFilterAction
         }
 
         // Attempt to create the filter
-        $filter_id = Catalog::add_catalog_filter_group($filtername, $catalog_array);
+        $filter_id = Catalog::add_catalog_filter_group($filter_name, $catalog_array);
         if ($filter_id < 1) {
             AmpError::add('general', T_("The new filter was not created"));
         }
 
         $this->ui->showConfirmation(
             T_('New Filter Added'),
-            sprintf(T_('%1$s has been created'), $filtername),
+            sprintf(T_('%1$s has been created'), $filter_name),
             sprintf('%s/admin/filter.php', $this->configContainer->getWebPath())
         );
 

@@ -29,7 +29,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -78,7 +77,13 @@ final class UpdateFilterAction extends AbstractFilterAction
 
         // If we've got an error then show add form!
         if (AmpError::occurred()) {
-            require_once Ui::find_template('show_edit_filter.inc.php');
+            $this->ui->show(
+                'show_edit_filter.inc.php',
+                [
+                    'filter_id' => $filter_id,
+                    'filter_name' => $filter_name
+                ]
+            );
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

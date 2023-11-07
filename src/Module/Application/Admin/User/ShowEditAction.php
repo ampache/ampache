@@ -28,7 +28,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -64,7 +63,10 @@ final class ShowEditAction extends AbstractUserAction
         $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
         $client->format();
 
-        require_once Ui::find_template('show_edit_user.inc.php');
+        $this->ui->show(
+            'show_edit_user.inc.php',
+            [$client]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

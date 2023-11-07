@@ -23,7 +23,6 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
