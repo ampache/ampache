@@ -80,7 +80,7 @@ final class LostPasswordMethod
             }
             // @todo replace by constructor injection
             global $dic;
-            /* @var NewPasswordSenderInterface $newPasswordSender */
+            /** @var NewPasswordSenderInterface $newPasswordSender */
             $newPasswordSender = $dic->get(NewPasswordSenderInterface::class);
             $current_ip        = Core::get_user_ip();
 

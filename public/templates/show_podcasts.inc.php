@@ -57,7 +57,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="podcast">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="podcast">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>

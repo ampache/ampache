@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 <head>
   <!-- Propelled by Ampache | ampache.org -->
   <?php Ui::show_custom_style(); ?>
-  <title><?php echo T_('Ampache -- Config Debug Page') ?></title>
+  <title><?php echo T_('Ampache -- Config Debug Page'); ?></title>
   <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
   <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />

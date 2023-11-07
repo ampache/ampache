@@ -28,11 +28,11 @@ use Ampache\Repository\Model\Search;
     <form method="post" id="edit_playlist_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Type') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Type'); ?></td>
                 <td>
                     <?php $name    = 'select_' . $libitem->type; ?>
                     <?php ${$name} = ' selected="selected"'; ?>
@@ -43,13 +43,13 @@ use Ampache\Repository\Model\Search;
                 </td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Random') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Random'); ?></td>
                 <td><input type="checkbox" name="random" value="1" <?php if ($libitem->random) {
                     echo "checked";
                 } ?> /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)'); ?></td>
                 <td><input type="text" name="limit" value="<?php echo scrub_out($libitem->limit); ?>" /></td>
             </tr>
             <tr>

@@ -59,10 +59,7 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
         $this->ui->show('show_mashup.inc.php');
-
-        // Show the Footer
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

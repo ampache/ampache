@@ -20,9 +20,9 @@
  *
  */
 
-/** @var Song $libitem */
+/** @var Song_Preview $libitem */
 
-use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
 
 ?>
 <td class="cel_song"><?php echo $libitem->title; ?></td>

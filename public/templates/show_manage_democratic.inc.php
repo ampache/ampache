@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var array $playlists */
 
-Ui::show_box_top(T_('Manage'));  ?>
+Ui::show_box_top(T_('Manage')); ?>
 <table class="tabledata striped-rows">
     <tr class="th-top">
         <th class="cel_number"><?php echo T_('Playlist'); ?></th>

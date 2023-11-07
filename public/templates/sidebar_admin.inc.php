@@ -28,7 +28,8 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
-?>
+/** @var string $web_path */
+/** @var string $t_expander */ ?>
 <ul class="sb2" id="sb_admin">
     <?php if (AmpConfig::get('browse_filter')) {
         echo "<li>";

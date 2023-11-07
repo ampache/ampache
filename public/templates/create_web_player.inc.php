@@ -38,12 +38,12 @@ if (WebPlayer::is_playlist_video($this)) {
     $width = 880;
 } ?>
     window.open(URL, 'Web_player', 'width=<?php echo $width; ?>,height=285,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');
-    window.location = '<?php echo return_referer() ?>';
+    window.location = '<?php echo return_referer(); ?>';
     return false;
 }
 // end -->
 </script>
 </head>
-<body onLoad="javascript:PlayerPopUp('<?php echo AmpConfig::get('web_path')?>/web_player.php<?php echo '?playlist_id=' . $this->id ?>')">
+<body onLoad="javascript:PlayerPopUp('<?php echo AmpConfig::get('web_path'); ?>/web_player.php<?php echo '?playlist_id=' . $this->id; ?>')">
 </body>
 </html>

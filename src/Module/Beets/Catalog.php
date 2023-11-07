@@ -139,7 +139,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_top(T_('Running Beets Update'));
         }
-        /* @var Handler $parser */
+        /** @var Handler $parser */
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'added', 0));
@@ -238,7 +238,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         debug_event(self::class, 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        /* @var Handler $parser */
+        /** @var Handler $parser */
         $parser = $this->getParser();
         $parser->setHandler($this, 'verifySong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'mtime', $this->last_update));
@@ -275,7 +275,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function clean_catalog_proc()
     {
-        /* @var Handler $parser */
+        /** @var Handler $parser */
         $parser      = $this->getParser();
         $this->songs = $this->getAllSongfiles();
         $parser->setHandler($this, 'removeFromDeleteList');

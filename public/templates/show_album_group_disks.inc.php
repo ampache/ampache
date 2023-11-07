@@ -155,9 +155,9 @@ if ($show_playlist_add) {
             <?php echo Ajax::button_with_text('?action=basket&type=album_random&id=' . $album->id, 'random', $randtotemp, 'play_random_' . $album->id); ?>
         </li>
         <li>
-            <a id="<?php echo 'add_playlist_' . $album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
+            <a id="<?php echo 'add_playlist_' . $album->id; ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id; ?>')">
                 <?php echo Ui::get_icon('playlist_add', $addtoexist);
-    echo $addtoexist ?>
+    echo $addtoexist; ?>
             </a>
         </li>
 <?php
@@ -207,14 +207,14 @@ if ($isAlbumEditable) {
     $t_upload = T_('Upload');
     if (Upload::can_upload($current_user) && $album->album_artist > 0) { ?>
                 <li>
-                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id ?>">
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id; ?>">
                         <?php echo Ui::get_icon('upload', $t_upload);
         echo $t_upload; ?>
                     </a>
                 </li>
     <?php } ?>
             <li>
-                <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', '')">
+                <a id="<?php echo 'edit_album_' . $album->id; ?>" onclick="showEditDialog('album_row', '<?php echo $album->id; ?>', '<?php echo 'edit_album_' . $album->id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
                     <?php echo Ui::get_icon('edit', T_('Edit'));
     echo T_('Edit Album'); ?>
                 </a>
@@ -234,7 +234,7 @@ if ($zip_album) {
 if (Catalog::can_remove($album)) {
     $delete = T_('Delete'); ?>
             <li>
-                <a id="<?php echo 'delete_album_' . $album->id ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
+                <a id="<?php echo 'delete_album_' . $album->id; ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('delete', $delete);
     echo $delete; ?>
                 </a>
@@ -278,7 +278,7 @@ foreach ($album->get_album_disk_ids() as $albumDiskId) {
     }
     if ($access25) {
         if ($can_shout) { ?>
-                <a href="<?php echo $web_path ?>/shout.php?action=show_add_shout&type=album_disk&id=<?php echo $album_disk->id ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')) ?></a>
+                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
             <?php }
         if ($can_share) {
             echo Share::display_ui('album_disk', $album_disk->id, false);

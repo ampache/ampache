@@ -24,14 +24,14 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\TvShow;
+use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-/** @var TvShow $libitem */
+/** @var TVShow_Season $libitem */
 /** @var bool $show_ratings */
 /** @var string $cel_cover */
 ?>
@@ -72,13 +72,13 @@ use Ampache\Module\Util\Ui;
 <td class="cel_action">
 <?php
     if (Access::check('interface', 50)) { ?>
-    <a id="<?php echo 'edit_tvshow_season_' . $libitem->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_season_' . $libitem->id ?>', '<?php echo addslashes(T_('Season Edit')) ?>', 'tvshow_season_')">
+    <a id="<?php echo 'edit_tvshow_season_' . $libitem->id; ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_tvshow_season_' . $libitem->id; ?>', '<?php echo addslashes(T_('Season Edit')); ?>', 'tvshow_season_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php
     }
     if (Catalog::can_remove($libitem)) { ?>
-    <a id="<?php echo 'delete_tvshow_season_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $libitem->id; ?>">
+    <a id="<?php echo 'delete_tvshow_season_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
     <?php } ?>

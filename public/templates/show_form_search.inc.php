@@ -60,19 +60,19 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=<?php echo $currentType; ?>" enctype="multipart/form-data" style="Display:inline">
 
 <div class="category_options">
-    <a class="category <?php echo ($currentType == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=song"><?php echo T_('Songs'); ?></a>
-    <a class="category <?php echo ($currentType == 'album' || $currentType == 'album_disk') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
-    <a class="category <?php echo ($currentType == 'artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a>
+    <a class="category <?php echo ($currentType == 'song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=song"><?php echo T_('Songs'); ?></a>
+    <a class="category <?php echo ($currentType == 'album' || $currentType == 'album_disk') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
+    <a class="category <?php echo ($currentType == 'artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a>
     <?php if (AmpConfig::get('label')) { ?>
-        <a class="category <?php echo ($currentType == 'label') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=label"><?php echo T_('Labels'); ?></a>
+        <a class="category <?php echo ($currentType == 'label') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=label"><?php echo T_('Labels'); ?></a>
     <?php } ?>
-    <a class="category <?php echo ($currentType == 'playlist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo T_('Playlists'); ?></a>
+    <a class="category <?php echo ($currentType == 'playlist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo T_('Playlists'); ?></a>
     <?php if (AmpConfig::get('podcast')) { ?>
-        <a class="category <?php echo ($currentType == 'podcast') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=podcast"><?php echo T_('Podcasts'); ?></a>
-        <a class="category <?php echo ($currentType == 'podcast_episode') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
+        <a class="category <?php echo ($currentType == 'podcast') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=podcast"><?php echo T_('Podcasts'); ?></a>
+        <a class="category <?php echo ($currentType == 'podcast_episode') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
     <?php } ?>
     <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
-        <a class="category <?php echo ($currentType == 'video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
+        <a class="category <?php echo ($currentType == 'video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
     <?php } ?>
 </div>
 
@@ -83,13 +83,13 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
             <select name="limit">
                 <option value="0"><?php echo T_('Unlimited'); ?></option>
                 <option value="1" <?php echo $limit1; ?>>1</option>
-                <option value="5" <?php echo $limit5 ?>>5</option>
-                <option value="10" <?php echo $limit50 ?>>10</option>
-                <option value="25" <?php echo $limit25 ?>>25</option>
-                <option value="50" <?php echo $limit50 ?>>50</option>
-                <option value="100" <?php echo $limit100 ?>>100</option>
-                <option value="250" <?php echo $limit250 ?>>250</option>
-                <option value="500" <?php echo $limit500 ?>>500</option>
+                <option value="5" <?php echo $limit5; ?>>5</option>
+                <option value="10" <?php echo $limit50; ?>>10</option>
+                <option value="25" <?php echo $limit25; ?>>25</option>
+                <option value="50" <?php echo $limit50; ?>>50</option>
+                <option value="100" <?php echo $limit100; ?>>100</option>
+                <option value="250" <?php echo $limit250; ?>>250</option>
+                <option value="500" <?php echo $limit500; ?>>500</option>
             </select>
         </td>
     </tr>

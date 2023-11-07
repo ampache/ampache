@@ -27,7 +27,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var array $images */
+/** @var int $object_id */
 /** @var string $object_type */
+/** @var string $burl */
 
 $total_images = count($images);
 $rows         = floor($total_images / 5);

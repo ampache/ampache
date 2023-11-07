@@ -32,9 +32,9 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
-/* @var Ampache\Repository\Model\TVShow_Season $season */
-/* @var array $object_ids */
-/* @var string $object_type */
+/** @var Ampache\Repository\Model\TVShow_Season $season */
+/** @var array $object_ids */
+/** @var string $object_type */
 
 $web_path = AmpConfig::get('web_path'); ?>
 <?php
@@ -76,7 +76,7 @@ if (Stream_Playlist::check_autoplay_next()) { ?>
 <?php }
 if (Access::check('interface', 50)) { ?>
         <li>
-            <a id="<?php echo 'edit_tvshow_season_' . $season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_' . $season->id ?>', '<?php echo addslashes(T_('Season Edit')) ?>', '')">
+            <a id="<?php echo 'edit_tvshow_season_' . $season->id; ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id; ?>', '<?php echo 'edit_tvshow_season_' . $season->id; ?>', '<?php echo addslashes(T_('Season Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Season'); ?>
             </a>
@@ -84,7 +84,7 @@ if (Access::check('interface', 50)) { ?>
 <?php }
 if (Catalog::can_remove($season)) { ?>
         <li>
-            <a id="<?php echo 'delete_tvshow_season_' . $season->id ?>" href="<?php echo $web_path; ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $season->id; ?>">
+            <a id="<?php echo 'delete_tvshow_season_' . $season->id; ?>" href="<?php echo $web_path; ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $season->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>

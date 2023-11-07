@@ -32,16 +32,16 @@ use Ampache\Module\Api\Ajax;
     <form method="post" id="edit_album_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($libitem->get_fullname(true)); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Album Artist') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Album Artist'); ?></td>
                 <td>
                     <?php
                         if (Access::check('interface', 50)) {
                             show_artist_select('album_artist', $libitem->album_artist, true, $libitem->id, true); ?>
-                    <div id="album_artist_select_album_<?php echo $libitem->id ?>">
+                    <div id="album_artist_select_album_<?php echo $libitem->id; ?>">
                         <?php echo Ajax::observe('album_artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("album_artist", ' . $libitem->id . ')'); ?>
                     </div>
                     <?php
@@ -52,16 +52,16 @@ use Ampache\Module\Api\Ajax;
             </tr>
             <?php if (count($libitem->album_artists) > 1) { ?>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Additional Artists') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
                 <td><?php echo Artist::get_display(array_diff($libitem->album_artists, array($libitem->album_artist))); ?></td>
             </tr>
             <?php } ?>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
                 <td><input type="text" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
                 <td>
                     <?php if (Access::check('interface', 50)) { ?>
                         <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
@@ -72,7 +72,7 @@ use Ampache\Module\Api\Ajax;
                 </td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz Release Group ID') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz Release Group ID'); ?></td>
                 <td>
                 <?php if (Access::check('interface', 50)) { ?>
                     <input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group; ?>" />
@@ -83,40 +83,40 @@ use Ampache\Module\Api\Ajax;
                 </td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Release Type') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Type'); ?></td>
                 <td><input type="text" name="release_type" value="<?php echo $libitem->release_type; ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Release Status') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Status'); ?></td>
                 <td><input type="text" name="release_status" value="<?php echo $libitem->release_status; ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Release Comment') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Comment'); ?></td>
                 <td><input type="text" name="subtitle" value="<?php echo $libitem->version; ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Catalog Number'); ?></td>
                 <td><input type="text" name="catalog_number" value="<?php echo $libitem->catalog_number; ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Barcode') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Barcode'); ?></td>
                 <td><input type="text" name="barcode" value="<?php echo $libitem->barcode; ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Original Year') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Original Year'); ?></td>
                 <td><input type="text" name="original_year" value="<?php echo $libitem->original_year; ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('album', $libitem->id, 20)); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub songs') ?></td>
+                <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub songs'); ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub songs') ?></td>
+                <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub songs'); ?></td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />

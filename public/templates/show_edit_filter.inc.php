@@ -44,13 +44,13 @@ if (!AmpConfig::get('catalog_filter')) {
             <td><?php echo T_('Filter Name'); ?>:</td>
             <?php if ($filter_name == 'DEFAULT') { ?>
                 <td><?php echo $filter_name; ?></td>
-                <input type="hidden" name="name" value="<?php echo $filter_name?>" />
-                <input type="hidden" name="filter_id" value="<?php echo $filter_id?>" />
+                <input type="hidden" name="name" value="<?php echo $filter_name; ?>" />
+                <input type="hidden" name="filter_id" value="<?php echo $filter_id; ?>" />
             <?php } else { ?>
                 <td>
-                    <input type="text" name="name" maxlength="128" value="<?php echo $filter_name ?>" >
+                    <input type="text" name="name" maxlength="128" value="<?php echo $filter_name; ?>" >
                     <?php echo AmpError::display('name'); ?>
-                    <input type="hidden" name="filter_id" value="<?php echo $filter_id?>" />
+                    <input type="hidden" name="filter_id" value="<?php echo $filter_id; ?>" />
                 </td>
             <?php } ?>
         </tr>

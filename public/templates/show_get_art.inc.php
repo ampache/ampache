@@ -62,8 +62,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
                              if ($object_type == 'artist') {
                                  echo 'required';
                              }
-                         }
-                ?>
+                         } ?>
                     />
                   </td>
                 </tr>
@@ -94,7 +93,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
         <tr>
            <td>
                 <label id="gatherYear" for="yearFilter"><?php echo T_('Year'); ?> </label>
-                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?" value="<?php echo $year_str; ?>">
+                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?" value="<?php echo $year_str ?? ''; ?>">
                 <label><?php echo T_("(e.g. '2001', '2001-2005')"); ?></label>
            </td>
           </tr>

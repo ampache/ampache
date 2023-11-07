@@ -38,10 +38,10 @@ use SimpleXMLElement;
  */
 class UPnPPlayer
 {
-    /* @var UPnPPlaylist $object */
+    /** @var UPnPPlaylist $object */
     private $_playlist = null;
 
-    /* @var UPnPDevice $object */
+    /** @var UPnPDevice $object */
     private $_device;
 
     private $_description_url;

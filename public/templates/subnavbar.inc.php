@@ -27,7 +27,7 @@
 
 use Ampache\Config\AmpConfig;
 
-?>
+/** @var array $items */ ?>
 <ul class="subnavside">
 <?php
     foreach ($items as $item) {

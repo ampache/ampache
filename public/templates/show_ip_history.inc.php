@@ -31,16 +31,16 @@ use Ampache\Module\Util\Ui;
 <ul>
 <li>
 <?php if (array_key_exists('all', $_REQUEST)) { ?>
-    <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>">
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id; ?>">
         <?php echo Ui::get_icon('disable', T_('Disable')); ?>
         <?php echo T_('Show Unique'); ?>
     </a>
 <?php } else { ?>
-    <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all">
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id; ?>&all">
         <?php echo Ui::get_icon('add', T_('Add')); ?>
         <?php echo T_('Show All'); ?>
     </a>
-<?php }?>
+<?php } ?>
 </li>
 </ul>
 </div>

@@ -220,7 +220,7 @@ if (canEditArtist($artist, $gatekeeper->getUserId())) {
             <?php
     } ?>
             <li>
-                <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo addslashes(T_('Artist Edit')) ?>', '')">
+                <a id="<?php echo 'edit_artist_' . $artist->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id; ?>', '<?php echo 'edit_artist_' . $artist->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', '')">
                     <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                     <?php echo T_('Edit Artist'); ?>
                 </a>
@@ -229,7 +229,7 @@ if (canEditArtist($artist, $gatekeeper->getUserId())) {
 if (Catalog::can_remove($artist)) {
     $delete = T_('Delete'); ?>
         <li>
-            <a id="<?php echo 'delete_artist_' . $artist->id ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
+            <a id="<?php echo 'delete_artist_' . $artist->id; ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('delete', $delete); ?>
                 <?php echo $delete; ?>
             </a>

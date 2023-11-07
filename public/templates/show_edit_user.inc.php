@@ -139,7 +139,7 @@ switch ($var_name) {
         $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . $filter['name'] . '</option>';
     }
     echo '<select name="catalog_filter_group">' . implode("\n", $options) . '</select>';
-}?>
+} ?>
             </td>
         </tr>
         <tr>

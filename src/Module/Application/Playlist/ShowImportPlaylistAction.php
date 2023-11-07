@@ -45,9 +45,7 @@ final class ShowImportPlaylistAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-
         $this->ui->show('show_import_playlist.inc.php');
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

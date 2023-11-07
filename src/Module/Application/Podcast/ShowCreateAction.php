@@ -61,9 +61,7 @@ final class ShowCreateAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
         $this->ui->show('show_add_podcast.inc.php');
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

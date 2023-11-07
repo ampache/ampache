@@ -157,7 +157,9 @@ final class FindArtAction extends AbstractArtAction
                 'show_arts.inc.php',
                 [
                     'images' => $images,
-                    'object_type' => $object_type
+                    'object_type' => $object_type,
+                    'object_id' => $object_id,
+                    'burl' => $burl
                 ]
             );
         }

@@ -71,12 +71,12 @@ use Ampache\Module\Util\Ui;
     <?php } ?>
 <td class="cel_action">
 <?php if (Access::check('interface', 50)) { ?>
-    <a id="<?php echo 'edit_tvshow_' . $libitem->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_' . $libitem->id ?>', '<?php echo addslashes(T_('TV Show Edit')) ?>', 'tvshow_')">
+    <a id="<?php echo 'edit_tvshow_' . $libitem->id; ?>" onclick="showEditDialog('tvshow_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_tvshow_' . $libitem->id; ?>', '<?php echo addslashes(T_('TV Show Edit')); ?>', 'tvshow_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php } ?>
 <?php if (Catalog::can_remove($libitem)) { ?>
-    <a id="<?php echo 'delete_tvshow_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshows.php?action=delete&tvshow_id=<?php echo $libitem->id; ?>">
+    <a id="<?php echo 'delete_tvshow_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshows.php?action=delete&tvshow_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
 <?php } ?>

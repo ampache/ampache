@@ -100,7 +100,7 @@ trait Metadata
      */
     public function updateOrInsertMetadata(MetadataField $field, $data)
     {
-        /* @var Model\Metadata $metadata */
+        /** @var Model\Metadata $metadata */
         $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, ucfirst(ObjectTypeToClassNameMapper::reverseMap(get_class($this))));
         if ($metadata) {
             $object = reset($metadata);

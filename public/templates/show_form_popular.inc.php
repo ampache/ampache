@@ -38,19 +38,19 @@ $albumString     = (AmpConfig::get('album_group'))
 <h3 class="box-title"><?php echo T_('Popular'); ?></h3>
 
 <div class="category_options">
-    <a class="category <?php echo ($filter_str == 'popular_song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_song"><?php echo T_('Songs'); ?></a>
-    <a class="category <?php echo ($filter_str == 'popular_album_disk' || $filter_str == 'popular_album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
+    <a class="category <?php echo ($filter_str == 'popular_song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_song"><?php echo T_('Songs'); ?></a>
+    <a class="category <?php echo ($filter_str == 'popular_album_disk' || $filter_str == 'popular_album') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
     <?php if ($showArtist || $filter_str == 'popular_artist') { ?>
-        <a class="category <?php echo ($filter_str == 'popular_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_artist"><?php echo T_('Artists'); ?></a>
+        <a class="category <?php echo ($filter_str == 'popular_artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_artist"><?php echo T_('Artists'); ?></a>
     <?php } ?>
     <?php if ($showAlbumArtist || !$showArtist || $filter_str == 'popular_album_artist') { ?>
-        <a class="category <?php echo ($filter_str == 'popular_album_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_album_artist"><?php echo T_('Album Artists'); ?></a>
+        <a class="category <?php echo ($filter_str == 'popular_album_artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_album_artist"><?php echo T_('Album Artists'); ?></a>
     <?php } ?>
     <?php if (AmpConfig::get('podcast')) { ?>
-        <a class="category <?php echo ($filter_str == 'popular_podcast_episode') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
+        <a class="category <?php echo ($filter_str == 'popular_podcast_episode') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
     <?php }
     if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
-        <a class="category <?php echo ($filter_str == 'popular_video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_video"><?php echo T_('Videos'); ?></a>
+        <a class="category <?php echo ($filter_str == 'popular_video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_video"><?php echo T_('Videos'); ?></a>
     <?php } ?>
-    <a class="category <?php echo ($filter_str == 'popular_playlist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_playlist"><?php echo T_('Playlists'); ?></a>
+    <a class="category <?php echo ($filter_str == 'popular_playlist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_playlist"><?php echo T_('Playlists'); ?></a>
 </div>

@@ -90,7 +90,7 @@ if ($label->website) {
         <?php } ?>
         <?php if ($isLabelEditable) { ?>
         <li>
-            <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo addslashes(T_('Label Edit')) ?>', '')">
+            <a id="<?php echo 'edit_label_' . $label->id; ?>" onclick="showEditDialog('label_row', '<?php echo $label->id; ?>', '<?php echo 'edit_label_' . $label->id; ?>', '<?php echo addslashes(T_('Label Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Label'); ?>
             </a>
@@ -98,7 +98,7 @@ if ($label->website) {
         <?php } ?>
         <?php if (Catalog::can_remove($label)) { ?>
         <li>
-            <a id="<?php echo 'delete_label_' . $label->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
+            <a id="<?php echo 'delete_label_' . $label->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>

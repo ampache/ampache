@@ -51,17 +51,17 @@ Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
 <input type='hidden' name='random' value=1>
 <div class="category_options">
-    <a class="category <?php echo ($random_type == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=song">
+    <a class="category <?php echo ($random_type == 'song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=song">
         <?php echo T_('Songs'); ?>
     </a>
-    <a class="category <?php echo ($random_type == 'album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=album">
+    <a class="category <?php echo ($random_type == 'album') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=album">
         <?php echo T_('Albums'); ?>
     </a>
-    <a class="category <?php echo ($random_type == 'artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=artist">
+    <a class="category <?php echo ($random_type == 'artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=artist">
         <?php echo T_('Artists'); ?>
     </a>
     <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
-        <a class="category <?php echo ($random_type == 'video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=video">
+        <a class="category <?php echo ($random_type == 'video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=video">
             <?php echo T_('Videos'); ?>
         </a>
     <?php } ?>

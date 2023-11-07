@@ -26,22 +26,16 @@ use Ampache\Module\Util\Ui;
 
 /** @var array $wartist */
 
-$web_path = AmpConfig::get('web_path'); ?>
-<?php
-Ui::show_box_top($wartist['name'], 'info-box'); ?>
-<?php
+$web_path = AmpConfig::get('web_path');
+Ui::show_box_top($wartist['name'], 'info-box');
 if (AmpConfig::get('lastfm_api_key')) {
     echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&fullname=' . rawurlencode($wartist['name']), 'artist_info')); ?>
     <div id="artist_biography">
         <?php echo T_('Loading...'); ?>
     </div>
-<?php
-} ?>
-<?php Ui::show_box_bottom(); ?>
-
-<?php
+<?php }
+Ui::show_box_bottom();
 if (AmpConfig::get('wanted')) {
     echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=wanted_missing_albums&artist_mbid=' . $wartist['mbid'], 'missing_albums')); ?>
     <div id="missing_albums"></div>
-<?php
-} ?>
+<?php } ?>

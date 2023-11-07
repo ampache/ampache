@@ -177,12 +177,12 @@ if ($upload_max > 0) { ?>
 <?php } ?>
 <table class="tabledata">
     <tr>
-    <h5><?php echo T_('Leave the artist and album fields blank to read file tags') ?></h5>
+    <h5><?php echo T_('Leave the artist and album fields blank to read file tags'); ?></h5>
     </tr>
 </table>
 <table class="tabledata">
 <tr>
-    <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
+    <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
     <td class="upload_select">
         <?php show_artist_select('artist', $artist, true, 1, true); ?>
         <div id="artist_select_1">
@@ -191,7 +191,7 @@ if ($upload_max > 0) { ?>
     </td>
 </tr>
 <tr>
-    <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
+    <td class="edit_dialog_content_header"><?php echo T_('Album'); ?></td>
     <td class="upload_select">
         <?php show_album_select('album_id', $album, true, 1, true); ?>
         <div id="album_select_1">
@@ -201,7 +201,7 @@ if ($upload_max > 0) { ?>
 </tr>
 <?php if (AmpConfig::get('licensing')) { ?>
 <tr>
-    <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
+    <td class="edit_dialog_content_header"><?php echo T_('Music License'); ?></td>
     <td class="upload_select">
         <?php show_license_select('license'); ?>
         <div id="album_select_license">

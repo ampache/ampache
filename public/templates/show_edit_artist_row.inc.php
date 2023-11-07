@@ -32,11 +32,11 @@ use Ampache\Module\Authorization\Access;
     <form method="post" id="edit_artist_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($libitem->get_fullname()); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
                 <td>
                     <?php if (Access::check('interface', 50)) { ?>
                     <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
@@ -46,34 +46,34 @@ use Ampache\Module\Authorization\Access;
                 </td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Summary'); ?></td>
                 <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out(trim($libitem->summary)); ?></textarea></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Place Formed') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Place Formed'); ?></td>
                 <td><input type="text" name="placeformed" value="<?php echo scrub_out($libitem->placeformed); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Year Formed') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Year Formed'); ?></td>
                 <td><input type="text" name="yearformed" value="<?php echo scrub_out($libitem->yearformed); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('artist', $libitem->id, 20)); ?>" /></td>
             </tr>
             <?php if (AmpConfig::get('label')) { ?>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Labels') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Labels'); ?></td>
                 <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo Label::get_display($libitem->labels); ?>" /></td>
             </tr>
             <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub albums and sub songs') ?></td>
+                <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub albums and sub songs'); ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub albums and sub songs') ?></td>
+                <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub albums and sub songs'); ?></td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />

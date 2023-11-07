@@ -213,7 +213,7 @@ class Shoutbox
 
         // Never send email in case of user impersonation
         if (!isset($data['user']) && $insert_id !== null) {
-            /* @var library_item $libitem */
+            /** @var library_item $libitem */
             $class_name    = ObjectTypeToClassNameMapper::map($data['object_type']);
             $libitem       = new $class_name($data['object_id']);
             $item_owner_id = $libitem->get_user_owner();

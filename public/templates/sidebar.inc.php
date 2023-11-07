@@ -145,7 +145,7 @@ $(function() {
             if ($header.children(".header-img").hasClass("collapsed")) {
                 sbstate = "collapsed";
             }
-            Cookies.set('sb_' + $header.children(".header-img").attr('id'), sbstate, {<?php echo $cookie_string ?>});
+            Cookies.set('sb_' + $header.children(".header-img").attr('id'), sbstate, {<?php echo $cookie_string; ?>});
         });
     });
 });

@@ -27,11 +27,14 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
-<?php if ($browse->is_show_header()) {
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
+$web_path = AmpConfig::get('web_path');
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="user">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="user">
 <colgroup>
   <col id="col_username" />
   <col id="col_lastseen" />
@@ -47,7 +50,7 @@ $web_path = AmpConfig::get('web_path'); ?>
 </colgroup>
 <thead>
     <tr class="th-top">
-      <th class="cel_username essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1');?><?php echo " (" . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Full Name'), 'users_sort_fullname1') . ")";?></th>
+      <th class="cel_username essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1'); ?><?php echo " (" . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Full Name'), 'users_sort_fullname1') . ")";?></th>
       <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen'); ?></th>
       <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate'); ?></th>
       <?php if (Access::check('interface', 50)) { ?>
@@ -82,7 +85,7 @@ foreach ($object_ids as $user_id) {
 </tbody>
 <tfoot>
     <tr class="th-bottom">
-      <th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1');?><?php echo " ( " . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Full Name'), 'users_sort_fullname1') . ")";?></th>
+      <th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1'); ?><?php echo " ( " . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Full Name'), 'users_sort_fullname1') . ")";?></th>
       <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen1'); ?></th>
       <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate1'); ?></th>
       <?php if (Access::check('interface', 50)) { ?>

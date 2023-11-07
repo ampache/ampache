@@ -49,21 +49,21 @@ $albumString  = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk'; ?>
 <ul id="sidebar-light">
-    <li><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo Ui::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists ?></a></li>
-    <li><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums ?></a></li>
-    <li><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?><br /><?php echo $t_playlists ?></a></li>
-    <li><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo Ui::get_image('topmenu-playlist', $t_smartlists); ?><br /><?php echo $t_smartlists ?></a></li>
-    <li><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?><br /><?php echo $t_genres ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo Ui::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists; ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums; ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?><br /><?php echo $t_playlists; ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo Ui::get_image('topmenu-playlist', $t_smartlists); ?><br /><?php echo $t_smartlists; ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?><br /><?php echo $t_genres; ?></a></li>
     <?php if (AmpConfig::get('live_stream')) { ?>
-    <li><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', $t_radioStations); ?><br /><?php echo $t_radio ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', $t_radioStations); ?><br /><?php echo $t_radio; ?></a></li>
     <?php } ?>
     <?php if (AmpConfig::get('ratings') && $access25) { ?>
-    <li><a href="<?php echo $web_path; ?>/stats.php?action=userflag_<?php echo $albumString; ?>"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/stats.php?action=userflag_<?php echo $albumString; ?>"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites; ?></a></li>
     <?php } ?>
     <?php if ($allow_upload) { ?>
-    <li><a href="<?php echo $web_path; ?>/upload.php"><?php echo Ui::get_image('topmenu-upload', $t_upload); ?><br /><?php echo $t_upload ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/upload.php"><?php echo Ui::get_image('topmenu-upload', $t_upload); ?><br /><?php echo $t_upload; ?></a></li>
     <?php } ?>
     <?php if ($is_session) { ?>
-        <li><a target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" class="nohtml"><img src="<?php echo $web_path; ?>/images/topmenu-logout.png" title="<?php echo $t_logout ?>" /><br /><?php echo $t_logout ?></a></li>
+        <li><a target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" class="nohtml"><img src="<?php echo $web_path; ?>/images/topmenu-logout.png" title="<?php echo $t_logout; ?>" /><br /><?php echo $t_logout; ?></a></li>
     <?php } ?>
 </ul>

@@ -52,7 +52,7 @@ ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <div class="item_right_info">
 <?php $thumb = Ui::is_grid_view('playlist') ? 32 : 11;
-$playlist->display_art($thumb, false, false) ?>
+$playlist->display_art($thumb, false, false); ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
@@ -69,7 +69,7 @@ $playlist->display_art($thumb, false, false) ?>
 <?php if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(50)) || $playlist->user == Core::get_global('user')->id) { ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
-                                            '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY ?>')">
+                                            '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY; ?>')">
                 <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
                 <?php echo T_('Save Track Order'); ?>
             </a>
@@ -138,7 +138,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist
             </li>
         <?php } ?>
         <li>
-            <a id="<?php echo 'edit_playlist_' . $playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_' . $playlist->id ?>', '<?php echo addslashes(T_('Playlist Edit')) ?>', '')">
+            <a id="<?php echo 'edit_playlist_' . $playlist->id; ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id; ?>', '<?php echo 'edit_playlist_' . $playlist->id; ?>', '<?php echo addslashes(T_('Playlist Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit'); ?>
             </a>

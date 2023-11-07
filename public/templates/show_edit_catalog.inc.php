@@ -72,7 +72,7 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' .
         </tr>
         <tr>
             <td><?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?></td>
-            <td><input type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern);?>" /></td>
+            <td><input type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern); ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

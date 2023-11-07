@@ -41,7 +41,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
         <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_RPC; ?>"><?php echo Ui::get_icon('cog', $addrpc) . ' ' . $addrpc; ?></a>
     </li>
     <li>
-        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_LOCAL ?>"><?php echo Ui::get_icon('home', $addlocal) . ' ' . $addlocal; ?></a>
+        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_LOCAL; ?>"><?php echo Ui::get_icon('home', $addlocal) . ' ' . $addlocal; ?></a>
     <li>
         <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo Ui::get_icon('add_key', T_('Advanced Add')) . ' ' . T_('Advanced Add'); ?></a>
     </li>

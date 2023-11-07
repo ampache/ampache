@@ -45,7 +45,7 @@ class AmpacheUPnP extends localplay_controller
 
     private $_description = 'Controls a UPnP instance';
 
-    /* @var UPnPPlayer $object */
+    /** @var UPnPPlayer $object */
     private $_upnp;
 
     /**

@@ -26,7 +26,7 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
 /** @var Localplay $localplay */
-/** @var array $object_ids */
+/** @var array $objects */
 
 $status = $localplay->status();
 ?>
