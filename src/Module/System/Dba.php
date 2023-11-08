@@ -237,6 +237,46 @@ class Dba
     }
 
     /**
+     * Returns the value from a single column
+     *
+     * Returns just the first column of a db-query result
+     * (or null, if the query fails). Useful, e.g. for count-results
+     *
+     * @param string $query
+     * @param list<scalar> $parameter
+     * @param bool $finish
+     *
+     * @return null|string
+     */
+    public static function fetch_single_column(
+        string $query,
+        array $parameter = [],
+        bool $finish = true
+    ): ?string {
+        $resource = self::query(
+            $query,
+            $parameter
+        );
+
+        if (!$resource) {
+            return null;
+        }
+
+        /** @var PDOStatement $resource */
+        $result = $resource->fetch(PDO::FETCH_COLUMN);
+
+        if ($result === false) {
+            if ($finish === true) {
+                self::finish($resource);
+            }
+
+            return null;
+        }
+
+        return (string) $result;
+    }
+
+    /**
      * @param $resource
      * @param string $class
      * @param bool $finish
