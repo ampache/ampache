@@ -71,9 +71,11 @@ final class UpgradePluginAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
+        $plugin_name = $this->requestParser->getFromRequest('plugin');
+
         /* Verify that this plugin exists */
         $plugins = Plugin::get_plugins();
-        if (!array_key_exists($_REQUEST['plugin'], $plugins)) {
+        if (!array_key_exists($plugin_name, $plugins)) {
             $this->logger->error(
                 sprintf("Error: Invalid Plugin: %s selected", $this->requestParser->getFromRequest('plugin')),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -85,7 +87,7 @@ final class UpgradePluginAction implements ApplicationActionInterface
             return null;
         }
 
-        $plugin = new Plugin($_REQUEST['plugin']);
+        $plugin = new Plugin($this->requestParser->getFromRequest('plugin'));
         $plugin->upgrade();
         User::rebuild_all_preferences();
         $url   = sprintf('%s/admin/modules.php?action=show_plugins', $this->configContainer->getWebPath());

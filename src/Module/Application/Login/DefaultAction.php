@@ -130,7 +130,7 @@ final class DefaultAction implements ApplicationActionInterface
         /* Clean Auth values */
         unset($auth);
 
-        if (empty($_REQUEST['step'])) {
+        if (empty($this->requestParser->getFromRequest('step'))) {
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
             if ((isset($_POST['username'])) ||
                 (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) &&
@@ -179,7 +179,7 @@ final class DefaultAction implements ApplicationActionInterface
                 }
             }
         } elseif ($this->requestParser->getFromRequest('step') == '2') {
-            $auth_mod = $_REQUEST['auth_mod'];
+            $auth_mod = $this->requestParser->getFromRequest('auth_mod');
 
             $auth = $this->authenticationManager->postAuth($auth_mod);
 

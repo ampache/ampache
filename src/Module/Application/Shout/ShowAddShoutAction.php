@@ -79,7 +79,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
         $data = '';
         if (get_class($object) == Song::class) {
-            $data = $_REQUEST['offset'] ?? '';
+            $data = $this->requestParser->getFromRequest('offset');
         }
         $object_type = ObjectTypeToClassNameMapper::reverseMap(get_class($object));
         $shouts      = $this->shoutRepository->getBy($object_type, $object->id);

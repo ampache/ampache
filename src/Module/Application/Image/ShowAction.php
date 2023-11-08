@@ -165,7 +165,7 @@ final class ShowAction implements ApplicationActionInterface
                     Session::check();
                     // If we need to pull the data out of the session
                     if (array_key_exists('form', $_SESSION)) {
-                        $filename    = scrub_in($_REQUEST['image_index']);
+                        $filename    = $this->requestParser->getFromRequest('image_index');
                         $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
                         $mime        = $_SESSION['form']['images'][$filename]['mime'];
                         $typeManaged = true;

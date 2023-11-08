@@ -105,7 +105,7 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         if (InterfaceImplementationChecker::is_playable_item($object_type)) {
-            $object_id = $_REQUEST['id'] ?? array();
+            $object_id = $this->requestParser->getFromRequest('id') ?? array();
             if (!is_array($object_id)) {
                 $object_id = [$object_id];
             }

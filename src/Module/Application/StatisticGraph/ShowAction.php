@@ -93,13 +93,13 @@ final class ShowAction implements ApplicationActionInterface
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             $object_type = null;
         }
-        $object_id  = (int) ($_REQUEST['object_id']);
-        $start_date = (int) scrub_in($_REQUEST['start_date']);
-        $end_date   = (int) scrub_in($_REQUEST['end_date']);
-        $zoom       = (string) scrub_in($_REQUEST['zoom']);
+        $object_id  = (int)$this->requestParser->getFromRequest('object_id');
+        $start_date = (int)$this->requestParser->getFromRequest('start_date');
+        $end_date   = (int)$this->requestParser->getFromRequest('end_date');
+        $zoom       = $this->requestParser->getFromRequest('zoom');
 
-        $width  = (int) ($_REQUEST['width']);
-        $height = (int) ($_REQUEST['height']);
+        $width  = (int)$this->requestParser->getFromRequest('width');
+        $height = (int)$this->requestParser->getFromRequest('height');
         $graph  = new Graph();
 
         switch ($action_type) {

@@ -101,7 +101,7 @@ final class GrantAction implements ApplicationActionInterface
             'show_preferences.inc.php',
             [
                 'fullname' => $user->fullname,
-                'preferences' => $user->get_preferences($_REQUEST['tab']),
+                'preferences' => $user->get_preferences($this->requestParser->getFromRequest('tab')),
                 'ui' => $this->ui,
             ]
         );

@@ -68,7 +68,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $browse  = $this->modelFactory->createBrowse((int)$_REQUEST['browse_id']);
+        $browse  = $this->modelFactory->createBrowse((int)$this->requestParser->getFromRequest('browse_id'));
         $objects = $browse->get_saved();
 
         // Make sure we have a unique name

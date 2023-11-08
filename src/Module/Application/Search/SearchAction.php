@@ -87,12 +87,12 @@ final class SearchAction implements ApplicationActionInterface
             $browse->show_objects($results);
             $browse->store();
         } else {
-            $wartists = $this->missingArtistFinder->find($_REQUEST['rule_1_input']);
+            $wartists = $this->missingArtistFinder->find($this->requestParser->getFromRequest('rule_1_input'));
             require_once Ui::find_template('show_missing_artists.inc.php');
 
             printf(
                 '<a href="http://musicbrainz.org/search?query=%s&type=artist&method=indexed" target="_blank">%s</a><br />',
-                rawurlencode($_REQUEST['rule_1_input']),
+                rawurlencode($this->requestParser->getFromRequest('rule_1_input')),
                 T_('View on MusicBrainz')
             );
         }
