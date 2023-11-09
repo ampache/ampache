@@ -766,9 +766,9 @@ function return_referer()
  * It's used by the Edit page and takes a $name and an $album_id
  * @param string $name
  * @param int $album_id
- @param bool $allow_add
+ * @param bool $allow_add
  * @param int $song_id
- @param bool $allow_none
+ * @param bool $allow_none
  * @param string $user_id
  */
 function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)

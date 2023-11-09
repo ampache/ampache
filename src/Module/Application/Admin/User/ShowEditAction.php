@@ -70,7 +70,7 @@ final class ShowEditAction extends AbstractUserAction
 
         $this->ui->show(
             'show_edit_user.inc.php',
-            [$client]
+            ['client' => $client]
         );
 
         $this->ui->showQueryStats();
