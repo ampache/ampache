@@ -58,7 +58,7 @@ class Stats
     /**
      * clear
      *
-     * This clears all stats for _everything_.
+     * This clears all stats for _everything.
      * @param int $user_id
      */
     public static function clear($user_id = 0)
@@ -68,7 +68,15 @@ class Stats
         } else {
             Dba::write("TRUNCATE `object_count`;");
         }
-        Dba::write("UPDATE `song` SET `played` = 0;");
+        // song.total_count
+        $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;";
+        Dba::write($sql);
+        // song.total_skip
+        $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_skip` = `object_count`.`total_skip` WHERE `song`.`total_skip` != `object_count`.`total_skip` AND `song`.`id` = `object_count`.`object_id`;";
+        Dba::write($sql);
+        // song.played
+        $sql = "UPDATE `song` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";
+        Dba::write($sql);
     }
 
     /**
@@ -187,6 +195,10 @@ class Stats
                     : "UPDATE `$type` SET `total_count` = `total_count` + 1 WHERE `id` = ?";
                 Dba::write($sql, array($object_id));
                 break;
+        }
+        if (in_array($type, array('song', 'podcast_episode', 'video')) && $count_type == 'down') {
+            $sql = "UPDATE `$type` SET `played` = 0 WHERE `id` = ? `total_count` = 0 and `played` = 1;";
+            Dba::write($sql, array($object_id));
         }
     }
 

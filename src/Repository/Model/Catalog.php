@@ -3154,6 +3154,9 @@ abstract class Catalog extends database_object
             // podcast_episode.total_count
             $sql = "UPDATE `podcast_episode`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `podcast_episode`.`total_count` = `object_count`.`total_count` WHERE `podcast_episode`.`total_count` != `object_count`.`total_count` AND `podcast_episode`.`id` = `object_count`.`object_id`;";
             Dba::write($sql);
+            // podcast_episode.played
+            $sql = "UPDATE `podcast_episode` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";
+            Dba::write($sql);
             // podcast.total_count
             $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_count`) AS `total_count`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_count` = `object_count`.`total_count` WHERE `podcast`.`total_count` != `object_count`.`total_count` AND `podcast`.`id` = `object_count`.`podcast`;";
             Dba::write($sql);
@@ -3165,6 +3168,9 @@ abstract class Catalog extends database_object
             Dba::write($sql);
             // song.total_skip
             $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_skip` = `object_count`.`total_skip` WHERE `song`.`total_skip` != `object_count`.`total_skip` AND `song`.`id` = `object_count`.`object_id`;";
+            Dba::write($sql);
+            // song.played
+            $sql = "UPDATE `song` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";
             Dba::write($sql);
         }
         if (AmpConfig::get('allow_video')) {
@@ -3179,6 +3185,9 @@ abstract class Catalog extends database_object
             Dba::write($sql);
             // video.total_count
             $sql = "UPDATE `video`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `video`.`total_count` = `object_count`.`total_count` WHERE `video`.`total_count` != `object_count`.`total_count` AND `video`.`id` = `object_count`.`object_id`;";
+            Dba::write($sql);
+            // video.played
+            $sql = "UPDATE `video` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";
             Dba::write($sql);
         }
         Artist::update_table_counts();
