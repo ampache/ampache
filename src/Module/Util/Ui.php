@@ -943,6 +943,55 @@ class Ui implements UiInterface
                 echo "<option value=\"6\" $is_6>" . T_('Allow API6 Only') . "</option>\n";
                 echo "</select>\n";
                 break;
+            case 'jp_volume':
+                $is_0  = '';
+                $is_1  = '';
+                $is_2  = '';
+                $is_3  = '';
+                $is_4  = '';
+                $is_5  = '';
+                $is_6  = '';
+                $is_7  = '';
+                $is_8  = '';
+                $is_9  = '';
+                $is_10 = '';
+                if ($value == 0.0) {
+                    $is_0 = 'selected="selected"';
+                } elseif ($value == 0.1) {
+                    $is_1 = 'selected="selected"';
+                } elseif ($value == 0.2) {
+                    $is_2 = 'selected="selected"';
+                } elseif ($value == 0.3) {
+                    $is_3 = 'selected="selected"';
+                } elseif ($value == 0.4) {
+                    $is_4 = 'selected="selected"';
+                } elseif ($value == 0.5) {
+                    $is_5 = 'selected="selected"';
+                } elseif ($value == 0.6) {
+                    $is_6 = 'selected="selected"';
+                } elseif ($value == 0.7) {
+                    $is_7 = 'selected="selected"';
+                } elseif ($value == 0.8) {
+                    $is_8 = 'selected="selected"';
+                } elseif ($value == 0.9) {
+                    $is_9 = 'selected="selected"';
+                } elseif ($value == 1.0) {
+                    $is_10 = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "<option value=0.00 $is_0>0%</option>\n";
+                echo "<option value=0.10 $is_1>10%</option>\n";
+                echo "<option value=0.20 $is_2>20%</option>\n";
+                echo "<option value=0.30 $is_3>30%</option>\n";
+                echo "<option value=0.40 $is_4>40%</option>\n";
+                echo "<option value=0.50 $is_5>50%</option>\n";
+                echo "<option value=0.60 $is_6>60%</option>\n";
+                echo "<option value=0.70 $is_7>70%</option>\n";
+                echo "<option value=0.80 $is_8>80%</option>\n";
+                echo "<option value=0.90 $is_9>90%</option>\n";
+                echo "<option value=1.00 $is_10>100%</option>\n";
+                echo "</select>\n";
+                break;
             case 'ratingmatch_stars':
                 $is_0 = '';
                 $is_1 = '';

@@ -28,6 +28,7 @@ $iframed        = $iframed ?? false;
 $isShare        = $isShare ?? false;
 $embed          = $embed ?? false;
 $loop           = ($isRandom || $isDemocratic);
+$jp_volume      = (float)AmpConfig::get('jp_volume', 0.80);
 $removeCount    = (int)AmpConfig::get('webplayer_removeplayed', 0);
 $removePlayed   = ($removeCount > 0);
 if ($removePlayed && $removeCount === 999) {
@@ -71,7 +72,7 @@ $replaygain = (AmpConfig::get('theme_color') == 'light')
         if (!isNaN(Cookies.get('jp_volume'))) {
             var jp_volume = Cookies.get('jp_volume');
         } else {
-            var jp_volume = 0.80;
+            var jp_volume = <?php echo $jp_volume; ?>;
         }
 
         var replaygainPersist = Cookies.get('replaygain');

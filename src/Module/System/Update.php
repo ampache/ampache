@@ -908,6 +908,9 @@ class Update
         $update_string = "* Add user preference `bookmark_latest`, Only keep the latest media bookmark";
         $version[]     = array('version' => '600042', 'description' => $update_string);
 
+        $update_string = "* Set correct preference type for `use_play2`<br />* Add user preference `jp_volume`, Default webplayer volume";
+        $version[]     = array('version' => '600043', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5624,6 +5627,28 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
+
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
+    }
+
+    /** _update_600043
+     *
+     * Set correct preference type for `use_play2`
+     * Add user preference `jp_volume`, Default webplayer volume
+     */
+    private static function _update_600043(Interactor $interactor = null): bool
+    {
+        $sql = "UPDATE `preference` SET `type` = 'boolean' WHERE `name` = 'use_play2'";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('jp_volume', 0.80, 'Default webplayer volume', 25, 'special', 'streaming', 'player')";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, 0.80)";
+
 
         return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
