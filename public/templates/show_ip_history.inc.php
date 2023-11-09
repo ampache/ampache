@@ -20,23 +20,25 @@
  *
  */
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
-/** @var \Ampache\Repository\Model\User $working_user */
-/** @var array $history */
+/** @var User $workingUser */
+/** @var Traversable<array{date: int, ip: string}> $history */
+/** @var bool $showAll */
+/** @var string $webPath */
 
-/* HINT: Username */ Ui::show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>
+?>
 <div id="information_actions">
 <ul>
 <li>
-<?php if (array_key_exists('all', $_REQUEST)) { ?>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id; ?>">
+<?php if ($showAll === true) { ?>
+    <a href="<?php echo $webPath?>/admin/users.php?action=show_ip_history&user_id=<?php echo $workingUser->getId()?>">
         <?php echo Ui::get_icon('disable', T_('Disable')); ?>
         <?php echo T_('Show Unique'); ?>
     </a>
 <?php } else { ?>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id; ?>&all">
+    <a href="<?php echo $webPath?>/admin/users.php?action=show_ip_history&user_id=<?php echo $workingUser->getId()?>&all">
         <?php echo Ui::get_icon('add', T_('Add')); ?>
         <?php echo T_('Show All'); ?>
     </a>
@@ -52,23 +54,22 @@ use Ampache\Module\Util\Ui;
   <col id="col_ipaddress" />
 </colgroup>
 <tr class="th-top">
-  <th class="cel_date"><?php echo T_('Date'); ?></th>
-     <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
+    <th class="cel_date"><?php echo T_('Date'); ?></th>
+    <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 <?php foreach ($history as $data) { ?>
 <tr>
     <td class="cel_date">
-        <?php echo get_datetime((int)($data['date'] ?? 0)); ?>
+        <?php echo get_datetime($data['date']); ?>
     </td>
     <td class="cel_ipaddress">
-        <?php echo(inet_ntop($data['ip'])) ?? T_('Invalid'); ?>
+        <?php echo inet_ntop($data['ip']) ?: T_('Invalid'); ?>
     </td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-  <th class="cel_date"><?php echo T_('Date'); ?></th>
-     <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
+    <th class="cel_date"><?php echo T_('Date'); ?></th>
+    <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 
 </table>
-<?php Ui::show_box_bottom(); ?>

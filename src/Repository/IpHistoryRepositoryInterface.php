@@ -22,10 +22,29 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\User;
+use Traversable;
+
 interface IpHistoryRepositoryInterface
 {
     /**
-     * This returns the ip_history from the last AmpConfig::get('user_ip_cardinality') days
+     * This returns the ip_history for the provided user
+     *
+     * @param User $user
+     * @param int $limit
+     * @param bool $distinct
+     * @return Traversable<array{ip: string, date: int}>
      */
-    public function getHistory(int $userId, int $count = 1, bool $distinct = false): array;
+    public function getHistory(
+        User $user,
+        int $limit = 1,
+        bool $distinct = false
+    ): Traversable;
+
+    /**
+     * Returns the most recent ip-address used by the provided user
+     *
+     * @return string|null Most recent ip-address or null if no data is available
+     */
+    public function getRecentIpForUser(User $user): ?string;
 }
