@@ -1594,6 +1594,14 @@ class User extends database_object
     }
 
     /**
+     * Returns the users internal username
+     */
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    /**
      * @deprecated inject dependency
      */
     private function getIpHistoryRepository(): IpHistoryRepositoryInterface

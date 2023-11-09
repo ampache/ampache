@@ -20,20 +20,22 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Deletes a user
+ */
 final class ConfirmDeleteAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'confirm_delete';
@@ -64,26 +66,28 @@ final class ConfirmDeleteAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('delete_user')) {
+        if ($this->requestParser->verifyForm('delete_user') === false) {
             throw new AccessDeniedException();
         }
+
+        $userId      = (int) $request->getQueryParams()['user_id'];
+        $user        = $this->modelFactory->createUser($userId);
+        $redirectUrl = sprintf('%s/admin/users.php', $this->configContainer->getWebPath());
+
         $this->ui->showHeader();
 
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
-        $client  = $this->modelFactory->createUser($user_id);
-
-        if ($client->delete()) {
+        if ($user->delete()) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 /* HINT: Username (Short Name) */
-                sprintf(T_('%s has been deleted'), $client->username),
-                sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+                sprintf(T_('%s has been deleted'), $user->getUsername()),
+                $redirectUrl
             );
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('You need at least one active Administrator account'),
-                sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+                $redirectUrl
             );
         }
 
