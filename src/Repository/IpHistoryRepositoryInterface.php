@@ -30,14 +30,15 @@ interface IpHistoryRepositoryInterface
     /**
      * This returns the ip_history for the provided user
      *
+     * @param User $user
      * @param int $limit
-     *
+     * @param bool $distinct
      * @return Traversable<array{ip: string, date: int}>
      */
     public function getHistory(
         User $user,
         int $limit = 1,
-        bool $distinct = false,
+        bool $distinct = false
     ): Traversable;
 
     /**

@@ -39,12 +39,24 @@ final class ShowIpHistoryAction extends AbstractUserAction
     /** @var string */
     public const REQUEST_KEY = 'show_ip_history';
 
+    private UiInterface $ui;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private IpHistoryRepositoryInterface $ipHistoryRepository;
+
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
-        private readonly UiInterface $ui,
-        private readonly ModelFactoryInterface $modelFactory,
-        private readonly IpHistoryRepositoryInterface $ipHistoryRepository,
-        private readonly ConfigContainerInterface $configContainer,
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory,
+        IpHistoryRepositoryInterface $ipHistoryRepository,
+        ConfigContainerInterface $configContainer
     ) {
+        $this->ui                  = $ui;
+        $this->modelFactory        = $modelFactory;
+        $this->ipHistoryRepository = ipHistoryRepository;
+        $this->configContainer     = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface

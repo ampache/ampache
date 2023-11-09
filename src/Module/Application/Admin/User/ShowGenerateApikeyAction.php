@@ -37,10 +37,12 @@ final class ShowGenerateApikeyAction extends AbstractUserAction
 
     public const REQUEST_KEY = 'show_generate_apikey';
 
+    private UiInterface $ui;
 
     public function __construct(
-        private readonly UiInterface $ui,
+        UiInterface $ui
     ) {
+        $this->ui = $ui;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
