@@ -33,7 +33,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class DeleteAction extends AbstractUserAction
+final class ShowDeleteAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'delete';
 

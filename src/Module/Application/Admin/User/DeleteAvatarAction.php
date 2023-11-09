@@ -64,21 +64,21 @@ final class DeleteAvatarAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('delete_avatar')) {
+        if ($this->requestParser->verifyForm('delete_avatar') === false) {
             throw new AccessDeniedException();
         }
+
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
+        $user   = $this->modelFactory->createUser($userId);
+
+        $user->deleteAvatar();
+
         $this->ui->showHeader();
-
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
-        $client  = $this->modelFactory->createUser($user_id);
-        $client->delete_avatar();
-
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Avatar has been deleted'),
-            sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+            'admin/users.php'
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

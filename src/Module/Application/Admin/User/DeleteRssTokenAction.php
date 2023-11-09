@@ -26,15 +26,14 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DeleteRsstokenAction extends AbstractUserAction
+final class DeleteRssTokenAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'delete_rsstoken';
 
@@ -64,19 +63,20 @@ final class DeleteRsstokenAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('delete_rsstoken')) {
+        if ($this->requestParser->verifyForm('delete_rsstoken') === false) {
             throw new AccessDeniedException();
         }
+
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
+        $user   = $this->modelFactory->createUser($userId);
+
+        $user->deleteRssToken();
+
         $this->ui->showHeader();
-
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
-        $client  = $this->modelFactory->createUser($user_id);
-        $client->delete_rsstoken();
-
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Token has been deleted'),
-            sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+            'admin/users.php',
         );
 
         $this->ui->showQueryStats();

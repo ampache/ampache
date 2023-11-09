@@ -27,11 +27,11 @@ use Ampache\Module\Application\Admin\User\AddUserAction;
 use Ampache\Module\Application\Admin\User\ConfirmDeleteAction;
 use Ampache\Module\Application\Admin\User\ConfirmDisableAction;
 use Ampache\Module\Application\Admin\User\ConfirmEnableAction;
-use Ampache\Module\Application\Admin\User\DeleteAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteAction;
 use Ampache\Module\Application\Admin\User\DeleteApikeyAction;
 use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
-use Ampache\Module\Application\Admin\User\DeleteRsstokenAction;
-use Ampache\Module\Application\Admin\User\DeleteStreamtokenAction;
+use Ampache\Module\Application\Admin\User\DeleteRssTokenAction;
+use Ampache\Module\Application\Admin\User\DeleteStreamTokenAction;
 use Ampache\Module\Application\Admin\User\DisableAction;
 use Ampache\Module\Application\Admin\User\EnableAction;
 use Ampache\Module\Application\Admin\User\GenerateApikeyAction;
@@ -69,9 +69,9 @@ $dic->get(ApplicationRunner::class)->run(
         GenerateStreamtokenAction::REQUEST_KEY => GenerateStreamtokenAction::class,
         ShowGenerateRsstokenAction::REQUEST_KEY => ShowGenerateRsstokenAction::class,
         ShowGenerateStreamtokenAction::REQUEST_KEY => ShowGenerateStreamtokenAction::class,
-        DeleteRsstokenAction::REQUEST_KEY => DeleteRsstokenAction::class,
+        DeleteRssTokenAction::REQUEST_KEY => DeleteRssTokenAction::class,
         ShowDeleteRsstokenAction::REQUEST_KEY => ShowDeleteRsstokenAction::class,
-        DeleteStreamtokenAction::REQUEST_KEY => DeleteStreamtokenAction::class,
+        DeleteStreamTokenAction::REQUEST_KEY => DeleteStreamTokenAction::class,
         ShowDeleteStreamtokenAction::REQUEST_KEY => ShowDeleteStreamtokenAction::class,
         GenerateApikeyAction::REQUEST_KEY => GenerateApikeyAction::class,
         ShowGenerateApikeyAction::REQUEST_KEY => ShowGenerateApikeyAction::class,
@@ -79,7 +79,7 @@ $dic->get(ApplicationRunner::class)->run(
         ShowDeleteApikeyAction::REQUEST_KEY => ShowDeleteApikeyAction::class,
         DeleteAvatarAction::REQUEST_KEY => DeleteAvatarAction::class,
         ShowDeleteAvatarAction::REQUEST_KEY => ShowDeleteAvatarAction::class,
-        DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ShowDeleteAction::REQUEST_KEY => ShowDeleteAction::class,
         ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
         ShowEditAction::REQUEST_KEY => ShowEditAction::class,
         DisableAction::REQUEST_KEY => DisableAction::class,

@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
@@ -29,7 +29,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -64,19 +63,20 @@ final class DeleteApikeyAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('delete_apikey')) {
+        if ($this->requestParser->verifyForm('delete_apikey') === false) {
             throw new AccessDeniedException();
         }
+
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
+        $user   = $this->modelFactory->createUser($userId);
+
+        $user->deleteApiKey();
+
         $this->ui->showHeader();
-
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
-        $client  = $this->modelFactory->createUser($user_id);
-        $client->delete_apikey();
-
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('API key has been deleted'),
-            sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+            'admin/users.php'
         );
 
         $this->ui->showQueryStats();
