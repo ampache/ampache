@@ -7,9 +7,16 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Message\ServerRequestInterface;
 
 trait UserAdminAccessTestTrait
 {
+    private GuiGatekeeperInterface&MockObject $gatekeeper;
+
+    private ServerRequestInterface&MockObject $request;
+
     public function testHandleThrowsIfAccessIsDenied(): void
     {
         static::expectException(AccessDeniedException::class);

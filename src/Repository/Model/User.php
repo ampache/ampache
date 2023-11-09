@@ -1579,6 +1579,17 @@ class User extends database_object
     }
 
     /**
+     * Returns a concatenated version of several names
+     *
+     * In some cases (e.g. admin backend), we want to be as verbose as possible,
+     * so show the username and the users full-name (display name).
+     */
+    public function getFullDisplayName(): string
+    {
+        return sprintf('%s (%s)', $this->username, $this->fullname);
+    }
+
+    /**
      * @deprecated inject dependency
      */
     private function getIpHistoryRepository(): IpHistoryRepositoryInterface
