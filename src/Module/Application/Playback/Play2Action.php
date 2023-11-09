@@ -949,7 +949,7 @@ final class Play2Action implements ApplicationActionInterface
             }
         }
 
-        if (!empty($this->requestParser->getFromRequest('segment'))) {
+        if (empty($this->requestParser->getFromRequest('segment'))) {
             if ($media->time) {
                 header('X-Content-Duration: ' . $media->time);
             }
