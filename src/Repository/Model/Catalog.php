@@ -52,6 +52,7 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 use PDOStatement;
 use RecursiveDirectoryIterator;
@@ -1170,7 +1171,7 @@ abstract class Catalog extends database_object
     public static function get_stats($catalog_id = null)
     {
         $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::get_server_counts(0);
-        $counts         = array_merge(User::count(), $counts);
+        $counts         = array_merge(self::getUserRepository()->getStatistics(), $counts);
         $counts['tags'] = ($catalog_id) ? 0 : self::count_tags();
 
         $counts['formatted_size'] = Ui::format_bytes($counts['size'], 2, 2);
@@ -4616,5 +4617,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(UtilityFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

@@ -424,4 +424,37 @@ final class UserRepository implements UserRepositoryInterface
 
         return $row['password'] ?? '';
     }
+
+    /**
+     * Returns statistical data related to user accounts and active users
+     *
+     * @param int $timePeriod Time period to consider sessions `active` (in seconds)
+     *
+     * @return array{users: int, connected: int}
+     */
+    public function getStatistics(int $timePeriod = 1200): array
+    {
+        $userResult = Dba::fetch_single_column(
+            'SELECT COUNT(`id`) FROM `user`'
+        );
+
+        $time = time();
+
+        $sessionResult = Dba::fetch_single_column(
+            <<<SQL
+                SELECT
+                COUNT(DISTINCT `session`.`username`)
+                FROM `session`
+                INNER JOIN `user`
+                ON `session`.`username` = `user`.`username`
+                WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?,
+            SQL,
+            [$time, $time - $timePeriod]
+        );
+
+        return [
+            'users' => (int) $userResult,
+            'connected' => (int) $sessionResult,
+        ];
+    }
 }

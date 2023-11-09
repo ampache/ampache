@@ -32,7 +32,6 @@ use CpChart;
 use CpChart\Data;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\User;
 
 class Graph
 {
@@ -248,11 +247,13 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ) {
+        $userRepository = $this->getUserRepository();
+
         $values = $this->get_all_pts($fct, $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-        $ustats = User::count();
+        $ustats = $userRepository->getStatistics();
         // Only display other users if the graph is not for a specific user and user count is small
         if ($user_id < 1 && $ustats['users'] < 10) {
-            $userArray = $this->getUserRepository()->getValidArray();
+            $userArray = $userRepository->getValidArray();
             foreach ($userArray as $validUser) {
                 $user_values = $this->get_all_type_pts($fct, $validUser['id'], $object_type, $object_id, $start_date, $end_date,
                     $zoom);

@@ -132,4 +132,13 @@ interface UserRepositoryInterface
      * Get the current hashed user password
      */
     public function retrievePasswordFromUser(int $userId): string;
+
+    /**
+     * Returns statistical data related to user accounts and active users
+     *
+     * @param int $timePeriod Time period to consider sessions `active` (in seconds)
+     *
+     * @return array{users: int, connected: int}
+     */
+    public function getStatistics(int $timePeriod = 1200): array;
 }
