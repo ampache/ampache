@@ -198,6 +198,7 @@ class mpd
 
     private $_debug_callback = null; // Optional callback to be run on debug
     public $debugging        = false;
+    private $current_track_id;
 
     /**
      * Constructor

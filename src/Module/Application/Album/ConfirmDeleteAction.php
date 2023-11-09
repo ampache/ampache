@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
@@ -41,6 +42,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'confirm_delete';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private ModelFactoryInterface $modelFactory;
@@ -50,11 +53,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
     private AlbumDeleterInterface $albumDeleter;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
         AlbumDeleterInterface $albumDeleter
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
@@ -70,8 +75,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
             return null;
         }
-
-        $album = $this->modelFactory->createAlbum((int) $_REQUEST['album_id']);
+        $album_id = (int)$this->requestParser->getFromRequest('album_id');
+        $album    = $this->modelFactory->createAlbum($album_id);
         if (!Catalog::can_remove($album)) {
             throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the album `%d`', $album->id)

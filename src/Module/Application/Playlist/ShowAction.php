@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -37,32 +38,43 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
     private ModelFactoryInterface $modelFactory;
     public function __construct(
         UiInterface $ui,
+        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory
     ) {
         $this->ui           = $ui;
+        $this->logger       = $logger;
         $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         $playlist = $this->modelFactory->createPlaylist(
             (int)($_REQUEST['playlist_id'] ?? 0)
         );
+        $this->ui->showHeader();
 
-        $playlist->format();
-        $object_ids = $playlist->get_items();
-        $this->ui->show(
-            'show_playlist.inc.php',
-            [
-                'playlist' => $playlist,
-                'object_ids' => $object_ids
-            ]
-        );
+        if (!$playlist->id) {
+            $this->logger->warning(
+                'Requested a playlist that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $playlist->format();
+            $object_ids = $playlist->get_items();
+            $this->ui->show(
+                'show_playlist.inc.php',
+                [
+                    'playlist' => $playlist,
+                    'object_ids' => $object_ids
+                ]
+            );
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

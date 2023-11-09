@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\PodcastEpisode;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -41,6 +42,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'confirm_delete';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
@@ -50,11 +53,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
@@ -67,7 +72,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $episode = $this->modelFactory->createPodcastEpisode((int) $_REQUEST['podcast_episode_id']);
+        $episode_id = (int)$this->requestParser->getFromRequest('podcast_id');
+        $episode    = $this->modelFactory->createPodcastEpisode($episode_id);
         if (!Catalog::can_remove($episode)) {
             $this->logger->warning(
                 sprintf('Unauthorized to remove the episode `%s`', $episode->id),

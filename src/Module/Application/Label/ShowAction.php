@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -36,6 +37,7 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class ShowAction implements ApplicationActionInterface
 {
@@ -44,6 +46,8 @@ final class ShowAction implements ApplicationActionInterface
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
+
+    private LoggerInterface $logger;
 
     private PrivilegeCheckerInterface $privilegeChecker;
 
@@ -54,12 +58,14 @@ final class ShowAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
+        LoggerInterface $logger,
         PrivilegeCheckerInterface $privilegeChecker,
         LabelRepositoryInterface $labelRepository,
         ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer  = $configContainer;
         $this->ui               = $ui;
+        $this->logger           = $logger;
         $this->privilegeChecker = $privilegeChecker;
         $this->labelRepository  = $labelRepository;
         $this->modelFactory     = $modelFactory;
@@ -77,6 +83,10 @@ final class ShowAction implements ApplicationActionInterface
             }
         }
         if ($label_id < 1) {
+            $this->logger->warning(
+                'Requested a label that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             echo T_('You have requested an object that does not exist');
             $this->ui->showFooter();
         } else {

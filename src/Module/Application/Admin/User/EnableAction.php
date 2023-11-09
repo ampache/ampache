@@ -26,10 +26,12 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class EnableAction extends AbstractUserAction
 {
@@ -37,16 +39,20 @@ final class EnableAction extends AbstractUserAction
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
     private ModelFactoryInterface $modelFactory;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
         UiInterface $ui,
+        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
+        $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
@@ -61,6 +67,10 @@ final class EnableAction extends AbstractUserAction
 
         $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
         if ($userId < 1) {
+            $this->logger->warning(
+                'Requested a user that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             echo T_('You have requested an object that does not exist');
         } else {
             $user = $this->modelFactory->createUser($userId);

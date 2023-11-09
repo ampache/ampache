@@ -26,12 +26,14 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class ShowAction implements ApplicationActionInterface
 {
@@ -41,15 +43,19 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
+        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
     }
 
@@ -62,8 +68,14 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $podcast_id = (int) filter_input(INPUT_GET, 'podcast', FILTER_SANITIZE_NUMBER_INT);
-        if ($podcast_id > 0) {
-            $podcast = $this->modelFactory->createPodcast($podcast_id);
+        $podcast    = $this->modelFactory->createPodcast($podcast_id);
+        if (!$podcast->id) {
+            $this->logger->warning(
+                'Requested a podcast that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            echo T_('You have requested an object that does not exist');
+        } else {
             $podcast->format();
             $object_ids  = $podcast->get_episodes();
             $object_type = 'podcast_episode';

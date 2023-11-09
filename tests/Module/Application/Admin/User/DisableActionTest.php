@@ -35,11 +35,15 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 class DisableActionTest extends MockeryTestCase
 {
     /** @var UiInterface|null */
     private MockInterface $ui;
+
+    /** @var LoggerInterface|MockInterface|null */
+    private MockInterface $logger;
 
     /** @var ModelFactoryInterface|null */
     private MockInterface $modelFactory;
@@ -52,11 +56,13 @@ class DisableActionTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
+        $this->logger          = $this->mock(LoggerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
 
         $this->subject = new DisableAction(
             $this->ui,
+            $this->logger,
             $this->modelFactory,
             $this->configContainer
         );

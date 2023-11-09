@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Playlist;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -36,21 +37,26 @@ final class RemoveDuplicatesAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'remove_duplicates';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->requestParser = $requestParser;
+        $this->ui            = $ui;
+        $this->modelFactory  = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
+        $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
+        $playlist    = $this->modelFactory->createPlaylist($playlist_id);
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
             throw new AccessDeniedException();

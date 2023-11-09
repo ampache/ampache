@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\TvShow;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -35,23 +36,28 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->requestParser = $requestParser;
+        $this->ui            = $ui;
+        $this->modelFactory  = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
 
-        $tvshow = $this->modelFactory->createTvShow((int) $_REQUEST['tvshow']);
+        $tvshow_id = (int)$this->requestParser->getFromRequest('tvshow');
+        $tvshow    = $this->modelFactory->createTvShow($tvshow_id);
         $tvshow->format();
         $object_ids  = $tvshow->get_seasons();
         $object_type = 'tvshow_season';

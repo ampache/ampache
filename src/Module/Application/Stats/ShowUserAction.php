@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -34,12 +35,15 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserFollowerRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class ShowUserAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_user';
 
     private UiInterface $ui;
+
+    private LoggerInterface $logger;
 
     private ModelFactoryInterface $modelFactory;
 
@@ -53,6 +57,7 @@ final class ShowUserAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
+        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory,
         UserActivityRepositoryInterface $useractivityRepository,
         UserActivityRendererInterface $userActivityRenderer,
@@ -60,6 +65,7 @@ final class ShowUserAction implements ApplicationActionInterface
         UserFollowStateRendererInterface $userFollowStateRenderer
     ) {
         $this->ui                      = $ui;
+        $this->logger                  = $logger;
         $this->modelFactory            = $modelFactory;
         $this->useractivityRepository  = $useractivityRepository;
         $this->userActivityRenderer    = $userActivityRenderer;
@@ -78,6 +84,10 @@ final class ShowUserAction implements ApplicationActionInterface
 
         $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
         if ($userId < 1) {
+            $this->logger->warning(
+                'Requested a user that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             echo T_('You have requested an object that does not exist');
         } else {
             $client = $this->modelFactory->createUser($userId);

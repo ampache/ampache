@@ -28,9 +28,11 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class DeleteAction implements ApplicationActionInterface
 {
@@ -40,12 +42,16 @@ final class DeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        LoggerInterface $logger
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -58,6 +64,10 @@ final class DeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         if ($videoId < 1) {
+            $this->logger->warning(
+                'Requested a video that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             echo T_('You have requested an object that does not exist');
         } else {
             $this->ui->showConfirmation(

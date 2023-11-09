@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
@@ -40,16 +41,21 @@ class DeleteActionTest extends MockeryTestCase
     /** @var UiInterface|MockInterface|null */
     private ?MockInterface $ui;
 
+    /** @var LoggerInterface|MockInterface|null */
+    private MockInterface $logger;
+
     private ?DeleteAction $subject;
 
     public function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->ui              = $this->mock(UiInterface::class);
+        $this->logger          = $this->mock(LoggerInterface::class);
 
         $this->subject = new DeleteAction(
             $this->configContainer,
-            $this->ui
+            $this->ui,
+            $this->logger
         );
     }
 

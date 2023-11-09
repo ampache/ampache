@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -37,6 +38,8 @@ final class ArtistRandomAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'artist_random';
 
+    private RequestParserInterface $requestParser;
+
     private ModelFactoryInterface $modelFactory;
 
     private ConfigContainerInterface $configContainer;
@@ -44,12 +47,14 @@ final class ArtistRandomAction extends AbstractStreamAction
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         SongRepositoryInterface $songRepository
     ) {
         parent::__construct($logger, $configContainer);
+        $this->requestParser    = $requestParser;
         $this->modelFactory     = $modelFactory;
         $this->configContainer  = $configContainer;
         $this->songRepository   = $songRepository;
@@ -61,7 +66,8 @@ final class ArtistRandomAction extends AbstractStreamAction
             return null;
         }
 
-        $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist_id']);
+        $artist_id = (int)$this->requestParser->getFromRequest('artist_id');
+        $artist    = $this->modelFactory->createArtist($artist_id);
 
         return $this->stream(
             $this->songRepository->getRandomByArtist($artist),

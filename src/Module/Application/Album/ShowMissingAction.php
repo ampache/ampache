@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Album;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Wanted;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -37,6 +38,8 @@ final class ShowMissingAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_missing';
 
+    private RequestParserInterface $requestParser;
+
     private ModelFactoryInterface $modelFactory;
 
     private UiInterface $ui;
@@ -44,13 +47,15 @@ final class ShowMissingAction implements ApplicationActionInterface
     private ArtCollectorInterface $artCollector;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
         ArtCollectorInterface $artCollector
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
-        $this->artCollector = $artCollector;
+        $this->requestParser = $requestParser;
+        $this->modelFactory  = $modelFactory;
+        $this->ui            = $ui;
+        $this->artCollector  = $artCollector;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -58,17 +63,18 @@ final class ShowMissingAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         set_time_limit(600);
-        $mbid   = $_REQUEST['mbid'];
+        $mbid   = $this->requestParser->getFromRequest('mbid');
         $walbum = $this->modelFactory->createWanted(Wanted::get_wanted($mbid));
 
         if (!$walbum->id) {
             $walbum->mbid = $mbid;
             if (array_key_exists('artist', $_REQUEST)) {
-                $artist              = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
+                $artist_id           = (int)$this->requestParser->getFromRequest('artist');
+                $artist              = $this->modelFactory->createArtist($artist_id);
                 $walbum->artist      = $artist->id;
                 $walbum->artist_mbid = $artist->mbid;
             } elseif (array_key_exists('artist_mbid', $_REQUEST)) {
-                $walbum->artist_mbid = $_REQUEST['artist_mbid'];
+                $walbum->artist_mbid = $this->requestParser->getFromRequest('artist_mbid');
             }
         }
         $walbum->load_all();
