@@ -1,0 +1,20 @@
+name: phplint74
+
+on:
+  push:
+    branches: [ develop, master ]
+  pull_request:
+    branches: [ develop, master ]
+
+jobs:
+  lintphp74:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: PHP syntax checker 7.4
+        uses: prestashop/github-action-php-lint/7.4@v1
+        with:
+          folder-to-exclude: "! -path \"./vendor/*\" ! -path \"./tests/*\""
