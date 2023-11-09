@@ -63,8 +63,10 @@ final class AlbumMethod implements MethodInterface
      * @param GatekeeperInterface $gatekeeper
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
-     * filter  = (string) UID of Album
-     * include = (array|string) 'songs' //optional
+     * @param array $input
+     *  filter  = (string) UID of Album
+     *  include = (array|string) 'songs' //optional
+     * @param User $user
      * @return ResponseInterface
      *
      * @throws RequestParamMissingException

@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;

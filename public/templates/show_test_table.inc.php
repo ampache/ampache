@@ -30,6 +30,7 @@ use Ampache\Module\Util\Ui;
  *
  * Convenience function to format the output.
  @param bool $status
+ * @param bool $status
  * @param string $value
  * @param string $comment
  */
@@ -47,6 +48,7 @@ function debug_wresult($status = false, $value = null, $comment = ''): string
 
 // TODO remove me
 global $dic;
+/** @var EnvironmentInterface $environment */
 $environment = $dic->get(EnvironmentInterface::class); ?>
 <tr>
     <td><?php echo T_('PHP version'); ?></td>

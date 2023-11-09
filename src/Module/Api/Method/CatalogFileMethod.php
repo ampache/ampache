@@ -34,7 +34,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Song\Deletion\SongDeleterInterface;
 
 /**
  * Class CatalogFileMethod

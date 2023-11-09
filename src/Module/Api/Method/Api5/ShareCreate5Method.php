@@ -52,10 +52,12 @@ final class ShareCreate5Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * filter      = (string) object_id
-     * type        = (string) object_type ('song', 'album', 'artist')
-     * description = (string) description (will be filled for you if empty) //optional
-     * expires     = (integer) days to keep active //optional
+     * @param array $input
+     *  filter      = (string) object_id
+     *  type        = (string) object_type ('song', 'album', 'artist')
+     *  description = (string) description (will be filled for you if empty) //optional
+     *  expires     = (integer) days to keep active //optional
+     * @param User $user
      * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

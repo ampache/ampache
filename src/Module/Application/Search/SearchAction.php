@@ -29,7 +29,6 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;

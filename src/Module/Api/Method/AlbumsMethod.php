@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
-use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -62,13 +61,15 @@ final class AlbumsMethod implements MethodInterface
      * @param GatekeeperInterface $gatekeeper
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
-     * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add     = Api::set_filter(date) //optional
-     * update  = Api::set_filter(date) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
-     * include = (array|string) 'songs' //optional
+     * @param array $input
+     *  filter  = (string) Alpha-numeric search term //optional
+     *  exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     *  add     = Api::set_filter(date) //optional
+     *  update  = Api::set_filter(date) //optional
+     *  offset  = (integer) //optional
+     *  limit   = (integer) //optional
+     *  include = (array|string) 'songs' //optional
+     * @param User $user
      * @return ResponseInterface
      */
     public function handle(

@@ -17,7 +17,7 @@ class UPnPFind
      *
      * Requires socket extension
      */
-    public static function findDevices()
+    public static function findDevices(): array
     {
         $discover = self::discover(10);
 
@@ -77,7 +77,7 @@ class UPnPFind
      *
      * @return array  Response
      */
-    private static function discover($timeout = 2)
+    private static function discover($timeout = 2): array
     {
         $msg  = 'M-SEARCH * HTTP/1.1' . "\r\n";
         $msg .= 'HOST: 239.255.255.250:1900' . "\r\n";

@@ -40,7 +40,6 @@ use Ampache\Module\Api\Method\PingMethod;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
