@@ -55,7 +55,7 @@ final class ShowIpHistoryAction extends AbstractUserAction
     ) {
         $this->ui                  = $ui;
         $this->modelFactory        = $modelFactory;
-        $this->ipHistoryRepository = ipHistoryRepository;
+        $this->ipHistoryRepository = $ipHistoryRepository;
         $this->configContainer     = $configContainer;
     }
 
