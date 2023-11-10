@@ -186,8 +186,7 @@ class User extends database_object
             return false;
         }
 
-        $this->id = (int)($user_id);
-        $info     = $this->has_info();
+        $info = $this->has_info((int)$user_id);
         if (!empty($info)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
@@ -210,17 +209,19 @@ class User extends database_object
     /**
      * has_info
      * This function returns the information for this object
+     * @param int $user_id
      * @return array
      */
-    private function has_info()
+    private function has_info(int $user_id): array
     {
-        if (User::is_cached('user', $this->id)) {
-            return User::get_from_cache('user', $this->id);
+        if (User::is_cached('user', $user_id)) {
+            return User::get_from_cache('user', $user_id);
         }
 
         // If the ID is -1 then send back generic data
-        if ($this->id == '-1') {
+        if ($user_id == '-1') {
             return array(
+                'id' => -1,
                 'username' => 'System',
                 'fullname' => 'Ampache User',
                 'access' => '25',
@@ -230,11 +231,11 @@ class User extends database_object
         }
 
         $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($user_id));
 
         $data = Dba::fetch_assoc($db_results);
 
-        User::add_to_cache('user', $this->id, $data);
+        User::add_to_cache('user', $user_id, $data);
 
         return $data;
     } // has_info
