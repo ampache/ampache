@@ -255,7 +255,7 @@ class User extends database_object
     /**
      * get_playlists
      * Get your playlists and just your playlists
-     * @var bool $show_all
+     * @param bool $show_all
      */
     public function get_playlists($show_all): array
     {
@@ -1519,7 +1519,7 @@ class User extends database_object
      * rebuild_all_preferences
      * This rebuilds the user preferences for all installed users, called by the plugin functions
      */
-    public static function rebuild_all_preferences()
+    public static function rebuild_all_preferences(): void
     {
         // Garbage collection
         $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE `user_preference`.`user` != -1 AND `user`.`id` IS NULL;";
@@ -1541,8 +1541,6 @@ class User extends database_object
         }
         // Fix the system user preferences
         self::fix_preferences(-1);
-
-        return true;
     } // rebuild_all_preferences
 
     /**

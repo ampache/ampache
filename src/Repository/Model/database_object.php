@@ -105,10 +105,10 @@ abstract class database_object
      * is_cached
      * this checks the cache to see if the specified object is there
      * @param string $index
-     * @param string $object_id
+     * @param int|string $object_id
      * @return bool
      */
-    public static function is_cached($index, $object_id)
+    public static function is_cached(string $index, $object_id): bool
     {
         // Make sure we've got some parents here before we dive below
         if (!array_key_exists($index, self::$object_cache)) {

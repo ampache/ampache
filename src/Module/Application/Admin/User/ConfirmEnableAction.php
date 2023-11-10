@@ -75,7 +75,7 @@ final class ConfirmEnableAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
-        $user_id = (int) ($request->getQueryParams()['user_id']) ?? 0;
+        $user_id = (int)($request->getQueryParams()['user_id'] ?? 0);
         $user    = $this->modelFactory->createUser($user_id);
 
         $this->userStateToggler->enable($user);
