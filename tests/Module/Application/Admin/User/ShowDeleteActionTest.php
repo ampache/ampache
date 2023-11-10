@@ -37,21 +37,17 @@ use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-class DeleteActionTest extends MockeryTestCase
+class ShowDeleteActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|null */
-    private MockInterface $ui;
+    private MockInterface&UiInterface $ui;
 
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
+    private MockInterface&LoggerInterface $logger;
 
-    /** @var ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
+    private MockInterface&ModelFactoryInterface $modelFactory;
 
-    /** @var ConfigContainerInterface|null */
-    private MockInterface $configContainer;
+    private MockInterface&ConfigContainerInterface $configContainer;
 
-    private ?DeleteAction $subject;
+    private ShowDeleteAction $subject;
 
     public function setUp(): void
     {
@@ -60,7 +56,7 @@ class DeleteActionTest extends MockeryTestCase
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
 
-        $this->subject = new DeleteAction(
+        $this->subject = new ShowDeleteAction(
             $this->ui,
             $this->logger,
             $this->modelFactory,

@@ -56,7 +56,7 @@ class ShowDeleteStreamtokenActionTest extends TestCase
                         'This Token will be deleted',
                         sprintf(
                             'admin/users.php?action=%s&user_id=%d',
-                            DeleteStreamtokenAction::REQUEST_KEY,
+                            DeleteStreamTokenAction::REQUEST_KEY,
                             $userId
                         ),
                         1,

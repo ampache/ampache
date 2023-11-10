@@ -1491,25 +1491,25 @@ class User extends database_object
         return true; // only worry about failed uploads
     }
 
-    public function delete_avatar()
+    public function deleteAvatar(): void
     {
         $art = new Art($this->id, 'user');
         $art->reset();
     }
 
-    public function delete_streamtoken()
+    public function deleteStreamToken(): void
     {
         $sql = "UPDATE `user` SET `streamtoken` = NULL WHERE `id` = ?;";
         Dba::write($sql, array($this->id));
     }
 
-    public function delete_rsstoken()
+    public function deleteRssToken(): void
     {
         $sql = "UPDATE `user` SET `rsstoken` = NULL WHERE `id` = ?;";
         Dba::write($sql, array($this->id));
     }
 
-    public function delete_apikey()
+    public function deleteApiKey(): void
     {
         $sql = "UPDATE `user` SET `apikey` = NULL WHERE `id` = ?;";
         Dba::write($sql, array($this->id));

@@ -55,7 +55,7 @@ final class ShowDeleteRsstokenAction extends AbstractUserAction
                     T_('This Token will be deleted'),
                     sprintf(
                         'admin/users.php?action=%s&user_id=%d',
-                        DeleteRsstokenAction::REQUEST_KEY,
+                        DeleteRssTokenAction::REQUEST_KEY,
                         $userId
                     ),
                     1,
