@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
@@ -36,8 +36,6 @@ final class ShowEditAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'show_edit';
 
-    private RequestParserInterface $requestParser;
-
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
@@ -45,12 +43,10 @@ final class ShowEditAction extends AbstractUserAction
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer
     ) {
-        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
@@ -62,15 +58,15 @@ final class ShowEditAction extends AbstractUserAction
             return null;
         }
 
+        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
+        $user   = $this->modelFactory->createUser($userId);
+
+        $user->format();
+
         $this->ui->showHeader();
-
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
-        $client  = $this->modelFactory->createUser($user_id);
-        $client->format();
-
         $this->ui->show(
             'show_edit_user.inc.php',
-            ['client' => $client]
+            ['client' => $user]
         );
 
         $this->ui->showQueryStats();

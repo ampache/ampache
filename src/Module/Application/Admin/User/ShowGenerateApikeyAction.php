@@ -55,7 +55,7 @@ final class ShowGenerateApikeyAction extends AbstractUserAction
                     T_('This will replace your existing API key'),
                     sprintf(
                         'admin/users.php?action=%s&user_id=%d',
-                        GenerateApikeyAction::REQUEST_KEY,
+                        GenerateApiKeyAction::REQUEST_KEY,
                         $userId
                     ),
                     1,

@@ -20,24 +20,26 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\System\Core;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class GenerateStreamtokenAction extends AbstractUserAction
+/**
+ * Generate an api-key for a user
+ */
+final class GenerateApiKeyAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'generate_streamtoken';
+    public const REQUEST_KEY = 'generate_apikey';
 
     private RequestParserInterface $requestParser;
 
@@ -69,24 +71,21 @@ final class GenerateStreamtokenAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('generate_streamtoken')) {
+        if ($this->requestParser->verifyForm('generate_apikey') === false) {
             throw new AccessDeniedException();
         }
+
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
+        $user   = $this->modelFactory->createUser($userId);
+
+        $this->userKeyGenerator->generateApikey($user);
+
         $this->ui->showHeader();
-
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
-        $client  = $this->modelFactory->createUser($user_id);
-
-        if ($client->id) {
-            $this->userKeyGenerator->generateStreamToken($client);
-        }
-
         $this->ui->showConfirmation(
             T_('No Problem'),
-            T_('A new user token has been generated'),
-            sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+            T_('A new user API Key has been generated'),
+            'admin/users.php'
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

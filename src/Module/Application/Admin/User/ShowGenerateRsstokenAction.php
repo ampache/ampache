@@ -55,7 +55,7 @@ final class ShowGenerateRsstokenAction extends AbstractUserAction
                     T_('This will replace your existing token. Links with the old token might not work properly'),
                     sprintf(
                         'admin/users.php?action=%s&user_id=%d',
-                        GenerateRsstokenAction::REQUEST_KEY,
+                        GenerateApiKeyAction::REQUEST_KEY,
                         $userId
                     ),
                     1,

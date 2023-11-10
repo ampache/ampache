@@ -27,6 +27,7 @@ use Ampache\Module\Application\Admin\User\AddUserAction;
 use Ampache\Module\Application\Admin\User\ConfirmDeleteAction;
 use Ampache\Module\Application\Admin\User\ConfirmDisableAction;
 use Ampache\Module\Application\Admin\User\ConfirmEnableAction;
+use Ampache\Module\Application\Admin\User\GenerateRssTokenAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteAction;
 use Ampache\Module\Application\Admin\User\DeleteApikeyAction;
 use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
@@ -34,9 +35,8 @@ use Ampache\Module\Application\Admin\User\DeleteRssTokenAction;
 use Ampache\Module\Application\Admin\User\DeleteStreamTokenAction;
 use Ampache\Module\Application\Admin\User\DisableAction;
 use Ampache\Module\Application\Admin\User\EnableAction;
-use Ampache\Module\Application\Admin\User\GenerateApikeyAction;
-use Ampache\Module\Application\Admin\User\GenerateRsstokenAction;
-use Ampache\Module\Application\Admin\User\GenerateStreamtokenAction;
+use Ampache\Module\Application\Admin\User\GenerateApiKeyAction;
+use Ampache\Module\Application\Admin\User\GenerateStreamTokenAction;
 use Ampache\Module\Application\Admin\User\ShowAction;
 use Ampache\Module\Application\Admin\User\ShowAddUserAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteApikeyAction;
@@ -65,15 +65,15 @@ $dic->get(ApplicationRunner::class)->run(
         ShowPreferencesAction::REQUEST_KEY => ShowPreferencesAction::class,
         ShowAddUserAction::REQUEST_KEY => ShowAddUserAction::class,
         ShowIpHistoryAction::REQUEST_KEY => ShowIpHistoryAction::class,
-        GenerateRsstokenAction::REQUEST_KEY => GenerateRsstokenAction::class,
-        GenerateStreamtokenAction::REQUEST_KEY => GenerateStreamtokenAction::class,
+        GenerateApiKeyAction::REQUEST_KEY => GenerateApiKeyAction::class,
+        GenerateStreamTokenAction::REQUEST_KEY => GenerateStreamTokenAction::class,
         ShowGenerateRsstokenAction::REQUEST_KEY => ShowGenerateRsstokenAction::class,
         ShowGenerateStreamtokenAction::REQUEST_KEY => ShowGenerateStreamtokenAction::class,
         DeleteRssTokenAction::REQUEST_KEY => DeleteRssTokenAction::class,
         ShowDeleteRsstokenAction::REQUEST_KEY => ShowDeleteRsstokenAction::class,
         DeleteStreamTokenAction::REQUEST_KEY => DeleteStreamTokenAction::class,
         ShowDeleteStreamtokenAction::REQUEST_KEY => ShowDeleteStreamtokenAction::class,
-        GenerateApikeyAction::REQUEST_KEY => GenerateApikeyAction::class,
+        GenerateRssTokenAction::REQUEST_KEY => GenerateRssTokenAction::class,
         ShowGenerateApikeyAction::REQUEST_KEY => ShowGenerateApikeyAction::class,
         DeleteApikeyAction::REQUEST_KEY => DeleteApikeyAction::class,
         ShowDeleteApikeyAction::REQUEST_KEY => ShowDeleteApikeyAction::class,
