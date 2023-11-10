@@ -374,7 +374,7 @@
     },
     "scripts": {
         "coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
-        "qa": "composer run-script syntax && composer run-script fix-cs && composer run-script tests",
+        "qa": "composer run-script syntax && composer run-script fix-cs && composer run-script tests && composer run-script stan",
         "stan": "resources/scripts/tests/stan.sh",
         "tests": "./vendor/bin/phpunit tests",
         "codestyle": "resources/scripts/tests/codestyle.sh",
