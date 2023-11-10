@@ -20,18 +20,17 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -69,19 +68,18 @@ final class ConfirmDisableAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('disable_user')) {
+        if ($this->requestParser->verifyForm('disable_user') === false) {
             throw new AccessDeniedException();
         }
-        $this->ui->showHeader();
 
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
+        $user_id = (int)$request->getQueryParams()['user_id'];
         $user    = $this->modelFactory->createUser($user_id);
 
+        $this->ui->showHeader();
         if ($this->userStateToggler->disable($user) === true) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
-                /* HINT: Username and fullname together: Username (fullname) */
-                sprintf(T_('%s (%s) has been disabled'), $user->username, $user->fullname),
+                sprintf(T_('%s has been disabled'), $user->getFullDisplayName()),
                 'admin/users.php'
             );
         } else {
@@ -91,7 +89,6 @@ final class ConfirmDisableAction extends AbstractUserAction
                 'admin/users.php'
             );
         }
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
