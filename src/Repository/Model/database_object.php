@@ -172,12 +172,12 @@ abstract class database_object
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
      * @param string $index
-     * @param int $object_id
+     * @param int|null $object_id
      */
-    public static function remove_from_cache($index, $object_id = false)
+    public static function remove_from_cache($index, $object_id = null): void
     {
         if (isset(self::$object_cache[$index])) {
-            if ($object_id === false) {
+            if (is_null($object_id)) {
                 // unset the whole index
                 unset(self::$object_cache[$index]);
             } elseif (isset(self::$object_cache[$index][$object_id])) {
