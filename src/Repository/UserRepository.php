@@ -103,6 +103,7 @@ final class UserRepository implements UserRepositoryInterface
 
         return 0;
     }
+
     /**
      * This returns all valid users in database.
      *

@@ -41,6 +41,7 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -62,12 +63,15 @@ final class ApiHandler implements ApiHandlerInterface
 
     private ContainerInterface $dic;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         RequestParserInterface $requestParser,
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
+        UserRepositoryInterface $userRepository,
         ContainerInterface $dic
     ) {
         $this->requestParser   = $requestParser;
@@ -76,6 +80,7 @@ final class ApiHandler implements ApiHandlerInterface
         $this->configContainer = $configContainer;
         $this->networkChecker  = $networkChecker;
         $this->dic             = $dic;
+        $this->userRepository  = $userRepository;
     }
 
     public function handle(
@@ -84,6 +89,7 @@ final class ApiHandler implements ApiHandlerInterface
         ApiOutputInterface $output
     ): ?ResponseInterface {
         $gatekeeper = new Gatekeeper(
+            $this->userRepository,
             $request,
             $this->logger
         );

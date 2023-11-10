@@ -18281,11 +18281,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Parameter \\#1 \\$emailAddress of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_from_email\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Parameter \\#1 \\$filename of static method Ampache\\\\Module\\\\System\\\\Core\\:\\:conv_lc_file\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -27707,7 +27702,7 @@ parameters:
 
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\User\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 10
+			count: 5
 			path: src/Repository/Model/User.php
 
 		-
