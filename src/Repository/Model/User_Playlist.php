@@ -56,7 +56,7 @@ class User_Playlist extends database_object
             return false;
         }
         $this->user   = (int)$user_id;
-        $this->client = substr($client ?? $this->get_latest(), 0, 254);
+        $this->client = substr($client, 0, 254);
 
         return true;
     } // __construct
