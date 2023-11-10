@@ -1176,127 +1176,7 @@ parameters:
 			path: src/Module/Api/Edit/ShowEditPlaylistAction.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$album\\.$#"
-			count: 2
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$artist\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 2
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$mime\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$size\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$tags\\.$#"
-			count: 2
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$title\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$track\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_album_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_artist_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:play_url\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot access property \\$enabled on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_add on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_clean on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_info on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_update on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot access property \\$rename_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot access property \\$sort_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -1526,132 +1406,7 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$album\\.$#"
-			count: 2
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$artist\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 2
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$mime\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$size\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$tags\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$total_count\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$track\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_album_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_artist_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:play_url\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot access property \\$enabled on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_info on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_add on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_clean on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_update on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot access property \\$rename_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot access property \\$sort_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -1881,132 +1636,7 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$album\\.$#"
-			count: 3
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$artist\\.$#"
-			count: 2
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$bitrate\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 2
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$mime\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$size\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$tags\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$total_count\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$track\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$type\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:play_url\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot access property \\$enabled on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_info on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_add on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_clean on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_update on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot access property \\$rename_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot access property \\$sort_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -2166,11 +1796,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:set_offset\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:shares\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
@@ -2257,11 +1882,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Ternary operator condition is always false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -3571,11 +3191,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
 
 		-
-			message: "#^Parameter \\#3 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) expects array\\|string, int\\<1, max\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Users4Method\\:\\:users\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Users4Method.php
@@ -4576,11 +4191,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
 
 		-
-			message: "#^Parameter \\#3 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) expects array\\|string, int\\<1, max\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Users5Method\\:\\:users\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Users5Method.php
@@ -4634,11 +4244,6 @@ parameters:
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/ArtistsMethod.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/BookmarkCreateMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\BookmarkCreateMethod\\:\\:bookmark_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -5491,92 +5096,7 @@ parameters:
 			path: src/Module/Api/Method/UserDeleteMethod.php
 
 		-
-			message: "#^Cannot access property \\$access on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Cannot call method update_catalog_filter_group\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Cannot call method update_city\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Cannot call method update_email\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Cannot call method update_fullname\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Cannot call method update_fullname_public\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Cannot call method update_password\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Cannot call method update_state\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Cannot call method update_website\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UserEditMethod\\:\\:user_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$address of static method Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:validate_address\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of method Ampache\\\\Module\\\\User\\\\Authorization\\\\UserKeyGeneratorInterface\\:\\:generateApikey\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of method Ampache\\\\Module\\\\User\\\\Authorization\\\\UserKeyGeneratorInterface\\:\\:generateStreamToken\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of method Ampache\\\\Module\\\\User\\\\UserStateTogglerInterface\\:\\:disable\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of method Ampache\\\\Module\\\\User\\\\UserStateTogglerInterface\\:\\:enable\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserEditMethod.php
-
-		-
-			message: "#^Parameter \\#3 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) expects array\\|string, int\\<1, max\\> given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/UserEditMethod.php
 
@@ -5589,11 +5109,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UserPreferenceMethod\\:\\:user_preference\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/UserPreferenceMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UserPreferencesMethod\\:\\:user_preferences\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserPreferencesMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UserPreferencesMethod\\:\\:user_preferences\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -6776,16 +6291,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Parameter \\#3 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) expects array\\|string, int given\\.$#"
-			count: 6
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#3 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) expects array\\|string, int\\<1, max\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Parameter \\#4 \\$offset of static method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tag_objects\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -7936,71 +7441,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$album\\.$#"
-			count: 2
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$artist\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 2
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$mime\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$size\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$tags\\.$#"
-			count: 2
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$title\\.$#"
-			count: 2
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$track\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_album_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_artist_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:play_url\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Default value of the parameter \\#2 \\$callback \\(string\\) of method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:keyed_array\\(\\) is incompatible with type bool\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
@@ -8156,132 +7596,12 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$album\\.$#"
-			count: 2
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$artist\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 2
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$mime\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$size\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$tags\\.$#"
-			count: 2
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$title\\.$#"
-			count: 2
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$track\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_album_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_artist_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:play_url\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Call to function is_string\\(\\) with array will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot access property \\$enabled on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_add on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_clean on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_info on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_update on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot access property \\$rename_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot access property \\$sort_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
 
@@ -8401,142 +7721,12 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$album\\.$#"
-			count: 2
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$artist\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_name\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 2
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$mime\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$size\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$tags\\.$#"
-			count: 2
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$total_count\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$track\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
 			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_album_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_artist_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:play_url\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
 			message: "#^Call to function is_int\\(\\) with string\\|null will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot access property \\$enabled on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_info on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_add on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_clean on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_update on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot access property \\$rename_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot access property \\$sort_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
 
@@ -8641,172 +7831,12 @@ parameters:
 			path: src/Module/Api/Xml5_Data.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$id\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$addition_time\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$album\\.$#"
-			count: 3
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$artist\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$bitrate\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_artist_full\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_name\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_time\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$mime\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$size\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$tags\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$total_count\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$track\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$type\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_description\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_fullname\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_link\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:play_url\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Call to function is_int\\(\\) with string\\|null will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot access property \\$enabled on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot access property \\$f_info on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_add on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_clean on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot access property \\$last_update on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot access property \\$rename_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot access property \\$sort_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
@@ -11441,11 +10471,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 2
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:_check_chunk\\(\\) has parameter \\$chunk with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
@@ -11557,11 +10582,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:sync_podcasts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
 
@@ -12147,11 +11167,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method verify_catalog_proc\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
@@ -15411,41 +14426,6 @@ parameters:
 			path: src/Module/Playlist/Search/VideoSearch.php
 
 		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Cannot access property \\$rename_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Cannot access property \\$sort_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Cannot call method get_path\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Cannot call method get_songs\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Cannot call method sort_find_home\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Song\\\\SongSorter\\:\\:sort_move_file\\(\\) has parameter \\$fullname with no type specified\\.$#"
 			count: 1
 			path: src/Module/Song/SongSorter.php
@@ -15753,21 +14733,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, string\\|false given\\.$#"
 			count: 1
-			path: src/Module/System/AutoUpdate.php
-
-		-
-			message: "#^Parameter \\#3 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) expects array\\|string, bool given\\.$#"
-			count: 2
-			path: src/Module/System/AutoUpdate.php
-
-		-
-			message: "#^Parameter \\#3 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) expects array\\|string, int given\\.$#"
-			count: 1
-			path: src/Module/System/AutoUpdate.php
-
-		-
-			message: "#^Parameter \\#3 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) expects array\\|string, int\\<1, max\\> given\\.$#"
-			count: 2
 			path: src/Module/System/AutoUpdate.php
 
 		-
@@ -16641,16 +15606,6 @@ parameters:
 			path: src/Module/Util/AmazonSearch.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:get_display\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/AmpacheRss.php
@@ -16718,11 +15673,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Util\\\\\\\\AmpacheRss', non\\-falsy\\-string\\} given\\.$#"
 			count: 3
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Parameter \\#1 \\$libitem of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:podcast\\(\\) expects Ampache\\\\Repository\\\\Model\\\\library_item, object given\\.$#"
-			count: 1
 			path: src/Module/Util/AmpacheRss.php
 
 		-
@@ -20666,11 +19616,6 @@ parameters:
 			path: src/Plugin/AmpacheLastfm.php
 
 		-
-			message: "#^Parameter \\#3 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) expects array\\|string, SimpleXMLElement\\|true given\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$api_host has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLastfm.php
@@ -22341,11 +21286,6 @@ parameters:
 			path: src/Plugin/Ampachelibrefm.php
 
 		-
-			message: "#^Parameter \\#3 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) expects array\\|string, SimpleXMLElement\\|true given\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$api_host has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelibrefm.php
@@ -23217,11 +22157,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#6 \\$src_y of function imagecopyresampled expects int, float\\|int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Art\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
@@ -26862,11 +25797,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$types has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 

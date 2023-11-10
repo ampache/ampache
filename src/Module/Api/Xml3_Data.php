@@ -553,9 +553,9 @@ class Xml3_Data
         $string     = '';
 
         foreach ($object_ids as $row_id => $data) {
+            $className = ObjectTypeToClassNameMapper::map($data['object_type']);
             /** @var Song $song */
-            $className  = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song       = new $className($data['object_id']);
+            $song = new $className($data['object_id']);
             $song->format();
 
             //FIXME: This is duplicate code and so wrong, functions need to be improved

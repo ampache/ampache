@@ -43,7 +43,7 @@ final class UserPreferencesMethod
      *
      * Get your user preferences
      */
-    public static function user_preferences(array $input, User $user)
+    public static function user_preferences(array $input, User $user): void
     {
         // fix preferences that are missing for user
         User::fix_preferences($user->id);

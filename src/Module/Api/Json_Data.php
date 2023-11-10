@@ -74,7 +74,7 @@ class Json_Data
      *
      * @param int $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
      */
-    public static function set_offset($offset)
+    public static function set_offset($offset): void
     {
         self::$offset = (int)$offset;
     } // set_offset
@@ -84,7 +84,7 @@ class Json_Data
      *
      * This sets the limit for any ampache transactions
      *
-     * @param int $limit Set a limit on your results
+     * @param int|string $limit Set a limit on your results
      */
     public static function set_limit($limit): bool
     {
@@ -893,6 +893,7 @@ class Json_Data
         }
         $JSON = [];
         foreach ($objects as $catalog_id) {
+            /** @var Catalog $catalog */
             $catalog = Catalog::create_from_id($catalog_id);
             $catalog->format();
             $catalog_name           = $catalog->name;
@@ -1293,9 +1294,9 @@ class Json_Data
 
         $JSON = [];
         foreach ($object_ids as $row_id => $data) {
-            /** @var Song $song */
             $className = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song      = new $className($data['object_id']);
+            /** @var Song $song */
+            $song = new $className($data['object_id']);
             $song->format();
 
             $rating      = new Rating($song->id, 'song');

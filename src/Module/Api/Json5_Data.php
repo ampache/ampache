@@ -716,6 +716,7 @@ class Json5_Data
 
         $JSON = [];
         foreach ($catalogs as $catalog_id) {
+            /** @var Catalog $catalog */
             $catalog = Catalog::create_from_id($catalog_id);
             $catalog->format();
             $catalog_name           = $catalog->name;
@@ -1055,9 +1056,9 @@ class Json5_Data
 
         $JSON = [];
         foreach ($object_ids as $row_id => $data) {
-            /** @var Song $song */
             $className = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song      = new $className($data['object_id']);
+            /** @var Song $song */
+            $song = new $className($data['object_id']);
             $song->format();
 
             $rating      = new Rating($song->id, 'song');

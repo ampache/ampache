@@ -270,7 +270,7 @@ class Preference extends database_object
      * This updates a single preference from the given name or id
      * @param string $preference
      * @param int $user_id
-     * @param array|string $value
+     * @param array|string|int|bool|\SimpleXMLElement $value
      * @param bool $applytoall
      * @param bool $applytodefault
      * @return bool

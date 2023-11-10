@@ -83,10 +83,10 @@ final class ShareAction implements ApplicationActionInterface
             T_('Clean Expired Shared Objects')
         );
         $user       = Core::get_global('user');
-        $object_ids = ($user->id)
+        $object_ids = (!empty($user))
             ? Share::get_share_list($user)
             : array();
-        if ($user->id && !empty($object_ids)) {
+        if (!empty($object_ids)) {
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type('share');
             $browse->set_static_content(true);

@@ -85,6 +85,9 @@ final class SongSorter implements SongSorterInterface
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
+            if (!$catalog) {
+                break;
+            }
             /* HINT: Catalog Name */
             $interactor->info(
                 sprintf(T_('Starting Catalog: %s'), stripslashes($catalog->name)),
@@ -159,7 +162,7 @@ final class SongSorter implements SongSorterInterface
                     if ($directory === false || $filename === false) {
                         $fullpath = $song->file;
                     } else {
-                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION) ?? '');
+                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION));
                     }
 
                     /* We need to actually do the moving (fake it if we are testing)

@@ -705,6 +705,7 @@ class Xml4_Data
         $string = "<total_count>" . count($catalogs) . "</total_count>\n";
 
         foreach ($catalogs as $catalog_id) {
+            /** @var Catalog $catalog */
             $catalog = Catalog::create_from_id($catalog_id);
             $catalog->format();
             $string .= "<catalog id=\"$catalog_id\">\n\t<name><![CDATA[" . $catalog->name . "]]></name>\n\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n\t<enabled>" . $catalog->enabled . "</enabled>\n\t<last_add><![CDATA[" . $catalog->f_add . "]]></last_add>\n\t<last_clean><![CDATA[" . $catalog->f_clean . "]]></last_clean>\n\t<last_update><![CDATA[" . $catalog->f_update . "]]></last_update>\n\t<path><![CDATA[" . $catalog->f_info . "]]></path>\n\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n</catalog>\n";
@@ -887,9 +888,9 @@ class Xml4_Data
         $string     = '';
 
         foreach ($object_ids as $row_id => $data) {
+            $className = ObjectTypeToClassNameMapper::map($data['object_type']);
             /** @var Song $song */
-            $className  = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song       = new $className($data['object_id']);
+            $song = new $className($data['object_id']);
             $song->format();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved

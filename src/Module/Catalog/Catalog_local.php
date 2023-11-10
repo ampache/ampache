@@ -571,9 +571,8 @@ class Catalog_local extends Catalog
             $this->update_last_add();
         }
 
-        $current_time = time();
-        $time_diff    = ($current_time - $start_time) ?? 0;
-        $rate         = number_format(($time_diff > 0)
+        $time_diff = time() - $start_time;
+        $rate      = number_format(($time_diff > 0)
             ? $this->count / $time_diff
             : 0, 2);
         if ($rate < 1) {
@@ -962,14 +961,14 @@ class Catalog_local extends Catalog
                     if ($directory === false || $filename === false) {
                         $fullpath = $song->file;
                     } else {
-                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION) ?? '');
+                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION));
                     }
 
                     // don't move over existing files
                     if (!is_file($fullpath) && $song->file != $fullpath && strlen($fullpath)) {
                         debug_event(self::class, 'Destin: ' . $fullpath, 5);
                         $info      = pathinfo($fullpath);
-                        $directory = $info['dirname'];
+                        $directory = $info['dirname'] ?? '';
                         $file      = $info['basename'];
 
                         if (!Core::is_readable($directory)) {

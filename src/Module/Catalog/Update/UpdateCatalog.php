@@ -319,7 +319,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 true
             );
         }
-        $time_diff  = (time() - $start_time) ?? 0;
+        $time_diff  = time() - $start_time;
         $interactor->info(
             T_('Time') . ": " . date('i:s', $time_diff),
             true

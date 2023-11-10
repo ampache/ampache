@@ -913,6 +913,7 @@ class Xml_Data
         $string = "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n";
 
         foreach ($catalogs as $catalog_id) {
+            /** @var Catalog $catalog */
             $catalog = Catalog::create_from_id($catalog_id);
             $catalog->format();
             $string .= "<catalog id=\"$catalog_id\">\n\t<name><![CDATA[" . $catalog->name . "]]></name>\n\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n\t<enabled>" . $catalog->enabled . "</enabled>\n\t<last_add>" . $catalog->last_add . "</last_add>\n\t<last_clean>" . $catalog->last_clean . "</last_clean>\n\t<last_update>" . $catalog->last_update . "</last_update>\n\t<path><![CDATA[" . $catalog->f_info . "]]></path>\n\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n</catalog>\n";
@@ -1113,9 +1114,9 @@ class Xml_Data
         $string     = '';
 
         foreach ($object_ids as $row_id => $data) {
+            $className = ObjectTypeToClassNameMapper::map($data['object_type']);
             /** @var Song $song */
-            $className  = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song       = new $className($data['object_id']);
+            $song = new $className($data['object_id']);
             $song->format();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
@@ -1384,7 +1385,7 @@ class Xml_Data
 
     /**
      * podcast
-     * @param library_item $libitem
+     * @param Album|Artist|Podcast $libitem
      * @param User         $user
      * @return string|false
      */
@@ -1421,6 +1422,7 @@ class Xml_Data
         $medias = $libitem->get_medias();
         foreach ($medias as $media_info) {
             $className  = ObjectTypeToClassNameMapper::map($media_info['object_type']);
+            /** @var Song|Podcast_Episode $media */
             $media      = new $className($media_info['object_id']);
             $media->format();
             $xitem = $xchannel->addChild("item");
@@ -1432,12 +1434,6 @@ class Xml_Data
             $xitem->addChild("guid", htmlspecialchars($media->get_link()));
             if ($media->addition_time) {
                 $xitem->addChild("pubDate", date("r", (int)$media->addition_time));
-            }
-            if ($media instanceof Artist || $libitem instanceof Podcast) {
-                $description = $media->get_description();
-                if (!empty($description)) {
-                    $xitem->addChild("description", htmlspecialchars($description));
-                }
             }
             $xitem->addChild("xmlns:itunes:duration", $media->f_time);
             if ($media->mime) {

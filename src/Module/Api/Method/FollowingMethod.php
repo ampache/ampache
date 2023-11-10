@@ -62,7 +62,7 @@ final class FollowingMethod
         unset($user);
         $username = $input['username'];
         $leader   = User::get_from_username($username);
-        if (!$leader instanceof User || $leader->id < 1) {
+        if ($leader === null || $leader->id < 1) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);

@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Statistics\Stats;
@@ -88,7 +89,8 @@ class AmpacheRss
                 $object_id   = $params['object_id'];
                 if (InterfaceImplementationChecker::is_library_item($object_type)) {
                     $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                    $libitem    = new $class_name($object_id);
+                    /** @var Album|Artist|Podcast $libitem */
+                    $libitem = new $class_name($object_id);
                     if ($libitem->id) {
                         $libitem->format();
 

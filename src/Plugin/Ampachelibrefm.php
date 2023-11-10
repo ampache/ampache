@@ -207,7 +207,7 @@ class Ampachelibrefm
     {
         $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
-        if (!$session_key) {
+        if (!$session_key instanceof \SimpleXMLElement) {
             debug_event(self::class, 'getSession Failed: ' . $scrobbler->error_msg, 3);
 
             return false;

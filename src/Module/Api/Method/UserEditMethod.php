@@ -89,8 +89,12 @@ final class UserEditMethod
 
         // identify the user to modify
         $update_user = User::get_from_username($username);
-        $user_id     = $update_user->getId();
+        if ($update_user === null) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
 
+            return false;
+        }
         if ($password && $update_user->access == 100) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
@@ -100,56 +104,51 @@ final class UserEditMethod
 
         $userStateToggler = static::getUserStateToggler();
 
-        if ($user_id > 0) {
-            if ($password && !AmpConfig::get('simple_user_mode')) {
-                $update_user->update_password('', $password);
-            }
-            if ($fullname) {
-                $update_user->update_fullname($fullname);
-            }
-            if (Mailer::validate_address($email)) {
-                $update_user->update_email($email);
-            }
-            if ($website) {
-                $update_user->update_website($website);
-            }
-            if ($state) {
-                $update_user->update_state($state);
-            }
-            if ($city) {
-                $update_user->update_city($city);
-            }
-            if ((int)$user->disabled === 0 && $disable === '1') {
-                $userStateToggler->disable($update_user);
-            } elseif ((int)$user->disabled === 1 && $disable === '0') {
-                $userStateToggler->enable($update_user);
-            }
-            if ($catalog_filter_group !== null) {
-                $update_user->update_catalog_filter_group((int)$catalog_filter_group);
-            }
-            if ($maxbitrate > 0) {
-                Preference::update('transcode_bitrate', $user_id, $maxbitrate);
-            }
-            if ($fullname_public !== null) {
-                $update_user->update_fullname_public($fullname_public);
-            }
-            if ($reset_apikey) {
-                static::getUserKeyGenerator()->generateApikey($update_user);
-            }
-            if ($reset_streamtoken) {
-                static::getUserKeyGenerator()->generateStreamToken($update_user);
-            }
-            if ($clear_stats) {
-                Stats::clear($update_user->id);
-            }
-            Api::message('successfully updated: ' . $username, $input['api_format']);
-
-            return true;
+        $user_id = $update_user->getId();
+        if ($password && !AmpConfig::get('simple_user_mode')) {
+            $update_user->update_password('', $password);
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+        if ($fullname) {
+            $update_user->update_fullname($fullname);
+        }
+        if ($email && Mailer::validate_address($email)) {
+            $update_user->update_email($email);
+        }
+        if ($website) {
+            $update_user->update_website($website);
+        }
+        if ($state) {
+            $update_user->update_state($state);
+        }
+        if ($city) {
+            $update_user->update_city($city);
+        }
+        if ((int)$user->disabled === 0 && $disable === '1') {
+            $userStateToggler->disable($update_user);
+        } elseif ((int)$user->disabled === 1 && $disable === '0') {
+            $userStateToggler->enable($update_user);
+        }
+        if ($catalog_filter_group !== null) {
+            $update_user->update_catalog_filter_group((int)$catalog_filter_group);
+        }
+        if ($maxbitrate > 0) {
+            Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+        }
+        if ($fullname_public !== null) {
+            $update_user->update_fullname_public($fullname_public);
+        }
+        if ($reset_apikey) {
+            static::getUserKeyGenerator()->generateApikey($update_user);
+        }
+        if ($reset_streamtoken) {
+            static::getUserKeyGenerator()->generateStreamToken($update_user);
+        }
+        if ($clear_stats) {
+            Stats::clear($update_user->id);
+        }
+        Api::message('successfully updated: ' . $username, $input['api_format']);
 
-        return false;
+        return true;
     }
 
     /**

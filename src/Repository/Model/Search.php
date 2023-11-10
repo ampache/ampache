@@ -203,7 +203,7 @@ class Search extends playlist_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return (int)($this->id ?: 0);
     }
 
     /**
@@ -1108,7 +1108,7 @@ class Search extends playlist_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+            $user_id = $user->id ?: 0;
         }
         $key     = 'searches';
         if (parent::is_cached($key, $user_id)) {
