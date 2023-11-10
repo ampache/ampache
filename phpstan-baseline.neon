@@ -5291,11 +5291,6 @@ parameters:
 			path: src/Module/Api/Method/ScrobbleMethod.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ScrobbleMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\SearchSongsMethod\\:\\:search_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/SearchSongsMethod.php
@@ -22716,11 +22711,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:is_cached\\(\\) expects string, int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Parameter \\#2 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:update_field\\(\\) expects int\\|string, int\\|null given\\.$#"
 			count: 2
 			path: src/Repository/Model/Album.php
@@ -24796,11 +24786,6 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:is_cached\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$base_playlist has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -26266,11 +26251,6 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:is_cached\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\PrivateMsg\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/PrivateMsg.php
@@ -27036,11 +27016,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Variable \\$object in PHPDoc tag @var does not match assigned variable \\$class_name\\.$#"
 			count: 2
 			path: src/Repository/Model/Share.php
@@ -27547,11 +27522,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$mbid of static method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:check\\(\\) expects string, array\\|string given\\.$#"
-			count: 2
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:is_cached\\(\\) expects string, int given\\.$#"
 			count: 2
 			path: src/Repository/Model/Song.php
 
@@ -28581,26 +28551,6 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:delete_apikey\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:delete_avatar\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:delete_rsstoken\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:delete_streamtoken\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:disable\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
@@ -28627,11 +28577,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_favorites\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_playlists\\(\\) has parameter \\$show_all with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
@@ -28677,11 +28622,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:load_playlist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:rebuild_all_preferences\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
@@ -28801,18 +28741,8 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^PHPDoc tag @var above a method has no effect\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Parameter \\#1 \\$session_id of static method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_from_session\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:is_cached\\(\\) expects string, int given\\.$#"
-			count: 2
 			path: src/Repository/Model/User.php
 
 		-
@@ -28827,11 +28757,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
@@ -28917,11 +28842,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:set_items\\(\\) has parameter \\$playlist with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Variable \\$client on left side of \\?\\? always exists and is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/User_Playlist.php
 
@@ -29391,11 +29311,6 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Default value of the parameter \\#2 \\$object_id \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:remove_from_cache\\(\\) is incompatible with type int\\.$#"
-			count: 1
-			path: src/Repository/Model/database_object.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:add_to_cache\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/database_object.php
@@ -29421,27 +29336,12 @@ parameters:
 			path: src/Repository/Model/database_object.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:remove_from_cache\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/database_object.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:is_cached\\(\\) expects string, int\\<1, max\\> given\\.$#"
-			count: 1
-			path: src/Repository/Model/database_object.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:\\$cache_hit has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/database_object.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:\\$object_cache has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/database_object.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between int and false will always evaluate to false\\.$#"
 			count: 1
 			path: src/Repository/Model/database_object.php
 
@@ -29727,11 +29627,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\WantedRepository\\:\\:getById\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/WantedRepository.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:is_cached\\(\\) expects string, int\\<1, max\\> given\\.$#"
 			count: 1
 			path: src/Repository/WantedRepository.php
 
