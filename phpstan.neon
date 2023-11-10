@@ -8,4 +8,4 @@ parameters:
   ignoreErrors:
     - '#Static method Ampache\\Module\\System\\Update::_update_([0-9]+)\(\) is unused#'
 includes:
-	- phpstan-baseline.neon
+    - phpstan-baseline.neon
