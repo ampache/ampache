@@ -1176,7 +1176,7 @@ abstract class Catalog extends database_object
 
         $counts['formatted_size'] = Ui::format_bytes($counts['size'], 2, 2);
 
-        $hours = floor($counts['time'] / 3600);
+        $hours = floor((int) $counts['time'] / 3600);
         $days  = floor($hours / 24);
         $hours = $hours % 24;
 

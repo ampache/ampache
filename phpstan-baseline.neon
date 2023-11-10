@@ -141,11 +141,6 @@ parameters:
 			path: src/Application/Api/Ajax/Handler/StatsAjaxHandler.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:get_user_owner\\(\\)\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/TagAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$object_type of static method Ampache\\\\Application\\\\Api\\\\Ajax\\\\Handler\\\\TagAjaxHandler\\:\\:can_edit_tag_map\\(\\) expects string, string\\|false\\|null given\\.$#"
 			count: 2
 			path: src/Application/Api/Ajax/Handler/TagAjaxHandler.php
@@ -1076,11 +1071,6 @@ parameters:
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:get_user_owner\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/AbstractEditAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$instance of static method Ampache\\\\Module\\\\Util\\\\InterfaceImplementationChecker\\:\\:is_library_item\\(\\) expects string, string\\|false\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/AbstractEditAction.php
@@ -1096,7 +1086,7 @@ parameters:
 			path: src/Module/Api/Edit/AbstractEditAction.php
 
 		-
-			message: "#^Parameter \\#4 \\$libitem of method Ampache\\\\Module\\\\Api\\\\Edit\\\\AbstractEditAction\\:\\:handle\\(\\) expects Ampache\\\\Repository\\\\Model\\\\database_object, object given\\.$#"
+			message: "#^Parameter \\#4 \\$libitem of method Ampache\\\\Module\\\\Api\\\\Edit\\\\AbstractEditAction\\:\\:handle\\(\\) expects Ampache\\\\Repository\\\\Model\\\\database_object, Ampache\\\\Repository\\\\Model\\\\library_item given\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/AbstractEditAction.php
 
@@ -9033,6 +9023,26 @@ parameters:
 		-
 			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 1
+			path: src/Module/Application/Admin/Filter/ShowAddFilterAction.php
+
+		-
+			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
+			count: 1
+			path: src/Module/Application/Admin/Filter/ShowAddFilterAction.php
+
+		-
+			message: "#^Cannot cast array\\|string to string\\.$#"
+			count: 1
+			path: src/Module/Application/Admin/Filter/ShowEditAction.php
+
+		-
+			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
+			count: 1
+			path: src/Module/Application/Admin/Filter/ShowEditAction.php
+
+		-
+			message: "#^Cannot cast array\\|string to string\\.$#"
+			count: 1
 			path: src/Module/Application/Admin/Filter/UpdateFilterAction.php
 
 		-
@@ -9206,41 +9216,6 @@ parameters:
 			path: src/Module/Application/Admin/User/AddUserAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Admin\\\\User\\\\ShowDeleteApikeyAction\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/User/ShowDeleteApikeyAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Admin\\\\User\\\\ShowDeleteAvatarAction\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/User/ShowDeleteAvatarAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Admin\\\\User\\\\ShowDeleteRsstokenAction\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/User/ShowDeleteRsstokenAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Admin\\\\User\\\\ShowDeleteStreamtokenAction\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/User/ShowDeleteStreamtokenAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Admin\\\\User\\\\ShowGenerateApikeyAction\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/User/ShowGenerateApikeyAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Admin\\\\User\\\\ShowGenerateRsstokenAction\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/User/ShowGenerateRsstokenAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Admin\\\\User\\\\ShowGenerateStreamtokenAction\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/User/ShowGenerateStreamtokenAction.php
-
-		-
 			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 3
 			path: src/Module/Application/Admin/User/UpdateUserAction.php
@@ -9336,48 +9311,33 @@ parameters:
 			path: src/Module/Application/Artist/UpdateFromTagsAction.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$enabled\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$enabled\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$file\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$file\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$id\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$size\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$size\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_fullname\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_medias\\(\\)\\.$#"
+			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:get_parent\\(\\)\\.$#"
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 2
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
@@ -9387,11 +9347,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Batch\\\\DefaultAction\\:\\:getMediaFiles\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Batch\\\\DefaultAction\\:\\:\\$albumRepository is never read, only written\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
 
@@ -9606,7 +9561,7 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, \\(float\\|int\\<min, 2048\\>\\) given\\.$#"
+			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, float\\|int\\<0, 2048\\> given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
 
@@ -9751,7 +9706,7 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, \\(float\\|int\\<min, 2048\\>\\) given\\.$#"
+			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, float\\|int\\<0, 2048\\> given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
@@ -9804,11 +9759,6 @@ parameters:
 			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 1
 			path: src/Module/Application/PodcastEpisode/DeleteAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\PodcastEpisode\\\\ShowAction\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/PodcastEpisode/ShowAction.php
 
 		-
 			message: "#^If condition is always true\\.$#"
@@ -9949,11 +9899,6 @@ parameters:
 			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 1
 			path: src/Module/Application/Song/DeleteAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/StatisticGraph/ShowAction.php
 
 		-
 			message: "#^Parameter \\#2 \\$object_type of method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) expects string, string\\|null given\\.$#"
@@ -13281,11 +13226,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:\\$current_track_id\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Argument of an invalid type array\\|bool supplied for foreach, only iterables are supported\\.$#"
 			count: 2
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -13562,6 +13502,16 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:\\$connected has no type specified\\.$#"
+			count: 1
+			path: src/Module/Playback/Localplay/Mpd/mpd.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:\\$current_track_id has no type specified\\.$#"
+			count: 1
+			path: src/Module/Playback/Localplay/Mpd/mpd.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:\\$current_track_id is never written, only read\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -16381,1081 +16331,6 @@ parameters:
 			path: src/Module/System/Update.php
 
 		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360002\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360003\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360004\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360005\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360006\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360008\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360009\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360010\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360011\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360012\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360013\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360014\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360015\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360016\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360017\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360018\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360019\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360020\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360021\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360022\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360023\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360024\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360025\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360026\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360027\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360028\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360029\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360030\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360031\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360032\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360033\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360034\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360035\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360036\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360037\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360038\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360039\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360041\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360042\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360043\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360044\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360045\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360046\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360047\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360048\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360049\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_360050\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370002\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370003\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370004\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370005\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370006\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370007\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370008\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370009\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370010\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370011\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370012\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370013\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370014\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370015\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370016\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370017\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370018\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370019\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370020\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370021\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370022\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370023\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370024\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370025\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370026\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370027\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370028\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370029\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370030\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370031\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370032\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370033\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370034\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370035\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370036\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370037\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370038\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370039\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370040\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_370041\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380002\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380003\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380004\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380005\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380006\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380007\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380008\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380009\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380010\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380011\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_380012\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400000\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400002\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400003\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400004\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400005\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400006\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400007\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400008\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400009\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400010\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400011\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400012\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400013\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400014\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400015\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400016\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400018\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400019\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400020\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400021\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400022\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400023\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_400024\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500000\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500002\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500003\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500004\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500005\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500006\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500007\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500008\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500009\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500010\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500011\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500012\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500013\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500014\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_500015\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_510000\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_510001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_510003\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_510004\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_510005\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_520000\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_520001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_520002\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_520003\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_520004\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_520005\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530000\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530002\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530003\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530004\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530005\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530006\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530007\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530008\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530009\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530010\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530011\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530012\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530013\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530014\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530015\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_530016\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_540000\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_540001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_540002\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_550001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_550002\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_550003\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_550004\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_550005\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600001\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600002\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600003\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600004\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600005\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600006\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600007\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600008\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600009\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600010\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600011\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600012\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600013\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600014\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600015\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600016\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600018\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600019\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600020\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600021\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600022\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600023\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600024\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600025\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600026\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600027\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600028\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600032\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600033\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600034\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600035\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600036\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600037\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600038\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600039\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600040\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600041\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Static method Ampache\\\\Module\\\\System\\\\Update\\:\\:_update_600042\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
 			message: "#^Class Ampache\\\\Module\\\\User\\\\Activity\\\\TypeHandler\\\\AlbumActivityTypeHandler constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: src/Module/User/Activity/TypeHandler/ActivityTypeHandlerMapper.php
@@ -18987,16 +17862,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) has parameter \\$user with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$user_id$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 
@@ -23671,16 +22536,6 @@ parameters:
 			path: src/Repository/AlbumRepositoryInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\IpHistoryRepository\\:\\:getHistory\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/IpHistoryRepository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\IpHistoryRepositoryInterface\\:\\:getHistory\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/IpHistoryRepositoryInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -24092,11 +22947,6 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_user_owner\\(\\)\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
@@ -25547,6 +24397,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$update has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Parameter \\#1 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:create_from_id\\(\\) expects int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true given\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -28071,11 +26926,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:is_shared_media\\(\\) has parameter \\$media_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:is_valid\\(\\) has parameter \\$action with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Share.php
@@ -28206,21 +27056,6 @@ parameters:
 			path: src/Repository/Model/Shoutbox.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_user_owner\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
 			message: "#^Cannot call method get_f_link\\(\\) on Ampache\\\\Repository\\\\Model\\\\library_item\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Shoutbox.php
@@ -28336,7 +27171,17 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
+			message: "#^Cannot call method setData\\(\\) on false\\.$#"
+			count: 1
+			path: src/Repository/Model/Song.php
+
+		-
 			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
+			count: 1
+			path: src/Repository/Model/Song.php
+
+		-
+			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -28667,6 +27512,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$new_artist of static method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:update_artist\\(\\) expects int, int\\|null given\\.$#"
+			count: 1
+			path: src/Repository/Model/Song.php
+
+		-
+			message: "#^Parameter \\#1 \\$object of method Ampache\\\\Repository\\\\Repository\\:\\:update\\(\\) expects Ampache\\\\Repository\\\\Model\\\\DatabaseObject, false given\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -29722,11 +28572,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:count\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 

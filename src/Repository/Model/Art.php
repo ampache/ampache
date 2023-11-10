@@ -1479,7 +1479,7 @@ class Art extends database_object
         }
 
         if ($prettyPhoto) {
-            /** @var library_item $libitem */
+            /** @var class-string<library_item> $class_name */
             $class_name  = ObjectTypeToClassNameMapper::map($object_type);
             $libitem     = new $class_name($object_id);
             echo "<div class=\"item_art_actions\">";
