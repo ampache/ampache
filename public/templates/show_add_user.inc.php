@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Catalog;
 $max_upload_size = AmpConfig::get('max_upload_size'); ?>
 <?php Ui::show_box_top(T_('Add User'), 'box box_add_user'); ?>
 <?php echo AmpError::display('general'); ?>
-<form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php?action=add_user"; ?>">
+<form name="add_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php?action=add_user"; ?>">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Username'); ?>: *</td>
