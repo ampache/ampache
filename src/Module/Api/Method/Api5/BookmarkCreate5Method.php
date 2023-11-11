@@ -54,7 +54,7 @@ final class BookmarkCreate5Method
      */
     public static function bookmark_create(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter', 'position'), self::ACTION)) {
+        if (!Api5::check_parameter($input, array('filter', 'type', 'position'), self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
