@@ -81,7 +81,7 @@ final class Session implements SessionInterface
             self::check();
 
             // Create the new user
-            $GLOBALS['user'] = (array_key_exists('username', $_SESSION['userdata']))
+            $GLOBALS['user'] = (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata']))
                 ? User::get_from_username($_SESSION['userdata']['username'])
                 : '';
 
