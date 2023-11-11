@@ -25121,11 +25121,6 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_all\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_categories\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php

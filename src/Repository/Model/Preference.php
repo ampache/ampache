@@ -475,38 +475,6 @@ class Preference extends database_object
     } // get_categories
 
     /**
-     * get_all
-     * This returns a nice flat array of all of the possible preferences for the specified user
-     * @param int $user_id
-     * @return array
-     */
-    public static function get_all($user_id)
-    {
-        $user_id    = Dba::escape($user_id);
-        $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
-
-        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `user_preference`.`user` = ? AND `preference`.`catagory` != 'internal' $user_limit ORDER BY `preference`.`subcatagory`, `preference`.`description`";
-
-        $db_results = Dba::read($sql, array($user_id));
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
-                'id' => $row['id'],
-                'name' => $row['name'],
-                'level' => $row['level'],
-                'description' => $row['description'],
-                'value' => $row['value'],
-                'type' => $row['type'],
-                'category' => $row['catagory'],
-                'subcategory' => $row['subcatagory']
-            );
-        }
-
-        return $results;
-    } // get_all
-
-    /**
      * get
      * This returns a nice flat array of all of the possible preferences for the specified user
      * @param string $pref_name

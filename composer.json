@@ -376,7 +376,7 @@
         "coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
         "qa": "composer run-script syntax && composer run-script fix-cs && composer run-script tests && composer run-script stan",
         "stan": "resources/scripts/tests/stan.sh",
-        "stan-baseline": "vendor/bin/phpstan analyse --level 8 --configuration phpstan.neon src/ tests/ --generate-baseline",
+        "stan-baseline": "vendor/bin/phpstan --generate-baseline",
         "tests": "vendor/bin/phpunit tests",
         "codestyle": "resources/scripts/tests/codestyle.sh",
         "syntax": "resources/scripts/tests/syntax.sh",

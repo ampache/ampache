@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
  * Class UserPreferencesMethod
@@ -48,8 +49,8 @@ final class UserPreferencesMethod
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $preferences  = Preference::get_all($user->id);
-        $output_array = array('preference' => $preferences);
+        $output_array = ['preference' => self::getPreferenceRepository()->getAll($user)];
+
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
@@ -57,5 +58,15 @@ final class UserPreferencesMethod
             default:
                 echo Xml_Data::object_array($output_array['preference'], 'preference');
         }
+    }
+
+    /**
+     * @todo Replace by constructor injection
+     */
+    private static function getPreferenceRepository(): PreferenceRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PreferenceRepositoryInterface::class);
     }
 }

@@ -20,16 +20,19 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\PreferenceRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders the users preferences
+ */
 final class ShowPreferencesAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'show_preferences';
@@ -38,17 +41,21 @@ final class ShowPreferencesAction extends AbstractUserAction
 
     private ModelFactoryInterface $modelFactory;
 
+    private PreferenceRepositoryInterface $preferenceRepository;
+
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        PreferenceRepositoryInterface $preferenceRepository
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui                   = $ui;
+        $this->modelFactory         = $modelFactory;
+        $this->preferenceRepository = $preferenceRepository;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        $client = $this->modelFactory->createUser(
+        $user = $this->modelFactory->createUser(
             (int) ($request->getQueryParams()['user_id'] ?? 0)
         );
 
@@ -57,11 +64,10 @@ final class ShowPreferencesAction extends AbstractUserAction
             'show_user_preferences.inc.php',
             [
                 'ui' => $this->ui,
-                'preferences' => Preference::get_all($client->id),
-                'client' => $client
+                'preferences' => $this->preferenceRepository->getAll($user),
+                'client' => $user
             ]
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

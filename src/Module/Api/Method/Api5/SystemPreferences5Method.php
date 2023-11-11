@@ -28,6 +28,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
  * Class SystemPreferences5Method
@@ -47,10 +48,9 @@ final class SystemPreferences5Method
         if (!Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $preferences = Preference::get_all(-1);
-        $results     = array(
-            'preference' => $preferences
-        );
+
+        $results = ['preference' => self::getPreferenceRepository()->getAll()];
+
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);
@@ -60,5 +60,15 @@ final class SystemPreferences5Method
         }
 
         return true;
+    }
+
+    /**
+     * @todo Replace by constructor injection
+     */
+    private static function getPreferenceRepository(): PreferenceRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PreferenceRepositoryInterface::class);
     }
 }
