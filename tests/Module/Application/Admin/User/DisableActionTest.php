@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -39,19 +40,15 @@ use Psr\Log\LoggerInterface;
 
 class DisableActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|null */
-    private MockInterface $ui;
+    private MockInterface&UiInterface $ui;
 
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
+    private MockInterface&LoggerInterface $logger;
 
-    /** @var ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
+    private MockInterface&ModelFactoryInterface $modelFactory;
 
-    /** @var ConfigContainerInterface|null */
-    private MockInterface $configContainer;
+    private MockInterface&ConfigContainerInterface $configContainer;
 
-    private ?DisableAction $subject;
+    private DisableAction $subject;
 
     public function setUp(): void
     {
@@ -100,6 +97,55 @@ class DisableActionTest extends MockeryTestCase
             ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnTrue();
+
+        $this->assertNull(
+            $this->subject->run(
+                $request,
+                $gatekeeper
+            )
+        );
+    }
+
+    public function testRunErrorsIfUserIdIsLesserThenOne(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $userId   = -1;
+
+        $this->logger->shouldReceive('warning')
+            ->with(
+                'Requested a user that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
+            )
+            ->once();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['user_id' => (string) $userId]);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        static::expectOutputString('You have requested an object that does not exist');
 
         $this->assertNull(
             $this->subject->run(

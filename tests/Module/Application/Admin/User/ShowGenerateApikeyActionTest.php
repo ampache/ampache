@@ -20,17 +20,13 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\MockeryTestCase;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Mockery\MockInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 
 class ShowGenerateApikeyActionTest extends TestCase
 {
@@ -60,7 +56,7 @@ class ShowGenerateApikeyActionTest extends TestCase
                         'This will replace your existing API key',
                         sprintf(
                             'admin/users.php?action=%s&user_id=%d',
-                            GenerateApikeyAction::REQUEST_KEY,
+                            GenerateApiKeyAction::REQUEST_KEY,
                             $userId
                         ),
                         1,
