@@ -56,7 +56,7 @@ class ShowGenerateRsstokenActionTest extends TestCase
                         'This will replace your existing token. Links with the old token might not work properly',
                         sprintf(
                             'admin/users.php?action=%s&user_id=%d',
-                            GenerateApiKeyAction::REQUEST_KEY,
+                            GenerateRssTokenAction::REQUEST_KEY,
                             $userId
                         ),
                         1,
