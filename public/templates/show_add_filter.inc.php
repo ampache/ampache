@@ -37,7 +37,7 @@ if (!AmpConfig::get('catalog_filter')) {
   <p><?php echo T_("If you do not tick a catalog, it will be hidden from users that you assign to this filter"); ?></p>
 &nbsp;
   <?php echo AmpError::display('general'); ?>
-  <form name="add_filter" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/filter.php?action=add_filter"; ?>">
+  <form name="add_filter" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/filter.php?action=add_filter"; ?>">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Filter Name'); ?>:</td>
