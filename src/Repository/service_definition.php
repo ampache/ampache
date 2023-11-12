@@ -44,4 +44,5 @@ return [
     PrivateMessageRepositoryInterface::class => autowire(PrivateMessageRepository::class),
     VideoRepositoryInterface::class => autowire(VideoRepository::class),
     Model\ModelFactoryInterface::class => autowire(Model\ModelFactory::class),
+    PreferenceRepositoryInterface::class => autowire(PreferenceRepository::class),
 ];
