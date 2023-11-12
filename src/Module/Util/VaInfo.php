@@ -1268,8 +1268,13 @@ final class VaInfo implements VaInfoInterface
                 default:
                     // look for set ratings using email address
                     foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
-                        $rating_user = User::get_from_email(array_map('trim', preg_split("/^rating:/", $user_rating))[1] ?? false);
-                        if ($rating_user instanceof User) {
+                        /**
+                         * @todo check functionality; looks like an array is used for a string
+                         */
+                        $rating_user = $this->userRepository->findByEmail(
+                            array_map('trim', preg_split("/^rating:/", $user_rating))[1] ?? ''
+                        );
+                        if ($rating_user !== null) {
                             $parsed['rating'][$rating_user->id] = floor($data[0] * 5 / 100);
                         }
                     }

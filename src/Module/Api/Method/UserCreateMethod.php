@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class UserCreateMethod
@@ -74,13 +75,16 @@ final class UserCreateMethod
 
             return true;
         }
-        if (User::id_from_username($username) > 0) {
+
+        $userRepository = self::getUserRepository();
+
+        if ($userRepository->idByUsername($username) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
-        if (User::id_from_email($email) > 0) {
+        if ($userRepository->idByEmail($email) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $email), '4710', self::ACTION, 'email', $input['api_format']);
 
@@ -89,5 +93,15 @@ final class UserCreateMethod
         Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
         return false;
+    }
+
+    /**
+     * @todo Inject by constructor
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

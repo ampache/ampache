@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class UserCreate4Method
@@ -72,12 +73,15 @@ final class UserCreate4Method
 
             return true;
         }
-        if (User::id_from_username($username) > 0) {
+
+        $userRepository = self::getUserRepository();
+
+        if ($userRepository->idByUsername($username) > 0) {
             Api4::message('error', 'username already exists: ' . $username, '400', $input['api_format']);
 
             return false;
         }
-        if (User::id_from_email($email) > 0) {
+        if ($userRepository->idByEmail($email) > 0) {
             Api4::message('error', 'email already exists: ' . $email, '400', $input['api_format']);
 
             return false;
@@ -86,4 +90,14 @@ final class UserCreate4Method
 
         return false;
     } // user_create
+
+    /**
+     * @todo Inject by constructor
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
+    }
 }

@@ -30,6 +30,7 @@ use Ampache\Module\Util\Mailer;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Core;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -67,7 +68,7 @@ final class LostPasswordMethod
             return false;
         }
         // identify the user to modify
-        $user_id     = User::id_from_token($input['auth']);
+        $user_id     = self::getUserRepository()->idByResetToken($input['auth']);
         $update_user = new User($user_id);
 
         if ($user_id > 0) {
@@ -78,14 +79,11 @@ final class LostPasswordMethod
 
                 return false;
             }
-            // @todo replace by constructor injection
-            global $dic;
-            /** @var NewPasswordSenderInterface $newPasswordSender */
-            $newPasswordSender = $dic->get(NewPasswordSenderInterface::class);
-            $current_ip        = Core::get_user_ip();
+
+            $current_ip = Core::get_user_ip();
 
             // Do not acknowledge a password has been sent or failed
-            $newPasswordSender->send($update_user->email, $current_ip);
+            self::getNewPasswordSender()->send($update_user->email, $current_ip);
 
             Api::message('success', $input['api_format']);
 
@@ -94,5 +92,25 @@ final class LostPasswordMethod
         Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
 
         return false;
+    }
+
+    /**
+     * @todo replace by constructor injection
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @todo replace by constructor injection
+     */
+    private static function getNewPasswordSender(): NewPasswordSenderInterface
+    {
+        global $dic;
+
+        return $dic->get(NewPasswordSenderInterface::class);
     }
 }

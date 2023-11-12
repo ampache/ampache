@@ -287,65 +287,6 @@ class User extends database_object
     } // get_from_username
 
     /**
-     * get_from_apikey
-     * This returns a built user from a username. This is a
-     * static function so it doesn't require an instance
-     * @param string $apikey
-     * @return User|null
-     */
-    public static function get_from_apikey($apikey)
-    {
-        return static::getUserRepository()->findByApiKey($apikey);
-    } // get_from_apikey
-
-    /**
-     * get_from_email
-     * This returns a built user from an email address. This is a
-     * static function so it doesn't require an instance
-     * @param string $emailAddress
-     * @return User|null $user
-     */
-    public static function get_from_email($emailAddress)
-    {
-        return static::getUserRepository()->findByEmail($emailAddress);
-    } // get_from_email
-
-    /**
-     * id_from_username
-     * This returns a built user from a username. This is a
-     * static function so it doesn't require an instance
-     * @param string $username
-     * @return int
-     */
-    public static function id_from_username($username)
-    {
-        return static::getUserRepository()->idByUsername($username);
-    } // id_from_username
-
-    /**
-     * id_from_email
-     * This returns a built user from an email address. This is a
-     * static function so it doesn't require an instance
-     * @param string $emailAddress
-     * @return int
-     */
-    public static function id_from_email($emailAddress)
-    {
-        return static::getUserRepository()->idByEmail($emailAddress);
-    } // id_from_email
-
-    /**
-     * id_from_token
-     * This returns a built user from a reset token.
-     * @param string $token
-     * @return int
-     */
-    public static function id_from_token($token)
-    {
-        return static::getUserRepository()->idByResetToken($token);
-    } // id_from_username
-
-    /**
      * get_user_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @param int $user_id
