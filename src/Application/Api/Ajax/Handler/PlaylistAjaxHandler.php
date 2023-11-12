@@ -61,9 +61,10 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $playlist->regenerate_track_numbers();
                 }
 
+                $browse_id  = $_REQUEST['browse_id'] ?? 0;
                 $object_ids = $playlist->get_items();
                 ob_start();
-                $browse = new Browse();
+                $browse = new Browse((int) $browse_id);
                 $browse->set_type('playlist_media');
                 $browse->add_supplemental_object('playlist', $playlist->id);
                 $browse->save_objects($object_ids);

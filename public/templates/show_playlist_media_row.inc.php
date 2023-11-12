@@ -100,7 +100,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
         }
     }
     if (isset($playlist) && $playlist->has_access()) {
-        echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']); ?>
+        echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&browse_id=' . $browse->getId() . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']); ?>
     </td>
     <td class="cel_drag">
         <?php echo Ui::get_icon('drag', T_('Reorder')); ?>
