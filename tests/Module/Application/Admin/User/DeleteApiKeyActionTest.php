@@ -26,7 +26,7 @@ namespace Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Application\Admin\User\DeleteApikeyAction;
+use Ampache\Module\Application\Admin\User\DeleteApiKeyAction;
 use Ampache\Module\Application\Admin\User\UserAdminAccessTestTrait;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -38,7 +38,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
-class DeleteApikeyActionTest extends TestCase
+class DeleteApiKeyActionTest extends TestCase
 {
     use UserAdminAccessTestTrait;
 
@@ -54,7 +54,7 @@ class DeleteApikeyActionTest extends TestCase
 
     private ServerRequestInterface&MockObject $request;
 
-    private DeleteApikeyAction $subject;
+    private DeleteApiKeyAction $subject;
 
     protected function setUp(): void
     {
@@ -65,7 +65,7 @@ class DeleteApikeyActionTest extends TestCase
         $this->gatekeeper      = $this->createMock(GuiGatekeeperInterface::class);
         $this->request         = $this->createMock(ServerRequestInterface::class);
 
-        $this->subject = new DeleteApikeyAction(
+        $this->subject = new DeleteApiKeyAction(
             $this->requestParser,
             $this->ui,
             $this->modelFactory,

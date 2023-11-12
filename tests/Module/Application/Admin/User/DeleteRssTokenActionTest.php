@@ -26,7 +26,7 @@ namespace Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Application\Admin\User\DeleteApikeyAction;
+use Ampache\Module\Application\Admin\User\DeleteApiKeyAction;
 use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
 use Ampache\Module\Application\Admin\User\DeleteRssTokenAction;
 use Ampache\Module\Application\Admin\User\UserAdminAccessTestTrait;

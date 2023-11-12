@@ -1,5 +1,4 @@
 <?php
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -29,18 +28,19 @@ use Ampache\Module\Util\UiInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class ShowDeleteStreamtokenActionTest extends TestCase
+class ShowGenerateApiKeyActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
+
     private MockObject&UiInterface $ui;
 
-    private ShowDeleteStreamtokenAction $subject;
+    private ShowGenerateApiKeyAction $subject;
 
     public function setUp(): void
     {
         $this->ui = $this->createMock(UiInterface::class);
 
-        $this->subject = new ShowDeleteStreamtokenAction(
+        $this->subject = new ShowGenerateApiKeyAction(
             $this->ui,
         );
     }
@@ -53,14 +53,14 @@ class ShowDeleteStreamtokenActionTest extends TestCase
                     ->method('showConfirmation')
                     ->with(
                         'Are You Sure?',
-                        'This Token will be deleted',
+                        'This will replace your existing API key',
                         sprintf(
                             'admin/users.php?action=%s&user_id=%d',
-                            DeleteStreamTokenAction::REQUEST_KEY,
+                            GenerateApiKeyAction::REQUEST_KEY,
                             $userId
                         ),
                         1,
-                        'delete_streamtoken'
+                        'generate_apikey'
                     );
             }
         );

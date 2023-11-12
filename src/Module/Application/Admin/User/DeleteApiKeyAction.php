@@ -33,7 +33,7 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DeleteApikeyAction extends AbstractUserAction
+final class DeleteApiKeyAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'delete_apikey';
 

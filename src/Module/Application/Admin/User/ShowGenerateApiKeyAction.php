@@ -29,13 +29,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the confirmation dialogue for rss-token deletion
+ * Renders the confirmation dialogue for api-key generation
  */
-final class ShowDeleteRsstokenAction extends AbstractUserAction
+final class ShowGenerateApiKeyAction extends AbstractUserAction
 {
     use UserAdminApplicationTrait;
 
-    public const REQUEST_KEY = 'show_delete_rsstoken';
+    public const REQUEST_KEY = 'show_generate_apikey';
 
     private UiInterface $ui;
 
@@ -52,14 +52,14 @@ final class ShowDeleteRsstokenAction extends AbstractUserAction
             function (int $userId): void {
                 $this->ui->showConfirmation(
                     T_('Are You Sure?'),
-                    T_('This Token will be deleted'),
+                    T_('This will replace your existing API key'),
                     sprintf(
                         'admin/users.php?action=%s&user_id=%d',
-                        DeleteRssTokenAction::REQUEST_KEY,
+                        GenerateApiKeyAction::REQUEST_KEY,
                         $userId
                     ),
                     1,
-                    'delete_rsstoken'
+                    'generate_apikey'
                 );
             }
         );

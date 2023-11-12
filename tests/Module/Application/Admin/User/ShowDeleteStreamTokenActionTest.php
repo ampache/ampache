@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,19 +29,18 @@ use Ampache\Module\Util\UiInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class ShowGenerateRsstokenActionTest extends TestCase
+class ShowDeleteStreamTokenActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
-
     private MockObject&UiInterface $ui;
 
-    private ShowGenerateRsstokenAction $subject;
+    private ShowDeleteStreamTokenAction $subject;
 
     public function setUp(): void
     {
         $this->ui = $this->createMock(UiInterface::class);
 
-        $this->subject = new ShowGenerateRsstokenAction(
+        $this->subject = new ShowDeleteStreamTokenAction(
             $this->ui,
         );
     }
@@ -53,14 +53,14 @@ class ShowGenerateRsstokenActionTest extends TestCase
                     ->method('showConfirmation')
                     ->with(
                         'Are You Sure?',
-                        'This will replace your existing token. Links with the old token might not work properly',
+                        'This Token will be deleted',
                         sprintf(
                             'admin/users.php?action=%s&user_id=%d',
-                            GenerateRssTokenAction::REQUEST_KEY,
+                            DeleteStreamTokenAction::REQUEST_KEY,
                             $userId
                         ),
                         1,
-                        'generate_rsstoken'
+                        'delete_streamtoken'
                     );
             }
         );

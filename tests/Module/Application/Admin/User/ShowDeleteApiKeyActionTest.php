@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,19 +29,19 @@ use Ampache\Module\Util\UiInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class ShowGenerateApikeyActionTest extends TestCase
+class ShowDeleteApiKeyActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
 
     private MockObject&UiInterface $ui;
 
-    private ShowGenerateApikeyAction $subject;
+    private ShowDeleteApiKeyAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui = $this->createMock(UiInterface::class);
 
-        $this->subject = new ShowGenerateApikeyAction(
+        $this->subject = new ShowDeleteApiKeyAction(
             $this->ui,
         );
     }
@@ -53,14 +54,14 @@ class ShowGenerateApikeyActionTest extends TestCase
                     ->method('showConfirmation')
                     ->with(
                         'Are You Sure?',
-                        'This will replace your existing API key',
+                        'This Token will be deleted',
                         sprintf(
                             'admin/users.php?action=%s&user_id=%d',
-                            GenerateApiKeyAction::REQUEST_KEY,
+                            DeleteApiKeyAction::REQUEST_KEY,
                             $userId
                         ),
                         1,
-                        'generate_apikey'
+                        'delete_apikey'
                     );
             }
         );

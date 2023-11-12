@@ -29,13 +29,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the confirmation dialogue for stream-token deletion
+ * Renders the confirmation-dialogue for api-key deletion
  */
-final class ShowGenerateStreamtokenAction extends AbstractUserAction
+final class ShowDeleteApiKeyAction extends AbstractUserAction
 {
     use UserAdminApplicationTrait;
 
-    public const REQUEST_KEY = 'show_generate_streamtoken';
+    public const REQUEST_KEY = 'show_delete_apikey';
 
     private UiInterface $ui;
 
@@ -52,14 +52,14 @@ final class ShowGenerateStreamtokenAction extends AbstractUserAction
             function (int $userId): void {
                 $this->ui->showConfirmation(
                     T_('Are You Sure?'),
-                    T_('This will replace your existing token. Links with the old token might not work properly'),
+                    T_('This Token will be deleted'),
                     sprintf(
                         'admin/users.php?action=%s&user_id=%d',
-                        GenerateStreamTokenAction::REQUEST_KEY,
+                        DeleteApiKeyAction::REQUEST_KEY,
                         $userId
                     ),
                     1,
-                    'generate_streamtoken'
+                    'delete_apikey'
                 );
             }
         );
