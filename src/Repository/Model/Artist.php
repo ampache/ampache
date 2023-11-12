@@ -323,85 +323,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
     } // get_from_name
 
     /**
-     * get_time
-     *
-     * Get time for an artist's songs.
-     * @param int $artist_id
-     * @return int
-     */
-    public static function get_time($artist_id)
-    {
-        $params     = array($artist_id);
-        $sql        = "SELECT DISTINCT SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song'";
-        $db_results = Dba::read($sql, $params);
-        $results    = Dba::fetch_assoc($db_results);
-        $total_time = (int) ($results['time'] ?? 0);
-        // album artists that don't have any songs
-        if ($total_time == 0) {
-            $sql        = "SELECT DISTINCT SUM(`album`.`time`) AS `time` FROM `album` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album'";
-            $db_results = Dba::read($sql, $params);
-            $results    = Dba::fetch_assoc($db_results);
-            $total_time = (int) ($results['time'] ?? 0);
-        }
-
-        return $total_time;
-    }
-
-    /**
-     * get_song_count
-     *
-     * Get count for an artist's songs.
-     * @param int $artist_id
-     * @return int
-     */
-    public static function get_song_count($artist_id)
-    {
-        $params     = array($artist_id);
-        $sql        = "SELECT DISTINCT COUNT(`song`.`id`) AS `song_count` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song'";
-        $db_results = Dba::read($sql, $params);
-        $results    = Dba::fetch_assoc($db_results);
-        if (empty($results)) {
-            return 0;
-        }
-
-        return (int)$results['song_count'];
-    }
-
-    /**
-     * get_album_count
-     *
-     * Get count for an artist's albums.
-     * @param int $artist_id
-     * @return int
-     */
-    public static function get_album_count($artist_id)
-    {
-        $params     = array($artist_id);
-        $sql        = "SELECT COUNT(DISTINCT `album`.`id`) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1'";
-        $db_results = Dba::read($sql, $params);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return (int) $results['album_count'];
-    }
-
-    /**
-     * get_album_disk_count
-     *
-     * Get count for an artist's albums.
-     * @param int $artist_id
-     * @return int
-     */
-    public static function get_album_disk_count($artist_id)
-    {
-        $params     = array($artist_id);
-        $sql        = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1'";
-        $db_results = Dba::read($sql, $params);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return (int) $results['album_count'];
-    }
-
-    /**
      * get_id_arrays
      *
      * Get each id from the artist table with the minimum detail required for subsonic
@@ -1221,21 +1142,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $sql = "DELETE FROM `album_map` WHERE `object_id` = ? AND `object_type` = 'album';";
         Dba::write($sql, array($old_object_id));
         self::update_table_counts();
-    }
-
-    /**
-     * Migrate an object associated artist to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
-     * @return PDOStatement|bool
-     */
-    public static function migrate_map($object_type, $old_object_id, $new_object_id)
-    {
-        $sql    = "UPDATE IGNORE `artist_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        $params = array($new_object_id, $object_type, $old_object_id);
-
-        return Dba::write($sql, $params);
     }
 
     /**
