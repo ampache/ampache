@@ -197,7 +197,7 @@ class Stats
                 break;
         }
         if (in_array($type, array('song', 'podcast_episode', 'video')) && $count_type == 'down') {
-            $sql = "UPDATE `$type` SET `played` = 0 WHERE `id` = ? `total_count` = 0 and `played` = 1;";
+            $sql = "UPDATE `$type` SET `played` = 0 WHERE `id` = ? AND `total_count` = 0 and `played` = 1;";
             Dba::write($sql, array($object_id));
         }
     }
