@@ -11091,7 +11091,7 @@ parameters:
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Update\\\\UpdateCatalog\\:\\:lookupCatalogs\\(\\) should return PDOStatement but returns bool\\|PDOStatement\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Update\\\\UpdateCatalog\\:\\:lookupCatalogs\\(\\) should return PDOStatement but returns PDOStatement\\|false\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
@@ -14792,6 +14792,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:finish\\(\\) has parameter \\$resource with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/Dba.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:insert_id\\(\\) should return string\\|null but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/System/Dba.php
 

@@ -20,17 +20,16 @@
  *
  */
 
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Shoutbox;
 
-/** @var int[] $shouts */
+/** @var list<Shoutbox> $shouts */
 
 Ui::show_box_top(T_('Shoutbox')); ?>
 <div id="shoutbox">
 <?php
-  foreach ($shouts as $shout_id) {
-      $shout = new Shoutbox($shout_id); ?>
-<div id="shout<?php echo $shout->id; ?>" class="shout">
+  foreach ($shouts as $shout) {?>
+<div id="shout<?php echo $shout->getId(); ?>" class="shout">
     <?php echo $shout->get_display(true, true); ?>
 </div>
 <?php
