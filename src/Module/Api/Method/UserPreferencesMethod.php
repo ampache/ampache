@@ -49,14 +49,16 @@ final class UserPreferencesMethod
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $output_array = ['preference' => self::getPreferenceRepository()->getAll($user)];
+        $results = [
+            'preference' => self::getPreferenceRepository()->getAll($user)
+        ];
 
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($output_array['preference'], 'preference');
+                echo Xml_Data::object_array($results['preference'], 'preference');
         }
     }
 

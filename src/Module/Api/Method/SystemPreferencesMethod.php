@@ -49,14 +49,14 @@ final class SystemPreferencesMethod
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $output_array = ['preference' => self::getPreferenceRepository()->getAll()];
+        $results = ['preference' => self::getPreferenceRepository()->getAll()];
 
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($output_array['preference'], 'preference');
+                echo Xml_Data::object_array($results['preference'], 'preference');
         }
 
         return true;
