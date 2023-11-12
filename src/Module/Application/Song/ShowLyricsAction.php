@@ -66,7 +66,10 @@ final class ShowLyricsAction implements ApplicationActionInterface
 
         $this->ui->show(
             'show_lyrics.inc.php',
-            ['lyrics' => $lyrics]
+            [
+                'song' => $song,
+                'lyrics' => $lyrics
+            ]
         );
 
         // Show the Footer
