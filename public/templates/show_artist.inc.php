@@ -40,8 +40,9 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Artist $artist */
-/** @var string $object_type */
+/** @var array $multi_object_ids */
 /** @var array $object_ids */
+/** @var string $object_type */
 /** @var GuiGatekeeperInterface $gatekeeper */
 
 $web_path          = (string)AmpConfig::get('web_path', '');

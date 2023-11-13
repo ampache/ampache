@@ -65,8 +65,8 @@ final class ShowArtDlgAction extends AbstractArtAction
             'show_get_art.inc.php',
             [
                 'item' => $item,
-                'object_type' => $object_type,
                 'object_id' => $object_id,
+                'object_type' => $object_type,
                 'burl' => $burl
             ]
         );
