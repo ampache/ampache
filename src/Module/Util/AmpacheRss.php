@@ -84,6 +84,9 @@ class AmpacheRss
     {
         if ($this->type === "podcast") {
             $user = static::getUserRepository()->getByRssToken($this->rsstoken);
+            if (is_null($user)) {
+                $user = new User(-1);
+            }
             if ($params != null && is_array($params)) {
                 $object_type = $params['object_type'];
                 $object_id   = $params['object_id'];
