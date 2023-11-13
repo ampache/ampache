@@ -120,6 +120,7 @@ final class CreateAction implements ApplicationActionInterface
                         'has_failed' => true,
                         'message' => $message,
                         'object' => $object,
+                        'object_type' => $object_type,
                         'token' => $token,
                         'isZipable' => $isZipable
                     ]
