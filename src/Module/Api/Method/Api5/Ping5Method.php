@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\System\Session;
@@ -61,7 +62,7 @@ final class Ping5Method
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (array_key_exists('auth', $input) && Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            if (in_array($data_version, array(3, 4, 5))) {
+            if (in_array($data_version, Api::API_VERSIONS)) {
                 Session::write($input['auth'], $data_version);
             }
             $results = array_merge(array('session_expire' => date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60)), $results, Api5::server_details($input['auth']));
