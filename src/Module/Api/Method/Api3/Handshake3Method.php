@@ -60,7 +60,7 @@ final class Handshake3Method
     public static function handshake(array $input): bool
     {
         $now_time   = time();
-        $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
+        $timestamp  = (int)preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = $_POST['auth'];
