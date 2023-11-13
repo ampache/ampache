@@ -169,7 +169,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                '501',
+                                501,
                                 T_('Access Control not Enabled')
                             )
                         )
@@ -178,7 +178,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                '501',
+                                501,
                                 T_('Access Control not Enabled')
                             )
                         )
@@ -228,7 +228,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                '401',
+                                401,
                                 T_('Session Expired')
                             )
                         )
@@ -237,7 +237,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                '401',
+                                401,
                                 T_('Session Expired')
                             )
                         )
@@ -280,7 +280,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                '403',
+                                403,
                                 T_('Unauthorized access attempt to API - ACL Error')
                             )
                         )
@@ -289,7 +289,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                '403',
+                                403,
                                 T_('Unauthorized access attempt to API - ACL Error')
                             )
                         )
@@ -342,7 +342,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                '405',
+                                405,
                                 T_('Invalid Request')
                             )
                         )
@@ -357,7 +357,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                '405',
+                                405,
                                 T_('Invalid Request')
                             )
                         )
@@ -504,7 +504,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                '405',
+                                405,
                                 T_('Invalid Request')
                             )
                         )
@@ -513,7 +513,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                '405',
+                                405,
                                 T_('Invalid Request')
                             )
                         )
