@@ -328,7 +328,7 @@ class Stats
             $sql = "SELECT COUNT(*) AS `total_count` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
             if ($threshold > 0) {
                 $date = time() - (86400 * (int)$threshold);
-                $sql .= "AND `date` >= '" . $date . "'";
+                $sql .= " AND `date` >= '" . $date . "'";
             }
         }
 
@@ -740,7 +740,7 @@ class Stats
             ? $count
             : $offset . "," . $count;
         if ($limit > 0) {
-            $sql .= "LIMIT $limit";
+            $sql .= " LIMIT $limit";
         }
 
         //debug_event(self::class, 'get_top ' . $sql, 5);
@@ -764,7 +764,7 @@ class Stats
     public static function get_recent_sql($input_type, $user_id = null, $newest = true)
     {
         $type              = self::validate_type($input_type);
-        $ordersql          = ($newest === true) ? 'DESC' : 'ASC';
+        $ordersql          = ($newest === true) ? 'DESC ' : 'ASC ';
         $user_sql          = (!empty($user_id)) ? " AND `user` = '" . $user_id . "'" : '';
         $catalog_filter    = (AmpConfig::get('catalog_filter'));
 
