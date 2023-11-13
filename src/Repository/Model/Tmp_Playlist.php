@@ -44,6 +44,7 @@ class Tmp_Playlist extends database_object
     public $type;
     public $object_type;
     public $base_playlist;
+    public $created;
 
     // Generated Elements
     public $items = array();
