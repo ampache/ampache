@@ -41,6 +41,7 @@ class Share extends database_object
         'album',
         'album_disk',
         'playlist',
+        'podcast_episode',
         'video'
     );
 

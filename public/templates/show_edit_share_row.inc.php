@@ -20,11 +20,11 @@
  *
  */
 
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Authorization\Access;
 
-/** @var Share $libitem */
-?>
+/** @var Share $libitem */ ?>
 <div>
     <form method="post" id="edit_share_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
@@ -44,12 +44,14 @@ use Ampache\Module\Authorization\Access;
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($libitem->allow_stream) ? 'checked' : ''; ?> /> <?php echo T_('Allow Stream'); ?></td>
             </tr>
-            <?php if ((($libitem->object_type == 'song' || $libitem->object_type == 'video') && (Access::check_function('download')) || Access::check_function('batch_download'))) { ?>
-                    <tr>
-                        <td class="edit_dialog_content_header"></td>
-                        <td><input type="checkbox" name="allow_download" value="1" <?php echo ($libitem->allow_download) ? 'checked' : ''; ?> /> <?php echo T_('Allow Download'); ?></td>
-                    </tr>
-                <?php } ?>
+<?php global $dic; // @todo remove after refactoring
+$zipHandler = $dic->get(ZipHandlerInterface::class);
+if ((in_array($libitem->object_type, array('song', 'video', 'podcast_episode')) && (Access::check_function('download'))) || (Access::check_function('batch_download') && $zipHandler->isZipable($libitem->object_type))) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"></td>
+                <td><input type="checkbox" name="allow_download" value="1" <?php echo ($libitem->allow_download) ? 'checked' : ''; ?> /> <?php echo T_('Allow Download'); ?></td>
+            </tr>
+        <?php } ?>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="share_row" />
