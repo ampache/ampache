@@ -165,6 +165,10 @@ class Api
         5,
         6
     );
+    /**
+     * @var int $data_version
+     */
+    public const  DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     /**
      * @var string $auth_version

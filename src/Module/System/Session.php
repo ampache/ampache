@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Api;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Query;
 use Ampache\Repository\Model\User;
@@ -588,7 +589,7 @@ final class Session implements SessionInterface
      */
     public static function get_api_version($sid)
     {
-        $api_version = 6; // AMPACHE_VERSION
+        $api_version = Api::DEFAULT_VERSION;
 
         if ($sid) {
             $sql        = "SELECT `value` FROM `session` WHERE `type` = 'api' AND `id` = ?;";
