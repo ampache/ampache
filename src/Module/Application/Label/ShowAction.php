@@ -96,9 +96,9 @@ final class ShowAction implements ApplicationActionInterface
             $this->ui->show(
                 'show_label.inc.php',
                 [
+                    'label' => $label,
                     'object_ids' => $label->get_artists(),
                     'object_type' => 'artist',
-                    'label' => $label,
                     'isLabelEditable' => $this->isEditable(
                         $gatekeeper->getUserId(),
                         $label

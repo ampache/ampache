@@ -90,7 +90,7 @@ final class ShowCreateAction implements ApplicationActionInterface
                     [
                         'has_failed' => false,
                         'message' => '',
-                        $object
+                        'object' => $object
                     ]
                 );
             }

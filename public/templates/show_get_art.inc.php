@@ -26,8 +26,8 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\library_item $item */
-/** @var string $object_type */
 /** @var int $object_id */
+/** @var string $object_type */
 /** @var string $burl */
 
 $keywords  = $item->get_keywords();
