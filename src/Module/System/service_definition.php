@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System;
 
 use Psr\Log\LoggerInterface;
+
 use function DI\autowire;
 
 return [

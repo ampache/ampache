@@ -26,6 +26,7 @@ declare(strict_types=1);
 /**
  * This file creates and initializes the central DI-Container
  */
+
 namespace Ampache\Config;
 
 use DI\ContainerBuilder;

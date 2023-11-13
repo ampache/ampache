@@ -32,6 +32,7 @@ use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolder;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolderInterface;
+
 use function DI\autowire;
 
 return [

@@ -1226,7 +1226,7 @@ class Xml_Data
         }
         // return formatted xml when asking for full_xml
         if ($full_xml) {
-            $dom = new DOMDocument;
+            $dom = new DOMDocument();
             // format the string
             $dom->preserveWhiteSpace = false;
             if (!$dom->loadXML($xml)) {

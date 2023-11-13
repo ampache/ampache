@@ -590,7 +590,7 @@ final class VaInfo implements VaInfoInterface
             $info['title']         = (!$info['title'] && array_key_exists('title', $tags)) ? stripslashes(trim((string)$tags['title'])) : $info['title'];
 
             // Not even sure if these can be negative, but better safe than llama.
-            $info['year'] = (!$info['year'] && array_key_exists('year', $tags)) ? Catalog::normalize_year((int) $tags['year']): $info['year'];
+            $info['year'] = (!$info['year'] && array_key_exists('year', $tags)) ? Catalog::normalize_year((int) $tags['year']) : $info['year'];
             $info['disk'] = (!$info['disk'] && array_key_exists('disk', $tags)) ? abs((int) $tags['disk']) : $info['disk'];
 
             $info['totaldisks']   = (!$info['totaldisks'] && array_key_exists('totaldisks', $tags)) ? (int) $tags['totaldisks'] : $info['totaldisks'];
@@ -672,7 +672,7 @@ final class VaInfo implements VaInfoInterface
             $info['tvshow_summary'] = (!$info['tvshow_summary'] && array_key_exists('tvshow_summary', $tags)) ? trim((string)$tags['tvshow_summary']) : $info['tvshow_summary'];
 
             $info['tvshow_art']        = (!$info['tvshow_art'] && array_key_exists('tvshow_art', $tags)) ? trim((string)$tags['tvshow_art']) : $info['tvshow_art'];
-            $info['tvshow_season_art'] = (!$info['tvshow_season_art'] && array_key_exists('tvshow_season_art', $tags))  ? trim((string)$tags['tvshow_season_art']): $info['tvshow_season_art'];
+            $info['tvshow_season_art'] = (!$info['tvshow_season_art'] && array_key_exists('tvshow_season_art', $tags)) ? trim((string)$tags['tvshow_season_art']) : $info['tvshow_season_art'];
             $info['art']               = (!$info['art'] && array_key_exists('art', $tags)) ? trim((string)$tags['art']) : $info['art'];
 
             if (static::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {

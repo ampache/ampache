@@ -49,6 +49,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use SpotifyWebAPI\SpotifyWebAPI;
+
 use function DI\autowire;
 use function DI\factory;
 

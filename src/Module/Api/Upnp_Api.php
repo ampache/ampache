@@ -518,7 +518,7 @@ class Upnp_Api
                             $ndItem->appendChild($ndTag);
                             // check if string is already utf-8 encoded
                             $xvalue     = str_replace("&", "&amp;", $value);
-                            $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($xvalue, 'auto') == 'UTF-8')?$xvalue:utf8_encode($xvalue));
+                            $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($xvalue, 'auto') == 'UTF-8') ? $xvalue : utf8_encode($xvalue));
                             $ndTag->appendChild($ndTag_text);
                         }
                 }

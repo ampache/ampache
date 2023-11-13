@@ -155,7 +155,7 @@ trait Metadata
      */
     public static function isCustomMetadataEnabled()
     {
-        return (boolean) AmpConfig::get('enable_custom_metadata');
+        return (bool) AmpConfig::get('enable_custom_metadata');
     }
 
     /**

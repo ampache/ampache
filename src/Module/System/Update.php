@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnusedPrivateMethodInspection */
+<?php
+
+/** @noinspection PhpUnusedPrivateMethodInspection */
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -222,7 +224,7 @@ class Update
      * @param string $version
      * @return string
      */
-    public static function format_version($version = '') : string
+    public static function format_version($version = ''): string
     {
         if (empty($version)) {
             $version = self::_get_db_version();

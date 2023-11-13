@@ -20,6 +20,7 @@
  */
 
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 namespace Ampache\Repository\Model;
 
 /**

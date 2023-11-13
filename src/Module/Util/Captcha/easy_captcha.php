@@ -31,7 +31,6 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha
 {
-
     #-- init data
     /**
      * easy_captcha constructor.

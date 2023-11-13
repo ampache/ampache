@@ -31,8 +31,6 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
 {
-
-
     /* returns jpeg file stream with unscannable letters encoded
        in front of colorful disturbing background
     */
