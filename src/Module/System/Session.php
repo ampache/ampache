@@ -584,7 +584,7 @@ final class Session implements SessionInterface
      */
     public static function get_api_version($sid)
     {
-        $api_version = 5;
+        $api_version = 6; // AMPACHE_VERSION
 
         if ($sid) {
             $sql        = "SELECT `value` FROM `session` WHERE `type` = 'api' AND `id` = ?;";
