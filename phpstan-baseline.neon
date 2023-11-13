@@ -22506,82 +22506,7 @@ parameters:
 			path: src/Repository/Model/Browse.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:save_cookie_params\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_album_artist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_grid_view\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_mashup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_show_header\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_simple_browse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_song_artist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_threshold\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_title\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_type\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_update_session\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_use_alpha\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_use_pages\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_next_link\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_next_link\\(\\) has parameter \\$argument with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Browse.php
 
@@ -22592,11 +22517,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:update_browse_from_session\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Browse.php
 
@@ -25126,11 +25046,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_allowed_filters\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -25166,123 +25081,13 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_base\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_filters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_having\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_join\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_select\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_total\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:save_objects\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_catalog\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_content_div_ak\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_having\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_is_simple\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_join\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_join_and\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_join_and_and\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_offset\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_select\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_start\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_static_content\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_total\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_type\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:store\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 
 		-
 			message: "#^Parameter \\#1 \\$string of function make_bool expects string, bool given\\.$#"
 			count: 2
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Parameter \\#8 \\$dest3 of method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_join_and_and\\(\\) expects string, int given\\.$#"
-			count: 7
 			path: src/Repository/Model/Query.php
 
 		-
