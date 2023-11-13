@@ -28,7 +28,7 @@ interface GatekeeperInterface
 {
     public function getUser(): ?User;
 
-    public function sessionExists(): bool;
+    public function sessionExists(string $auth): bool;
 
     public function extendSession(): void;
 

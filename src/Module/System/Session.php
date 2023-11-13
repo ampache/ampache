@@ -296,6 +296,10 @@ final class Session implements SessionInterface
         $type = $data['type'] ?? '';
         // Regenerate the session ID to prevent fixation
         switch ($type) {
+            case 'header':
+                $type = 'api';
+                $key  = $data['apikey'];
+                break;
             case 'api':
                 $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
                 break;
@@ -427,7 +431,7 @@ final class Session implements SessionInterface
         switch ($type) {
             case 'api':
             case 'stream':
-                $sql        = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' . "AND `type` in ('stream', 'api')";
+                $sql        = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' . "AND `type` in ('api', 'stream')"; // TODO why are these together?
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {

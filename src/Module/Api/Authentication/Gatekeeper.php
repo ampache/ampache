@@ -66,9 +66,9 @@ final class Gatekeeper implements GatekeeperInterface
             : $this->userRepository->findByApiKey($this->getAuth());
     }
 
-    public function sessionExists(): bool
+    public function sessionExists(string $auth): bool
     {
-        return Session::exists('api', $this->getAuth());
+        return Session::exists('api', $auth);
     }
 
     public function extendSession(): void

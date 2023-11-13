@@ -41,6 +41,7 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -103,7 +104,13 @@ final class ApiHandler implements ApiHandlerInterface
         $is_forgotten  = $action == LostPasswordMethod::ACTION;
         $is_public     = ($is_handshake || $is_ping || $is_register || $is_forgotten);
         $input         = $request->getQueryParams();
-        $input['auth'] = $gatekeeper->getAuth();
+        $header_auth   = false;
+        if (!isset($input['auth'])) {
+            if (!$is_public || $is_ping) {
+                $header_auth = true;
+            }
+            $input['auth'] = $gatekeeper->getAuth();
+        }
         $api_format    = $input['api_format'];
         $version       = (isset($input['version'])) ? $input['version'] : Api::$version;
         $user          = $gatekeeper->getUser();
@@ -111,7 +118,7 @@ final class ApiHandler implements ApiHandlerInterface
         $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
-            $api_version = ($is_public)
+            $api_version = ($is_public || $header_auth)
                 ? (int)substr($version, 0, 1)
                 : $api_session;
             // roll up the version if you haven't enabled the older versions
@@ -150,6 +157,24 @@ final class ApiHandler implements ApiHandlerInterface
         // send the version to API calls (this is used to determine return data for api4/api5)
         $input['api_version'] = $api_version;
 
+        // Create a simplified session for header authenticated sessions
+        if ($header_auth && $user instanceof User) {
+            $data             = [];
+            $data['username'] = $user->username;
+            $data['type']     = 'header';
+            $data['apikey']   = md5($user->username);
+            $data['value']    = $api_version;
+            // Session might not exist or has expired
+            if (!Session::read($data['apikey'])) {
+                Session::destroy($data['apikey']);
+                Session::create($data);
+            }
+            if (in_array($api_version, Api::API_VERSIONS)) {
+                Session::write($data['apikey'], $api_version);
+            }
+            // Continue with the new session string to hide your header token
+            $input['auth'] = $data['apikey'];
+        }
         // If it's not a handshake then we can allow it to take up lots of time
         if (!$is_handshake) {
             set_time_limit(0);
@@ -215,7 +240,11 @@ final class ApiHandler implements ApiHandlerInterface
          */
         if (
             !$is_public &&
-            $gatekeeper->sessionExists() === false
+            (
+                !$user instanceof User || // User is required for non-public methods
+                (!$header_auth && $input['auth'] === md5($user->username)) || // require header auth for simplified session
+                $gatekeeper->sessionExists($input['auth']) === false // no valid session
+            )
         ) {
             $this->logger->warning(
                 sprintf('Invalid Session attempt to API [%s]', $action),
@@ -321,7 +350,8 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         if (
-            !$is_public
+            !$is_public &&
+            $user instanceof User
         ) {
             /**
              * @todo get rid of implicit user registration and pass the user explicitly
