@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Playlist;
@@ -54,16 +55,20 @@ final class ShowCreateAction implements ApplicationActionInterface
 
     private PasswordGeneratorInterface $passwordGenerator;
 
+    private ZipHandlerInterface $zipHandler;
+
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        PasswordGeneratorInterface $passwordGenerator
+        PasswordGeneratorInterface $passwordGenerator,
+        ZipHandlerInterface $zipHandler
     ) {
         $this->requestParser     = $requestParser;
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
         $this->passwordGenerator = $passwordGenerator;
+        $this->zipHandler        = $zipHandler;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -85,7 +90,8 @@ final class ShowCreateAction implements ApplicationActionInterface
             /** @var Song|Album|AlbumDisk|Playlist|Video $object */
             $object = new $class_name($object_id);
             if ($object->id) {
-                $token = $this->passwordGenerator->generate_token();
+                $token     = $this->passwordGenerator->generate_token();
+                $isZipable = $this->zipHandler->isZipable($object_type);
                 $object->format();
                 $this->ui->show(
                     'show_add_share.inc.php',
@@ -93,7 +99,8 @@ final class ShowCreateAction implements ApplicationActionInterface
                         'has_failed' => false,
                         'message' => '',
                         'object' => $object,
-                        'token' => $token
+                        'token' => $token,
+                        'isZipable' => $isZipable
                     ]
                 );
             }

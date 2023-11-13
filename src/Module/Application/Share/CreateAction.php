@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Playlist;
@@ -57,16 +58,20 @@ final class CreateAction implements ApplicationActionInterface
 
     private PasswordGeneratorInterface $passwordGenerator;
 
+    private ZipHandlerInterface $zipHandler;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LoggerInterface $logger,
-        PasswordGeneratorInterface $passwordGenerator
+        PasswordGeneratorInterface $passwordGenerator,
+        ZipHandlerInterface $zipHandler
     ) {
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
         $this->logger            = $logger;
         $this->passwordGenerator = $passwordGenerator;
+        $this->zipHandler        = $zipHandler;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -86,7 +91,7 @@ final class CreateAction implements ApplicationActionInterface
 
         $share_id = Share::create_share(
             Core::get_global('user')->id,
-            $_REQUEST['type'],
+            $_REQUEST['type'] ?? '',
             (int)($_REQUEST['id'] ?? 0),
             (int)($_REQUEST['allow_stream'] ?? 0),
             (int)($_REQUEST['allow_download'] ?? 0),
@@ -100,20 +105,23 @@ final class CreateAction implements ApplicationActionInterface
                 'Share failed: ' . (int)($_REQUEST['id'] ?? 0),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $class_name = ObjectTypeToClassNameMapper::map($_REQUEST['type']);
+            $object_type = $_REQUEST['type'] ?? '';
+            $class_name  = ObjectTypeToClassNameMapper::map($object_type);
             /** @var Song|Album|AlbumDisk|Playlist|Video $object */
             $object = new $class_name((int)$_REQUEST['id']);
             if ($object->id) {
                 $object->format();
-                $message = T_('Failed to create share');
-                $token   = $this->passwordGenerator->generate_token();
+                $message   = T_('Failed to create share');
+                $token     = $this->passwordGenerator->generate_token();
+                $isZipable = $this->zipHandler->isZipable($object_type);
                 $this->ui->show(
                     'show_add_share.inc.php',
                     [
                         'has_failed' => true,
                         'message' => $message,
                         'object' => $object,
-                        'token' => $token
+                        'token' => $token,
+                        'isZipable' => $isZipable
                     ]
                 );
             } else {

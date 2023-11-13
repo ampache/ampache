@@ -30,6 +30,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $message */
 /** @var Ampache\Repository\Model\Song|Ampache\Repository\Model\Album|Ampache\Repository\Model\AlbumDisk|Ampache\Repository\Model\Playlist|Ampache\Repository\Model\Video $object */
 /** @var string $token */
+/** @var bool $isZipable */
 
 $allow_stream   = $_REQUEST['allow_stream'] ?? false;
 $allow_download = $_REQUEST['allow_download'] ?? false;
@@ -63,7 +64,7 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
     <td><?php echo T_('Allow Stream'); ?></td>
     <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($allow_stream || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
-<?php if (((Core::get_request('type') == 'song' || Core::get_request('type') == 'video') && (Access::check_function('download')) || Access::check_function('batch_download'))) { ?>
+<?php if ((((Core::get_request('type') == 'song' || Core::get_request('type') == 'video') && (Access::check_function('download'))) || (Access::check_function('batch_download') && $isZipable))) { ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
     <td><input type="checkbox" name="allow_download" value="1" <?php echo ($allow_download || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
