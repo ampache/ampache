@@ -29,6 +29,7 @@ use Ampache\Module\Util\Ui;
 /** @var bool $has_failed */
 /** @var string $message */
 /** @var Ampache\Repository\Model\Song|Ampache\Repository\Model\Album|Ampache\Repository\Model\AlbumDisk|Ampache\Repository\Model\Playlist|Ampache\Repository\Model\Video $object */
+/** @var string $token */
 
 $allow_stream   = $_REQUEST['allow_stream'] ?? false;
 $allow_download = $_REQUEST['allow_download'] ?? false;
@@ -44,7 +45,7 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>
-    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?? $this->passwordGenerator->generate_token()); ?>" />
+    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?? $token); ?>" />
         <?php echo AmpError::display('secret'); ?>
     </td>
 </tr>

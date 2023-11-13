@@ -27,15 +27,23 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class CreateAction implements ApplicationActionInterface
 {
@@ -45,12 +53,20 @@ final class CreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
+    private PasswordGeneratorInterface $passwordGenerator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        LoggerInterface $logger,
+        PasswordGeneratorInterface $passwordGenerator
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->configContainer   = $configContainer;
+        $this->ui                = $ui;
+        $this->logger            = $logger;
+        $this->passwordGenerator = $passwordGenerator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,7 +87,7 @@ final class CreateAction implements ApplicationActionInterface
         $share_id = Share::create_share(
             Core::get_global('user')->id,
             $_REQUEST['type'],
-            (int)$_REQUEST['id'],
+            (int)($_REQUEST['id'] ?? 0),
             (int)($_REQUEST['allow_stream'] ?? 0),
             (int)($_REQUEST['allow_download'] ?? 0),
             (int) $_REQUEST['expire'],
@@ -80,19 +96,24 @@ final class CreateAction implements ApplicationActionInterface
         );
 
         if (!$share_id) {
-            debug_event(__CLASS__, 'Share failed: ' . (int)$_REQUEST['id'], 2);
-
+            $this->logger->error(
+                'Share failed: ' . (int)($_REQUEST['id'] ?? 0),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             $class_name = ObjectTypeToClassNameMapper::map($_REQUEST['type']);
-            $object     = new $class_name((int)$_REQUEST['id']);
+            /** @var Song|Album|AlbumDisk|Playlist|Video $object */
+            $object = new $class_name((int)$_REQUEST['id']);
             if ($object->id) {
-                $message = T_('Failed to create share');
                 $object->format();
+                $message = T_('Failed to create share');
+                $token   = $this->passwordGenerator->generate_token();
                 $this->ui->show(
                     'show_add_share.inc.php',
                     [
                         'has_failed' => true,
                         'message' => $message,
-                        'object' => $object
+                        'object' => $object,
+                        'token' => $token
                     ]
                 );
             } else {

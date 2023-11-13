@@ -27,6 +27,9 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -34,9 +37,10 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ShowCreateAction implements ApplicationActionInterface
 {
@@ -48,21 +52,17 @@ final class ShowCreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     private PasswordGeneratorInterface $passwordGenerator;
 
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        LoggerInterface $logger,
         PasswordGeneratorInterface $passwordGenerator
     ) {
         $this->requestParser     = $requestParser;
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
-        $this->logger            = $logger;
         $this->passwordGenerator = $passwordGenerator;
     }
 
@@ -82,15 +82,18 @@ final class ShowCreateAction implements ApplicationActionInterface
             }
 
             $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $object     = new $class_name($object_id);
+            /** @var Song|Album|AlbumDisk|Playlist|Video $object */
+            $object = new $class_name($object_id);
             if ($object->id) {
+                $token = $this->passwordGenerator->generate_token();
                 $object->format();
                 $this->ui->show(
                     'show_add_share.inc.php',
                     [
                         'has_failed' => false,
                         'message' => '',
-                        'object' => $object
+                        'object' => $object,
+                        'token' => $token
                     ]
                 );
             }
