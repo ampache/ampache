@@ -66,7 +66,7 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <?php if (((Core::get_request('type') == 'song' || Core::get_request('type') == 'video') && (Access::check_function('download')) || Access::check_function('batch_download'))) { ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
-    <td><input type="checkbox" name="allow_download" value="1" <?php echo ($allow_stream || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
+    <td><input type="checkbox" name="allow_download" value="1" <?php echo ($allow_download || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
 <?php } ?>
 <?php if ($has_failed !== false) { ?>
