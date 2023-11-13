@@ -471,15 +471,17 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * information and formats the relevant values
      * so they can be displayed in a table for example
      * it changes the title into a full link.
+     *
      * @param bool $details
      * @param string $limit_threshold
-     * @return bool
+     *
+     * @return void
      */
-    public function format($details = true, $limit_threshold = '')
+    public function format($details = true, $limit_threshold = ''): void
     {
         // If this is a memory-only object, we're done here
         if (!$this->id) {
-            return true;
+            return;
         }
         $this->songs  = $this->song_count ?? 0;
         $this->albums = (AmpConfig::get('album_group'))
@@ -503,8 +505,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 $this->f_labels = Label::get_display($this->labels, true);
             }
         }
-
-        return true;
     } // format
 
     /**

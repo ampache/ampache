@@ -154,10 +154,10 @@ class TvShow extends database_object implements library_item
     /**
      * format
      * this function takes the object and formats some values
+     *
      * @param bool $details
-     * @return bool
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         $this->get_f_link();
         if ($details) {
@@ -165,8 +165,6 @@ class TvShow extends database_object implements library_item
             $this->tags   = Tag::get_top_tags('tvshow', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
         }
-
-        return true;
     }
 
     /**

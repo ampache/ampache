@@ -305,9 +305,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * format
      * This formats a video object so that it is human readable
+     *
      * @param bool $details
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         $this->f_full_title = $this->get_fullname();
         $this->get_f_link();
