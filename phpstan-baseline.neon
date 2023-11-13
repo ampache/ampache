@@ -811,16 +811,6 @@ parameters:
 			path: src/Module/Api/ApiHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$code of method Ampache\\\\Module\\\\Api\\\\Output\\\\ApiOutputInterface\\:\\:error3\\(\\) expects int, string given\\.$#"
-			count: 5
-			path: src/Module/Api/ApiHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$code of method Ampache\\\\Module\\\\Api\\\\Output\\\\ApiOutputInterface\\:\\:error4\\(\\) expects int, string given\\.$#"
-			count: 5
-			path: src/Module/Api/ApiHandler.php
-
-		-
 			message: "#^Parameter \\#5 \\$user of method Ampache\\\\Module\\\\Api\\\\Method\\\\MethodInterface\\:\\:handle\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/ApiHandler.php
@@ -2091,16 +2081,6 @@ parameters:
 			path: src/Module/Api/Method/Api3/Handshake3Method.php
 
 		-
-			message: "#^Comparison operation \"\\<\" between \\(array\\<int, string\\>\\|string\\|null\\) and int\\<\\-1799, max\\> results in an error\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Handshake3Method.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between \\(array\\<int, string\\>\\|string\\|null\\) and int\\<1801, max\\> results in an error\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Handshake3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Handshake3Method\\:\\:handshake\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Handshake3Method.php
@@ -2682,16 +2662,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Handshake4Method.php
-
-		-
-			message: "#^Comparison operation \"\\<\" between \\(array\\<int, string\\>\\|string\\|null\\) and int\\<\\-1799, max\\> results in an error\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Handshake4Method.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between \\(array\\<int, string\\>\\|string\\|null\\) and int\\<1801, max\\> results in an error\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Handshake4Method.php
 
@@ -3507,16 +3477,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Handshake5Method.php
-
-		-
-			message: "#^Comparison operation \"\\<\" between \\(array\\<int, string\\>\\|string\\|null\\) and int\\<\\-1799, max\\> results in an error\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Handshake5Method.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between \\(array\\<int, string\\>\\|string\\|null\\) and int\\<1801, max\\> results in an error\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Handshake5Method.php
 
@@ -4537,16 +4497,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/HandshakeMethod.php
-
-		-
-			message: "#^Comparison operation \"\\<\" between \\(array\\<int, string\\>\\|string\\|null\\) and int\\<\\-1799, max\\> results in an error\\.$#"
-			count: 1
-			path: src/Module/Api/Method/HandshakeMethod.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between \\(array\\<int, string\\>\\|string\\|null\\) and int\\<1801, max\\> results in an error\\.$#"
 			count: 1
 			path: src/Module/Api/Method/HandshakeMethod.php
 
@@ -8836,16 +8786,6 @@ parameters:
 			path: src/Module/Application/SearchData/ShowAction.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/Share/CreateAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Share/CreateAction.php
-
-		-
 			message: "#^Parameter \\#4 \\$allow_stream of static method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:create_share\\(\\) expects bool, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Share/CreateAction.php
@@ -8871,27 +8811,7 @@ parameters:
 			path: src/Module/Application/Share/ExternalShareAction.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/Share/ShowCreateAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Share/ShowCreateAction.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with non\\-falsy\\-string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Application/Share/ShowCreateAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Share\\\\ShowCreateAction\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Share/ShowCreateAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Share\\\\ShowCreateAction\\:\\:\\$passwordGenerator is never read, only written\\.$#"
 			count: 1
 			path: src/Module/Application/Share/ShowCreateAction.php
 
