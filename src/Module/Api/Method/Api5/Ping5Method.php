@@ -59,7 +59,7 @@ final class Ping5Method
         );
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
-        if (Session::exists('api', $input['auth'])) {
+        if (array_key_exists('auth', $input) && Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
             if (in_array($data_version, array(3, 4, 5))) {
                 Session::write($input['auth'], $data_version);
