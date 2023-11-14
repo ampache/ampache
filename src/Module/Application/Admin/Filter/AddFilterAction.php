@@ -86,8 +86,11 @@ final class AddFilterAction extends AbstractFilterAction
             return null;
         }
 
-        $catalogs      = Catalog::get_catalogs();
-        $catalog_array = array();
+        $catalogs = Catalog::get_catalogs();
+
+        /** @var array<string, int> $catalog_array */
+        $catalog_array = [];
+
         foreach ($catalogs as $catalog_id) {
             $catalog_name                 = Catalog::getName($catalog_id);
             $catalog_array[$catalog_name] = (int)filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
@@ -95,7 +98,7 @@ final class AddFilterAction extends AbstractFilterAction
 
         // Attempt to create the filter
         $filter_id = Catalog::add_catalog_filter_group($filter_name, $catalog_array);
-        if ($filter_id < 1) {
+        if ($filter_id === false) {
             AmpError::add('general', T_("The new filter was not created"));
         }
 
