@@ -22,16 +22,20 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Authorization\Access;
+use Traversable;
+
 /**
  * This repository contains all db calls related to the `access_list` table
  */
 interface AccessRepositoryInterface
 {
     /**
-     * Returns a full listing of all access rules on this server
-     * @return int[]
+     * Yields all available all access rules on this server
+     *
+     * @return Traversable<Access>
      */
-    public function getAccessLists(): array;
+    public function getAccessLists(): Traversable;
 
     /**
      * Searches for certain ip and config. Returns true if a match was found
@@ -62,8 +66,8 @@ interface AccessRepositoryInterface
     /**
      * Creates a new acl item
      *
-     * @param string $startIp The startip in in-addr notation
-     * @param string $endIp The end ip in in-addr notation
+     * @param string $startIp The start-ip in in-addr notation
+     * @param string $endIp The end-ip in in-addr notation
      * @param string $name Name of the acl
      * @param int $userId Designated user id (or -1 if none)
      * @param int $level Access level
@@ -81,9 +85,9 @@ interface AccessRepositoryInterface
     /**
      * Updates the data of a certain acl item
      *
-     * @param int $accessId Id of an existing acl item
-     * @param string $startIp The startip in in-addr notation
-     * @param string $endIp The end ip in in-addr notation
+     * @param int $accessId ID of an existing acl item
+     * @param string $startIp The start-ip in in-addr notation
+     * @param string $endIp The end-ip in in-addr notation
      * @param string $name Name of the acl
      * @param int $userId Designated user id (or -1 if none)
      * @param int $level Access level
