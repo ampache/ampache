@@ -28,6 +28,7 @@ use Ampache\Module\Art\Collector\ArtCollector;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Art\Export\ArtExporter;
 use Ampache\Module\Art\Export\ArtExporterInterface;
+
 use function DI\autowire;
 
 return [

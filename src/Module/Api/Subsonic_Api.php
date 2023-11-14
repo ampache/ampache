@@ -319,7 +319,7 @@ class Subsonic_Api
                         $vattr = (int) $strattr;
                     }
                     if (in_array($attributeName, $options['alwaysDouble'])) {
-                        $vattr = (double) $strattr;
+                        $vattr = (float) $strattr;
                     }
                 }
                 $attributesArray[$attributeKey] = $vattr;

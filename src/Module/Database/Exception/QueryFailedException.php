@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -17,22 +18,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Album;
+namespace Ampache\Module\Database\Exception;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
-
-use function DI\autowire;
-
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-    Deletion\AlbumDeleterInterface::class => autowire(Deletion\AlbumDeleter::class),
-    Tag\AlbumTagUpdaterInterface::class => autowire(Tag\AlbumTagUpdater::class),
-];
+/**
+ * This exception indicates a failure in a database query execution
+ */
+final class QueryFailedException extends DatabaseException
+{
+}

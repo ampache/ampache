@@ -23,57 +23,108 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Shoutbox;
+use Generator;
+use Psr\Log\LoggerInterface;
 
+/**
+ * Manages shout-box related database access
+ *
+ * Table: `user_shout`
+ */
 final class ShoutRepository implements ShoutRepositoryInterface
 {
-    /**
-     * @return int[]
-     */
-    public function getBy(string $object_type, int $object_id): array
-    {
-        $sql        = 'SELECT `id` FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC';
-        $db_results = Dba::read($sql, [$object_type, $object_id]);
-        $results    = array();
+    private DatabaseConnectionInterface $connection;
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
+    private LoggerInterface $logger;
 
-        return $results;
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        DatabaseConnectionInterface $connection,
+        LoggerInterface $logger,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->connection   = $connection;
+        $this->logger       = $logger;
+        $this->modelFactory = $modelFactory;
     }
 
     /**
-     * Cleans out orphaned shoutbox items
+     * Returns all shout-box items for the provided object-type and -id
+     *
+     * @return Generator<Shoutbox>
+     */
+    public function getBy(
+        string $objectType,
+        int $objectId
+    ): Generator {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
+            [$objectType, $objectId]
+        );
+
+        while ($row = $result->fetchColumn()) {
+            yield $this->modelFactory->createShoutbox((int) $row);
+        }
+    }
+
+    /**
+     * Cleans out orphaned shout-box items
      */
     public function collectGarbage(
-        ?string $object_type = null,
-        ?int $object_id = null
+        ?string $objectType = null,
+        ?int $objectId = null
     ): void {
-        $types = array('song', 'album', 'artist', 'label');
+        $types = ['song', 'album', 'artist', 'label'];
 
-        if ($object_type !== null) {
-            if (in_array($object_type, $types)) {
-                $sql = "DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, array($object_type, $object_id));
+        if ($objectType !== null) {
+            // @todo use php8+ enum to get rid of this check
+            if (in_array($objectType, $types)) {
+                $this->connection->query(
+                    'DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?',
+                    [$objectType, $objectId]
+                );
             } else {
-                debug_event(__CLASS__, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                $this->logger->critical(
+                    sprintf('Garbage collect on type `%s` is not supported.', $objectType)
+                );
             }
         } else {
             foreach ($types as $type) {
-                Dba::write("DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `$type` ON `$type`.`id` = `user_shout`.`object_id` WHERE `$type`.`id` IS NULL AND `user_shout`.`object_type` = '$type';");
+                $query = <<<SQL
+                    DELETE FROM
+                        `user_shout`
+                    USING
+                        `user_shout`
+                    LEFT JOIN
+                        `%1\$s`
+                    ON
+                        `%1\$s`.`id` = `user_shout`.`object_id`
+                    WHERE
+                        `%1\$s`.`id` IS NULL
+                    AND
+                        `user_shout`.`object_type` = ?
+                SQL;
+
+                $this->connection->query(
+                    sprintf($query, $type),
+                    [$type]
+                );
             }
         }
     }
 
     /**
-     * this function deletes the shoutbox entry
+     * this function deletes the shout-box entry
      */
-    public function delete(int $shoutboxId): void
+    public function delete(int $shoutBoxId): void
     {
-        Dba::write(
+        $this->connection->query(
             'DELETE FROM `user_shout` WHERE `id` = ?',
-            [$shoutboxId]
+            [$shoutBoxId]
         );
     }
 }

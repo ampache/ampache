@@ -65,7 +65,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if (!$object || !$object->id) {
+        if (!$object || !$object->getId()) {
             AmpError::add('general', T_('Invalid object selected'));
             echo AmpError::display('general');
 
@@ -77,7 +77,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
         $object->format();
 
         $data = '';
-        if (get_class($object) == Song::class) {
+        if (get_class($object) === Song::class) {
             $data = $this->requestParser->getFromRequest('offset');
         }
         $object_type = ObjectTypeToClassNameMapper::reverseMap(get_class($object));

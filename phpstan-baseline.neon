@@ -11091,7 +11091,7 @@ parameters:
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Update\\\\UpdateCatalog\\:\\:lookupCatalogs\\(\\) should return PDOStatement but returns bool\\|PDOStatement\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Update\\\\UpdateCatalog\\:\\:lookupCatalogs\\(\\) should return PDOStatement but returns PDOStatement\\|false\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
@@ -14792,6 +14792,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:finish\\(\\) has parameter \\$resource with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/Dba.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:insert_id\\(\\) should return string\\|null but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/System/Dba.php
 
@@ -21401,57 +21406,12 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:add_album_map\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:add_album_map\\(\\) has parameter \\$album_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:add_album_map\\(\\) has parameter \\$object_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:add_album_map\\(\\) has parameter \\$object_type with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check\\(\\) should return int but returns string\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check_album_map\\(\\) has parameter \\$album_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check_album_map\\(\\) has parameter \\$object_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check_album_map\\(\\) has parameter \\$object_type with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:format\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
 
@@ -21471,27 +21431,7 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_id_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_medias\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_name_array_by_id\\(\\) has parameter \\$album_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_name_array_by_id\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
 
@@ -21506,57 +21446,7 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_song_count_disk\\(\\) has parameter \\$disk_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:remove_album_map\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:remove_album_map\\(\\) has parameter \\$album_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:remove_album_map\\(\\) has parameter \\$object_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:remove_album_map\\(\\) has parameter \\$object_type with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:update_album_artist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:update_album_artist\\(\\) has parameter \\$album_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:update_album_count\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:update_field\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:update_table_counts\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
 
@@ -21671,22 +21561,12 @@ parameters:
 			path: src/Repository/Model/AlbumDisk.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_id_array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -21702,11 +21582,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_parent_array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -22401,11 +22276,6 @@ parameters:
 			path: src/Repository/Model/Broadcast.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
@@ -22506,82 +22376,7 @@ parameters:
 			path: src/Repository/Model/Browse.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:save_cookie_params\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_album_artist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_grid_view\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_mashup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_show_header\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_simple_browse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_song_artist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_threshold\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_title\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_type\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_update_session\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_use_alpha\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_use_pages\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_next_link\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_next_link\\(\\) has parameter \\$argument with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Browse.php
 
@@ -22592,11 +22387,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:update_browse_from_session\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Browse.php
 
@@ -23741,11 +23531,6 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -24227,11 +24012,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:format\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 
@@ -25126,11 +24906,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_allowed_filters\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -25166,123 +24941,13 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_base\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_filters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_having\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_join\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_select\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:reset_total\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:save_objects\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_catalog\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_content_div_ak\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_having\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_is_simple\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_join\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_join_and\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_join_and_and\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_offset\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_select\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_start\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_static_content\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_total\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_type\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:store\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 
 		-
 			message: "#^Parameter \\#1 \\$string of function make_bool expects string, bool given\\.$#"
 			count: 2
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Parameter \\#8 \\$dest3 of method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_join_and_and\\(\\) expects string, int given\\.$#"
-			count: 7
 			path: src/Repository/Model/Query.php
 
 		-
@@ -25542,11 +25207,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:filter_data\\(\\) has parameter \\$operator with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:format\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
@@ -25971,21 +25631,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Cannot access offset 'catalog' on array\\|bool\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Cannot access offset 'file' on array\\|bool\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Cannot call method get_rel_path\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Cannot call method setData\\(\\) on false\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -26061,11 +25706,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -26097,11 +25737,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_deleted\\(\\) should return array\\<int\\> but returns array\\<int\\<0, max\\>, array\\>\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_duplicate_info\\(\\) has parameter \\$dupe with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -27001,11 +26636,6 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
@@ -27816,11 +27446,6 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
@@ -28201,11 +27826,6 @@ parameters:
 			path: src/Repository/Model/library_item.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/playable_item.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playable_item.php
@@ -28237,11 +27857,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:format\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
 
@@ -28474,4 +28089,3 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\WantedRepositoryInterface\\:\\:getById\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/WantedRepositoryInterface.php
-

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
@@ -20,6 +21,7 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;

@@ -168,10 +168,10 @@ class TVShow_Episode extends Video
     /**
      * format
      * this function takes the object and formats some values
+     *
      * @param bool $details
-     * @return bool
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         parent::format($details);
 
@@ -191,8 +191,6 @@ class TVShow_Episode extends Video
         }
         $this->f_file .= ' - ' . $this->f_name;
         $this->f_full_title = $this->f_file;
-
-        return true;
     }
 
     /**

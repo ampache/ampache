@@ -130,10 +130,12 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     /**
      * format
      * this function takes the object and formats some values
+     *
      * @param bool $details
-     * @return bool
+     *
+     * @return void
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         $tvshow = new TvShow($this->tvshow);
         $tvshow->format($details);
@@ -144,8 +146,6 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         if ($details) {
             $this->_get_extra_info();
         }
-
-        return true;
     }
 
     /**

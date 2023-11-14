@@ -135,10 +135,10 @@ class Podcast extends database_object implements library_item
     /**
      * format
      * this function takes the object and formats some values
+     *
      * @param bool $details
-     * @return bool
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         $this->f_description   = scrub_out($this->description);
         $this->f_language      = scrub_out($this->language);
@@ -149,8 +149,6 @@ class Podcast extends database_object implements library_item
         $this->f_lastsync      = date("c", (int)$this->lastsync);
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
         $this->get_f_link();
-
-        return true;
     }
 
     /**

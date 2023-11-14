@@ -130,11 +130,11 @@ class Movie extends Video
     /**
      * format
      * this function takes the object and formats some values
+     *
      * @param bool $details
-     * @return bool
      */
 
-    public function format($details = true)
+    public function format($details = true): void
     {
         parent::format($details);
 
@@ -142,8 +142,6 @@ class Movie extends Video
         $this->f_name          = ($this->f_original_name ?? $this->get_fullname());
         $this->f_full_title    = $this->f_name;
         $this->f_link          = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
-
-        return true;
     } // format
 
     /**

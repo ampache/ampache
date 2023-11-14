@@ -1,4 +1,5 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 /**
@@ -38,7 +39,7 @@ interface playable_item
      * Creates member variables for output
      * @param bool $details
      */
-    public function format($details = true);
+    public function format($details = true): void;
 
     /**
      * get_fullname

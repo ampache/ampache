@@ -9,7 +9,7 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
-        '@PSR2' => true,
+        '@PSR12' => true,
         'binary_operator_spaces' => [
             'operators' => ['=' => 'align']
         ],
@@ -37,6 +37,9 @@ return $config->setRules([
         'single_blank_line_at_eof' => true,
         'strict_param' => false,
         'visibility_required' => false,
+        'return_type_declaration' => [
+            'space_before' => 'none',
+        ],
     ])
     ->setIndent("    ")
     ->setUsingCache(false)

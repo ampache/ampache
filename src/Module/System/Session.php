@@ -151,15 +151,17 @@ final class Session implements SessionInterface
      * This saves the session information into the database.
      * @param $key
      * @param $value
-     * @return bool
+     * @param bool $perpetual
      */
-    public static function write($key, $value)
+    public static function write($key, $value, $perpetual = false): bool
     {
         if (defined('NO_SESSION_UPDATE')) {
             return true;
         }
 
-        $expire = time() + AmpConfig::get('session_length', 3600);
+        $expire = ($perpetual)
+            ? 0
+            : time() + AmpConfig::get('session_length', 3600);
         $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
@@ -205,13 +207,26 @@ final class Session implements SessionInterface
     }
 
     /**
+     * destroy_perpetual
+     *
+     * Remove all perpetual API sessions
+     */
+    public static function destroy_perpetual(): void
+    {
+        $sql = "DELETE FROM `session` WHERE `expire` = 0 AND `type` = 'api';";
+        Dba::write($sql);
+    }
+
+    /**
      * garbage_collection
      *
      * This function is randomly called and it cleans up the expired sessions
      */
     public static function garbage_collection()
     {
-        $sql = 'DELETE FROM `session` WHERE `expire` < ?';
+        $sql = (AmpConfig::get('perpetual_api_session'))
+            ? "DELETE FROM `session` WHERE NOT (`expire` = 0 AND `type` = 'api') AND `expire` < ?;"
+            : "DELETE FROM `session` WHERE `expire` < ?;";
         Dba::write($sql, array(time()));
 
         $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?;';
@@ -246,7 +261,9 @@ final class Session implements SessionInterface
      */
     private static function _read($key, $column)
     {
-        $sql        = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
+        $sql        = (AmpConfig::get('perpetual_api_session'))
+            ? "SELECT * FROM `session` WHERE `id` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
+            : "SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?;";
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -329,7 +346,11 @@ final class Session implements SessionInterface
 
         $expire = time() + AmpConfig::get('session_length', 3600);
         if ($type == 'stream') {
-            $expire = time() + AmpConfig::get('stream_length');
+            $expire = time() + AmpConfig::get('stream_length', 7200);
+        }
+        // this is risky but allow it
+        if ($type == 'api' && AmpConfig::get('perpetual_api_session')) {
+            $expire = 0;
         }
         $latitude = null;
         if (isset($data['geo_latitude'])) {
@@ -432,7 +453,9 @@ final class Session implements SessionInterface
         switch ($type) {
             case 'api':
             case 'stream':
-                $sql        = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' . "AND `type` in ('api', 'stream')"; // TODO why are these together?
+                $sql = (AmpConfig::get('perpetual_api_session'))
+                    ? "SELECT * FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ?) AND `type` in ('api', 'stream');"
+                    : "SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? AND `type` in ('api', 'stream');"; // TODO why are these together?
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
@@ -477,15 +500,20 @@ final class Session implements SessionInterface
     public static function extend($sid, $type = null)
     {
         $time = time();
-        if ($type == 'stream') {
-            $expire = $time + AmpConfig::get('stream_length');
+        // this is risky but allow it
+        if ($type == 'api' && AmpConfig::get('perpetual_api_session')) {
+            $expire = 0;
+        } elseif ($type == 'stream') {
+            $expire = $time + AmpConfig::get('stream_length', 7200);
         } else {
             $expire = $time + AmpConfig::get('session_length', 3600);
         }
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
-            debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            if ($expire !== 0) {
+                debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            }
             $results = Dba::fetch_assoc($db_results);
             if ($results) {
                 self::createGlobalUser(User::get_from_username($results['username']));

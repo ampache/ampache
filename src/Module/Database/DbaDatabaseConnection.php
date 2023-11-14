@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -17,22 +18,42 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Album;
+namespace Ampache\Module\Database;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
+use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Module\System\Dba;
+use PDOStatement;
 
-use function DI\autowire;
+/**
+ * Provides non-static access to the database
+ *
+ * @see Dba
+ */
+final class DbaDatabaseConnection implements DatabaseConnectionInterface
+{
+    /**
+     * Executes the provided sql query
+     *
+     * If the query fails, a DatabaseException will be thrown
+     *
+     * @param list<mixed> $params
+     *
+     * @throws QueryFailedException
+     */
+    public function query(
+        string $sql,
+        array $params = []
+    ): PDOStatement {
+        $result = Dba::query($sql, $params);
 
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-    Deletion\AlbumDeleterInterface::class => autowire(Deletion\AlbumDeleter::class),
-    Tag\AlbumTagUpdaterInterface::class => autowire(Tag\AlbumTagUpdater::class),
-];
+        if ($result === false) {
+            throw new QueryFailedException();
+        }
+
+        return $result;
+    }
+}

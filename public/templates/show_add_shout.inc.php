@@ -24,11 +24,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Shoutbox;
 
 /** @var string $data */
 /** @var Ampache\Repository\Model\library_item $object */
 /** @var string $object_type */
-/** @var int[] $shouts */
+/** @var Traversable<Shoutbox> $shouts */
 ?>
 <div>
 <?php if (Access::check('interface', 25)) { ?>
@@ -70,7 +71,9 @@ $boxtitle = T_('Post to Shoutbox');
 $boxtitle = $object->get_fullname() . ' ' . T_('Shoutbox');
 Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <?php
-if (count($shouts)) {
+$shouts = iterator_to_array($shouts);
+
+if (count($shouts) !== []) {
     require_once Ui::find_template('show_shoutbox.inc.php');
 } ?>
 <?php Ui::show_box_bottom(); ?>

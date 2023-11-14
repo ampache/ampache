@@ -160,7 +160,8 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $status  = $localplay->status();
 
                 ob_start();
-                $browse = new Browse();
+                $browse_id = (int)($_REQUEST['browse_id'] ?? 0);
+                $browse    = new Browse($browse_id);
                 $browse->set_type('playlist_localplay');
                 $browse->set_static_content(true);
                 $browse->save_objects($objects);

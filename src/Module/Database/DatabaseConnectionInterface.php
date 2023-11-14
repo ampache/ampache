@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -20,19 +21,24 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Database;
 
-namespace Ampache\Module\Album;
+use Ampache\Module\Database\Exception\DatabaseException;
+use PDOStatement;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
-
-use function DI\autowire;
-
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-    Deletion\AlbumDeleterInterface::class => autowire(Deletion\AlbumDeleter::class),
-    Tag\AlbumTagUpdaterInterface::class => autowire(Tag\AlbumTagUpdater::class),
-];
+interface DatabaseConnectionInterface
+{
+    /**
+     * Executes the provided sql query
+     *
+     * If the query fails, a DatabaseException will be thrown
+     *
+     * @param list<mixed> $params
+     *
+     * @throws DatabaseException
+     */
+    public function query(
+        string $sql,
+        array $params = []
+    ): PDOStatement;
+}

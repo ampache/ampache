@@ -36,7 +36,7 @@ final class SongRepository implements SongRepositoryInterface
     /**
      * gets the songs for an album takes an optional limit
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByAlbum(
         int $albumId,

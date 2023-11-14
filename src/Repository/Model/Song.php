@@ -562,11 +562,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Catalog::update_map((int)$catalog, 'song', $song_id);
         if ((int)$artist_id > 0) {
             Artist::add_artist_map($artist_id, 'song', $song_id);
-            Album::add_album_map($album_id, 'song', $artist_id);
+            Album::add_album_map($album_id, 'song', (int) $artist_id);
         }
         if ((int)$albumartist_id > 0) {
             Artist::add_artist_map($albumartist_id, 'album', $album_id);
-            Album::add_album_map($album_id, 'album', $albumartist_id);
+            Album::add_album_map($album_id, 'album', (int) $albumartist_id);
         }
         foreach ($artist_mbid_array as $songArtist_mbid) {
             $song_artist_id = Artist::check_mbid($songArtist_mbid);
@@ -706,7 +706,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
             parent::add_to_cache('song', $row['id'], $row);
             $artists[$row['artist']] = $row['artist'];
-            $albums[$row['album']]   = $row['album'];
+
+            $albums[] = (int) $row['album'];
+
             if ($row['tag_id']) {
                 $tags[$row['tag_id']] = $row['tag_id'];
             }
@@ -995,42 +997,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return false;
-    }
-
-    /**
-     * Get duplicate information.
-     * @param array $dupe
-     * @param string $search_type
-     * @return int[]
-     */
-    public static function get_duplicate_info($dupe, $search_type)
-    {
-        $results = array();
-        if (isset($dupe['id'])) {
-            $results[] = $dupe['id'];
-        } else {
-            $sql = "SELECT `id` FROM `song` WHERE `title`='" . Dba::escape($dupe['title']) . "' ";
-
-            if ($search_type == 'artist_title' || $search_type == 'artist_album_title') {
-                $sql .= "AND `artist`='" . Dba::escape($dupe['artist']) . "' ";
-            }
-            if ($search_type == 'artist_album_title') {
-                $sql .= "AND `album` = '" . Dba::escape($dupe['album']) . "' ";
-            }
-            $sql .= 'ORDER BY `time`, `bitrate`, `size`';
-
-            if ($search_type == 'album') {
-                $sql = "SELECT `id` FROM `song` LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) HAVING `Counting` > 1) AS `dupe_search` ON `song`.`album` = `dupe_search`.`dupe_id1` LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL ORDER BY `album`, `track`";
-            }
-
-            $db_results = Dba::read($sql);
-
-            while ($item = Dba::fetch_assoc($db_results)) {
-                $results[] = (int)$item['id'];
-            } // end while
-        }
-
-        return $results;
     }
 
     /**
@@ -1780,9 +1746,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * This takes the current song object
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
+     *
      * @param bool $details
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         if ($details) {
             $this->fill_ext_info();
@@ -2208,31 +2175,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         return $fields;
     } // get_fields
-
-    /**
-     * get_rel_path
-     * returns the path of the song file stripped of the catalog path used for mpd playback
-     * @param string $file_path
-     * @param int $catalog_id
-     * @return string
-     */
-    public function get_rel_path($file_path = null, $catalog_id = 0)
-    {
-        $info = null;
-        if ($file_path === null) {
-            $info      = $this->has_info();
-            $file_path = $info['file'];
-        }
-        if (!$catalog_id) {
-            if (!is_array($info)) {
-                $info = $this->has_info();
-            }
-            $catalog_id = $info['catalog'];
-        }
-        $catalog = Catalog::create_from_id($catalog_id);
-
-        return $catalog->get_rel_path($file_path);
-    } // get_rel_path
 
     /**
      * play_url

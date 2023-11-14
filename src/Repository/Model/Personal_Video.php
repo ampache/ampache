@@ -105,17 +105,15 @@ class Personal_Video extends Video
     /**
      * format
      * this function takes the object and formats some values
+     *
      * @param bool $details
-     * @return bool
      */
 
-    public function format($details = true)
+    public function format($details = true): void
     {
         parent::format($details);
 
         $this->f_location = $this->location;
-
-        return true;
     } // format
 
     /**

@@ -226,7 +226,7 @@ class Rating extends database_object
     {
         $key = 'rating_' . $this->type . '_all';
         if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
-            return (double)parent::get_from_cache($key, $this->id)[0];
+            return (float)parent::get_from_cache($key, $this->id)[0];
         }
 
         $sql        = "SELECT ROUND(AVG(`rating`), 2) AS `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
@@ -235,7 +235,7 @@ class Rating extends database_object
         if (empty($row)) {
             return null;
         }
-        $rating = (double)$row['rating'];
+        $rating = (float)$row['rating'];
         parent::add_to_cache($key, $this->id, array($rating));
 
         return $rating;

@@ -58,6 +58,11 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_icon('cog', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
             </li>
+    <?php if (AmpConfig::get('perpetual_api_session')) { ?>
+            <li>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=perpetual_api_session"><?php echo Ui::get_icon('cog', T_('Clear Perpetual API Sessions')) . ' ' . T_('Clear Perpetual API Sessions'); ?></a>
+            </li>
+    <?php  } ?>
         </ul>
     </div>
     <?php Ui::show_box_top(T_('Ampache Update'), 'box'); ?>

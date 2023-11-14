@@ -149,7 +149,7 @@ class Label extends database_object implements library_item
     /**
      * @param bool $details
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         unset($details);
         $this->get_f_link();

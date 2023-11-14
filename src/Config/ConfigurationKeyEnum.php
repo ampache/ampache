@@ -136,6 +136,7 @@ final class ConfigurationKeyEnum
     public const NOW_PLAYING_REFRESH_LIMIT             = 'now_playing_refresh_limit';
     public const OFFSET_LIMIT                          = 'offset_limit';
     public const OF_THE_MOMENT                         = 'of_the_moment';
+    public const PERPETUAL_API_SESSION                 = 'perpetual_api_session';
     public const PLAYLIST_METHOD                       = 'playlist_method';
     public const PLAYLIST_TYPE                         = 'playlist_type';
     public const PLAY_TYPE                             = 'play_type';

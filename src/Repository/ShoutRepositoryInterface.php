@@ -21,23 +21,28 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Shoutbox;
+use Traversable;
+
 interface ShoutRepositoryInterface
 {
     /**
-     * @return int[]
+     * Returns all shout-box items for the provided object-type and -id
+     *
+     * @return Traversable<Shoutbox>
      */
     public function getBy(
-        string $object_type,
-        int $object_id
-    ): array;
+        string $objectType,
+        int $objectId
+    ): Traversable;
 
     /**
-     * Cleans out orphaned shoutbox items
+     * Cleans out orphaned shout-box items
      */
-    public function collectGarbage(?string $object_type = null, ?int $object_id = null): void;
+    public function collectGarbage(?string $objectType = null, ?int $objectId = null): void;
 
     /**
-     * this function deletes the shoutbox entry
+     * this function deletes the shout-box entry
      */
-    public function delete(int $shoutboxId): void;
+    public function delete(int $shoutBoxId): void;
 }
