@@ -15556,11 +15556,6 @@ parameters:
 			path: src/Module/Util/AmpacheRss.php
 
 		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:podcast\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:\\$data has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/AmpacheRss.php
@@ -15576,118 +15571,13 @@ parameters:
 			path: src/Module/Util/AmpacheRss.php
 
 		-
-			message: "#^Access to an undefined property \\$this\\(Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\)\\:\\:\\$created\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\)\\:\\:\\$expires\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\)\\:\\:\\$failures\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\)\\:\\:\\$maxpasses\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\)\\:\\:\\$passed\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\)\\:\\:\\$tries\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$ajax_tries\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$created\\$\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$created\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$expires\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$failures\\.$#"
-			count: 4
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$grant\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$id\\.$#"
-			count: 6
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$image\\.$#"
-			count: 5
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$maxpasses\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$passed\\.$#"
-			count: 3
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$prev\\.$#"
 			count: 2
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$saved\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$sent\\.$#"
-			count: 4
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$shortcut\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$text\\.$#"
-			count: 4
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$tries\\.$#"
-			count: 4
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Binary operation \"\\+\" between string and float\\|int\\<1, max\\> results in an error\\.$#"
-			count: 1
 			path: src/Module/Util/Captcha/easy_captcha.php
 
 		-
@@ -15777,6 +15667,76 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$stream of function fread expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$ajax_tries has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$created has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$expires has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$failures has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$grant has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$id has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$image has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$maxpasses has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$passed has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$saved has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$sent has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$shortcut has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$text has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$tries has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha.php
 
@@ -15911,43 +15871,8 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_fuzzy.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$bg\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$height\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$img\\.$#"
 			count: 4
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$inverse\\.$#"
-			count: 3
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$maxsize\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$quality\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$solution\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$width\\.$#"
-			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic.php
 
 		-
@@ -16011,23 +15936,43 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_disturbed\\:\\:\\$height\\.$#"
-			count: 9
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$bg has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_graphic.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$height has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_graphic.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$inverse has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_graphic.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$maxsize has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_graphic.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$quality has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_graphic.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$solution has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_graphic.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$width has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_graphic.php
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_disturbed\\:\\:\\$img\\.$#"
 			count: 6
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_disturbed\\:\\:\\$solution\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_disturbed\\:\\:\\$width\\.$#"
-			count: 8
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
 
 		-
@@ -16086,33 +16031,8 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:\\$bg\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:\\$height\\.$#"
-			count: 5
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:\\$img\\.$#"
 			count: 8
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:\\$inverse\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:\\$solution\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:\\$width\\.$#"
-			count: 5
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
@@ -16334,21 +16254,6 @@ parameters:
 			message: "#^Variable \\$calc might not be defined\\.$#"
 			count: 2
 			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$ajax_tries\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$image\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$text\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
 
 		-
 			message: "#^Constant CAPTCHA_BASE_URL not found\\.$#"
@@ -26742,6 +26647,11 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$base_playlist has no type specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Tmp_Playlist.php
+
+		-
+			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$created has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
 
