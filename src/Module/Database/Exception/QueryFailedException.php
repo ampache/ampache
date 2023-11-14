@@ -29,5 +29,4 @@ namespace Ampache\Module\Database\Exception;
  */
 final class QueryFailedException extends DatabaseException
 {
-
 }
