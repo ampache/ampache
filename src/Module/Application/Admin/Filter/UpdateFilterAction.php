@@ -61,8 +61,8 @@ final class UpdateFilterAction extends AbstractFilterAction
 
         $this->ui->showHeader();
 
-        $filter_id   = filter_input(INPUT_POST, 'filter_id', FILTER_SANITIZE_NUMBER_INT);
-        $filter_name = ($filter_id == 0)
+        $filter_id   = (int) filter_input(INPUT_POST, 'filter_id', FILTER_SANITIZE_NUMBER_INT);
+        $filter_name = ($filter_id === 0)
             ? 'DEFAULT'
             : (string) scrub_in(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
 

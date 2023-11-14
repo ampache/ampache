@@ -52,18 +52,12 @@ final class ShowCatalogTypesAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        $catalog_types = Catalog::get_catalog_types();
-
         $this->ui->showBoxTop(T_('Catalog Types'), 'box box_catalog_types');
-
         $this->ui->show(
             'show_catalog_types.inc.php',
-            ['catalog_types' => $catalog_types]
+            ['catalog_types' => Catalog::CATALOG_TYPES]
         );
-
         $this->ui->showBoxBottom();
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

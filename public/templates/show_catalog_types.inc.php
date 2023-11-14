@@ -23,7 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 
-/** @var array $catalog_types */
+/** @var array<string, class-string> $catalog_types */
 
 $web_path = (string)AmpConfig::get('web_path', ''); ?>
 <!-- Plugin we've found -->

@@ -54,6 +54,7 @@ use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;
+use Generator;
 use PDOStatement;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -68,7 +69,10 @@ abstract class Catalog extends database_object
 {
     protected const DB_TABLENAME = 'catalog';
 
-    private const CATALOG_TYPES = [
+    /**
+     * @var array<string, class-string>
+     */
+    public const CATALOG_TYPES = [
         'beets' => Catalog_beets::class,
         'beetsremote' => Catalog_beetsremote::class,
         'dropbox' => Catalog_dropbox::class,
@@ -78,6 +82,30 @@ abstract class Catalog extends database_object
         'subsonic' => Catalog_subsonic::class,
     ];
 
+    /**
+     * @var array{
+     *  album: int,
+     *  album_disk: int,
+     *  album_group: int,
+     *  artist: int,
+     *  catalog: int,
+     *  items: int,
+     *  label: int,
+     *  license: int,
+     *  live_stream: int,
+     *  playlist: int,
+     *  podcast: int,
+     *  podcast_episode: int,
+     *  search: int,
+     *  share: int,
+     *  size: int,
+     *  song: int,
+     *  tag: int,
+     *  time: int,
+     *  user: int,
+     *  video: int
+     * }
+     */
     private const SERVER_COUNTS = [
         'album' => 0,
         'album_disk' => 0,
@@ -324,17 +352,14 @@ abstract class Catalog extends database_object
     /**
      * uninstall
      * This removes the remote catalog
-     * @return bool
      */
-    public function uninstall()
+    public function uninstall(): void
     {
         $sql = "DELETE FROM `catalog` WHERE `catalog_type` = ?";
         Dba::query($sql, array($this->get_type()));
 
         $sql = "DROP TABLE `catalog_" . $this->get_type() . "`";
         Dba::query($sql);
-
-        return true;
     } // uninstall
 
     /**
@@ -400,12 +425,12 @@ abstract class Catalog extends database_object
      * Show dropdown catalog types.
      * @param string $divback
      */
-    public static function show_catalog_types($divback = 'catalog_type_fields')
+    public static function show_catalog_types($divback = 'catalog_type_fields'): void
     {
         echo '<script>' . "var type_fields = new Array();type_fields['none'] = '';";
         $seltypes = '<option value="none">[' . T_("Select") . ']</option>';
-        $types    = self::get_catalog_types();
-        foreach ($types as $type) {
+
+        foreach (Catalog::CATALOG_TYPES as $type) {
             $catalog = self::create_catalog_type($type);
             if ($catalog->is_installed()) {
                 $seltypes .= '<option value="' . $type . '">' . $type . '</option>';
@@ -437,40 +462,29 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * get_catalog_types
-     * This returns the catalog types that are available
-     * @return string[]
-     */
-    public static function get_catalog_types()
-    {
-        return array_keys(self::CATALOG_TYPES);
-    }
-
-    /**
      * get_catalog_filters
-     * This returns the filters, sorting by name or by id as indicated by $sort
-     * $sort = field to sort on (id or name)
-     * @return array
+     * This returns the filters, sorting by name
+     *
+     * @return Generator<array{id: int, name: string}>
      */
-    public static function get_catalog_filters($sort = 'name')
+    public static function get_catalog_filters(): Generator
     {
-        $results = array();
         // Now fetch the rest;
-        $sql        = "SELECT `id`, `name` FROM `catalog_filter_group` ORDER BY `$sort` ";
+        $sql        = "SELECT `id`, `name` FROM `catalog_filter_group` ORDER BY `name` ";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row;
+            yield [
+                'id' => (int) $row['id'],
+                'name' => $row['name'],
+            ];
         }
-
-        return $results;
     }
 
     /**
      * get_name
      * Returns the name of the catalog matching the given ID
-     * @return string
      */
-    public static function getName($catalog_id = 0)
+    public static function getName(int $catalog_id): string
     {
         $sql        = "SELECT `name` FROM `catalog` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($catalog_id));
@@ -523,51 +537,34 @@ abstract class Catalog extends database_object
     /**
      * filter_user_count
      * Returns the number of users assigned to a particular filter.
-     * @return int
      */
-    public static function filter_user_count($filter_id)
+    public static function filter_user_count(int $filter_id): int
     {
         $sql        = "SELECT COUNT(1) AS `count` FROM `user` WHERE `catalog_filter_group` = ?";
         $db_results = Dba::read($sql, array($filter_id));
         $row        = Dba::fetch_assoc($db_results);
 
-        return $row['count'];
+        return (int) $row['count'];
     }
 
     /**
      * filter_catalog_count
      * This returns the number of catalogs assigned to a filter.
-     * @return string
      */
-    public static function filter_catalog_count($filter_id)
+    public static function filter_catalog_count(int $filter_id): int
     {
         $sql        = "SELECT COUNT(1) AS `count` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `enabled` = 1";
         $db_results = Dba::read($sql, array($filter_id));
         $row        = Dba::fetch_assoc($db_results);
 
-        return $row['count'];
-    }
-
-    /**
-     * filter_count
-     * This returns the number of filters.
-     * @return int
-     */
-    public static function filter_count()
-    {
-        $sql        = "SELECT COUNT(1) AS `count` FROM `catalog_filter_group`";
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_assoc($db_results);
-
-        return (int)($row['count'] ?? 0);
+        return (int) $row['count'];
     }
 
     /**
      * filter_name_exists
      * can specifiy an ID to ignore in this check, useful for filter names.
-     * @return bool
      */
-    public static function filter_name_exists($filter_name, $exclude_id = 0)
+    public static function filter_name_exists(string $filter_name, int $exclude_id = 0): bool
     {
         $params = array($filter_name);
         $sql    = "SELECT `id` FROM `catalog_filter_group` WHERE `name` = ?";
@@ -587,44 +584,20 @@ abstract class Catalog extends database_object
     /**
      * check_filter_catalog_enabled
      * Returns the `enabled` status of the filter/catalog combination
-     * @return bool
      */
-    public static function check_filter_catalog_enabled($filter_id, $catalog_id)
+    public static function check_filter_catalog_enabled(int $filter_id, int $catalog_id): bool
     {
         $sql        = "SELECT `enabled` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ? AND `enabled` = 1;";
         $db_results = Dba::read($sql, array($filter_id, $catalog_id));
-        if (Dba::num_rows($db_results)) {
-            return true;
-        }
 
-        return false;
-    }
-
-    /**
-     * check_filter_access
-     * Check that a user can access the requested catalog
-     * @return bool
-     */
-    public static function check_filter_access($catalog_id, $user_id)
-    {
-        if (AmpConfig::get('catalog_filter')) {
-            $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `catalog_id` = ? AND `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1";
-            $db_results = Dba::read($sql, array($catalog_id, $user_id));
-            if (Dba::num_rows($db_results)) {
-                return true;
-            }
-
-            return false;
-        }
-
-        return true;
+        return Dba::num_rows($db_results) > 0;
     }
 
     /**
      * add_catalog_filter_group_map
      * Adds appropriate rows when a catalog is added.
      */
-    public static function add_catalog_filter_group_map($catalog_id)
+    public static function add_catalog_filter_group_map(int $catalog_id): void
     {
         $results    = array();
         $sql        = "SELECT `id` FROM `catalog_filter_group` ORDER BY `id`";
@@ -636,21 +609,26 @@ abstract class Catalog extends database_object
         foreach ($results as $filter_id) {
             $enabled = ($filter_id == 0) ? 1 : 0; // always enable for the DEFAULT group
             $sql     = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (?, ?, ?);";
-            $params  = array((int)$filter_id, (int)$catalog_id, $enabled);
+            $params  = array((int)$filter_id, $catalog_id, $enabled);
             Dba::write($sql, $params);
         }
     }
 
     /**
      * add_catalog_filter_group
-     * @return PDOStatement|bool
+     *
+     * @param array<string, int> $catalogs
+     *
+     * @return PDOStatement|false
      */
-    public static function add_catalog_filter_group($filter_name, $catalogs)
+    public static function add_catalog_filter_group(string $filter_name, array $catalogs)
     {
         // Create the filter
-        $params = array($filter_name);
-        $sql    = "INSERT INTO `catalog_filter_group` (`name`) VALUES ('$filter_name')";
-        Dba::write($sql, $params);
+        Dba::write(
+            'INSERT INTO `catalog_filter_group` (`name`) VALUES (?)',
+            [$filter_name]
+        );
+
         $filter_id = Dba::insert_id();
 
         // Fill in catalog_filter_group_map table for the new filter
@@ -675,9 +653,10 @@ abstract class Catalog extends database_object
 
     /**
      * edit_catalog_filter
-     * @return bool
+     *
+     * @param array<int, int> $catalogs
      */
-    public static function edit_catalog_filter($filter_id, $filter_name, $catalogs)
+    public static function edit_catalog_filter(int $filter_id, string $filter_name, array $catalogs): bool
     {
         // Modify the filter name
         $results = array();
@@ -709,9 +688,9 @@ abstract class Catalog extends database_object
 
     /**
      * delete_catalog_filter
-     * @return PDOStatement|bool
+     * @return PDOStatement|false
      */
-    public static function delete_catalog_filter($filter_id)
+    public static function delete_catalog_filter(int $filter_id)
     {
         if ($filter_id > 0) {
             $params = array($filter_id);
@@ -730,7 +709,7 @@ abstract class Catalog extends database_object
      * reset_user_filter
      * reset a users's catalog filter to DEFAULT after deleting a filter group
      */
-    public static function reset_user_filter($filter_id)
+    public static function reset_user_filter(int $filter_id): void
     {
         $sql = "UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` = ?";
         Dba::write($sql, array($filter_id));
@@ -738,10 +717,8 @@ abstract class Catalog extends database_object
 
     /**
      * Check if a file is an audio.
-     * @param string $file
-     * @return bool
      */
-    public static function is_audio_file($file)
+    public static function is_audio_file(string $file): bool
     {
         $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
         $ignore_check   = !($ignore_pattern) || preg_match("/(" . $ignore_pattern . ")/i", $file) === 0;
@@ -753,10 +730,8 @@ abstract class Catalog extends database_object
 
     /**
      * Check if a file is a video.
-     * @param string $file
-     * @return bool
      */
-    public static function is_video_file($file)
+    public static function is_video_file(string $file): bool
     {
         $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
         $ignore_check   = !($ignore_pattern) || preg_match("/(" . $ignore_pattern . ")/i", $file) === 0;
@@ -767,10 +742,8 @@ abstract class Catalog extends database_object
 
     /**
      * Check if a file is a playlist.
-     * @param string $file
-     * @return bool
      */
-    public static function is_playlist_file($file)
+    public static function is_playlist_file(string $file): bool
     {
         $ignore_pattern   = AmpConfig::get('catalog_ignore_pattern');
         $ignore_check     = !($ignore_pattern) || preg_match("/(" . $ignore_pattern . ")/i", $file) === 0;

@@ -56,7 +56,7 @@ class easy_captcha
     {
 
         #-- load
-        if (($this->id = $captcha_id) || ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[CAPTCHA_PARAM_ID]??'' ))) {
+        if (($this->id = $captcha_id) || ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[CAPTCHA_PARAM_ID] ?? ''))) {
             $this->load();
         }
 
