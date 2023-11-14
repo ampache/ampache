@@ -562,11 +562,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Catalog::update_map((int)$catalog, 'song', $song_id);
         if ((int)$artist_id > 0) {
             Artist::add_artist_map($artist_id, 'song', $song_id);
-            Album::add_album_map($album_id, 'song', $artist_id);
+            Album::add_album_map($album_id, 'song', (int) $artist_id);
         }
         if ((int)$albumartist_id > 0) {
             Artist::add_artist_map($albumartist_id, 'album', $album_id);
-            Album::add_album_map($album_id, 'album', $albumartist_id);
+            Album::add_album_map($album_id, 'album', (int) $albumartist_id);
         }
         foreach ($artist_mbid_array as $songArtist_mbid) {
             $song_artist_id = Artist::check_mbid($songArtist_mbid);
@@ -706,7 +706,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
             parent::add_to_cache('song', $row['id'], $row);
             $artists[$row['artist']] = $row['artist'];
-            $albums[$row['album']]   = $row['album'];
+
+            $albums[] = (int) $row['album'];
+
             if ($row['tag_id']) {
                 $tags[$row['tag_id']] = $row['tag_id'];
             }
@@ -1744,9 +1746,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * This takes the current song object
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
+     *
      * @param bool $details
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         if ($details) {
             $this->fill_ext_info();

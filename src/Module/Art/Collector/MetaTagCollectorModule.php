@@ -83,7 +83,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         Art $art,
         int $limit = 5,
         array $data = []
-    ):array {
+    ): array {
         if (!$limit) {
             $limit = 5;
         }

@@ -65,7 +65,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if (!$object || !$object->id) {
+        if (!$object || !$object->getId()) {
             AmpError::add('general', T_('Invalid object selected'));
             echo AmpError::display('general');
 

@@ -123,18 +123,16 @@ class Live_Stream extends database_object implements Media, library_item
      * format
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
+     *
      * @param bool $details
-     * @return true
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         unset($details);
         $this->get_f_link();
         $this->f_name_link     = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->get_fullname() . "</a>";
         $this->f_url_link      = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
         $this->f_site_url_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->site_url . "</a>";
-
-        return true;
     } // format
 
     /**

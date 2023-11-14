@@ -142,11 +142,11 @@ class Clip extends Video
     /**
      * format
      * this function takes the object and formats some values
+     *
      * @param bool $details
-     * @return bool
      */
 
-    public function format($details = true)
+    public function format($details = true): void
     {
         parent::format($details);
 
@@ -163,8 +163,6 @@ class Clip extends Video
                 $this->f_song = $song->get_f_link();
             }
         }
-
-        return true;
     } // format
 
     /**
