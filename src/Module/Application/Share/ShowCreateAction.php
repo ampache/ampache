@@ -86,9 +86,9 @@ final class ShowCreateAction implements ApplicationActionInterface
                 $object_id = $object_id[0];
             }
 
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
+            $className = ObjectTypeToClassNameMapper::map($object_type);
             /** @var Song|Album|AlbumDisk|Playlist|Video $object */
-            $object = new $class_name($object_id);
+            $object = new $className($object_id);
             if ($object->id) {
                 $token     = $this->passwordGenerator->generate_token();
                 $isZipable = $this->zipHandler->isZipable($object_type);

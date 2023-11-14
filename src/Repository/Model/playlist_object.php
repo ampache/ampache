@@ -310,9 +310,9 @@ abstract class playlist_object extends database_object implements library_item
             }
             if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
                 if (!Art::has_db($media['object_id'], $media['object_type'])) {
-                    $class_name = ObjectTypeToClassNameMapper::map($media['object_type']);
-                    $libitem    = new $class_name($media['object_id']);
-                    $parent     = $libitem->get_parent();
+                    $className = ObjectTypeToClassNameMapper::map($media['object_type']);
+                    $libitem   = new $className($media['object_id']);
+                    $parent    = $libitem->get_parent();
                     if ($parent !== null) {
                         $media = $parent;
                     }

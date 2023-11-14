@@ -107,8 +107,8 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
                     $item_ids = explode(',', $item_id);
                     foreach ($item_ids as $iid) {
-                        $class_name = ObjectTypeToClassNameMapper::map($item_type);
-                        $libitem    = new $class_name($iid);
+                        $className = ObjectTypeToClassNameMapper::map($item_type);
+                        $libitem   = new $className($iid);
                         if ($libitem->id) {
                             $medias = array_merge($medias, $libitem->get_medias());
                         }

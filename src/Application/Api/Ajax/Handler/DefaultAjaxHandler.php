@@ -85,9 +85,9 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         $object_id = array($object_id);
                     }
                     foreach ($object_id as $item) {
-                        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                        $object     = new $class_name($item);
-                        $medias     = $object->get_medias();
+                        $className = ObjectTypeToClassNameMapper::map($object_type);
+                        $object    = new $className($item);
+                        $medias    = $object->get_medias();
                         Core::get_global('user')->playlist->add_medias($medias);
                     }
                 } else {
@@ -133,11 +133,11 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                             break;
                         case 'artist_random':
                         case 'tag_random':
-                            $data       = explode('_', $request_type);
-                            $type       = $data['0'];
-                            $class_name = ObjectTypeToClassNameMapper::map($type);
-                            $object     = new $class_name($request_id);
-                            $songs      = $this->songRepository->getRandomByArtist($object);
+                            $data      = explode('_', $request_type);
+                            $type      = $data['0'];
+                            $className = ObjectTypeToClassNameMapper::map($type);
+                            $object    = new $className($request_id);
+                            $songs     = $this->songRepository->getRandomByArtist($object);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }

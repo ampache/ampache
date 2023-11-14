@@ -148,10 +148,10 @@ if ($current_list) {
                     <tr>
                         <td>
         <?php foreach ($object_ids as $object_data) {
-            $type       = array_shift($object_data);
-            $class_name = ObjectTypeToClassNameMapper::map($type);
+            $type      = array_shift($object_data);
+            $className = ObjectTypeToClassNameMapper::map($type);
             /** @var Ampache\Repository\Model\playable_item $object */
-            $object = new $class_name(array_shift($object_data));
+            $object = new $className(array_shift($object_data));
             echo $object->get_f_link(); ?>
             <br />
             <?php

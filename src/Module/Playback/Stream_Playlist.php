@@ -203,10 +203,10 @@ class Stream_Playlist
         if (!array_key_exists('object_type', $media) || !array_key_exists('object_id', $media)) {
             return null;
         }
-        $type       = $media['object_type'];
-        $object_id  = $media['object_id'];
-        $class_name = ObjectTypeToClassNameMapper::map($type);
-        $object     = new $class_name($object_id);
+        $type      = $media['object_type'];
+        $object_id = $media['object_id'];
+        $className = ObjectTypeToClassNameMapper::map($type);
+        $object    = new $className($object_id);
         $object->format();
 
         if (array_key_exists('client', $media)) {
@@ -253,8 +253,8 @@ class Stream_Playlist
         if (!$user) {
             $user = Core::get_global('user');
         }
-        $class_name  = get_class($object);
-        $type        = ObjectTypeToClassNameMapper::reverseMap($class_name);
+        $className   = get_class($object);
+        $type        = ObjectTypeToClassNameMapper::reverseMap($className);
         $url['type'] = $type;
 
         // Don't add disabled media objects to the stream playlist

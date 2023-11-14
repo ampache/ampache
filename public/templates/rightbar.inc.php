@@ -129,9 +129,9 @@ foreach ($objects as $object_data) {
     $uid  = $object_data['track_id'];
     $type = array_shift($object_data);
     if (in_array($type, $normal_array)) {
-        $class_name = ObjectTypeToClassNameMapper::map($type);
+        $className = ObjectTypeToClassNameMapper::map($type);
         /** @var Ampache\Repository\Model\playable_item $object */
-        $object = new $class_name(array_shift($object_data)); ?>
+        $object = new $className(array_shift($object_data)); ?>
     <li>
       <?php echo $object->get_f_link();
         echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>

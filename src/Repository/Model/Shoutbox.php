@@ -155,8 +155,8 @@ class Shoutbox
             return null;
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($type);
-        $object     = new $class_name($object_id);
+        $className = ObjectTypeToClassNameMapper::map($type);
+        $object    = new $className($object_id);
 
         if ($object->id > 0) {
             if (strtolower((string)$type) === 'song') {
@@ -213,9 +213,9 @@ class Shoutbox
 
         // Never send email in case of user impersonation
         if (!isset($data['user']) && $insert_id !== null) {
-            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
-            /** @var class-string<library_item> $class_name */
-            $libitem       = new $class_name($data['object_id']);
+            $className = ObjectTypeToClassNameMapper::map($data['object_type']);
+            /** @var class-string<library_item> $className */
+            $libitem       = new $className($data['object_id']);
             $item_owner_id = $libitem->get_user_owner();
             if ($item_owner_id) {
                 if (Preference::get_by_user($item_owner_id, 'notify_email')) {

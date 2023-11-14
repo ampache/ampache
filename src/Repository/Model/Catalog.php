@@ -2008,8 +2008,8 @@ abstract class Catalog extends database_object
         if ($type == 'video') {
             $libitem = Video::create_from_id($object_id);
         } else {
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            $libitem    = new $class_name($object_id);
+            $className = ObjectTypeToClassNameMapper::map($type);
+            $libitem   = new $className($object_id);
         }
         $inserted = false;
         $options  = array();

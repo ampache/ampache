@@ -92,8 +92,8 @@ class WebDavDirectory extends DAV\Collection
      */
     public static function getChildFromArray($array)
     {
-        $class_name = ObjectTypeToClassNameMapper::map($array['object_type']);
-        $libitem    = new $class_name($array['object_id']);
+        $className = ObjectTypeToClassNameMapper::map($array['object_type']);
+        $libitem   = new $className($array['object_id']);
         if (!$libitem->id) {
             throw new DAV\Exception\NotFound('The library item `' . $array['object_type'] . '` with id `' . $array['object_id'] . '` could not be found');
         }

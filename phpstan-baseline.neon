@@ -4321,11 +4321,6 @@ parameters:
 			path: src/Module/Api/Method/CatalogFolderMethod.php
 
 		-
-			message: "#^Variable \\$class_name in PHPDoc tag @var does not match assigned variable \\$media\\.$#"
-			count: 1
-			path: src/Module/Api/Method/CatalogFolderMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\CatalogMethod\\:\\:catalog\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/CatalogMethod.php
@@ -11087,11 +11082,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of method Ampache\\\\Module\\\\Catalog\\\\Update\\\\AbstractCatalogUpdater\\:\\:cleanBuffer\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateSingleCatalogFolder.php
-
-		-
-			message: "#^Variable \\$class_name in PHPDoc tag @var does not match assigned variable \\$media\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateSingleCatalogFolder.php
 
@@ -18581,7 +18571,7 @@ parameters:
 			path: src/Module/WebDav/WebDavFile.php
 
 		-
-			message: "#^Parameter \\#1 \\$class_name of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects string, class\\-string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects string, class\\-string\\|false given\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavFile.php
 

@@ -59,9 +59,9 @@ final class PlayItemAction extends AbstractStreamAction
         $mediaIds   = [];
         if (InterfaceImplementationChecker::is_playable_item($objectType)) {
             foreach ($objectIds as $object_id) {
-                $class_name = ObjectTypeToClassNameMapper::map($objectType);
-                $item       = new $class_name($object_id);
-                $mediaIds   = array_merge($mediaIds, $item->get_medias());
+                $className = ObjectTypeToClassNameMapper::map($objectType);
+                $item      = new $className($object_id);
+                $mediaIds  = array_merge($mediaIds, $item->get_medias());
 
                 if (array_key_exists('custom_play_action', $_REQUEST)) {
                     foreach ($mediaIds as $mediaId) {

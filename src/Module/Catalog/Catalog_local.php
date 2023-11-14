@@ -664,15 +664,15 @@ class Catalog_local extends Catalog
                 break;
         }
         $db_results = Dba::read($sql);
-        $class_name = ObjectTypeToClassNameMapper::map($tableName);
+        $className  = ObjectTypeToClassNameMapper::map($tableName);
 
         if (AmpConfig::get('memory_cache') && $tableName !== 'podcast_episode') {
             $media_ids = array();
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
-            /** @var Song|Album|Video $class_name */
-            $class_name::build_cache($media_ids);
+            /** @var Song|Album|Video $className */
+            $className::build_cache($media_ids);
             $db_results = Dba::read($sql);
         }
         $verify_by_time = AmpConfig::get('catalog_verify_by_time', false) && $tableName !== 'podcast_episode';

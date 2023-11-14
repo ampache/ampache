@@ -1421,7 +1421,7 @@ class Xml_Data
 
         $medias = $libitem->get_medias();
         foreach ($medias as $media_info) {
-            $className  = ObjectTypeToClassNameMapper::map($media_info['object_type']);
+            $className = ObjectTypeToClassNameMapper::map($media_info['object_type']);
             /** @var Song|Podcast_Episode $media */
             $media      = new $className($media_info['object_id']);
             $media->format();

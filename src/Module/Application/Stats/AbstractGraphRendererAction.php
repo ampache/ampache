@@ -48,9 +48,9 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
         $libitem  = null;
         $owner_id = 0;
         if (($object_id) && (InterfaceImplementationChecker::is_library_item($object_type))) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
+            $className = ObjectTypeToClassNameMapper::map($object_type);
             /** @var library_item $libitem */
-            $libitem  = new $class_name($object_id);
+            $libitem  = new $className($object_id);
             $owner_id = $libitem->get_user_owner();
         }
 

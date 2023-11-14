@@ -211,8 +211,8 @@ class Browse extends Query
         $browse        = $this;
 
         foreach ($extra_objects as $type => $id) {
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            ${$type}    = new $class_name($id);
+            $className = ObjectTypeToClassNameMapper::map($type);
+            ${$type}   = new $className($id);
         }
 
         $match = '';

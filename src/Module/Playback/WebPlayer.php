@@ -131,9 +131,9 @@ class WebPlayer
     public static function get_media_object($urlinfo)
     {
         if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
-            $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
+            $className = ObjectTypeToClassNameMapper::map($urlinfo['type']);
 
-            return new $class_name($urlinfo['id']);
+            return new $className($urlinfo['id']);
         }
         if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
             return new Song_Preview($urlinfo['id']);

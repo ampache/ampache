@@ -85,7 +85,7 @@ $t_logout          = T_('Log out'); ?>
     if (!array_key_exists('state', $_SESSION) || !array_key_exists('sidebar_tab', $_SESSION['state'])) {
         $_SESSION['state']['sidebar_tab'] = 'home';
     }
-    $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
+    $className = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 
     // List of buttons ( id, title, icon, access level)
     $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
@@ -98,7 +98,7 @@ $t_logout          = T_('Log out'); ?>
     $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75); ?>
     <?php foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
-            $active    = ('sidebar_' . $item['id'] == $class_name) ? ' active' : '';
+            $active    = ('sidebar_' . $item['id'] == $className) ? ' active' : '';
             $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'"; ?>
         <li <?php print_r($li_params); ?>>
     <?php print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));

@@ -91,7 +91,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     break;
             }
             foreach ($file_ids as $file_id) {
-                /** @var Song|Podcast_Episode|Video $class_name */
+                /** @var Song|Podcast_Episode|Video $className */
                 $media     = new $className($file_id);
                 $file_path = $media->file;
                 $file_test = is_file($file_path);

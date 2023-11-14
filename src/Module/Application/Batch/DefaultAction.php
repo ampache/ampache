@@ -116,9 +116,9 @@ final class DefaultAction implements ApplicationActionInterface
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
 
-                $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                /** @var class-string<library_item> $class_name */
-                $libitem = new $class_name($item);
+                $className = ObjectTypeToClassNameMapper::map($object_type);
+                /** @var class-string<library_item> $className */
+                $libitem = new $className($item);
                 if ($libitem->id) {
                     $libitem->format();
                     $name      = $libitem->get_fullname();
@@ -201,9 +201,9 @@ final class DefaultAction implements ApplicationActionInterface
                     $type    = array_shift($element);
                     $mediaid = array_shift($element);
                 }
-                $class_name = ObjectTypeToClassNameMapper::map($type);
-                /** @var class-string<library_item> $class_name */
-                $media = new $class_name($mediaid);
+                $className = ObjectTypeToClassNameMapper::map($type);
+                /** @var class-string<library_item> $className */
+                $media = new $className($mediaid);
             } else {
                 $media = $this->modelFactory->createSong((int) $element);
             }
@@ -212,9 +212,9 @@ final class DefaultAction implements ApplicationActionInterface
                 $dirname    = '';
                 $parent     = $media->get_parent();
                 if ($parent != null) {
-                    $class_name = ObjectTypeToClassNameMapper::map($parent['object_type']);
-                    /** @var class-string<library_item> $class_name */
-                    $pobj = new $class_name($parent['object_id']);
+                    $className = ObjectTypeToClassNameMapper::map($parent['object_type']);
+                    /** @var class-string<library_item> $className */
+                    $pobj = new $className($parent['object_id']);
                     $pobj->format();
                     $dirname = $pobj->get_fullname();
                 }

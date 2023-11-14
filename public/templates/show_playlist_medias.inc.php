@@ -73,9 +73,9 @@ $count     = 1; ?>
                 }
                 $object_type = $object['object_type'];
                 if (InterfaceImplementationChecker::is_library_item($object_type)) {
-                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                    $className = ObjectTypeToClassNameMapper::map($object_type);
                     /** @var Ampache\Repository\Model\playable_item $libitem */
-                    $libitem = new $class_name($object['object_id']);
+                    $libitem = new $className($object['object_id']);
                     $libitem->format();
                     $playlist_track = (int)($object['track'] ?? $count); ?>
                     <tr id="track_<?php echo($object['track_id'] ?? $count); ?>">

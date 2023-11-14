@@ -41,8 +41,8 @@ abstract class AbstractArtAction implements ApplicationActionInterface
             return null;
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $item       = new $class_name($object_id);
+        $className = ObjectTypeToClassNameMapper::map($object_type);
+        $item      = new $className($object_id);
 
         // If not a content manager user then kick em out
         if (

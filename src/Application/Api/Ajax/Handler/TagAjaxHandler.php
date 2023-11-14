@@ -158,9 +158,9 @@ final class TagAjaxHandler implements AjaxHandlerInterface
         }
 
         if (InterfaceImplementationChecker::is_library_item($object_type)) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            /** @var class-string<library_item> $class_name */
-            $libitem  = new $class_name($object_id);
+            $className = ObjectTypeToClassNameMapper::map($object_type);
+            /** @var class-string<library_item> $className */
+            $libitem  = new $className($object_id);
             $owner_id = $libitem->get_user_owner();
 
             return ($owner_id !== null && $owner_id == $uid);

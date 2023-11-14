@@ -373,9 +373,9 @@ class Democratic extends Tmp_Playlist
             return false;
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $media      = new $class_name($object_id);
-        $track      = isset($media->track) ? (int)($media->track) : null;
+        $className = ObjectTypeToClassNameMapper::map($object_type);
+        $media     = new $className($object_id);
+        $track     = isset($media->track) ? (int)($media->track) : null;
 
         /* If it's on the playlist just vote */
         $sql        = "SELECT `id` FROM `tmp_playlist_data` WHERE `tmp_playlist_data`.`object_id` = ? AND `tmp_playlist_data`.`tmp_playlist` = ?";

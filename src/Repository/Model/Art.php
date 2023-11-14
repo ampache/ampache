@@ -381,9 +381,9 @@ class Art extends database_object
         $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
 
         if (AmpConfig::get('write_tags', false)) {
-            $class_name = ObjectTypeToClassNameMapper::map($this->type);
-            $object     = new $class_name($this->uid);
-            $songs      = array();
+            $className = ObjectTypeToClassNameMapper::map($this->type);
+            $object    = new $className($this->uid);
+            $songs     = array();
             debug_event(__CLASS__, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
             if ($this->type === 'album') {
                 /** Use special treatment for albums */
@@ -1478,9 +1478,9 @@ class Art extends database_object
         }
 
         if ($prettyPhoto) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            /** @var class-string<library_item> $class_name */
-            $libitem = new $class_name($object_id);
+            $className = ObjectTypeToClassNameMapper::map($object_type);
+            /** @var class-string<library_item> $className */
+            $libitem = new $className($object_id);
             echo "<div class=\"item_art_actions\">";
             if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(50)) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";

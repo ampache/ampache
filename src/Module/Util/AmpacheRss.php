@@ -88,9 +88,9 @@ class AmpacheRss
                 $object_type = $params['object_type'];
                 $object_id   = $params['object_id'];
                 if (InterfaceImplementationChecker::is_library_item($object_type)) {
-                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                    $className = ObjectTypeToClassNameMapper::map($object_type);
                     /** @var Album|Artist|Podcast $libitem */
-                    $libitem = new $class_name($object_id);
+                    $libitem = new $className($object_id);
                     if ($libitem->id) {
                         $libitem->format();
 

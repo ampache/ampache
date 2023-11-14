@@ -130,7 +130,7 @@ final class CatalogFolderMethod
                 }
             }
             foreach ($file_ids as $file_id) {
-                /** @var Song|Podcast_Episode|Video $class_name */
+                /** @var Song|Podcast_Episode|Video $className */
                 $media = new $className($file_id);
                 foreach ($task as $item) {
                     if (defined('SSE_OUTPUT')) {

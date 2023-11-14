@@ -106,9 +106,9 @@ final class CreateAction implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             $object_type = $_REQUEST['type'] ?? '';
-            $class_name  = ObjectTypeToClassNameMapper::map($object_type);
+            $className   = ObjectTypeToClassNameMapper::map($object_type);
             /** @var Song|Album|AlbumDisk|Playlist|Video $object */
-            $object = new $class_name((int)$_REQUEST['id']);
+            $object = new $className((int)$_REQUEST['id']);
             if ($object->id) {
                 $object->format();
                 $message   = T_('Failed to create share');
