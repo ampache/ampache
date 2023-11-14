@@ -116,9 +116,9 @@ final class DefaultAction implements ApplicationActionInterface
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
 
-                /** @var class-string<library_item> $class_name */
                 $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                $libitem    = new $class_name($item);
+                /** @var class-string<library_item> $class_name */
+                $libitem = new $class_name($item);
                 if ($libitem->id) {
                     $libitem->format();
                     $name      = $libitem->get_fullname();
@@ -201,9 +201,9 @@ final class DefaultAction implements ApplicationActionInterface
                     $type    = array_shift($element);
                     $mediaid = array_shift($element);
                 }
-                /** @var class-string<library_item> $class_name */
                 $class_name = ObjectTypeToClassNameMapper::map($type);
-                $media      = new $class_name($mediaid);
+                /** @var class-string<library_item> $class_name */
+                $media = new $class_name($mediaid);
             } else {
                 $media = $this->modelFactory->createSong((int) $element);
             }
@@ -212,9 +212,9 @@ final class DefaultAction implements ApplicationActionInterface
                 $dirname    = '';
                 $parent     = $media->get_parent();
                 if ($parent != null) {
-                    /** @var class-string<library_item> $class_name */
                     $class_name = ObjectTypeToClassNameMapper::map($parent['object_type']);
-                    $pobj       = new $class_name($parent['object_id']);
+                    /** @var class-string<library_item> $class_name */
+                    $pobj = new $class_name($parent['object_id']);
                     $pobj->format();
                     $dirname = $pobj->get_fullname();
                 }

@@ -79,9 +79,9 @@ if ($browse->is_show_header()) {
         if (!is_array($item)) {
             $item = (array) $item;
         }
-        /** @var \Ampache\Repository\Model\Song $media */
         $class_name = ObjectTypeToClassNameMapper::map($item['object_type']);
-        $media      = new $class_name($item['object_id']);
+        /** @var \Ampache\Repository\Model\Song $media */
+        $media = new $class_name($item['object_id']);
         $media->format(); ?>
 <tr>
     <td class="cel_action">

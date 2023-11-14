@@ -92,9 +92,9 @@ final class EditObjectAction extends AbstractEditAction
             'edit_object: {' . $object_type . '} {' . $object_id . '}',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
+        $className = ObjectTypeToClassNameMapper::map($object_type);
         /** @var library_item $libitem */
-        $className  = ObjectTypeToClassNameMapper::map($object_type);
-        $libitem    = new $className($_POST['id']);
+        $libitem = new $className($_POST['id']);
         if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
             // TODO: improve this uniqueness check
             if (isset($_POST['user'])) {
@@ -125,18 +125,19 @@ final class EditObjectAction extends AbstractEditAction
                 $_POST['edit_labels'] = $this->clean_to_existing($_POST['edit_labels']);
             }
             // Check mbid and *_mbid match as it is used as identifier
-            if (isset($_POST['mbid'])) {
+            if (isset($_POST['mbid']) && isset($libitem->mbid)) {
                 $_POST['mbid'] = $libitem->mbid;
             }
-            if (isset($_POST['mbid_group'])) {
+            if (isset($_POST['mbid_group']) && isset($libitem->mbid_group)) {
                 $_POST['mbid_group'] = $libitem->mbid_group;
             }
         }
 
         $libitem->format();
-        $new_id     = $libitem->update($_POST);
-        $className  = ObjectTypeToClassNameMapper::map($object_type);
-        $libitem    = new $className($new_id);
+        $new_id    = $libitem->update($_POST);
+        $className = ObjectTypeToClassNameMapper::map($object_type);
+        /** @var library_item $libitem */
+        $libitem = new $className($new_id);
         $libitem->format();
 
         xoutput_headers();

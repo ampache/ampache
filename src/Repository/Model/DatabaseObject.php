@@ -118,8 +118,8 @@ abstract class DatabaseObject
     {
         foreach ($this->fieldClassRelations as $field => $repositoryName) {
             if (class_exists($repositoryName)) {
+                $class_name = ObjectTypeToClassNameMapper::map($repositoryName);
                 /** @var Repository $repository */
-                $class_name   = ObjectTypeToClassNameMapper::map($repositoryName);
                 $repository   = new $class_name();
                 $this->$field = $repository->findById($this->$field);
             }

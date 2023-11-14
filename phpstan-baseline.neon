@@ -1081,32 +1081,7 @@ parameters:
 			path: src/Module/Api/Edit/AbstractEditAction.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$mbid\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$mbid_group\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_user_owner\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:update\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/EditObjectAction.php
 
@@ -8849,16 +8824,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$object_type of method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/StatisticGraph/ShowAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/AbstractGraphRendererAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_user_owner\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/AbstractGraphRendererAction.php
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\PopularAlbumAction\\:\\:\\$videoRepository is never read, only written\\.$#"
@@ -23301,11 +23266,6 @@ parameters:
 			path: src/Repository/Model/Clip.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:findById\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:fromCamelCase\\(\\) has parameter \\$properties with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/DatabaseObject.php
@@ -25371,16 +25331,6 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:get_medias\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_songs\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:__construct\\(\\) has parameter \\$share_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Share.php
@@ -25513,11 +25463,6 @@ parameters:
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$user has no type specified\\.$#"
 			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Variable \\$object in PHPDoc tag @var does not match assigned variable \\$class_name\\.$#"
-			count: 2
 			path: src/Repository/Model/Share.php
 
 		-
