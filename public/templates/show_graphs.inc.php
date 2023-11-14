@@ -34,6 +34,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $zoom */
 /** @var array $gtypes */
 /** @var string $blink */
+/** @var string $type */
 
 $boxtitle = T_('Statistical Graphs');
 if ($blink) {
@@ -93,6 +94,7 @@ foreach ($date_formats as $dtype => $dname) {
     <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
     <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
     <input type="hidden" name="action" value="<?php echo filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+    <input type="hidden" name="type" value="<?php echo $type ?? ''; ?>" />
 </form>
 <script>
     $('#start_date').datetimepicker({
