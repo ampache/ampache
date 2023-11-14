@@ -24,6 +24,17 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\Ui;
 
+/** @var int $object_id */
+/** @var string $object_type */
+/** @var int $user_id */
+/** @var int $end_date */
+/** @var string $f_end_date */
+/** @var int $start_date */
+/** @var string $f_start_date */
+/** @var string $zoom */
+/** @var array $gtypes */
+/** @var string $blink */
+
 $boxtitle = T_('Statistical Graphs');
 if ($blink) {
     $boxtitle .= ' - ' . $blink;
@@ -82,7 +93,6 @@ foreach ($date_formats as $dtype => $dname) {
     <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
     <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
     <input type="hidden" name="action" value="<?php echo filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
-    <input type="hidden" name="type" value="<?php echo $type; ?>" />
 </form>
 <script>
     $('#start_date').datetimepicker({
