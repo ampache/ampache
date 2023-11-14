@@ -62,11 +62,16 @@ final class Ping4Method
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (array_key_exists('auth', $input) && Session::exists('api', $input['auth'])) {
-            Session::extend($input['auth']);
+            Session::extend($input['auth'], 'api');
+            // perpetual sessions do not expire
+            $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+            $session_expire = ($perpetual)
+                ? 0
+                : date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60);
             if (in_array($data_version, Api::API_VERSIONS)) {
-                Session::write($input['auth'], $data_version, (bool)AmpConfig::get('perpetual_api_session', false));
+                Session::write($input['auth'], $data_version, $perpetual);
             }
-            $results = array_merge(array('session_expire' => date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60)), $results);
+            $results = array_merge(array('session_expire' => $session_expire), $results);
             // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
             $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
             $db_results = Dba::read($sql);
@@ -74,10 +79,11 @@ final class Ping4Method
             // Now we need to quickly get the totals
             $user   = User::get_from_username(Session::username($input['auth']));
             $counts = Catalog::get_server_counts($user->id ?? 0);
+
             // now add it all together
             $countarray = array(
                 'api' => Api4::$version,
-                'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
+                'session_expire' => $session_expire,
                 'update' => date("c", (int)$row['update']),
                 'add' => date("c", (int)$row['add']),
                 'clean' => date("c", (int)$row['clean']),

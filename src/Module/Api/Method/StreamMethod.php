@@ -99,7 +99,7 @@ final class StreamMethod
             $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
-            Session::extend($input['auth']);
+            Session::extend($input['auth'], 'api');
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;

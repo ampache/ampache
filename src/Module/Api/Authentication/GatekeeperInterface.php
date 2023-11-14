@@ -30,7 +30,7 @@ interface GatekeeperInterface
 
     public function sessionExists(string $auth): bool;
 
-    public function extendSession(): void;
+    public function extendSession(string $auth): void;
 
     public function getUserName(): string;
 

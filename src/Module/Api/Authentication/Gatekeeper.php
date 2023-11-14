@@ -71,9 +71,9 @@ final class Gatekeeper implements GatekeeperInterface
         return Session::exists('api', $auth);
     }
 
-    public function extendSession(): void
+    public function extendSession(string $auth): void
     {
-        Session::extend($this->getAuth());
+        Session::extend($auth, 'api');
     }
 
     public function getUserName(): string

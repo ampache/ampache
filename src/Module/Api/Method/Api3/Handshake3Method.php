@@ -152,7 +152,7 @@ final class Handshake3Method
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);
                 } else {
-                    Session::extend($data['apikey']);
+                    Session::extend($data['apikey'], 'api');
                     $token = $data['apikey'];
                 }
 
@@ -165,11 +165,17 @@ final class Handshake3Method
                 $row        = Dba::fetch_assoc($db_results);
 
                 // Now we need to quickly get the totals
-                $counts  = Catalog::get_server_counts($user_id);
+                $counts = Catalog::get_server_counts($user_id);
+                // perpetual sessions do not expire
+                $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+                $session_expire = ($perpetual)
+                    ? 0
+                    : date("c", $now_time + AmpConfig::get('session_length') - 60);
+
                 $results = array(
                     'auth' => $token,
                     'api' => Api3::$version,
-                    'session_expire' => date("c", $now_time + AmpConfig::get('session_length') - 60),
+                    'session_expire' => $session_expire,
                     'update' => date("c", $row['update']),
                     'add' => date("c", $row['add']),
                     'clean' => date("c", $row['clean']),

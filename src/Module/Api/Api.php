@@ -389,11 +389,16 @@ class Api
             ? $counts['playlist']
             : $counts['playlist'] + $counts['search'];
         $autharray = (!empty($token)) ? array('auth' => $token) : array();
+        // perpetual sessions do not expire
+        $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+        $session_expire = ($perpetual)
+            ? 0
+            : date("c", time() + AmpConfig::get('session_length', 3600) - 60);
 
         // send the totals
         $outarray = array(
             'api' => self::$version,
-            'session_expire' => date("c", time() + AmpConfig::get('session_length', 3600) - 60),
+            'session_expire' => $session_expire,
             'update' => date("c", (int)$details['update']),
             'add' => date("c", (int)$details['add']),
             'clean' => date("c", (int)$details['clean']),

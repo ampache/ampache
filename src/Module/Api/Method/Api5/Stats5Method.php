@@ -247,7 +247,7 @@ final class Stats5Method
                         Xml5_Data::set_limit($limit);
                         echo Xml5_Data::videos($results, $user);
                 }
-                Session::extend($input['auth']);
+                Session::extend($input['auth'], 'api');
                 break;
             case 'podcast':
                 switch ($input['api_format']) {

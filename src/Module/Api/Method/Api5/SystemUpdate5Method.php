@@ -59,7 +59,7 @@ final class SystemUpdate5Method
             // check that the update completed or failed failed.
             if (AutoUpdate::is_update_available(true)) {
                 Api5::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
-                Session::extend($input['auth']);
+                Session::extend($input['auth'], 'api');
 
                 return false;
             }
@@ -74,7 +74,7 @@ final class SystemUpdate5Method
         if ($updated) {
             // there was an update and it was successful
             Api5::message('update successful', $input['api_format']);
-            Session::extend($input['auth']);
+            Session::extend($input['auth'], 'api');
 
             return true;
         }

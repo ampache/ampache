@@ -55,11 +55,16 @@ final class Ping3Method
 
         // Check and see if we should extend the api sessions (done if valid sess is passed)
         if (array_key_exists('auth', $input) && Session::exists('api', $input['auth'])) {
-            Session::extend($input['auth']);
+            Session::extend($input['auth'], 'api');
+            // perpetual sessions do not expire
+            $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+            $session_expire = ($perpetual)
+                ? 0
+                : date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60));
             if (in_array($data_version, Api::API_VERSIONS)) {
-                Session::write($input['auth'], $data_version, (bool)AmpConfig::get('perpetual_api_session', false));
+                Session::write($input['auth'], $data_version, $perpetual);
             }
-            $results = array_merge(array('session_expire' => date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60)), $results);
+            $results = array_merge(array('session_expire' => $session_expire), $results);
         }
 
         debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);

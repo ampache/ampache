@@ -160,7 +160,7 @@ final class HandshakeMethod
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);
                 } else {
-                    Session::extend($data['apikey']);
+                    Session::extend($data['apikey'], 'api');
                     $token = $data['apikey'];
                 }
 

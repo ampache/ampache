@@ -454,7 +454,7 @@ final class ApiHandler implements ApiHandlerInterface
                     $user
                 );
 
-                $gatekeeper->extendSession();
+                $gatekeeper->extendSession($input['auth']);
 
                 return $response;
             } elseif ($is_public) {
@@ -463,7 +463,7 @@ final class ApiHandler implements ApiHandlerInterface
                     $input
                 );
 
-                $gatekeeper->extendSession();
+                $gatekeeper->extendSession($input['auth']);
 
                 return null;
             } else {
@@ -473,7 +473,7 @@ final class ApiHandler implements ApiHandlerInterface
                     $user
                 );
 
-                $gatekeeper->extendSession();
+                $gatekeeper->extendSession($input['auth']);
 
                 return null;
             }

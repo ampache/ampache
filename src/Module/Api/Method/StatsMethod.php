@@ -250,7 +250,7 @@ final class StatsMethod
                         Xml_Data::set_limit($limit);
                         echo Xml_Data::videos($results, $user);
                 }
-                Session::extend($input['auth']);
+                Session::extend($input['auth'], 'api');
                 break;
             case 'podcast':
                 switch ($input['api_format']) {

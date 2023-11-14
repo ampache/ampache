@@ -111,7 +111,7 @@ final class GetArt4Method
             header('Content-type: ' . $art->raw_mime);
             header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
-            Session::extend($input['auth']);
+            Session::extend($input['auth'], 'api');
 
             return true;
         }

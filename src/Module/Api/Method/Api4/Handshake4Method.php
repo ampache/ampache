@@ -158,7 +158,7 @@ final class Handshake4Method
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);
                 } else {
-                    Session::extend($data['apikey']);
+                    Session::extend($data['apikey'], 'api');
                     $token = $data['apikey'];
                 }
 
@@ -170,12 +170,17 @@ final class Handshake4Method
 
                 // Now we need to quickly get the totals
                 $counts = Catalog::get_server_counts($user_id);
+                // perpetual sessions do not expire
+                $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+                $session_expire = ($perpetual)
+                    ? 0
+                    : date("c", $now_time + AmpConfig::get('session_length') - 60);
 
                 // send the totals
                 $results = array(
                     'auth' => $token,
                     'api' => Api4::$version,
-                    'session_expire' => date("c", $now_time + AmpConfig::get('session_length') - 60),
+                    'session_expire' => $session_expire,
                     'update' => date("c", (int)$row['update']),
                     'add' => date("c", (int)$row['add']),
                     'clean' => date("c", (int)$row['clean']),
