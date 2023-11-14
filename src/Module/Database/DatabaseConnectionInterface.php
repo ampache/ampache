@@ -41,4 +41,16 @@ interface DatabaseConnectionInterface
         string $sql,
         array $params = []
     ): PDOStatement;
+
+    /**
+     * Fetches a single column from the query result
+     *
+     * Useful e.g. for counting-queries
+     *
+     * @param list<mixed> $params
+     */
+    public function fetchOne(
+        string $sql,
+        array $params = []
+    ): mixed;
 }

@@ -60,20 +60,21 @@ final class ShowAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
+        $items       = [];
+        $accessItems = $this->accessRepository->getAccessLists();
 
+        foreach ($accessItems as $accessItem) {
+            $items[] = new Lib\AccessListItem(
+                $this->modelFactory,
+                $accessItem
+            );
+        }
+
+        $this->ui->showHeader();
         $this->ui->show(
             'show_access_list.inc.php',
             [
-                'list' => array_map(
-                    function (int $accessId): Lib\AccessListItemInterface {
-                        return new Lib\AccessListItem(
-                            $this->modelFactory,
-                            $this->modelFactory->createAccess($accessId)
-                        );
-                    },
-                    $this->accessRepository->getAccessLists()
-                )
+                'list' => $items,
             ]
         );
 

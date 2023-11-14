@@ -33,22 +33,20 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AccessRepositoryInterface;
+use ArrayIterator;
 use Mockery;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private MockInterface&UiInterface $ui;
 
-    /** @var AccessRepositoryInterface|MockInterface|null */
-    private MockInterface $accessRepository;
+    private MockInterface&AccessRepositoryInterface $accessRepository;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
+    private MockInterface&ModelFactoryInterface $modelFactory;
 
-    private ?ShowAction $subject;
+    private ShowAction $subject;
 
     public function setUp(): void
     {
@@ -84,8 +82,6 @@ class ShowActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $access     = $this->mock(Access::class);
 
-        $accessId = 666;
-
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ->once()
@@ -112,12 +108,7 @@ class ShowActionTest extends MockeryTestCase
         $this->accessRepository->shouldReceive('getAccessLists')
             ->withNoArgs()
             ->once()
-            ->andReturn([$accessId]);
-
-        $this->modelFactory->shouldReceive('createAccess')
-            ->with($accessId)
-            ->once()
-            ->andReturn($access);
+            ->andReturn(new ArrayIterator([$access]));
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
