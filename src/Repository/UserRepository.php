@@ -451,7 +451,7 @@ final class UserRepository implements UserRepositoryInterface
                 FROM `session`
                 INNER JOIN `user`
                 ON `session`.`username` = `user`.`username`
-                WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?,
+                WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?;
             SQL,
             [$time, $time - $timePeriod]
         );
