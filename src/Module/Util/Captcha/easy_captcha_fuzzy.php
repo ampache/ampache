@@ -31,7 +31,6 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_fuzzy extends easy_captcha
 {
-
     #-- ratio of letters that may differ between solution and real password
     public $fuzzy = CAPTCHA_FUZZY;
 

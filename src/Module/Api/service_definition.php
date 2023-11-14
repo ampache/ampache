@@ -26,6 +26,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Module\Api\Output\ApiOutputFactory;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
+
 use function DI\autowire;
 
 return [

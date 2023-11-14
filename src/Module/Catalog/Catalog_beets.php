@@ -158,7 +158,7 @@ class Catalog_beets extends Catalog
             return true;
         }
 
-        return (boolean)$this->getIdFromPath($song['file']);
+        return (bool)$this->getIdFromPath($song['file']);
     }
 
     /**

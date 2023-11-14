@@ -98,7 +98,7 @@ Following these tips prior to raising a pull request will speed up the review cy
 
 ### Coding standards and principles
 
-* We use PSR2 code style
+* We use PSR12 code style
 * We follow the [`SOLID`](https://en.wikipedia.org/wiki/SOLID) principles
 
 ### Submitting your changes

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
@@ -20,6 +21,7 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -353,7 +355,7 @@ class Xml4_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . count($objects) . "</total_count>\n": '';
+        $string = ($full_xml) ? "<total_count>" . count($objects) . "</total_count>\n" : '';
 
         // here is where we call the object type
         foreach ($objects as $object_id) {

@@ -53,6 +53,7 @@ use Ampache\Module\Application\Admin\User\UpdateUserAction;
 use Ampache\Module\Application\ApplicationRunner;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
+
 use function DI\autowire;
 
 /** @var ContainerInterface $dic */

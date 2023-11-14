@@ -31,7 +31,6 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_graphic extends easy_captcha_fuzzy
 {
-
     #-- config
     /**
      * easy_captcha_graphic constructor.

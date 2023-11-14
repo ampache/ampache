@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnusedPrivateMethodInspection */
+<?php
+
+/** @noinspection PhpUnusedPrivateMethodInspection */
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *

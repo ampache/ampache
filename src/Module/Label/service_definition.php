@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Label;
 
 use Ampache\Module\Label\Deletion\LabelDeleter;
+
 use function DI\autowire;
 
 return [

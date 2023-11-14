@@ -26,6 +26,7 @@ namespace Ampache\Module\Album;
 
 use Ampache\Module\Album\Export\AlbumArtExporter;
 use Ampache\Module\Album\Export\AlbumArtExporterInterface;
+
 use function DI\autowire;
 
 return [

@@ -32,6 +32,7 @@ use Ampache\Module\Authentication\Authenticator\LdapAuthenticator;
 use Ampache\Module\Authentication\Authenticator\OpenIdAuthenticator;
 use Ampache\Module\Authentication\Authenticator\PamAuthenticator;
 use Psr\Container\ContainerInterface;
+
 use function DI\factory;
 
 return [
