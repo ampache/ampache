@@ -48,7 +48,7 @@ class Dba
      * query
      * @param string $sql
      * @param array $params
-     * @return PDOStatement|bool
+     * @return PDOStatement|false
      */
     public static function query($sql, $params = array())
     {
@@ -68,7 +68,7 @@ class Dba
      * _query
      * @param string $sql
      * @param array $params
-     * @return PDOStatement|bool
+     * @return PDOStatement|false
      */
     private static function _query($sql, $params)
     {
@@ -120,7 +120,7 @@ class Dba
      * read
      * @param string $sql
      * @param array $params
-     * @return PDOStatement|bool
+     * @return PDOStatement|false
      */
     public static function read($sql, $params = array())
     {
@@ -131,7 +131,7 @@ class Dba
      * write
      * @param string $sql
      * @param array $params
-     * @return PDOStatement|bool
+     * @return PDOStatement|false
      */
     public static function write($sql, $params = array())
     {
@@ -496,7 +496,7 @@ class Dba
      *
      * This is called by the class to return the database handle
      * for the specified database, if none is found it connects
-     * @return mixed|PDO|null
+     * @return PDO|null
      */
     public static function dbh()
     {
@@ -506,17 +506,18 @@ class Dba
         }
 
         // Assign the Handle name that we are going to store
-        $handle = 'dbh_' . $database;
+        $handle = sprintf('dbh_%s', $database);
 
-        if (is_object(AmpConfig::get($handle))) {
-            return AmpConfig::get($handle);
-        } else {
-            $dbh = self::_connect();
-            self::_setup_dbh($dbh, $database);
-            AmpConfig::set($handle, $dbh, true);
+        /** * @var null|PDO $connection */
+        $connection = AmpConfig::get($handle);
 
-            return $dbh;
+        if ($connection === null) {
+            $connection = self::_connect();
+            self::_setup_dbh($connection, $database);
+            AmpConfig::set($handle, $connection, true);
         }
+
+        return $connection;
     }
 
     /**
@@ -548,7 +549,7 @@ class Dba
     public static function insert_id()
     {
         $dbh = self::dbh();
-        if ($dbh) {
+        if ($dbh !== null) {
             return $dbh->lastInsertId();
         }
 

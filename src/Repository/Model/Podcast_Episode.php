@@ -142,10 +142,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * format
      * this function takes the object and formats some values
+     *
      * @param bool $details
-     * @return bool
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         $this->f_description = scrub_out($this->description);
         $this->f_category    = scrub_out($this->category);
@@ -198,8 +198,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         if (AmpConfig::get('show_played_times')) {
             $this->total_count = (int) $this->total_count;
         }
-
-        return true;
     }
 
     /**

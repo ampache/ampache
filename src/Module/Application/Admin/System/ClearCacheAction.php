@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Admin\System;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
@@ -69,6 +70,7 @@ final class ClearCacheAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
+        $text = T_('Your cache has been cleared successfully');
         switch ($_REQUEST['type']) {
             case 'song':
                 Song::clear_cache();
@@ -79,11 +81,15 @@ final class ClearCacheAction implements ApplicationActionInterface
             case 'album':
                 Album::clear_cache();
                 break;
+            case 'perpetual_api_session':
+                $text = T_('Succeeded');
+                Session::destroy_perpetual();
+                break;
         }
 
         $this->ui->showConfirmation(
             T_('No Problem'),
-            T_('Your cache has been cleared successfully'),
+            $text,
             sprintf('%s/admin/system.php?action=show_debug', $this->configContainer->getWebPath())
         );
 

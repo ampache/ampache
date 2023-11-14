@@ -425,7 +425,9 @@ class User extends database_object
      */
     public function is_logged_in()
     {
-        $sql        = "SELECT `id`, `ip` FROM `session` WHERE `username`= ? AND `expire` > ?;";
+        $sql = (AmpConfig::get('perpetual_api_session'))
+            ? "SELECT `id`, `ip` FROM `session` WHERE `username`= ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
+            : "SELECT `id`, `ip` FROM `session` WHERE `username`= ? AND `expire` > ?;";
         $db_results = Dba::read($sql, array($this->username, time()));
 
         if ($row = Dba::fetch_assoc($db_results)) {

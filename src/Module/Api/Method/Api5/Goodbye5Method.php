@@ -49,13 +49,13 @@ final class Goodbye5Method
         if (!Api5::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
         }
-        unset($user);
+        debug_event(self::class, 'Goodbye Received from ' . $user->id . ' ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
+
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";
             Dba::write($sql, array($input['auth']));
 
-            debug_event(self::class, 'Goodbye Received from ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
             ob_end_clean();
             Api5::message($input['auth'], $input['api_format']);
 

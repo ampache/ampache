@@ -286,9 +286,10 @@ class Playlist extends playlist_object
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
+     *
      * @param bool $details
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         parent::format($details);
         $this->f_date        = $this->date ? get_datetime((int)$this->date) : T_('Unknown');

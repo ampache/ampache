@@ -31,6 +31,8 @@ use Ampache\Config\Init\InitializationHandlerDatabaseUpdate;
 use Ampache\Config\Init\InitializationHandlerEnvironment;
 use Ampache\Config\Init\InitializationHandlerGetText;
 use Ampache\Config\Init\InitializationHandlerGlobals;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\DbaDatabaseConnection;
 use Ampache\Module\Util\EnvironmentInterface;
 use getID3;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
@@ -90,4 +92,5 @@ return [
     ServerRequestFactoryInterface::class => autowire(Psr17Factory::class),
     PhpTalInterface::class => autowire(PHPTAL::class),
     SapiEmitter::class => autowire(SapiEmitter::class),
+    DatabaseConnectionInterface::class => autowire(DbaDatabaseConnection::class),
 ];

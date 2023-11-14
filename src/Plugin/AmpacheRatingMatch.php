@@ -166,7 +166,7 @@ class AmpacheRatingMatch
                     $rAlbum->set_rating($new_rating, $this->user->id);
                 }
             }
-            if ($rating->type == 'album') {
+            if ($rating->type == 'album') { // TODO missing album_disk
                 $album        = new Album($rating->id);
                 $rAlbum       = new Rating($rating->id, 'album');
                 $rating_album = $rAlbum->get_user_rating($this->user->id);

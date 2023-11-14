@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -19,30 +20,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Repository;
+declare(strict_types=1);
 
-use Ampache\Repository\Model\Shoutbox;
-use Traversable;
+namespace Ampache\Module\Database\Exception;
 
-interface ShoutRepositoryInterface
+use Exception;
+
+/**
+ * Base exception class for database related exceptions
+ */
+abstract class DatabaseException extends Exception
 {
-    /**
-     * Returns all shout-box items for the provided object-type and -id
-     *
-     * @return Traversable<Shoutbox>
-     */
-    public function getBy(
-        string $objectType,
-        int $objectId
-    ): Traversable;
 
-    /**
-     * Cleans out orphaned shout-box items
-     */
-    public function collectGarbage(?string $objectType = null, ?int $objectId = null): void;
-
-    /**
-     * this function deletes the shout-box entry
-     */
-    public function delete(int $shoutBoxId): void;
 }
