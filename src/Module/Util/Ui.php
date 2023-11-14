@@ -765,6 +765,7 @@ class Ui implements UiInterface
             case 'no_symlinks':
             case 'notify_email':
             case 'now_playing_per_user':
+            case 'perpetual_api_session':
             case 'personalfav_display':
             case 'quarantine':
             case 'ratingmatch_flags':

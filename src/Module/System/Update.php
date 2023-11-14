@@ -911,6 +911,9 @@ class Update
         $update_string = "* Set correct preference type for `use_play2`<br />* Add user preference `jp_volume`, Default webplayer volume";
         $version[]     = array('version' => '600043', 'description' => $update_string);
 
+        $update_string = "* Add system preference `perpetual_api_session`, API sessions do not expire";
+        $version[]     = array('version' => '600044', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5663,6 +5666,22 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, 0.80)";
 
+
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
+    }
+
+    /** _update_600044
+     *
+     * Add system preference `perpetual_api_session`, API sessions do not expire
+     */
+    private static function _update_600044(Interactor $interactor = null): bool
+    {
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('perpetual_api_session', '0', 'API sessions do not expire', 100, 'boolean', 'system', 'backend')";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
 
         return (self::_write($interactor, $sql, array($row_id)) !== false);
     }

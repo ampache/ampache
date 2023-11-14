@@ -26,6 +26,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Method\LostPasswordMethod;
 use Ampache\Module\Api\Method\RegisterMethod;
 use Ampache\Module\System\Session;
@@ -170,7 +171,7 @@ final class ApiHandler implements ApiHandlerInterface
                 Session::create($data);
             }
             if (in_array($api_version, Api::API_VERSIONS)) {
-                Session::write($data['apikey'], $api_version);
+                Session::write($data['apikey'], $api_version, $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PERPETUAL_API_SESSION));
             }
             // Continue with the new session string to hide your header token
             $input['auth'] = $data['apikey'];

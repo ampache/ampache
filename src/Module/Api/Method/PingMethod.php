@@ -63,7 +63,7 @@ final class PingMethod
         if (array_key_exists('auth', $input) && Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
             if (in_array($data_version, Api::API_VERSIONS)) {
-                Session::write($input['auth'], $data_version);
+                Session::write($input['auth'], $data_version, (bool)AmpConfig::get('perpetual_api_session', false));
             }
             $results = array_merge(array('session_expire' => date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60)), $results, Api::server_details($input['auth'])
             );

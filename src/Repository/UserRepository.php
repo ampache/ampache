@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Dba;
 
@@ -283,7 +284,9 @@ final class UserRepository implements UserRepositoryInterface
                 return new User((int) $results['id']);
             }
             // check for api sessions
-            $sql        = "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND type = 'api'";
+            $sql = (AmpConfig::get('perpetual_api_session'))
+                ? "SELECT `username` FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ?) AND type = 'api'"
+                : "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND type = 'api'";
             $db_results = Dba::read($sql, array($apikey, time()));
             $results    = Dba::fetch_assoc($db_results);
 
