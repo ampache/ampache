@@ -60,7 +60,7 @@ final class Ping3Method
             $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
             $session_expire = ($perpetual)
                 ? 0
-                : date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60));
+                : date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60);
             if (in_array($data_version, Api::API_VERSIONS)) {
                 Session::write($input['auth'], $data_version, $perpetual);
             }
