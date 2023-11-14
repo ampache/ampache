@@ -772,7 +772,7 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * get_album_disk_id
+     * get_album_disk_ids
      *
      * Returns the disk ids for an album
      * @return int[]
