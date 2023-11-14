@@ -106,6 +106,7 @@
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-mockery": "^1.1",
         "phpunit/phpunit": "^10",
+        "seec/phpunit-consecutive-params": "^1.1",
         "squizlabs/php_codesniffer": "^3.5",
         "szymach/c-pchart": "^3.0"
     },

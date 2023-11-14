@@ -87,8 +87,7 @@ final class SongAjaxHandler implements AjaxHandlerInterface
                     $shouts = $this->shoutRepository->getBy($type, $songid);
                     echo "<script>\r\n";
                     echo "shouts = {};\r\n";
-                    foreach ($shouts as $shoutsid) {
-                        $shout = new Shoutbox($shoutsid);
+                    foreach ($shouts as $shout) {
                         $key   = (int)$shout->data;
                         $time  = (int)$media->time;
                         echo "if (typeof shouts['" . $key . "'] === 'undefined') { shouts['" . $key . "'] = new Array(); }\r\n";

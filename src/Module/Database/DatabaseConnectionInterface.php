@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -17,32 +18,27 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Database;
 
-use Ampache\Repository\Model\Shoutbox;
-use Traversable;
+use Ampache\Module\Database\Exception\DatabaseException;
+use PDOStatement;
 
-interface ShoutRepositoryInterface
+interface DatabaseConnectionInterface
 {
     /**
-     * Returns all shout-box items for the provided object-type and -id
+     * Executes the provided sql query
      *
-     * @return Traversable<Shoutbox>
+     * If the query fails, a DatabaseException will be thrown
+     *
+     * @param list<mixed> $params
+     *
+     * @throws DatabaseException
      */
-    public function getBy(
-        string $objectType,
-        int $objectId
-    ): Traversable;
-
-    /**
-     * Cleans out orphaned shout-box items
-     */
-    public function collectGarbage(?string $objectType = null, ?int $objectId = null): void;
-
-    /**
-     * this function deletes the shout-box entry
-     */
-    public function delete(int $shoutBoxId): void;
+    public function query(
+        string $sql,
+        array $params = []
+    ): PDOStatement;
 }
