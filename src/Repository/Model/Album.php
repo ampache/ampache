@@ -777,26 +777,7 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * get_album_disk_id
-     *
-     * Returns the disk id for an album (default to one)
-     * @param int $disk
-     * @return int|null
-     */
-    public function get_album_disk_id($disk)
-    {
-        $sql        = "SELECT DISTINCT `id` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ?;";
-        $db_results = Dba::read($sql, array($this->id, $disk));
-        $results    = Dba::fetch_assoc($db_results);
-        if (empty($results)) {
-            return null;
-        }
-
-        return (int)$results['id'];
-    }
-
-    /**
-     * get_album_disk_id
+     * get_album_disk_ids
      *
      * Returns the disk ids for an album
      * @return int[]
@@ -811,44 +792,6 @@ class Album extends database_object implements library_item
         }
 
         return $results;
-    }
-
-    /**
-     * get_song_count
-     *
-     * Returns the song_count id for an album
-     * @param int $album_id
-     * @return int
-     */
-    public static function get_song_count($album_id)
-    {
-        $sql        = "SELECT `song_count` FROM `album` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($album_id));
-        $results    = Dba::fetch_assoc($db_results);
-        if (empty($results)) {
-            return 0;
-        }
-
-        return (int)$results['song_count'];
-    }
-
-    /**
-     * get_song_count_disk
-     *
-     * Returns the song_count id for an album disk
-     * @param int $album_id
-     * @return int
-     */
-    public static function get_song_count_disk($album_id, $disk_id)
-    {
-        $sql        = "SELECT `song_count` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ?;";
-        $db_results = Dba::read($sql, array($album_id, $disk_id));
-        $results    = Dba::fetch_assoc($db_results);
-        if (empty($results)) {
-            return 0;
-        }
-
-        return (int)$results['song_count'];
     }
 
     /**
@@ -986,26 +929,6 @@ class Album extends database_object implements library_item
     public function get_default_art_kind()
     {
         return 'default';
-    }
-
-    /**
-     * get_id_array
-     *
-     * Get info from the album table with the minimum detail required for subsonic
-     * @param int $album_id
-     * @return array
-     */
-    public static function get_id_array($album_id)
-    {
-        $sql          = "SELECT DISTINCT `album`.`id`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `f_name`, `album`.`name`, `album`.`album_artist` FROM `album` WHERE `album`.`id` = ? ORDER BY `album`.`name`";
-        $db_results   = Dba::read($sql, array($album_id));
-        $results      = array();
-
-        while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = $row;
-        }
-
-        return $results;
     }
 
     /**

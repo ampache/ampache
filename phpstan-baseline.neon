@@ -11091,7 +11091,7 @@ parameters:
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Update\\\\UpdateCatalog\\:\\:lookupCatalogs\\(\\) should return PDOStatement but returns bool\\|PDOStatement\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Update\\\\UpdateCatalog\\:\\:lookupCatalogs\\(\\) should return PDOStatement but returns PDOStatement\\|false\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
@@ -14792,6 +14792,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:finish\\(\\) has parameter \\$resource with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/Dba.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:insert_id\\(\\) should return string\\|null but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/System/Dba.php
 
@@ -21426,11 +21431,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_id_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -21442,11 +21442,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_parent_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_song_count_disk\\(\\) has parameter \\$disk_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
 
@@ -21576,11 +21571,6 @@ parameters:
 			path: src/Repository/Model/AlbumDisk.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_id_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
@@ -21592,11 +21582,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_parent_array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -25646,21 +25631,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Cannot access offset 'catalog' on array\\|bool\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Cannot access offset 'file' on array\\|bool\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Cannot call method get_rel_path\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Cannot call method setData\\(\\) on false\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -25767,11 +25737,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_deleted\\(\\) should return array\\<int\\> but returns array\\<int\\<0, max\\>, array\\>\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_duplicate_info\\(\\) has parameter \\$dupe with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -28124,4 +28089,3 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\WantedRepositoryInterface\\:\\:getById\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/WantedRepositoryInterface.php
-

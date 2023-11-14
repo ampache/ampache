@@ -539,28 +539,6 @@ class AlbumDisk extends database_object implements library_item
     }
 
     /**
-     * Get parent album artists.
-     * @param int $album_id
-     * @param int $primary_id
-     * @return array
-     */
-    public static function get_parent_array($album_id, $primary_id)
-    {
-        $results    = array();
-        $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;";
-        $db_results = Dba::read($sql, array($album_id));
-        //debug_event(self::class, 'get_parent_array ' . $sql, 5);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
-        }
-        $primary = ((int)$primary_id > 0)
-            ? array((int)$primary_id)
-            : array();
-
-        return array_unique(array_merge($primary, $results));
-    }
-
-    /**
      * Get item children.
      * @return array
      */
@@ -635,26 +613,6 @@ class AlbumDisk extends database_object implements library_item
     public function get_default_art_kind()
     {
         return 'default';
-    }
-
-    /**
-     * get_id_array
-     *
-     * Get info from the album table with the minimum detail required for subsonic
-     * @param int $album_id
-     * @return array
-     */
-    public static function get_id_array($album_id)
-    {
-        $sql          = "SELECT DISTINCT `album_disk`.`id`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `f_name`, `album`.`name`, `album`.`album_artist` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`id` = ? ORDER BY `album`.`name`";
-        $db_results   = Dba::read($sql, array($album_id));
-        $results      = array();
-
-        while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = $row;
-        }
-
-        return $results;
     }
 
     /**
@@ -741,23 +699,6 @@ class AlbumDisk extends database_object implements library_item
         }
 
         return 0;
-    }
-
-    /**
-     * sanitize_disk
-     * Change letter disk numbers (like vinyl/cassette) to an integer
-     * @param string|int $disk
-     * @return int
-     */
-    public static function sanitize_disk($disk)
-    {
-        if ((int)$disk == 0) {
-            // A is 0 but we want to start at disk 1
-            $alphabet = range('A', 'Z');
-            $disk     = (int)array_search(strtoupper((string)$disk), $alphabet) + 1;
-        }
-
-        return (int)$disk;
     }
 
     /**

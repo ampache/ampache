@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -19,30 +20,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Repository;
+declare(strict_types=1);
 
-use Ampache\Repository\Model\Shoutbox;
-use Traversable;
+namespace Ampache\Module\Database;
 
-interface ShoutRepositoryInterface
+use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Module\System\Dba;
+use PDOStatement;
+
+/**
+ * Provides non-static access to the database
+ *
+ * @see Dba
+ */
+final class DbaDatabaseConnection implements DatabaseConnectionInterface
 {
     /**
-     * Returns all shout-box items for the provided object-type and -id
+     * Executes the provided sql query
      *
-     * @return Traversable<Shoutbox>
+     * If the query fails, a DatabaseException will be thrown
+     *
+     * @param list<mixed> $params
+     *
+     * @throws QueryFailedException
      */
-    public function getBy(
-        string $objectType,
-        int $objectId
-    ): Traversable;
+    public function query(
+        string $sql,
+        array $params = []
+    ): PDOStatement {
+        $result = Dba::query($sql, $params);
 
-    /**
-     * Cleans out orphaned shout-box items
-     */
-    public function collectGarbage(?string $objectType = null, ?int $objectId = null): void;
+        if ($result === false) {
+            throw new QueryFailedException();
+        }
 
-    /**
-     * this function deletes the shout-box entry
-     */
-    public function delete(int $shoutBoxId): void;
+        return $result;
+    }
 }
