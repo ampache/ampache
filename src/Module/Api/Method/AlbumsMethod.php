@@ -96,6 +96,7 @@ final class AlbumsMethod implements MethodInterface
 
         ob_end_clean();
 
+        /** @var string $result */
         $result = $output->albums(
             $results,
             $include,

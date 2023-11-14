@@ -96,6 +96,7 @@ final class AlbumMethod implements MethodInterface
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         }
 
+        /** @var string $result */
         $result = $output->albums(
             [$album->getId()],
             $include,
