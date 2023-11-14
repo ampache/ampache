@@ -3745,8 +3745,8 @@ class Update
                 $rootdir = realpath($catalog->get_path());
                 foreach ($tables as $type) {
                     $sql = ($type === 'album')
-                        ? "UPDATE `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` SET `album`.`catalog` = ? WHERE `song`.`file` LIKE '$rootdir%' AND `$type`.`catalog` != ?;"
-                        : "UPDATE `$type` SET `catalog` = ? WHERE `$type`.`file` LIKE '$rootdir%' AND `$type`.`catalog` != ?;";
+                        ? "UPDATE `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` SET `album`.`catalog` = ? WHERE `song`.`file` LIKE '$rootdir%' AND (`$type`.`catalog` IS NULL OR `$type`.`catalog` != ?);"
+                        : "UPDATE `$type` SET `catalog` = ? WHERE `$type`.`file` LIKE '$rootdir%' AND (`$type`.`catalog` IS NULL OR `$type`.`catalog` != ?);";
                     Dba::write($sql, array($catalog->id, $catalog->id));
                 }
             }
