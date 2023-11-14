@@ -1428,7 +1428,7 @@ class Xml_Data
             $xitem = $xchannel->addChild("item");
             $xitem->addChild("title", htmlspecialchars($media->get_fullname()));
             if ($media->f_artist_full) {
-                $xitem->addChild("xmlns:itunes:author", $media->f_artist_full);
+                $xitem->addChild("xmlns:itunes:author", htmlspecialchars($media->f_artist_full));
             }
             //$xmlink = $xitem->addChild("link", htmlspecialchars($media->get_link()));
             $xitem->addChild("guid", htmlspecialchars($media->get_link()));

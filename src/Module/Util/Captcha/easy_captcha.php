@@ -31,6 +31,21 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha
 {
+    public $ajax_tries;
+    public $created;
+    public $expires;
+    public $failures;
+    public $grant;
+    public $id;
+    public $image;
+    public $maxpasses;
+    public $passed;
+    public $saved;
+    public $sent;
+    public $shortcut;
+    public $text;
+    public $tries;
+
     #-- init data
     /**
      * easy_captcha constructor.
@@ -41,7 +56,7 @@ class easy_captcha
     {
 
         #-- load
-        if (($this->id = $captcha_id) || ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[CAPTCHA_PARAM_ID]))) {
+        if (($this->id = $captcha_id) || ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[CAPTCHA_PARAM_ID]??'' ))) {
             $this->load();
         }
 
@@ -57,7 +72,7 @@ class easy_captcha
     {
 
         #-- init
-        srand(microtime() + time() / 2 - 21017);
+        srand(0);
         if ($this->id) {
             $this->prev[] = $this->id;
         }

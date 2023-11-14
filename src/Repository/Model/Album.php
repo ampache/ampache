@@ -744,6 +744,8 @@ class Album extends database_object implements library_item
                     $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
                 }
                 $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");
+            } else {
+                $this->f_artist_link = '';
             }
         }
 

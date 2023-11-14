@@ -90,6 +90,9 @@ final class ShowAction implements ApplicationActionInterface
      */
     private function arrayToJSON($array): string
     {
+        if (function_exists('json_encode')) {
+            return json_encode($array);
+        }
         $json = '{ ';
         foreach ($array as $key => $value) {
             $json .= '"' . $key . '" : ';

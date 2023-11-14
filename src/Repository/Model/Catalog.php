@@ -1414,7 +1414,7 @@ abstract class Catalog extends database_object
                 $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql";
                 break;
             case 'album':
-                $sql = "SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `artist` on `album`.`album_artist` = `artist`.`id` $where_sql";
+                $sql = "SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `artist` on `album`.`album_artist` = `artist`.`id` ";
                 break;
             case 'artist':
                 $sql = "SELECT DISTINCT `id` FROM `artist` $where_sql";
