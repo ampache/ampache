@@ -25,59 +25,56 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AccessRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Deletes an ACL item by its id
+ */
 final class DeleteRecordAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'delete_record';
 
     private UiInterface $ui;
 
-    private ConfigContainerInterface $configContainer;
-
     private AccessRepositoryInterface $accessRepository;
+
+    private RequestParserInterface $requestParser;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        AccessRepositoryInterface $accessRepository
+        AccessRepositoryInterface $accessRepository,
+        RequestParserInterface $requestParser
     ) {
         $this->ui               = $ui;
-        $this->configContainer  = $configContainer;
         $this->accessRepository = $accessRepository;
+        $this->requestParser    = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
-            !Core::form_verify('delete_access')
+            $this->requestParser->verifyForm('delete_access') === false
         ) {
             throw new AccessDeniedException();
         }
 
+        $this->accessRepository->delete((int) ($request->getQueryParams()['access_id'] ?? 0));
+
         $this->ui->showHeader();
-
-        $this->accessRepository->delete((int)($request->getQueryParams()['access_id'] ?? 0));
-
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Your Access List entry has been removed'),
-            sprintf(
-                '%s/admin/access.php',
-                $this->configContainer->getWebPath()
-            )
+            'admin/access.php',
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
