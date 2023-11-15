@@ -95,10 +95,10 @@ final class ShowAction implements ApplicationActionInterface
         $user_id   = (int)$this->requestParser->getFromRequest('user_id');
         $object_id = (int)$this->requestParser->getFromRequest('object_id');
         $end_date  = (!empty($this->requestParser->getFromRequest('end_date')))
-            ? (int)$this->requestParser->getFromRequest('start_date')
+            ? (int)$this->requestParser->getFromRequest('end_date')
             : time();
         $start_date = (!empty($this->requestParser->getFromRequest('start_date')))
-            ? (int)$this->requestParser->getFromRequest('end_date')
+            ? (int)$this->requestParser->getFromRequest('start_date')
             : ($end_date - 864000);
         $zoom = (!empty($this->requestParser->getFromRequest('zoom')))
             ? $this->requestParser->getFromRequest('zoom')
