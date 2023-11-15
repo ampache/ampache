@@ -65,7 +65,7 @@ final class UserCreate5Method
         $disable              = (bool)($input['disable'] ?? false);
         $access               = 25;
         $catalog_filter_group = 0;
-        $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
+        $user_id              = User::create($username, $fullname, $email, '', $password, $access, $catalog_filter_group, '', '', $disable, true);
 
         if ($user_id > 0) {
             Api5::message('successfully created: ' . $username, $input['api_format']);

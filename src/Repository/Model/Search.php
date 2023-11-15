@@ -1187,7 +1187,7 @@ class Search extends playlist_object
         $limit  = (int)($data['limit'] ?? 0);
         $offset = (int)($data['offset'] ?? 0);
         $random = ((int)($data['random'] ?? 0) > 0) ? 1 : 0;
-        $search = new Search(null, $data['type'], $user);
+        $search = new Search(0, $data['type'], $user);
         $search->set_rules($data);
 
         // Generate BASE SQL

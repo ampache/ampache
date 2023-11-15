@@ -104,7 +104,7 @@ class Random
                 $song_ids = self::get_search($user, $object_id);
                 break;
             default:
-                $song_ids = self::get_default(1, $user);
+                $song_ids = self::get_default('1', $user);
         }
         $song = array_pop($song_ids);
         //debug_event(__CLASS__, "get_single_song:" . $song, 5);
@@ -130,7 +130,7 @@ class Random
         if (empty($user)) {
             $user = Core::get_global('user');
         }
-        $user_id = $user->id ?? null;
+        $user_id = ($user instanceof User) ? $user->id : null;
         $sql     = "SELECT `song`.`id` FROM `song` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -214,7 +214,7 @@ class Random
      * @param int $search_id
      * @return int[]
      */
-    public static function get_search($user, $search_id = 0)
+    public static function get_search(User $user, $search_id = 0)
     {
         $results = array();
         $search  = new Search($search_id, 'song', $user);
@@ -367,7 +367,7 @@ class Random
      */
     private static function advanced_sql($data, $type, $limit_sql)
     {
-        $search = new Search(null, $type);
+        $search = new Search(0, $type);
         $search->set_rules($data);
         $search_info     = $search->to_sql();
         $catalog_disable = AmpConfig::get('catalog_disable');

@@ -2482,7 +2482,7 @@ class Subsonic_Api
                 $access = AccessLevelEnum::LEVEL_ADMIN;
             }
             $password = self::_decryptPassword($password);
-            $user_id  = User::create($username, $username, $email, null, $password, $access);
+            $user_id  = User::create($username, $username, $email, '', $password, $access);
             if ($user_id > 0) {
                 if ($downloadRole) {
                     Preference::update('download', $user_id, 1);

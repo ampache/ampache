@@ -70,7 +70,7 @@ final class RegisterMethod
         $disable              = (bool)AmpConfig::get('admin_enable_required');
         $access               = User::access_name_to_level(AmpConfig::get('auto_user') ?? 'guest');
         $catalog_filter_group = 0;
-        $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
+        $user_id              = User::create($username, $fullname, $email, '', $password, $access, $catalog_filter_group, '', '', $disable, true);
 
         if ($user_id > 0) {
             if (!AmpConfig::get('user_no_email_confirm', false)) {
@@ -79,7 +79,7 @@ final class RegisterMethod
                 $client->update_validation($validation);
 
                 // Notify user and/or admins
-                Registration::send_confirmation($username, $fullname, $email, null, $validation);
+                Registration::send_confirmation($username, $fullname, $email, '', $validation);
             }
             $text = 'successfully created: ' . $username;
             if (AmpConfig::get('admin_enable_required')) {

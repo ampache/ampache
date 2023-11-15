@@ -6,11 +6,6 @@ parameters:
 			path: src/Application/Api/Ajax/AjaxApplication.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_ids of method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) expects array, null given\\.$#"
-			count: 5
-			path: src/Application/Api/Ajax/Handler/BrowseAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, array\\|string given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/BrowseAjaxHandler.php
@@ -131,49 +126,9 @@ parameters:
 			path: src/Application/Api/Ajax/Handler/PlaylistAjaxHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$limit of static method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_default\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/RandomAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$sid of static method Ampache\\\\Module\\\\System\\\\Session\\:\\:update_geolocation\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/StatsAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_type of static method Ampache\\\\Application\\\\Api\\\\Ajax\\\\Handler\\\\TagAjaxHandler\\:\\:can_edit_tag_map\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 2
-			path: src/Application/Api/Ajax/Handler/TagAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$type of method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:remove_map\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/TagAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:add\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/TagAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:add_tag_map\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/TagAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_id of method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:remove_map\\(\\) expects int, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/TagAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Application\\\\Api\\\\Ajax\\\\Handler\\\\TagAjaxHandler\\:\\:can_edit_tag_map\\(\\) expects int, string\\|false\\|null given\\.$#"
-			count: 2
-			path: src/Application/Api/Ajax/Handler/TagAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:add\\(\\) expects int, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/TagAjaxHandler.php
 
 		-
 			message: "#^Cannot access offset 'scheme' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
@@ -452,11 +407,6 @@ parameters:
 
 		-
 			message: "#^Function scrub_in\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function set_memory_limit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
@@ -2741,21 +2691,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/UserCreate4Method.php
 
 		-
-			message: "#^Parameter \\#4 \\$website of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserCreate4Method.php
-
-		-
-			message: "#^Parameter \\#8 \\$state of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserCreate4Method.php
-
-		-
-			message: "#^Parameter \\#9 \\$city of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserCreate4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\UserDelete4Method\\:\\:user_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/UserDelete4Method.php
@@ -3676,21 +3611,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/UserCreate5Method.php
 
 		-
-			message: "#^Parameter \\#4 \\$website of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserCreate5Method.php
-
-		-
-			message: "#^Parameter \\#8 \\$state of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserCreate5Method.php
-
-		-
-			message: "#^Parameter \\#9 \\$city of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserCreate5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\UserDelete5Method\\:\\:user_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/UserDelete5Method.php
@@ -4421,26 +4341,6 @@ parameters:
 			path: src/Module/Api/Method/RegisterMethod.php
 
 		-
-			message: "#^Parameter \\#4 \\$website of static method Ampache\\\\Module\\\\User\\\\Registration\\:\\:send_confirmation\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/RegisterMethod.php
-
-		-
-			message: "#^Parameter \\#4 \\$website of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/RegisterMethod.php
-
-		-
-			message: "#^Parameter \\#8 \\$state of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/RegisterMethod.php
-
-		-
-			message: "#^Parameter \\#9 \\$city of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/RegisterMethod.php
-
-		-
 			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/ScrobbleMethod.php
@@ -4636,21 +4536,6 @@ parameters:
 			path: src/Module/Api/Method/UserCreateMethod.php
 
 		-
-			message: "#^Parameter \\#4 \\$website of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserCreateMethod.php
-
-		-
-			message: "#^Parameter \\#8 \\$state of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserCreateMethod.php
-
-		-
-			message: "#^Parameter \\#9 \\$city of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserCreateMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UserDeleteMethod\\:\\:user_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/UserDeleteMethod.php
@@ -4759,11 +4644,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:error\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Output/XmlOutput.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_ids of method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) expects array, null given\\.$#"
-			count: 1
-			path: src/Module/Api/RefreshReordered/RefreshAlbumSongsAction.php
 
 		-
 			message: "#^Binary operation \"\\+\" between \\(float\\|int\\) and string results in an error\\.$#"
@@ -5852,11 +5732,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#4 \\$offset of static method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tag_objects\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#4 \\$website of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -14551,11 +14426,6 @@ parameters:
 			path: src/Module/System/InstallationHelper.php
 
 		-
-			message: "#^Parameter \\#6 \\$access of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:generate_config\\(\\) has parameter \\$current with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/System/InstallationHelperInterface.php
@@ -17308,11 +17178,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$artist_id of static method Ampache\\\\Module\\\\Util\\\\Upload\\:\\:check_album\\(\\) expects int, int\\|true given\\.$#"
 			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
-			message: "#^Parameter \\#2 \\$mbid of static method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:check\\(\\) expects string, null given\\.$#"
-			count: 2
 			path: src/Module/Util/Upload.php
 
 		-
@@ -24386,11 +24251,6 @@ parameters:
 			path: src/Repository/Model/Random.php
 
 		-
-			message: "#^Parameter \\#1 \\$search_id of class Ampache\\\\Repository\\\\Model\\\\Search constructor expects int, null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Random.php
@@ -24637,11 +24497,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:year_search\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Parameter \\#1 \\$search_id of class Ampache\\\\Repository\\\\Model\\\\Search constructor expects int, null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 

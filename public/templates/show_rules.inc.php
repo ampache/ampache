@@ -70,7 +70,7 @@ $logic_operator = strtolower($logic_operator); ?>
 <?php if (isset($playlist)) {
     $out = $playlist->to_js();
 } else {
-    $mysearch = new Search(null, $currentType);
+    $mysearch = new Search(0, $currentType);
     $mysearch->set_rules($_REQUEST);
     $out = $mysearch->to_js();
 }
