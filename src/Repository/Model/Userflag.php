@@ -113,7 +113,7 @@ class Userflag extends database_object
      * @param string $object_type
      * @param int $object_id
      */
-    public static function garbage_collection($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null): void
     {
         $types = array(
             'album',

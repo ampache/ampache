@@ -181,10 +181,7 @@ class Label extends database_object implements library_item
         return array('artist' => $medias);
     }
 
-    /**
-     * @return string
-     */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }
@@ -198,9 +195,9 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return string
+     * get_fullname
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->name;
@@ -211,9 +208,8 @@ class Label extends database_object implements library_item
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -226,9 +222,8 @@ class Label extends database_object implements library_item
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -483,7 +478,7 @@ class Label extends database_object implements library_item
      *
      * This cleans out unused artists
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         Dba::write("DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`);");
         Dba::write("DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL;");

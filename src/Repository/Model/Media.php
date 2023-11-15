@@ -79,22 +79,19 @@ interface Media
      * @param string $agent
      * @param array $location
      * @param int $date
-     * @return bool
      */
-    public function set_played($user_id, $agent, $location, $date = null);
+    public function set_played($user_id, $agent, $location, $date = null): bool;
 
     /**
      * @param int $user
      * @param string $agent
      * @param int $date
-     * @return bool
      */
-    public function check_play_history($user, $agent, $date);
+    public function check_play_history($user, $agent, $date): bool;
 
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove();
+    public function remove(): bool;
 }

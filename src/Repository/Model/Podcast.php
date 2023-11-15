@@ -153,9 +153,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * does the item have art?
-     * @return bool
      */
-    public function has_art()
+    public function has_art(): bool
     {
         if (!isset($this->has_art)) {
             $this->has_art = Art::has_db($this->id, 'podcast');
@@ -182,10 +181,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * get_fullname
-     *
-     * @return string
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->title;
@@ -196,9 +193,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -211,9 +207,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -279,10 +274,7 @@ class Podcast extends database_object implements library_item
         return null;
     }
 
-    /**
-     * @return string
-     */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }
@@ -671,9 +663,8 @@ class Podcast extends database_object implements library_item
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         $episodes = $this->get_episodes();
         foreach ($episodes as $episode_id) {
@@ -778,9 +769,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * get_root_path
-     * @return string
      */
-    public function get_root_path()
+    public function get_root_path(): string
     {
         $catalog = Catalog::create_from_id($this->catalog);
         if (!$catalog->get_type() == 'local') {

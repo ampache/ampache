@@ -253,7 +253,7 @@ class Tmp_Playlist extends database_object
      * garbage_collection
      * This cleans up old data
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         self::prune_playlists();
         self::prune_tracks();

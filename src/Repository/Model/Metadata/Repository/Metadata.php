@@ -29,7 +29,7 @@ class Metadata extends Repository
 {
     protected $modelClassName = \Ampache\Repository\Model\Metadata\Model\Metadata::class;
 
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         Dba::write("DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL;");
     }

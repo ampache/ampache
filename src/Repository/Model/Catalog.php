@@ -494,9 +494,9 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @return string
+     * get_fullname
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->name;
@@ -507,9 +507,8 @@ abstract class Catalog extends database_object
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -522,9 +521,8 @@ abstract class Catalog extends database_object
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {

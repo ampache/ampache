@@ -222,7 +222,7 @@ final class Session implements SessionInterface
      *
      * This function is randomly called and it cleans up the expired sessions
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = (AmpConfig::get('perpetual_api_session'))
             ? "DELETE FROM `session` WHERE NOT (`expire` = 0 AND `type` = 'api') AND `expire` < ?;"

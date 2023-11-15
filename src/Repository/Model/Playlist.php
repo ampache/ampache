@@ -73,7 +73,7 @@ class Playlist extends playlist_object
      *
      * Clean dead items out of playlists
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         foreach (array('song', 'podcast_episode', 'video') as $object_type) {
             Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `playlist_data`.`object_id` WHERE `" . $object_type . "`.`file` IS NULL AND `playlist_data`.`object_type`='" . $object_type . "';");

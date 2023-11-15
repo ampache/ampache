@@ -218,9 +218,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item fullname.
-     * @return string
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->name;
@@ -231,9 +230,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * get_link
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -246,9 +244,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -331,7 +328,7 @@ class Broadcast extends database_object implements library_item
      * Get default art kind for this item.
      * @return string
      */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }

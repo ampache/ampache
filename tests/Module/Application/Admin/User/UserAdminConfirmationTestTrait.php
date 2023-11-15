@@ -39,7 +39,7 @@ trait UserAdminConfirmationTestTrait
     }
 
     /**
-     * @param callable(int):void $confirmationExpectationsCallback
+     * @param callable(int): void $confirmationExpectationsCallback
      */
     private function createConfirmationExpectations(
         callable $confirmationExpectationsCallback

@@ -145,9 +145,9 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @return string
+     * get_fullname
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->name;
@@ -158,9 +158,8 @@ class Live_Stream extends database_object implements Media, library_item
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -173,9 +172,8 @@ class Live_Stream extends database_object implements Media, library_item
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -277,10 +275,7 @@ class Live_Stream extends database_object implements Media, library_item
         return null;
     }
 
-    /**
-     * @return string
-     */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }
@@ -456,9 +451,8 @@ class Live_Stream extends database_object implements Media, library_item
      * @param string $agent
      * @param array $location
      * @param int $date
-     * @return bool
      */
-    public function set_played($user_id, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null): bool
     {
         // Do nothing
         unset($user_id, $agent, $location, $date);
@@ -470,9 +464,8 @@ class Live_Stream extends database_object implements Media, library_item
      * @param int $user
      * @param string $agent
      * @param int $date
-     * @return bool
      */
-    public function check_play_history($user, $agent, $date)
+    public function check_play_history($user, $agent, $date): bool
     {
         // Do nothing
         unset($user, $agent, $date);
@@ -480,7 +473,7 @@ class Live_Stream extends database_object implements Media, library_item
         return false;
     }
 
-    public function remove()
+    public function remove(): bool
     {
         return true;
     }

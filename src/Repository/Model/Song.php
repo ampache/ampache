@@ -640,7 +640,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      *
      * Cleans up the song_data table
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         // delete files matching catalog_ignore_pattern
         $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
@@ -1147,9 +1147,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param string $agent
      * @param array $location
      * @param int $date
-     * @return bool
      */
-    public function set_played($user_id, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null): bool
     {
         // ignore duplicates or skip the last track
         if (!$this->check_play_history($user_id, $agent, $date)) {
@@ -1183,9 +1182,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param int $user
      * @param string $agent
      * @param int $date
-     * @return bool
      */
-    public function check_play_history($user, $agent, $date)
+    public function check_play_history($user, $agent, $date): bool
     {
         return Stats::has_played_history('song', $this, $user, $agent, $date);
     }
@@ -1876,9 +1874,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get item fullname.
-     * @return string
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->title;
@@ -1889,9 +1886,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -1904,9 +1900,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -2106,7 +2101,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * Get default art kind for this item.
      * @return string
      */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }
@@ -2188,9 +2183,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param string $player
      * @param bool $local
      * @param int|string $uid
+     * @param string|null $streamToken
      * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = false)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null)
     {
         if (!$this->id) {
             return '';

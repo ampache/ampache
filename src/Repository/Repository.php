@@ -157,7 +157,7 @@ class Repository
     /**
      * @param DatabaseObject $object
      */
-    public function remove(DatabaseObject $object)
+    public function remove(DatabaseObject $object): void
     {
         $this->deleteRecord($object->getId());
     }

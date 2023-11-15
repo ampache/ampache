@@ -250,9 +250,8 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * Get item fullname.
-     * @return string
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->title;
@@ -263,9 +262,8 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -277,9 +275,8 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -420,9 +417,8 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param string $agent
      * @param array $location
      * @param int $date
-     * @return bool
      */
-    public function set_played($user_id, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null): bool
     {
         // Do nothing
         unset($user_id, $agent, $location, $date);
@@ -434,9 +430,8 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param int $user
      * @param string $agent
      * @param int $date
-     * @return bool
      */
-    public function check_play_history($user, $agent, $date)
+    public function check_play_history($user, $agent, $date): bool
     {
         // Do nothing
         unset($user, $agent, $date);
@@ -463,16 +458,15 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @return PDOStatement|bool
+     * garbage_collection
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = 'DELETE FROM `song_preview` USING `song_preview` LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` WHERE `session`.`id` IS NULL';
-
-        return Dba::write($sql);
+        Dba::write($sql);
     }
 
-    public function remove()
+    public function remove(): bool
     {
         return true;
     }

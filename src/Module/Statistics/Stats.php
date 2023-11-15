@@ -84,7 +84,7 @@ class Stats
      *
      * This removes stats for things that no longer exist.
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         foreach (array('album', 'artist', 'song', 'playlist', 'tag', 'live_stream', 'video', 'podcast', 'podcast_episode') as $object_type) {
             Dba::write("DELETE FROM `object_count` WHERE `object_type` = '$object_type' AND `object_count`.`object_id` NOT IN (SELECT `$object_type`.`id` FROM `$object_type`);");

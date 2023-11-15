@@ -66,7 +66,7 @@ class Clip extends Video
      *
      * This cleans out unused clips
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = "DELETE FROM `clip` USING `clip` LEFT JOIN `video` ON `video`.`id` = `clip`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);

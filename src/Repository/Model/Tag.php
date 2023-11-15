@@ -439,7 +439,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This cleans out tag_maps that are obsolete and then removes tags that
      * have no maps.
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
         Dba::write($sql);
@@ -959,27 +959,24 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     /**
      * get_fullname
-     * @return string
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         return $this->name;
     }
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         return '';
     }
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         return '';
     }
@@ -1056,7 +1053,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * get_default_art_kind
      * @return string
      */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }

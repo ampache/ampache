@@ -161,13 +161,12 @@ class Stream_Playlist
     }
 
     /**
-     * @return PDOStatement|bool
+     * garbage_collection
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` WHERE `session`.`id` IS NULL';
-
-        return Dba::write($sql);
+        Dba::write($sql);
     }
 
     /**

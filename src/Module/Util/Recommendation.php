@@ -58,7 +58,7 @@ class Recommendation
      *
      * This cleans out old recommendations cache
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         Dba::write("DELETE FROM `recommendation` WHERE `last_update` < ? OR ((`object_type` = 'song' AND `object_id` NOT IN (SELECT `id` FROM `song`)) OR (`object_type` = 'artist' AND `object_id` NOT IN (SELECT `id` FROM `artist`)) OR (`object_type` = 'album' AND `object_id` NOT IN (SELECT `id` FROM `album`)));", array((time() - 31556952)));
         Dba::write("UPDATE `recommendation_item` SET `mbid` = NULL WHERE `mbid` = '';");

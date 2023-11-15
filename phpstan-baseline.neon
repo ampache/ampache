@@ -13151,11 +13151,6 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_image_preview\\(\\) should return string but returns string\\|null\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
@@ -13916,11 +13911,6 @@ parameters:
 			path: src/Module/Statistics/Stats.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_cached_place_name\\(\\) has parameter \\$latitude with no type specified\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
@@ -14517,11 +14507,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:create_user_cookie\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/System/Session.php
 
@@ -16842,11 +16827,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:delete_recommendation_cache\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Recommendation.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Recommendation.php
 
@@ -21341,11 +21321,6 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -22451,11 +22426,6 @@ parameters:
 			path: src/Repository/Model/Clip.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
@@ -22706,11 +22676,6 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\GarbageCollectibleInterface\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/GarbageCollectibleInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:__construct\\(\\) has parameter \\$label_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -22742,11 +22707,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
 
@@ -23011,19 +22971,9 @@ parameters:
 			path: src/Repository/Model/Metadata/Model/MetadataField.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\Metadata\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Repository/Metadata.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\Metadata\\:\\:\\$modelClassName has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Metadata/Repository/Metadata.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\MetadataField\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Repository/MetadataField.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\MetadataField\\:\\:\\$modelClassName has no type specified\\.$#"
@@ -23077,11 +23027,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Movie.php
 
@@ -23147,11 +23092,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Personal_Video.php
 
@@ -23227,11 +23167,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 
@@ -23676,11 +23611,6 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -23722,11 +23652,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_transcode_settings\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:play_url\\(\\) has parameter \\$streamToken with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -24246,11 +24171,6 @@ parameters:
 			path: src/Repository/Model/Random.php
 
 		-
-			message: "#^Parameter \\#1 \\$limit of static method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_default\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Random.php
@@ -24596,11 +24516,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:is_valid\\(\\) has parameter \\$action with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Share.php
@@ -24896,11 +24811,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:getDisabledMetadataFields\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -25002,11 +24912,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:migrate_artist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:play_url\\(\\) has parameter \\$streamToken with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -25536,11 +25441,6 @@ parameters:
 			path: src/Repository/Model/TVShow_Episode.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Episode.php
@@ -25657,11 +25557,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Season.php
 
@@ -25826,11 +25721,6 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
@@ -25961,11 +25851,6 @@ parameters:
 			path: src/Repository/Model/Tmp_Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
@@ -26057,11 +25942,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TvShow.php
 
@@ -26561,11 +26441,6 @@ parameters:
 			path: src/Repository/Model/Userflag.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Userflag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:get_flag\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Userflag.php
@@ -26606,11 +26481,6 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Default value of the parameter \\#5 \\$streamToken \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:play_url\\(\\) is incompatible with type string\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
@@ -26637,11 +26507,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 
@@ -26916,11 +26781,6 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_albums\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
@@ -27027,16 +26887,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/playable_item.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_fullname\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/playable_item.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_link\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/playable_item.php
 
@@ -27197,11 +27047,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:insertRecord\\(\\) has parameter \\$properties with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:remove\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Repository.php
 

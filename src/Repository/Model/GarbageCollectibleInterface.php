@@ -23,5 +23,5 @@ namespace Ampache\Repository\Model;
 
 interface GarbageCollectibleInterface
 {
-    public static function garbage_collection();
+    public static function garbage_collection(): void;
 }

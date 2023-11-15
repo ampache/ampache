@@ -44,10 +44,7 @@ interface library_item extends playable_item
      */
     public function get_user_owner();
 
-    /**
-     * @return mixed
-     */
-    public function get_default_art_kind();
+    public function get_default_art_kind(): string;
 
     /**
      * @return mixed

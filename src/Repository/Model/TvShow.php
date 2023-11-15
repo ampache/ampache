@@ -78,7 +78,7 @@ class TvShow extends database_object implements library_item
      *
      * This cleans out unused tv shows
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = "DELETE FROM `tvshow` USING `tvshow` LEFT JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` WHERE `tvshow_season`.`id` IS NULL";
         Dba::write($sql);
@@ -189,9 +189,9 @@ class TvShow extends database_object implements library_item
     }
 
     /**
-     * @return string
+     * get_fullname
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
@@ -203,9 +203,8 @@ class TvShow extends database_object implements library_item
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -218,9 +217,8 @@ class TvShow extends database_object implements library_item
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -297,10 +295,7 @@ class TvShow extends database_object implements library_item
         return null;
     }
 
-    /**
-     * @return string
-     */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }
@@ -475,9 +470,8 @@ class TvShow extends database_object implements library_item
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         $deleted    = true;
         $season_ids = $this->get_seasons();

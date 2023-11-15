@@ -28,7 +28,7 @@ class MetadataField extends Repository
 {
     protected $modelClassName = \Ampache\Repository\Model\Metadata\Model\MetadataField::class;
 
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         Dba::write("DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL;");
     }

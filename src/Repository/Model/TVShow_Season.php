@@ -75,7 +75,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      *
      * This cleans out unused tv shows seasons
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = "DELETE FROM `tvshow_season` USING `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` WHERE `tvshow_episode`.`id` IS NULL";
         Dba::write($sql);
@@ -173,9 +173,9 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     }
 
     /**
-     * @return string
+     * get_fullname
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
@@ -187,9 +187,8 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -202,9 +201,8 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -286,10 +284,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         return null;
     }
 
-    /**
-     * @return string
-     */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }
@@ -400,9 +395,8 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         $deleted = true;
         $videos  = $this->get_episodes();

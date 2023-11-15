@@ -567,7 +567,7 @@ class Stream
      * This will garbage collect the Now Playing data,
      * this is done on every play start.
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         // Remove any Now Playing entries for sessions that have been GC'd
         $sql = "DELETE FROM `now_playing` USING `now_playing` LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
@@ -727,7 +727,7 @@ class Stream
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      * @param bool $local
-     * @param string $streamToken
+     * @param string|null $streamToken
      * @return string
      */
     public static function get_base_url($local = false, $streamToken = null)

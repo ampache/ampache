@@ -69,7 +69,7 @@ class TVShow_Episode extends Video
      *
      * This cleans out unused tv shows episodes
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = "DELETE FROM `tvshow_episode` USING `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
@@ -298,9 +298,8 @@ class TVShow_Episode extends Video
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         $deleted = parent::remove();
         if ($deleted) {

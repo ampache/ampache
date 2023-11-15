@@ -165,9 +165,9 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return string
+     * get_fullname
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         $show_fullname = AmpConfig::get('show_playlist_username');
         $my_playlist   = (!empty(Core::get_global('user')) && ($this->user == Core::get_global('user')->id));
@@ -180,9 +180,8 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -197,9 +196,8 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -260,10 +258,7 @@ abstract class playlist_object extends database_object implements library_item
         return $this->user;
     }
 
-    /**
-     * @return string
-     */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }

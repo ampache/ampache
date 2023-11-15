@@ -256,7 +256,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      *
      * This cleans out unused artists
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         debug_event(self::class, 'garbage_collection', 5);
         Dba::write("DELETE FROM `artist_map` WHERE `object_type` = 'album' AND `object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);");
@@ -474,9 +474,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Get item fullname.
-     * @return string
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         if (!isset($this->f_name)) {
             // set the full name
@@ -488,9 +487,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Get item fullname by the artist id.
-     * @return string
      */
-    public static function get_fullname_by_id($artist_id)
+    public static function get_fullname_by_id($artist_id): string
     {
         $sql        = "SELECT LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name` FROM `artist` WHERE `id` = ?;";
         $db_results = Dba::read($sql, array($artist_id));
@@ -556,9 +554,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -573,9 +570,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -678,7 +674,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Get default art kind for this item.
      * @return string
      */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }

@@ -623,9 +623,8 @@ class Album extends database_object implements library_item
      * Get item fullname.
      * @param bool $simple
      * @param bool $force_year
-     * @return string
      */
-    public function get_fullname($simple = false, $force_year = false)
+    public function get_fullname($simple = false, $force_year = false): string
     {
         // return the basic name without all the wild formatting
         if ($simple) {
@@ -679,9 +678,8 @@ class Album extends database_object implements library_item
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -694,9 +692,8 @@ class Album extends database_object implements library_item
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -929,7 +926,7 @@ class Album extends database_object implements library_item
      * Get default art kind for this item.
      * @return string
      */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }

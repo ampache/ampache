@@ -382,9 +382,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * Get item fullname.
-     * @return string
      */
-    public function get_fullname()
+    public function get_fullname(): string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->title;
@@ -395,9 +394,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -410,9 +408,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -523,7 +520,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * Get default art kind for this item.
      * @return string
      */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'preview';
     }
@@ -553,7 +550,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      *
      * Cleans up the inherited object tables
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         // delete files matching catalog_ignore_pattern
         $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
@@ -589,10 +586,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param string $player
      * @param bool $local
      * @param int|string $uid
-     * @param string $streamToken
+     * @param string|null $streamToken
      * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = false)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null)
     {
         if (!$this->id) {
             return '';
@@ -869,9 +866,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param string $agent
      * @param array $location
      * @param int $date
-     * @return bool
      */
-    public function set_played($user_id, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null): bool
     {
         // ignore duplicates or skip the last track
         if (!$this->check_play_history($user_id, $agent, $date)) {
@@ -893,9 +889,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param int $user
      * @param string $agent
      * @param int $date
-     * @return bool
      */
-    public function check_play_history($user, $agent, $date)
+    public function check_play_history($user, $agent, $date): bool
     {
         return Stats::has_played_history('video', $this, $user, $agent, $date);
     }
@@ -1151,9 +1146,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         if (file_exists($this->file)) {
             $deleted = unlink($this->file);

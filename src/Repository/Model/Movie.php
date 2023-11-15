@@ -69,7 +69,7 @@ class Movie extends Video
      *
      * This cleans out unused movies
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
@@ -160,10 +160,7 @@ class Movie extends Video
         return $keywords;
     }
 
-    /**
-     * @return string
-     */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }
@@ -171,9 +168,8 @@ class Movie extends Video
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         $deleted = parent::remove();
         if ($deleted) {

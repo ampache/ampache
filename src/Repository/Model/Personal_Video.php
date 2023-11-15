@@ -64,7 +64,7 @@ class Personal_Video extends Video
      *
      * This cleans out unused personal videos
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = "DELETE FROM `personal_video` USING `personal_video` LEFT JOIN `video` ON `video`.`id` = `personal_video`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
@@ -119,9 +119,8 @@ class Personal_Video extends Video
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         $deleted = parent::remove();
         if ($deleted) {
