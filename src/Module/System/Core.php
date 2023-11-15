@@ -276,30 +276,35 @@ class Core
      */
     public static function image_dimensions($image_data)
     {
+        $empty = array(
+            'width' => 0,
+            'height' => 0
+        );
         if (!function_exists('imagecreatefromstring')) {
-            return array('width' => 0, 'height' => 0);
+            return $empty;
         }
 
         if (empty($image_data)) {
             debug_event(self::class, "Cannot create image from empty data", 2);
 
-            return array('width' => 0, 'height' => 0);
+            return $empty;
         }
 
         $image = imagecreatefromstring($image_data);
-
         if (!$image) {
-            return array('width' => 0, 'height' => 0);
+            return $empty;
         }
 
         $width  = imagesx($image);
         $height = imagesy($image);
-
         if (!$width || !$height) {
-            return array('width' => 0, 'height' => 0);
+            return $empty;
         }
 
-        return array('width' => $width, 'height' => $height);
+        return array(
+            'width' => $width,
+            'height' => $height
+        );
     } // image_dimensions
 
     /**

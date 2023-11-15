@@ -96,7 +96,10 @@ class Ampachechartlyrics
             $xml = simplexml_load_string($request->body);
             if ($xml) {
                 if (!empty($xml->Lyric)) {
-                    return array('text' => nl2br($xml->Lyric), 'url' => $xml->LyricUrl);
+                    return array(
+                        'text' => nl2br($xml->Lyric),
+                        'url' => $xml->LyricUrl
+                    );
                 }
             }
         }

@@ -119,7 +119,10 @@ class OAuthServer
         $token    = $this->get_token($request, $consumer);
         $this->check_signature($request, $consumer, $token);
 
-        return array($consumer, $token);
+        return array(
+            $consumer,
+            $token
+        );
     }
 
     // Internals from here

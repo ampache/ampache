@@ -292,7 +292,10 @@ class Stream
 
         debug_event(self::class, 'Command: ' . $cmd . ' Arguments:' . $args, 5);
 
-        return array('format' => $target, 'command' => $cmd . $args);
+        return array(
+            'format' => $target,
+            'command' => $cmd . $args
+        );
     }
 
     /**

@@ -975,7 +975,10 @@ class Art extends database_object
             return array();
         }
 
-        return array('thumb' => $data, 'thumb_mime' => $mime_type);
+        return array(
+            'thumb' => $data,
+            'thumb_mime' => $mime_type
+        );
     } // generate_thumb
 
     /**

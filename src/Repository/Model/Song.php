@@ -2013,7 +2013,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_parent()
     {
-        return array('object_type' => 'album', 'object_id' => $this->album);
+        return array(
+            'object_type' => 'album',
+            'object_id' => $this->album
+        );
     }
 
     /**

@@ -232,7 +232,10 @@ class TVShow_Episode extends Video
      */
     public function get_parent()
     {
-        return array('object_type' => 'tvshow_season', 'object_id' => $this->season);
+        return array(
+            'object_type' => 'tvshow_season',
+            'object_id' => $this->season
+        );
     }
 
     /**

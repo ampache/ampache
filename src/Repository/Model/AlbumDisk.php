@@ -535,7 +535,10 @@ class AlbumDisk extends database_object implements library_item
      */
     public function get_parent()
     {
-        return array('object_type' => 'album', 'object_id' => $this->album_id);
+        return array(
+            'object_type' => 'album',
+            'object_id' => $this->album_id
+        );
     }
 
     /**

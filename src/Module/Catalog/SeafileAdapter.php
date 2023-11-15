@@ -207,7 +207,10 @@ class SeafileAdapter
     {
         $split = explode('|', $file_path);
 
-        return array('path' => $split[1], 'filename' => $split[2]);
+        return array(
+            'path' => $split[1],
+            'filename' => $split[2]
+        );
     }
 
     /**

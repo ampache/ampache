@@ -338,7 +338,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_parent()
     {
-        return array('object_type' => 'podcast', 'object_id' => $this->podcast);
+        return array(
+            'object_type' => 'podcast',
+            'object_id' => $this->podcast
+        );
     }
 
     /**

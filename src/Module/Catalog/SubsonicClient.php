@@ -216,7 +216,10 @@ class SubsonicClient
             $response = (array)$arr['subsonic-response'];
             $data     = $response;
 
-            return array("success" => ($response['status'] == "ok"), "data" => $data);
+            return array(
+                "success" => ($response['status'] == "ok"),
+                "data" => $data
+            );
         } else {
             return $this->error("Invalid response from server!");
         }

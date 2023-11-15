@@ -779,7 +779,10 @@ class Upnp_Api
         $maxCount = count($items);
         //debug_event(self::class, 'slice: ' . $maxCount . "   " . $start . "    " . $count, 5);
 
-        return array($maxCount, array_slice($items, $start, ($count == 0 ? $maxCount - $start : $count)));
+        return array(
+            $maxCount,
+            array_slice($items, $start, (($count == 0) ? $maxCount - $start : $count))
+        );
     }
 
     /**
@@ -980,7 +983,10 @@ class Upnp_Api
             $maxCount = count($mediaItems);
         }
 
-        return array($maxCount, $mediaItems);
+        return array(
+            $maxCount,
+            $mediaItems
+        );
     }
 
     /**
@@ -1218,7 +1224,10 @@ class Upnp_Api
             $maxCount = count($mediaItems);
         }
 
-        return array($maxCount, $mediaItems);
+        return array(
+            $maxCount,
+            $mediaItems
+        );
     }
 
     /**
@@ -1492,20 +1501,23 @@ class Upnp_Api
      */
     public static function _callSearch($criteria, $filter, $start, $count)
     {
-        $mediaItems   = array();
-        $maxCount     = 0;
-        $type         = self::parse_upnp_filter($filter);
-        $data         = self::parse_upnp_searchcriteria($criteria, $type);
+        $type = self::parse_upnp_filter($filter);
+        $data = self::parse_upnp_searchcriteria($criteria, $type);
         debug_event(self::class, 'Dumping search data: ' . var_export($data, true), 5);
         $ids = Search::run($data); // return a list of IDs
         if (count($ids) == 0) {
             debug_event(self::class, 'Search returned no hits', 5);
 
-            return array(0, $mediaItems);
+            return array(
+                0,
+                array()
+            );
         }
         //debug_event(self::class, 'Dumping $search results: '.var_export( $ids, true ), 5);
         debug_event(self::class, ' ' . (string) count($ids) . ' ids looking for type ' . $data['type'], 5);
 
+        $mediaItems = array();
+        $maxCount   = 0;
         switch ($data['type']) {
             case 'artist':
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
@@ -1554,7 +1566,10 @@ class Upnp_Api
             $maxCount = count($mediaItems);
         }
 
-        return array($maxCount, $mediaItems);
+        return array(
+            $maxCount,
+            $mediaItems
+        );
     }
 
     /**

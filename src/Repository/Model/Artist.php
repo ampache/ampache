@@ -925,7 +925,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $sql = 'UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `mbid` = ?';
         Dba::write($sql, array($prefix, $name, $mbid));
 
-        return array('name' => $name, 'prefix' => $prefix);
+        return array(
+            'name' => $name,
+            'prefix' => $prefix
+        );
     }
 
     /**

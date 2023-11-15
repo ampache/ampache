@@ -148,11 +148,17 @@ class FileSystem
         if (strpos($fs_id, ":")) {
             $fs_id = array_map(array($this, 'id'), explode(':', $fs_id));
 
-            return array('type' => 'multiple', 'content' => 'Multiple selected: ' . implode(' ', $fs_id));
+            return array(
+                'type' => 'multiple',
+                'content' => 'Multiple selected: ' . implode(' ', $fs_id)
+            );
         }
         $dir = $this->path($fs_id);
         if (is_dir($dir)) {
-            return array('type' => 'folder', 'content' => $fs_id);
+            return array(
+                'type' => 'folder',
+                'content' => $fs_id
+            );
         }
         if (is_file($dir)) {
             $ext = strpos($dir, '.') !== false ? substr($dir, strrpos($dir, '.') + 1) : '';

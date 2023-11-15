@@ -220,7 +220,10 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function get_parent()
     {
-        return array('object_type' => 'tvshow', 'object_id' => $this->tvshow);
+        return array(
+            'object_type' => 'tvshow',
+            'object_id' => $this->tvshow
+        );
     }
 
     /**

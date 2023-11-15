@@ -659,11 +659,7 @@ class Album extends database_object implements library_item
 
     /**
      * Get item prefix, basename and name by the album id.
-     * @return array{
-     *  prefix: string,
-     *  basename: string,
-     *  name: string
-     * }
+     * @return array{prefix: string, basename: string, name: string}
      */
     public static function get_name_array_by_id(int $album_id): array
     {
@@ -820,7 +816,10 @@ class Album extends database_object implements library_item
     public function get_parent()
     {
         if ($this->artist_count == 1) {
-            return array('object_type' => 'artist', 'object_id' => $this->album_artist);
+            return array(
+                'object_type' => 'artist',
+                'object_id' => $this->album_artist
+            );
         }
 
         return null;
@@ -906,7 +905,9 @@ class Album extends database_object implements library_item
      */
     public function get_catalogs()
     {
-        return [$this->catalog];
+        return [
+            $this->catalog
+        ];
     }
 
     /**

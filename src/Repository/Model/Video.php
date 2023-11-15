@@ -839,7 +839,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function get_release_item_art()
     {
-        return array('object_type' => 'video',
+        return array(
+            'object_type' => 'video',
             'object_id' => $this->id
         );
     }

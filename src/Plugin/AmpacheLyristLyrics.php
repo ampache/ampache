@@ -114,7 +114,10 @@ class AmpacheLyristLyrics
             $json = json_decode($request->body);
             if ($json) {
                 if (!empty($json->lyrics)) {
-                    return array('text' => nl2br($json->lyrics), 'url' => $json->image);
+                    return array(
+                        'text' => nl2br($json->lyrics),
+                        'url' => $json->image
+                    );
                 }
             }
         }

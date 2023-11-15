@@ -3456,7 +3456,10 @@ abstract class Catalog extends database_object
             $prefix = null;
         }
 
-        return array('string' => $string, 'prefix' => $prefix);
+        return array(
+            'string' => $string,
+            'prefix' => $prefix
+        );
     } // trim_prefix
 
     /**

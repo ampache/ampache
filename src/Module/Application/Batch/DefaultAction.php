@@ -225,6 +225,9 @@ final class DefaultAction implements ApplicationActionInterface
             }
         }
 
-        return array($media_files, $total_size);
+        return array(
+            $media_files,
+            $total_size
+        );
     }
 }
