@@ -132,8 +132,6 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      * this function takes the object and formats some values
      *
      * @param bool $details
-     *
-     * @return void
      */
     public function format($details = true): void
     {

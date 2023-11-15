@@ -39,7 +39,7 @@ final class User3Method
      * user
      * This get a user's public information
      */
-    public static function user(array $input, User $user)
+    public static function user(array $input, User $user): void
     {
         unset($user);
         $username = $input['username'];

@@ -175,7 +175,7 @@ class Api5
      * @param string $format
      * @param array $return_data
      */
-    public static function message($message, $format = 'xml', $return_data = array())
+    public static function message($message, $format = 'xml', $return_data = array()): void
     {
         switch ($format) {
             case 'json':
@@ -195,7 +195,7 @@ class Api5
      * @param string $error_type
      * @param string $format
      */
-    public static function error($message, $error_code, $method, $error_type, $format = 'xml')
+    public static function error($message, $error_code, $method, $error_type, $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
@@ -212,7 +212,7 @@ class Api5
      * @param string $empty_type
      * @param string $format
      */
-    public static function empty($empty_type, $format = 'xml')
+    public static function empty($empty_type, $format = 'xml'): void
     {
         switch ($format) {
             case 'json':

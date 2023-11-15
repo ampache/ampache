@@ -395,8 +395,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
      *
      * @param bool $details
      * @param string $limit_threshold
-     *
-     * @return void
      */
     public function format($details = true, $limit_threshold = ''): void
     {

@@ -40,7 +40,7 @@ final class TagSongs3Method
      * tag_songs
      * returns the songs for this tag
      */
-    public static function tag_songs(array $input, User $user)
+    public static function tag_songs(array $input, User $user): void
     {
         $results = Tag::get_tag_objects('song', $input['filter']);
 

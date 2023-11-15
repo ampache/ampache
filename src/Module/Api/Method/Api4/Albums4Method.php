@@ -51,7 +51,7 @@ final class Albums4Method
      * limit   = (integer) //optional
      * include = (array) 'songs' //optional
      */
-    public static function albums(array $input, User $user)
+    public static function albums(array $input, User $user): void
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();

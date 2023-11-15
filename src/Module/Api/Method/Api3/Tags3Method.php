@@ -40,7 +40,7 @@ final class Tags3Method
      * tags
      * This returns the tags based on the specified filter
      */
-    public static function tags(array $input, User $user)
+    public static function tags(array $input, User $user): void
     {
         unset($user);
         $browse = Api::getBrowse();

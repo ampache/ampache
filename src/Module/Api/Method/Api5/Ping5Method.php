@@ -48,7 +48,7 @@ final class Ping5Method
      * auth    = (string) //optional
      * version = (string) $version //optional
      */
-    public static function ping(array $input)
+    public static function ping(array $input): void
     {
         $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
         Api5::$version = ((int)$version >= 350001) ? Api5::$version_numeric : Api5::$version;
@@ -70,7 +70,11 @@ final class Ping5Method
             if (in_array($data_version, Api::API_VERSIONS)) {
                 Session::write($input['auth'], $data_version, $perpetual);
             }
-            $results = array_merge(array('session_expire' => $session_expire), $results, Api5::server_details($input['auth']));
+            $results = array_merge(
+                array('session_expire' => $session_expire),
+                $results,
+                Api5::server_details($input['auth'])
+            );
         }
 
         debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);

@@ -46,7 +46,7 @@ final class Videos4Method
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function videos(array $input, User $user)
+    public static function videos(array $input, User $user): void
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();

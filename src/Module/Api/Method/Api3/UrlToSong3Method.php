@@ -41,7 +41,7 @@ final class UrlToSong3Method
      *
      * This takes a url and returns the song object in question
      */
-    public static function url_to_song(array $input, User $user)
+    public static function url_to_song(array $input, User $user): void
     {
         // Don't scrub, the function needs her raw and juicy
         $url_data = Stream_URL::parse($input['url']);

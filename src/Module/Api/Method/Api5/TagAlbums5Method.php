@@ -41,7 +41,7 @@ final class TagAlbums5Method
      *
      * This returns the albums associated with the genre in question
      */
-    public static function tag_albums(array $input, User $user)
+    public static function tag_albums(array $input, User $user): void
     {
         unset($user);
         Api5::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);

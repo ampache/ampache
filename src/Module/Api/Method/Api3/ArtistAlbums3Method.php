@@ -38,7 +38,7 @@ final class ArtistAlbums3Method
      * artist_albums
      * This returns the albums of an artist
      */
-    public static function artist_albums(array $input, User $user)
+    public static function artist_albums(array $input, User $user): void
     {
         $artist  = new Artist($input['filter']);
         $results = array();

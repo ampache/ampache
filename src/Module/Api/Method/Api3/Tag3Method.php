@@ -39,7 +39,7 @@ final class Tag3Method
      * tag
      * This returns a single tag based on UID
      */
-    public static function tag(array $input, User $user)
+    public static function tag(array $input, User $user): void
     {
         unset($user);
         $uid = scrub_in($input['filter']);

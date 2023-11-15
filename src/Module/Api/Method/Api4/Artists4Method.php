@@ -52,7 +52,7 @@ final class Artists4Method
      * limit   = (integer) //optional
      * include = (array) 'albums'|'songs' //optional
      */
-    public static function artists(array $input, User $user)
+    public static function artists(array $input, User $user): void
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();

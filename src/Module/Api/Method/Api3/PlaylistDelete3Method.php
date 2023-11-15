@@ -40,7 +40,7 @@ final class PlaylistDelete3Method
      * playlist_delete
      * This delete a playlist
      */
-    public static function playlist_delete(array $input, User $user)
+    public static function playlist_delete(array $input, User $user): void
     {
         unset($user);
         ob_end_clean();

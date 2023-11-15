@@ -222,7 +222,6 @@ class Update
      *
      * Make the version number pretty. (600028 => 6.0.0 Build: 028)
      * @param string $version
-     * @return string
      */
     public static function format_version($version = ''): string
     {

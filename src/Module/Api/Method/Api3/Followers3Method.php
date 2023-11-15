@@ -40,7 +40,7 @@ final class Followers3Method
      * followers
      * This gets a user's followers
      */
-    public static function followers(array $input, User $user)
+    public static function followers(array $input, User $user): void
     {
         unset($user);
         if (AmpConfig::get('sociable')) {

@@ -40,7 +40,7 @@ final class TagAlbums3Method
      * tag_albums
      * This returns the albums associated with the tag in question
      */
-    public static function tag_albums(array $input, User $user)
+    public static function tag_albums(array $input, User $user): void
     {
         $results = Tag::get_tag_objects('album', $input['filter']);
         if (!empty($results)) {

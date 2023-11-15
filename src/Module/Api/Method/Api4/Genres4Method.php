@@ -48,7 +48,7 @@ final class Genres4Method
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function genres(array $input, User $user)
+    public static function genres(array $input, User $user): void
     {
         unset($user);
         $browse = Api::getBrowse();

@@ -40,7 +40,7 @@ final class Videos3Method
      * videos
      * This returns video objects!
      */
-    public static function videos(array $input, User $user)
+    public static function videos(array $input, User $user): void
     {
         unset($user);
         $browse = Api::getBrowse();

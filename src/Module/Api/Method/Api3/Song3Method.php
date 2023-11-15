@@ -39,7 +39,7 @@ final class Song3Method
      * song
      * returns a single song
      */
-    public static function song(array $input, User $user)
+    public static function song(array $input, User $user): void
     {
         $uid  = scrub_in($input['filter']);
 

@@ -40,7 +40,7 @@ final class Following3Method
      * following
      * This get the user list followed by a user
      */
-    public static function following(array $input, User $user)
+    public static function following(array $input, User $user): void
     {
         unset($user);
         if (AmpConfig::get('sociable')) {

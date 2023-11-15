@@ -39,7 +39,7 @@ final class Video3Method
      * video
      * This returns a single video
      */
-    public static function video(array $input, User $user)
+    public static function video(array $input, User $user): void
     {
         unset($user);
         $video_id = scrub_in($input['filter']);

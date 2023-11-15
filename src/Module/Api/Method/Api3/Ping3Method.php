@@ -43,7 +43,7 @@ final class Ping3Method
      * of the server is, and what version it is running/compatible with
      * @param array $input
      */
-    public static function ping(array $input)
+    public static function ping(array $input): void
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api3::$version;
         $data_version = (int)substr($version, 0, 1);
@@ -64,7 +64,10 @@ final class Ping3Method
             if (in_array($data_version, Api::API_VERSIONS)) {
                 Session::write($input['auth'], $data_version, $perpetual);
             }
-            $results = array_merge(array('session_expire' => $session_expire), $results);
+            $results = array_merge(
+                array('session_expire' => $session_expire),
+                $results
+            );
         }
 
         debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);

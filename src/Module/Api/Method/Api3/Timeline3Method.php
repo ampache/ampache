@@ -41,7 +41,7 @@ final class Timeline3Method
      * timeline
      * This gets a user's timeline
      */
-    public static function timeline(array $input, User $user)
+    public static function timeline(array $input, User $user): void
     {
         unset($user);
         if (AmpConfig::get('sociable')) {

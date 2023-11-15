@@ -58,9 +58,8 @@ class Ajax
      * @param string $method
      * @param string $action
      * @param string $confirm
-     * @return string
      */
-    public static function observe($source, $method, $action, $confirm = '')
+    public static function observe($source, $method, $action, $confirm = ''): string
     {
         $non_quoted = array('document', 'window');
 
@@ -91,9 +90,8 @@ class Ajax
      * url
      * This takes a string and makes an URL
      * @param string $action
-     * @return string
      */
-    public static function url($action)
+    public static function url($action): string
     {
         global $dic;
 
@@ -107,9 +105,8 @@ class Ajax
      * @param string $action
      * @param string $source
      * @param string $post
-     * @return string
      */
-    public static function action($action, $source, $post = '')
+    public static function action($action, $source, $post = ''): string
     {
         $url = self::url($action);
 
@@ -141,9 +138,8 @@ class Ajax
      * @param string $post
      * @param string $class
      * @param string $confirm
-     * @return string
      */
-    public static function button($action, $icon, $alt, $source = '', $post = '', $class = '', $confirm = '')
+    public static function button($action, $icon, $alt, $source = '', $post = '', $class = '', $confirm = ''): string
     {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
@@ -176,9 +172,8 @@ class Ajax
      * @param string $post
      * @param string $class
      * @param string $confirm
-     * @return string
      */
-    public static function button_with_text($action, $icon, $text, $source = '', $post = '', $class = '', $confirm = '')
+    public static function button_with_text($action, $icon, $text, $source = '', $post = '', $class = '', $confirm = ''): string
     {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
@@ -206,9 +201,8 @@ class Ajax
      * @param string $source
      * @param string $post
      * @param string $class
-     * @return string
      */
-    public static function text($action, $text, $source, $post = '', $class = '')
+    public static function text($action, $text, $source, $post = '', $class = ''): string
     {
         // Temporary workaround to avoid sorting on custom base requests
         if (!defined("NO_BROWSE_SORTING") || strpos($source, "sort_") === false) {
@@ -238,7 +232,7 @@ class Ajax
      * This runs the specified action no questions asked
      * @param string $action
      */
-    public static function run($action)
+    public static function run($action): void
     {
         echo "<script><!--\n";
         echo "$action";
@@ -251,7 +245,7 @@ class Ajax
      * hack.
      * @param bool $value
      */
-    public static function set_include_override($value)
+    public static function set_include_override($value): void
     {
         self::$include_override = make_bool($value);
     } // set_include_override
@@ -262,9 +256,8 @@ class Ajax
      * the html needed to start a container that can be replaced by Ajax.
      * @param string $name
      * @param string $class
-     * @return bool
      */
-    public static function start_container($name, $class = '')
+    public static function start_container($name, $class = ''): bool
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
@@ -282,9 +275,8 @@ class Ajax
     /**
      * end_container
      * This ends the container if we're not doing the AJAX thing
-     * @return bool
      */
-    public static function end_container()
+    public static function end_container(): bool
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;

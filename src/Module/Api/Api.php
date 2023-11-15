@@ -206,7 +206,7 @@ class Api
      * @param string $format
      * @param array $return_data
      */
-    public static function message($message, $format = 'xml', $return_data = array())
+    public static function message($message, $format = 'xml', $return_data = array()): void
     {
         switch ($format) {
             case 'json':
@@ -226,7 +226,7 @@ class Api
      * @param string $error_type
      * @param string $format
      */
-    public static function error($message, $error_code, $method, $error_type, $format = 'xml')
+    public static function error($message, $error_code, $method, $error_type, $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
@@ -243,7 +243,7 @@ class Api
      * @param string $empty_type
      * @param string $format
      */
-    public static function empty($empty_type, $format = 'xml')
+    public static function empty($empty_type, $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
@@ -320,9 +320,8 @@ class Api
      * @param array $input
      * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
-     * @return bool
      */
-    public static function check_parameter($input, $parameters, $method)
+    public static function check_parameter($input, $parameters, $method): bool
     {
         foreach ($parameters as $parameter) {
             if (array_key_exists($parameter, $input) && ($input[$parameter] === 0 || $input[$parameter] === '0')) {
@@ -352,9 +351,8 @@ class Api
      * @param int $user_id
      * @param string $method
      * @param string $format
-     * @return bool
      */
-    public static function check_access($type, $level, $user_id, $method, $format = 'xml')
+    public static function check_access($type, $level, $user_id, $method, $format = 'xml'): bool
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type . " '" . $level . "' required on " . $method . " function call.", 2);

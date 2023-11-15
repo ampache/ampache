@@ -72,12 +72,10 @@ class Xml3_Data
      * This takes an int and changes the offset
      *
      * @param int    $offset    (description here...)
-     * @return void
      */
-    public static function set_offset($offset)
+    public static function set_offset($offset): void
     {
-        $offset       = (int)($offset);
-        self::$offset = $offset;
+        self::$offset = (int)$offset;
     } // set_offset
 
     /**
@@ -85,18 +83,17 @@ class Xml3_Data
      *
      * This sets the limit for any ampache transactions
      *
-     * @param int    $limit    (description here...)
-     * @return void
+     * @param int|string    $limit    (description here...)
      */
-    public static function set_limit($limit)
+    public static function set_limit($limit): bool
     {
-        if ($limit) {
-            if (strtolower($limit) == "none") {
-                self::$limit = null;
-            } else {
-                self::$limit = (int)$limit;
-            }
+        if (!$limit) {
+            return false;
         }
+
+        self::$limit = (strtolower((string)$limit) == "none") ? null : (int)$limit;
+
+        return true;
     } // set_limit
 
     /**
@@ -105,9 +102,8 @@ class Xml3_Data
      * This sets the type of Xml_Data we are working on
      *
      * @param string    $type    Xml_Data type
-     * @return void
      */
-    public static function set_type($type)
+    public static function set_type($type): void
     {
         if (in_array($type, array('rss', 'xspf', 'itunes'))) {
             self::$type = $type;

@@ -48,7 +48,7 @@ final class PingMethod
      * auth    = (string) //optional
      * version = (string) $version //optional
      */
-    public static function ping(array $input)
+    public static function ping(array $input): void
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ((int)$version >= 350001) ? Api::$version_numeric : Api::$version;
@@ -70,7 +70,10 @@ final class PingMethod
             if (in_array($data_version, Api::API_VERSIONS)) {
                 Session::write($input['auth'], $data_version, $perpetual);
             }
-            $results = array_merge(array('session_expire' => $session_expire), $results, Api::server_details($input['auth'])
+            $results = array_merge(
+                array('session_expire' => $session_expire),
+                $results,
+                Api::server_details($input['auth'])
             );
         }
 

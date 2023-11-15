@@ -53,7 +53,7 @@ final class Playlists4Method
      * hide_search  = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * show_dupes   = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
      */
-    public static function playlists(array $input, User $user)
+    public static function playlists(array $input, User $user): void
     {
         $like       = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);

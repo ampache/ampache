@@ -45,7 +45,7 @@ final class Tags4Method
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function tags(array $input, User $user)
+    public static function tags(array $input, User $user): void
     {
         Genres4Method::genres($input, $user);
     } // tags

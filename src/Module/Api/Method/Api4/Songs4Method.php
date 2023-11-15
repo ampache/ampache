@@ -52,7 +52,7 @@ final class Songs4Method
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function songs(array $input, User $user)
+    public static function songs(array $input, User $user): void
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();

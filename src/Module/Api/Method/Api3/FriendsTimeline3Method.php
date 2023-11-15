@@ -40,7 +40,7 @@ final class FriendsTimeline3Method
      * friends_timeline
      * This get current user friends timeline
      */
-    public static function friends_timeline(array $input, User $user)
+    public static function friends_timeline(array $input, User $user): void
     {
         if (AmpConfig::get('sociable')) {
             $limit = (int)($input['limit'] ?? 0);

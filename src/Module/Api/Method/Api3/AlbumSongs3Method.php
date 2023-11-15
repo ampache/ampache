@@ -40,7 +40,7 @@ class AlbumSongs3Method
      * album_songs
      * This returns the songs of a specified album
      */
-    public static function album_songs(array $input, User $user)
+    public static function album_songs(array $input, User $user): void
     {
         $album   = new Album($input['filter']);
         $results = array();

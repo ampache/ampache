@@ -45,7 +45,7 @@ final class Catalogs4Method
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function catalogs(array $input, User $user)
+    public static function catalogs(array $input, User $user): void
     {
         // filter for specific catalog types
         $filter  = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';

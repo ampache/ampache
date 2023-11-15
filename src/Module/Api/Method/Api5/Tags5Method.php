@@ -41,7 +41,7 @@ final class Tags5Method
      *
      * This returns the genres (Tags) based on the specified filter
      */
-    public static function tags(array $input, User $user)
+    public static function tags(array $input, User $user): void
     {
         unset($user);
         Api5::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);

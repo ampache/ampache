@@ -40,7 +40,7 @@ final class PlaylistSongs3Method
      * playlist_songs
      * This returns the songs for a playlist
      */
-    public static function playlist_songs(array $input, User $user)
+    public static function playlist_songs(array $input, User $user): void
     {
         $playlist = new Playlist($input['filter']);
         $items    = $playlist->get_items();

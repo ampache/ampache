@@ -50,7 +50,7 @@ final class Ping4Method
      * @param array $input
      * auth = (string) //optional
      */
-    public static function ping(array $input)
+    public static function ping(array $input): void
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api4::$version;
         $data_version = (int)substr($version, 0, 1);
@@ -71,7 +71,10 @@ final class Ping4Method
             if (in_array($data_version, Api::API_VERSIONS)) {
                 Session::write($input['auth'], $data_version, $perpetual);
             }
-            $results = array_merge(array('session_expire' => $session_expire), $results);
+            $results = array_merge(
+                array('session_expire' => $session_expire),
+                $results
+            );
             // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
             $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
             $db_results = Dba::read($sql);
@@ -102,7 +105,10 @@ final class Ping4Method
                 'live_streams' => $counts['live_stream'],
                 'labels' => $counts['label']
             );
-            $results = array_merge($results, $countarray);
+            $results = array_merge(
+                $results,
+                $countarray
+            );
         }
 
         debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);

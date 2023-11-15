@@ -41,7 +41,7 @@ final class Rate3Method
      * rate
      * This rate a library item
      */
-    public static function rate(array $input, User $user)
+    public static function rate(array $input, User $user): void
     {
         ob_end_clean();
         $type      = (string) $input['type'];

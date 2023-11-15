@@ -40,7 +40,7 @@ final class Songs3Method
      * songs
      * Returns songs based on the specified filter
      */
-    public static function songs(array $input, User $user)
+    public static function songs(array $input, User $user): void
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();

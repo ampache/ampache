@@ -39,7 +39,7 @@ final class Album3Method
      * album
      * This returns a single album based on the UID provided
      */
-    public static function album(array $input, User $user)
+    public static function album(array $input, User $user): void
     {
         $uid     = scrub_in($input['filter']);
         $include = [];

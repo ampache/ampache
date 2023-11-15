@@ -83,9 +83,9 @@ class Xml4_Data
      *
      * @param int $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
      */
-    public static function set_offset($offset)
+    public static function set_offset($offset): void
     {
-        self::$offset = (int) $offset;
+        self::$offset = (int)$offset;
     } // set_offset
 
     /**
@@ -93,16 +93,15 @@ class Xml4_Data
      *
      * This sets the limit for any ampache transactions
      *
-     * @param int $limit Set a limit on your results
-     * @return bool
+     * @param int|string $limit Set a limit on your results
      */
-    public static function set_limit($limit)
+    public static function set_limit($limit): bool
     {
         if (!$limit) {
             return false;
         }
 
-        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
+        self::$limit = (strtolower((string)$limit) == "none") ? null : (int)$limit;
 
         return true;
     } // set_limit
@@ -113,9 +112,8 @@ class Xml4_Data
      * This sets the type of Xml_Data we are working on
      *
      * @param string    $type    Xml_Data type
-     * @return bool
      */
-    public static function set_type($type)
+    public static function set_type($type): bool
     {
         if (!in_array(strtolower($type), array('rss', 'xspf', 'itunes'))) {
             return false;
@@ -225,7 +223,7 @@ class Xml4_Data
      * @param string $type
      * @return string
      */
-    public static function output_xml_from_array($array, $callback = false, $type = '')
+    public static function output_xml_from_array($array, $callback = false, $type = ''): string
     {
         $string = '';
 

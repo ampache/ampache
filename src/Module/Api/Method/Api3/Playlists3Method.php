@@ -40,7 +40,7 @@ final class Playlists3Method
      * playlists
      * This returns playlists based on the specified filter
      */
-    public static function playlists(array $input, User $user)
+    public static function playlists(array $input, User $user): void
     {
         unset($user);
         $browse = Api::getBrowse();

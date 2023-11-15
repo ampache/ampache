@@ -41,7 +41,7 @@ final class ArtistSongs3Method
      * artist_songs
      * This returns the songs of the specified artist
      */
-    public static function artist_songs(array $input, User $user)
+    public static function artist_songs(array $input, User $user): void
     {
         $artist  = new Artist($input['filter']);
         $results = static::getSongRepository()->getByArtist($artist->id);

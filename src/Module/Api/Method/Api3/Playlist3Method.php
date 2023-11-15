@@ -39,7 +39,7 @@ final class Playlist3Method
      * playlist
      * This returns a single playlist
      */
-    public static function playlist(array $input, User $user)
+    public static function playlist(array $input, User $user): void
     {
         unset($user);
         $uid = scrub_in($input['filter']);

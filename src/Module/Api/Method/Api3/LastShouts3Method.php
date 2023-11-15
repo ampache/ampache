@@ -40,7 +40,7 @@ final class LastShouts3Method
      * last_shouts
      * This get the latest posted shouts
      */
-    public static function last_shouts(array $input, User $user)
+    public static function last_shouts(array $input, User $user): void
     {
         unset($user);
         $limit = (int)($input['limit'] ?? 0);

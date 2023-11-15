@@ -40,7 +40,7 @@ final class Democratic3Method
      * democratic
      * This is for controlling democratic play
      */
-    public static function democratic(array $input, User $user)
+    public static function democratic(array $input, User $user): void
     {
         // Load up democratic information
         $democratic = Democratic::get_current_playlist($user);

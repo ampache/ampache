@@ -681,16 +681,6 @@ parameters:
 			path: src/Module/Album/Export/Writer/WindowsMetadataWriter.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Ajax\\:\\:run\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Ajax.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Ajax\\:\\:set_include_override\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Ajax.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function make_bool expects string, bool given\\.$#"
 			count: 1
 			path: src/Module/Api/Ajax.php
@@ -716,21 +706,6 @@ parameters:
 			path: src/Module/Api/Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api\\:\\:empty\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api\\:\\:error\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api\\:\\:message\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api\\:\\:message\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Api.php
@@ -751,11 +726,6 @@ parameters:
 			path: src/Module/Api/Api4.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api4\\:\\:message\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Api4.php
-
-		-
 			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:error\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Api4.php
@@ -772,21 +742,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Api5.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:empty\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Api5.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:error\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Api5.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:message\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Api5.php
 
@@ -1251,11 +1206,6 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:set_offset\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:shares\\(\\) has parameter \\$shares with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
@@ -1352,11 +1302,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Ternary operator condition is always false\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -1511,11 +1456,6 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:set_offset\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:shares\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
@@ -1582,11 +1522,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Ternary operator condition is always false\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -1876,11 +1811,6 @@ parameters:
 			path: src/Module/Api/Method/AlbumMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, array\\|string given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/AlbumMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\AlbumSongsMethod\\:\\:album_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/AlbumSongsMethod.php
@@ -1906,34 +1836,14 @@ parameters:
 			path: src/Module/Api/Method/AlbumsMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, array\\|string given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/AlbumsMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\AdvancedSearch3Method\\:\\:advanced_search\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/AdvancedSearch3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\AdvancedSearch3Method\\:\\:advanced_search\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/AdvancedSearch3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Album3Method\\:\\:album\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Album3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Album3Method\\:\\:album\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Album3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\AlbumSongs3Method\\:\\:album_songs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/AlbumSongs3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\AlbumSongs3Method\\:\\:album_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -1951,29 +1861,14 @@ parameters:
 			path: src/Module/Api/Method/Api3/AlbumSongs3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Albums3Method\\:\\:albums\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Albums3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Albums3Method\\:\\:albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Albums3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Artist3Method\\:\\:artist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Artist3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Artist3Method\\:\\:artist\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Artist3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\ArtistAlbums3Method\\:\\:artist_albums\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/ArtistAlbums3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\ArtistAlbums3Method\\:\\:artist_albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -1986,29 +1881,14 @@ parameters:
 			path: src/Module/Api/Method/Api3/ArtistAlbums3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\ArtistSongs3Method\\:\\:artist_songs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/ArtistSongs3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\ArtistSongs3Method\\:\\:artist_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/ArtistSongs3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Artists3Method\\:\\:artists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Artists3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Artists3Method\\:\\:artists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Artists3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Democratic3Method\\:\\:democratic\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Democratic3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Democratic3Method\\:\\:democratic\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2021,29 +1901,14 @@ parameters:
 			path: src/Module/Api/Method/Api3/Democratic3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Followers3Method\\:\\:followers\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Followers3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Followers3Method\\:\\:followers\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Followers3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Following3Method\\:\\:following\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Following3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Following3Method\\:\\:following\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Following3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\FriendsTimeline3Method\\:\\:friends_timeline\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/FriendsTimeline3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\FriendsTimeline3Method\\:\\:friends_timeline\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2066,11 +1931,6 @@ parameters:
 			path: src/Module/Api/Method/Api3/Handshake3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\LastShouts3Method\\:\\:last_shouts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/LastShouts3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\LastShouts3Method\\:\\:last_shouts\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/LastShouts3Method.php
@@ -2086,29 +1946,14 @@ parameters:
 			path: src/Module/Api/Method/Api3/Localplay3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Ping3Method\\:\\:ping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Ping3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Ping3Method\\:\\:ping\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Ping3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Playlist3Method\\:\\:playlist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Playlist3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Playlist3Method\\:\\:playlist\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Playlist3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistAddSong3Method\\:\\:playlist_add_song\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/PlaylistAddSong3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistAddSong3Method\\:\\:playlist_add_song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2121,19 +1966,9 @@ parameters:
 			path: src/Module/Api/Method/Api3/PlaylistAddSong3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistCreate3Method\\:\\:playlist_create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/PlaylistCreate3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistCreate3Method\\:\\:playlist_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/PlaylistCreate3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistDelete3Method\\:\\:playlist_delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/PlaylistDelete3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistDelete3Method\\:\\:playlist_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2144,11 +1979,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:error\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/PlaylistDelete3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistRemoveSong3Method\\:\\:playlist_remove_song\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/PlaylistRemoveSong3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistRemoveSong3Method\\:\\:playlist_remove_song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2166,19 +1996,9 @@ parameters:
 			path: src/Module/Api/Method/Api3/PlaylistRemoveSong3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistSongs3Method\\:\\:playlist_songs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/PlaylistSongs3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistSongs3Method\\:\\:playlist_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/PlaylistSongs3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Playlists3Method\\:\\:playlists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Playlists3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Playlists3Method\\:\\:playlists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2187,11 +2007,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Rate3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Rate3Method\\:\\:rate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Rate3Method.php
 
@@ -2206,29 +2021,14 @@ parameters:
 			path: src/Module/Api/Method/Api3/Rate3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\SearchSongs3Method\\:\\:search_songs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/SearchSongs3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\SearchSongs3Method\\:\\:search_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/SearchSongs3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Song3Method\\:\\:song\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Song3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Song3Method\\:\\:song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Song3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Songs3Method\\:\\:songs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Songs3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Songs3Method\\:\\:songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2237,11 +2037,6 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Stats3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Stats3Method\\:\\:stats\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Stats3Method.php
 
@@ -2261,19 +2056,9 @@ parameters:
 			path: src/Module/Api/Method/Api3/Stats3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Tag3Method\\:\\:tag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Tag3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Tag3Method\\:\\:tag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Tag3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\TagAlbums3Method\\:\\:tag_albums\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/TagAlbums3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\TagAlbums3Method\\:\\:tag_albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2281,19 +2066,9 @@ parameters:
 			path: src/Module/Api/Method/Api3/TagAlbums3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\TagArtists3Method\\:\\:tag_artists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/TagArtists3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\TagArtists3Method\\:\\:tag_artists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/TagArtists3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\TagSongs3Method\\:\\:tag_songs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/TagSongs3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\TagSongs3Method\\:\\:tag_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2301,19 +2076,9 @@ parameters:
 			path: src/Module/Api/Method/Api3/TagSongs3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Tags3Method\\:\\:tags\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Tags3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Tags3Method\\:\\:tags\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Tags3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Timeline3Method\\:\\:timeline\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Timeline3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Timeline3Method\\:\\:timeline\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2321,19 +2086,9 @@ parameters:
 			path: src/Module/Api/Method/Api3/Timeline3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\ToggleFollow3Method\\:\\:toggle_follow\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/ToggleFollow3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\ToggleFollow3Method\\:\\:toggle_follow\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/ToggleFollow3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\UrlToSong3Method\\:\\:url_to_song\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/UrlToSong3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\UrlToSong3Method\\:\\:url_to_song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2341,19 +2096,9 @@ parameters:
 			path: src/Module/Api/Method/Api3/UrlToSong3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\User3Method\\:\\:user\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/User3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\User3Method\\:\\:user\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/User3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Video3Method\\:\\:video\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Video3Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Video3Method\\:\\:video\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2361,19 +2106,9 @@ parameters:
 			path: src/Module/Api/Method/Api3/Video3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Videos3Method\\:\\:videos\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Videos3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Videos3Method\\:\\:videos\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Videos3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\AdvancedSearch4Method\\:\\:advanced_search\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/AdvancedSearch4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\AdvancedSearch4Method\\:\\:advanced_search\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2414,11 +2149,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\AlbumSongs4Method\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/AlbumSongs4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Albums4Method\\:\\:albums\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Albums4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Albums4Method\\:\\:albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2464,11 +2194,6 @@ parameters:
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/ArtistSongs4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Artists4Method\\:\\:artists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Artists4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Artists4Method\\:\\:artists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2521,11 +2246,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/CatalogFile4Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Catalogs4Method\\:\\:catalogs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Catalogs4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Catalogs4Method\\:\\:catalogs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Catalogs4Method.php
@@ -2559,11 +2279,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Following4Method\\:\\:following\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Following4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\FriendsTimeline4Method\\:\\:friends_timeline\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/FriendsTimeline4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\FriendsTimeline4Method\\:\\:friends_timeline\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2604,11 +2319,6 @@ parameters:
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/GenreSongs4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Genres4Method\\:\\:genres\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Genres4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Genres4Method\\:\\:genres\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2676,11 +2386,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/Localplay4Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Ping4Method\\:\\:ping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Ping4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Ping4Method\\:\\:ping\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Ping4Method.php
@@ -2716,11 +2421,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/PlaylistEdit4Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\PlaylistGenerate4Method\\:\\:playlist_generate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/PlaylistGenerate4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\PlaylistGenerate4Method\\:\\:playlist_generate\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/PlaylistGenerate4Method.php
@@ -2744,11 +2444,6 @@ parameters:
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/PlaylistSongs4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Playlists4Method\\:\\:playlists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Playlists4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Playlists4Method\\:\\:playlists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2886,11 +2581,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/Song4Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Songs4Method\\:\\:songs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Songs4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Songs4Method\\:\\:songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Songs4Method.php
@@ -2984,11 +2674,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\TagSongs4Method\\:\\:tag_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/TagSongs4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Tags4Method\\:\\:tags\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Tags4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Tags4Method\\:\\:tags\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3144,11 +2829,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Video4Method\\:\\:video\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Video4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Videos4Method\\:\\:videos\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Videos4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Videos4Method\\:\\:videos\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3524,11 +3204,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\LocalplaySongs5Method\\:\\:localplay_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/LocalplaySongs5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Ping5Method\\:\\:ping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Ping5Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Ping5Method\\:\\:ping\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3916,19 +3591,9 @@ parameters:
 			path: src/Module/Api/Method/Api5/SystemUpdate5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Tag5Method\\:\\:tag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Tag5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Tag5Method\\:\\:tag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Tag5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\TagAlbums5Method\\:\\:tag_albums\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/TagAlbums5Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\TagAlbums5Method\\:\\:tag_albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3936,29 +3601,14 @@ parameters:
 			path: src/Module/Api/Method/Api5/TagAlbums5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\TagArtists5Method\\:\\:tag_artists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/TagArtists5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\TagArtists5Method\\:\\:tag_artists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/TagArtists5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\TagSongs5Method\\:\\:tag_songs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/TagSongs5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\TagSongs5Method\\:\\:tag_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/TagSongs5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Tags5Method\\:\\:tags\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Tags5Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Tags5Method\\:\\:tags\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -4054,11 +3704,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\UserPreference5Method\\:\\:user_preference\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/UserPreference5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\UserPreferences5Method\\:\\:user_preferences\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserPreferences5Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\UserPreferences5Method\\:\\:user_preferences\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -4604,11 +4249,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\MethodInterface\\:\\:handle\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/MethodInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PingMethod\\:\\:ping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PingMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PingMethod\\:\\:ping\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -7476,11 +7116,6 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function strtolower expects string, int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Parameter \\#2 \\$callback of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:keyed_array\\(\\) expects bool, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
@@ -7576,11 +7211,6 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:set_offset\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:shares\\(\\) has parameter \\$shares with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
@@ -7623,11 +7253,6 @@ parameters:
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 2
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Ternary operator condition is always false\\.$#"
-			count: 1
 			path: src/Module/Api/Xml4_Data.php
 
 		-
@@ -7706,11 +7331,6 @@ parameters:
 			path: src/Module/Api/Xml5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:set_offset\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
@@ -7733,11 +7353,6 @@ parameters:
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 2
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Ternary operator condition is always false\\.$#"
-			count: 1
 			path: src/Module/Api/Xml5_Data.php
 
 		-
@@ -7831,11 +7446,6 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:set_offset\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -7878,11 +7488,6 @@ parameters:
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Ternary operator condition is always false\\.$#"
-			count: 1
 			path: src/Module/Api/Xml_Data.php
 
 		-

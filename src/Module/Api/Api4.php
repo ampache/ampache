@@ -152,7 +152,7 @@ class Api4
      * @param string $error_code
      * @param string $format
      */
-    public static function message($type, $message, $error_code = null, $format = 'xml')
+    public static function message($type, $message, $error_code = null, $format = 'xml'): void
     {
         if ($type === 'error') {
             switch ($format) {
@@ -183,9 +183,8 @@ class Api4
      * @param array $input
      * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
-     * @return bool
      */
-    public static function check_parameter($input, $parameters, $method = '')
+    public static function check_parameter($input, $parameters, $method = ''): bool
     {
         foreach ($parameters as $parameter) {
             if ($input[$parameter] === 0 || $input[$parameter] === '0') {
@@ -213,9 +212,8 @@ class Api4
      * @param int $user_id
      * @param string $method
      * @param string $format
-     * @return bool
      */
-    public static function check_access($type, $level, $user_id, $method = '', $format = 'xml')
+    public static function check_access($type, $level, $user_id, $method = '', $format = 'xml'): bool
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type . " '" . $level . "' required on " . $method . " function call.", 2);

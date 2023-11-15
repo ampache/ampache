@@ -81,9 +81,9 @@ class Json4_Data
      *
      * @param int $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
      */
-    public static function set_offset($offset)
+    public static function set_offset($offset): void
     {
-        self::$offset = (int) $offset;
+        self::$offset = (int)$offset;
     } // set_offset
 
     /**
@@ -91,16 +91,15 @@ class Json4_Data
      *
      * This sets the limit for any ampache transactions
      *
-     * @param int $limit Set a limit on your results
-     * @return bool
+     * @param int|string $limit Set a limit on your results
      */
-    public static function set_limit($limit)
+    public static function set_limit($limit): bool
     {
         if (!$limit) {
             return false;
         }
 
-        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
+        self::$limit = (strtolower((string) $limit) == "none") ? null : (int)$limit;
 
         return true;
     } // set_limit
@@ -115,7 +114,7 @@ class Json4_Data
      * @param string    $string    Error message
      * @return string    return error message JSON
      */
-    public static function error($code, $string)
+    public static function error($code, $string): string
     {
         return json_encode(array("error" => array("code" => $code, "message" => $string)), JSON_PRETTY_PRINT);
     } // error
@@ -129,7 +128,7 @@ class Json4_Data
      * @param string    $string    success message
      * @return string    return success message JSON
      */
-    public static function success($string)
+    public static function success($string): string
     {
         return json_encode(array("success" => $string), JSON_PRETTY_PRINT);
     } // success
@@ -224,7 +223,7 @@ class Json4_Data
      * @param int[] $licenses
      * @return string return JSON
      */
-    public static function licenses($licenses)
+    public static function licenses($licenses): string
     {
         if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
@@ -252,7 +251,7 @@ class Json4_Data
      * @param array    $tags    (description here...)
      * @return string return JSON
      */
-    public static function tags($tags)
+    public static function tags($tags): string
     {
         if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
