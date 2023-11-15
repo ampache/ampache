@@ -29,7 +29,6 @@ use Ampache\Module\Util\Ui;
  * debug_wresult
  *
  * Convenience function to format the output.
- @param bool $status
  * @param bool $status
  * @param string $value
  * @param string $comment

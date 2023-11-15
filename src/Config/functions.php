@@ -827,9 +827,9 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
  * inventive!
  * @param string $name
  * @param int $artist_id
- @param bool $allow_add
+ * @param bool $allow_add
  * @param int $song_id
- @param bool $allow_none
+ * @param bool $allow_none
  * @param int $user_id
  */
 function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
@@ -884,9 +884,9 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
  * inventive!
  * @param string $name
  * @param int $tvshow_id
- @param bool $allow_add
+ * @param bool $allow_add
  * @param int $season_id
- @param bool $allow_none
+ * @param bool $allow_none
  */
 function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false)
 {
@@ -927,9 +927,9 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
 /**
  * @param string $name
  * @param $season_id
- @param bool $allow_add
+ * @param bool $allow_add
  * @param int $video_id
- @param bool $allow_none
+ * @param bool $allow_none
  * @return bool
  */
 function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false)
@@ -982,7 +982,7 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
  * @param string $name
  * @param int $catalog_id
  * @param string $style
- @param bool $allow_none
+ * @param bool $allow_none
  * @param string $filter_type
  */
 function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = '')
@@ -1115,7 +1115,7 @@ function xoutput_headers()
 
 /**
  * @param array $array
- @param bool $callback
+ * @param bool $callback
  * @param string $type
  * @return false|mixed|string
  */
@@ -1192,8 +1192,8 @@ function show_now_playing()
 } // show_now_playing
 
 /**
- @param bool $render
- @param bool $force
+ * @param bool $render
+ * @param bool $force
  */
 function show_table_render($render = false, $force = false)
 {
