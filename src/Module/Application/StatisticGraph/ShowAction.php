@@ -87,21 +87,30 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        $action_type = $this->requestParser->getFromRequest('type');
         $object_type = $this->requestParser->getFromRequest('object_type');
-        $user_id     = (int)$this->requestParser->getFromRequest('user_id');
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             $object_type = null;
         }
-        $object_id  = (int)$this->requestParser->getFromRequest('object_id');
-        $start_date = (int)$this->requestParser->getFromRequest('start_date');
-        $end_date   = (int)$this->requestParser->getFromRequest('end_date');
-        $zoom       = $this->requestParser->getFromRequest('zoom');
+        $graph     = new Graph();
+        $user_id   = (int)$this->requestParser->getFromRequest('user_id');
+        $object_id = (int)$this->requestParser->getFromRequest('object_id');
+        $end_date  = (!empty($this->requestParser->getFromRequest('end_date')))
+            ? (int)$this->requestParser->getFromRequest('start_date')
+            : time();
+        $start_date = (!empty($this->requestParser->getFromRequest('start_date')))
+            ? (int)$this->requestParser->getFromRequest('end_date')
+            : ($end_date - 864000);
+        $zoom = (!empty($this->requestParser->getFromRequest('zoom')))
+            ? $this->requestParser->getFromRequest('zoom')
+            : 'day';
+        $width = ((int)$this->requestParser->getFromRequest('width') !== 0)
+            ? (int)$this->requestParser->getFromRequest('width')
+            : 700;
+        $height = ((int)$this->requestParser->getFromRequest('height') !== 0)
+            ? (int)$this->requestParser->getFromRequest('height')
+            : 260;
 
-        $width  = (int)$this->requestParser->getFromRequest('width');
-        $height = (int)$this->requestParser->getFromRequest('height');
-        $graph  = new Graph();
-
+        $action_type = $this->requestParser->getFromRequest('type');
         switch ($action_type) {
             case 'user_hits':
                 $graph->render_user_hits($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);
