@@ -32,6 +32,9 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders the catalog-filters list
+ */
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
@@ -51,11 +54,10 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
+        $this->ui->showBoxTop('Show Catalog Filters', 'box box_manage_filter');
         $this->ui->show('show_manage_filters.inc.php');
-
+        $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
-        //$this->ui->showFooter();
 
         return null;
     }

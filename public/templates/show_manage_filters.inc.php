@@ -25,7 +25,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
 $web_path = (string)AmpConfig::get('web_path', ''); ?>
-<?php Ui::show_box_top(T_('Show Catalog Filters'), 'box box_manage_filter'); ?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>
@@ -64,4 +63,3 @@ foreach ($filters as $filter) {
         </tr>
     </tfoot>
 </table>
-<?php //require Ui::find_template('list_header.inc.php');?>
