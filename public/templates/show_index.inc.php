@@ -27,6 +27,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
 ?>
 <div id="browse_header">
@@ -34,7 +35,7 @@ use Ampache\Module\Util\Ui;
 </div> <!-- Close browse_header Div -->
 
 <?php $user = Core::get_global('user');
-if (isset($user->id)) {
+if ($user instanceof User) {
     foreach (Plugin::get_plugins('display_home') as $plugin_name) {
         $plugin = new Plugin($plugin_name);
         if ($plugin->load($user)) {

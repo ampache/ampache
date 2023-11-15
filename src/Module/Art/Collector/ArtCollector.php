@@ -117,6 +117,7 @@ final class ArtCollector implements ArtCollectorInterface
 
             return $playlist->gather_art($limit);
         }
+        /** @var User $user */
         $user = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);

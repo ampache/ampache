@@ -297,7 +297,7 @@ foreach ($album->get_album_disk_ids() as $albumDiskId) {
     $browse->set_filter('album_disk', $album_disk->id);
     $browse->set_sort('track', 'ASC');
     $browse->get_objects();
-    $browse->show_objects(null, array('hide' => $hide_array));
+    $browse->show_objects(array(), array('hide' => $hide_array));
     $browse->store(); ?>
     </div><br />
     <?php

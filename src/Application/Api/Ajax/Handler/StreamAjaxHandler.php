@@ -70,7 +70,6 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                         $new = 'web_player';
                         break;
                     default:
-                        $new                = 'stream';
                         $results['rfc3514'] = '0x1';
                         break 2;
                 } // end switch

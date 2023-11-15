@@ -124,7 +124,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $browse->set_catalog($_SESSION['catalog']);
 
                 ob_start();
-                $browse->show_objects(null, $argument);
+                $browse->show_objects(array(), $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'set_sort':
@@ -137,7 +137,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects(null, $argument);
+                $browse->show_objects(array(), $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'toggle_tag':
@@ -183,12 +183,12 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
             case 'page':
                 $browse->set_start((int)($_REQUEST['start'] ?? 0));
                 ob_start();
-                $browse->show_objects(null, $argument);
+                $browse->show_objects(array(), $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'show_art':
                 ob_start();
-                $browse->show_objects(null, $argument);
+                $browse->show_objects(array(), $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_filters':
@@ -247,12 +247,12 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects(null, $argument);
+                $browse->show_objects(array(), $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_share_links':
                 $object_type = Core::get_request('object_type');
-                $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $object_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
                 if (InterfaceImplementationChecker::is_library_item($object_type) && $object_id > 0) {
                     echo $this->shareUiLinkRenderer->render($object_type, $object_id);

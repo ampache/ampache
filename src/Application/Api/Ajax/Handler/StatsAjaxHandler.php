@@ -33,6 +33,7 @@ use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Session;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 
 final class StatsAjaxHandler implements AjaxHandlerInterface
 {
@@ -48,13 +49,16 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
-        $user    = Core::get_global('user');
+        /** @var User $user */
+        $user = (!empty(Core::get_global('user')))
+            ? Core::get_global('user')
+            : new User(-1);
 
         // Switch on the actions
         switch ($action) {
             case 'geolocation':
                 if (AmpConfig::get('geolocation')) {
-                    if ($user->id) {
+                    if ($user->id > 0) {
                         $name = $_REQUEST['name'] ?? null;
                         if (empty($name)) {
                             $latitude  = (float)($_REQUEST['latitude'] ?? 0);
@@ -78,7 +82,6 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                                 Session::update_geolocation(session_id(), $latitude, $longitude, $name);
                             }
                         }
-                    }
                 } else {
                     debug_event('stats.ajax', 'Geolocation not enabled for the user.', 3);
                 }
@@ -89,7 +92,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $user_id   = $user->id ?? -1;
+                $user_id   = $user->id;
                 $data      = Stats::get_recently_played($user_id, 'stream', 'song');
                 $ajax_page = 'stats';
                 Song::build_cache(array_keys($data));
@@ -102,7 +105,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $user_id   = $user->id ?? -1;
+                $user_id   = $user->id;
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song');
                 $ajax_page = 'stats';
                 Song::build_cache(array_keys($data));

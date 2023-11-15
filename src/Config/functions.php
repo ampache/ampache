@@ -43,7 +43,7 @@ use Psr\Log\LoggerInterface;
  * Will never reduce it below the current setting.
  * @param $new_limit
  */
-function set_memory_limit($new_limit)
+function set_memory_limit($new_limit): void
 {
     $current_limit = ini_get('memory_limit');
     if ($current_limit == -1) {

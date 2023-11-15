@@ -1501,6 +1501,9 @@ class User extends database_object
     {
         if ($user === null) {
             $user = Core::get_global('user');
+            if (!$user instanceof User) {
+                return false;
+            }
         }
 
         foreach (Plugin::get_plugins('stream_control') as $plugin_name) {

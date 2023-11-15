@@ -55,8 +55,8 @@ final class TagAjaxHandler implements AjaxHandlerInterface
     {
         $results   = array();
         $action    = $this->requestParser->getFromRequest('action');
-        $type      = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
-        $object_id = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+        $type      = (string)filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
         // Switch on the actions
         switch ($action) {

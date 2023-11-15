@@ -319,7 +319,7 @@ class Catalog_local extends Catalog
         }
 
         /* Close the dir handle */
-        @closedir($handle);
+        closedir($handle);
 
         return $songsadded;
     } // add_files

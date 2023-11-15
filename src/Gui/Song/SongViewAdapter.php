@@ -429,8 +429,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $owner_id = $this->song->get_user_owner();
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) && $owner_id > 0) {
             $owner = $this->modelFactory->createUser($owner_id);
-            $owner->format();
-            $songprops[T_('Uploaded by')]  = $owner->f_link;
+            $songprops[T_('Uploaded by')]  = $owner->get_f_link();
         }
 
         return $songprops;
