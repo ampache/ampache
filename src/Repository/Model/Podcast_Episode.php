@@ -132,7 +132,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return list<int>
      */
     public function get_catalogs()
     {

@@ -64,7 +64,7 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $albumId = $request->getQueryParams()['album_id'] ?? 0;
+        $albumId = (int) ($request->getQueryParams()['album_id'] ?? 0);
 
         $this->ui->showHeader();
         if ($albumId < 1) {

@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Album;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Module\Application\Artist\ShowAction;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
@@ -37,16 +36,13 @@ use Psr\Log\LoggerInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private ?MockInterface $configContainer;
+    private ConfigContainerInterface&MockInterface $configContainer;
 
-    /** @var UiInterface|MockInterface|null */
-    private ?MockInterface $ui;
+    private UiInterface&MockInterface $ui;
 
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
+    private LoggerInterface&MockInterface $logger;
 
-    private ?DeleteAction $subject;
+    private DeleteAction $subject;
 
     public function setup(): void
     {
@@ -133,6 +129,47 @@ class DeleteActionTest extends MockeryTestCase
             ->andReturn($webPath);
 
         $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunErrorsIfAlbumIdIsLesserThenOne(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $albumId = 0;
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['album_id' => $albumId]);
+
+        $this->logger->shouldReceive('warning')
+            ->with(
+                'Requested an album that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
+            )
+            ->once();
+
+        static::expectOutputString('You have requested an object that does not exist');
+
+        static::assertNull(
             $this->subject->run($request, $gatekeeper)
         );
     }
