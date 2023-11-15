@@ -82,6 +82,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                                 Session::update_geolocation(session_id(), $latitude, $longitude, $name);
                             }
                         }
+                    }
                 } else {
                     debug_event('stats.ajax', 'Geolocation not enabled for the user.', 3);
                 }
