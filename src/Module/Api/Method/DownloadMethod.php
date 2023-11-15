@@ -60,7 +60,7 @@ final class DownloadMethod
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $format    = $input['format'];
+        $format    = $input['format'] ?? null; // mp3, flv or raw
         $user      = User::get_from_username(Session::username($input['auth']));
 
         $params = '&client=api&action=download&cache=1';
@@ -77,7 +77,7 @@ final class DownloadMethod
             $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }
         if ($type == 'search' || $type == 'playlist') {
-            $song_id = Random::get_single_song($type, $user, (int)$_REQUEST['random_id']);
+            $song_id = Random::get_single_song($type, $user, $object_id);
             $media   = new Song($song_id);
             $url     = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }

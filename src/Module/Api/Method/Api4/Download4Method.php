@@ -56,7 +56,7 @@ final class Download4Method
         }
         $fileid   = $input['id'];
         $type     = $input['type'];
-        $format   = $input['format'];
+        $format   = $input['format'] ?? null; // mp3, flv or raw
         $original = $format && $format != 'raw';
         $user     = User::get_from_username(Session::username($input['auth']));
 

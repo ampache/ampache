@@ -58,10 +58,10 @@ use Ampache\Module\Util\Ui;
 <?php foreach ($history as $data) { ?>
 <tr>
     <td class="cel_date">
-        <?php echo get_datetime((int) $data['date']); ?>
+        <?php echo get_datetime((int) ($data['date'] ?? 0)); ?>
     </td>
     <td class="cel_ipaddress">
-        <?php echo (inet_ntop($data['ip'])) ?: T_('Invalid'); ?>
+        <?php echo(inet_ntop($data['ip'])) ?? T_('Invalid'); ?>
     </td>
 </tr>
 <?php } ?>

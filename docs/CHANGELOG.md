@@ -7,6 +7,7 @@
 * SQL generation for browse sorting with comma and space in the text
 * Genre browse page HTML div name using bad names
 * Fix a lot of code Runtime Errors
+* Null artist time's not updating
 
 ## API 5.6.4
 

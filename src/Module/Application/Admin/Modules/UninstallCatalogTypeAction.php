@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UninstallCatalogTypeAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'unintall_catalog_type';
+    public const REQUEST_KEY = 'uninstall_catalog_type';
 
     private UiInterface $ui;
 
