@@ -198,6 +198,8 @@ final class UserRepository implements UserRepositoryInterface
             $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` IS NOT NULL AND `user` != -1 AND `user` NOT IN (SELECT `id` FROM `user`);";
             Dba::write($sql);
         }
+        $sql = "UPDATE `song` SET `user_upload` = NULL WHERE `user_upload` IS NOT NULL AND `user_upload` != -1 AND `user_upload` NOT IN (SELECT `id` FROM `user`);";
+        Dba::write($sql);
 
         // Clean up the playlist data table
         $sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL";
