@@ -48,7 +48,10 @@ Ui::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
                     <?php
                     $catalogs = Catalog::get_catalogs();
 foreach ($catalogs as $catalog_id) {
-    $catalog      = Catalog::create_from_id($catalog_id);
+    $catalog = Catalog::create_from_id($catalog_id);
+    if (!$catalog instanceof Catalog) {
+        break;
+    }
     $current_name = 'catalog_' . $catalog->id; ?>
                         <option value="<?php echo $catalog->id; ?>" <?php echo $current_name; ?>><?php echo scrub_out($catalog->name); ?></option>
                     <?php

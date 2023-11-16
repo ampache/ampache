@@ -381,7 +381,7 @@ class TvShow extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current tv show
      * @param array $data
-     * @return int|string|null
+     * @return int
      */
     public function update(array $data)
     {
@@ -401,16 +401,16 @@ class TvShow extends database_object implements library_item
                 foreach ($seasons as $season_id) {
                     TVShow_Season::update_tvshow($tvshow_id, $season_id);
                 }
-                $current_id = $tvshow_id;
-                Stats::migrate('tvshow', $this->id, (int)$tvshow_id, 0);
-                Useractivity::migrate('tvshow', $this->id, (int)$tvshow_id);
+                $current_id = (int)$tvshow_id;
+                Stats::migrate('tvshow', $this->id, $current_id, 0);
+                Useractivity::migrate('tvshow', $this->id, $current_id);
                 //Recommendation::migrate('tvshow', $this->id);
-                Share::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Shoutbox::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Tag::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Userflag::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Rating::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Art::duplicate('tvshow', $this->id, (int)$tvshow_id);
+                Share::migrate('tvshow', $this->id, $current_id);
+                Shoutbox::migrate('tvshow', $this->id, $current_id);
+                Tag::migrate('tvshow', $this->id, $current_id);
+                Userflag::migrate('tvshow', $this->id, $current_id);
+                Rating::migrate('tvshow', $this->id, $current_id);
+                Art::duplicate('tvshow', $this->id, $current_id);
                 if (!AmpConfig::get('cron_cache')) {
                     self::garbage_collection();
                 }

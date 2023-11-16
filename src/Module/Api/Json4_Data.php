@@ -587,6 +587,9 @@ class Json4_Data
         foreach ($catalogs as $catalog_id) {
             /** @var Catalog $catalog */
             $catalog = Catalog::create_from_id($catalog_id);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
             $catalog->format();
             $catalog_name           = $catalog->name;
             $catalog_type           = $catalog->catalog_type;

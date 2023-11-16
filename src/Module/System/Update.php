@@ -3745,7 +3745,7 @@ class Update
         // Make sure your files have a catalog
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
-            if ($catalog != null && $catalog->id) {
+            if ($catalog !== null) {
                 $rootdir = realpath($catalog->get_path());
                 foreach ($tables as $type) {
                     $sql = ($type === 'album')

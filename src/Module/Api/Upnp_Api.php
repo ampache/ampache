@@ -864,7 +864,10 @@ class Upnp_Api
                 if (count($pathreq) == 1) {
                     $catalogs = Catalog::get_catalogs();
                     foreach ($catalogs as $catalog_id) {
-                        $catalog            = Catalog::create_from_id($catalog_id);
+                        $catalog = Catalog::create_from_id($catalog_id);
+                        if (!$catalog instanceof Catalog) {
+                            break;
+                        }
                         $songs              = $catalog->get_songs();
                         [$maxCount, $songs] = self::_slice($songs, $start, $count);
                         foreach ($songs as $song) {

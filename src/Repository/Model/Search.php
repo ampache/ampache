@@ -701,7 +701,10 @@ class Search extends playlist_object
         $this->_add_type_boolean('orphaned_album', T_('Orphaned Album'), 'is_true', $t_file_data);
         $catalogs = array();
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
-            $catalog          = Catalog::create_from_id($catid);
+            $catalog = Catalog::create_from_id($catid);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
             $catalogs[$catid] = $catalog->name;
         }
         if (!empty($catalogs)) {
@@ -791,7 +794,10 @@ class Search extends playlist_object
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $catalogs = array();
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
-            $catalog          = Catalog::create_from_id($catid);
+            $catalog = Catalog::create_from_id($catid);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
             $catalogs[$catid] = $catalog->name;
         }
         if (!empty($catalogs)) {
@@ -875,7 +881,10 @@ class Search extends playlist_object
         $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $catalogs = array();
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
-            $catalog          = Catalog::create_from_id($catid);
+            $catalog = Catalog::create_from_id($catid);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
             $catalogs[$catid] = $catalog->name;
         }
         if (!empty($catalogs)) {

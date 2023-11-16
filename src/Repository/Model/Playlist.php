@@ -682,9 +682,8 @@ class Playlist extends playlist_object
      * @param string $name
      * @param string $type
      * @param int $user_id
-     * @return int
      */
-    public static function check($name, $type, $user_id = null)
+    public static function check($name, $type, $user_id = null): int
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');

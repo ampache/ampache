@@ -164,6 +164,9 @@ class Subsonic_Xml_Data
         $xfolders = $xml->addChild('musicFolders');
         foreach ($catalogs as $folder_id) {
             $catalog = Catalog::create_from_id($folder_id);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
             $xfolder = $xfolders->addChild('musicFolder');
             $xfolder->addAttribute('id', (string)$folder_id);
             $xfolder->addAttribute('name', (string)$catalog->name);
@@ -591,7 +594,10 @@ class Subsonic_Xml_Data
     private static function addDirectory_Catalog($xml, $catalog_id)
     {
         $catalog = Catalog::create_from_id($catalog_id);
-        $xdir    = $xml->addChild('directory');
+        if (!$catalog instanceof Catalog) {
+            return;
+        }
+        $xdir = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$catalog_id);
         $xdir->addAttribute('name', $catalog->name);
         $allartists = Catalog::get_artist_arrays(array($catalog_id));

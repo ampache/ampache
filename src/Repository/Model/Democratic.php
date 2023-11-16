@@ -484,7 +484,7 @@ class Democratic extends Tmp_Playlist
      * update
      * This updates an existing democratic playlist item. It takes a key'd array just like create
      * @param array $data
-     * @return bool
+     * @return int
      */
     public function update(array $data)
     {
@@ -495,15 +495,14 @@ class Democratic extends Tmp_Playlist
         $default = (int)$data['make_default'];
         $demo_id = $this->id;
 
-        // no negative ints, this also gives you over 2 million days...
-        if ($cool < 0 || $cool > 3000000000) {
-            return false;
+        if ($cool < 0 || $cool > 999999) {
+            $cool = 1;
         }
 
         $sql = "UPDATE `democratic` SET `name` = ?, `base_playlist` = ?,`cooldown` = ?, `primary` = ?, `level` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $base, $cool, $default, $level, $demo_id));
 
-        return true;
+        return $this->id;
     } // update
 
     /**
@@ -521,6 +520,9 @@ class Democratic extends Tmp_Playlist
         $level   = (int)$data['level'];
         $default = (int)$data['make_default'];
         $user    = (int)Core::get_global('user')->id;
+        if ($cool < 0 || $cool > 999999) {
+            $cool = 1;
+        }
 
         $sql        = "INSERT INTO `democratic` (`name`, `base_playlist`, `cooldown`, `level`, `user`, `primary`) VALUES (?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($name, $base, $cool, $level, $user, $default));

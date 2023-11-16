@@ -311,21 +311,21 @@ class AlbumDisk extends database_object implements library_item
      * Insert album_disk and do additional steps for data on insert
      * @param int $album_id
      * @param int $disk
-     * @param int $catalog
+     * @param int $catalog_id
      * @param string|null $disksubtitle
      */
-    public static function check($album_id, $disk, $catalog, $disksubtitle)
+    public static function check($album_id, $disk, $catalog_id, $disksubtitle): void
     {
         // create the album_disk (if missing)
         $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?)";
-        Dba::write($sql, array($album_id, $disk, $catalog));
+        Dba::write($sql, array($album_id, $disk, $catalog_id));
         // count a new song on the disk right away
         $sql = "UPDATE `album_disk` SET `song_count` = `song_count` + 1 WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ?";
-        Dba::write($sql, array($album_id, $disk, $catalog));
+        Dba::write($sql, array($album_id, $disk, $catalog_id));
         if (!empty($disksubtitle)) {
             // set the subtitle on insert too
             $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ?";
-            Dba::write($sql, array($disksubtitle, $album_id, $disk, $catalog));
+            Dba::write($sql, array($disksubtitle, $album_id, $disk, $catalog_id));
         }
     }
 

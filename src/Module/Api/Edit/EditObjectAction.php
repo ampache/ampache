@@ -77,7 +77,7 @@ final class EditObjectAction extends AbstractEditAction
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {
             foreach ($data as $key => $value) {
-                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities((string) scrub_in($value));
+                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities((string)scrub_in($value));
             }
 
             return $data;
@@ -92,7 +92,7 @@ final class EditObjectAction extends AbstractEditAction
             'edit_object: {' . $object_type . '} {' . $object_id . '}',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
-        $className = ObjectTypeToClassNameMapper::map($object_type);
+        $className = ObjectTypeToClassNameMapper::map((string)$object_type);
         /** @var library_item $libitem */
         $libitem = new $className($_POST['id']);
         if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
@@ -134,8 +134,10 @@ final class EditObjectAction extends AbstractEditAction
         }
 
         $libitem->format();
-        $new_id    = $libitem->update($_POST);
-        $className = ObjectTypeToClassNameMapper::map($object_type);
+        $new_id = $libitem->update($_POST);
+        if ($new_id) {
+            $new_id = $object_id;
+        }
         /** @var library_item $libitem */
         $libitem = new $className($new_id);
         $libitem->format();

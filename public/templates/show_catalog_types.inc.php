@@ -40,7 +40,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
         <?php
         foreach ($catalog_types as $type) {
             $catalog = Catalog::create_catalog_type($type);
-            if ($catalog === null) {
+            if (!$catalog instanceof Catalog) {
                 continue;
             }
             $catalog->format();

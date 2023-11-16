@@ -60,7 +60,7 @@ interface library_item extends playable_item
 
     /**
      * @param array $data
-     * @return mixed
+     * @return int|false
      */
     public function update(array $data);
 } // end library_item.interface

@@ -68,7 +68,7 @@ final class LiveStreamCreateMethod
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($catalog_id);
-        if (!$catalog->name) {
+        if (!$catalog instanceof Catalog) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
         }

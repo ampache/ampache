@@ -958,10 +958,10 @@ class Stats
      * get_newest_sql
      * This returns the get_newest sql
      * @param string $input_type
-     * @param int $catalog
+     * @param int $catalog_id
      * @return string
      */
-    public static function get_newest_sql($input_type, $catalog = 0, $user_id = null)
+    public static function get_newest_sql($input_type, $catalog_id = 0, $user_id = null)
     {
         $type = self::validate_type($input_type);
         // all objects could be filtered
@@ -1017,8 +1017,8 @@ class Stats
             $sql_type = "`song`.`" . $type . "`";
         }
         // join valid catalogs or a specific one
-        $sql .= ($catalog > 0)
-            ? "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog` = '" . (string)scrub_in($catalog) . "' "
+        $sql .= ($catalog_id > 0)
+            ? "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog` = '" . (string)scrub_in($catalog_id) . "' "
             : "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -1043,11 +1043,11 @@ class Stats
      * @param string $input_type
      * @param int $count
      * @param int $offset
-     * @param int $catalog
+     * @param int $catalog_id
      * @param int $user_id
      * @return int[]
      */
-    public static function get_newest($input_type, $count = 0, $offset = 0, $catalog = 0, $user_id = null)
+    public static function get_newest($input_type, $count = 0, $offset = 0, $catalog_id = 0, $user_id = null)
     {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -1057,7 +1057,7 @@ class Stats
             $offset = 0;
         }
 
-        $sql   = self::get_newest_sql($input_type, $catalog, $user_id);
+        $sql   = self::get_newest_sql($input_type, $catalog_id, $user_id);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;

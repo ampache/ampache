@@ -247,7 +247,7 @@ class Shoutbox
      * update
      * This takes a key'd array of data as input and updates a shoutbox entry
      * @param array $data
-     * @return mixed
+     * @return int
      */
     public function update(array $data)
     {

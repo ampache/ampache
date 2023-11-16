@@ -550,7 +550,7 @@ class User extends database_object
      * calls the mini ones does all the error checking and all that
      * good stuff
      * @param array $data
-     * @return bool|int
+     * @return int|false
      */
     public function update(array $data)
     {

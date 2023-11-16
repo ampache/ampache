@@ -304,7 +304,7 @@ class Podcast extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current podcast
      * @param array $data
-     * @return mixed
+     * @return int|false
      */
     public function update(array $data)
     {
@@ -319,7 +319,7 @@ class Podcast extends database_object implements library_item
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             debug_event(self::class, 'Podcast update canceled, bad feed url.', 1);
 
-            return $this->id;
+            return false;
         }
 
         $sql = 'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `language` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?';
@@ -355,10 +355,10 @@ class Podcast extends database_object implements library_item
             AmpError::add('catalog', T_('Target Catalog is required'));
         } else {
             $catalog = Catalog::create_from_id($catalog_id);
-            if (!$catalog) {
+            if (!$catalog instanceof Catalog) {
                 AmpError::add('catalog', T_('Catalog not found'));
             }
-            if ($catalog && $catalog->gather_types !== "podcast") {
+            if ($catalog !== null && $catalog->gather_types !== "podcast") {
                 AmpError::add('catalog', T_('Wrong target Catalog type'));
             }
         }
@@ -773,7 +773,7 @@ class Podcast extends database_object implements library_item
     public function get_root_path(): string
     {
         $catalog = Catalog::create_from_id($this->catalog);
-        if (!$catalog->get_type() == 'local') {
+        if ($catalog === null || !$catalog->get_type() == 'local') {
             debug_event(self::class, 'Bad catalog type.', 1);
 
             return '';

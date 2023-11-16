@@ -43,9 +43,12 @@ if ($browse->is_show_header()) {
     <tbody>
         <?php
             foreach ($object_ids as $catalog_id) {
-                $libitem = Catalog::create_from_id($catalog_id);
-                $libitem->format(); ?>
-        <tr id="catalog_<?php echo $libitem->id; ?>">
+                $catalog = Catalog::create_from_id($catalog_id);
+                if (!$catalog instanceof Catalog) {
+                    break;
+                }
+                $catalog->format(); ?>
+        <tr id="catalog_<?php echo $catalog->id; ?>">
             <?php require Ui::find_template('show_catalog_row.inc.php'); ?>
         </tr>
         <?php

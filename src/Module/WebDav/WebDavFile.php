@@ -66,7 +66,7 @@ class WebDavFile extends DAV\File
         // Only media associated to a local catalog is supported
         if ($this->libitem->catalog) {
             $catalog = Catalog::create_from_id($this->libitem->catalog);
-            if ($catalog->get_type() === 'local') {
+            if ($catalog !== null && $catalog->get_type() === 'local') {
                 $filepointer = fopen(Core::conv_lc_file($this->libitem->file), 'r');
 
                 if (!is_resource($filepointer)) {

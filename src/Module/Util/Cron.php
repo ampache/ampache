@@ -99,6 +99,9 @@ final class Cron
             foreach ($catalogs as $catalog_id) {
                 debug_event('cron', 'Catalog memory cache for catalog ' . (string) $catalog_id, 4);
                 $catalog = Catalog::create_from_id($catalog_id);
+                if (!$catalog instanceof Catalog) {
+                    break;
+                }
                 // cache album details
                 $albums = $catalog->get_album_ids();
                 Album::build_cache($albums);

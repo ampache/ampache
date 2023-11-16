@@ -306,7 +306,7 @@ class Live_Stream extends database_object implements Media, library_item
      * it depends on a ID element to determine which radio element it
      * should be updating
      * @param array $data
-     * @return bool|int
+     * @return int|false
      */
     public function update(array $data)
     {
@@ -381,7 +381,7 @@ class Live_Stream extends database_object implements Media, library_item
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($data['catalog']);
-        if (!$catalog->name) {
+        if (!$catalog instanceof Catalog) {
             AmpError::add('catalog', T_('Catalog is invalid'));
         }
 

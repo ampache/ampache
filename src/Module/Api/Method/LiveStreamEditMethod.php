@@ -61,7 +61,7 @@ final class LiveStreamEditMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $object_id = filter_var($input['filter'], FILTER_SANITIZE_NUMBER_INT);
+        $object_id = (int)filter_var($input['filter'], FILTER_SANITIZE_NUMBER_INT);
         $item      = new Live_Stream($object_id);
         if (!$item->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -73,11 +73,11 @@ final class LiveStreamEditMethod
         $url        = (isset($input['url'])) ? filter_var(urldecode($input['url']), FILTER_VALIDATE_URL) ?? '' : $item->url;
         $codec      = (isset($input['codec'])) ? preg_replace("/[^a-z]/", "", strtolower($input['codec'])) ?? '' : $item->codec;
         $site_url   = (isset($input['site_url'])) ? filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL) ?? '' : $item->site_url;
-        $catalog_id = (isset($input['catalog'])) ? filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT) : $item->catalog;
+        $catalog_id = (isset($input['catalog'])) ? (int)filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT) : $item->catalog;
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($catalog_id);
-        if (!$catalog->name) {
+        if (!$catalog instanceof Catalog) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
@@ -93,7 +93,7 @@ final class LiveStreamEditMethod
 
         // check for the live_stream first
         $results = $item->update($data);
-        if (empty($results)) {
+        if (!$results) {
             Api::empty('live_stream', $input['api_format']);
 
             return false;
@@ -102,10 +102,10 @@ final class LiveStreamEditMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams(array((int)$results));
+                echo Json_Data::live_streams(array($results));
                 break;
             default:
-                echo Xml_Data::live_streams(array((int)$results), $user);
+                echo Xml_Data::live_streams(array($results), $user);
         }
 
         return true;

@@ -52,7 +52,7 @@ final class Catalog5Method
         }
         $object_id = (int) $input['filter'];
         $catalog   = Catalog::create_from_id($object_id);
-        if (!$catalog) {
+        if (!$catalog instanceof Catalog) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 

@@ -85,7 +85,7 @@ final class SongSorter implements SongSorterInterface
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
-            if (!$catalog) {
+            if (!$catalog instanceof Catalog) {
                 break;
             }
             /* HINT: Catalog Name */

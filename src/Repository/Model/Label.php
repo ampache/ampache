@@ -313,10 +313,11 @@ class Label extends database_object implements library_item
     /**
      * update
      * @param array $data
-     * @return int
+     * @return int|false
      */
     public function update(array $data)
     {
+        // duplicate name check
         if (static::getLabelRepository()->lookup($data['name'], $this->id) !== 0) {
             return false;
         }

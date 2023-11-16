@@ -721,11 +721,6 @@ parameters:
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Cannot call method get_songs\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:add_dict\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Daap_Api.php
@@ -993,11 +988,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Edit\\\\EditObjectAction\\:\\:clean_to_existing\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_type of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:map\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 2
 			path: src/Module/Api/Edit/EditObjectAction.php
 
 		-
@@ -2166,21 +2156,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/CatalogFile4Method.php
 
 		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/CatalogFile4Method.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/CatalogFile4Method.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/CatalogFile4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\CatalogFile4Method\\:\\:catalog_file\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/CatalogFile4Method.php
@@ -2907,21 +2882,6 @@ parameters:
 
 		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/CatalogFile5Method.php
-
-		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/CatalogFile5Method.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/CatalogFile5Method.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/CatalogFile5Method.php
 
@@ -3801,21 +3761,6 @@ parameters:
 			path: src/Module/Api/Method/CatalogActionMethod.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/CatalogAddMethod.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/CatalogAddMethod.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/CatalogAddMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\CatalogAddMethod\\:\\:catalog_add\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/CatalogAddMethod.php
@@ -3831,42 +3776,12 @@ parameters:
 			path: src/Module/Api/Method/CatalogFileMethod.php
 
 		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/CatalogFileMethod.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/CatalogFileMethod.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/CatalogFileMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\CatalogFileMethod\\:\\:catalog_file\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/CatalogFileMethod.php
 
 		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/CatalogFolderMethod.php
-
-		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/CatalogFolderMethod.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Api/Method/CatalogFolderMethod.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Method/CatalogFolderMethod.php
 
@@ -4081,11 +3996,6 @@ parameters:
 			path: src/Module/Api/Method/ListMethod.php
 
 		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamCreateMethod.php
-
-		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Module/Api/Method/LiveStreamCreateMethod.php
@@ -4106,27 +4016,12 @@ parameters:
 			path: src/Module/Api/Method/LiveStreamDeleteMethod.php
 
 		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamEditMethod.php
-
-		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 2
 			path: src/Module/Api/Method/LiveStreamEditMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LiveStreamEditMethod\\:\\:live_stream_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamEditMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:create_from_id\\(\\) expects int, int\\|string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamEditMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream_id of class Ampache\\\\Repository\\\\Model\\\\Live_Stream constructor expects int, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/LiveStreamEditMethod.php
 
@@ -4698,21 +4593,6 @@ parameters:
 		-
 			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
 			count: 7
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot access property \\$last_add on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot access property \\$last_clean on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot access property \\$last_update on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
@@ -5781,11 +5661,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Cannot cast array\\<int, string\\>\\|string\\|null to string\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
@@ -6408,11 +6283,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property XMLReader\\:\\:\\$value\\.$#"
 			count: 7
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Cannot call method get_songs\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
 			path: src/Module/Api/Upnp_Api.php
 
 		-
@@ -7896,11 +7766,6 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Cannot call method prepare_media\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 17
 			path: src/Module/Application/Playback/Play2Action.php
@@ -8038,11 +7903,6 @@ parameters:
 		-
 			message: "#^Cannot access offset 'stderr' on array\\|false\\.$#"
 			count: 2
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Cannot call method prepare_media\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
@@ -10416,66 +10276,6 @@ parameters:
 			path: src/Module/Catalog/Update/AddCatalog.php
 
 		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot call method add_to_catalog\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot call method check_catalog_proc\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot call method clean_catalog\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot call method gather_art\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot call method gather_artist_info\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot call method get_artist_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot call method get_label_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot call method get_path\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot call method update_from_external\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Cannot call method verify_catalog_proc\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Update\\\\UpdateCatalog\\:\\:lookupCatalogs\\(\\) should return PDOStatement but returns PDOStatement\\|false\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateCatalog.php
@@ -10491,19 +10291,9 @@ parameters:
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of method Ampache\\\\Module\\\\Catalog\\\\Update\\\\AbstractCatalogUpdater\\:\\:cleanBuffer\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateSingleCatalogFolder.php
 
 		-
 			message: "#^Parameter \\#1 \\$string of method Ampache\\\\Module\\\\Catalog\\\\Update\\\\AbstractCatalogUpdater\\:\\:cleanBuffer\\(\\) expects string, string\\|false given\\.$#"
@@ -10631,11 +10421,6 @@ parameters:
 			path: src/Module/Cli/ExportAlbumArtCommand.php
 
 		-
-			message: "#^Parameter \\#2 \\$catalog of method Ampache\\\\Module\\\\Album\\\\Export\\\\AlbumArtExporterInterface\\:\\:export\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Catalog, Ampache\\\\Repository\\\\Model\\\\Catalog\\|null given\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportAlbumArtCommand.php
-
-		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Cli/ExportArtCommand.php
@@ -10678,16 +10463,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
 			count: 5
-			path: src/Module/Cli/PrintTagsCommand.php
-
-		-
-			message: "#^Cannot access property \\$rename_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/PrintTagsCommand.php
-
-		-
-			message: "#^Cannot access property \\$sort_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
 			path: src/Module/Cli/PrintTagsCommand.php
 
 		-
@@ -13746,11 +13521,6 @@ parameters:
 			path: src/Module/Song/Tag/SongTagWriter.php
 
 		-
-			message: "#^Cannot call method get_type\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Song/Tag/SongTagWriter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:check_for_duplicate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Song/Tag/SongTagWriter.php
@@ -15706,31 +15476,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_utility.php
 
 		-
-			message: "#^Cannot call method get_album_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/Cron.php
-
-		-
-			message: "#^Cannot call method get_artist_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/Cron.php
-
-		-
-			message: "#^Cannot call method get_podcast_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/Cron.php
-
-		-
-			message: "#^Cannot call method get_song_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/Cron.php
-
-		-
-			message: "#^Cannot call method get_video_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/Cron.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Util/Environment.php
@@ -15856,16 +15601,6 @@ parameters:
 			path: src/Module/Util/FileSystem/FileNameConverter.php
 
 		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Cannot call method get_path\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\\\FileNameConverter\\:\\:charset_clean_name\\(\\) never returns array\\<string\\> so it can be removed from the return type\\.$#"
 			count: 1
 			path: src/Module/Util/FileSystem/FileNameConverter.php
@@ -15899,11 +15634,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$translated_filename of method Ampache\\\\Module\\\\Util\\\\FileSystem\\\\FileNameConverter\\:\\:charset_rename_file\\(\\) expects string, string\\|false given\\.$#"
 			count: 2
 			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
@@ -17051,11 +16781,6 @@ parameters:
 			path: src/Module/Util/Upload.php
 
 		-
-			message: "#^Cannot access property \\$catalog_type on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Upload\\:\\:check\\(\\) has parameter \\$catalog_id with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Upload.php
@@ -17112,11 +16837,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$to of function move_uploaded_file expects string, string\\|true given\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
-			message: "#^Parameter \\#6 \\$album_artist of static method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check\\(\\) expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Module/Util/Upload.php
 
@@ -17671,11 +17391,6 @@ parameters:
 			path: src/Module/Util/Waveform.php
 
 		-
-			message: "#^Cannot call method get_type\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:create_waveform\\(\\) should return string\\|null but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
@@ -17816,11 +17531,6 @@ parameters:
 			path: src/Module/Util/ZipHandlerInterface.php
 
 		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/WebDav/WebDavCatalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\WebDav\\\\WebDavCatalog\\:\\:getChildren\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavCatalog.php
@@ -17859,11 +17569,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\WebDav\\\\WebDavFactoryInterface\\:\\:createServer\\(\\) has parameter \\$node with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavFactoryInterface.php
-
-		-
-			message: "#^Cannot call method get_type\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/WebDav/WebDavFile.php
 
 		-
 			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
@@ -20661,11 +20366,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check\\(\\) should return int but returns string\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:display_art\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -20711,16 +20411,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:update_field\\(\\) expects int\\|string, int\\|null given\\.$#"
-			count: 2
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Parameter \\#6 \\$album_artist of static method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check\\(\\) expects string\\|null, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$_mapcache type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -20732,7 +20422,7 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$album_artist \\(int\\) does not accept int\\|null\\.$#"
-			count: 2
+			count: 1
 			path: src/Repository/Model/Album.php
 
 		-
@@ -20802,11 +20492,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:check\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -21616,11 +21301,6 @@ parameters:
 			path: src/Repository/Model/Browse.php
 
 		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:get_supplemental_objects\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Browse.php
@@ -21707,41 +21387,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method object\\:\\:get_parent\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Cannot access property \\$gather_types on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Cannot call method cache_catalog_proc\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Cannot call method get_newest_podcasts_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Cannot call method get_podcast_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Cannot call method get_tvshow_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Cannot call method get_video_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -22141,11 +21786,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Parameter \\#1 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:create_from_id\\(\\) expects int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true given\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Parameter \\#1 \\$data of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_asx\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -22192,11 +21832,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, array\\<int, string\\>\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#6 \\$album_artist of static method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check\\(\\) expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -22656,11 +22291,6 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:update\\(\\) should return int but returns false\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -22722,11 +22352,6 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
 
@@ -23304,16 +22929,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:\\$name has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Cannot call method get_path\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 3
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Cannot call method get_type\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
 
 		-
 			message: "#^If condition is always false\\.$#"
@@ -24146,11 +23761,6 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 3
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:_add_type_boolean\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
@@ -24971,11 +24581,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Parameter \\#1 \\$new_artist of static method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:update_artist\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Parameter \\#1 \\$object of method Ampache\\\\Repository\\\\Repository\\:\\:update\\(\\) expects Ampache\\\\Repository\\\\Model\\\\DatabaseObject, false given\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -25021,11 +24626,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Parameter \\#6 \\$album_artist of static method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check\\(\\) expects string\\|null, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$album_disk \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -25047,11 +24647,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$aliases has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$artist \\(int\\) does not accept int\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 

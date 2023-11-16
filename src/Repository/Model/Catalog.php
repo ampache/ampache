@@ -430,7 +430,7 @@ abstract class Catalog extends database_object
 
         foreach (Catalog::CATALOG_TYPES as $type) {
             $catalog = self::create_catalog_type($type);
-            if (!$catalog) {
+            if (!$catalog instanceof Catalog) {
                 break;
             }
             if ($catalog->is_installed()) {
@@ -1081,6 +1081,9 @@ abstract class Catalog extends database_object
             foreach ($catalogs as $catalogid) {
                 debug_event(__CLASS__, 'cache_catalogs: ' . $catalogid, 5);
                 $catalog = self::create_from_id($catalogid);
+                if (!$catalog instanceof Catalog) {
+                    break;
+                }
                 $catalog->cache_catalog_proc();
             }
             $catalog_dirs = new RecursiveDirectoryIterator($path);
@@ -1110,7 +1113,7 @@ abstract class Catalog extends database_object
         }
         foreach ($catalogs as $catalogid) {
             $catalog = self::create_from_id($catalogid);
-            if (!$catalog) {
+            if (!$catalog instanceof Catalog) {
                 break;
             }
             if ($catalog->last_add > $last_update) {
@@ -1332,16 +1335,16 @@ abstract class Catalog extends database_object
      */
     public static function count_catalog($catalog_id)
     {
-        $catalog   = self::create_from_id($catalog_id);
-        $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
-        $params    = $catalog_id ? array($catalog_id) : array();
-        $results   = array(
+        $catalog = self::create_from_id($catalog_id);
+        $results = array(
             'items' => 0,
             'time' => 0,
             'size' => 0
         );
+        if ($catalog !== null) {
+            $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
+            $params    = $catalog_id ? array($catalog_id) : array();
 
-        if ($catalog->id) {
             $table = self::get_table_from_type($catalog->gather_types);
             if ($table == 'podcast_episode' && $catalog_id) {
                 $where_sql = "WHERE `podcast` IN (SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
@@ -1452,7 +1455,10 @@ abstract class Catalog extends database_object
 
         $results = array();
         foreach ($catalogs as $catalog_id) {
-            $catalog   = self::create_from_id($catalog_id);
+            $catalog = self::create_from_id($catalog_id);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
             $video_ids = $catalog->get_video_ids($type);
             foreach ($video_ids as $video_id) {
                 $results[] = Video::create_from_id($video_id);
@@ -1513,7 +1519,10 @@ abstract class Catalog extends database_object
 
         $results = array();
         foreach ($catalogs as $catalog_id) {
-            $catalog    = self::create_from_id($catalog_id);
+            $catalog = self::create_from_id($catalog_id);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
             $tvshow_ids = $catalog->get_tvshow_ids();
             foreach ($tvshow_ids as $tvshow_id) {
                 $results[] = new TvShow($tvshow_id);
@@ -1900,7 +1909,10 @@ abstract class Catalog extends database_object
 
         $results = array();
         foreach ($catalogs as $catalog_id) {
-            $catalog     = self::create_from_id($catalog_id);
+            $catalog = self::create_from_id($catalog_id);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
             $podcast_ids = $catalog->get_podcast_ids();
             foreach ($podcast_ids as $podcast_id) {
                 $results[] = new Podcast($podcast_id);
@@ -1944,7 +1956,10 @@ abstract class Catalog extends database_object
         $results  = array();
 
         foreach ($catalogs as $catalog_id) {
-            $catalog     = self::create_from_id($catalog_id);
+            $catalog = self::create_from_id($catalog_id);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
             $episode_ids = $catalog->get_newest_podcasts_ids($count);
             foreach ($episode_ids as $episode_id) {
                 $results[] = new Podcast_Episode($episode_id);
@@ -2457,7 +2472,7 @@ abstract class Catalog extends database_object
     ) {
         $array   = array();
         $catalog = self::create_from_id($media->catalog);
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
             $array['error']  = true;
 
@@ -2700,7 +2715,7 @@ abstract class Catalog extends database_object
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
         if (!empty($artists_array) && count($artists_array) > count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
-                $songArtist_id = Artist::check($artist_name);
+                $songArtist_id = (int)Artist::check($artist_name);
                 if ($songArtist_id > 0 && !in_array($songArtist_id, $songArtist_array)) {
                     $songArtist_array[] = $songArtist_id;
                 }
@@ -4242,7 +4257,8 @@ abstract class Catalog extends database_object
                 $catalog_id = 0;
                 // First see if we need to do an add
                 if ($options['add_path'] != '/' && strlen((string)$options['add_path'])) {
-                    if ($catalog_id = Catalog_local::get_from_path($options['add_path'])) {
+                    $catalog_id = (int)Catalog_local::get_from_path($options['add_path']);
+                    if ($catalog_id > 0) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => $options['add_path']))) {
                             self::update_catalog_map($catalog->gather_types);

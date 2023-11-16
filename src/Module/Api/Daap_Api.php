@@ -345,7 +345,10 @@ class Daap_Api
         $catalogs = Catalog::get_catalogs();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
-            $songs   = array_merge($songs, $catalog->get_songs());
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
+            $songs = array_merge($songs, $catalog->get_songs());
         }
 
         $output .= self::tlv('dmap.specifiedtotalcount', count($songs));

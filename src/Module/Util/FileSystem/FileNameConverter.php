@@ -50,6 +50,9 @@ final class FileNameConverter implements FileNameConverterInterface
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
             /* HINT: %1 Catalog Name, %2 Catalog Path */
             $interactor->info(
                 sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->get_path()),

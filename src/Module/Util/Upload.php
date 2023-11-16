@@ -161,9 +161,12 @@ class Upload
             return null;
         }
         if (array_key_exists('upl', $_FILES) && $_FILES['upl']['error'] == 0) {
-            $upload_catalog = Catalog::create_from_id($catalog_id);
-            if ($upload_catalog->catalog_type == "local") {
-                return $upload_catalog;
+            $catalog = Catalog::create_from_id($catalog_id);
+            if (!$catalog instanceof Catalog) {
+                return null;
+            }
+            if ($catalog->catalog_type == "local") {
+                return $catalog;
             }
         } else {
             debug_event(self::class, 'File upload error (check filesize limits).', 2);
@@ -241,8 +244,8 @@ class Upload
 
                 return false;
             }
-            $artist_id = Artist::check($artist_name);
-            if ((int) $artist_id < 0) {
+            $artist_id = (int)Artist::check($artist_name);
+            if ($artist_id === 0) {
                 debug_event(self::class, 'Artist information required, uploaded song skipped.', 3);
 
                 return false;
@@ -250,7 +253,7 @@ class Upload
             $artist = new Artist($artist_id);
             $artist->update_artist_user($user_id); // take ownership of the new artist
 
-            return (int) $artist_id;
+            return $artist_id;
         }
 
         return false;
@@ -267,7 +270,7 @@ class Upload
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
             $album_id = Album::check(AmpConfig::get('upload_catalog'), $album_name, 0, null, null, $artist_id);
-            if ((int)$album_id < 0) {
+            if ((int)$album_id === 0) {
                 debug_event(self::class, 'Album information required, uploaded song skipped.', 3);
 
                 return false;
@@ -340,13 +343,12 @@ class Upload
                 $catalog = Catalog::create_from_id($catalog_id);
             }
         }
-
         if ($username === null) {
             $username = Core::get_global('user')->username;
         }
 
         $rootdir = "";
-        if ($catalog != null && $catalog->id) {
+        if ($catalog !== null && $catalog->id) {
             $rootdir = realpath($catalog->get_path());
             if (!empty($rootdir)) {
                 if (AmpConfig::get('upload_subdir')) {

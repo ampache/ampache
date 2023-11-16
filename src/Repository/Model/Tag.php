@@ -243,7 +243,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * update
      * Update the name of the tag
      * @param array $data
-     * @return bool
+     * @return int|false
      */
     public function update(array $data)
     {

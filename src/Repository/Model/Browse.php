@@ -224,7 +224,9 @@ class Browse extends Query
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
             $catalog = Catalog::create_from_id((int)((string)$filter_value));
-            $match   = ' (' . $catalog->name . ')';
+            if ($catalog !== null) {
+                $match = ' (' . $catalog->name . ')';
+            }
         }
 
         $type = $this->get_type();

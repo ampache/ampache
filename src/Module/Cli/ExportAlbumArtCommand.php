@@ -71,6 +71,9 @@ final class ExportAlbumArtCommand extends Command
         $catalogs = Catalog::get_catalogs();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
+            if (!$catalog instanceof Catalog) {
+                break;
+            }
 
             try {
                 $this->albumArtExporter->export(

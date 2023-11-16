@@ -65,7 +65,7 @@ final class CatalogAction5Method
         }
 
         $catalog = Catalog::create_from_id((int) $input['catalog']);
-        if ($catalog) {
+        if ($catalog !== null) {
             if (defined('SSE_OUTPUT')) {
                 unset($SSE_OUTPUT);
             }

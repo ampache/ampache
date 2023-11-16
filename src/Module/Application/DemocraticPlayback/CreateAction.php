@@ -47,16 +47,12 @@ final class CreateAction implements ApplicationActionInterface
 
     private ResponseFactoryInterface $responseFactory;
 
-    private UiInterface $ui;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory,
-        UiInterface $ui
+        ResponseFactoryInterface $responseFactory
     ) {
         $this->configContainer = $configContainer;
         $this->responseFactory = $responseFactory;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,12 +73,8 @@ final class CreateAction implements ApplicationActionInterface
             // Create the playlist
             Democratic::create($_POST);
             Democratic::get_current_playlist();
-        } elseif (!$democratic->update($_POST)) {
-            $this->ui->showConfirmation(
-                T_('There Was a Problem'),
-                T_("Cooldown out of range."),
-                AmpConfig::get('web_path') . "/democratic.php?action=manage"
-            );
+        } else {
+            $democratic->update($_POST);
         }
 
         return $this->responseFactory

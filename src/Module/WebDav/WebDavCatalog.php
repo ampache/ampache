@@ -95,14 +95,13 @@ class WebDavCatalog extends DAV\Collection
 
     /**
      * getName
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         if ($this->catalog_id > 0) {
             $catalog = Catalog::create_from_id($this->catalog_id);
 
-            return $catalog->name;
+            return $catalog->name ?? '';
         }
 
         return AmpConfig::get('site_title');

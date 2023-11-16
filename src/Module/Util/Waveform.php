@@ -88,7 +88,7 @@ class Waveform
             }
             if (!$waveform) {
                 $catalog = Catalog::create_from_id($media->catalog);
-                if ($catalog->get_type() == 'local') {
+                if ($catalog !== null && $catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';
                     $transcode_cfg = AmpConfig::get('transcode');
                     $valid_types   = $media->get_stream_types();

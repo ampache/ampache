@@ -61,6 +61,9 @@ final class SongTagWriter implements SongTagWriterInterface
         $utilityFactory = $dic->get(UtilityFactoryInterface::class);
 
         $catalog = Catalog::create_from_id($song->catalog);
+        if (!$catalog instanceof Catalog) {
+            return;
+        }
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing metadata to file %s', $song->file),
@@ -240,6 +243,9 @@ final class SongTagWriter implements SongTagWriterInterface
         $utilityFactory = $dic->get(UtilityFactoryInterface::class);
 
         $catalog = Catalog::create_from_id($song->catalog);
+        if (!$catalog instanceof Catalog) {
+            return;
+        }
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing rating to file %s', $song->file),

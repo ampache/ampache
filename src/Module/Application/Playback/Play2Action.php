@@ -641,7 +641,10 @@ final class Play2Action implements ApplicationActionInterface
             } else {
                 // Build up the catalog for our current object
                 $catalog = Catalog::create_from_id($mediaCatalogId);
-                $media   = $catalog->prepare_media($media);
+                if (!$catalog instanceof Catalog) {
+                    return null;
+                }
+                $media = $catalog->prepare_media($media);
                 // Subsonic and remote catalogs redirect you to the remote url so stop here
                 if ($media == null) {
                     return null;

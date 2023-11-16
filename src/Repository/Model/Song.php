@@ -471,9 +471,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
             if (!empty($artist) && !empty($albumartist) && $artist == $albumartist) {
-                $albumartist = $artists_array[0];
+                $albumartist = (string)$artists_array[0];
             }
-            $artist = $artists_array[0];
+            $artist = (string)$artists_array[0];
         }
         $license_id = null;
         if (isset($results['license']) && (int)$results['license'] > 0) {
@@ -510,7 +510,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         if (!isset($results['artist_id'])) {
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-            $artist_id   = Artist::check($artist, $artist_mbid);
+            $artist_id   = (int)Artist::check($artist, $artist_mbid);
         } else {
             $artist_id = (int)($results['artist_id']);
         }
@@ -553,14 +553,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         $song_id = (int)Dba::insert_id();
-        $artists = array((int)$artist_id, (int)$albumartist_id);
+        $artists = array($artist_id, (int)$albumartist_id);
 
         // create the album_disk (if missing)
         AlbumDisk::check($album_id, $disk, $catalog, $disksubtitle);
 
         // map the song to catalog album and artist maps
         Catalog::update_map((int)$catalog, 'song', $song_id);
-        if ((int)$artist_id > 0) {
+        if ($artist_id > 0) {
             Artist::add_artist_map($artist_id, 'song', $song_id);
             Album::add_album_map($album_id, 'song', (int) $artist_id);
         }
@@ -581,7 +581,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
         if (!empty($artists_array) && !count($artists_array) == count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
-                $song_artist_id = Artist::check($artist_name);
+                $song_artist_id = (int)Artist::check($artist_name);
                 if ($song_artist_id > 0) {
                     $artists[] = $song_artist_id;
                     if ($song_artist_id != $artist_id) {
@@ -1330,9 +1330,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 case 'artist_name':
                     // Create new artist name and id
                     $old_artist_id = $this->artist;
-                    $new_artist_id = Artist::check($value);
-                    $this->artist  = $new_artist_id;
-                    self::update_artist($new_artist_id, $this->id, $old_artist_id);
+                    $new_artist_id = (int)Artist::check($value);
+                    if ($new_artist_id > 0) {
+                        $this->artist = $new_artist_id;
+                        self::update_artist($new_artist_id, $this->id, $old_artist_id);
+                    }
                     break;
                 case 'album_name':
                     // Create new album name and id

@@ -124,7 +124,7 @@ interface AlbumRepositoryInterface
      */
     public function getByArtist(
         int $artistId,
-        ?int $catalog = null,
+        ?int $catalogId = null,
         bool $group_release_type = false
     ): array;
 
@@ -136,7 +136,7 @@ interface AlbumRepositoryInterface
      */
     public function getAlbumByArtist(
         int $artistId,
-        ?int $catalog = null,
+        ?int $catalogId = null,
         bool $group_release_type = false
     ): array;
 
@@ -148,7 +148,7 @@ interface AlbumRepositoryInterface
      */
     public function getAlbumDiskByArtist(
         int $artistId,
-        ?int $catalog = null,
+        ?int $catalogId = null,
         bool $group_release_type = false
     ): array;
 

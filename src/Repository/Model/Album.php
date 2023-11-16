@@ -382,12 +382,12 @@ class Album extends database_object implements library_item
      * check
      *
      * Searches for an album; if none is found, insert a new one.
-     * @param int $catalog
+     * @param int $catalog_id
      * @param string $name
      * @param int $year
      * @param string $mbid
      * @param string $mbid_group
-     * @param string $album_artist
+     * @param int $album_artist
      * @param string $release_type
      * @param string $release_status
      * @param int $original_year
@@ -395,9 +395,8 @@ class Album extends database_object implements library_item
      * @param string $catalog_number
      * @param string $version
      * @param bool $readonly
-     * @return int
      */
-    public static function check($catalog, $name, $year = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $release_status = null, $original_year = 0, $barcode = null, $catalog_number = null, $version = null, $readonly = false)
+    public static function check($catalog_id, $name, $year = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $release_status = null, $original_year = 0, $barcode = null, $catalog_number = null, $version = null, $readonly = false): int
     {
         $trimmed        = Catalog::trim_prefix(trim((string) $name));
         $name           = $trimmed['string'];
@@ -418,7 +417,7 @@ class Album extends database_object implements library_item
             $year          = 0;
             $original_year = null;
             $album_artist  = Artist::check(T_('Unknown (Orphaned)'));
-            $catalog       = 0;
+            $catalog_id    = 0;
         }
         if (isset(self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version])) {
             return self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version];
@@ -488,7 +487,7 @@ class Album extends database_object implements library_item
             $sql .= 'AND `album`.`version` IS NULL ';
         }
         $sql .= 'AND `album`.`catalog` = ?;';
-        $params[] = $catalog;
+        $params[] = $catalog_id;
 
         $db_results = Dba::read($sql, $params);
 
@@ -521,7 +520,7 @@ class Album extends database_object implements library_item
             $barcode,
             $catalog_number,
             $version,
-            $catalog,
+            $catalog_id,
             time()
         ));
         if (!$db_results) {
@@ -531,7 +530,7 @@ class Album extends database_object implements library_item
         $album_id = Dba::insert_id();
         debug_event(self::class, "check album: created {{$album_id}}", 4);
         // map the new id
-        Catalog::update_map($catalog, 'album', $album_id);
+        Catalog::update_map($catalog_id, 'album', $album_id);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             try {
@@ -543,7 +542,7 @@ class Album extends database_object implements library_item
 
         self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version] = $album_id;
 
-        return $album_id;
+        return (int)$album_id;
     }
 
     /**
@@ -1032,8 +1031,10 @@ class Album extends database_object implements library_item
         // If you have created an album_artist using 'add new...' we need to create a new artist
         if (array_key_exists('artist_name', $data) && !empty($data['artist_name'])) {
             $album_artist = Artist::check($data['artist_name']);
-            self::update_field('album_artist', $album_artist, $this->id);
-            $this->album_artist = $album_artist;
+            if ($album_artist !== null) {
+                self::update_field('album_artist', $album_artist, $this->id);
+                $this->album_artist = $album_artist;
+            }
         }
 
         $current_id = $this->id;
@@ -1157,7 +1158,7 @@ class Album extends database_object implements library_item
     /**
      * Update an album field.
      * @param string $field
-     * @param string|int $value
+     * @param string|int|null $value
      * @param int $album_id
      */
     private static function update_field($field, $value, $album_id): void

@@ -306,13 +306,13 @@ final class AlbumRepository implements AlbumRepositoryInterface
      */
     public function getByArtist(
         int $artistId,
-        ?int $catalog = null,
+        ?int $catalogId = null,
         bool $group_release_type = false
     ): array {
         $userId        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
-        if ($catalog !== null) {
-            $catalog_where = "AND `album`.`catalog` = '" . Dba::escape($catalog) . "'";
+        if ($catalogId !== null) {
+            $catalog_where = "AND `album`.`catalog` = '" . Dba::escape($catalogId) . "'";
         }
         $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
@@ -334,7 +334,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 $sql_sort = "`album`.`name`, $original_year";
         }
 
-        $sql        = ($showAlbum)
+        $sql = ($showAlbum)
             ? "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort"
             : "SELECT DISTINCT `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, $original_year FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, $original_year ORDER BY $sql_sort, `album_disk`.`disk`";
         $db_results = Dba::read($sql, array($artistId));
@@ -378,13 +378,13 @@ final class AlbumRepository implements AlbumRepositoryInterface
      */
     public function getAlbumByArtist(
         int $artistId,
-        ?int $catalog = null,
+        ?int $catalogId = null,
         bool $group_release_type = false
     ): array {
         $userId        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
-        if ($catalog !== null) {
-            $catalog_where .= " AND `album`.`catalog` = '" . Dba::escape($catalog) . "'";
+        if ($catalogId !== null) {
+            $catalog_where .= " AND `album`.`catalog` = '" . Dba::escape($catalogId) . "'";
         }
         $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
@@ -447,13 +447,13 @@ final class AlbumRepository implements AlbumRepositoryInterface
      */
     public function getAlbumDiskByArtist(
         int $artistId,
-        ?int $catalog = null,
+        ?int $catalogId = null,
         bool $group_release_type = false
     ): array {
         $userId        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
         $catalog_where = "AND `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
-        if ($catalog !== null) {
-            $catalog_where .= "AND `album_disk`.`catalog` = '" . Dba::escape($catalog) . "'";
+        if ($catalogId !== null) {
+            $catalog_where .= "AND `album_disk`.`catalog` = '" . Dba::escape($catalogId) . "'";
         }
         $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
