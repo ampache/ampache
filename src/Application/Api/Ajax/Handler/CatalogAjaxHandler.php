@@ -54,8 +54,10 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
 
                     return;
                 }
-
-                $catalog     = Catalog::create_from_id($_REQUEST['catalog_id']);
+                $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
+                if (!$catalog) {
+                    return;
+                }
                 $new_enabled = !$catalog->enabled;
                 Catalog::update_enabled($new_enabled, $catalog->id);
                 $catalog->enabled = (int)$new_enabled;

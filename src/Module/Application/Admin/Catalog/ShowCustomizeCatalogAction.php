@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -37,12 +38,16 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_customize_catalog';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui
     ) {
-        $this->ui = $ui;
+        $this->requestParser = $requestParser;
+        $this->ui            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -53,7 +58,10 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
+        $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
+        if (!$catalog) {
+            return null;
+        }
         $catalog->format();
 
         $this->ui->show(
