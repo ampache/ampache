@@ -36,7 +36,7 @@ global $dic;
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? -1;
 $rss_link  = AmpConfig::get('use_rss') ? '&nbsp' . AmpacheRss::get_display('recently_played', $user_id) : '';
-$refresh   = "&nbsp" . Ajax::button('?page=index&action=refresh_recently_played', 'refresh', T_('Refresh'), 'refresh_recently_played', 'box box_recently_played');
+$refresh   = "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
 $web_path  = (string)AmpConfig::get('web_path', '');
 $is_admin  = Access::check('interface', 100);
 $showAlbum = AmpConfig::get('album_group');
