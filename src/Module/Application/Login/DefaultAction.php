@@ -132,9 +132,10 @@ final class DefaultAction implements ApplicationActionInterface
 
         if (empty($this->requestParser->getFromRequest('step'))) {
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
-            if ((isset($_POST['username'])) ||
-                (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) &&
-                    (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))) {
+            if (
+                (isset($_POST['username'])) ||
+                (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
+            ) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
                     $auth                         = array();
@@ -334,13 +335,15 @@ final class DefaultAction implements ApplicationActionInterface
              * to redirect them back into an admin section
              */
             $web_path = $this->configContainer->getWebPath();
-            if ((substr($_POST['referrer'], 0, strlen((string) $web_path)) == $web_path) &&
+            if (
+                (substr($_POST['referrer'], 0, strlen((string) $web_path)) == $web_path) &&
                 strpos($_POST['referrer'], 'install.php') === false &&
                 strpos($_POST['referrer'], 'login.php') === false &&
                 strpos($_POST['referrer'], 'logout.php') === false &&
                 strpos($_POST['referrer'], 'update.php') === false &&
                 strpos($_POST['referrer'], 'activate.php') === false &&
-                strpos($_POST['referrer'], 'admin') === false) {
+                strpos($_POST['referrer'], 'admin') === false
+            ) {
                 return $this->responseFactory
                     ->createResponse(StatusCode::FOUND)
                     ->withHeader(

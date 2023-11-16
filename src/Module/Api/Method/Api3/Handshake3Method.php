@@ -101,8 +101,10 @@ final class Handshake3Method
             // Authentication with user/password, we still need to check the password
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
-                if (($timestamp < ($now_time - 1800)) ||
-                    ($timestamp > ($now_time + 1800))) {
+                if (
+                    ($timestamp < ($now_time - 1800)) ||
+                    ($timestamp > ($now_time + 1800))
+                ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login Failed: timestamp out of range'));
                     echo Xml3_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));

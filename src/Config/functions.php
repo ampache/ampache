@@ -85,10 +85,9 @@ function scrub_in($input)
  * This is the inverse of the scrub_in function
  * (Not deprecated yet see Ui::scrubOut)
  * @param string|null $string
- * @return string
  *
  */
-function scrub_out($string)
+function scrub_out($string): string
 {
     if ($string === null) {
         return '';
@@ -101,9 +100,8 @@ function scrub_out($string)
  * unhtmlentities
  * Undoes htmlentities()
  * @param string $string
- * @return string
  */
-function unhtmlentities($string)
+function unhtmlentities($string): string
 {
     return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
 } // unhtmlentities
@@ -114,9 +112,8 @@ function unhtmlentities($string)
  * value. We need a special function because PHP considers "false" to be true.
  *
  * @param string $string
- * @return bool
  */
-function make_bool($string)
+function make_bool($string): bool
 {
     if ($string === null) {
         return false;
@@ -132,9 +129,8 @@ function make_bool($string)
  * invert_bool
  * This returns the opposite of what you've got
  * @param $value
- * @return bool
  */
-function invert_bool($value)
+function invert_bool($value): bool
 {
     return make_bool($value) ? false : true;
 } // invert_bool
@@ -344,9 +340,8 @@ function get_languages()
  * is_rtl
  * This checks whether to be a Right-To-Left language.
  * @param $locale
- * @return bool
  */
-function is_rtl($locale)
+function is_rtl($locale): bool
 {
     return in_array($locale, array("he_IL", "fa_IR", "ar_SA"));
 }
@@ -424,9 +419,9 @@ if (!function_exists('getallheaders')) {
 }
 
 /**
- * @return string
+ * get_current_path
  */
-function get_current_path()
+function get_current_path(): string
 {
     if (strlen((string) $_SERVER['PHP_SELF'])) {
         $root = $_SERVER['PHP_SELF'];
@@ -438,9 +433,9 @@ function get_current_path()
 }
 
 /**
- * @return string
+ * get_web_path
  */
-function get_web_path()
+function get_web_path(): string
 {
     $root = get_current_path();
 
@@ -453,9 +448,8 @@ function get_web_path()
  * @param string $date_format
  * @param string $time_format
  * @param string $overwrite
- * @return string
  */
-function get_datetime($time, $date_format = 'short', $time_format = 'short', $overwrite = '')
+function get_datetime($time, $date_format = 'short', $time_format = 'short', $overwrite = ''): string
 {
     // allow time or date only
     $date_type = ($date_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
@@ -477,9 +471,8 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
  * check_config_values
  * checks to make sure that they have at least set the needed variables
  * @param array $conf
- * @return bool
  */
-function check_config_values($conf)
+function check_config_values($conf): bool
 {
     if (!is_array($conf)) {
         return false;
@@ -544,31 +537,30 @@ function return_bytes($val)
 /**
  * check_config_writable
  * This checks whether we can write the config file
- * @return bool
  */
-function check_config_writable()
+function check_config_writable(): bool
 {
     // file eixsts && is writable, or dir is writable
-    return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/ampache.cfg.php'))
-        || (!file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/')));
+    return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/ampache.cfg.php')) ||
+        (!file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/')));
 }
 
 /**
- * @return bool
+ * check_htaccess_rest_writable
  */
-function check_htaccess_rest_writable()
+function check_htaccess_rest_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
+    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess')) ||
+        (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
 }
 
 /**
- * @return bool
+ * check_htaccess_play_writable
  */
-function check_htaccess_play_writable()
+function check_htaccess_play_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
+    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess')) ||
+        (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
 }
 
 /**
@@ -577,9 +569,8 @@ function check_htaccess_play_writable()
  * @param string|bool $status
  * @param string $value
  * @param string $comment
- * @return string
  */
-function debug_result($status = false, $value = null, $comment = '')
+function debug_result($status = false, $value = null, $comment = ''): string
 {
     $class = $status ? 'success' : 'danger';
 
@@ -679,11 +670,10 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  * @param string $message
  * @param int $level
  * @param string $username
- * @return bool
  *
  * @deprecated Use LegacyLogger
  */
-function debug_event($type, $message, $level, $username = '')
+function debug_event($type, $message, $level, $username = ''): bool
 {
     if (!$username && Core::get_global('user')) {
         $username = Core::get_global('user')->username;
@@ -712,7 +702,7 @@ function debug_event($type, $message, $level, $username = '')
  * @param $catalogs
  * @param array $options
  */
-function catalog_worker($action, $catalogs = null, $options = null)
+function catalog_worker($action, $catalogs = null, $options = null): void
 {
     if (AmpConfig::get('ajax_load')) {
         $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs));
@@ -728,7 +718,7 @@ function catalog_worker($action, $catalogs = null, $options = null)
 /**
  * @param string $url
  */
-function sse_worker($url)
+function sse_worker($url): void
 {
     echo '<script>';
     echo "sse_worker('$url');";
@@ -740,9 +730,8 @@ function sse_worker($url)
  * returns the script part of the referer address passed by the web browser
  * this is not %100 accurate. Also because this is not passed by us we need
  * to clean it up, take the filename then check for a /admin/ and dump the rest
- * @return string
  */
-function return_referer()
+function return_referer(): string
 {
     $referer = Core::get_server('HTTP_REFERER');
     if (substr($referer, -1) == '/') {
@@ -771,7 +760,7 @@ function return_referer()
  * @param bool $allow_none
  * @param string $user_id
  */
-function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
+function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null): void
 {
     static $album_id_cnt = 0;
 
@@ -832,7 +821,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
  * @param bool $allow_none
  * @param int $user_id
  */
-function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
+function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null): void
 {
     static $artist_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -888,7 +877,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
  * @param int $season_id
  * @param bool $allow_none
  */
-function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false)
+function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false): void
 {
     static $tvshow_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -930,9 +919,8 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
  * @param bool $allow_add
  * @param int $video_id
  * @param bool $allow_none
- * @return bool
  */
-function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false)
+function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false): bool
 {
     if (!$season_id) {
         return false;
@@ -985,7 +973,7 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
  * @param bool $allow_none
  * @param string $filter_type
  */
-function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = '')
+function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = ''): void
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
@@ -1030,7 +1018,7 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
  * @param int $license_id
  * @param int $song_id
  */
-function show_license_select($name, $license_id = 0, $song_id = 0)
+function show_license_select($name, $license_id = 0, $song_id = 0): void
 {
     static $license_id_cnt = 0;
 
@@ -1075,7 +1063,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0)
  * @param string $selected
  * @param string $style
  */
-function show_user_select($name, $selected = '', $style = '')
+function show_user_select($name, $selected = '', $style = ''): void
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"-1\">" . T_('All') . "</option>\n";
@@ -1097,7 +1085,7 @@ function show_user_select($name, $selected = '', $style = '')
     echo "</select>\n";
 } // show_user_select
 
-function xoutput_headers()
+function xoutput_headers(): void
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
@@ -1138,7 +1126,7 @@ function xoutput_from_array($array, $callback = false, $type = '')
  * This is identical to the javascript command that it actually calls
  * @param $element
  */
-function toggle_visible($element)
+function toggle_visible($element): void
 {
     echo '<script>';
     echo "toggleVisible('$element');";
@@ -1151,7 +1139,7 @@ function toggle_visible($element)
  * @param string $message
  * @param int $timeout
  */
-function display_notification($message, $timeout = 5000)
+function display_notification($message, $timeout = 5000): void
 {
     echo "<script>";
     echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE)) . "', " . $timeout . ");";
@@ -1163,9 +1151,8 @@ function display_notification($message, $timeout = 5000)
  * This function takes a boolean value and then prints out a friendly text
  * message.
  * @param $value
- * @return string
  */
-function print_bool($value)
+function print_bool($value): string
 {
     if ($value) {
         $string = '<span class="item_on">' . T_('On') . '</span>';
@@ -1181,7 +1168,7 @@ function print_bool($value)
  * This shows the Now Playing templates and does some garbage collection
  * this should really be somewhere else
  */
-function show_now_playing()
+function show_now_playing(): void
 {
     Session::garbage_collection();
     Stream::garbage_collection();
@@ -1195,7 +1182,7 @@ function show_now_playing()
  * @param bool $render
  * @param bool $force
  */
-function show_table_render($render = false, $force = false)
+function show_table_render($render = false, $force = false): void
 {
     // Include table render javascript only once
     if ($force || !defined('TABLE_RENDERED')) {
@@ -1212,10 +1199,8 @@ function show_table_render($render = false, $force = false)
 /**
  * load_gettext
  * Sets up our local gettext settings.
- *
- * @return bool
  */
-function load_gettext()
+function load_gettext(): bool
 {
     $lang   = AmpConfig::get('lang');
     $mopath = __DIR__ . '/../../locale/' . $lang . '/LC_MESSAGES/messages.mo';
@@ -1233,10 +1218,8 @@ function load_gettext()
 /**
  * T_
  * Translate string
- * @param string $msgid
- * @return string
  */
-function T_($msgid)
+function T_(string $msgid): string
 {
     if (function_exists('__')) {
         return __($msgid);
@@ -1338,9 +1321,8 @@ function get_theme($name)
  * @see \Ampache\Module\Util\Graph
  *
  * @param $value
- * @return string
  */
-function pGraph_Yformat_bytes($value)
+function pGraph_Yformat_bytes($value): string
 {
     return Ui::format_bytes($value);
 }

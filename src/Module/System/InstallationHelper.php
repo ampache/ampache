@@ -650,10 +650,12 @@ final class InstallationHelper implements InstallationHelperInterface
         $data  = explode("\n", (string) $dist);
         $final = "";
         foreach ($data as $line) {
-            if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
-                || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
-                || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)
-                || preg_match("/^;?([\w\d]+)\s{0}=\s{0}[\'\"]?(.*?)[\'\"]?$/", $line, $matches)) {
+            if (
+                preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches) ||
+                preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches) ||
+                preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches) ||
+                preg_match("/^;?([\w\d]+)\s{0}=\s{0}[\'\"]?(.*?)[\'\"]?$/", $line, $matches)
+            ) {
                 $key   = $matches[1];
                 $value = $matches[2];
 

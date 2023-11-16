@@ -31,7 +31,7 @@ $default_sort   = "%a/%A";
 $allow_video    = AmpConfig::get('allow_video'); ?>
 <?php Ui::show_box_top(T_('Add Catalog'), 'box box_add_catalog'); ?>
 <p><?php
-$catalog_filter="";
+$catalog_filter = "";
 if (AmpConfig::get('catalog_filter')) {
     $catalog_filter = "<br>" . T_("New catalogs are added to the DEFAULT group when created");
 }

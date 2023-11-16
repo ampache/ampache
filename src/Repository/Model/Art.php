@@ -486,7 +486,7 @@ class Art extends database_object
     {
         $idx = null;
         $cnt = count($apics);
-        for ($i=0; $i < $cnt; $i++) {
+        for ($i = 0; $i < $cnt; $i++) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
                 $ndata['attached_picture'][$i]['description']       = $new_pic['description'];
                 $ndata['attached_picture'][$i]['data']              = $new_pic['data'];

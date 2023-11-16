@@ -364,10 +364,14 @@ class Horde_Browser
             $this->setQuirk('no_hidden_overflow_tables');
             $this->setFeature('dataurl');
 
-            if (strpos($agent, 'Mobile') !== false || strpos($agent, 'Android') !== false || strpos($agent, 'SAMSUNG-GT') !== false ||
+            if (
+                strpos($agent, 'Mobile') !== false ||
+                strpos($agent, 'Android') !== false ||
+                strpos($agent, 'SAMSUNG-GT') !== false ||
                 ((strpos($agent, 'Nokia') !== false || strpos($agent, 'Symbian') !== false) && strpos($agent, 'WebKit') !== false) ||
                 (strpos($agent, 'N900') !== false && strpos($agent, 'Maemo Browser') !== false) ||
-                (strpos($agent, 'MeeGo') !== false && strpos($agent, 'NokiaN9') !== false)) {
+                (strpos($agent, 'MeeGo') !== false && strpos($agent, 'NokiaN9') !== false)
+            ) {
                 // WebKit Mobile
                 $this->setFeature('frames', false);
                 $this->setFeature('javascript');

@@ -182,7 +182,7 @@ class Upnp_Api
         // Delay in ms
         $delay = random_int(15, $delaytime * 1000);
 
-        $addr=explode(":", $address);
+        $addr = explode(":", $address);
         if (self::SSDP_DEBUG) {
             debug_event(self::class, 'Sending response to: ' . $addr[0] . ':' . $addr[1] . PHP_EOL . $response, 5);
         }
@@ -425,10 +425,12 @@ class Upnp_Api
                 continue;
             }
 
-            if ($item['upnp:class'] == 'object.container' ||
+            if (
+                $item['upnp:class'] == 'object.container' ||
                 $item['upnp:class'] == 'object.container.album.musicAlbum' ||
                 $item['upnp:class'] == 'object.container.person.musicArtist' ||
-                $item['upnp:class'] == 'object.container.storageFolder') {
+                $item['upnp:class'] == 'object.container.storageFolder'
+            ) {
                 $ndItem = $xmlDoc->createElement('container');
             } else {
                 $ndItem = $xmlDoc->createElement('item');
@@ -1254,8 +1256,8 @@ class Upnp_Api
 
         // trim spaces around tokens and discard those which have only spaces in them
         $index = 0;
-        for ($i=0; $i < $actualsize; $i++) {
-            $actualtokens[$i]=trim($actualtokens[$i]);
+        for ($i = 0; $i < $actualsize; $i++) {
+            $actualtokens[$i] = trim($actualtokens[$i]);
             if ($actualtokens[$i] != "") {
                 $nospacetokens[$index++] = $actualtokens[$i];
             }
@@ -1265,7 +1267,7 @@ class Upnp_Api
         $onetoken    = "";
         $index       = 0;
         $nospacesize = sizeof($nospacetokens);
-        for ($i=0; $i < $nospacesize; $i++) {
+        for ($i = 0; $i < $nospacesize; $i++) {
             $token = $nospacetokens[$i];
             switch ($token) {
                 case "not":
@@ -1304,7 +1306,7 @@ class Upnp_Api
     {
         //echo "Search term ", $query, "\n";
         $tok = str_getcsv($query, ' ');
-        //for ($i=0; $i<sizeof($tok); $i++) {
+        //for ($i = 0; $i<sizeof($tok); $i++) {
         //    echo $i, $tok[$i];
         //    echo "\n";
         //}
@@ -1394,14 +1396,14 @@ class Upnp_Api
 
         $tokens = self::gettokens($query);
         $size   = sizeof($tokens);
-        // for ($i=0; $i<sizeof($tokens); $i++) {
+        // for ($i = 0; $i<sizeof($tokens); $i++) {
         //     echo $tokens[$i]."|";
         // }
         // echo "\n";
 
         // Go through all the tokens and transform anything we recognize
         // If any translation goes to NUL then must remove previous token provided it is AND or OR
-        for ($i=0; $i < $size; $i++) {
+        for ($i = 0; $i < $size; $i++) {
             for ($j=0; $j < 7; $j++) {
                 if ($tokens[$i] == $upnp_translations[$j][0]) {
                     $tokens[$i] = $upnp_translations[$j][1];
@@ -1411,7 +1413,7 @@ class Upnp_Api
                 }
             }
         }
-        //for ($i=0; $i<sizeof($tokens); $i++) {
+        //for ($i = 0; $i<sizeof($tokens); $i++) {
         //   echo $tokens[$i]."|";
         //}
         // Start to construct the Ampache Search data array
@@ -1442,7 +1444,7 @@ class Upnp_Api
         $num_and = 0;
         $num_or  = 0;
         $size    = sizeof($tokens);
-        for ($i=0; $i < $size; $i++) {
+        for ($i = 0; $i < $size; $i++) {
             if ($tokens[$i] == 'and') {
                 $num_and++;
                 $tokens[$i] = '';
@@ -1471,7 +1473,7 @@ class Upnp_Api
 
         $rule_num = 1;
         $size     = sizeof($tokens);
-        for ($i=0; $i < $size; $i++) {
+        for ($i = 0; $i < $size; $i++) {
             if ($tokens[$i] != '') {
                 $rule = 'rule_' . (string) $rule_num;
                 $term = self::parse_upnp_search_term($tokens[$i], $data['type']);
