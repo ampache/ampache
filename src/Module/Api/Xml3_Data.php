@@ -71,7 +71,7 @@ class Xml3_Data
      *
      * This takes an int and changes the offset
      *
-     * @param int    $offset    (description here...)
+     * @param int $offset    (description here...)
      */
     public static function set_offset($offset): void
     {
@@ -83,7 +83,7 @@ class Xml3_Data
      *
      * This sets the limit for any ampache transactions
      *
-     * @param int|string    $limit    (description here...)
+     * @param int|string $limit    (description here...)
      */
     public static function set_limit($limit): bool
     {
@@ -101,7 +101,7 @@ class Xml3_Data
      *
      * This sets the type of Xml_Data we are working on
      *
-     * @param string    $type    Xml_Data type
+     * @param string $type    Xml_Data type
      */
     public static function set_type($type): void
     {
@@ -115,11 +115,10 @@ class Xml3_Data
      *
      * This generates a standard XML Error message
      *
-     * @param int    $code    Error code
-     * @param string    $string    Error message
-     * @return string    return error message xml
+     * @param int $code    Error code
+     * @param string $string    Error message
      */
-    public static function error($code, $string)
+    public static function error($code, $string): string
     {
         $string = "\t<error code=\"$code\"><![CDATA[" . $string . "]]></error>";
 
@@ -131,11 +130,10 @@ class Xml3_Data
      *
      * This takes two values, first the key second the string
      *
-     * @param string    $key    (description here...)
-     * @param string    $string    xml data
-     * @return string    return xml
+     * @param string $key    (description here...)
+     * @param string $string    xml data
      */
-    public static function single_string($key, $string = '')
+    public static function single_string($key, $string = ''): string
     {
         $final = self::_header();
         if (!empty($string)) {
@@ -153,10 +151,9 @@ class Xml3_Data
      *
      * This returns the header
      *
-     * @see    _header()
-     * @return string    return xml
+     * @see _header()
      */
-    public static function header($title = null)
+    public static function header($title = null): string
     {
         return self::_header($title);
     } // header
@@ -166,10 +163,9 @@ class Xml3_Data
      *
      * This returns the footer
      *
-     * @see    _footer()
-     * @return string    return xml
+     * @see _footer()
      */
-    public static function footer()
+    public static function footer(): string
     {
         return self::_footer();
     } // footer
@@ -229,11 +225,10 @@ class Xml3_Data
      *
      * This will build an xml document from a key'd array,
      *
-     * @param array    $array    (description here...)
-     * @param bool    $callback    (description here...)
-     * @return string    return xml
+     * @param array $array    (description here...)
+     * @param bool $callback    (description here...)
      */
-    public static function keyed_array($array, $callback = '')
+    public static function keyed_array($array, $callback = ''): string
     {
         $string = '';
 
@@ -267,10 +262,9 @@ class Xml3_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param array    $tags    (description here...)
-     * @return string    return xml
+     * @param array $tags    (description here...)
      */
-    public static function tags($tags)
+    public static function tags($tags): string
     {
         $string = "<total_count>" . count($tags) . "</total_count>\n";
 
@@ -297,13 +291,12 @@ class Xml3_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param array    $artists    (description here...)
-     * @param array    $include    Array of other items to include
-     * @param User     $user
-     * @param bool     $full_xml  whether to return a full XML document or just the node
-     * @return string    return xml
+     * @param array $artists    (description here...)
+     * @param array $include    Array of other items to include
+     * @param User $user
+     * @param bool $full_xml  whether to return a full XML document or just the node
      */
-    public static function artists($artists, $include, $user, $full_xml = true)
+    public static function artists($artists, $include, $user, $full_xml = true): string
     {
         if (null == $include) {
             $include = array();
@@ -359,13 +352,12 @@ class Xml3_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param array    $albums    (description here...)
-     * @param array    $include    Array of other items to include
-     * @param User     $user
-     * @param bool     $full_xml  whether to return a full XML document or just the node
-     * @return string    return xml
+     * @param array $albums    (description here...)
+     * @param array $include    Array of other items to include
+     * @param User $user
+     * @param bool $full_xml  whether to return a full XML document or just the node
      */
-    public static function albums($albums, $include, $user, $full_xml = true)
+    public static function albums($albums, $include, $user, $full_xml = true): string
     {
         if (null == $include) {
             $include = array();
@@ -416,10 +408,9 @@ class Xml3_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param array    $playlists    (description here...)
-     * @return string    return xml
+     * @param array $playlists    (description here...)
      */
-    public static function playlists($playlists)
+    public static function playlists($playlists): string
     {
         $string = "<total_count>" . count($playlists) . "</total_count>\n";
 
@@ -507,10 +498,9 @@ class Xml3_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param array    $videos    (description here...)
-     * @return string    return xml
+     * @param array $videos    (description here...)
      */
-    public static function videos($videos)
+    public static function videos($videos): string
     {
         $string = "<total_count>" . count($videos) . "</total_count>\n";
 
@@ -538,11 +528,10 @@ class Xml3_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param array   $object_ids    Object IDs
+     * @param array $object_ids    Object IDs
      * @param User $user
-     * @return string  return xml
      */
-    public static function democratic($object_ids, $user)
+    public static function democratic($object_ids, $user): string
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
@@ -579,10 +568,9 @@ class Xml3_Data
      *
      * This handles creating an xml document for a user
      *
-     * @param User    $user    User
-     * @return string    return xml
+     * @param User $user
      */
-    public static function user(User $user)
+    public static function user(User $user): string
     {
         $user->format();
 
@@ -600,10 +588,9 @@ class Xml3_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param int[]    $users    User identifier list
-     * @return string    return xml
+     * @param int[] $users    User identifier list
      */
-    public static function users($users)
+    public static function users($users): string
     {
         $string = "<users>\n";
         foreach ($users as $user_id) {
@@ -620,10 +607,9 @@ class Xml3_Data
      *
      * This handles creating an xml document for a shout list
      *
-     * @param int[]    $shouts    Shout identifier list
-     * @return string    return xml
+     * @param int[] $shouts    Shout identifier list
      */
-    public static function shouts($shouts)
+    public static function shouts($shouts): string
     {
         $string = "<shouts>\n";
         foreach ($shouts as $shout_id) {
@@ -645,10 +631,9 @@ class Xml3_Data
      *
      * This handles creating an xml document for an activity list
      *
-     * @param int[]    $activities    Activity identifier list
-     * @return string    return xml
+     * @param int[] $activities    Activity identifier list
      */
-    public static function timeline($activities)
+    public static function timeline($activities): string
     {
         $string = "<timeline>\n";
         foreach ($activities as $aid) {

@@ -111,7 +111,7 @@ class Xml4_Data
      *
      * This sets the type of Xml_Data we are working on
      *
-     * @param string    $type    Xml_Data type
+     * @param string $type    Xml_Data type
      */
     public static function set_type($type): bool
     {
@@ -129,11 +129,10 @@ class Xml4_Data
      *
      * This generates a standard XML Error message
      *
-     * @param string    $code    Error code
-     * @param string    $string    Error message
-     * @return string    return error message xml
+     * @param string $code    Error code
+     * @param string $string    Error message
      */
-    public static function error($code, $string)
+    public static function error($code, $string): string
     {
         $xml_string = "\t<error code=\"$code\"><![CDATA[" . $string . "]]></error>";
 
@@ -145,10 +144,9 @@ class Xml4_Data
      *
      * This generates a standard XML Success message
      *
-     * @param string    $string    success message
-     * @return string    return success message xml
+     * @param string $string    success message
      */
-    public static function success($string)
+    public static function success($string): string
     {
         $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
 
@@ -161,10 +159,9 @@ class Xml4_Data
      * This returns the header
      *
      * @param string $title
-     * @return string return xml
      * @see _header()
      */
-    public static function header($title = null)
+    public static function header($title = null): string
     {
         return self::_header($title);
     } // header
@@ -174,10 +171,9 @@ class Xml4_Data
      *
      * This returns the footer
      *
-     * @see    _footer()
-     * @return string    return xml
+     * @see _footer()
      */
-    public static function footer()
+    public static function footer(): string
     {
         return self::_footer();
     } // footer
@@ -305,9 +301,8 @@ class Xml4_Data
      * @param array $array (description here...)
      * @param bool $callback (don't output xml when true)
      * @param string|bool $object
-     * @return string return xml
      */
-    public static function keyed_array($array, $callback = false, $object = false)
+    public static function keyed_array($array, $callback = false, $object = false): string
     {
         $string = '';
         // Foreach it
@@ -341,14 +336,13 @@ class Xml4_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param array   $objects Array of object_ids (Mixed string|int)
-     * @param string  $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
-     * @param User     $user
+     * @param array $objects Array of object_ids (Mixed string|int)
+     * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
+     * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
      * @param bool $include include episodes from podcasts or tracks in a playlist
-     * @return string  return xml
      */
-    public static function indexes($objects, $object_type, $user, $full_xml = true, $include = false)
+    public static function indexes($objects, $object_type, $user, $full_xml = true, $include = false): string
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -454,10 +448,9 @@ class Xml4_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param array    $licenses    (description here...)
-     * @return string    return xml
+     * @param array $licenses    (description here...)
      */
-    public static function licenses($licenses)
+    public static function licenses($licenses): string
     {
         if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
@@ -477,10 +470,9 @@ class Xml4_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param array    $tags    (description here...)
-     * @return string    return xml
+     * @param array $tags    (description here...)
      */
-    public static function tags($tags)
+    public static function tags($tags): string
     {
         if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
@@ -504,11 +496,10 @@ class Xml4_Data
      *
      * @param array $artists (description here...)
      * @param array $include Array of other items to include
-     * @param User     $user
+     * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string    return xml
      */
-    public static function artists($artists, $include, $user, $full_xml = true)
+    public static function artists($artists, $include, $user, $full_xml = true): string
     {
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -559,9 +550,8 @@ class Xml4_Data
      * @param array $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string    return xml
      */
-    public static function albums($albums, $include, $user, $full_xml = true)
+    public static function albums($albums, $include, $user, $full_xml = true): string
     {
         if ($include == null || $include == '') {
             $include = array();
@@ -614,11 +604,10 @@ class Xml4_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param array   $playlists Playlist id's to include
-     * @param User    $user
-     * @return string  return xml
+     * @param array $playlists Playlist id's to include
+     * @param User $user
      */
-    public static function playlists($playlists, $user)
+    public static function playlists($playlists, $user): string
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -671,10 +660,9 @@ class Xml4_Data
      *
      * This returns shares to the user, in a pretty xml document with the information
      *
-     * @param array    $shares    (description here...)
-     * @return string    return xml
+     * @param array $shares    (description here...)
      */
-    public static function shares($shares)
+    public static function shares($shares): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
@@ -695,9 +683,8 @@ class Xml4_Data
      * This returns catalogs to the user, in a pretty xml document with the information
      *
      * @param int[] $catalogs group of catalog id's
-     * @return string return xml
      */
-    public static function catalogs($catalogs)
+    public static function catalogs($catalogs): string
     {
         if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
@@ -722,12 +709,11 @@ class Xml4_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param array   $podcasts    (description here...)
-     * @param User    $user
+     * @param array $podcasts    (description here...)
+     * @param User $user
      * @param bool $episodes include the episodes of the podcast //optional
-     * @return string  return xml
      */
-    public static function podcasts($podcasts, $user, $episodes = false)
+    public static function podcasts($podcasts, $user, $episodes = false): string
     {
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
@@ -760,11 +746,10 @@ class Xml4_Data
      * This returns podcasts to the user, in a pretty xml document with the information
      *
      * @param int[] $podcast_episodes Podcast_Episode id's to include
-     * @param User      $user
-     * @param bool   $full_xml whether to return a full XML document or just the node
-     * @return string    return xml
+     * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function podcast_episodes($podcast_episodes, $user, $full_xml = true)
+    public static function podcast_episodes($podcast_episodes, $user, $full_xml = true): string
     {
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
@@ -791,9 +776,8 @@ class Xml4_Data
      * @param int[] $songs
      * @param User $user
      * @param bool $full_xml
-     * @return string return xml
      */
-    public static function songs($songs, $user, $full_xml = true)
+    public static function songs($songs, $user, $full_xml = true): string
     {
         if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -851,10 +835,9 @@ class Xml4_Data
      * This builds the xml document for displaying video objects
      *
      * @param array $videos (description here...)
-     * @param User  $user
-     * @return string   return xml
+     * @param User $user
      */
-    public static function videos($videos, $user)
+    public static function videos($videos, $user): string
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -883,9 +866,8 @@ class Xml4_Data
      *
      * @param array $object_ids Object IDs
      * @param User $user
-     * @return string     return xml
      */
-    public static function democratic($object_ids, $user)
+    public static function democratic($object_ids, $user): string
     {
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';
@@ -918,11 +900,10 @@ class Xml4_Data
      *
      * This handles creating an xml document for a user
      *
-     * @param User   $user User
-     * @param bool   $fullinfo
-     * @return string return xml
+     * @param User $user User
+     * @param bool $fullinfo
      */
-    public static function user(User $user, $fullinfo)
+    public static function user(User $user, $fullinfo): string
     {
         $user->format();
         $string = "<user id=\"" . (string) $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n";
@@ -943,10 +924,9 @@ class Xml4_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param int[]    $users    User identifier list
-     * @return string    return xml
+     * @param int[] $users    User identifier list
      */
-    public static function users($users)
+    public static function users($users): string
     {
         $string = "<users>\n";
         foreach ($users as $user_id) {
@@ -963,10 +943,9 @@ class Xml4_Data
      *
      * This handles creating an xml document for a shout list
      *
-     * @param int[]    $shouts    Shout identifier list
-     * @return string    return xml
+     * @param int[] $shouts    Shout identifier list
      */
-    public static function shouts($shouts)
+    public static function shouts($shouts): string
     {
         $string = "<shouts>\n";
         foreach ($shouts as $shout_id) {
@@ -988,10 +967,9 @@ class Xml4_Data
      *
      * This handles creating an xml document for an activity list
      *
-     * @param int[]    $activities    Activity identifier list
-     * @return string    return xml
+     * @param int[] $activities    Activity identifier list
      */
-    public static function timeline($activities)
+    public static function timeline($activities): string
     {
         $string = "<timeline>\n";
         foreach ($activities as $activity_id) {

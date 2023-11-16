@@ -77,7 +77,7 @@ final class AlbumsMethod implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        User  $user
+        User $user
     ): ResponseInterface {
         $browse = $this->modelFactory->createBrowse(null, false);
         $browse->reset_filters();

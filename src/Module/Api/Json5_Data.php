@@ -107,7 +107,6 @@ class Json5_Data
      * @param string $string Error message
      * @param string $action Error method
      * @param string $type Error type
-     * @return string return error message JSON
      */
     public static function error($code, $string, $action, $type): string
     {
@@ -123,8 +122,7 @@ class Json5_Data
      * nothing fancy here...
      *
      * @param string $string success message
-     * @param array  $return_data
-     * @return string return success message JSON
+     * @param array $return_data
      */
     public static function success($string, $return_data = array()): string
     {
@@ -143,7 +141,6 @@ class Json5_Data
      * nothing fancy here...
      *
      * @param string $type object type
-     * @return string return empty JSON message
      */
     public static function empty($type): string
     {
@@ -189,8 +186,8 @@ class Json5_Data
      *
      * This takes an array of object_ids and return JSON based on the type of object
      *
-     * @param array   $objects Array of object_ids (Mixed string|int)
-     * @param string  $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param array $objects Array of object_ids (Mixed string|int)
+     * @param string $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param User $user
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
@@ -233,7 +230,7 @@ class Json5_Data
      * This returns live_streams to the user, in a pretty JSON document with the information
      *
      * @param int[] $live_streams
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "live_stream"
      */
     public static function live_streams($live_streams, $object = true): string
@@ -266,7 +263,7 @@ class Json5_Data
      * This returns licenses to the user, in a pretty JSON document with the information
      *
      * @param int[] $licenses Licence id's assigned to songs and artists
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "license"
      */
     public static function licenses($licenses, $object = true): string
@@ -296,7 +293,7 @@ class Json5_Data
      * This returns labels to the user, in a pretty JSON document with the information
      *
      * @param int[] $labels
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "label"
      */
     public static function labels($labels, $object = true): string
@@ -333,7 +330,7 @@ class Json5_Data
      * This returns genres to the user, in a pretty JSON document with the information
      *
      * @param int[] $tags Genre id's to include
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "genre"
      */
     public static function genres($tags, $object = true): string
@@ -368,11 +365,11 @@ class Json5_Data
      * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
-     * @param int[]    $artists Artist id's to include
-     * @param array        $include
-     * @param User         $user
-     * @param bool      $encode
-     * @param bool      $object (whether to return as a named object array or regular array)
+     * @param int[] $artists Artist id's to include
+     * @param array $include
+     * @param User $user
+     * @param bool $encode
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "artist"
      */
     public static function artists($artists, $include, $user, $encode = true, $object = true)
@@ -441,11 +438,11 @@ class Json5_Data
      *
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
-     * @param int[]    $albums Album id's to include
-     * @param array        $include
-     * @param User         $user
-     * @param bool      $encode
-     * @param bool      $object (whether to return as a named object array or regular array)
+     * @param int[] $albums Album id's to include
+     * @param array $include
+     * @param User $user
+     * @param bool $encode
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
     public static function albums($albums, $include, $user, $encode = true, $object = true)
@@ -521,7 +518,7 @@ class Json5_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
-     * @param array   $playlists Playlist id's to include
+     * @param array $playlists Playlist id's to include
      * @param User $user
      * @param bool $songs
      * @param bool $object (whether to return as a named object array or regular array)
@@ -607,7 +604,7 @@ class Json5_Data
      * This returns shares to the user, in a pretty json document with the information
      *
      * @param int[] $shares Share id's to include
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "share"
      */
     public static function shares($shares, $object = true): string
@@ -663,7 +660,7 @@ class Json5_Data
      * This returns bookmarks to the user, in a pretty json document with the information
      *
      * @param int[] $bookmarks Bookmark id's to include
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "bookmark"
      */
     public static function bookmarks($bookmarks, $object = true): string
@@ -705,7 +702,7 @@ class Json5_Data
      * This returns catalogs to the user, in a pretty json document with the information
      *
      * @param int[] $catalogs group of catalog id's
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "catalog"
      */
     public static function catalogs($catalogs, $object = true): string
@@ -758,9 +755,9 @@ class Json5_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param int[] $podcasts Podcast id's to include
-     * @param User      $user
-     * @param bool   $episodes include the episodes of the podcast
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param User $user
+     * @param bool $episodes include the episodes of the podcast
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "podcast"
      */
     public static function podcasts($podcasts, $user, $episodes = false, $object = true): string
@@ -823,10 +820,10 @@ class Json5_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param int[]    $podcast_episodes Podcast_Episode id's to include
-     * @param User         $user
-     * @param bool      $encode
-     * @param bool      $object (whether to return as a named object array or regular array)
+     * @param int[] $podcast_episodes Podcast_Episode id's to include
+     * @param User $user
+     * @param bool $encode
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
     public static function podcast_episodes($podcast_episodes, $user, $encode = true, $object = true)
@@ -884,8 +881,8 @@ class Json5_Data
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
-     * @param int[]   $songs
-     * @param User    $user
+     * @param int[] $songs
+     * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "song"
@@ -999,8 +996,8 @@ class Json5_Data
      * This builds the JSON document for displaying video objects
      *
      * @param int[] $videos Video id's to include
-     * @param User      $user
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param User $user
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "video"
      */
     public static function videos($videos, $user, $object = true): string
@@ -1045,9 +1042,9 @@ class Json5_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param array        $object_ids Object IDs
-     * @param User         $user
-     * @param bool      $object (whether to return as a named object array or regular array)
+     * @param array $object_ids Object IDs
+     * @param User $user
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string       JSON Object "song"
      */
     public static function democratic($object_ids, $user, $object = true): string
@@ -1099,7 +1096,7 @@ class Json5_Data
      *
      * This handles creating an JSON document for a user
      *
-     * @param User    $user User Object
+     * @param User $user User Object
      * @param bool $fullinfo
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string  JSON Object "user"
@@ -1149,7 +1146,7 @@ class Json5_Data
      * This handles creating an JSON document for a user list
      *
      * @param int[] $users User id list
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "user"
      */
     public static function users($users, $object = true): string
@@ -1173,7 +1170,7 @@ class Json5_Data
      * This handles creating an JSON document for a shout list
      *
      * @param int[] $shouts Shout id list
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "shout"
      */
     public static function shouts($shouts, $object = true): string
@@ -1204,7 +1201,7 @@ class Json5_Data
      * This handles creating an JSON document for an activity list
      *
      * @param int[] $activities Activity id list
-     * @param bool   $object (whether to return as a named object array or regular array)
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "activity"
      */
     public static function timeline($activities, $object = true): string
@@ -1237,7 +1234,7 @@ class Json5_Data
      * This handles creating a JSON document for deleted items
      *
      * @param string $object_type ('song', 'podcast_episode', 'video')
-     * @param array  $objects deleted object list
+     * @param array $objects deleted object list
      * @return string JSON Object "deleted"
      */
     public static function deleted($object_type, $objects): string

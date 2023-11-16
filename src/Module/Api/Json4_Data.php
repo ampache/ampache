@@ -110,9 +110,8 @@ class Json4_Data
      * This generates a JSON Error message
      * nothing fancy here...
      *
-     * @param string    $code    Error code
-     * @param string    $string    Error message
-     * @return string    return error message JSON
+     * @param string $code    Error code
+     * @param string $string    Error message
      */
     public static function error($code, $string): string
     {
@@ -125,8 +124,7 @@ class Json4_Data
      * This generates a standard JSON Success message
      * nothing fancy here...
      *
-     * @param string    $string    success message
-     * @return string    return success message JSON
+     * @param string $string    success message
      */
     public static function success($string): string
     {
@@ -180,8 +178,8 @@ class Json4_Data
      *
      * This takes an array of object_ids and return JSON based on the type of object
      *
-     * @param array   $objects Array of object_ids (Mixed string|int)
-     * @param string  $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
+     * @param array $objects Array of object_ids (Mixed string|int)
+     * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
      * @param User $user
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"
@@ -221,7 +219,6 @@ class Json4_Data
      * This returns licenses to the user, in a pretty JSON document with the information
      *
      * @param int[] $licenses
-     * @return string return JSON
      */
     public static function licenses($licenses): string
     {
@@ -248,8 +245,7 @@ class Json4_Data
      *
      * This returns tags to the user, in a pretty JSON document with the information
      *
-     * @param array    $tags    (description here...)
-     * @return string return JSON
+     * @param array $tags    (description here...)
      */
     public static function tags($tags): string
     {
@@ -438,7 +434,7 @@ class Json4_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
-     * @param array   $playlists Playlist id's to include
+     * @param array $playlists Playlist id's to include
      * @param User $user
      * @param bool $songs
      * @return string  JSON Object "playlist"
@@ -521,7 +517,7 @@ class Json4_Data
      * This returns shares to the user, in a pretty json document with the information
      *
      * @param array $shares (description here...)
-     * @return string return JSON
+     * @return string
      */
     public static function shares($shares)
     {
@@ -575,9 +571,8 @@ class Json4_Data
      * This returns catalogs to the user, in a pretty json document with the information
      *
      * @param int[] $catalogs group of catalog id's
-     * @return string return JSON
      */
-    public static function catalogs($catalogs)
+    public static function catalogs($catalogs): string
     {
         if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
@@ -625,12 +620,11 @@ class Json4_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param array   $podcasts Podcast id's to include
+     * @param array $podcasts Podcast id's to include
      * @param User $user
      * @param bool $episodes include the episodes of the podcast
-     * @return string return JSON
      */
-    public static function podcasts($podcasts, $user, $episodes = false)
+    public static function podcasts($podcasts, $user, $episodes = false): string
     {
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
@@ -689,10 +683,10 @@ class Json4_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param int[]    $podcast_episodes Podcast_Episode id's to include
+     * @param int[] $podcast_episodes Podcast_Episode id's to include
      * @param User $user
-     * @param bool      $encode
-     * @param bool      $object (whether to return as a named object array or regular array)
+     * @param bool $encode
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
     public static function podcast_episodes($podcast_episodes, $user, $encode = true, $object = true)
@@ -856,11 +850,10 @@ class Json4_Data
      *
      * This builds the JSON document for displaying video objects
      *
-     * @param array    $videos    (description here...)
+     * @param array $videos    (description here...)
      * @param User $user
-     * @return string return JSON
      */
-    public static function videos($videos, $user)
+    public static function videos($videos, $user): string
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -902,9 +895,8 @@ class Json4_Data
      *
      * @param array $object_ids Object IDs
      * @param User $user
-     * @return string    return JSON
      */
-    public static function democratic($object_ids, $user)
+    public static function democratic($object_ids, $user): string
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
@@ -952,11 +944,10 @@ class Json4_Data
      *
      * This handles creating an JSON document for a user
      *
-     * @param User    $user    User
+     * @param User $user    User
      * @param bool $fullinfo
-     * @return string  return JSON
      */
-    public static function user(User $user, $fullinfo)
+    public static function user(User $user, $fullinfo): string
     {
         $JSON = array();
         $user->format();
@@ -1000,10 +991,9 @@ class Json4_Data
      *
      * This handles creating an JSON document for a user list
      *
-     * @param int[]    $users    User identifier list
-     * @return string return JSON
+     * @param int[] $users    User identifier list
      */
-    public static function users($users)
+    public static function users($users): string
     {
         $JSON       = [];
         $user_array = [];
@@ -1028,10 +1018,9 @@ class Json4_Data
      *
      * This handles creating an JSON document for a shout list
      *
-     * @param int[]    $shouts    Shout identifier list
-     * @return string return JSON
+     * @param int[] $shouts    Shout identifier list
      */
-    public static function shouts($shouts)
+    public static function shouts($shouts): string
     {
         $JSON = [];
         foreach ($shouts as $shout_id) {
@@ -1059,10 +1048,9 @@ class Json4_Data
      *
      * This handles creating an JSON document for an activity list
      *
-     * @param int[]    $activities    Activity identifier list
-     * @return string return JSON
+     * @param int[] $activities    Activity identifier list
      */
-    public static function timeline($activities)
+    public static function timeline($activities): string
     {
         $JSON             = array();
         $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss

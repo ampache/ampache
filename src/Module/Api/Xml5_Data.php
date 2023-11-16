@@ -103,7 +103,7 @@ class Xml5_Data
      *
      * This sets the type of Xml_Data we are working on
      *
-     * @param string  $type Xml_Data type
+     * @param string $type Xml_Data type
      */
     public static function set_type($type): bool
     {
@@ -126,7 +126,6 @@ class Xml5_Data
      * @param string $string Error message
      * @param string $action
      * @param string $type
-     * @return string return error message xml
      */
     public static function error($code, $string, $action, $type): string
     {
@@ -142,8 +141,7 @@ class Xml5_Data
      * nothing fancy here...
      *
      * @param string $string success message
-     * @param array  $return_data
-     * @return string return success message xml
+     * @param array $return_data
      */
     public static function success($string, $return_data = array()): string
     {
@@ -171,7 +169,6 @@ class Xml5_Data
      * This returns the header
      *
      * @param string $title
-     * @return string return xml
      * @see _header()
      */
     public static function header($title = null): string
@@ -184,7 +181,6 @@ class Xml5_Data
      *
      * This returns the footer
      *
-     * @return string return xml
      * @see _footer()
      */
     public static function footer(): string
@@ -196,7 +192,7 @@ class Xml5_Data
      * genre_string
      *
      * This returns the formatted 'genre' string for an xml document
-     * @param array  $tags
+     * @param array $tags
      */
     private static function genre_string($tags): string
     {
@@ -227,9 +223,9 @@ class Xml5_Data
      * output_xml_from_array
      * This takes a one dimensional array and creates a XML document from it. For
      * use primarily by the ajax mojo.
-     * @param array   $array
+     * @param array $array
      * @param bool $callback
-     * @param string  $type
+     * @param string $type
      */
     public static function output_xml_from_array($array, $callback = false, $type = ''): string
     {
@@ -310,10 +306,9 @@ class Xml5_Data
      *
      * This will build an xml document from a key'd array,
      *
-     * @param array          $array keyed array of objects (key => value, key => value)
-     * @param bool        $callback (don't output xml when true)
+     * @param array $array keyed array of objects (key => value, key => value)
+     * @param bool $callback (don't output xml when true)
      * @param string|bool $object
-     * @return string         return xml
      */
     public static function keyed_array($array, $callback = false, $object = false): string
     {
@@ -352,10 +347,9 @@ class Xml5_Data
      *     <$item id="123">
      *       <data></data>
      *
-     * @param array  $array
+     * @param array $array
      * @param string $item
      * @param string $object_type
-     * @return string return xml
      */
     public static function object_array($array, $item, $object_type = ''): string
     {
@@ -380,12 +374,11 @@ class Xml5_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param array   $objects Array of object_ids (Mixed string|int)
-     * @param string  $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
-     * @param User    $user
+     * @param array $objects Array of object_ids (Mixed string|int)
+     * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @param bool $include include episodes from podcasts or tracks in a playlist
-     * @return string  return xml
      */
     public static function indexes($objects, $object_type, $user, $full_xml = true, $include = false): string
     {
@@ -500,8 +493,7 @@ class Xml5_Data
      * This returns licenses to the user, in a pretty xml document with the information
      *
      * @param int[] $licenses Licence id's assigned to songs and artists
-     * @param User      $user
-     * @return string    return xml
+     * @param User $user
      */
     public static function licenses($licenses, $user): string
     {
@@ -524,8 +516,7 @@ class Xml5_Data
      * This returns labels to the user, in a pretty xml document with the information
      *
      * @param int[] $labels
-     * @param User      $user
-     * @return string    return xml
+     * @param User $user
      */
     public static function labels($labels, $user): string
     {
@@ -550,8 +541,7 @@ class Xml5_Data
      * This returns live_streams to the user, in a pretty xml document with the information
      *
      * @param int[] $live_streams
-     * @param User      $user
-     * @return string    return xml
+     * @param User $user
      */
     public static function live_streams($live_streams, $user): string
     {
@@ -576,8 +566,7 @@ class Xml5_Data
      * This returns genres to the user, in a pretty xml document with the information
      *
      * @param int[] $tags Genre id's to include
-     * @param User      $user
-     * @return string    return xml
+     * @param User $user
      */
     public static function genres($tags, $user): string
     {
@@ -602,10 +591,9 @@ class Xml5_Data
      * we want
      *
      * @param int[] $artists Artist id's to include
-     * @param array     $include Array of other items to include.
-     * @param User      $user
-     * @param bool   $full_xml whether to return a full XML document or just the node.
-     * @return string    return xml
+     * @param array $include Array of other items to include.
+     * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
      */
     public static function artists($artists, $include, $user, $full_xml = true): string
     {
@@ -651,10 +639,9 @@ class Xml5_Data
      * This echos out a standard albums XML document, it pays attention to the limit
      *
      * @param int[] $albums Album id's to include
-     * @param array     $include Array of other items to include.
-     * @param User      $user
-     * @param bool   $full_xml whether to return a full XML document or just the node.
-     * @return string    return xml
+     * @param array $include Array of other items to include.
+     * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
      */
     public static function albums($albums, $include, $user, $full_xml = true): string
     {
@@ -707,9 +694,8 @@ class Xml5_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param array   $playlists Playlist id's to include
-     * @param User    $user
-     * @return string  return xml
+     * @param array $playlists Playlist id's to include
+     * @param User $user
      */
     public static function playlists($playlists, $user): string
     {
@@ -768,8 +754,7 @@ class Xml5_Data
      * This returns shares to the user, in a pretty xml document with the information
      *
      * @param int[] $shares Share id's to include
-     * @param User      $user
-     * @return string    return xml
+     * @param User $user
      */
     public static function shares($shares, $user): string
     {
@@ -792,7 +777,6 @@ class Xml5_Data
      * This returns bookmarks to the user, in a pretty xml document with the information
      *
      * @param int[] $bookmarks Bookmark id's to include
-     * @return string    return xml
      */
     public static function bookmarks($bookmarks): string
     {
@@ -811,8 +795,7 @@ class Xml5_Data
      * This returns catalogs to the user, in a pretty xml document with the information
      *
      * @param int[] $catalogs group of catalog id's
-     * @param User      $user
-     * @return string    return xml
+     * @param User $user
      */
     public static function catalogs($catalogs, $user): string
     {
@@ -840,9 +823,8 @@ class Xml5_Data
      * This returns podcasts to the user, in a pretty xml document with the information
      *
      * @param int[] $podcasts Podcast id's to include
-     * @param User      $user
-     * @param bool   $episodes include the episodes of the podcast //optional
-     * @return string    return xml
+     * @param User $user
+     * @param bool $episodes include the episodes of the podcast //optional
      */
     public static function podcasts($podcasts, $user, $episodes = false): string
     {
@@ -877,9 +859,8 @@ class Xml5_Data
      * This returns podcasts to the user, in a pretty xml document with the information
      *
      * @param int[] $podcast_episodes Podcast_Episode id's to include
-     * @param User      $user
-     * @param bool   $full_xml whether to return a full XML document or just the node.
-     * @return string    return xml
+     * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
      */
     public static function podcast_episodes($podcast_episodes, $user, $full_xml = true): string
     {
@@ -906,10 +887,9 @@ class Xml5_Data
      *
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
-     * @param int[]   $songs
-     * @param User    $user
+     * @param int[] $songs
+     * @param User $user
      * @param bool $full_xml
-     * @return string return xml
      */
     public static function songs($songs, $user, $full_xml = true): string
     {
@@ -974,8 +954,7 @@ class Xml5_Data
      * This builds the xml document for displaying video objects
      *
      * @param int[] $videos Video id's to include
-     * @param User      $user
-     * @return string    return xml
+     * @param User $user
      */
     public static function videos($videos, $user): string
     {
@@ -1004,9 +983,8 @@ class Xml5_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param array    $object_ids Object IDs
-     * @param User  $user
-     * @return string   return xml
+     * @param array $object_ids Object IDs
+     * @param User $user
      */
     public static function democratic($object_ids, $user): string
     {
@@ -1042,9 +1020,8 @@ class Xml5_Data
      *
      * This handles creating an xml document for a user
      *
-     * @param User    $user User Object
+     * @param User $user User Object
      * @param bool $fullinfo
-     * @return string  return xml
      */
     public static function user(User $user, $fullinfo): string
     {
@@ -1068,7 +1045,6 @@ class Xml5_Data
      * This handles creating an xml document for a user list
      *
      * @param int[] $users User identifier list
-     * @return string    return xml
      */
     public static function users($users): string
     {
@@ -1087,7 +1063,6 @@ class Xml5_Data
      * This handles creating an xml document for a shout list
      *
      * @param int[] $shouts Shout identifier list
-     * @return string    return xml
      */
     public static function shouts($shouts): string
     {
@@ -1111,7 +1086,6 @@ class Xml5_Data
      * This handles creating an xml document for an activity list
      *
      * @param int[] $activities Activity identifier list
-     * @return string    return xml
      */
     public static function timeline($activities): string
     {
@@ -1134,7 +1108,7 @@ class Xml5_Data
      *
      * returns xml for rss types that aren't podcasts (Feed generation of plays/albums/etc)
      *
-     * @param array  $data Keyed array of information to RSS'ify
+     * @param array $data Keyed array of information to RSS'ify
      * @param string $title RSS feed title
      * @param string $date publish date
      * @return string RSS feed xml
@@ -1161,9 +1135,8 @@ class Xml5_Data
      * This takes an array of deleted objects and return XML based on the type of object
      * we want
      *
-     * @param string  $object_type ('song', 'podcast_episode', 'video')
-     * @param array   $objects deleted object list
-     * @return string  return xml
+     * @param string $object_type ('song', 'podcast_episode', 'video')
+     * @param array $objects deleted object list
      */
     public static function deleted($object_type, $objects): string
     {
