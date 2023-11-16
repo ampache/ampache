@@ -32,6 +32,7 @@ use PHPUnit\Framework\TestCase;
 class ShowDeleteRssTokenActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
+
     private MockObject&UiInterface $ui;
 
     private ShowDeleteRssTokenAction $subject;

@@ -260,7 +260,7 @@ class Userflag extends database_object
      * get_latest_sql
      * Get the latest sql
      * @param string $input_type
-     * @param string $user_id
+     * @param int $user_id
      * @return string
      */
     public static function get_latest_sql($input_type, $user_id = null)
@@ -296,7 +296,7 @@ class Userflag extends database_object
      * get_latest
      * Get the latest user flagged objects
      * @param string $type
-     * @param string $user_id
+     * @param int $user_id
      * @param int $count
      * @param int $offset
      * @return array

@@ -75,8 +75,7 @@ class OAuthUtil
     public static function split_header($header, $oauth_parameters = true)
     {
         $params = array();
-        if (preg_match_all('/(' . ($oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/',
-            $header, $matches)) {
+        if (preg_match_all('/(' . ($oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
             foreach ($matches[1] as $i => $h) {
                 $params[$h] = OAuthUtil::urldecode_rfc3986(empty($matches[3][$i]) ? $matches[4][$i] : $matches[3][$i]);
             }

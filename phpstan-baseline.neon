@@ -301,11 +301,6 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Function catalog_worker\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function catalog_worker\\(\\) has parameter \\$action with no type specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
@@ -322,11 +317,6 @@ parameters:
 
 		-
 			message: "#^Function check_config_values\\(\\) has parameter \\$conf with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function display_notification\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
@@ -406,57 +396,7 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Function show_album_select\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function show_artist_select\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function show_catalog_select\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function show_license_select\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function show_now_playing\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function show_table_render\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function show_tvshow_season_select\\(\\) has parameter \\$season_id with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function show_tvshow_select\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function show_user_select\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function sse_worker\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function toggle_visible\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
@@ -472,11 +412,6 @@ parameters:
 
 		-
 			message: "#^Function xoutput_from_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function xoutput_headers\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
@@ -2541,11 +2476,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/Stats4Method.php
 
 		-
-			message: "#^Parameter \\#2 \\$user_id of static method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:get_latest\\(\\) expects string\\|null, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
 			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Stats4Method.php
@@ -3417,11 +3347,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:videos\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user_id of static method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:get_latest\\(\\) expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Stats5Method.php
 
@@ -4331,11 +4256,6 @@ parameters:
 			path: src/Module/Api/Method/StatsMethod.php
 
 		-
-			message: "#^Parameter \\#2 \\$user_id of static method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:get_latest\\(\\) expects string\\|null, int\\<1, max\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/StatsMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\StreamMethod\\:\\:stream\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/StreamMethod.php
@@ -4646,22 +4566,12 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_apiOutput\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_apiOutput\\(\\) has parameter \\$alwaysArray with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_apiOutput\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_apiOutput2\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4677,11 +4587,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_decryptPassword\\(\\) has parameter \\$password with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_follow_stream\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4711,17 +4616,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_setHeader\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_setHeader\\(\\) has parameter \\$filetype with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_setStar\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4761,17 +4656,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:addchatmessage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:addchatmessage\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:changepassword\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4781,17 +4666,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:createbookmark\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:createbookmark\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:createinternetradiostation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4801,27 +4676,12 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:createplaylist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:createplaylist\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:createpodcastchannel\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:createpodcastchannel\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:createshare\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4836,17 +4696,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:createuser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:createuser\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:deletebookmark\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4856,17 +4706,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:deleteinternetradiostation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:deleteinternetradiostation\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:deleteplaylist\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4876,17 +4716,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:deletepodcastchannel\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:deletepodcastchannel\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:deletepodcastepisode\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4896,17 +4726,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:deleteshare\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:deleteshare\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:deleteuser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4916,17 +4736,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:download\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:download\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:downloadpodcastepisode\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4936,17 +4746,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getalbum\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getalbum\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getalbuminfo\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4956,17 +4756,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getalbuminfo2\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getalbuminfo2\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getalbumlist\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4976,17 +4766,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getalbumlist2\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getalbumlist2\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getartist\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4996,17 +4776,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getartistinfo\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getartistinfo\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getartistinfo2\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5016,17 +4786,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getartists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getartists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getavatar\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5036,17 +4796,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getbookmarks\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getbookmarks\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getcaptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5056,17 +4806,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getchatmessages\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getchatmessages\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getcoverart\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5076,17 +4816,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getgenres\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getgenres\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getindexes\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5096,17 +4826,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getinternetradiostations\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getinternetradiostations\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getlicense\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5116,17 +4836,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getlyrics\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getlyrics\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getmusicdirectory\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5136,17 +4846,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getmusicfolders\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getmusicfolders\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getnewestpodcasts\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5156,17 +4856,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getnowplaying\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getnowplaying\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getplaylist\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5176,17 +4866,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getplaylists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getplaylists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getplayqueue\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5196,17 +4876,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getpodcasts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getpodcasts\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getrandomsongs\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5216,17 +4886,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getscanstatus\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getscanstatus\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getshares\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5236,17 +4896,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getsimilarsongs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getsimilarsongs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getsimilarsongs2\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5256,17 +4906,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getsong\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getsong\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getsongsbygenre\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5276,17 +4916,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getstarred\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getstarred\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getstarred2\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5296,17 +4926,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:gettopsongs\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:gettopsongs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getuser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5316,17 +4936,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getusers\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getusers\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getvideoinfo\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5336,17 +4946,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getvideos\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getvideos\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:hls\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5356,17 +4956,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:jukeboxcontrol\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:jukeboxcontrol\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:ping\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5376,17 +4966,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:refreshpodcasts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:refreshpodcasts\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:saveplayqueue\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5396,17 +4976,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:scrobble\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:scrobble\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:search2\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5416,17 +4986,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:search3\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:search3\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:setrating\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5436,17 +4996,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:star\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:star\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:startscan\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5456,17 +5006,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:stream\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:stream\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:unstar\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5476,17 +5016,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:updateinternetradiostation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:updateinternetradiostation\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:updateplaylist\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5496,17 +5026,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:updateshare\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:updateshare\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:updateuser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5561,16 +5081,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Parameter \\#1 \\$user_id of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_last_play\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$user_id of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:shift_last_play\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Parameter \\#2 \\$agent of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_last_play\\(\\) expects string, array\\|string given\\.$#"
 			count: 2
 			path: src/Module/Api/Subsonic_Api.php
@@ -5583,11 +5093,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, array\\<int, string\\>\\|string given\\.$#"
 			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#2 \\$user_id of static method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:get_latest\\(\\) expects string\\|null, int given\\.$#"
-			count: 7
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
@@ -13681,11 +13186,6 @@ parameters:
 			path: src/Module/Statistics/Stats.php
 
 		-
-			message: "#^Parameter \\#1 \\$user_id of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_last_play\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
 			message: "#^Parameter \\#2 \\$threshold of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_top_sql\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
@@ -17837,11 +17337,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Parameter \\#2 \\$user_id of static method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:get_latest\\(\\) expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheCatalogFavorites.php
 

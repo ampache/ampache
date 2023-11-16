@@ -1404,7 +1404,7 @@ class Upnp_Api
         // Go through all the tokens and transform anything we recognize
         // If any translation goes to NUL then must remove previous token provided it is AND or OR
         for ($i = 0; $i < $size; $i++) {
-            for ($j=0; $j < 7; $j++) {
+            for ($j = 0; $j < 7; $j++) {
                 if ($tokens[$i] == $upnp_translations[$j][0]) {
                     $tokens[$i] = $upnp_translations[$j][1];
                     if ($upnp_translations[$j][1] == '' && $i > 1 && ($tokens[$i - 1] == "and" || $tokens[$i - 1] == "or")) {

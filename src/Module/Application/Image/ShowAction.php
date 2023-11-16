@@ -209,7 +209,7 @@ final class ShowAction implements ApplicationActionInterface
                         if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
                             $defaultimg = $rootimg . "blankmovie.png";
                         }
-                        $etag="EmptyMediaMovie";
+                        $etag = "EmptyMediaMovie";
                         break;
                     default:
                         $mime       = 'image/png';
@@ -217,7 +217,7 @@ final class ShowAction implements ApplicationActionInterface
                         if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
                             $defaultimg = $rootimg . "blankalbum.png";
                         }
-                        $etag="EmptyMediaAlbum";
+                        $etag = "EmptyMediaAlbum";
                         break;
                 }
                 $image = file_get_contents($defaultimg);

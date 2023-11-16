@@ -32,6 +32,7 @@ use PHPUnit\Framework\TestCase;
 class ShowDeleteStreamTokenActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
+
     private MockObject&UiInterface $ui;
 
     private ShowDeleteStreamTokenAction $subject;

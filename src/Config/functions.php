@@ -758,7 +758,7 @@ function return_referer(): string
  * @param bool $allow_add
  * @param int $song_id
  * @param bool $allow_none
- * @param string $user_id
+ * @param int $user_id
  */
 function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null): void
 {

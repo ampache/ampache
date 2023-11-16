@@ -394,14 +394,14 @@ class Stats
      * was played, this is used by, among other things, the LastFM plugin to figure out
      * if we should re-submit or if this is a duplicate / if it's too soon. This takes an
      * optional user_id because when streaming we don't have $GLOBALS()
-     * @param string $user_id
+     * @param int $user_id
      * @param string $agent
      * @param int $date
      * @return array
      */
-    public static function get_last_play($user_id = '', $agent = '', $date = 0)
+    public static function get_last_play($user_id = 0, $agent = '', $date = 0)
     {
-        if ($user_id === '') {
+        if ($user_id === 0) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;
         }
@@ -437,7 +437,7 @@ class Stats
      * shift_last_play
      * When you play or pause the song, shift the start time to allow better skip recording
      *
-     * @param string $user_id
+     * @param int $user_id
      * @param string $agent
      * @param int $original_date
      * @param int $new_date
@@ -518,21 +518,21 @@ class Stats
      * this checks to see if the current object has been played recently by the user
      * @param string $object_type
      * @param Song|Podcast_Episode|Video $object
-     * @param int $user
+     * @param int $user_id
      * @param string $agent
      * @param int $date
      * @return bool
      */
-    public static function has_played_history($object_type, $object, $user, $agent, $date)
+    public static function has_played_history($object_type, $object, $user_id, $agent, $date)
     {
-        if (AmpConfig::get('use_auth') && $user == -1) {
+        if (AmpConfig::get('use_auth') && $user_id == -1) {
             return false;
         }
         // if it's already recorded (but from a different agent), don't do it again
-        if (self::is_already_inserted($object_type, $object->id, $user, '', $date, true)) {
+        if (self::is_already_inserted($object_type, $object->id, $user_id, '', $date, true)) {
             return false;
         }
-        $previous  = self::get_last_play($user, $agent, $date);
+        $previous  = self::get_last_play($user_id, $agent, $date);
         // no previous data?
         if (!array_key_exists('object_id', $previous) || !array_key_exists('object_type', $previous)) {
             return true;

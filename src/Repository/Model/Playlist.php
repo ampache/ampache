@@ -310,7 +310,7 @@ class Playlist extends playlist_object
         $user_id = $user->id ?? 0;
 
         // Iterate over the object types
-        $sql              ='SELECT DISTINCT `object_type` FROM `playlist_data`';
+        $sql              = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
         $db_object_types  = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_object_types)) {
@@ -370,7 +370,7 @@ class Playlist extends playlist_object
         $user_id = $user->id ?? 0;
 
         // Iterate over the object types
-        $sql              ='SELECT DISTINCT `object_type` FROM `playlist_data`';
+        $sql              = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
         $db_object_types  = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_object_types)) {

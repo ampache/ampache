@@ -31,6 +31,7 @@ use PHPUnit\Framework\TestCase;
 class ShowDeleteAvatarActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
+
     private MockObject&UiInterface $ui;
 
     private ShowDeleteAvatarAction $subject;
