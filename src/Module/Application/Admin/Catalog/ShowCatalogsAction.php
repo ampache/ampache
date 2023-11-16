@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
@@ -29,6 +29,8 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -51,9 +53,18 @@ final class ShowCatalogsAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
+        $this->ui->showBoxTop(T_('Show Catalogs'), 'box box_manage_catalogs');
         $this->ui->show('show_manage_catalogs.inc.php');
 
+        $catalogs = Catalog::get_catalogs();
+        $browse   = new Browse();
+        $browse->set_type('catalog');
+        $browse->set_static_content(true);
+        $browse->save_objects($catalogs);
+        $browse->show_objects($catalogs);
+        $browse->store();
+
+        $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
