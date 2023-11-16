@@ -35,7 +35,7 @@ use Ampache\Module\Api\Xml4_Data;
  */
 final class Songs4Method
 {
-    const ACTION = 'songs';
+    public const ACTION = 'songs';
 
     /**
      * songs

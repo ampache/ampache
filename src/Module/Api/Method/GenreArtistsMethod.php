@@ -37,7 +37,7 @@ use Ampache\Module\Api\Xml_Data;
  */
 final class GenreArtistsMethod
 {
-    const ACTION = 'genre_artists';
+    public const ACTION = 'genre_artists';
 
     /**
      * genre_artists

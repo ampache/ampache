@@ -36,7 +36,7 @@ use Ampache\Module\Api\Xml5_Data;
  */
 final class GenreArtists5Method
 {
-    const ACTION = 'genre_artists';
+    public const ACTION = 'genre_artists';
 
     /**
      * genre_artists

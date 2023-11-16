@@ -43,8 +43,8 @@ use Ampache\Repository\Model\Tag;
  */
 class Daap_Api
 {
-    const AMPACHEID_SMARTPL = 400000000;
-    const BASE_LIBRARY      = 0;
+    public const AMPACHEID_SMARTPL = 400000000;
+    public const BASE_LIBRARY      = 0;
 
     public static $metas = array(
         'dmap.itemid',

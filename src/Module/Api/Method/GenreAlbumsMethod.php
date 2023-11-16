@@ -37,7 +37,7 @@ use Ampache\Module\Api\Xml_Data;
  */
 final class GenreAlbumsMethod
 {
-    const ACTION = 'genre_albums';
+    public const ACTION = 'genre_albums';
 
     /**
      * genre_albums

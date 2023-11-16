@@ -37,7 +37,7 @@ use Ampache\Module\Api\Xml5_Data;
  */
 final class Playlists5Method
 {
-    const ACTION = 'playlists';
+    public const ACTION = 'playlists';
 
     /**
      * playlists

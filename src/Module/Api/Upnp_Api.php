@@ -72,7 +72,7 @@ class Upnp_Api
      * object.item.textItem
      * object.container
      */
-    const SSDP_DEBUG = false;
+    public const SSDP_DEBUG = false;
 
     /**
      * @return string

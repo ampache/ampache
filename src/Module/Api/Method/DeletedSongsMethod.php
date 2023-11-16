@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class DeletedSongsMethod
 {
-    const ACTION = 'deleted_songs';
+    public const ACTION = 'deleted_songs';
 
     /**
      * deleted_songs

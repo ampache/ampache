@@ -51,114 +51,114 @@ class mpd
 {
     // Command names
     // Status queries
-    const COMMAND_CLEARERROR  = 'clearerror';
-    const COMMAND_CURRENTSONG = 'currentsong';
-    const COMMAND_IDLE        = 'idle';
-    const COMMAND_STATUS      = 'status';
-    const COMMAND_STATISTICS  = 'stats';
+    public const COMMAND_CLEARERROR  = 'clearerror';
+    public const COMMAND_CURRENTSONG = 'currentsong';
+    public const COMMAND_IDLE        = 'idle';
+    public const COMMAND_STATUS      = 'status';
+    public const COMMAND_STATISTICS  = 'stats';
 
     // Playback options
-    const COMMAND_CONSUME            = 'consume';
-    const COMMAND_CROSSFADE          = 'crossfade';
-    const COMMAND_RANDOM             = 'random';
-    const COMMAND_REPEAT             = 'repeat';
-    const COMMAND_SETVOL             = 'setvol';
-    const COMMAND_SINGLE             = 'single';
-    const COMMAND_REPLAY_GAIN_MODE   = 'replay_gain_mode';
-    const COMMAND_REPLAY_GAIN_STATUS = 'replay_gain_status';
+    public const COMMAND_CONSUME            = 'consume';
+    public const COMMAND_CROSSFADE          = 'crossfade';
+    public const COMMAND_RANDOM             = 'random';
+    public const COMMAND_REPEAT             = 'repeat';
+    public const COMMAND_SETVOL             = 'setvol';
+    public const COMMAND_SINGLE             = 'single';
+    public const COMMAND_REPLAY_GAIN_MODE   = 'replay_gain_mode';
+    public const COMMAND_REPLAY_GAIN_STATUS = 'replay_gain_status';
 
     // Playback control
-    const COMMAND_NEXT     = 'next';
-    const COMMAND_PAUSE    = 'pause';
-    const COMMAND_PLAY     = 'play';
-    const COMMAND_PLAYID   = 'playid';
-    const COMMAND_PREVIOUS = 'previous';
-    const COMMAND_SEEK     = 'seek';
-    const COMMAND_SEEKID   = 'seekid';
-    const COMMAND_STOP     = 'stop';
+    public const COMMAND_NEXT     = 'next';
+    public const COMMAND_PAUSE    = 'pause';
+    public const COMMAND_PLAY     = 'play';
+    public const COMMAND_PLAYID   = 'playid';
+    public const COMMAND_PREVIOUS = 'previous';
+    public const COMMAND_SEEK     = 'seek';
+    public const COMMAND_SEEKID   = 'seekid';
+    public const COMMAND_STOP     = 'stop';
 
     // Current playlist control
-    const COMMAND_ADD            = 'add';
-    const COMMAND_ADDID          = 'addid';
-    const COMMAND_CLEAR          = 'clear';
-    const COMMAND_DELETE         = 'delete';
-    const COMMAND_DELETEID       = 'deleteid';
-    const COMMAND_MOVETRACK      = 'move';
-    const COMMAND_MOVEID         = 'moveid';
-    const COMMAND_PLFIND         = 'playlistfind';
-    const COMMAND_PLID           = 'playlistid';
-    const COMMAND_PLINFO         = 'playlistinfo';
-    const COMMAND_PLSEARCH       = 'playlistsearch';
-    const COMMAND_PLCHANGES      = 'plchanges';
-    const COMMAND_PLCHANGESPOSID = 'plchangesposid';
-    const COMMAND_PLSHUFFLE      = 'shuffle';
-    const COMMAND_PLSWAPTRACK    = 'swap';
-    const COMMAND_PLSWAPID       = 'swapid';
+    public const COMMAND_ADD            = 'add';
+    public const COMMAND_ADDID          = 'addid';
+    public const COMMAND_CLEAR          = 'clear';
+    public const COMMAND_DELETE         = 'delete';
+    public const COMMAND_DELETEID       = 'deleteid';
+    public const COMMAND_MOVETRACK      = 'move';
+    public const COMMAND_MOVEID         = 'moveid';
+    public const COMMAND_PLFIND         = 'playlistfind';
+    public const COMMAND_PLID           = 'playlistid';
+    public const COMMAND_PLINFO         = 'playlistinfo';
+    public const COMMAND_PLSEARCH       = 'playlistsearch';
+    public const COMMAND_PLCHANGES      = 'plchanges';
+    public const COMMAND_PLCHANGESPOSID = 'plchangesposid';
+    public const COMMAND_PLSHUFFLE      = 'shuffle';
+    public const COMMAND_PLSWAPTRACK    = 'swap';
+    public const COMMAND_PLSWAPID       = 'swapid';
 
     // Stored playlists
-    const COMMAND_LISTPL        = 'listplaylist';
-    const COMMAND_LISTPLINFO    = 'listplaylistinfo';
-    const COMMAND_LISTPLAYLISTS = 'listplaylists';
-    const COMMAND_PLLOAD        = 'load';
-    const COMMAND_PLADD         = 'playlistadd';
-    const COMMAND_PLCLEAR       = 'playlistclear';
-    const COMMAND_PLDELETE      = 'playlistdelete';
-    const COMMAND_PLMOVE        = 'playlistmove';
-    const COMMAND_RENAME        = 'rename';
-    const COMMAND_RM            = 'rm';
-    const COMMAND_PLSAVE        = 'save';
+    public const COMMAND_LISTPL        = 'listplaylist';
+    public const COMMAND_LISTPLINFO    = 'listplaylistinfo';
+    public const COMMAND_LISTPLAYLISTS = 'listplaylists';
+    public const COMMAND_PLLOAD        = 'load';
+    public const COMMAND_PLADD         = 'playlistadd';
+    public const COMMAND_PLCLEAR       = 'playlistclear';
+    public const COMMAND_PLDELETE      = 'playlistdelete';
+    public const COMMAND_PLMOVE        = 'playlistmove';
+    public const COMMAND_RENAME        = 'rename';
+    public const COMMAND_RM            = 'rm';
+    public const COMMAND_PLSAVE        = 'save';
 
     // Music database
-    const COMMAND_COUNT       = 'count';
-    const COMMAND_FIND        = 'find';
-    const COMMAND_FINDADD     = 'findadd';
-    const COMMAND_TABLE       = 'list';
-    const COMMAND_LISTALL     = 'listall';
-    const COMMAND_LISTALLINFO = 'listallinfo';
-    const COMMAND_LSDIR       = 'lsinfo';
-    const COMMAND_SEARCH      = 'search';
-    const COMMAND_REFRESH     = 'update';
-    const COMMAND_RESCAN      = 'rescan';
+    public const COMMAND_COUNT       = 'count';
+    public const COMMAND_FIND        = 'find';
+    public const COMMAND_FINDADD     = 'findadd';
+    public const COMMAND_TABLE       = 'list';
+    public const COMMAND_LISTALL     = 'listall';
+    public const COMMAND_LISTALLINFO = 'listallinfo';
+    public const COMMAND_LSDIR       = 'lsinfo';
+    public const COMMAND_SEARCH      = 'search';
+    public const COMMAND_REFRESH     = 'update';
+    public const COMMAND_RESCAN      = 'rescan';
 
     // Stickers
-    const COMMAND_STICKER = 'sticker';
-    const STICKER_GET     = 'get';
-    const STICKER_SET     = 'set';
-    const STICKER_DELETE  = 'delete';
-    const STICKER_LIST    = 'list';
-    const STICKER_FIND    = 'find';
+    public const COMMAND_STICKER = 'sticker';
+    public const STICKER_GET     = 'get';
+    public const STICKER_SET     = 'set';
+    public const STICKER_DELETE  = 'delete';
+    public const STICKER_LIST    = 'list';
+    public const STICKER_FIND    = 'find';
 
     // Connection
-    const COMMAND_CLOSE    = 'close';
-    const COMMAND_KILL     = 'kill';
-    const COMMAND_PASSWORD = 'password';
-    const COMMAND_PING     = 'ping';
-    const COMMAND_SHUTDOWN = 'shutdown';
+    public const COMMAND_CLOSE    = 'close';
+    public const COMMAND_KILL     = 'kill';
+    public const COMMAND_PASSWORD = 'password';
+    public const COMMAND_PING     = 'ping';
+    public const COMMAND_SHUTDOWN = 'shutdown';
 
     // Deprecated commands
-    const COMMAND_VOLUME = 'volume';
+    public const COMMAND_VOLUME = 'volume';
 
     // Bulk commands
-    const COMMAND_START_BULK = 'command_list_begin';
-    const COMMAND_END_BULK   = 'command_list_end';
+    public const COMMAND_START_BULK = 'command_list_begin';
+    public const COMMAND_END_BULK   = 'command_list_end';
 
     // Predefined MPD Response messages
-    const RESPONSE_ERR = 'ACK';
-    const RESPONSE_OK  = 'OK';
+    public const RESPONSE_ERR = 'ACK';
+    public const RESPONSE_OK  = 'OK';
 
     // MPD State Constants
-    const STATE_PLAYING = 'play';
-    const STATE_STOPPED = 'stop';
-    const STATE_PAUSED  = 'pause';
+    public const STATE_PLAYING = 'play';
+    public const STATE_STOPPED = 'stop';
+    public const STATE_PAUSED  = 'pause';
 
     // MPD Searching Constants
-    const SEARCH_ARTIST = 'artist';
-    const SEARCH_TITLE  = 'title';
-    const SEARCH_ALBUM  = 'album';
+    public const SEARCH_ARTIST = 'artist';
+    public const SEARCH_TITLE  = 'title';
+    public const SEARCH_ALBUM  = 'album';
 
     // MPD Cache Tables
-    const TABLE_ARTIST = 'artist';
-    const TABLE_ALBUM  = 'album';
+    public const TABLE_ARTIST = 'artist';
+    public const TABLE_ALBUM  = 'album';
 
     // Table holding version compatibility information
     private static $_COMPATIBILITY_TABLE = array(

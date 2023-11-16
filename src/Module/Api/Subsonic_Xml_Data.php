@@ -63,27 +63,27 @@ use SimpleXMLElement;
  */
 class Subsonic_Xml_Data
 {
-    const API_VERSION = "1.16.1";
+    public const API_VERSION = "1.16.1";
 
-    const SSERROR_GENERIC               = 0;
-    const SSERROR_MISSINGPARAM          = 10;
-    const SSERROR_APIVERSION_CLIENT     = 20;
-    const SSERROR_APIVERSION_SERVER     = 30;
-    const SSERROR_BADAUTH               = 40;
-    const SSERROR_TOKENAUTHNOTSUPPORTED = 41;
-    const SSERROR_UNAUTHORIZED          = 50;
-    const SSERROR_TRIAL                 = 60;
-    const SSERROR_DATA_NOTFOUND         = 70;
+    public const SSERROR_GENERIC               = 0;
+    public const SSERROR_MISSINGPARAM          = 10;
+    public const SSERROR_APIVERSION_CLIENT     = 20;
+    public const SSERROR_APIVERSION_SERVER     = 30;
+    public const SSERROR_BADAUTH               = 40;
+    public const SSERROR_TOKENAUTHNOTSUPPORTED = 41;
+    public const SSERROR_UNAUTHORIZED          = 50;
+    public const SSERROR_TRIAL                 = 60;
+    public const SSERROR_DATA_NOTFOUND         = 70;
 
     // Ampache doesn't have a global unique id but each items are unique per category. We use id pattern to identify item category.
-    const AMPACHEID_ARTIST    = 100000000;
-    const AMPACHEID_ALBUM     = 200000000;
-    const AMPACHEID_SONG      = 300000000;
-    const AMPACHEID_SMARTPL   = 400000000;
-    const AMPACHEID_VIDEO     = 500000000;
-    const AMPACHEID_PODCAST   = 600000000;
-    const AMPACHEID_PODCASTEP = 700000000;
-    const AMPACHEID_PLAYLIST  = 800000000;
+    public const AMPACHEID_ARTIST    = 100000000;
+    public const AMPACHEID_ALBUM     = 200000000;
+    public const AMPACHEID_SONG      = 300000000;
+    public const AMPACHEID_SMARTPL   = 400000000;
+    public const AMPACHEID_VIDEO     = 500000000;
+    public const AMPACHEID_PODCAST   = 600000000;
+    public const AMPACHEID_PODCASTEP = 700000000;
+    public const AMPACHEID_PLAYLIST  = 800000000;
 
     public static $enable_json_checks = false;
 

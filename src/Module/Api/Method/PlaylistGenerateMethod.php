@@ -40,7 +40,7 @@ use Ampache\Module\Api\Xml_Data;
  */
 final class PlaylistGenerateMethod
 {
-    const ACTION = 'playlist_generate';
+    public const ACTION = 'playlist_generate';
 
     /**
      * playlist_generate
