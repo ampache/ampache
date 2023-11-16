@@ -35,11 +35,12 @@ global $dic;
 
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? -1;
-$link      = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $user_id) : '';
+$rss_link  = AmpConfig::get('use_rss') ? '&nbsp' . AmpacheRss::get_display('recently_played', $user_id) : '';
+$refresh   = "&nbsp" . Ajax::button('?page=index&action=refresh_recently_played', 'refresh', T_('Refresh'), 'refresh_recently_played', 'box box_recently_played');
 $web_path  = (string)AmpConfig::get('web_path', '');
 $is_admin  = Access::check('interface', 100);
 $showAlbum = AmpConfig::get('album_group');
-UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
+UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_played'); ?>
 <table class="tabledata striped-rows">
     <thead>
     <tr class="th-top">

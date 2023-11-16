@@ -78,7 +78,7 @@ final class ShowAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HOME_NOW_PLAYING)
         ) {
             $refresh_limit = $refreshLimit;
-            $ajax_url      = '?page=index&action=reloadnp';
+            $ajax_url      = '?page=index&action=refresh_index';
             require_once Ui::find_template('javascript_refresh.inc.php');
         }
 

@@ -316,10 +316,9 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'delete_play':
-                Stats::delete((int)$_REQUEST['activity_id']);
-                ob_start();
-                show_now_playing();
-                $results['now_playing'] = ob_get_clean();
+                if (isset($_REQUEST['activity_id'])) {
+                    Stats::delete((int)$_REQUEST['activity_id']);
+                }
                 ob_start();
                 $user_id   = $user->id ?? -1;
                 $data      = Stats::get_recently_played($user_id, 'stream', 'song');
@@ -328,7 +327,21 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 require_once Ui::find_template('show_recently_played.inc.php');
                 $results['recently_played'] = ob_get_clean();
                 break;
-            case 'reloadnp':
+            case 'refresh_recently_played':
+                ob_start();
+                $user_id   = $user->id ?? -1;
+                $data      = Stats::get_recently_played($user_id, 'stream', 'song');
+                $ajax_page = 'index';
+                Song::build_cache(array_keys($data));
+                require_once Ui::find_template('show_recently_played.inc.php');
+                $results['recently_played'] = ob_get_clean();
+                break;
+            case 'refresh_now_playing':
+                ob_start();
+                show_now_playing();
+                $results['now_playing'] = ob_get_clean();
+                break;
+            case 'refresh_index':
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
