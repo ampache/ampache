@@ -35,6 +35,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Renders the podcast overview
+ */
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
@@ -67,9 +70,9 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $podcast_id = (int) filter_input(INPUT_GET, 'podcast', FILTER_SANITIZE_NUMBER_INT);
-        $podcast    = $this->modelFactory->createPodcast($podcast_id);
-        if (!$podcast->id) {
+        $podcastId  = (int) ($request->getQueryParams()['podcast'] ?? 0);
+        $podcast    = $this->modelFactory->createPodcast($podcastId);
+        if ($podcast->isNew()) {
             $this->logger->warning(
                 'Requested a podcast that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -77,14 +80,14 @@ final class ShowAction implements ApplicationActionInterface
             echo T_('You have requested an object that does not exist');
         } else {
             $podcast->format();
-            $object_ids  = $podcast->get_episodes();
-            $object_type = 'podcast_episode';
+
+            $this->ui->showBoxTop($podcast->get_fullname(), 'info-box');
             $this->ui->show(
                 'show_podcast.inc.php',
                 [
                     'podcast' => $podcast,
-                    'object_ids' => $object_ids,
-                    'object_type' => $object_type
+                    'object_ids' => $podcast->get_episodes(),
+                    'object_type' => 'podcast_episode'
                 ]
             );
         }
