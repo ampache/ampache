@@ -76,6 +76,10 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
+            case 'basket_refresh':
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rfc3514']  = '0x0';
+                break;
             case 'basket':
                 // Handle the users basketcases...
                 $object_type = $request_type ?? $this->requestParser->getFromRequest('object_type');

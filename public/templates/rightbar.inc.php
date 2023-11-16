@@ -93,6 +93,9 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
             </li>
         </ul>
     </li>
+    <li id="rb_reload">
+        <?php echo Ajax::button('?action=basket_refresh', 'refresh', T_('Refresh'), 'rb_refresh'); ?>
+    </li>
 </ul>
 <?php if (AmpConfig::get('play_type') == 'localplay') {
     require_once Ui::find_template('show_localplay_control.inc.php');
