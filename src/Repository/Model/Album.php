@@ -1163,7 +1163,7 @@ class Album extends database_object implements library_item
      */
     private static function update_field($field, $value, $album_id): void
     {
-        if ($value == null) {
+        if ($value === null) {
             $sql = "UPDATE `album` SET `" . $field . "` = NULL WHERE `id` = ?";
             Dba::write($sql, array($album_id));
         } else {

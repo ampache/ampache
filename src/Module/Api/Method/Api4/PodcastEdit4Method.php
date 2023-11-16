@@ -86,7 +86,7 @@ final class PodcastEdit4Method
             'generator' => $generator,
             'copyright' => $copyright
         );
-        if ($podcast->update($data)) {
+        if ($podcast->update($data) !== false) {
             Api4::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
         } else {
             Api4::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['api_format']);

@@ -135,7 +135,7 @@ final class EditObjectAction extends AbstractEditAction
 
         $libitem->format();
         $new_id = $libitem->update($_POST);
-        if ($new_id) {
+        if ($new_id !== false) {
             $new_id = $object_id;
         }
         /** @var library_item $libitem */

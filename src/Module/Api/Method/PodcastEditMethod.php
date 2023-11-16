@@ -90,7 +90,7 @@ final class PodcastEditMethod
             'generator' => $generator,
             'copyright' => $copyright
         );
-        if ($podcast->update($data)) {
+        if ($podcast->update($data) !== false) {
             Api::message('podcast ' . $podcast_id . ' updated', $input['api_format']);
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

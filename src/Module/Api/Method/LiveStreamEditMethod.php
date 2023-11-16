@@ -93,7 +93,7 @@ final class LiveStreamEditMethod
 
         // check for the live_stream first
         $results = $item->update($data);
-        if (!$results) {
+        if ($results === false) {
             Api::empty('live_stream', $input['api_format']);
 
             return false;
