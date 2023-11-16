@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <ruleset>
   <rule ref="PSR12">
+    <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
     <exclude name="Squiz.WhiteSpace.ScopeKeywordSpacing"/>
     <exclude name="Squiz.WhiteSpace.ScopeClosingBrace"/>
     <exclude name="Squiz.Scope.MethodScope"/>
