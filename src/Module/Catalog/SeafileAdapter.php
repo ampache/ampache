@@ -95,9 +95,9 @@ class SeafileAdapter
     // do we have all the info we need?
 
     /**
-     * @return bool
+     * ready
      */
-    public function ready()
+    public function ready(): bool
     {
         return $this->server != null && $this->api_key != null && $this->library_name != null && $this->call_delay != null;
     }
@@ -105,9 +105,9 @@ class SeafileAdapter
     // create API client object & find library
 
     /**
-     * @return bool
+     * prepare
      */
-    public function prepare()
+    public function prepare(): bool
     {
         if ($this->client !== null) {
             return true;
@@ -190,9 +190,8 @@ class SeafileAdapter
 
     /**
      * @param $file
-     * @return string
      */
-    public function to_virtual_path($file)
+    public function to_virtual_path($file): string
     {
         return $this->library->name . '|' . $file->dir . '|' . $file->name;
     }
@@ -254,9 +253,8 @@ class SeafileAdapter
      * Returns number added, or -1 on failure
      * @param $func
      * @param string $path
-     * @return int
      */
-    public function for_all_files($func, $path = '/')
+    public function for_all_files($func, $path = '/'): int
     {
         if ($this->client != null) {
             $directoryItems = $this->get_cached_directory($path);
@@ -304,9 +302,8 @@ class SeafileAdapter
     /**
      * @param $file
      * @param bool $partial
-     * @return string
      */
-    public function download($file, $partial = false)
+    public function download($file, $partial = false): string
     {
         $url = $this->throttle_check(function () use ($file) {
             return $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir);
@@ -334,9 +331,9 @@ class SeafileAdapter
     }
 
     /**
-     * @return string
+     * get_format_string
      */
-    public function get_format_string()
+    public function get_format_string(): string
     {
         return 'Seafile server "' . $this->server . '", library "' . $this->library_name . '"';
     }

@@ -209,9 +209,8 @@ class Catalog_local extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return bool
      */
-    public static function create_type($catalog_id, $data)
+    public static function create_type($catalog_id, $data): bool
     {
         // Clean up the path just in case
         $path = rtrim(rtrim(trim($data['path']), '/'), '\\');
@@ -249,9 +248,8 @@ class Catalog_local extends Catalog
      * @param string $path
      * @param array $options
      * @param int $counter
-     * @return int
      */
-    public function add_files($path, $options, $counter = 0)
+    public function add_files($path, $options, $counter = 0): int
     {
         // See if we want a non-root path for the add
         if (isset($options['subdirectory'])) {
@@ -333,7 +331,7 @@ class Catalog_local extends Catalog
      * @return bool
      * @throws Exception
      */
-    public function add_file($full_file, $options, $counter = 0)
+    public function add_file($full_file, $options, $counter = 0): bool
     {
         // Ensure that we've got our cache
         $this->_create_filecache();
@@ -483,9 +481,8 @@ class Catalog_local extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return int
      */
-    public function add_to_catalog($options = null)
+    public function add_to_catalog($options = null): int
     {
         if (empty($options)) {
             $options = array(
@@ -590,9 +587,9 @@ class Catalog_local extends Catalog
     } // add_to_catalog
 
     /**
-     * @return int
+     * verify_catalog_proc
      */
-    public function verify_catalog_proc()
+    public function verify_catalog_proc(): int
     {
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
@@ -644,9 +641,8 @@ class Catalog_local extends Catalog
      * @param string $tableName
      * @param int $chunk
      * @param int $chunk_size
-     * @return int
      */
-    private function _verify_chunk($tableName, $chunk, $chunk_size)
+    private function _verify_chunk($tableName, $chunk, $chunk_size): int
     {
         $count   = $chunk * $chunk_size;
         $changed = 0;
@@ -710,9 +706,8 @@ class Catalog_local extends Catalog
      * clean catalog procedure
      *
      * Removes local songs that no longer exist.
-     * @return int
      */
-    public function clean_catalog_proc()
+    public function clean_catalog_proc(): int
     {
         if (!Core::is_readable($this->path)) {
             // First sanity check; no point in proceeding with an unreadable catalog root.
@@ -1037,7 +1032,7 @@ class Catalog_local extends Catalog
      * @throws Exception
      * @throws Exception
      */
-    public function insert_local_video($file, $options = array())
+    public function insert_local_video($file, $options = array()): int
     {
         /* Create the vainfo object and get info */
         $gtypes = $this->get_gather_types('video');
@@ -1124,9 +1119,8 @@ class Catalog_local extends Catalog
      * check_path
      * Checks the path to see if it's there or conflicting with an existing catalog
      * @param string $path
-     * @return bool
      */
-    public static function check_path($path)
+    public static function check_path($path): bool
     {
         if (!strlen($path)) {
             AmpError::add('general', T_('Path was not specified'));
@@ -1192,9 +1186,8 @@ class Catalog_local extends Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location
      * @param string $new_path
-     * @return bool
      */
-    public function move_catalog_proc($new_path)
+    public function move_catalog_proc($new_path): bool
     {
         if (!self::check_path($new_path)) {
             return false;
@@ -1217,9 +1210,8 @@ class Catalog_local extends Catalog
 
     /**
      * cache_catalog_proc
-     * @return bool
      */
-    public function cache_catalog_proc()
+    public function cache_catalog_proc(): bool
     {
         $m4a    = AmpConfig::get('cache_m4a');
         $flac   = AmpConfig::get('cache_flac');

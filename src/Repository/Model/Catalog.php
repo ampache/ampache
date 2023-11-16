@@ -365,9 +365,8 @@ abstract class Catalog extends database_object
     /**
      * Create a catalog from its id.
      * @param int $catalog_id
-     * @return Catalog|null
      */
-    public static function create_from_id($catalog_id)
+    public static function create_from_id($catalog_id): ?Catalog
     {
         $sql        = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($catalog_id));
@@ -384,9 +383,8 @@ abstract class Catalog extends database_object
      * This function attempts to create a catalog type
      * @param string $type
      * @param int $catalog_id
-     * @return Catalog|null
      */
-    public static function create_catalog_type($type, $catalog_id = 0)
+    public static function create_catalog_type($type, $catalog_id = 0): ?Catalog
     {
         if (!$type) {
             return null;
@@ -432,6 +430,9 @@ abstract class Catalog extends database_object
 
         foreach (Catalog::CATALOG_TYPES as $type) {
             $catalog = self::create_catalog_type($type);
+            if (!$catalog) {
+                break;
+            }
             if ($catalog->is_installed()) {
                 $seltypes .= '<option value="' . $type . '">' . $type . '</option>';
                 echo "type_fields['" . $type . "'] = \"";
@@ -778,9 +779,8 @@ abstract class Catalog extends database_object
      * Get enable sql filter;
      * @param string $type
      * @param string $catalog_id
-     * @return string
      */
-    public static function get_enable_filter($type, $catalog_id)
+    public static function get_enable_filter($type, $catalog_id): string
     {
         $sql = "";
         if ($type == "song" || $type == "album" || $type == "artist" || $type == "album_artist") {
@@ -801,9 +801,8 @@ abstract class Catalog extends database_object
      * Get filter_user sql filter;
      * @param string $type
      * @param int $user_id
-     * @return string
      */
-    public static function get_user_filter($type, $user_id)
+    public static function get_user_filter($type, $user_id): string
     {
         switch ($type) {
             case "album":
@@ -918,9 +917,8 @@ abstract class Catalog extends database_object
      * _create_filecache
      *
      * This populates an array which is used to speed up the add process.
-     * @return bool
      */
-    protected function _create_filecache()
+    protected function _create_filecache(): void
     {
         if (count($this->_filecache) == 0) {
             // Get _EVERYTHING_
@@ -939,8 +937,6 @@ abstract class Catalog extends database_object
                 $this->_filecache[strtolower((string)$results['file'])] = 'v_' . $results['id'];
             }
         }
-
-        return true;
     }
 
     /**
@@ -949,9 +945,8 @@ abstract class Catalog extends database_object
      * return the counts from user_data or update_info to speed up responses
      * @param string $key
      * @param int $user_id
-     * @return int
      */
-    public static function get_update_info(string $key, int $user_id)
+    public static function get_update_info(string $key, int $user_id): int
     {
         $sql = ($user_id > 0)
             ? "SELECT `key`, `value` FROM `user_data` WHERE `key` = ? AND `user` = " . $user_id
@@ -1106,9 +1101,8 @@ abstract class Catalog extends database_object
     /**
      * Get last catalogs update.
      * @param int[]|null $catalogs
-     * @return int
      */
-    public static function getLastUpdate($catalogs = null)
+    public static function getLastUpdate($catalogs = null): int
     {
         $last_update = 0;
         if ($catalogs == null || !is_array($catalogs)) {
@@ -1116,6 +1110,9 @@ abstract class Catalog extends database_object
         }
         foreach ($catalogs as $catalogid) {
             $catalog = self::create_from_id($catalogid);
+            if (!$catalog) {
+                break;
+            }
             if ($catalog->last_add > $last_update) {
                 $last_update = $catalog->last_add;
             }
@@ -1166,9 +1163,8 @@ abstract class Catalog extends database_object
      *
      * This creates a new catalog entry and associate it to current instance
      * @param array $data
-     * @return int
      */
-    public static function create($data)
+    public static function create($data): int
     {
         $name           = $data['name'];
         $type           = $data['type'];
@@ -1238,9 +1234,8 @@ abstract class Catalog extends database_object
      * count_tags
      *
      * This returns the current number of unique tags in the database.
-     * @return int
      */
-    public static function count_tags()
+    public static function count_tags(): int
     {
         $sql        = "SELECT COUNT(`id`) FROM `tag` WHERE `is_hidden` = 0;";
         $db_results = Dba::read($sql);
@@ -1255,9 +1250,8 @@ abstract class Catalog extends database_object
      * When filtering catalogs you shouldn't be able to play the files
      * @param int $catalog_id
      * @param int $user_id
-     * @return bool
      */
-    public static function has_access($catalog_id, $user_id)
+    public static function has_access($catalog_id, $user_id): bool
     {
         if (!AmpConfig::get('catalog_filter')) {
             return true;
@@ -1311,9 +1305,8 @@ abstract class Catalog extends database_object
      * Count and/or Update a table count when adding/removing from the server
      * @param string $table
      * @param int $catalog_id
-     * @return int
      */
-    public static function count_table($table, $catalog_id = 0)
+    public static function count_table($table, $catalog_id = 0): int
     {
         $sql = ($catalog_id > 0)
             ? "SELECT COUNT(`id`) FROM `$table` WHERE `catalog` = $catalog_id;"
@@ -1369,9 +1362,8 @@ abstract class Catalog extends database_object
      *
      * @param string $type
      * @param int $user_id
-     * @return string
      */
-    public static function get_uploads_sql($type, $user_id = 0)
+    public static function get_uploads_sql($type, $user_id = 0): string
     {
         $sql       = '';
         $column    = ($type == 'song')
@@ -1474,9 +1466,8 @@ abstract class Catalog extends database_object
      *
      * @param int|null $catalog_id
      * @param string $type
-     * @return int
      */
-    public static function get_videos_count($catalog_id = null, $type = '')
+    public static function get_videos_count($catalog_id = null, $type = ''): int
     {
         $sql = "SELECT COUNT(`video`.`id`) AS `video_cnt` FROM `video` ";
         if (!empty($type)) {
@@ -1689,9 +1680,8 @@ abstract class Catalog extends database_object
      * This returns an id of artist that have songs in this catalog
      * @param string $object_type
      * @param string $object_id
-     * @return int
      */
-    public static function get_catalog_map($object_type, $object_id)
+    public static function get_catalog_map($object_type, $object_id): int
     {
         $sql = "SELECT MIN(`catalog_map`.`catalog_id`) AS `catalog_id` FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
 
@@ -1710,9 +1700,8 @@ abstract class Catalog extends database_object
      *
      * @param string $file_path
      * @param string $media_type
-     * @return int
      */
-    public static function get_id_from_file($file_path, $media_type)
+    public static function get_id_from_file($file_path, $media_type): int
     {
         $sql        = "SELECT `id` FROM `$media_type` WHERE `file` = ?;";
         $db_results = Dba::read($sql, array($file_path));
@@ -1971,9 +1960,8 @@ abstract class Catalog extends database_object
      * @param int $object_id
      * @param bool $db_art_first
      * @param bool $api
-     * @return bool
      */
-    public static function gather_art_item($type, $object_id, $db_art_first = false, $api = false)
+    public static function gather_art_item($type, $object_id, $db_art_first = false, $api = false): bool
     {
         // Should be more generic !
         if ($type == 'video') {
@@ -2065,9 +2053,8 @@ abstract class Catalog extends database_object
      * to find the art for them from the mp3s
      * @param int[]|null $songs
      * @param int[]|null $videos
-     * @return bool
      */
-    public function gather_art($songs = null, $videos = null)
+    public function gather_art($songs = null, $videos = null): bool
     {
         // Make sure they've actually got methods
         $art_order       = AmpConfig::get('art_order');
@@ -2310,9 +2297,8 @@ abstract class Catalog extends database_object
      * update_settings
      * This function updates the basic setting of the catalog
      * @param array $data
-     * @return bool
      */
-    public static function update_settings($data)
+    public static function update_settings($data): bool
     {
         $sql    = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ? WHERE `id` = ?";
         $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['catalog_id']);
@@ -3292,9 +3278,8 @@ abstract class Catalog extends database_object
     /**
      * get_table_from_type
      * @param string $gather_type
-     * @return string
      */
-    public static function get_table_from_type($gather_type)
+    public static function get_table_from_type($gather_type): string
     {
         switch ($gather_type) {
             case 'clip':
@@ -3372,9 +3357,8 @@ abstract class Catalog extends database_object
      * clean_catalog
      *
      * Cleans the catalog of files that no longer exist.
-     * @return int
      */
-    public function clean_catalog()
+    public function clean_catalog(): int
     {
         // We don't want to run out of time
         set_time_limit(0);
@@ -3462,9 +3446,8 @@ abstract class Catalog extends database_object
 
     /**
      * @param $year
-     * @return int
      */
-    public static function normalize_year($year)
+    public static function normalize_year($year): int
     {
         if (empty($year)) {
             return 0;
@@ -3519,9 +3502,8 @@ abstract class Catalog extends database_object
      * filename and tries to set the title based on that
      * @param string $title
      * @param string $file
-     * @return string
      */
-    public static function check_title($title, $file = '')
+    public static function check_title($title, $file = ''): string
     {
         if (strlen(trim((string)$title)) < 1) {
             $title = Dba::escape($file);
@@ -3536,9 +3518,8 @@ abstract class Catalog extends database_object
      * max_length is the maximum number of characters that the (varchar) column can hold
      * @param string $string
      * @param int $max_length
-     * @return string
      */
-    public static function check_length($string, $max_length = 255)
+    public static function check_length($string, $max_length = 255): string
     {
         $string = (string)$string;
         if (false !== $encoding = mb_detect_encoding($string, null, true)) {
@@ -3555,9 +3536,8 @@ abstract class Catalog extends database_object
      * Check to make sure the track number fits into the database: max 32767, min -32767
      *
      * @param string $track
-     * @return int
      */
-    public static function check_track($track)
+    public static function check_track($track): int
     {
         $retval = ((int)$track > 32767 || (int)$track < -32767) ? (int)substr($track, -4, 4) : (int)$track;
         if ((int)$track !== $retval) {
@@ -3574,9 +3554,8 @@ abstract class Catalog extends database_object
      * @param int $my_int
      * @param int $max
      * @param int $min
-     * @return int
      */
-    public static function check_int($my_int, $max, $min)
+    public static function check_int($my_int, $max, $min): int
     {
         if ($my_int > $max) {
             return $max;
@@ -3593,9 +3572,8 @@ abstract class Catalog extends database_object
      * Check to make sure the string doesn't have duplicate strings ({)e.g. "Enough Records; Enough Records")
      *
      * @param string $str_array
-     * @return string
      */
-    public static function get_unique_string($str_array)
+    public static function get_unique_string($str_array): string
     {
         $array = array_unique(array_map('trim', explode(';', $str_array)));
 
@@ -3823,11 +3801,9 @@ abstract class Catalog extends database_object
     /**
      * delete
      * Deletes the catalog and everything associated with it
-     * it takes the catalog id
      * @param int $catalog_id
-     * @return bool
      */
-    public static function delete($catalog_id)
+    public static function delete($catalog_id): bool
     {
         $params  = array($catalog_id);
         $catalog = self::create_from_id($catalog_id);
@@ -4092,9 +4068,8 @@ abstract class Catalog extends database_object
     /**
      * @param Album|AlbumDisk|Artist|Song|Video|Podcast_Episode|TvShow|TVShow_Episode|Label|TVShow_Season $libitem
      * @param int|null $user_id
-     * @return bool
      */
-    public static function can_remove($libitem, $user_id = null)
+    public static function can_remove($libitem, $user_id = null): bool
     {
         if (!$user_id) {
             $user    = Core::get_global('user');
@@ -4422,9 +4397,8 @@ abstract class Catalog extends database_object
      * @param string|int $string
      * @param string $return
      * @param bool $windowsCompat
-     * @return string
      */
-    public static function sort_clean_name($string, $return = '', $windowsCompat = false)
+    public static function sort_clean_name($string, $return = '', $windowsCompat = false): string
     {
         if (empty($string)) {
             return $return;
@@ -4442,9 +4416,8 @@ abstract class Catalog extends database_object
      * @param int $old_object_id
      * @param int $new_object_id
      * @param int $song_id
-     * @return bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id, $song_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id, $song_id): bool
     {
         if ($old_object_id != $new_object_id) {
             debug_event(__CLASS__, "migrate $song_id $object_type: {{$old_object_id}} to {{$new_object_id}}", 4);
@@ -4475,9 +4448,8 @@ abstract class Catalog extends database_object
      * xml_get_footer
      * This takes the type and returns the correct xml footer
      * @param string $type
-     * @return string
      */
-    private static function xml_get_footer($type)
+    private static function xml_get_footer($type): string
     {
         switch ($type) {
             case 'itunes':
@@ -4496,9 +4468,8 @@ abstract class Catalog extends database_object
      * xml_get_header
      * This takes the type and returns the correct xml header
      * @param string $type
-     * @return string
      */
-    private static function xml_get_header($type)
+    private static function xml_get_header($type): string
     {
         switch ($type) {
             case 'itunes':

@@ -162,9 +162,8 @@ class Catalog_remote extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return bool
      */
-    public static function create_type($catalog_id, $data)
+    public static function create_type($catalog_id, $data): bool
     {
         $uri      = $data['uri'];
         $username = $data['username'];
@@ -209,7 +208,7 @@ class Catalog_remote extends Catalog
      * @return int
      * @throws Exception
      */
-    public function add_to_catalog($options = null)
+    public function add_to_catalog($options = null): int
     {
         if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
@@ -268,7 +267,7 @@ class Catalog_remote extends Catalog
      * @return int
      * @throws Exception
      */
-    public function update_remote_catalog()
+    public function update_remote_catalog(): int
     {
         set_time_limit(0);
 
@@ -332,9 +331,9 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * @return int
+     * verify_catalog_proc
      */
-    public function verify_catalog_proc()
+    public function verify_catalog_proc(): int
     {
         return 0;
     }
@@ -343,9 +342,8 @@ class Catalog_remote extends Catalog
      * clean_catalog_proc
      *
      * Removes remote songs that no longer exist.
-     * @return int
      */
-    public function clean_catalog_proc()
+    public function clean_catalog_proc(): int
     {
         $remote_handle = $this->connect();
         if (!$remote_handle) {
@@ -389,17 +387,16 @@ class Catalog_remote extends Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return bool
      */
-    public function move_catalog_proc($new_path)
+    public function move_catalog_proc($new_path): bool
     {
         return false;
     }
 
     /**
-     * @return bool
+     * cache_catalog_proc
      */
-    public function cache_catalog_proc()
+    public function cache_catalog_proc(): bool
     {
         $remote_handle = $this->connect();
 

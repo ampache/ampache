@@ -175,9 +175,8 @@ final class Session implements SessionInterface
      *
      * This removes the specified session from the database.
      * @param string $key
-     * @return bool
      */
-    public static function destroy($key)
+    public static function destroy($key): bool
     {
         if (!strlen((string)$key)) {
             return false;
@@ -244,9 +243,8 @@ final class Session implements SessionInterface
      *
      * This takes a key and returns the data from the database.
      * @param $key
-     * @return string
      */
-    public static function read($key)
+    public static function read($key): string
     {
         return self::_read($key, 'value');
     }
@@ -257,9 +255,8 @@ final class Session implements SessionInterface
      * This returns the specified column from the session row.
      * @param string $key
      * @param string $column
-     * @return string
      */
-    private static function _read($key, $column)
+    private static function _read($key, $column): string
     {
         $sql        = (AmpConfig::get('perpetual_api_session'))
             ? "SELECT * FROM `session` WHERE `id` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
@@ -282,9 +279,8 @@ final class Session implements SessionInterface
      *
      * This returns the username associated with a session ID, if any
      * @param $key
-     * @return string
      */
-    public static function username($key)
+    public static function username($key): string
     {
         return self::_read($key, 'username');
     }
@@ -294,9 +290,8 @@ final class Session implements SessionInterface
      *
      * This returns the agent associated with a session ID, if any
      * @param string $key
-     * @return string
      */
-    public static function agent($key)
+    public static function agent($key): string
     {
         return self::_read($key, 'agent');
     }
@@ -307,9 +302,8 @@ final class Session implements SessionInterface
      * it takes care of setting the initial cookie, and inserting the first
      * chunk of data, nifty ain't it!
      * @param array $data
-     * @return string
      */
-    public static function create($data)
+    public static function create($data): string
     {
         $type = $data['type'] ?? '';
         // Regenerate the session ID to prevent fixation
@@ -387,11 +381,9 @@ final class Session implements SessionInterface
     /**
      * check
      *
-     * This checks for an existing session. If it's still valid we go ahead
-     * and start it and return true.
-     * @return bool
+     * This checks for an existing session. If it's still valid we go ahead and start it and return true.
      */
-    public static function check()
+    public static function check(): bool
     {
         $session_name = AmpConfig::get('session_name');
 
@@ -441,9 +433,8 @@ final class Session implements SessionInterface
      * based on the type.
      * @param string $type
      * @param string $key
-     * @return bool
      */
-    public static function exists($type, $key)
+    public static function exists($type, $key): bool
     {
         // didn't pass an auth key so don't let them in!
         if (!$key) {
@@ -527,9 +518,8 @@ final class Session implements SessionInterface
      * get
      *
      * This checks for an existing session cookie and returns the value.
-     * @return string
      */
-    public static function get()
+    public static function get(): string
     {
         $session_name = AmpConfig::get('session_name');
 
@@ -613,9 +603,8 @@ final class Session implements SessionInterface
      * get_api_version
      * Get session geolocation.
      * @param string $sid
-     * @return int
      */
-    public static function get_api_version($sid)
+    public static function get_api_version($sid): int
     {
         $api_version = Api::DEFAULT_VERSION;
 
@@ -754,9 +743,8 @@ final class Session implements SessionInterface
     /**
      * generateRandomToken
      * Generate a random token.
-     * @return string
      */
-    public static function generateRandomToken()
+    public static function generateRandomToken(): string
     {
         return md5(uniqid((string)bin2hex(random_bytes(20)), true));
     }
@@ -792,9 +780,8 @@ final class Session implements SessionInterface
 
     /**
      * auth_remember
-     * @return bool
      */
-    public static function auth_remember()
+    public static function auth_remember(): bool
     {
         $auth  = false;
         $cname = AmpConfig::get('session_name') . '_remember';

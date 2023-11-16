@@ -177,9 +177,8 @@ class Catalog_Seafile extends Catalog
      * This creates a new catalog type entry for a catalog
      * @param $catalog_id
      * @param array $data
-     * @return bool
      */
-    public static function create_type($catalog_id, $data)
+    public static function create_type($catalog_id, $data): bool
     {
         $server_uri     = rtrim(trim($data['server_uri']), '/');
         $library_name   = trim($data['library_name']);
@@ -252,9 +251,8 @@ class Catalog_Seafile extends Catalog
 
     /**
      * @param string $file_path
-     * @return string
      */
-    public function get_rel_path($file_path)
+    public function get_rel_path($file_path): string
     {
         $arr = $this->seafile->from_virtual_path($file_path);
 
@@ -266,9 +264,8 @@ class Catalog_Seafile extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return int
      */
-    public function add_to_catalog($options = null)
+    public function add_to_catalog($options = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -438,7 +435,7 @@ class Catalog_Seafile extends Catalog
      * @return int
      * @throws ReflectionException
      */
-    public function verify_catalog_proc()
+    public function verify_catalog_proc(): int
     {
         set_time_limit(0);
 
@@ -524,9 +521,8 @@ class Catalog_Seafile extends Catalog
      * clean_catalog_proc
      *
      * Removes songs that no longer exist.
-     * @return int
      */
-    public function clean_catalog_proc()
+    public function clean_catalog_proc(): int
     {
         $dead = 0;
 
@@ -581,17 +577,16 @@ class Catalog_Seafile extends Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return bool
      */
-    public function move_catalog_proc($new_path)
+    public function move_catalog_proc($new_path): bool
     {
         return false;
     }
 
     /**
-     * @return bool
+     * cache_catalog_proc
      */
-    public function cache_catalog_proc()
+    public function cache_catalog_proc(): bool
     {
         return false;
     }

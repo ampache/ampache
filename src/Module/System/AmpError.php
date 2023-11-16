@@ -32,8 +32,9 @@ namespace Ampache\Module\System;
  */
 class AmpError
 {
-    private static $state  = false; // set to one when an error occurs
-    public static $errors  = array(); // Errors array key'd array with errors that have occurred
+    private static $state = false; // set to one when an error occurs
+
+    public static $errors = array(); // Errors array key'd array with errors that have occurred
 
     /**
      * __destruct
@@ -84,9 +85,8 @@ class AmpError
     /**
      * occurred
      * This returns true / false if an error has occurred anywhere
-     * @return bool
      */
-    public static function occurred()
+    public static function occurred(): bool
     {
         if (self::$state == '1') {
             return true;
@@ -99,9 +99,8 @@ class AmpError
      * get
      * This returns an error by name
      * @param string $name
-     * @return string
      */
-    public static function get($name)
+    public static function get($name): string
     {
         if (!isset(AmpError::$errors[$name])) {
             return '';
@@ -115,9 +114,8 @@ class AmpError
      * This prints the error out with a standard Error class span
      * Ben Goska: Renamed from print to display, print is reserved
      * @param string $name
-     * @return string
      */
-    public static function display($name)
+    public static function display($name): string
     {
         // Be smart about this, if no error don't print
         if (isset(AmpError::$errors[$name])) {

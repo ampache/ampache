@@ -103,9 +103,8 @@ class Catalog_beets extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return bool
      */
-    public static function create_type($catalog_id, $data)
+    public static function create_type($catalog_id, $data): bool
     {
         // TODO: This Method should be required / provided by parent
         $beetsdb = $data['beetsdb'];
@@ -134,9 +133,9 @@ class Catalog_beets extends Catalog
     }
 
     /**
-     * @return CliHandler
+     * getParser
      */
-    protected function getParser()
+    protected function getParser(): CliHandler
     {
         return new CliHandler($this);
     }
@@ -147,7 +146,7 @@ class Catalog_beets extends Catalog
      * @return bool
      * @throws Exception
      */
-    public function checkSong($song)
+    public function checkSong($song): bool
     {
         $date       = new DateTime($song['added']);
         $last_added = date("Y-m-d H:i:s", $this->last_add);
@@ -170,7 +169,7 @@ class Catalog_beets extends Catalog
         return $this->beetsdb;
     } // get_path
 
-    public function format()
+    public function format(): void
     {
         parent::format();
         $this->f_info      = $this->beetsdb;

@@ -144,9 +144,8 @@ class Dba
      * This runs an escape on a variable so that it can be safely inserted
      * into the sql
      * @param $var
-     * @return string
      */
-    public static function escape($var)
+    public static function escape($var): string
     {
         $dbh = self::dbh();
         if (!$dbh) {
@@ -164,9 +163,8 @@ class Dba
      * Truncate strings for the database that are longer than the limits
      * @param string $value
      * @param int $length
-     * @return string
      */
-    public static function check_length($value, $length)
+    public static function check_length($value, $length): string
     {
         $result = substr($value, 0, $length);
         if (!$result) {
@@ -308,9 +306,8 @@ class Dba
      * just a count of rows returned by our select statement, this
      * doesn't work for updates or inserts.
      * @param $resource
-     * @return int
      */
-    public static function num_rows($resource)
+    public static function num_rows($resource): int
     {
         if ($resource) {
             $result = $resource->rowCount();
@@ -340,9 +337,8 @@ class Dba
      *
      * This emulates the mysql_affected_rows function
      * @param $resource
-     * @return int
      */
-    public static function affected_rows($resource)
+    public static function affected_rows($resource): int
     {
         if ($resource) {
             $result = $resource->rowCount();
@@ -398,9 +394,8 @@ class Dba
      * _setup_dbh
      * @param null|PDO $dbh
      * @param string $database
-     * @return bool
      */
-    private static function _setup_dbh($dbh, $database)
+    private static function _setup_dbh($dbh, $database): bool
     {
         if (!$dbh) {
             return false;
@@ -432,9 +427,8 @@ class Dba
      * check_database
      *
      * Make sure that we can connect to the database
-     * @return bool
      */
-    public static function check_database()
+    public static function check_database(): bool
     {
         $dbh = self::_connect();
 
@@ -454,9 +448,8 @@ class Dba
      *
      * Checks to make sure that you have inserted the database
      * and that the user you are using has access to it.
-     * @return bool
      */
-    public static function check_database_inserted()
+    public static function check_database_inserted(): bool
     {
         $sql        = "DESCRIBE `session`";
         $db_results = self::read($sql);
@@ -525,9 +518,8 @@ class Dba
      *
      * This nukes the dbh connection, this isn't used very often...
      * @param string $database
-     * @return bool
      */
-    public static function disconnect($database = '')
+    public static function disconnect($database = ''): bool
     {
         if (!$database) {
             $database = AmpConfig::get('database_name');

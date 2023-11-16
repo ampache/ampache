@@ -60,7 +60,7 @@ class Update
      * @return string
      * @throws EnvironmentNotSuitableException
      */
-    private static function _get_db_version()
+    private static function _get_db_version(): string
     {
         /* Make sure that update_info exits */
         $sql        = "SHOW TABLES LIKE 'update_info'";

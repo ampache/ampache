@@ -156,9 +156,9 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return bool
+     * isReady
      */
-    public function isReady()
+    public function isReady(): bool
     {
         return (!empty($this->authtoken));
     }
@@ -199,9 +199,8 @@ class Catalog_dropbox extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return bool
      */
-    public static function create_type($catalog_id, $data)
+    public static function create_type($catalog_id, $data): bool
     {
         $apikey    = trim($data['apikey']);
         $secret    = trim($data['secret']);
@@ -254,9 +253,8 @@ class Catalog_dropbox extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return int
      */
-    public function add_to_catalog($options = null)
+    public function add_to_catalog($options = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -302,9 +300,8 @@ class Catalog_dropbox extends Catalog
      * Recurses through directories and pulls out all media files
      * @param $dropbox
      * @param $path
-     * @return int
      */
-    public function add_files($dropbox, $path)
+    public function add_files($dropbox, $path): int
     {
         debug_event('dropbox.catalog', "List contents for " . $path, 5);
         $listFolderContents = $dropbox->listFolder($path, ['recursive' => true]);
@@ -345,9 +342,8 @@ class Catalog_dropbox extends Catalog
     /**
      * @param $dropbox
      * @param $path
-     * @return bool
      */
-    public function add_file($dropbox, $path)
+    public function add_file($dropbox, $path): bool
     {
         $file     = $dropbox->getMetadata($path, ["include_media_info" => true, "include_deleted" => true]);
         $filesize = $file->getDataProperty('size');
@@ -386,7 +382,7 @@ class Catalog_dropbox extends Catalog
      * @return bool
      * @throws DropboxClientException|Exception
      */
-    private function insert_song($dropbox, $path)
+    private function insert_song($dropbox, $path): bool
     {
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
@@ -447,7 +443,7 @@ class Catalog_dropbox extends Catalog
      * @return int
      * @throws DropboxClientException|Exception
      */
-    public function insert_video($dropbox, $path)
+    public function insert_video($dropbox, $path): int
     {
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
@@ -511,7 +507,7 @@ class Catalog_dropbox extends Catalog
      * @return bool
      * @throws DropboxClientException
      */
-    public function download($dropbox, $path, $maxlen, $dropboxFile = null)
+    public function download($dropbox, $path, $maxlen, $dropboxFile = null): bool
     {
         // Path cannot be null
         if (is_null($path)) {
@@ -534,7 +530,7 @@ class Catalog_dropbox extends Catalog
      * @return int
      * @throws ReflectionException
      */
-    public function verify_catalog_proc()
+    public function verify_catalog_proc(): int
     {
         set_time_limit(0);
 
@@ -598,9 +594,8 @@ class Catalog_dropbox extends Catalog
      * clean_catalog_proc
      *
      * Removes songs that no longer exist.
-     * @return int
      */
-    public function clean_catalog_proc()
+    public function clean_catalog_proc(): int
     {
         $dead    = 0;
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
@@ -639,17 +634,16 @@ class Catalog_dropbox extends Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return bool
      */
-    public function move_catalog_proc($new_path)
+    public function move_catalog_proc($new_path): bool
     {
         return false;
     }
 
     /**
-     * @return bool
+     * cache_catalog_proc
      */
-    public function cache_catalog_proc()
+    public function cache_catalog_proc(): bool
     {
         return false;
     }
@@ -679,19 +673,18 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @param $file
-     * @return string
+     * get_virtual_path
+     * @param string $file
      */
-    public function get_virtual_path($file)
+    public function get_virtual_path($file): string
     {
         return $this->apikey . '|' . $file;
     }
 
     /**
      * @param string $file_path
-     * @return string
      */
-    public function get_rel_path($file_path)
+    public function get_rel_path($file_path): string
     {
         $path = strpos($file_path, "|");
         if ($path !== false) {
@@ -748,7 +741,7 @@ class Catalog_dropbox extends Catalog
      * @return bool
      * @throws DropboxClientException
      */
-    public function gather_art($songs = null, $videos = null)
+    public function gather_art($songs = null, $videos = null): bool
     {
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');

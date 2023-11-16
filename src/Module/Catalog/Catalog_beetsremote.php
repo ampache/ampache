@@ -48,7 +48,7 @@ class Catalog_beetsremote extends Catalog
      * get_create_help
      * This returns hints on catalog creation
      */
-    public function get_create_help()
+    public function get_create_help(): string
     {
         return "<ul><li>Install Beets web plugin: http://beets.readthedocs.org/en/latest/plugins/web.html</li><li>Start Beets web server</li><li>Specify URI including port (like http://localhost:8337). It will be shown when starting Beets web in console.</li></ul>";
     }
@@ -57,7 +57,7 @@ class Catalog_beetsremote extends Catalog
      * is_installed
      * This returns true or false if remote catalog is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE 'catalog_beetsremote'";
         $db_results = Dba::query($sql);
@@ -69,7 +69,7 @@ class Catalog_beetsremote extends Catalog
      * install
      * This function installs the remote catalog
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -101,9 +101,8 @@ class Catalog_beetsremote extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return bool
      */
-    public static function create_type($catalog_id, $data)
+    public static function create_type($catalog_id, $data): bool
     {
         // TODO: This Method should be required / provided by parent
         $uri = $data['uri'];
@@ -134,7 +133,7 @@ class Catalog_beetsremote extends Catalog
     /**
      * Get the parser class like CliHandler or JsonHandler
      */
-    protected function getParser()
+    protected function getParser(): JsonHandler
     {
         return new JsonHandler($this->uri);
     }
@@ -142,13 +141,11 @@ class Catalog_beetsremote extends Catalog
     /**
      * Check if a song was added before
      * @param array $song
-     * @return bool
      */
-    public function checkSong($song)
+    public function checkSong($song): bool
     {
         if ($song['added'] < $this->last_add) {
-            debug_event('beetsremote.catalog', 'Skipping ' . $song['file'] . ' File modify time before last add run',
-                3);
+            debug_event('beetsremote.catalog', 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
 
             return true;
         }

@@ -71,9 +71,8 @@ final class InstallationHelper implements InstallationHelperInterface
      * still need to install ampache. This function is
      * very important, we don't want to reinstall over top of an existing install
      * @param $configfile
-     * @return bool
      */
-    public function install_check_status($configfile)
+    public function install_check_status($configfile): bool
     {
         /**
          * Check and see if the config file exists
@@ -116,9 +115,9 @@ final class InstallationHelper implements InstallationHelperInterface
     } // install_check_status
 
     /**
-     * @return bool
+     * install_check_server_apache
      */
-    public function install_check_server_apache()
+    public function install_check_server_apache(): bool
     {
         return (strpos($_SERVER['SERVER_SOFTWARE'], "Apache/") === 0);
     }
@@ -174,9 +173,8 @@ final class InstallationHelper implements InstallationHelperInterface
      * @param string $file
      * @param $web_path
      * @param bool $download
-     * @return bool
      */
-    public function install_rewrite_rules($file, $web_path, $download)
+    public function install_rewrite_rules($file, $web_path, $download): bool
     {
         $final = $this->install_check_rewrite_rules($file, $web_path, true);
         if (!$download) {
@@ -211,9 +209,8 @@ final class InstallationHelper implements InstallationHelperInterface
      * @param bool $create_tables
      * @param string $charset
      * @param string $collation
-     * @return bool
      */
-    public function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8mb4', $collation = 'utf8mb4_unicode_ci')
+    public function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8mb4', $collation = 'utf8mb4_unicode_ci'): bool
     {
         $database = (string) AmpConfig::get('database_name');
         // Make sure that the database name is valid
@@ -336,7 +333,7 @@ final class InstallationHelper implements InstallationHelperInterface
      * @return bool
      * @throws Exception
      */
-    public function install_create_config($download = false)
+    public function install_create_config($download = false): bool
     {
         $config_file = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -392,9 +389,8 @@ final class InstallationHelper implements InstallationHelperInterface
      * @param string $username
      * @param string $password
      * @param string $password2
-     * @return bool
      */
-    public function install_create_account($username, $password, $password2)
+    public function install_create_account($username, $password, $password2): bool
     {
         if (!strlen((string) $username) || !strlen((string) $password)) {
             AmpError::add('general', T_('No username or password was specified'));
@@ -438,9 +434,8 @@ final class InstallationHelper implements InstallationHelperInterface
 
     /**
      * @param string $command
-     * @return bool
      */
-    private function command_exists($command)
+    private function command_exists($command): bool
     {
         if (!function_exists('proc_open')) {
             return false;

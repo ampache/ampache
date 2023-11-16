@@ -105,9 +105,8 @@ class SubsonicClient
     /**
      * @param $url
      * @param array $object
-     * @return string
      */
-    public function parameterize($url, $object = array())
+    public function parameterize($url, $object = array()): string
     {
         $params = array_merge($this->_creds, $object);
 
@@ -186,9 +185,9 @@ class SubsonicClient
     }
 
     /**
-     * @return string
+     * getServer
      */
-    public function getServer()
+    public function getServer(): string
     {
         return $this->_serverUrl . ":" . $this->_serverPort;
     }
@@ -227,9 +226,8 @@ class SubsonicClient
 
     /**
      * @param $command
-     * @return bool
      */
-    public function isCommand($command)
+    public function isCommand($command): bool
     {
         return in_array($command, $this->_commands);
     }

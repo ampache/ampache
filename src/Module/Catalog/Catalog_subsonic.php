@@ -163,9 +163,8 @@ class Catalog_subsonic extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return bool
      */
-    public static function create_type($catalog_id, $data)
+    public static function create_type($catalog_id, $data): bool
     {
         $uri      = $data['uri'];
         $username = $data['username'];
@@ -206,9 +205,8 @@ class Catalog_subsonic extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return int
      */
-    public function add_to_catalog($options = null)
+    public function add_to_catalog($options = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -225,9 +223,9 @@ class Catalog_subsonic extends Catalog
     } // add_to_catalog
 
     /**
-     * @return SubsonicClient
+     * createClient
      */
-    public function createClient()
+    public function createClient(): SubsonicClient
     {
         return (new SubsonicClient($this->username, $this->password, $this->uri, null));
     }
@@ -235,11 +233,9 @@ class Catalog_subsonic extends Catalog
     /**
      * update_remote_catalog
      *
-     * Pulls the data from a remote catalog and adds any missing songs to the
-     * database.
-     * @return int
+     * Pulls the data from a remote catalog and adds any missing songs to the database.
      */
-    public function update_remote_catalog()
+    public function update_remote_catalog(): int
     {
         debug_event('subsonic.catalog', 'Updating remote catalog...', 5);
 
@@ -319,9 +315,9 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @return int
+     * verify_catalog_proc
      */
-    public function verify_catalog_proc()
+    public function verify_catalog_proc(): int
     {
         return 0;
     }
@@ -329,9 +325,8 @@ class Catalog_subsonic extends Catalog
     /**
      * @param $data
      * @param $song_Id
-     * @return bool
      */
-    public function insertArt($data, $song_Id)
+    public function insertArt($data, $song_Id): bool
     {
         $subsonic = $this->createClient();
         $song     = new Song($song_Id);
@@ -353,9 +348,8 @@ class Catalog_subsonic extends Catalog
      * clean_catalog_proc
      *
      * Removes subsonic songs that no longer exist.
-     * @return int
      */
-    public function clean_catalog_proc()
+    public function clean_catalog_proc(): int
     {
         $subsonic = $this->createClient();
 
@@ -400,17 +394,16 @@ class Catalog_subsonic extends Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return bool
      */
-    public function move_catalog_proc($new_path)
+    public function move_catalog_proc($new_path): bool
     {
         return false;
     }
 
     /**
-     * @return bool
+     * cache_catalog_proc
      */
-    public function cache_catalog_proc()
+    public function cache_catalog_proc(): bool
     {
         $remote = AmpConfig::get('cache_remote');
         $path   = (string)AmpConfig::get('cache_path', '');
@@ -509,9 +502,8 @@ class Catalog_subsonic extends Catalog
 
     /**
      * @param $url
-     * @return int
      */
-    public function url_to_songid($url)
+    public function url_to_songid($url): int
     {
         $song_id = 0;
         preg_match('/\?id=([0-9]*)&/', $url, $matches);
