@@ -280,7 +280,7 @@ class TvShow extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return list<int>
      */
     public function get_catalogs()
     {

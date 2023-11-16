@@ -2077,7 +2077,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return list<int>
      */
     public function get_catalogs()
     {

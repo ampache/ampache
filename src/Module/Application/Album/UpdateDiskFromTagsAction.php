@@ -67,6 +67,7 @@ final class UpdateDiskFromTagsAction implements ApplicationActionInterface
         $albumDisk->format();
 
         $this->ui->showHeader();
+        $this->ui->showBoxTop(T_('Starting Update from Tags'), 'box box_update_items');
         $this->ui->show(
             'show_update_items.inc.php',
             [
@@ -80,6 +81,7 @@ final class UpdateDiskFromTagsAction implements ApplicationActionInterface
                 )
             ]
         );
+        $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -81,7 +81,7 @@ final class ShowAction implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             echo T_('You have requested an object that does not exist');
-        } elseif ($album->disk_count == 1) {
+        } elseif ($album->getDiskCount() === 1) {
             // Single disk albums
             $this->ui->show(
                 'show_album.inc.php',
@@ -124,7 +124,7 @@ final class ShowAction implements ApplicationActionInterface
             return true;
         }
 
-        if (!$album->album_artist) {
+        if ($album->getAlbumArtist() === 0) {
             return false;
         }
 

@@ -336,7 +336,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return list<int>
      */
     public function get_catalogs()
     {

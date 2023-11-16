@@ -306,6 +306,22 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * Returns the amount of discs associated to the album
+     */
+    public function getDiskCount(): int
+    {
+        return $this->disk_count;
+    }
+
+    /**
+     * Returns the albums artist id
+     */
+    public function getAlbumArtist(): int
+    {
+        return $this->album_artist;
+    }
+
+    /**
      * build_cache
      * This takes an array of object ids and caches all of their information
      * with a single query
