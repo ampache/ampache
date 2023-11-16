@@ -24,28 +24,28 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 
 $web_path = (string)AmpConfig::get('web_path', '');
-/** @var Ampache\Repository\Model\Catalog $libitem */
+/** @var Ampache\Repository\Model\Catalog $catalog */
 
-if ($libitem->enabled) {
+if ($catalog->enabled) {
     $icon     = 'disable';
     $icontext = T_('Disable');
 } else {
     $icon     = 'enable';
     $icontext = T_('Enable');
 }
-$button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
-<td class="cel_catalog"><?php echo $libitem->f_link; ?></td>
-<td class="cel_info"><?php echo scrub_out($libitem->f_info); ?></td>
-<td class="cel_lastverify"><?php echo scrub_out($libitem->f_update); ?></td>
-<td class="cel_lastadd"><?php echo scrub_out($libitem->f_add); ?></td>
-<td class="cel_lastclean"><?php echo scrub_out($libitem->f_clean); ?></td>
+$button_flip_state_id = 'button_flip_state_' . $catalog->id; ?>
+<td class="cel_catalog"><?php echo $catalog->f_link; ?></td>
+<td class="cel_info"><?php echo scrub_out($catalog->f_info); ?></td>
+<td class="cel_lastverify"><?php echo scrub_out($catalog->f_update); ?></td>
+<td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
+<td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
 <td class="cel_action cel_action_text">
-<?php if (!$libitem->isReady()) { ?>
-    <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $libitem->id; ?>"><b><?php echo T_('Make it ready ..'); ?></b></a><br />
+<?php if (!$catalog->isReady()) { ?>
+    <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $catalog->id; ?>"><b><?php echo T_('Make it ready ..'); ?></b></a><br />
 <?php } ?>
 <form>
     <select name="catalog_action_menu">
-<?php if ($libitem->isReady()) { ?>
+<?php if ($catalog->isReady()) { ?>
         <option value="add_to_catalog"><?php echo T_('Add'); ?></option>
         <option value="update_catalog"><?php echo T_('Verify'); ?></option>
         <option value="clean_catalog"><?php echo T_('Clean'); ?></option>
@@ -58,10 +58,10 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
 <?php } ?>
         <option value="show_delete_catalog"><?php echo T_('Delete'); ?></option>
     </select>
-    <input type="button" onClick="NavigateTo('<?php echo $web_path; ?>/admin/catalog.php?action=' + this.form.catalog_action_menu.options[this.form.catalog_action_menu.selectedIndex].value + '&catalogs[]=<?php echo $libitem->id; ?>');" value="<?php echo T_('Go'); ?>">
+    <input type="button" onClick="NavigateTo('<?php echo $web_path; ?>/admin/catalog.php?action=' + this.form.catalog_action_menu.options[this.form.catalog_action_menu.selectedIndex].value + '&catalogs[]=<?php echo $catalog->id; ?>');" value="<?php echo T_('Go'); ?>">
     <?php if (AmpConfig::get('catalog_disable')) { ?>
         <span id="<?php echo $button_flip_state_id; ?>">
-            <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, $icontext, 'flip_state_' . $libitem->id); ?>
+            <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $icon, $icontext, 'flip_state_' . $catalog->id); ?>
         </span>
     <?php } ?>
 </form>

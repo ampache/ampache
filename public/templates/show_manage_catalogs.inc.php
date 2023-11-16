@@ -21,12 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Browse;
-use Ampache\Module\Util\Ui;
 
 $web_path = (string)AmpConfig::get('web_path', ''); ?>
-<?php Ui::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs'); ?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>
@@ -70,11 +66,3 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
         </table>
     </form>
 </div>
-<?php Ui::show_box_bottom();
-$catalogs = Catalog::get_catalogs();
-$browse   = new Browse();
-$browse->set_type('catalog');
-$browse->set_static_content(true);
-$browse->save_objects($catalogs);
-$browse->show_objects($catalogs);
-$browse->store(); ?>

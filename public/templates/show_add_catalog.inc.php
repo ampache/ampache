@@ -72,7 +72,43 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
         </tr>
         <tr>
             <td><?php echo T_('Catalog Type'); ?>: </td>
-            <td><?php Catalog::show_catalog_types(); ?></td>
+            <td>
+                <?php
+                echo '<script>' . "var type_fields = new Array();type_fields['none'] = '';";
+$seltypes = '<option value="none">[' . T_("Select") . ']</option>';
+
+foreach (Catalog::CATALOG_TYPES as $type => $className) {
+    $catalog = new $className();
+
+    if ($catalog->is_installed()) {
+        $seltypes .= '<option value="' . $type . '">' . $type . '</option>';
+        echo "type_fields['" . $type . "'] = \"";
+        $fields = $catalog->catalog_fields();
+        $help   = $catalog->get_create_help();
+        if (!empty($help)) {
+            echo "<tr><td></td><td>" . $help . "</td></tr>";
+        }
+        foreach ($fields as $key => $field) {
+            echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td>";
+            $value = (array_key_exists('value', $field)) ? $field['value'] : '';
+
+            switch ($field['type']) {
+                case 'checkbox':
+                    echo "<input type='checkbox' name='" . $key . "' value='1' " . ((!empty($value)) ? 'checked' : '') . "/>";
+                    break;
+                default:
+                    echo "<input type='" . $field['type'] . "' name='" . $key . "' value='" . $value . "' />";
+                    break;
+            }
+            echo "</td></tr>";
+        }
+        echo "\";";
+    }
+}
+
+echo "function catalogTypeChanged() {var sel = document.getElementById('catalog_type');var seltype = sel.options[sel.selectedIndex].value;var ftbl = document.getElementById('catalog_type_fields');ftbl.innerHTML = '<table class=\"tabledata\">' + type_fields[seltype] + '</table>';} </script><select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
+?>
+            </td>
         </tr>
         <tr>
             <td><?php echo T_('Filename Pattern'); ?>: </td>
