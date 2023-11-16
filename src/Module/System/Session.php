@@ -132,7 +132,7 @@ final class Session implements SessionInterface
             }
         } else {
             // If Auth, but no session is set
-            if (array_key_exists('sid', $_REQUEST)) {
+            if (array_key_exists('sid', $_REQUEST) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
                 session_name($sessionName);
                 session_id(scrub_in((string) $_REQUEST['sid']));
                 session_start();
