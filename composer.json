@@ -384,7 +384,7 @@
         "tests": "vendor/bin/phpunit tests",
         "codestyle": "resources/scripts/tests/codestyle.sh",
         "syntax": "resources/scripts/tests/syntax.sh",
-        "fix-cs": "vendor/bin/php-cs-fixer fix -v .",
+        "fix-cs": "vendor/bin/php-cs-fixer fix -v",
         "post-autoload-dump": [
             "@php resources/scripts/composer/check_tag_tools.php"
         ]
