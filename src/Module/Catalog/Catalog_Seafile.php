@@ -45,10 +45,10 @@ use ReflectionException;
  */
 class Catalog_Seafile extends Catalog
 {
-    private static $version     = '000001';
-    private static $type        = 'seafile';
-    private static $description = 'Seafile Remote Catalog';
-    private static $table_name  = 'catalog_seafile';
+    private static string $version     = '000001';
+    private static string $type        = 'seafile';
+    private static string $description = 'Seafile Remote Catalog';
+    private static string $table_name  = 'catalog_seafile';
 
     /** @var SeafileAdapter seafile */
     private $seafile = null;

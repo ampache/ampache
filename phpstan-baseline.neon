@@ -1111,16 +1111,6 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:\\$limit has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:\\$offset has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
@@ -1332,16 +1322,6 @@ parameters:
 
 		-
 			message: "#^Possibly invalid array key type \\(array\\<int, string\\>\\|string\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:\\$limit has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:\\$offset has no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -1587,16 +1567,6 @@ parameters:
 
 		-
 			message: "#^Possibly invalid array key type \\(array\\<int, string\\>\\|string\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:\\$limit has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:\\$offset has no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -6076,21 +6046,6 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:\\$limit has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:\\$offset has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
@@ -6186,21 +6141,6 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:\\$limit has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:\\$offset has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 2
 			path: src/Module/Api/Xml4_Data.php
@@ -6287,21 +6227,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:\\$limit has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:\\$offset has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:\\$type has no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
 
@@ -6422,21 +6347,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:videos\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:\\$limit has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:\\$offset has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:\\$type has no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
@@ -8571,32 +8481,12 @@ parameters:
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:\\$library_name has no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:\\$server_uri has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:\\$table_name has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
 
@@ -22071,16 +21961,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$enabled\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
 			message: "#^Cannot call method get_f_link\\(\\) on Ampache\\\\Repository\\\\Model\\\\library_item\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Shoutbox.php
@@ -22092,11 +21972,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:get_object\\(\\) should return Ampache\\\\Repository\\\\Model\\\\library_item\\|null but returns object\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Shoutbox.php
 

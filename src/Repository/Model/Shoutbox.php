@@ -155,10 +155,11 @@ class Shoutbox
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
-        $object    = new $className($object_id);
+        /** @var library_item $object */
+        $object = new $className($object_id);
 
-        if ($object->id > 0) {
-            if (strtolower((string)$type) === 'song') {
+        if ($object->getId() > 0) {
+            if ($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) {
                 if (!$object->enabled) {
                     $object = null;
                 }
