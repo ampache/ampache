@@ -283,9 +283,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
      * @param int[] $ids
-     * @return bool
      */
-    public static function build_cache($ids)
+    public static function build_cache($ids): bool
     {
         if (empty($ids)) {
             return false;
@@ -353,9 +352,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * does the item have art?
-     * @return bool
      */
-    public function has_art()
+    public function has_art(): bool
     {
         if (!isset($this->has_art)) {
             $this->has_art = Art::has_db($this->id, 'video');
@@ -422,28 +420,24 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * get_f_artist_link
-     *
-     * @return string
      */
-    public function get_f_artist_link()
+    public function get_f_artist_link(): string
     {
         return '';
     }
 
     /**
      * Get item get_f_album_link.
-     * @return string
      */
-    public function get_f_album_link()
+    public function get_f_album_link(): string
     {
         return '';
     }
 
     /**
      * Get item get_f_album_disk_link.
-     * @return string
      */
-    public function get_f_album_disk_link()
+    public function get_f_album_disk_link(): string
     {
         return '';
     }
@@ -518,7 +512,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * Get default art kind for this item.
-     * @return string
      */
     public function get_default_art_kind(): string
     {
@@ -526,9 +519,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
-     * @return string
+     * get_description
      */
-    public function get_description()
+    public function get_description(): string
     {
         return '';
     }
@@ -587,9 +580,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param bool $local
      * @param int|string $uid
      * @param string|null $streamToken
-     * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
     {
         if (!$this->id) {
             return '';
@@ -620,9 +612,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * Get stream name.
-     * @return string
      */
-    public function get_stream_name()
+    public function get_stream_name(): string
     {
         return $this->title;
     }
@@ -644,9 +635,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      *
      * Returns the mime type for the specified file extension/type
      * @param string $type
-     * @return string
      */
-    public static function type_to_mime($type)
+    public static function type_to_mime($type): string
     {
         // FIXME: This should really be done the other way around.
         // Store the mime type in the database, and provide a function
@@ -687,9 +677,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return int
      */
-    public static function insert(array $data, $gtypes = array(), $options = array())
+    public static function insert(array $data, $gtypes = array(), $options = array()): int
     {
         $check_file = Catalog::get_id_from_file($data['file'], 'video');
         if ($check_file > 0) {
@@ -742,9 +731,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return int
      */
-    private static function insert_video_type(array $data, $gtypes, $options = array())
+    private static function insert_video_type(array $data, $gtypes, $options = array()): int
     {
         if (count($gtypes) > 0) {
             $gtype = $gtypes[0];
@@ -767,9 +755,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * update
      * This takes a key'd array of data as input and updates a video entry
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         $sql    = "UPDATE `video` SET `title` = ?";
         $title  = $data['title'] ?? $this->title;
@@ -929,9 +916,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * Get language name from code.
      * @param string $code
-     * @return string
      */
-    protected function get_language_name($code)
+    protected function get_language_name($code): string
     {
         $languageCodes = array(
          "aa" => T_("Afar"),
@@ -1126,9 +1112,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * Get subtitle file from language code.
      * @param string $lang_code
-     * @return string
      */
-    public function get_subtitle_file($lang_code)
+    public function get_subtitle_file($lang_code): string
     {
         $subtitle = '';
         if ($lang_code == '__' || $this->get_language_name($lang_code)) {
@@ -1212,9 +1197,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param string|int $value
      * @param int $video_id
      * @param int $level
-     * @return bool
      */
-    private static function _update_item($field, $value, $video_id, $level)
+    private static function _update_item($field, $value, $video_id, $level): bool
     {
         /* Check them Rights! */
         if (!Access::check('interface', $level)) {

@@ -210,7 +210,8 @@ final class SongSorter implements SongSorterInterface
         $fullname,
         $test_mode,
         $windowsCompat = false
-    ) {
+    ): bool
+    {
         $old_dir   = dirname($song->file);
         $info      = pathinfo($fullname);
         $directory = $info['dirname'];

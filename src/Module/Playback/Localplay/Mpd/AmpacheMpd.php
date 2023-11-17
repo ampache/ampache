@@ -55,7 +55,7 @@ class AmpacheMpd extends localplay_controller
      * get_description
      * Returns the description
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->description;
     } // get_description
@@ -64,7 +64,7 @@ class AmpacheMpd extends localplay_controller
      * get_version
      * This returns the version information
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
     } // get_version
@@ -73,7 +73,7 @@ class AmpacheMpd extends localplay_controller
      * is_installed
      * This returns true or false if MPD controller is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE 'localplay_mpd'";
         $db_results = Dba::read($sql);
@@ -85,7 +85,7 @@ class AmpacheMpd extends localplay_controller
      * install
      * This function installs the MPD Localplay controller
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -104,7 +104,7 @@ class AmpacheMpd extends localplay_controller
      * uninstall
      * This removes the Localplay controller
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         $sql = "DROP TABLE `localplay_mpd`";
         Dba::write($sql);
@@ -134,9 +134,8 @@ class AmpacheMpd extends localplay_controller
      * delete_instance
      * This takes a UID and deletes the instance in question
      * @param $uid
-     * @return bool
      */
-    public function delete_instance($uid)
+    public function delete_instance($uid): bool
     {
         $uid = Dba::escape($uid);
         $sql = "DELETE FROM `localplay_mpd` WHERE `id`='$uid'";
@@ -184,9 +183,8 @@ class AmpacheMpd extends localplay_controller
      * This takes an ID and an array of data and updates the instance specified
      * @param $uid
      * @param array $data
-     * @return bool
      */
-    public function update_instance($uid, $data)
+    public function update_instance($uid, $data): bool
     {
         $uid  = Dba::escape($uid);
         $host = $data['host'] ? Dba::escape($data['host']) : '127.0.0.1';
@@ -219,9 +217,8 @@ class AmpacheMpd extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      * @param string $uid
-     * @return bool
      */
-    public function set_active_instance($uid)
+    public function set_active_instance($uid): bool
     {
         $user = Core::get_global('user');
         if ($user == '') {
@@ -247,9 +244,8 @@ class AmpacheMpd extends localplay_controller
      * add_url
      * This is the new hotness
      * @param Stream_Url $url
-     * @return bool
      */
-    public function add_url(Stream_Url $url)
+    public function add_url(Stream_Url $url): bool
     {
         // If we haven't added anything then maybe we should clear the
         // playlist.
@@ -316,9 +312,8 @@ class AmpacheMpd extends localplay_controller
      * skip
      * This tells MPD to skip to the specified song
      * @param $song
-     * @return bool
      */
-    public function skip($song)
+    public function skip($song): bool
     {
         if (!$this->_mpd->SkipTo($song)) {
             return false;

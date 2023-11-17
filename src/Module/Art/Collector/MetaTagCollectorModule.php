@@ -328,9 +328,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * Get the type of picture being returned (https://id3.org/id3v2.3.0#Attached_picture)
      * Flac also uses the id3.org specs.
      * @param int $picture_type
-     * @return string
      */
-    public static function getPictureType(int $picture_type)
+    public static function getPictureType(int $picture_type): string
     {
         switch ($picture_type) {
             case 1:

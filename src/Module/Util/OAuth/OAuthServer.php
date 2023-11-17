@@ -133,7 +133,7 @@ class OAuthServer
      * @return string
      * @throws OAuthException
      */
-    private function get_version(&$request)
+    private function get_version(&$request): string
     {
         $version = $request->get_parameter("oauth_version");
         if (!$version) {

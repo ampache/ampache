@@ -67,9 +67,8 @@ class Recommendation
     /**
      * @param string $object_type
      * @param int $object_id
-     * @return bool
      */
-    public static function has_recommendation_cache($object_type, $object_id)
+    public static function has_recommendation_cache($object_type, $object_id): bool
     {
         $sql        = "SELECT `id` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($object_type, $object_id));

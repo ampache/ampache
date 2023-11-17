@@ -71,9 +71,8 @@ class Userflag extends database_object
      * @param string $type
      * @param array $ids
      * @param int $user_id
-     * @return bool
      */
-    public static function build_cache($type, $ids, $user_id = null)
+    public static function build_cache($type, $ids, $user_id = null): bool
     {
         if (empty($ids)) {
             return false;
@@ -195,9 +194,8 @@ class Userflag extends database_object
      * If no user_id is passed in, we use the currently logged in user.
      * @param bool $flagged
      * @param int $user_id
-     * @return bool
      */
-    public function set_flag($flagged, $user_id = null)
+    public function set_flag($flagged, $user_id = null): bool
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -261,9 +259,8 @@ class Userflag extends database_object
      * Get the latest sql
      * @param string $input_type
      * @param int $user_id
-     * @return string
      */
-    public static function get_latest_sql($input_type, $user_id = null)
+    public static function get_latest_sql($input_type, $user_id = null): string
     {
         $type    = Stats::validate_type($input_type);
         $user_id = (int)($user_id);

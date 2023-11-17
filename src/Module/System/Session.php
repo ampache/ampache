@@ -817,7 +817,7 @@ final class Session implements SessionInterface
      *
      * @todo check if we still need to do this today
      */
-    public static function ungimp_ie()
+    public static function ungimp_ie(): bool
     {
         // If no https, no ungimpage required
         if (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') != 'on') {

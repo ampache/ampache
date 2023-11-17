@@ -56,9 +56,8 @@ class OAuthUtil
     // seem to be used anywhere so leaving it as is.
     /**
      * @param string $string
-     * @return string
      */
-    public static function urldecode_rfc3986($string)
+    public static function urldecode_rfc3986($string): string
     {
         return urldecode($string);
     }
@@ -177,9 +176,8 @@ class OAuthUtil
 
     /**
      * @param $params
-     * @return string
      */
-    public static function build_http_query($params)
+    public static function build_http_query($params): string
     {
         if (!$params) {
             return '';

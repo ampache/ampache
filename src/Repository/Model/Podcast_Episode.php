@@ -387,9 +387,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     }
 
     /**
-     * @return string
+     * get_description
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->f_description;
     }
@@ -421,9 +421,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * update
      * This takes a key'd array of data and updates the current podcast episode
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         $title       = $data['title'] ?? $this->title;
         $website     = $data['website'] ?? null;
@@ -510,9 +509,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param string $field
      * @param string|int $value
      * @param int $episode_id
-     * @return bool
      */
-    private static function _update_item($field, $value, $episode_id)
+    private static function _update_item($field, $value, $episode_id): bool
     {
         /* Check them Rights! */
         if (!Access::check('interface', 25)) {
@@ -532,9 +530,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * Get stream name.
-     * @return string
      */
-    public function get_stream_name()
+    public function get_stream_name(): string
     {
         return $this->get_f_podcast() . " - " . $this->get_fullname();
     }
@@ -561,9 +558,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param bool $local
      * @param int|string $uid
      * @param string|null $streamToken
-     * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
     {
         if (!$this->id) {
             return '';
@@ -641,9 +637,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * gather
      * download the podcast episode to your catalog
-     * @return bool
      */
-    public function gather()
+    public function gather(): bool
     {
         if (!empty($this->source)) {
             // existing file (completed)

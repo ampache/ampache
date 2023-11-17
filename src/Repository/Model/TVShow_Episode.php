@@ -81,9 +81,8 @@ class TVShow_Episode extends Video
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return int
      */
-    public static function insert(array $data, $gtypes = array(), $options = array())
+    public static function insert(array $data, $gtypes = array(), $options = array()): int
     {
         if (empty($data['tvshow'])) {
             $data['tvshow'] = T_('Unknown');
@@ -123,9 +122,8 @@ class TVShow_Episode extends Video
      * create
      * This takes a key'd array of data as input and inserts a new tv show episode entry, it returns the record id
      * @param array $data
-     * @return int
      */
-    public static function create($data)
+    public static function create($data): int
     {
         $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array(
@@ -143,9 +141,8 @@ class TVShow_Episode extends Video
      * update
      * This takes a key'd array of data as input and updates a tv show episode entry
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         parent::update($data);
 
@@ -251,9 +248,9 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * @return string
+     * get_description
      */
-    public function get_description()
+    public function get_description(): string
     {
         if (!empty($this->summary)) {
             return $this->summary;

@@ -128,9 +128,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Adds new songs to the catalog
      * @param array $options
-     * @return int
      */
-    public function add_to_catalog($options = null)
+    public function add_to_catalog($options = null): int
     {
         if (!defined('SSE_OUTPUT') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
@@ -213,7 +212,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Add the song to the DB
      * @param array $song
-     * @return int
+     * @return int|false
      */
     protected function insertSong($song)
     {
@@ -232,9 +231,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * @return int
+     * verify_catalog_proc
      */
-    public function verify_catalog_proc()
+    public function verify_catalog_proc(): int
     {
         debug_event(self::class, 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
@@ -272,9 +271,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Cleans the Catalog.
      * This way is a little fishy, but if we start beets for every single file, it may take horribly long.
      * So first we get the difference between our and the beets database and then clean up the rest.
-     * @return int
      */
-    public function clean_catalog_proc()
+    public function clean_catalog_proc(): int
     {
         /** @var Handler $parser */
         $parser      = $this->getParser();
@@ -306,17 +304,16 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return bool
      */
-    public function move_catalog_proc($new_path)
+    public function move_catalog_proc($new_path): bool
     {
         return false;
     }
 
     /**
-     * @return bool
+     * cache_catalog_proc
      */
-    public function cache_catalog_proc()
+    public function cache_catalog_proc(): bool
     {
         return false;
     }
@@ -379,9 +376,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Assembles a virtual Path. Mostly just to looks nice in the UI.
      * @param array $song
-     * @return string
      */
-    protected function getVirtualSongPath($song)
+    protected function getVirtualSongPath($song): string
     {
         return implode('/', array(
             $song['artist'],
@@ -394,7 +390,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * get_description
      * This returns the description of this catalog
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->description;
     }
@@ -403,7 +399,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * get_version
      * This returns the current version
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
     }
@@ -412,17 +408,17 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * get_type
      * This returns the current catalog type
      */
-    public function get_type()
+    public function get_type(): string
     {
         return $this->type;
     }
 
     /**
-     * Doesn't seems like we need this...
      * @param string $file_path
      */
-    public function get_rel_path($file_path)
+    public function get_rel_path($file_path): string
     {
+        return '';
     }
 
     /**

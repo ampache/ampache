@@ -66,7 +66,7 @@ class Ampachelibrefm
      * This is a required plugin function. It inserts our preferences
      * into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('librefm_user')) {
@@ -101,7 +101,7 @@ class Ampachelibrefm
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version == 0) {
@@ -126,9 +126,8 @@ class Ampachelibrefm
      * save_mediaplay
      * This takes care of queueing and then submitting the tracks.
      * @param Song $song
-     * @return bool
      */
-    public function save_mediaplay($song)
+    public function save_mediaplay($song): bool
     {
         // Only support songs
         if (get_class($song) != Song::class) {
@@ -173,9 +172,8 @@ class Ampachelibrefm
      * This takes care of spreading your love on Libre.fm
      * @param Song $song
      * @param bool $flagged
-     * @return bool
      */
-    public function set_flag($song, $flagged)
+    public function set_flag($song, $flagged): bool
     {
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
@@ -200,9 +198,8 @@ class Ampachelibrefm
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
      * @param string $token
-     * @return bool
      */
-    public function get_session($token)
+    public function get_session($token): bool
     {
         $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
@@ -225,9 +222,8 @@ class Ampachelibrefm
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $this->api_key = AmpConfig::get('lastfm_api_key');
         $this->secret  = '';

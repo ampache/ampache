@@ -59,9 +59,9 @@ class OAuthConsumer
     }
 
     /**
-     * @return string
+     * __toString
      */
-    public function __toString()
+    public function __toString(): string
     {
         return "OAuthConsumer[key=$this->key,secret=$this->secret]";
     }

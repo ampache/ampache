@@ -150,10 +150,9 @@ trait Metadata
     }
 
     /**
-     *
-     * @return bool
+     * isCustomMetadataEnabled
      */
-    public static function isCustomMetadataEnabled()
+    public static function isCustomMetadataEnabled(): bool
     {
         return (bool) AmpConfig::get('enable_custom_metadata');
     }

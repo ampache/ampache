@@ -142,9 +142,8 @@ abstract class database_object
      * @param string $index
      * @param int|string $object_id
      * @param array $data
-     * @return bool
      */
-    public static function add_to_cache($index, $object_id, $data)
+    public static function add_to_cache($index, $object_id, $data): bool
     {
         /**
          * Lazy load the cache setting to avoid some magic auto_init logic

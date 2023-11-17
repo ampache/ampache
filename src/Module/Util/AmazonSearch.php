@@ -249,9 +249,8 @@ class AmazonSearch
      * signString
      * Sign a query string
      * @param string $string_to_sign The string to sign
-     * @return string
      */
-    public function signString($string_to_sign)
+    public function signString($string_to_sign): string
     {
         // hash and encode the query string
         $signature = base64_encode(hash_hmac("sha256", $string_to_sign, $this->private_key, true));

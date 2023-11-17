@@ -54,7 +54,7 @@ class Catalog_remote extends Catalog
      * get_description
      * This returns the description of this catalog
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->description;
     } // get_description
@@ -63,7 +63,7 @@ class Catalog_remote extends Catalog
      * get_version
      * This returns the current version
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
     } // get_version
@@ -72,7 +72,7 @@ class Catalog_remote extends Catalog
      * get_path
      * This returns the current catalog path/uri
      */
-    public function get_path()
+    public function get_path(): string
     {
         return $this->uri;
     } // get_path
@@ -81,7 +81,7 @@ class Catalog_remote extends Catalog
      * get_type
      * This returns the current catalog type
      */
-    public function get_type()
+    public function get_type(): string
     {
         return $this->type;
     } // get_type
@@ -90,7 +90,7 @@ class Catalog_remote extends Catalog
      * get_create_help
      * This returns hints on catalog creation
      */
-    public function get_create_help()
+    public function get_create_help(): string
     {
         return "";
     } // get_create_help
@@ -99,7 +99,7 @@ class Catalog_remote extends Catalog
      * is_installed
      * This returns true or false if remote catalog is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE 'catalog_remote'";
         $db_results = Dba::query($sql);
@@ -111,7 +111,7 @@ class Catalog_remote extends Catalog
      * install
      * This function installs the remote catalog
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -481,9 +481,8 @@ class Catalog_remote extends Catalog
 
     /**
      * @param string $file_path
-     * @return string|string[]
      */
-    public function get_rel_path($file_path)
+    public function get_rel_path($file_path): string
     {
         $catalog_path = rtrim($this->uri, "/");
 

@@ -127,9 +127,8 @@ class AmpacheRss
     /**
      * get_title
      * This returns the standardized title for the rss feed based on this->type
-     * @return string
      */
-    public function get_title()
+    public function get_title(): string
     {
         $titles = array(
             'now_playing' => T_('Now Playing'),
@@ -145,21 +144,18 @@ class AmpacheRss
     /**
      * get_description
      * This returns the standardized description for the rss feed based on this->type
-     * @return string
      */
-    public function get_description()
+    public function get_description(): string
     {
-        // FIXME: For now don't do any kind of translating
-        return 'Ampache RSS Feeds';
+        return T_('Ampache RSS Feeds');
     } // get_description
 
     /**
      * validate_type
      * this returns a valid type for an rss feed, if the specified type is invalid it returns a default value
      * @param string $rsstype
-     * @return string
      */
-    public static function validate_type($rsstype)
+    public static function validate_type($rsstype): string
     {
         if (!in_array($rsstype, self::RSS_TYPES)) {
             return 'now_playing';
@@ -175,9 +171,8 @@ class AmpacheRss
      * @param int $user_id
      * @param string $title
      * @param array|null $params
-     * @return string
      */
-    public static function get_display($type = 'now_playing', $user_id = -1, $title = '', $params = null)
+    public static function get_display($type = 'now_playing', $user_id = -1, $title = '', $params = null): string
     {
         // Default to Now Playing
         $type = self::validate_type($type);
@@ -423,9 +418,8 @@ class AmpacheRss
     /**
      * pubdate_recently_played
      * This just returns the 'newest' Recently Played entry
-     * @return int
      */
-    public static function pubdate_recently_played()
+    public static function pubdate_recently_played(): int
     {
         $user_id = Core::get_global('user')->id ?? -1;
         $data    = Stats::get_recently_played($user_id, 'stream', 'song');

@@ -159,9 +159,8 @@ class Broadcast extends database_object implements library_item
      * Create a broadcast
      * @param string $name
      * @param string $description
-     * @return int
      */
-    public static function create($name, $description = '')
+    public static function create($name, $description = ''): int
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
@@ -177,9 +176,8 @@ class Broadcast extends database_object implements library_item
     /**
      * Update a broadcast from data array.
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         if (isset($data['edit_tags'])) {
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
@@ -326,7 +324,6 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get default art kind for this item.
-     * @return string
      */
     public function get_default_art_kind(): string
     {
@@ -334,11 +331,11 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * @return mixed|null
+     * get_description
      */
-    public function get_description()
+    public function get_description(): string
     {
-        return null;
+        return '';
     }
 
     /**
@@ -355,9 +352,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Generate a new broadcast key.
-     * @return string
      */
-    public static function generate_key()
+    public static function generate_key(): string
     {
         // Should be improved for security reasons!
         return md5(uniqid((string)rand(), true));
@@ -395,9 +391,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get broadcast link.
-     * @return string
      */
-    public static function get_broadcast_link()
+    public static function get_broadcast_link(): string
     {
         $link = "<div class=\"broadcast-action\">";
         $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_icon('broadcast', T_('Broadcast')) . "</a>";
@@ -409,9 +404,8 @@ class Broadcast extends database_object implements library_item
     /**
      * Get unbroadcast link.
      * @param int $broadcast_id
-     * @return string
      */
-    public static function get_unbroadcast_link($broadcast_id)
+    public static function get_unbroadcast_link($broadcast_id): string
     {
         $link = "<div class=\"broadcast-action\">";
         $link .= Ajax::button('?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id, 'broadcast',
@@ -446,9 +440,8 @@ class Broadcast extends database_object implements library_item
      * @param string $additional_params
      * @param string $player
      * @param bool $local
-     * @return int
      */
-    public function play_url($additional_params = '', $player = '', $local = false)
+    public function play_url($additional_params = '', $player = '', $local = false): int
     {
         unset($additional_params, $player, $local);
 

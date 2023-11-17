@@ -587,9 +587,8 @@ class Album extends database_object implements library_item
 
     /**
      * does the item have art?
-     * @return bool
      */
-    public function has_art()
+    public function has_art(): bool
     {
         if (!isset($this->has_art)) {
             $this->has_art = Art::has_db($this->id, 'album');
@@ -733,9 +732,8 @@ class Album extends database_object implements library_item
 
     /**
      * Get item f_artist_link.
-     * @return string
      */
-    public function get_f_artist_link()
+    public function get_f_artist_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_artist_link)) {
@@ -762,9 +760,8 @@ class Album extends database_object implements library_item
 
     /**
      * Get the album artist fullname.
-     * @return string
      */
-    public function get_artist_fullname()
+    public function get_artist_fullname(): string
     {
         if (!isset($this->f_artist_name)) {
             if ($this->album_artist === 0) {
@@ -939,7 +936,6 @@ class Album extends database_object implements library_item
 
     /**
      * Get default art kind for this item.
-     * @return string
      */
     public function get_default_art_kind(): string
     {
@@ -970,9 +966,8 @@ class Album extends database_object implements library_item
 
     /**
      * get_description
-     * @return string
      */
-    public function get_description()
+    public function get_description(): string
     {
         // Album description is not supported yet, always return artist description
         $artist = new Artist($this->album_artist);
@@ -1010,10 +1005,8 @@ class Album extends database_object implements library_item
      * update
      * This function takes a key'd array of data and updates this object
      * as needed
-     * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         //debug_event(self::class, "update: " . print_r($data, true), 4);
         $name           = $data['name'] ?? $this->name;

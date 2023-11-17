@@ -57,9 +57,8 @@ class Stream
 
     /**
      * get_session
-     * @return string
      */
-    public static function get_session()
+    public static function get_session(): string
     {
         if (!self::$session) {
             // Generate the session ID.  This is slightly wasteful.
@@ -161,9 +160,8 @@ class Stream
 
     /**
      * get_allowed_bitrate
-     * @return int
      */
-    public static function get_allowed_bitrate()
+    public static function get_allowed_bitrate(): int
     {
         $max_bitrate = AmpConfig::get('max_bit_rate');
         $min_bitrate = AmpConfig::get('min_bit_rate', 8);
@@ -304,9 +302,8 @@ class Stream
      * @param string $target
      * @param string $player
      * @param string $media_type
-     * @return string
      */
-    public static function get_output_cache($source, $target = null, $player = null, $media_type = 'song')
+    public static function get_output_cache($source, $target = null, $player = null, $media_type = 'song'): string
     {
         if (!empty(Core::get_global('transcode'))) {
             return Core::get_global('transcode')[$source][$target][$player][$media_type] ?? '';
@@ -408,9 +405,8 @@ class Stream
     /**
      * This function behaves like escapeshellarg, but isn't broken
      * @param $arg
-     * @return string
      */
-    private static function scrub_arg($arg)
+    private static function scrub_arg($arg): string
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             return '"' . str_replace(array('"', '%'), array('', ''), $arg) . '"';
@@ -425,9 +421,8 @@ class Stream
      * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
      * @param Song|Podcast_Episode|Video $media
      * @param array $transcode_settings
-     * @return int
      */
-    public static function get_max_bitrate($media, $transcode_settings)
+    public static function get_max_bitrate($media, $transcode_settings): int
     {
         // don't ignore user bitrates
         $bit_rate = (int)self::get_allowed_bitrate();
@@ -553,9 +548,8 @@ class Stream
      * validate_bitrate
      * this function takes a bitrate and returns a valid one
      * @param $bitrate
-     * @return int
      */
-    public static function validate_bitrate($bitrate)
+    public static function validate_bitrate($bitrate): int
     {
         /* Round to standard bitrates */
         return (int) (16 * (floor((int) $bitrate / 16)));
@@ -600,9 +594,8 @@ class Stream
      *
      * There really isn't anywhere else for this function, shouldn't have
      * deleted it in the first place.
-     * @return bool
      */
-    public static function clear_now_playing()
+    public static function clear_now_playing(): bool
     {
         $sql = 'TRUNCATE `now_playing`';
         Dba::write($sql);
@@ -670,9 +663,8 @@ class Stream
      * This checks to see if the media is already being played.
      * @param int $media_id
      * @param string $type
-     * @return bool
      */
-    public static function check_lock_media($media_id, $type)
+    public static function check_lock_media($media_id, $type): bool
     {
         $sql        = "SELECT `object_id` FROM `now_playing` WHERE `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($media_id, $type));
@@ -693,9 +685,8 @@ class Stream
      * reason this is here is because it deals with streaming rather than
      * playlist mojo. If something needs to happen this will echo the
      * javascript required to cause a reload of the iframe.
-     * @return bool
      */
-    public static function run_playlist_method()
+    public static function run_playlist_method(): bool
     {
         // If this wasn't ajax included run away
         if (!defined('AJAX_INCLUDE')) {
@@ -728,9 +719,8 @@ class Stream
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      * @param bool $local
      * @param string|null $streamToken
-     * @return string
      */
-    public static function get_base_url($local = false, $streamToken = null)
+    public static function get_base_url($local = false, $streamToken = null): string
     {
         $base_url = '/play/index.php?';
         if (AmpConfig::get('use_play2')) {

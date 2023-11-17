@@ -50,12 +50,12 @@ interface MailerInterface
      * @return bool
      * @throws Exception
      */
-    public function send($phpmailer = null);
+    public function send($phpmailer = null): bool;
 
     /**
      * @param $group_name
      * @return bool
      * @throws Exception
      */
-    public function send_to_group($group_name);
+    public function send_to_group($group_name): bool;
 }

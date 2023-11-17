@@ -61,9 +61,8 @@ class Ui implements UiInterface
      * by the theme if it's not a php file, or if it is and if option
      * allow_php_themes is set to true.
      * @param string $template
-     * @return string
      */
-    public static function find_template($template, bool $extern = false)
+    public static function find_template($template, bool $extern = false): string
     {
         $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
         $realpath  = __DIR__ . '/../../../public/' . $path;
@@ -101,9 +100,8 @@ class Ui implements UiInterface
      * Does some trickery with the output buffer to return the output of a
      * template.
      * @param string $template
-     * @return string
      */
-    public static function ajax_include($template)
+    public static function ajax_include($template): string
     {
         ob_start();
         require self::find_template('') . $template;
@@ -116,10 +114,9 @@ class Ui implements UiInterface
     /**
      * check_iconv
      *
-     * Checks to see whether iconv is available;
-     * @return bool
+     * Checks to see whether iconv is available.
      */
-    public static function check_iconv()
+    public static function check_iconv(): bool
     {
         if (function_exists('iconv') && function_exists('iconv_substr')) {
             return true;
@@ -133,9 +130,8 @@ class Ui implements UiInterface
      *
      * Stupid little cutesie thing to ratelimit output of long-running
      * operations.
-     * @return bool
      */
-    public static function check_ticker()
+    public static function check_ticker(): bool
     {
         if (defined('SSE_OUTPUT') || defined('API')) {
             return false;
@@ -156,9 +152,8 @@ class Ui implements UiInterface
      * (which is a subset of valid UTF-8, but close enough for our purposes.)
      * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
      * @param string $string
-     * @return string
      */
-    public static function clean_utf8($string)
+    public static function clean_utf8($string): string
     {
         if ($string) {
             $clean = preg_replace(
@@ -184,9 +179,8 @@ class Ui implements UiInterface
      * @param $value
      * @param int $precision
      * @param int $pass
-     * @return string
      */
-    public static function format_bytes($value, $precision = 2, $pass = 0)
+    public static function format_bytes($value, $precision = 2, $pass = 0): string
     {
         if (!$value) {
             return '';
@@ -228,7 +222,7 @@ class Ui implements UiInterface
      * @return string
      * @noinspection PhpMissingBreakStatementInspection
      */
-    public static function unformat_bytes($value)
+    public static function unformat_bytes($value): string
     {
         if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', (string)$value, $matches)) {
             $value = $matches[1];
@@ -266,9 +260,8 @@ class Ui implements UiInterface
      * @param string $title
      * @param string $id_attrib
      * @param string $class_attrib
-     * @return string
      */
-    public static function get_icon($name, $title = null, $id_attrib = null, $class_attrib = null)
+    public static function get_icon($name, $title = null, $id_attrib = null, $class_attrib = null): string
     {
         if (is_array($name)) {
             $hover_name = $name[1];
@@ -330,9 +323,8 @@ class Ui implements UiInterface
      *
      * Does the finding icon thing. match svg first over png
      * @param string $name
-     * @return string
      */
-    private static function _find_icon($name)
+    private static function _find_icon($name): string
     {
         if (isset(self::$_icon_cache[$name])) {
             return self::$_icon_cache[$name];
@@ -362,9 +354,8 @@ class Ui implements UiInterface
      * @param string $title
      * @param string $id_attrib
      * @param string $class_attrib
-     * @return string
      */
-    public static function get_image($name, $title = null, $id_attrib = null, $class_attrib = null)
+    public static function get_image($name, $title = null, $id_attrib = null, $class_attrib = null): string
     {
         if (is_array($name)) {
             $hover_name = $name[1];
@@ -429,9 +420,8 @@ class Ui implements UiInterface
      *
      * Does the finding image thing. match svg first over png
      * @param string $name
-     * @return string
      */
-    private static function _find_image($name)
+    private static function _find_image($name): string
     {
         if (isset(self::$_image_cache[$name])) {
             return self::$_image_cache[$name];
@@ -600,9 +590,8 @@ class Ui implements UiInterface
      *
      * Get the custom logo or logo relating to your theme color
      * @param string $color
-     * @return string
      */
-    public static function get_logo_url($color = null)
+    public static function get_logo_url($color = null): string
     {
         if (AmpConfig::get('custom_logo')) {
             return AmpConfig::get('custom_logo');
@@ -616,9 +605,8 @@ class Ui implements UiInterface
 
     /**
      * @param $type
-     * @return bool
      */
-    public static function is_grid_view($type)
+    public static function is_grid_view($type): bool
     {
         $isgv = true;
         $name = 'browse_' . $type . '_grid_view';

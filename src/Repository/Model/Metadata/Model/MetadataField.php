@@ -53,19 +53,17 @@ class MetadataField extends DatabaseObject implements Model
     }
 
     /**
-     *
-     * @return string
+     * getName
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     *
-     * @return string
+     * getFormattedName
      */
-    public function getFormattedName()
+    public function getFormattedName(): string
     {
         return ucwords(str_replace("_", " ", $this->name));
     }
@@ -80,10 +78,9 @@ class MetadataField extends DatabaseObject implements Model
     }
 
     /**
-     *
-     * @return bool
+     * isPublic
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->public;
     }
@@ -91,7 +88,7 @@ class MetadataField extends DatabaseObject implements Model
     /**
      * Set public to false
      */
-    public function hide()
+    public function hide():void
     {
         $this->public = false;
     }

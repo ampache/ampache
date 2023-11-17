@@ -124,9 +124,8 @@ class User_Playlist extends database_object
     /**
      * get_count
      * This returns a count of the total number of tracks that are in this playlist
-     * @return int
      */
-    public function get_count()
+    public function get_count(): int
     {
         $sql        = "SELECT MAX(`track`) AS `count` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
         $db_results = Dba::read($sql, array($this->user, $this->client));
@@ -138,9 +137,8 @@ class User_Playlist extends database_object
     /**
      * get_time
      * This returns a count of the total number of tracks that are in this playlist
-     * @return int
      */
-    public function get_time()
+    public function get_time(): int
     {
         $sql        = "SELECT DISTINCT(`playqueue_time`) AS `time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
         $db_results = Dba::read($sql, array($this->user, $this->client));
@@ -155,9 +153,8 @@ class User_Playlist extends database_object
     /**
      * get_latest
      * get the most recent playqueue for the user
-     * @return string
      */
-    public function get_latest()
+    public function get_latest(): string
     {
         $sql        = "SELECT MAX(`playqueue_time`) AS `time`, `playqueue_client`, `user` FROM `user_playlist` WHERE `user` = ? GROUP BY `playqueue_client`, `user`";
         $db_results = Dba::read($sql, array($this->user));

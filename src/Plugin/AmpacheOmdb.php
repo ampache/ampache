@@ -54,7 +54,7 @@ class AmpacheOmdb
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
         return true;
     } // install
@@ -63,7 +63,7 @@ class AmpacheOmdb
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         return true;
     } // uninstall
@@ -73,9 +73,8 @@ class AmpacheOmdb
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
 

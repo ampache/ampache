@@ -201,7 +201,7 @@ class Tmp_Playlist extends database_object
      * clear
      * This clears all the objects out of a single playlist
      */
-    public function clear()
+    public function clear(): bool
     {
         $sql = "DELETE FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?";
         Dba::write($sql, array($this->id));
@@ -236,9 +236,8 @@ class Tmp_Playlist extends database_object
      * session
      * @param $sessid
      * @param string|null $plist_id
-     * @return bool
      */
-    public static function session_clean($sessid, $plist_id)
+    public static function session_clean($sessid, $plist_id): bool
     {
         $sql = "DELETE FROM `tmp_playlist` WHERE `session`= ? AND `id` != ?";
         Dba::write($sql, array($sessid, $plist_id));
@@ -264,7 +263,7 @@ class Tmp_Playlist extends database_object
      * prune_playlists
      * This deletes any playlists that don't have an associated session
      */
-    public static function prune_playlists()
+    public static function prune_playlists(): bool
     {
         /* Just delete if no matching session row */
         $sql = "DELETE FROM `tmp_playlist` USING `tmp_playlist` LEFT JOIN `session` ON `session`.`id`=`tmp_playlist`.`session` WHERE `session`.`id` IS NULL AND `tmp_playlist`.`type` != 'vote'";
@@ -291,9 +290,8 @@ class Tmp_Playlist extends database_object
      * it takes an optional type, default is song
      * @param int $object_id
      * @param string $object_type
-     * @return bool
      */
-    public function add_object($object_id, $object_type)
+    public function add_object($object_id, $object_type): bool
     {
         $sql = "INSERT INTO `tmp_playlist_data` (`object_id`, `tmp_playlist`, `object_type`) VALUES (?, ?, ?)";
         Dba::write($sql, array($object_id, $this->id, $object_type));
@@ -315,9 +313,8 @@ class Tmp_Playlist extends database_object
      * delete_track
      * This deletes a track from the tmpplaylist
      * @param $object_id
-     * @return bool
      */
-    public function delete_track($object_id)
+    public function delete_track($object_id): bool
     {
         /* delete the track its self */
         $sql = "DELETE FROM `tmp_playlist_data` WHERE `id` = ?";

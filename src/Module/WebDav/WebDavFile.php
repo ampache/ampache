@@ -47,9 +47,8 @@ class WebDavFile extends DAV\File
 
     /**
      * getName
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         $nameinfo = pathinfo($this->libitem->file);
 
@@ -88,18 +87,16 @@ class WebDavFile extends DAV\File
 
     /**
      * getSize
-     * @return int
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->libitem->size;
     }
 
     /**
      * getETag
-     * @return string
      */
-    public function getETag()
+    public function getETag(): string
     {
         return md5(ObjectTypeToClassNameMapper::reverseMap(get_class($this->libitem)) . "_" . $this->libitem->id . "_" . $this->libitem->update_time);
     }

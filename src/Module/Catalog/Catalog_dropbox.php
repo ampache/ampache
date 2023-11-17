@@ -66,7 +66,7 @@ class Catalog_dropbox extends Catalog
      * get_description
      * This returns the description of this catalog
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->description;
     } // get_description
@@ -75,7 +75,7 @@ class Catalog_dropbox extends Catalog
      * get_version
      * This returns the current version
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
     } // get_version
@@ -84,7 +84,7 @@ class Catalog_dropbox extends Catalog
      * get_path
      * This returns the current catalog path/uri
      */
-    public function get_path()
+    public function get_path(): string
     {
         return $this->path;
     } // get_path
@@ -93,7 +93,7 @@ class Catalog_dropbox extends Catalog
      * get_type
      * This returns the current catalog type
      */
-    public function get_type()
+    public function get_type(): string
     {
         return $this->type;
     } // get_type
@@ -102,7 +102,7 @@ class Catalog_dropbox extends Catalog
      * get_create_help
      * This returns hints on catalog creation
      */
-    public function get_create_help()
+    public function get_create_help(): string
     {
         return "<ul><li>" . T_("Go to https://www.dropbox.com/developers/apps/create") . "</li><li>" . T_("Select 'Dropbox API app'") . "</li><li>" . T_("Select 'Full Dropbox'") . "</li><li>" . T_("Give a name to your application and create it") . "</li><li>" . T_("Click the 'Generate' button to create an Access Token") . "</li><li>" . T_("Copy your App key and App secret and Access Token into the following fields.") . "</li></ul>";
     } // get_create_help
@@ -111,7 +111,7 @@ class Catalog_dropbox extends Catalog
      * is_installed
      * This returns true or false if remote catalog is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE 'catalog_dropbox'";
         $db_results = Dba::query($sql);
@@ -123,7 +123,7 @@ class Catalog_dropbox extends Catalog
      * install
      * This function installs the remote catalog
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -280,7 +280,7 @@ class Catalog_dropbox extends Catalog
      * Pulls the data from a remote catalog and adds any missing songs to the
      * database.
      */
-    public function update_remote_catalog()
+    public function update_remote_catalog(): int
     {
         $app         = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox     = new Dropbox($app);

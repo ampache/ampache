@@ -70,9 +70,8 @@ class License
      * has_info
      * does the db call, reads from the license table
      * @param int $license_id
-     * @return bool
      */
-    private function has_info($license_id)
+    private function has_info($license_id): bool
     {
         $sql        = "SELECT * FROM `license` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($license_id));

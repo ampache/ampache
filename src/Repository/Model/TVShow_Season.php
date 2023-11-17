@@ -290,9 +290,9 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     }
 
     /**
-     * @return mixed
+     * get_description
      */
-    public function get_description()
+    public function get_description(): string
     {
         // No season description for now, always return tvshow description
         $tvshow = new TvShow($this->tvshow);
@@ -382,9 +382,8 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      * update
      * This takes a key'd array of data and updates the current tv show
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         $sql = 'UPDATE `tvshow_season` SET `season_number` = ?, `tvshow` = ? WHERE `id` = ?';
         Dba::write($sql, array($data['season_number'], $data['tvshow'], $this->id));

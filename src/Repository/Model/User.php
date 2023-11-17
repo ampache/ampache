@@ -442,9 +442,8 @@ class User extends database_object
      * this function checks to see if this user has access
      * to the passed action (pass a level requirement)
      * @param int $needed_level
-     * @return bool
      */
-    public function has_access($needed_level)
+    public function has_access($needed_level): bool
     {
         if (AmpConfig::get('demo_mode')) {
             return true;
@@ -460,9 +459,8 @@ class User extends database_object
     /**
      * is_registered
      * Check if the user is registered
-     * @return bool
      */
-    public static function is_registered()
+    public static function is_registered(): bool
     {
         if (empty(Core::get_global('user'))) {
             return false;
@@ -519,9 +517,8 @@ class User extends database_object
      * get_play_size
      * A user might be missing the play_size so it needs to be calculated
      * @param int $user_id
-     * @return int
      */
-    public static function get_play_size($user_id)
+    public static function get_play_size($user_id): int
     {
         $params = array($user_id);
         $total  = 0;
@@ -812,7 +809,7 @@ class User extends database_object
      * disable
      * This disables the current user
      */
-    public function disable()
+    public function disable(): bool
     {
         // Make sure we aren't disabling the last admin
         $sql        = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `id` != '" . $this->id . "' AND `access`='100'";
@@ -836,9 +833,8 @@ class User extends database_object
      * update_access
      * updates their access level
      * @param $new_access
-     * @return bool
      */
-    public function update_access($new_access)
+    public function update_access($new_access): bool
     {
         /* Prevent Only User accounts */
         if ($new_access < '100') {
@@ -884,7 +880,7 @@ class User extends database_object
      * This inserts a row into the IP History recording this user at this
      * address at this time in this place, doing this thing.. you get the point
      */
-    public function insert_ip_history()
+    public function insert_ip_history(): bool
     {
         $sip = (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
             ? filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)
@@ -947,7 +943,8 @@ class User extends database_object
         $city = '',
         $disabled = false,
         $encrypted = false
-    ) {
+    ): int
+    {
         // don't try to overwrite users that already exist
         if (static::getUserRepository()->idByUsername($username) > 0 || static::getUserRepository()->idByEmail($email) > 0) {
             return 0;
@@ -1100,9 +1097,8 @@ class User extends database_object
      * access_name_to_level
      * This takes the access name for the user and returns the level
      * @param string $name
-     * @return int
      */
-    public static function access_name_to_level($name)
+    public static function access_name_to_level($name): int
     {
         // FIXME why is manager not here? (AccessLevelEnum::LEVEL_CONTENT_MANAGER;)
         switch ($name) {
@@ -1123,9 +1119,8 @@ class User extends database_object
      * access_level_to_name
      * This takes the access level for the user and returns the translated name for that level
      * @param string $level
-     * @return string
      */
-    public static function access_level_to_name($level)
+    public static function access_level_to_name($level): string
     {
         switch ($level) {
             case '100':
@@ -1231,9 +1226,8 @@ class User extends database_object
      * delete
      * deletes this user and everything associated with it. This will affect
      * ratings and total stats
-     * @return bool
      */
-    public function delete()
+    public function delete(): bool
     {
         // Before we do anything make sure that they aren't the last admin
         if ($this->has_access(100)) {
@@ -1267,9 +1261,8 @@ class User extends database_object
      * calculates difference between now and last_seen
      * if less than delay, we consider them still online
      * @param int $delay
-     * @return bool
      */
-    public function is_online($delay = 1200)
+    public function is_online($delay = 1200): bool
     {
         return time() - $this->last_seen <= $delay;
     } // is_online
@@ -1344,9 +1337,8 @@ class User extends database_object
     /**
      * Get item name based on whether they allow public fullname access.
      * @param int $user_id
-     * @return string
      */
-    public static function get_username($user_id)
+    public static function get_username($user_id): string
     {
         $users = static::getUserRepository()->getValidArray(true);
 
@@ -1400,9 +1392,8 @@ class User extends database_object
     /**
      * @param string $data
      * @param string $mime
-     * @return bool
      */
-    public function update_avatar($data, $mime = '')
+    public function update_avatar($data, $mime = ''): bool
     {
         debug_event(self::class, 'Updating avatar for ' . $this->id, 4);
 
@@ -1412,10 +1403,9 @@ class User extends database_object
     }
 
     /**
-     *
-     * @return bool
+     * upload_avatar
      */
-    public function upload_avatar()
+    public function upload_avatar(): bool
     {
         $upload = array();
         if (!empty($_FILES['avatar']['tmp_name']) && $_FILES['avatar']['size'] <= AmpConfig::get('max_upload_size')) {
@@ -1492,9 +1482,8 @@ class User extends database_object
      * Check all stream control plugins
      * @param array $media_ids
      * @param User|null $user
-     * @return bool
      */
-    public static function stream_control($media_ids, User $user = null)
+    public static function stream_control($media_ids, ?User $user = null): bool
     {
         if ($user === null) {
             $user = Core::get_global('user');

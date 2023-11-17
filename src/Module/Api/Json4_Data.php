@@ -437,9 +437,8 @@ class Json4_Data
      * @param array $playlists Playlist id's to include
      * @param User $user
      * @param bool $songs
-     * @return string  JSON Object "playlist"
      */
-    public static function playlists($playlists, $user, $songs = false)
+    public static function playlists($playlists, $user, $songs = false): string
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -516,10 +515,9 @@ class Json4_Data
      *
      * This returns shares to the user, in a pretty json document with the information
      *
-     * @param array $shares (description here...)
-     * @return string
+     * @param array $shares
      */
-    public static function shares($shares)
+    public static function shares($shares): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);

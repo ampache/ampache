@@ -59,7 +59,7 @@ class AmpacheAmazon
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
         if (Preference::exists('amazon_base_url')) {
             return false;
@@ -78,7 +78,7 @@ class AmpacheAmazon
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         Preference::delete('amazon_base_url');
         Preference::delete('amazon_max_results_pages');
@@ -94,9 +94,8 @@ class AmpacheAmazon
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

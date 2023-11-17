@@ -117,9 +117,8 @@ class Art extends database_object
 
     /**
      * @param string $type
-     * @return bool
      */
-    public static function is_valid_type($type)
+    public static function is_valid_type($type): bool
     {
         if (!$type) {
             return false;
@@ -159,9 +158,8 @@ class Art extends database_object
      * extension
      * This returns the file extension for the currently loaded art
      * @param string $mime
-     * @return string
      */
-    public static function extension($mime)
+    public static function extension($mime): string
     {
         if (empty($mime)) {
             return '';
@@ -183,7 +181,7 @@ class Art extends database_object
      * @return bool
      * @throws RuntimeException
      */
-    public static function test_image($source)
+    public static function test_image($source): bool
     {
         if (strlen((string) $source) < 10) {
             debug_event(self::class, 'Invalid image passed', 1);
@@ -231,9 +229,8 @@ class Art extends database_object
      * to create it.
      * @param bool $raw
      * @param bool $fallback
-     * @return string
      */
-    public function get($raw = false, $fallback = false)
+    public function get($raw = false, $fallback = false): string
     {
         // Get the data either way (allow forcing to fallback image)
         if (!$this->has_db_info($fallback)) {
@@ -252,9 +249,8 @@ class Art extends database_object
      * This pulls the information out from the database, depending
      * on if we want to resize and if there is not a thumbnail go
      * ahead and try to resize
-     * @return bool
      */
-    public function has_db_info($fallback = false)
+    public function has_db_info($fallback = false): bool
     {
         $sql         = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
         $db_results  = Dba::read($sql, array($this->type, $this->uid, $this->kind));
@@ -316,9 +312,8 @@ class Art extends database_object
      * @param int $object_id
      * @param string $object_type
      * @param string $kind
-     * @return bool
      */
-    public static function has_db($object_id, $object_type, $kind = 'default')
+    public static function has_db($object_id, $object_type, $kind = 'default'): bool
     {
         $sql        = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
         $db_results = Dba::read($sql, array($object_type, $object_id, $kind));
@@ -349,9 +344,8 @@ class Art extends database_object
      * the database. You must also pass the mime type.
      * @param string $source
      * @param string $mime
-     * @return bool
      */
-    public function insert($source, $mime = '')
+    public function insert($source, $mime = ''): bool
     {
         // Disabled in demo mode cause people suck and upload porn
         if (AmpConfig::get('demo_mode')) {
@@ -524,9 +518,8 @@ class Art extends database_object
     /**
      * check_dimensions
      * @param array $dimensions
-     * @return bool
      */
-    public static function check_dimensions($dimensions)
+    public static function check_dimensions($dimensions): bool
     {
         $width  = (int)($dimensions['width']);
         $height = (int)($dimensions['height']);
@@ -762,9 +755,8 @@ class Art extends database_object
      * @param string $source
      * @param string $mime
      * @param array $size
-     * @return bool
      */
-    public function save_thumb($source, $mime, $size)
+    public function save_thumb($source, $mime, $size): bool
     {
         // Quick sanity check
         if (!self::test_image($source)) {
@@ -991,9 +983,8 @@ class Art extends database_object
      * ['raw']      = Actual Image data, already captured
      * @param array $data
      * @param string $type
-     * @return string
      */
-    public static function get_from_source($data, $type)
+    public static function get_from_source($data, $type): string
     {
         if (!isset($type)) {
             $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
@@ -1139,7 +1130,7 @@ class Art extends database_object
      * @param string $object_type
      * @param int $object_id
      */
-    public static function garbage_collection($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null): void
     {
         $types = array(
             'album',
@@ -1425,7 +1416,8 @@ class Art extends database_object
         $link = null,
         $show_default = true,
         $kind = 'default'
-    ) {
+    ): bool
+    {
         if (!self::is_valid_type($object_type)) {
             return false;
         }
@@ -1522,7 +1514,8 @@ class Art extends database_object
         $link = null,
         $show_default = true,
         $kind = 'default'
-    ) {
+    ): string
+    {
         self::display(
             $object_type,
             $object_id,
@@ -1556,9 +1549,8 @@ class Art extends database_object
     /**
      * Get the object details for the art table
      * @param array $data
-     * @return string
      */
-    public static function get_raw_image($data)
+    public static function get_raw_image($data): string
     {
         $sql        = "SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?;";
         $db_results = Dba::read($sql, $data);

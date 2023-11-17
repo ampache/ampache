@@ -185,28 +185,24 @@ class Live_Stream extends database_object implements Media, library_item
 
     /**
      * get_f_artist_link
-     *
-     * @return string
      */
-    public function get_f_artist_link()
+    public function get_f_artist_link(): string
     {
         return '';
     }
 
     /**
      * Get item get_f_album_link.
-     * @return string
      */
-    public function get_f_album_link()
+    public function get_f_album_link(): string
     {
         return '';
     }
 
     /**
      * Get item get_f_album_disk_link.
-     * @return string
      */
-    public function get_f_album_disk_link()
+    public function get_f_album_disk_link(): string
     {
         return '';
     }
@@ -281,11 +277,10 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @return null
      */
-    public function get_description()
+    public function get_description(): string
     {
-        return null;
+        return '';
     }
 
     /**
@@ -417,17 +412,16 @@ class Live_Stream extends database_object implements Media, library_item
      * @param bool $local
      * @param string $sid
      * @param string $force_http
-     * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $sid = '', $force_http = '')
+    public function play_url($additional_params = '', $player = '', $local = false, $sid = '', $force_http = ''): string
     {
         return $this->url . $additional_params;
     } // play_url
 
     /**
-     * @return string
+     * get_stream_name
      */
-    public function get_stream_name()
+    public function get_stream_name(): string
     {
         return $this->get_fullname();
     }

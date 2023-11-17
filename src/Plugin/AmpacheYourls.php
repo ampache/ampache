@@ -60,7 +60,7 @@ class AmpacheYourls
      * This is a required plugin function. It inserts our preferences
      * into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('yourls_domain')) {
@@ -90,7 +90,7 @@ class AmpacheYourls
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
     } // upgrade
@@ -135,9 +135,8 @@ class AmpacheYourls
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

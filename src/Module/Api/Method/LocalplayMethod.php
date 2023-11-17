@@ -143,7 +143,7 @@ final class LocalplayMethod
         } // end switch on command
         $results = (!empty($status))
             ? array('localplay' => array('command' => array($input['command'] => $status)))
-            : array('localplay' => array('command' => array($input['command'] => make_bool($result))));
+            : array('localplay' => array('command' => array($input['command'] => $result)));
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);

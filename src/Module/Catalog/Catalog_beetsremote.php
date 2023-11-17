@@ -157,7 +157,7 @@ class Catalog_beetsremote extends Catalog
      * get_path
      * This returns the current catalog path/uri
      */
-    public function get_path()
+    public function get_path(): string
     {
         return $this->uri;
     } // get_path

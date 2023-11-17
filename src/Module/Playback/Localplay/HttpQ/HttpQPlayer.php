@@ -101,7 +101,7 @@ class HttpQPlayer
      * This gets the version of winamp currently
      * running, use this to test for a valid connection
      */
-    public function version()
+    public function version(): bool
     {
         $args    = array();
         $results = $this->sendCommand('getversion', $args);
@@ -129,7 +129,7 @@ class HttpQPlayer
      * next
      * go to next song
      */
-    public function next()
+    public function next(): bool
     {
         $args    = array();
         $results = $this->sendCommand("next", $args);
@@ -145,7 +145,7 @@ class HttpQPlayer
      * prev
      * go to previous song
      */
-    public function prev()
+    public function prev(): bool
     {
         $args    = array();
         $results = $this->sendCommand("prev", $args);
@@ -285,7 +285,7 @@ class HttpQPlayer
      * state
      * This returns the current state of the httpQ player
      */
-    public function state()
+    public function state(): string
     {
         $state   = '';
         $args    = array();
@@ -324,7 +324,7 @@ class HttpQPlayer
      * volume_up
      * This increases the volume by Winamp's defined amount
      */
-    public function volume_up()
+    public function volume_up(): bool
     {
         $args    = array();
         $results = $this->sendCommand('volumeup', $args);
@@ -340,7 +340,7 @@ class HttpQPlayer
      * volume_down
      * This decreases the volume by Winamp's defined amount
      */
-    public function volume_down()
+    public function volume_down(): bool
     {
         $args    = array();
         $results = $this->sendCommand('volumedown', $args);
@@ -357,9 +357,8 @@ class HttpQPlayer
      * This sets the volume as best it can, we go from a resolution
      * of 100 --> 255 so it's a little fuzzy
      * @param $value
-     * @return bool
      */
-    public function set_volume($value)
+    public function set_volume($value): bool
     {
         // Convert it to base 255
         $volume  = $value * 2.55;
@@ -377,7 +376,7 @@ class HttpQPlayer
      * clear_playlist
      * this flushes the playlist cache (I hope this means clear)
      */
-    public function clear_playlist()
+    public function clear_playlist(): bool
     {
         $args    = array();
         $results = $this->sendcommand('flushplaylist', $args);

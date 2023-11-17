@@ -139,9 +139,8 @@ final class TagAjaxHandler implements AjaxHandlerInterface
      * @param string $object_type
      * @param int $object_id
      * @param string|bool $user
-     * @return bool
      */
-    private static function can_edit_tag_map($object_type, $object_id, $user = true)
+    private static function can_edit_tag_map($object_type, $object_id, $user = true): bool
     {
         if ($user === true) {
             $uid = (int)(Core::get_global('user')->id);

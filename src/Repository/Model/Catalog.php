@@ -236,55 +236,54 @@ abstract class Catalog extends database_object
     protected static $tags = array();
 
     /**
-     * @return string
+     * get_path
      */
-    abstract public function get_path();
+    abstract public function get_path(): string;
 
     /**
-     * @return string
+     * get_type
      */
-    abstract public function get_type();
+    abstract public function get_type(): string;
 
     /**
-     * @return string
+     * get_description
      */
-    abstract public function get_description();
+    abstract public function get_description(): string;
 
     /**
-     * @return string
+     * get_version
      */
-    abstract public function get_version();
+    abstract public function get_version(): string;
 
     /**
-     * @return string
+     * get_create_help
      */
-    abstract public function get_create_help();
+    abstract public function get_create_help(): string;
 
     /**
-     * @return bool
+     * is_installed
      */
-    abstract public function is_installed();
+    abstract public function is_installed(): bool;
 
     /**
-     * @return bool
+     * install
      */
-    abstract public function install();
+    abstract public function install(): bool;
 
     /**
      * @param array $options
-     * @return int
      */
-    abstract public function add_to_catalog($options = null);
+    abstract public function add_to_catalog($options = null): int;
 
     /**
-     * @return int
+     * verify_catalog_proc
      */
-    abstract public function verify_catalog_proc();
+    abstract public function verify_catalog_proc(): int;
 
     /**
-     * @return int
+     * clean_catalog_proc
      */
-    abstract public function clean_catalog_proc();
+    abstract public function clean_catalog_proc(): int;
 
     /**
      * @return array
@@ -293,14 +292,13 @@ abstract class Catalog extends database_object
 
     /**
      * @param string $new_path
-     * @return bool
      */
-    abstract public function move_catalog_proc($new_path);
+    abstract public function move_catalog_proc($new_path): bool;
 
     /**
-     * @return bool
+     * cache_catalog_proc
      */
-    abstract public function cache_catalog_proc();
+    abstract public function cache_catalog_proc(): bool;
 
     /**
      * @return array
@@ -309,9 +307,8 @@ abstract class Catalog extends database_object
 
     /**
      * @param string $file_path
-     * @return string
      */
-    abstract public function get_rel_path($file_path);
+    abstract public function get_rel_path($file_path): string;
 
     /**
      * @param Song|Podcast_Episode|Song_Preview|Video $media
@@ -326,9 +323,8 @@ abstract class Catalog extends database_object
 
     /**
      * Check if the catalog is ready to perform actions (configuration completed, ...)
-     * @return bool
      */
-    public function isReady()
+    public function isReady(): bool
     {
         return true;
     }
@@ -3369,7 +3365,7 @@ abstract class Catalog extends database_object
      * verify_catalog
      * This function verify the catalog
      */
-    public function verify_catalog()
+    public function verify_catalog(): bool
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             require Ui::find_template('show_verify_catalog.inc.php');

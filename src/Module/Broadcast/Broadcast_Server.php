@@ -135,9 +135,8 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param int $song_id
-     * @return string
      */
-    protected function getSongJS($song_id)
+    protected function getSongJS($song_id): string
     {
         $media   = array();
         $media[] = array(
@@ -374,11 +373,9 @@ class Broadcast_Server implements MessageComponentInterface
     }
 
     /**
-     *
-     * @param ConnectionInterface $conn
-     * @return bool
+     * isBroadcaster
      */
-    protected function isBroadcaster(ConnectionInterface $conn)
+    protected function isBroadcaster(ConnectionInterface $conn): bool
     {
         return array_key_exists($conn->resourceId, $this->broadcasters);
     }
@@ -431,9 +428,8 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      * get_address
-     * @return string
      */
-    public static function get_address()
+    public static function get_address(): string
     {
         $websocket_address = AmpConfig::get('websocket_address');
         if (empty($websocket_address)) {

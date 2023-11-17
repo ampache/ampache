@@ -1247,7 +1247,6 @@ class Xml_Data
      * @param array $data Keyed array of information to RSS'ify
      * @param string $title RSS feed title
      * @param string $date publish date
-     * @return string RSS feed xml
      */
     public static function rss_feed($data, $title, $date = null): string
     {
@@ -1308,7 +1307,6 @@ class Xml_Data
      * so we allow them to pass a type if they want to
      *
      * @param string $title
-     * @return string Header xml tag.
      */
     private static function _header($title = null): string
     {
@@ -1334,8 +1332,6 @@ class Xml_Data
      * _footer
      *
      * this returns the footer for this document, these are pretty boring
-     *
-     * @return string Footer xml tag.
      */
     private static function _footer(): string
     {

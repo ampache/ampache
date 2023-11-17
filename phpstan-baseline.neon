@@ -6286,11 +6286,6 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:playlist_song_tracks_string\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:playlist_song_tracks_string\\(\\) has parameter \\$playlist_data with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
@@ -6302,11 +6297,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:playlists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:songs\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
 
@@ -6332,11 +6322,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:tags\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:tags_string\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
 
@@ -8436,17 +8421,7 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:get_rel_path\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:insertSong\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:insertSong\\(\\) should return int but returns bool\\|int\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -8856,11 +8831,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
-			message: "#^Parameter \\#1 \\$songs of method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:gather_art\\(\\) expects array\\<int\\>\\|null, array\\<int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true\\> given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:\\$api_call_delay has no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
@@ -9086,16 +9056,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_dropbox.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:update_remote_catalog\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Parameter \\#1 \\$songs of method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:gather_art\\(\\) expects array\\<int\\>\\|null, array\\<int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true\\> given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
 			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\<1, max\\>\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_dropbox.php
@@ -9251,16 +9211,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Parameter \\#1 \\$rating_id of class Ampache\\\\Repository\\\\Model\\\\Rating constructor expects int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Parameter \\#1 \\$songid of class Ampache\\\\Repository\\\\Model\\\\Song constructor expects int\\|null, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true given\\.$#"
-			count: 3
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
@@ -9272,11 +9222,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_cache_path\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Parameter \\#2 \\$song_id of static method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:update_enabled\\(\\) expects int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
 
@@ -10096,16 +10041,6 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:clear_playlist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:connect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:delete_instance\\(\\) has parameter \\$uid with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
@@ -10121,11 +10056,6 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:get_description\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
@@ -10136,42 +10066,7 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:get_version\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:is_installed\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:next\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:pause\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:play\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:prev\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
@@ -10197,16 +10092,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:stop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:uninstall\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
@@ -10266,11 +10151,6 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:clear_playlist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:delete_pos\\(\\) has parameter \\$track with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
@@ -10301,22 +10181,12 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:next\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:pause\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:play\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:prev\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
@@ -10351,27 +10221,7 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:state\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:stop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:version\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:volume_down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:volume_up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
@@ -10406,11 +10256,6 @@ parameters:
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:_load_player\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:add\\(\\) has parameter \\$object with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
@@ -10426,17 +10271,7 @@ parameters:
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:connect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:current_instance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:delete_all\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
@@ -10476,11 +10311,6 @@ parameters:
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:get_user_playing\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:get_user_state\\(\\) has parameter \\$state with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
@@ -10497,31 +10327,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:is_enabled\\(\\) has parameter \\$controller with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:next\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:pause\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:play\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:player_loaded\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:prev\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
@@ -10546,16 +10351,6 @@ parameters:
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:stop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
@@ -10566,22 +10361,7 @@ parameters:
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:volume_down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:volume_mute\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:volume_set\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:volume_up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
@@ -10671,11 +10451,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:get_description\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
@@ -10686,22 +10461,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:get_version\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:is_installed\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
@@ -10757,11 +10517,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:stop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:uninstall\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
@@ -11161,16 +10916,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:clear_playlist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:connect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:delete_instance\\(\\) has parameter \\$uid with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
@@ -11186,11 +10931,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:get_description\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
@@ -11201,42 +10941,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:get_version\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:is_installed\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:next\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:pause\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:play\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:prev\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
@@ -11266,16 +10971,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:stop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
@@ -11287,16 +10982,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:volume_down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:volume_up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
@@ -11411,11 +11096,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:FullState\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:GetCurrentItem\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
@@ -11426,27 +11106,12 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:Pause\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:Play\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:PlayListAdd\\(\\) has parameter \\$link with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:PlaylistRemove\\(\\) has parameter \\$track with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:Prev\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
@@ -11482,21 +11147,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:Skip\\(\\) has parameter \\$pos with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:Stop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:VolumeDown\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:VolumeUp\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
@@ -11621,16 +11271,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:clear_playlist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:connect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:delete_instance\\(\\) has parameter \\$uid with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
@@ -11646,11 +11286,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:get_description\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
@@ -11661,42 +11296,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:get_version\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:is_installed\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:next\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:pause\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:play\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:prev\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
 
@@ -11722,16 +11322,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:stop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:uninstall\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
 
@@ -11782,11 +11372,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:clear\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:clear_playlist\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -11866,27 +11451,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:state\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:stop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:version\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:volume_down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:volume_up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -11951,16 +11516,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:clear_playlist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:connect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:delete_instance\\(\\) has parameter \\$uid with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
@@ -11976,11 +11531,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:get_description\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
@@ -11991,42 +11541,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:get_version\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:is_installed\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:next\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:pause\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:play\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:prev\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
@@ -12056,16 +11571,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:stop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
@@ -12077,16 +11582,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:volume_down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:volume_up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
@@ -12152,11 +11647,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:get_active_instance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/localplay_controller.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:get_description\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/localplay_controller.php
 
@@ -12266,11 +11756,6 @@ parameters:
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:get_error_msg\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:get_queue_count\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Scrobble/Scrobbler.php
@@ -12302,11 +11787,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:queue_track\\(\\) has parameter \\$track with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:submit_tracks\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
@@ -12552,11 +12032,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_democratic\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_download\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
 
@@ -13727,11 +13202,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:read\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:ungimp_ie\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/System/Session.php
 
@@ -15606,32 +15076,7 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:generate_nonce\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:generate_timestamp\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:get_normalized_http_method\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:get_normalized_http_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:get_parameters\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:get_signature_base_string\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
@@ -15667,16 +15112,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:to_header\\(\\) has parameter \\$realm with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:to_postdata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:to_url\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
@@ -15921,11 +15356,6 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthToken.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthToken\\:\\:to_string\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthToken.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthToken\\:\\:\\$key has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthToken.php
@@ -15989,11 +15419,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$values of function array_combine expects array, array\\<string\\>\\|string given\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthUtil.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:map\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/ObjectTypeToClassNameMapper.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:delete_recommendation_cache\\(\\) has no return type specified\\.$#"
@@ -17091,22 +16516,7 @@ parameters:
 			path: src/Plugin/Ampache7digital.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampache7digital\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampache7digital\\:\\:stream_song_preview\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampache7digital\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampache7digital\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampache7digital.php
 
@@ -17172,16 +16582,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:gather_arts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:uninstall\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheAmazon.php
 
@@ -17256,17 +16656,7 @@ parameters:
 			path: src/Plugin/AmpacheBitly.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheBitly.php
 
@@ -17322,21 +16712,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:display_home\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheCatalogFavorites.php
 
@@ -17416,11 +16791,6 @@ parameters:
 			path: src/Plugin/AmpacheDiscogs.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:query_discogs\\(\\) has parameter \\$query with no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheDiscogs.php
@@ -17437,11 +16807,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:search_artist\\(\\) has parameter \\$artist with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:uninstall\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheDiscogs.php
 
@@ -17496,21 +16861,6 @@ parameters:
 			path: src/Plugin/AmpacheFacebook.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:\\$categories has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheFacebook.php
@@ -17552,21 +16902,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:display_user_field\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheFlattr.php
 
@@ -17626,21 +16961,6 @@ parameters:
 			path: src/Plugin/AmpacheFriendsTimeline.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$categories has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheFriendsTimeline.php
@@ -17687,21 +17007,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:display_on_footer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheGoogleAnalytics.php
 
@@ -17776,21 +17081,6 @@ parameters:
 			path: src/Plugin/AmpacheGoogleMaps.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:\\$api_key has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheGoogleMaps.php
@@ -17832,21 +17122,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheGravatar.php
 
@@ -17897,21 +17172,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:headphones_call\\(\\) has parameter \\$params with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheHeadphones.php
 
@@ -17971,17 +17231,7 @@ parameters:
 			path: src/Plugin/AmpacheLastfm.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLastfm.php
 
@@ -18066,21 +17316,6 @@ parameters:
 			path: src/Plugin/AmpacheLibravatar.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:\\$categories has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLibravatar.php
@@ -18131,16 +17366,6 @@ parameters:
 			path: src/Plugin/AmpacheLyristLyrics.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function rtrim expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLyristLyrics.php
@@ -18187,21 +17412,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:display_on_footer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMatomo.php
 
@@ -18291,21 +17501,6 @@ parameters:
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$categories has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMusicBrainz.php
@@ -18376,16 +17571,6 @@ parameters:
 			path: src/Plugin/AmpacheOmdb.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:\\$categories has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheOmdb.php
@@ -18427,21 +17612,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:display_user_field\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePaypal.php
 
@@ -18502,21 +17672,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:display_home\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePersonalFavorites.php
 
@@ -18587,21 +17742,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:display_on_footer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePiwik.php
 
@@ -18741,11 +17881,6 @@ parameters:
 			path: src/Plugin/AmpacheRatingMatch.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:rule_process\\(\\) has parameter \\$rule_array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheRatingMatch.php
@@ -18762,11 +17897,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheRatingMatch.php
 
@@ -19431,17 +18561,7 @@ parameters:
 			path: src/Plugin/AmpacheYourls.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheYourls.php
 
@@ -19502,16 +18622,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:get_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:uninstall\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachechartlyrics.php
 
@@ -19581,21 +18691,6 @@ parameters:
 			path: src/Plugin/Ampacheflickr.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:\\$api_key has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampacheflickr.php
@@ -19641,17 +18736,7 @@ parameters:
 			path: src/Plugin/Ampachelibrefm.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelibrefm.php
 
@@ -19731,17 +18816,7 @@ parameters:
 			path: src/Plugin/Ampachelistenbrainz.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelistenbrainz.php
 
@@ -20016,11 +19091,6 @@ parameters:
 			path: src/Repository/Model/AlbumDisk.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_song_count_disk\\(\\) has parameter \\$disk_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
@@ -20142,11 +19212,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:delete_rec_dir\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
@@ -21261,11 +20326,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:verify_catalog\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -21626,16 +20686,6 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:is_enabled\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:prune_tracks\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:remove_vote\\(\\) has parameter \\$row_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -21991,11 +21041,6 @@ parameters:
 			path: src/Repository/Model/Metadata/Model/Metadata.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\MetadataField\\:\\:hide\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/MetadataField.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\MetadataField\\:\\:setName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Metadata/Model/MetadataField.php
@@ -22196,11 +21241,6 @@ parameters:
 			path: src/Repository/Model/Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_details\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
@@ -22237,11 +21277,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:set_last\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:sort_tracks\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 
@@ -22366,22 +21401,7 @@ parameters:
 			path: src/Repository/Model/Plugin.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:is_installed\\(\\) has parameter \\$plugin_name with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:is_valid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:remove_plugin_version\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Plugin.php
 
@@ -23176,11 +22196,6 @@ parameters:
 			path: src/Repository/Model/Random.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_play_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
 			message: "#^Parameter \\#1 \\$limit of method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_random_items\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Random.php
@@ -23206,27 +22221,12 @@ parameters:
 			path: src/Repository/Model/Rating.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:garbage_collection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:get_highest\\(\\) has parameter \\$user_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:get_highest\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Rating.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:is_valid\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:save_rating\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Rating.php
 
@@ -23521,11 +22521,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:display_ui\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:is_valid\\(\\) has parameter \\$action with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Share.php
@@ -23657,11 +22652,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:get_image\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Shoutbox.php
 
@@ -23912,16 +22902,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:insert\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:migrate_album\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:migrate_artist\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -24826,11 +23806,6 @@ parameters:
 			path: src/Repository/Model/Tmp_Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:clear\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:count_items\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
@@ -24857,11 +23832,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:prune_playlists\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
 
@@ -25091,11 +24061,6 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:disable\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:fix_preferences\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
@@ -25147,11 +24112,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:insert_ip_history\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 

@@ -248,9 +248,8 @@ class Wanted extends database_object
     /**
      * Get wanted release by mbid.
      * @param string $mbid
-     * @return int
      */
-    public static function get_wanted($mbid)
+    public static function get_wanted($mbid): int
     {
         $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
         $db_results = Dba::read($sql, array($mbid));
@@ -264,9 +263,8 @@ class Wanted extends database_object
     /**
      * Get wanted release by name.
      * @param string $name
-     * @return int
      */
-    public static function get_wanted_by_name($name)
+    public static function get_wanted_by_name($name): int
     {
         $sql        = "SELECT `id` FROM `wanted` WHERE `name` = ? LIMIT 1";
         $db_results = Dba::read($sql, array($name));

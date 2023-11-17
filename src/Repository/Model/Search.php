@@ -1238,9 +1238,8 @@ class Search extends playlist_object
      * delete
      *
      * Does what it says on the tin.
-     * @return bool
      */
-    public function delete()
+    public function delete(): bool
     {
         $sql = "DELETE FROM `search` WHERE `id` = ?";
         Dba::write($sql, array($this->id));
@@ -1409,9 +1408,8 @@ class Search extends playlist_object
      * get_total_duration
      * Get the total duration of all songs.
      * @param array $songs
-     * @return int
      */
-    public static function get_total_duration($songs)
+    public static function get_total_duration($songs): int
     {
         $song_ids = array();
         foreach ($songs as $objects) {
@@ -1435,9 +1433,8 @@ class Search extends playlist_object
      * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
      * @param string $name
-     * @return string
      */
-    private function _get_rule_name($name)
+    private function _get_rule_name($name): string
     {
         // check that the rule you sent is not an alias (needed for pulling details from the rule)
         switch ($this->objectType) {
@@ -1682,9 +1679,8 @@ class Search extends playlist_object
      * to_js
      *
      * Outputs the javascript necessary to re-show the current set of rules.
-     * @return string
      */
-    public function to_js()
+    public function to_js(): string
     {
         $javascript = "";
         foreach ($this->rules as $rule) {
@@ -1710,9 +1706,8 @@ class Search extends playlist_object
      *
      * This function updates the saved search with the current settings.
      * @param array|null $data
-     * @return int
      */
-    public function update(array $data = null)
+    public function update(array $data = null): int
     {
         if ($data && is_array($data)) {
             $this->name   = $data['name'] ?? $this->name;

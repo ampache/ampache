@@ -332,9 +332,9 @@ class Daap_Api
     }
 
     /**
-     * @return string
+     * catalog_songs
      */
-    private static function catalog_songs()
+    private static function catalog_songs(): string
     {
         // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
         $meta   = explode(',', strtolower(Core::get_get('meta')));
@@ -361,9 +361,8 @@ class Daap_Api
     /**
      * databases
      * @param array $input
-     * @return bool
      */
-    public static function databases($input)
+    public static function databases($input): bool
     {
         $output = '';
         // Database list
@@ -496,9 +495,8 @@ class Daap_Api
     /**
      * @param $songs
      * @param $meta
-     * @return string
      */
-    private static function tlv_songs($songs, $meta)
+    private static function tlv_songs($songs, $meta): string
     {
         if (array_search('all', $meta) > -1) {
             $meta = self::$metas;
@@ -578,9 +576,9 @@ class Daap_Api
     }
 
     /**
-     * @return string
+     * base_library
      */
-    public static function base_library()
+    public static function base_library(): string
     {
         $library = self::tlv('dmap.itemid', Daap_Api::BASE_LIBRARY);
         $library .= self::tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
@@ -595,9 +593,8 @@ class Daap_Api
     /**
      * @param Playlist|Search $playlist
      * @param bool $isSmart
-     * @return string
      */
-    public static function tlv_playlist($playlist, $isSmart = false)
+    public static function tlv_playlist($playlist, $isSmart = false): string
     {
         $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
         $plist = self::tlv('dmap.itemid', $pl_id);
@@ -614,9 +611,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv($tag, $value)
+    private static function tlv($tag, $value): string
     {
         if (array_key_exists($tag, self::$tags)) {
             $code = self::$tags[$tag]['code'];
@@ -653,9 +649,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_string($tag, $value)
+    private static function tlv_string($tag, $value): string
     {
         return $tag . pack("N", strlen((string)$value)) . $value;
     }
@@ -663,9 +658,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_long($tag, $value)
+    private static function tlv_long($tag, $value): string
     {
         // Really?! PHP...
         // Need to split value into two 32-bit integer because php pack function doesn't support 64-bit integer...
@@ -680,9 +674,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_int($tag, $value)
+    private static function tlv_int($tag, $value): string
     {
         return $tag . "\x00\x00\x00\x04" . pack("N", $value);
     }
@@ -690,9 +683,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_short($tag, $value)
+    private static function tlv_short($tag, $value): string
     {
         return $tag . "\x00\x00\x00\x02" . pack("n", $value);
     }
@@ -700,9 +692,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_byte($tag, $value)
+    private static function tlv_byte($tag, $value): string
     {
         return $tag . "\x00\x00\x00\x01" . pack("C", $value);
     }
@@ -710,9 +701,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_version($tag, $value)
+    private static function tlv_version($tag, $value): string
     {
         $values = explode('.', $value);
         if (count($values) == 4) {
@@ -727,9 +717,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_date($tag, $value)
+    private static function tlv_date($tag, $value): string
     {
         return self::tlv_int($tag, $value);
     }
@@ -737,9 +726,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_list($tag, $value)
+    private static function tlv_list($tag, $value): string
     {
         return self::tlv_string($tag, $value);
     }
@@ -918,9 +906,8 @@ class Daap_Api
 
     /**
      * @param $code
-     * @return bool
      */
-    public static function createError($code)
+    public static function createError($code): bool
     {
         $error = "";
         switch ($code) {
@@ -944,9 +931,8 @@ class Daap_Api
      * @param string $tag
      * @param int $code
      * @param string $msg
-     * @return bool
      */
-    public static function createApiError($tag, $code, $msg = '')
+    public static function createApiError($tag, $code, $msg = ''): bool
     {
         $output = self::tlv('dmap.status', $code);
         if (!empty($msg)) {

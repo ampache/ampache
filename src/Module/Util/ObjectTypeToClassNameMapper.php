@@ -92,7 +92,7 @@ final class ObjectTypeToClassNameMapper
         Video::class => 'video',
     ];
 
-    public static function map(string $object_type)
+    public static function map(string $object_type): string
     {
         return self::OBJECT_TYPE_MAPPING[strtolower($object_type)] ?? $object_type;
     }

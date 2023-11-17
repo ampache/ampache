@@ -187,9 +187,9 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return string
+     * get_description
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->summary;
     }
@@ -412,9 +412,8 @@ class Label extends database_object implements library_item
 
     /**
      * get_artist_count
-     * @return int
      */
-    public function get_artist_count()
+    public function get_artist_count(): int
     {
         if (!isset($this->artist_count)) {
             $this->artist_count = count($this->get_artists());

@@ -72,9 +72,8 @@ class Shoutbox
      * has_info
      * does the db call, reads from the user_shout table
      * @param int $shout_id
-     * @return bool
      */
-    private function has_info($shout_id)
+    private function has_info($shout_id): bool
     {
         $sql        = "SELECT * FROM `user_shout` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($shout_id));
@@ -176,7 +175,7 @@ class Shoutbox
      * This returns an image tag if the type of object we're currently rolling with
      * has an image associated with it
      */
-    public function get_image()
+    public function get_image(): string
     {
         $image_string = '';
         if (Art::has_db($this->object_id, $this->object_type)) {
@@ -247,9 +246,8 @@ class Shoutbox
      * update
      * This takes a key'd array of data as input and updates a shoutbox entry
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         $sql = "UPDATE `user_shout` SET `text` = ?, `sticky` = ? WHERE `id` = ?";
         Dba::write($sql, array($data['comment'], (int) make_bool($data['sticky']), $this->id));
@@ -275,9 +273,8 @@ class Shoutbox
     /**
      * @param bool $details
      * @param bool $jsbuttons
-     * @return string
      */
-    public function get_display($details = true, $jsbuttons = false)
+    public function get_display($details = true, $jsbuttons = false): string
     {
         $object = Shoutbox::get_object($this->object_type, $this->object_id);
         $img    = $this->get_image();

@@ -48,9 +48,8 @@ final class Mailer implements MailerInterface
      * is_mail_enabled
      *
      * Check that the mail feature is enabled. By default, you people to configure their mail settings first
-     * @return bool
      */
-    public static function is_mail_enabled()
+    public static function is_mail_enabled(): bool
     {
         if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
             return true;
@@ -72,9 +71,8 @@ final class Mailer implements MailerInterface
      *
      * Checks whether what we have looks like a valid address.
      * @param string $address
-     * @return bool
      */
-    public static function validate_address($address)
+    public static function validate_address($address): bool
     {
         return PHPMailer::ValidateAddress($address);
     }
@@ -143,7 +141,7 @@ final class Mailer implements MailerInterface
      * @return bool
      * @throws Exception
      */
-    public function send($phpmailer = null)
+    public function send($phpmailer = null): bool
     {
         $mailtype = AmpConfig::get('mail_type', 'php');
 
@@ -217,7 +215,7 @@ final class Mailer implements MailerInterface
      * @return bool
      * @throws Exception
      */
-    public function send_to_group($group_name)
+    public function send_to_group($group_name): bool
     {
         $mail = new PHPMailer();
 

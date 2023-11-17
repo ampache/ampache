@@ -184,9 +184,8 @@ class Xml4_Data
      * This returns the formatted 'tags' string for an xml document
      * @input array $tags
      * @param $tags
-     * @return string
      */
-    private static function tags_string($tags)
+    private static function tags_string($tags): string
     {
         $string = '';
 
@@ -217,7 +216,6 @@ class Xml4_Data
      * @param $array
      * @param bool $callback
      * @param string $type
-     * @return string
      */
     public static function output_xml_from_array($array, $callback = false, $type = ''): string
     {
@@ -993,9 +991,8 @@ class Xml4_Data
      * so we allow them to pass a type if they want to
      *
      * @param string $title
-     * @return string Header xml tag
      */
-    private static function _header($title = null)
+    private static function _header($title = null): string
     {
         switch (self::$type) {
             case 'xspf':
@@ -1019,10 +1016,8 @@ class Xml4_Data
      * _footer
      *
      * this returns the footer for this document, these are pretty boring
-     *
-     * @return string    Footer xml tag
      */
-    private static function _footer()
+    private static function _footer(): string
     {
         switch (self::$type) {
             case 'itunes':

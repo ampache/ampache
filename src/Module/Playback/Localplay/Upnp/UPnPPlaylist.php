@@ -86,17 +86,17 @@ class UPnPPlaylist
     }
 
     /**
-     * @return int
+     * CurrentPos
      */
-    public function CurrentPos()
+    public function CurrentPos(): int
     {
         return $this->_current;
     }
 
     /**
-     * @return bool
+     * Next
      */
-    public function Next()
+    public function Next(): bool
     {
         if ($this->_current < count($this->_songs) - 1) {
             $this->_current++;
@@ -123,9 +123,9 @@ class UPnPPlaylist
     }
 
     /**
-     * @return bool
+     * Prev
      */
-    public function Prev()
+    public function Prev(): bool
     {
         if ($this->_current > 0) {
             $this->_current--;
@@ -139,9 +139,8 @@ class UPnPPlaylist
 
     /**
      * @param $pos
-     * @return bool
      */
-    public function Skip($pos)
+    public function Skip($pos): bool
     {
         // note that pos is started from 1 not from zero
         if (($pos >= 1) && ($pos <= count($this->_songs))) {

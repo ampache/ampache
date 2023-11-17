@@ -57,7 +57,7 @@ class Core
      *
      * @deprecated Use RequestParser
      */
-    public static function get_request($variable)
+    public static function get_request($variable): string
     {
         if (!array_key_exists($variable, $_REQUEST)) {
             return '';
@@ -71,9 +71,8 @@ class Core
      * Return a $GET variable instead of calling directly
      *
      * @param string $variable
-     * @return string
      */
-    public static function get_get($variable)
+    public static function get_get($variable): string
     {
         if (!array_key_exists($variable, $_GET)) {
             return '';
@@ -90,7 +89,7 @@ class Core
      * get_cookie
      * Return a $COOKIE variable instead of calling directly
      */
-    public static function get_cookie($variable)
+    public static function get_cookie($variable): string
     {
         if (!array_key_exists($variable, $_COOKIE)) {
             return '';
@@ -104,9 +103,8 @@ class Core
      * Return a $SERVER variable instead of calling directly
      *
      * @param string $variable
-     * @return string
      */
-    public static function get_server($variable)
+    public static function get_server($variable): string
     {
         if (!array_key_exists($variable, $_SERVER)) {
             return '';
@@ -120,9 +118,8 @@ class Core
      * Return a $POST variable instead of calling directly
      *
      * @param string $variable
-     * @return string
      */
-    public static function get_post($variable)
+    public static function get_post($variable): string
     {
         if (!array_key_exists($variable, $_POST)) {
             return '';
@@ -134,10 +131,8 @@ class Core
     /**
      * get_user_ip
      * check for the ip of the request
-     *
-     * @return string
      */
-    public static function get_user_ip()
+    public static function get_user_ip(): string
     {
         // get the x forward if it's valid
         if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
@@ -153,9 +148,8 @@ class Core
      * variables and then returns a string for use in the HTML form
      * @param string $name
      * @param string $type
-     * @return string
      */
-    public static function form_register($name, $type = 'post')
+    public static function form_register($name, $type = 'post'): string
     {
         // Make ourselves a nice little sid
         $sid    = md5(uniqid((string)rand(), true));
@@ -195,7 +189,7 @@ class Core
      *
      * @see RequestParser::verifyForm()
      */
-    public static function form_verify($name, $type = 'post')
+    public static function form_verify($name, $type = 'post'): bool
     {
         switch ($type) {
             case 'post':
@@ -314,9 +308,8 @@ class Core
      * https://bugs.php.net/bug.php?id=49620
      *
      * @param string $path
-     * @return bool
      */
-    public static function is_readable($path)
+    public static function is_readable($path): bool
     {
         if (!$path) {
             return false;
@@ -351,9 +344,8 @@ class Core
      * get_filesize
      * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
      * @param $filename
-     * @return int
      */
-    public static function get_filesize($filename)
+    public static function get_filesize($filename): int
     {
         if (!$filename || !file_exists($filename)) {
             return 0;
@@ -386,9 +378,8 @@ class Core
      *
      * Convert site charset filename to local charset filename for file operations
      * @param string $filename
-     * @return string
      */
-    public static function conv_lc_file($filename)
+    public static function conv_lc_file($filename): string
     {
         $lc_filename  = $filename;
         $site_charset = AmpConfig::get('site_charset');
@@ -406,9 +397,8 @@ class Core
      * is_session_started
      *
      * Universal function for checking session status.
-     * @return bool
      */
-    public static function is_session_started()
+    public static function is_session_started(): bool
     {
         if (php_sapi_name() !== 'cli') {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
@@ -422,9 +412,9 @@ class Core
     }
 
     /**
-     * @return string
+     * get_reloadutil
      */
-    public static function get_reloadutil()
+    public static function get_reloadutil(): string
     {
         $play_type = AmpConfig::get('play_type');
 
@@ -456,10 +446,8 @@ class Core
 
     /**
      * get_tmp_dir
-     *
-     * @return string
      */
-    public static function get_tmp_dir()
+    public static function get_tmp_dir(): string
     {
         if (AmpConfig::get('tmp_dir_path')) {
             return AmpConfig::get('tmp_dir_path');

@@ -46,9 +46,8 @@ class Registration
      * @param string $email
      * @param string $website
      * @param string $validation
-     * @return bool
      */
-    public static function send_confirmation($username, $fullname, $email, $website, $validation)
+    public static function send_confirmation($username, $fullname, $email, $website, $validation): bool
     {
         if (!Mailer::is_mail_enabled()) {
             return false;
@@ -94,9 +93,8 @@ class Registration
     /**
      * show_agreement
      * This shows the registration agreement, /config/registration_agreement.php
-     * @return bool
      */
-    public static function show_agreement()
+    public static function show_agreement(): bool
     {
         $filename = __DIR__ . '/../../../config/registration_agreement.php';
 

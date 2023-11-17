@@ -104,9 +104,8 @@ class JsonHandler extends Handler
     /**
      * Assemble the URI from the different parts
      * @param string $command
-     * @return string
      */
-    protected function assembleUri($command)
+    protected function assembleUri($command): string
     {
         $uriParts = array(
             $this->uri,
@@ -119,9 +118,8 @@ class JsonHandler extends Handler
     /**
      * Check if the Json is complete to get a song
      * @param string $item
-     * @return bool
      */
-    public function itemIsComlete($item)
+    public function itemIsComlete($item): bool
     {
         $item = $this->removeUnwantedStrings($item);
 
@@ -131,9 +129,8 @@ class JsonHandler extends Handler
     /**
      * Remove the beginning and the end of the json string so we can access the object in it.
      * @param string $item
-     * @return string
      */
-    public function removeUnwantedStrings($item)
+    public function removeUnwantedStrings($item): string
     {
         $toRemove = array(
             '{"items":[',
@@ -147,9 +144,8 @@ class JsonHandler extends Handler
     /**
      * Compare the braces to ensure that we have a complete song object
      * @param string $item
-     * @return bool
      */
-    public function compareBraces($item)
+    public function compareBraces($item): bool
     {
         $start = $this->countChar('{', $item);
         $end   = $this->countChar('}', $item);
@@ -161,9 +157,8 @@ class JsonHandler extends Handler
      *
      * @param string $char
      * @param string $string
-     * @return int
      */
-    public function countChar($char, $string)
+    public function countChar($char, $string): int
     {
         return substr_count($string, $char);
     }
@@ -186,9 +181,8 @@ class JsonHandler extends Handler
      * Create the Url to access the file
      * Have to do some magic with the file ending so ampache can detect the type
      * @param array $song
-     * @return string
      */
-    public function createFileUrl($song)
+    public function createFileUrl($song): string
     {
         $parts = array(
             $this->uri,

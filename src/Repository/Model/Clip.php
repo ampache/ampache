@@ -100,9 +100,8 @@ class Clip extends Video
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return mixed
      */
-    public static function insert(array $data, $gtypes = array(), $options = array())
+    public static function insert(array $data, $gtypes = array(), $options = array()): int
     {
         debug_event(self::class, 'insert ' . print_r($data,true), 5);
         $artist_id = self::_get_artist_id($data);
@@ -117,16 +116,15 @@ class Clip extends Video
             Dba::write($sql, array($data['id'], $artist_id, $song_id));
         }
 
-        return $data['id'];
+        return (int)$data['id'];
     } // create
 
     /**
      * update
      * This takes a key'd array of data as input and updates a clip entry
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         debug_event(self::class, 'update ' . print_r($data,true), 5);
         $artist_id = self::_get_artist_id($data);

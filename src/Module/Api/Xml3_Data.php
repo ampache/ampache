@@ -175,7 +175,7 @@ class Xml3_Data
      *
      * This returns the formatted 'tags' string for an xml document
      */
-    private static function tags_string($tags)
+    private static function tags_string($tags): string
     {
         $string = '';
 
@@ -205,7 +205,7 @@ class Xml3_Data
      *
      * This returns the formatted 'playlistTrack' string for an xml document
      */
-    private static function playlist_song_tracks_string($song, $playlist_data)
+    private static function playlist_song_tracks_string($song, $playlist_data): string
     {
         if (empty($playlist_data)) {
             return "";
@@ -440,7 +440,7 @@ class Xml3_Data
      *
      * This returns an xml document from an array of song ids
      */
-    public static function songs($songs, $user, $playlist_data = '', $full_xml = true)
+    public static function songs($songs, $user, $playlist_data = '', $full_xml = true): string
     {
         $string = "<total_count>" . count($songs) . "</total_count>\n";
 
@@ -655,10 +655,8 @@ class Xml3_Data
      *
      * this returns a standard header, there are a few types
      * so we allow them to pass a type if they want to
-     *
-     * @return string    Header xml tag
      */
-    private static function _header($title = null)
+    private static function _header($title = null): string
     {
         switch (self::$type) {
             case 'xspf':
@@ -682,10 +680,8 @@ class Xml3_Data
      * _footer
      *
      * this returns the footer for this document, these are pretty boring
-     *
-     * @return string    Footer xml tag
      */
-    private static function _footer()
+    private static function _footer(): string
     {
         switch (self::$type) {
             case 'itunes':

@@ -62,9 +62,8 @@ class Scrobbler
      * Provide the API signature for calling Last.fm / Libre.fm services
      * It is the md5 of the <name><value> of all parameter plus API's secret
      * @param array $vars
-     * @return string
      */
-    public function get_api_sig($vars = array())
+    public function get_api_sig($vars = array()): string
     {
         ksort($vars);
         $sig = '';
@@ -130,7 +129,7 @@ class Scrobbler
     /**
      * get_error_msg
      */
-    public function get_error_msg()
+    public function get_error_msg(): string
     {
         return $this->error_msg;
     } // get_error_msg
@@ -201,9 +200,8 @@ class Scrobbler
      * @param $timestamp
      * @param $length
      * @param $track
-     * @return bool
      */
-    public function queue_track($artist, $album, $title, $timestamp, $length, $track)
+    public function queue_track($artist, $album, $title, $timestamp, $length, $track): bool
     {
         if ($length < 30) {
             debug_event(self::class, "Not queuing track, too short", 3);
@@ -229,7 +227,7 @@ class Scrobbler
      * This actually talks to LastFM / Libre.fm submitting the tracks that are queued up.
      * It passed the API key, session key combined with the signature
      */
-    public function submit_tracks()
+    public function submit_tracks(): bool
     {
         // Check and make sure that we've got some queued tracks
         if (!count($this->queued_tracks)) {
@@ -289,9 +287,8 @@ class Scrobbler
      * @param bool $is_loved
      * @param string $artist
      * @param string $title
-     * @return bool
      */
-    public function love($is_loved, $artist = '', $title = '')
+    public function love($is_loved, $artist = '', $title = ''): bool
     {
         $vars           = array();
         $vars['track']  = $title;

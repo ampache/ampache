@@ -272,9 +272,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int[] $ids
      * @param bool $extra
      * @param string $limit_threshold
-     * @return bool
      */
-    public static function build_cache($ids, $extra = false, $limit_threshold = '')
+    public static function build_cache($ids, $extra = false, $limit_threshold = ''): bool
     {
         if (empty($ids)) {
             return false;
@@ -428,9 +427,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * does the item have art?
-     * @return bool
      */
-    public function has_art()
+    public function has_art(): bool
     {
         if (!isset($this->has_art)) {
             $this->has_art = Art::has_db($this->id, 'album');
@@ -537,9 +535,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * get_display
      * This returns a csv formatted version of the artists that we are given
      * @param array $artists
-     * @return string
      */
-    public static function get_display($artists)
+    public static function get_display($artists): string
     {
         $results = '';
         if (empty($artists)) {
@@ -672,7 +669,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Get default art kind for this item.
-     * @return string
      */
     public function get_default_art_kind(): string
     {
@@ -681,9 +677,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * get_description
-     * @return string
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->summary;
     }
@@ -817,9 +812,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      *
      * Checks for an existing artist by mbid; if none exists, insert one.
      * @param string $mbid
-     * @return int
      */
-    public static function check_mbid($mbid)
+    public static function check_mbid($mbid): int
     {
         $artist_id   = 0;
         $parsed_mbid = VaInfo::parse_mbid($mbid);
@@ -931,9 +925,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * update
      * This takes a key'd array of data and updates the current artist
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         //debug_event(__CLASS__, "update: " . print_r($data, true), 5);
         // Save our current ID

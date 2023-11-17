@@ -47,9 +47,8 @@ class Upload
 
     /**
      * process
-     * @return bool
      */
-    public static function process()
+    public static function process(): bool
     {
         header('Content-Type: application/json');
         ob_start();
@@ -199,7 +198,7 @@ class Upload
      * @return bool
      * @throws RuntimeException
      */
-    public static function rerror($file = null)
+    public static function rerror($file = null): bool
     {
         if ($file !== null) {
             if (unlink($file) === false) {
@@ -333,9 +332,8 @@ class Upload
      * get_root
      * @param Catalog $catalog
      * @param string $username
-     * @return string
      */
-    public static function get_root($catalog = null, $username = null)
+    public static function get_root($catalog = null, $username = null): string
     {
         if ($catalog == null) {
             $catalog_id = AmpConfig::get('upload_catalog');

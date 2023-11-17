@@ -35,7 +35,7 @@ class FileSystem
      * @return string
      * @throws Exception
      */
-    protected function real($path)
+    protected function real($path): string
     {
         $temp = realpath($path);
         if (!$temp) {
@@ -55,7 +55,7 @@ class FileSystem
      * @return string
      * @throws Exception
      */
-    protected function path($fs_id)
+    protected function path($fs_id): string
     {
         $fs_id = str_replace('/', DIRECTORY_SEPARATOR, $fs_id);
         $fs_id = trim($fs_id, DIRECTORY_SEPARATOR);
@@ -69,7 +69,7 @@ class FileSystem
      * @return string
      * @throws Exception
      */
-    protected function id($path)
+    protected function id($path): string
     {
         $path = $this->real($path);
         $path = substr($path, strlen($this->base));

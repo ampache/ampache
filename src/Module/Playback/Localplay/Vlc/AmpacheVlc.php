@@ -51,7 +51,7 @@ class AmpacheVlc extends localplay_controller
      * get_description
      * This returns the description of this Localplay method
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->description;
     } // get_description
@@ -60,7 +60,7 @@ class AmpacheVlc extends localplay_controller
      * get_version
      * This returns the current version
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
     } // get_version
@@ -69,7 +69,7 @@ class AmpacheVlc extends localplay_controller
      * is_installed
      * This returns true or false if VLC controller is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE 'localplay_vlc'";
         $db_results = Dba::query($sql);
@@ -81,7 +81,7 @@ class AmpacheVlc extends localplay_controller
      * install
      * This function installs the VLC Localplay controller
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -100,7 +100,7 @@ class AmpacheVlc extends localplay_controller
      * uninstall
      * This removes the localplay controller
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         $sql = "DROP TABLE `localplay_vlc`";
         Dba::query($sql);
@@ -131,9 +131,8 @@ class AmpacheVlc extends localplay_controller
      * delete_instance
      * This takes a UID and deletes the instance in question
      * @param $uid
-     * @return bool
      */
-    public function delete_instance($uid)
+    public function delete_instance($uid): bool
     {
         $sql = "DELETE FROM `localplay_vlc` WHERE `id` = ?";
         Dba::query($sql, array($uid));
@@ -164,9 +163,8 @@ class AmpacheVlc extends localplay_controller
      * This takes an ID and an array of data and updates the instance specified
      * @param $uid
      * @param array $data
-     * @return bool
      */
-    public function update_instance($uid, $data)
+    public function update_instance($uid, $data): bool
     {
         $sql = "UPDATE `localplay_vlc` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?";
         Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['password'], $uid));
@@ -209,9 +207,8 @@ class AmpacheVlc extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      * @param $uid
-     * @return bool
      */
-    public function set_active_instance($uid)
+    public function set_active_instance($uid): bool
     {
         $user = Core::get_global('user');
         if ($user == '') {
@@ -235,9 +232,8 @@ class AmpacheVlc extends localplay_controller
 
     /**
      * @param Stream_Url $url
-     * @return bool
      */
-    public function add_url(Stream_Url $url)
+    public function add_url(Stream_Url $url): bool
     {
         if ($this->_vlc->add($url->title, $url->url) === null) {
             debug_event(self::class, 'add_url failed to add: ' . json_encode($url), 1);
@@ -253,9 +249,8 @@ class AmpacheVlc extends localplay_controller
      * This must take an array of ID's (as passed by get function) from Ampache
      * and delete them from VLC webinterface
      * @param int $object_id
-     * @return bool
      */
-    public function delete_track($object_id)
+    public function delete_track($object_id): bool
     {
         if ($this->_vlc->delete_pos($object_id) === null) {
             debug_event(self::class, 'ERROR Unable to delete ' . $object_id . ' from VLC', 1);
@@ -270,7 +265,7 @@ class AmpacheVlc extends localplay_controller
      * clear_playlist
      * This deletes the entire VLC playlist... nuff said
      */
-    public function clear_playlist()
+    public function clear_playlist(): bool
     {
         if ($this->_vlc->clear() === null) {
             return false;
@@ -287,7 +282,7 @@ class AmpacheVlc extends localplay_controller
      * This just tells VLC to start playing, it does not
      * take any arguments
      */
-    public function play()
+    public function play(): bool
     {
         /* A play when it's already playing causes a track restart
          * which we don't want to doublecheck its state
@@ -308,7 +303,7 @@ class AmpacheVlc extends localplay_controller
      * This just tells VLC to stop playing, it does not take
      * any arguments
      */
-    public function stop()
+    public function stop(): bool
     {
         if ($this->_vlc->stop() === null) {
             return false;
@@ -321,9 +316,8 @@ class AmpacheVlc extends localplay_controller
      * skip
      * This tells VLC to skip to the specified song
      * @param $song
-     * @return bool
      */
-    public function skip($song)
+    public function skip($song): bool
     {
         if ($this->_vlc->skip($song) === null) {
             return false;
@@ -353,7 +347,7 @@ class AmpacheVlc extends localplay_controller
      * This just tells VLC to skip to the next song, if you play a song by direct
      * clicking and hit next VLC will start with the first song, needs work.
      */
-    public function next()
+    public function next(): bool
     {
         if ($this->_vlc->next() === null) {
             return false;
@@ -366,7 +360,7 @@ class AmpacheVlc extends localplay_controller
      * prev
      * This just tells VLC to skip to the prev song
      */
-    public function prev()
+    public function prev(): bool
     {
         if ($this->_vlc->prev() === null) {
             return false;
@@ -379,7 +373,7 @@ class AmpacheVlc extends localplay_controller
      * pause
      * This tells VLC to pause the current song
      */
-    public function pause()
+    public function pause(): bool
     {
         if ($this->_vlc->pause() === null) {
             return false;
@@ -393,9 +387,8 @@ class AmpacheVlc extends localplay_controller
      * This tells VLC to set the volume to the specified amount this
      * is 0-400 procent
      * @param $volume
-     * @return bool
      */
-    public function volume($volume)
+    public function volume($volume): bool
     {
         return $this->_vlc->set_volume($volume);
     } // volume
@@ -404,9 +397,8 @@ class AmpacheVlc extends localplay_controller
      * repeat
      * This tells VLC to set the repeating the playlist (i.e. loop) to either on or off
      * @param $state
-     * @return bool
      */
-    public function repeat($state)
+    public function repeat($state): bool
     {
         if ($this->_vlc->repeat($state) === null) {
             return false;
@@ -419,9 +411,8 @@ class AmpacheVlc extends localplay_controller
      * random
      * This tells VLC to turn on or off the playing of songs from the playlist in random order
      * @param $onoff
-     * @return bool
      */
-    public function random($onoff)
+    public function random($onoff): bool
     {
         if ($this->_vlc->random($onoff) === null) {
             return false;
@@ -584,7 +575,7 @@ class AmpacheVlc extends localplay_controller
      * a boolean value for the status, to save time this handle
      * is stored in this class
      */
-    public function connect()
+    public function connect(): bool
     {
         $options    = self::get_instance();
         $this->_vlc = new VlcPlayer($options['host'], $options['password'], $options['port']);

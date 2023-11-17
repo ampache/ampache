@@ -97,9 +97,8 @@ class UPnPPlayer
      * $link    URL of the song
      * @param string $name
      * @param $link
-     * @return bool
      */
-    public function PlayListAdd($name, $link)
+    public function PlayListAdd($name, $link): bool
     {
         $this->Playlist()->Add($name, $link);
 
@@ -110,9 +109,8 @@ class UPnPPlayer
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return bool
      */
-    public function PlaylistRemove($track)
+    public function PlaylistRemove($track): bool
     {
         $this->Playlist()->RemoveTrack($track);
 
@@ -120,9 +118,9 @@ class UPnPPlayer
     }
 
     /**
-     * @return bool
+     * PlaylistClear
      */
-    public function PlaylistClear()
+    public function PlaylistClear(): bool
     {
         $this->Playlist()->Clear();
 
@@ -169,9 +167,8 @@ class UPnPPlayer
      * next
      * go to next song
      * @param bool $forcePlay
-     * @return bool
      */
-    public function Next($forcePlay = true)
+    public function Next($forcePlay = true): bool
     {
         // get current internal play state, for case if someone has changed it
         if (!$forcePlay) {
@@ -190,7 +187,7 @@ class UPnPPlayer
      * prev
      * go to previous song
      */
-    public function Prev()
+    public function Prev(): bool
     {
         if ($this->Playlist()->Prev()) {
             $this->Play();
@@ -205,9 +202,8 @@ class UPnPPlayer
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return bool
      */
-    public function Skip($pos)
+    public function Skip($pos): bool
     {
         if ($this->Playlist()->Skip($pos)) {
             $this->Play();
@@ -264,7 +260,7 @@ class UPnPPlayer
      * play
      * play the current song
      */
-    public function Play()
+    public function Play(): bool
     {
         //!!$this->Stop();
 
@@ -292,7 +288,7 @@ class UPnPPlayer
      * Stop
      * stops the current song amazing!
      */
-    public function Stop()
+    public function Stop(): bool
     {
         $this->SetIntState(0);
         $response = $this->Device()->instanceOnly('Stop');
@@ -310,7 +306,7 @@ class UPnPPlayer
      * pause
      * toggle pause mode on current song
      */
-    public function Pause()
+    public function Pause(): bool
     {
         $state = $this->GetState();
         debug_event(self::class, 'Pause. prev state = ' . $state, 5);
@@ -329,9 +325,8 @@ class UPnPPlayer
      * Repeat
      * This toggles the repeat state
      * @param $value
-     * @return bool
      */
-    public function Repeat($value)
+    public function Repeat($value): bool
     {
         //!! TODO not implemented yet
         return true;
@@ -341,9 +336,8 @@ class UPnPPlayer
      * Random
      * this toggles the random state
      * @param $value
-     * @return bool
      */
-    public function Random($value)
+    public function Random($value): bool
     {
         //!! TODO not implemented yet
         return true;
@@ -352,7 +346,7 @@ class UPnPPlayer
     /**
      *
      */
-    public function FullState()
+    public function FullState(): string
     {
         //!! TODO not implemented yet
         return "";
@@ -362,7 +356,7 @@ class UPnPPlayer
      * VolumeUp
      * increases the volume
      */
-    public function VolumeUp()
+    public function VolumeUp(): bool
     {
         $volume = $this->GetVolume() + 2;
 
@@ -373,7 +367,7 @@ class UPnPPlayer
      * VolumeDown
      * decreases the volume
      */
-    public function VolumeDown()
+    public function VolumeDown(): bool
     {
         $volume = $this->GetVolume() - 2;
 
@@ -383,9 +377,8 @@ class UPnPPlayer
     /**
      * SetVolume
      * @param $value
-     * @return bool
      */
-    public function SetVolume($value)
+    public function SetVolume($value): bool
     {
         $desiredVolume = Max(0, Min(100, $value));
         $instanceId    = 0;

@@ -71,7 +71,7 @@ class AmpacheRatingMatch
      * This is a required plugin function. It inserts our preferences
      * into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('ratingmatch_stars')) {
@@ -117,7 +117,7 @@ class AmpacheRatingMatch
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version == 0) {
@@ -223,9 +223,8 @@ class AmpacheRatingMatch
      * save_mediaplay
      * check for extra star rules.
      * @param Song $song
-     * @return bool
      */
-    public function save_mediaplay($song)
+    public function save_mediaplay($song): bool
     {
         // Only support songs
         if (get_class($song) != Song::class) {
@@ -295,9 +294,8 @@ class AmpacheRatingMatch
      * @param array $rule_array
      * @param int $play_count
      * @param int $skip_count
-     * @return bool
      */
-    public function rule_process($rule_array, $play_count, $skip_count)
+    public function rule_process($rule_array, $play_count, $skip_count): bool
     {
         switch (count($rule_array)) {
             case 1:
@@ -333,9 +331,8 @@ class AmpacheRatingMatch
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data              = $user->prefs;

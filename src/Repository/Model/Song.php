@@ -424,7 +424,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      *
      * This inserts the song described by the passed array
      * @param array $results
-     * @return int|bool
+     * @return int|false
      */
     public static function insert(array $results)
     {
@@ -671,9 +671,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * db connection is the slow point.
      * @param int[] $song_ids
      * @param string $limit_threshold
-     * @return bool
      */
-    public static function build_cache($song_ids, $limit_threshold = '')
+    public static function build_cache($song_ids, $limit_threshold = ''): bool
     {
         if (empty($song_ids)) {
             return false;
@@ -764,9 +763,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * has_id
      * @param int|string $song_id
-     * @return bool
      */
-    public static function has_id($song_id)
+    public static function has_id($song_id): bool
     {
         $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`id` = ?";
         $db_results = Dba::read($sql, array($song_id));
@@ -797,7 +795,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $song_mbid = '',
         $artist_mbid = '',
         $album_mbid = ''
-    ) {
+    ): string
+    {
         // by default require song, album, artist for any searches
         $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?)";
         $params = array($song_name, $artist_name, $artist_name, $album_name, $album_name);
@@ -873,9 +872,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      *
      * Returns the mime type for the specified file extension/type
      * @param string $type
-     * @return string
      */
-    public static function type_to_mime($type)
+    public static function type_to_mime($type): string
     {
         // FIXME: This should really be done the other way around.
         // Store the mime type in the database, and provide a function
@@ -945,9 +943,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * find
      * @param array $data
-     * @return bool
      */
-    public static function find($data)
+    public static function find($data): bool
     {
         $sql_base = "SELECT `song`.`id` FROM `song`";
         if ($data['mb_trackid']) {
@@ -1004,9 +1001,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * gets the name of $this->album, allows passing of id
      * @param int $album_id
      * @param bool $simple
-     * @return string
      */
-    public function get_album_fullname($album_id = 0, $simple = false)
+    public function get_album_fullname($album_id = 0, $simple = false): string
     {
         if (isset($this->f_album_full) && $album_id == 0) {
             return $this->f_album_full;
@@ -1022,9 +1018,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * get_album_disk_fullname
      * gets the name of $this->album, allows passing of id
-     * @return string
      */
-    public function get_album_disk_fullname()
+    public function get_album_disk_fullname(): string
     {
         $albumDisk = new AlbumDisk($this->get_album_disk());
 
@@ -1035,9 +1030,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * get_album_catalog_number
      * gets the catalog_number of $this->album, allows passing of id
      * @param int $album_id
-     * @return string
      */
-    public function get_album_catalog_number($album_id = null)
+    public function get_album_catalog_number($album_id = null): string
     {
         if ($album_id === null) {
             $album_id = $this->album;
@@ -1051,9 +1045,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * get_album_original_year
      * gets the original_year of $this->album, allows passing of id
      * @param int $album_id
-     * @return int
      */
-    public function get_album_original_year($album_id = null)
+    public function get_album_original_year($album_id = null): int
     {
         if ($album_id === null) {
             $album_id = $this->album;
@@ -1067,9 +1060,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * get_album_barcode
      * gets the barcode of $this->album, allows passing of id
      * @param int $album_id
-     * @return string
      */
-    public function get_album_barcode($album_id = null)
+    public function get_album_barcode($album_id = null): string
     {
         if (!$album_id) {
             $album_id = $this->album;
@@ -1083,9 +1075,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * get_artist_fullname
      * gets the name of $this->artist, allows passing of id
      * @param int $artist_id
-     * @return string
      */
-    public function get_artist_fullname($artist_id = 0)
+    public function get_artist_fullname($artist_id = 0): string
     {
         if ($artist_id > 0) {
             return Artist::get_fullname_by_id($artist_id);
@@ -1101,9 +1092,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * get_album_artist_fullname
      * gets the name of $this->albumartist, allows passing of id
      * @param int $album_artist_id
-     * @return string
      */
-    public function get_album_artist_fullname($album_artist_id = 0)
+    public function get_album_artist_fullname($album_artist_id = 0): string
     {
         if ($album_artist_id) {
             return self::get_artist_fullname($album_artist_id);
@@ -1297,9 +1287,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * clean_string_field_value
      * @param string $value
-     * @return string
      */
-    private static function clean_string_field_value($value)
+    private static function clean_string_field_value($value): string
     {
         if (!$value) {
             return '';
@@ -1595,9 +1584,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param int $song_id
      * @param int $old_artist
      * @param bool $update_counts
-     * @return bool
      */
-    public static function update_artist($new_artist, $song_id, $old_artist, $update_counts = true)
+    public static function update_artist($new_artist, $song_id, $old_artist, $update_counts = true): bool
     {
         if ($old_artist != $new_artist) {
             if (self::_update_item('artist', $new_artist, $song_id, 50) !== false) {
@@ -1620,9 +1608,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param int $song_id
      * @param int $old_album
      * @param bool $update_counts
-     * @return bool
      */
-    public static function update_album($new_album, $song_id, $old_album, $update_counts = true)
+    public static function update_album($new_album, $song_id, $old_album, $update_counts = true): bool
     {
         if ($old_album != $new_album) {
             if (self::_update_item('album', $new_album, $song_id, 50, true) !== false) {
@@ -1828,9 +1815,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * does the item have art?
-     * @return bool
      */
-    public function has_art()
+    public function has_art(): bool
     {
         if (!isset($this->has_art)) {
             $this->has_art = (AmpConfig::get('show_song_art', false) && Art::has_db($this->id, 'song') || Art::has_db($this->album, 'album'));
@@ -1867,9 +1853,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get total count
-     * @return int
      */
-    public function get_totalcount()
+    public function get_totalcount(): int
     {
         return $this->total_count;
     }
@@ -1928,9 +1913,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get item f_artist_link.
-     * @return string
      */
-    public function get_f_artist_link()
+    public function get_f_artist_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_artist_link)) {
@@ -1951,9 +1935,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get item f_albumartist_link.
-     * @return string
      */
-    public function get_f_albumartist_link()
+    public function get_f_albumartist_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_albumartist_link)) {
@@ -1974,9 +1957,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get item get_f_album_link.
-     * @return string
      */
-    public function get_f_album_link()
+    public function get_f_album_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_album_link)) {
@@ -1990,9 +1972,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get item get_f_album_disk_link.
-     * @return string
      */
-    public function get_f_album_disk_link()
+    public function get_f_album_disk_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_album_disk_link)) {
@@ -2101,7 +2082,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get default art kind for this item.
-     * @return string
      */
     public function get_default_art_kind(): string
     {
@@ -2110,9 +2090,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * get_description
-     * @return string
      */
-    public function get_description()
+    public function get_description(): string
     {
         if (!empty($this->comment)) {
             return $this->comment;
@@ -2186,9 +2165,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param bool $local
      * @param int|string $uid
      * @param string|null $streamToken
-     * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
     {
         if (!$this->id) {
             return '';
@@ -2241,9 +2219,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get stream name.
-     * @return string
      */
-    public function get_stream_name()
+    public function get_stream_name(): string
     {
         return $this->get_artist_fullname() . " - " . $this->title;
     }
@@ -2396,7 +2373,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param int $new_artist
      * @param int $old_artist
      */
-    public static function migrate_artist($new_artist, $old_artist)
+    public static function migrate_artist($new_artist, $old_artist): bool
     {
         if ($old_artist != $new_artist) {
             // migrate stats for the old artist
@@ -2441,7 +2418,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param int $song_id
      * @param int $old_album
      */
-    public static function migrate_album($new_album, $song_id, $old_album)
+    public static function migrate_album($new_album, $song_id, $old_album): bool
     {
         // migrate stats for the old album
         Stats::migrate('album', $old_album, $new_album, $song_id);

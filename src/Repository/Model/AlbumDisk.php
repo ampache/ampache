@@ -369,9 +369,8 @@ class AlbumDisk extends database_object implements library_item
 
     /**
      * does the item have art?
-     * @return bool
      */
-    public function has_art()
+    public function has_art(): bool
     {
         if (!isset($this->has_art)) {
             $this->has_art = Art::has_db($this->album_id, 'album');
@@ -482,9 +481,8 @@ class AlbumDisk extends database_object implements library_item
 
     /**
      * Get item f_artist_link.
-     * @return string
      */
-    public function get_f_artist_link()
+    public function get_f_artist_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_artist_link)) {
@@ -499,9 +497,9 @@ class AlbumDisk extends database_object implements library_item
      *
      * Returns the song_count id for an album disk
      * @param int $album_id
-     * @return int
+     * @param int $disk_id
      */
-    public static function get_song_count_disk($album_id, $disk_id)
+    public static function get_song_count_disk($album_id, $disk_id): int
     {
         $sql        = "SELECT `song_count` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ?;";
         $db_results = Dba::read($sql, array($album_id, $disk_id));
@@ -515,9 +513,8 @@ class AlbumDisk extends database_object implements library_item
 
     /**
      * Get item album_artist fullname.
-     * @return string
      */
-    public function get_artist_fullname()
+    public function get_artist_fullname(): string
     {
         if (!isset($this->f_artist_name)) {
             $this->f_artist_name = $this->album->get_artist_fullname();
@@ -608,7 +605,6 @@ class AlbumDisk extends database_object implements library_item
 
     /**
      * Get default art kind for this item.
-     * @return string
      */
     public function get_default_art_kind(): string
     {
@@ -639,9 +635,8 @@ class AlbumDisk extends database_object implements library_item
 
     /**
      * get_description
-     * @return string
      */
-    public function get_description()
+    public function get_description(): string
     {
         // Album description is not supported yet, always return artist description
         $artist = new Artist($this->album->album_artist);
@@ -677,19 +672,16 @@ class AlbumDisk extends database_object implements library_item
      * update
      * This function takes a key'd array of data and updates this object
      * as needed
-     * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         return $this->id;
     } // update
 
     /**
      * does the item have a single album artist and song artist?
-     * @return int
      */
-    public function get_artist_count()
+    public function get_artist_count(): int
     {
         $sql        = "SELECT COUNT(DISTINCT(`object_id`)) AS `artist_count` FROM `album_map` WHERE `album_id` = ?;";
         $db_results = Dba::read($sql, array($this->id));

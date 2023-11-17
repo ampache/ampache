@@ -108,9 +108,8 @@ class WebDavDirectory extends DAV\Collection
     /**
      * childExists
      * @param string $name
-     * @return bool
      */
-    public function childExists($name)
+    public function childExists($name): bool
     {
         $matches = $this->libitem->get_children($name);
 
@@ -119,9 +118,8 @@ class WebDavDirectory extends DAV\Collection
 
     /**
      * getName
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return (string)$this->libitem->get_fullname();
     }

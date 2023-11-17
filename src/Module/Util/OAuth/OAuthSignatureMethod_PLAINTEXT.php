@@ -34,9 +34,9 @@ namespace Ampache\Module\Util\OAuth;
 class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
 {
     /**
-     * @return string
+     * get_name
      */
-    public function get_name()
+    public function get_name(): string
     {
         return "PLAINTEXT";
     }
@@ -52,9 +52,8 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
      * @param $request
      * @param $consumer
      * @param $token
-     * @return string
      */
-    public function build_signature($request, $consumer, $token)
+    public function build_signature($request, $consumer, $token): string
     {
         $key_parts = array(
             $consumer->secret,

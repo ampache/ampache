@@ -86,9 +86,8 @@ abstract class Handler
      * @param string $command
      * @param string $tag
      * @param int $time
-     * @return string
      */
-    public function getTimedCommand($command, $tag, $time)
+    public function getTimedCommand($command, $tag, $time): string
     {
         $commandParts = array(
             $command

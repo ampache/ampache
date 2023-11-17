@@ -301,9 +301,9 @@ class TvShow extends database_object implements library_item
     }
 
     /**
-     * @return mixed
+     * get_description
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->summary;
     }
@@ -381,9 +381,8 @@ class TvShow extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current tv show
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         // Save our current ID
         $current_id = $this->id;

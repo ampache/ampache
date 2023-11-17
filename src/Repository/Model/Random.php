@@ -71,9 +71,8 @@ class Random
      * playlist
      * This returns a random Playlist with songs little bit of extra
      * logic require
-     * @return int
      */
-    public static function playlist()
+    public static function playlist(): int
     {
         $sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL ORDER BY RAND()";
 
@@ -89,9 +88,8 @@ class Random
      * @param string $random_type
      * @param User $user
      * @param int $object_id
-     * @return int
      */
-    public static function get_single_song($random_type, $user, $object_id = 0)
+    public static function get_single_song($random_type, $user, $object_id = 0): int
     {
         switch ($random_type) {
             case 'artist':
@@ -424,7 +422,7 @@ class Random
      * @param string $object_type
      * @param int $object_id
      */
-    public static function get_play_url($object_type, $object_id)
+    public static function get_play_url($object_type, $object_id): string
     {
         $user = Core::get_global('user');
         $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out($user->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out($object_id);

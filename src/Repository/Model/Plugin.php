@@ -54,11 +54,9 @@ class Plugin
 
     /**
      * has_info
-
      * @param string $cname
-     * @return bool
      */
-    public function has_info($cname)
+    public function has_info($cname): bool
     {
         $controller = PluginEnum::LIST[strtolower($cname)] ?? null;
         if ($controller === null) {
@@ -117,7 +115,7 @@ class Plugin
      * also check that Ampache's database version falls within the min/max
      * version specified by the plugin.
      */
-    public function is_valid()
+    public function is_valid(): bool
     {
         /* Check the plugin to make sure it's got the needed vars */
         if (!strlen((string)$this->_plugin->name)) {
@@ -163,9 +161,8 @@ class Plugin
      * This checks to see if the specified plugin is currently installed in
      * the database, it doesn't check the files for integrity
      * @param $plugin_name
-     * @return int
      */
-    public static function is_installed($plugin_name)
+    public static function is_installed($plugin_name): int
     {
         /* All we do is check the version */
         return self::get_plugin_version($plugin_name);
@@ -176,7 +173,7 @@ class Plugin
      * This runs the install function of the plugin and inserts a row into
      * the update_info table to indicate that it's installed.
      */
-    public function install()
+    public function install(): bool
     {
         if ($this->_plugin->install() && $this->set_plugin_version($this->_plugin->version)) {
             return true;
@@ -215,9 +212,8 @@ class Plugin
      * load
      * This calls the plugin's load function
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
 
@@ -228,9 +224,8 @@ class Plugin
      * get_plugin_version
      * This returns the version of the specified plugin
      * @param $plugin_name
-     * @return int
      */
-    public static function get_plugin_version($plugin_name)
+    public static function get_plugin_version($plugin_name): int
     {
         $name       = Dba::escape('Plugin_' . $plugin_name);
         $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
@@ -245,9 +240,8 @@ class Plugin
 
     /**
      * Check if an update is available.
-     * @return bool
      */
-    public static function is_update_available()
+    public static function is_update_available(): bool
     {
         foreach (PluginEnum::LIST as $name => $className) {
             $plugin            = new Plugin($name);
@@ -296,9 +290,8 @@ class Plugin
      * set_plugin_version
      * This sets the plugin version in the update_info table
      * @param $version
-     * @return bool
      */
-    public function set_plugin_version($version)
+    public function set_plugin_version($version): bool
     {
         $name    = Dba::escape('Plugin_' . $this->_plugin->name);
         $version = (int)Dba::escape($version);
@@ -313,7 +306,7 @@ class Plugin
      * remove_plugin_version
      * This removes the version row from the db done on uninstall
      */
-    public function remove_plugin_version()
+    public function remove_plugin_version(): bool
     {
         $name = Dba::escape('Plugin_' . $this->_plugin->name);
         $sql  = "DELETE FROM `update_info` WHERE `key`='$name'";

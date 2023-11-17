@@ -75,9 +75,9 @@ class Upnp_Api
     public const SSDP_DEBUG = false;
 
     /**
-     * @return string
+     * get_uuidStr
      */
-    public static function get_uuidStr()
+    public static function get_uuidStr(): string
     {
         // Create uuid based on host
         $key  = 'ampache_' . AmpConfig::get('http_host');
@@ -370,9 +370,8 @@ class Upnp_Api
      * @param $keyisRes
      * @param $keytoCheck
      * Checks whether key is in filter string, taking account of allowable filter wildcards and null strings
-     * @return bool
      */
-    public static function isinFilter($filterValue, $keyisRes, $keytoCheck)
+    public static function isinFilter($filterValue, $keyisRes, $keytoCheck): bool
     {
         if ($filterValue == null || $filterValue == '') {
             return true;
@@ -1363,9 +1362,8 @@ class Upnp_Api
     /**
      * Cannot be very precious about this as filtering capability ATM just relates to the kind of search we end up doing
      * @param $filter
-     * @return string
      */
-    private static function parse_upnp_filter($filter)
+    private static function parse_upnp_filter($filter): string
     {
         // TODO patched out for now: creates problems in search results
         unset($filter);

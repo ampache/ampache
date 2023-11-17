@@ -58,9 +58,9 @@ abstract class DatabaseObject
     //}
 
     /**
-     * @return bool
+     * isDirty
      */
-    public function isDirty()
+    public function isDirty(): bool
     {
         return true;
     }

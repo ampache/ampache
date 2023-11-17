@@ -58,7 +58,7 @@ class Ampache7digital
      * This is a required plugin function. It inserts our preferences
      * into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         if (Preference::exists('7digital_api_key')) {
             return false;
@@ -74,7 +74,7 @@ class Ampache7digital
      * This is a required plugin function. It removes our preferences from
      * the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         Preference::delete('7digital_api_key');
         Preference::delete('7digital_secret_api_key');
@@ -86,7 +86,7 @@ class Ampache7digital
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
     } // upgrade
@@ -105,9 +105,8 @@ class Ampache7digital
 
     /**
      * @param $file
-     * @return bool
      */
-    public function stream_song_preview($file)
+    public function stream_song_preview($file): bool
     {
         if (strpos($file, "7digital") !== false) {
             $consumer = new OAuthConsumer($this->api_key, $this->secret, null);
@@ -128,9 +127,8 @@ class Ampache7digital
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

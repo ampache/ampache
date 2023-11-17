@@ -65,7 +65,7 @@ class Catalog_Seafile extends Catalog
      * get_description
      * This returns the description of this catalog
      */
-    public function get_description()
+    public function get_description(): string
     {
         return self::$description;
     } // get_description
@@ -74,7 +74,7 @@ class Catalog_Seafile extends Catalog
      * get_version
      * This returns the current version
      */
-    public function get_version()
+    public function get_version(): string
     {
         return self::$version;
     } // get_version
@@ -83,7 +83,7 @@ class Catalog_Seafile extends Catalog
      * get_path
      * This returns the current catalog path/uri
      */
-    public function get_path()
+    public function get_path(): string
     {
         return $this->server_uri;
     } // get_path
@@ -92,7 +92,7 @@ class Catalog_Seafile extends Catalog
      * get_type
      * This returns the current catalog type
      */
-    public function get_type()
+    public function get_type(): string
     {
         return self::$type;
     } // get_type
@@ -101,7 +101,7 @@ class Catalog_Seafile extends Catalog
      * get_create_help
      * This returns hints on catalog creation
      */
-    public function get_create_help()
+    public function get_create_help(): string
     {
         $help = "<ul><li>" . T_("Install a Seafile server as described in the documentation") . "</li><li>" . T_("Enter URL to server (e.g. 'https://seafile.example.com') and library name (e.g. 'Music').") . "</li><li>" . T_("API Call Delay is the delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accommodate Seafile's Rate Limiting.") . "<br/>" . T_("The default is tuned towards Seafile's default rate limit settings.") . "</li><li>" . T_("After creating the Catalog, you must 'Make it ready' on the Catalog table.") . "</li></ul>";
 
@@ -114,7 +114,7 @@ class Catalog_Seafile extends Catalog
      * is_installed
      * This returns true or false if remote catalog is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE '" . self::$table_name . "'";
         $db_results = Dba::query($sql);
@@ -126,7 +126,7 @@ class Catalog_Seafile extends Catalog
      * install
      * This function installs the remote catalog
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -166,7 +166,7 @@ class Catalog_Seafile extends Catalog
      *
      * Returns whether the catalog is ready for use.
      */
-    public function isReady()
+    public function isReady(): bool
     {
         return $this->seafile->ready();
     }

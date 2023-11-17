@@ -219,9 +219,8 @@ class Share extends database_object
      * get_url
      * @param string $secret
      * @param string|null $share_id
-     * @return string
      */
-    public static function get_url($share_id, $secret)
+    public static function get_url($share_id, $secret): string
     {
         $url = AmpConfig::get('web_path') . '/share.php?id=' . $share_id;
         if (!empty($secret)) {
@@ -234,9 +233,8 @@ class Share extends database_object
     /**
      * get_share_list_sql
      * @param User $user
-     * @return string
      */
-    public static function get_share_list_sql(User $user)
+    public static function get_share_list_sql(User $user): string
     {
         $sql     = "SELECT `id` FROM `share` ";
         $multi   = 'WHERE ';
@@ -367,9 +365,8 @@ class Share extends database_object
      * is_valid
      * @param $secret
      * @param $action
-     * @return bool
      */
-    public function is_valid($secret, $action)
+    public function is_valid($secret, $action): bool
     {
         if (!$this->id) {
             debug_event(self::class, 'Access Denied: Invalid share.', 3);
@@ -493,9 +490,8 @@ class Share extends database_object
      * get_expiry
      * get the expiry date in days from a time()
      * @param int $time
-     * @return int
      */
-    public static function get_expiry($time = null)
+    public static function get_expiry($time = null): int
     {
         if (isset($time)) {
             // 0 is a valid expiry too
@@ -515,7 +511,7 @@ class Share extends database_object
      * @param int $object_id
      * @param bool $show_text
      */
-    public static function display_ui($object_type, $object_id, $show_text = true)
+    public static function display_ui($object_type, $object_id, $show_text = true): string
     {
         $result = sprintf(
             '<a onclick="showShareDialog(event, \'%s\', %d);">%s',

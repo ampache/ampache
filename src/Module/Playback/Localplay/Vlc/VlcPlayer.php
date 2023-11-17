@@ -58,9 +58,8 @@ class VlcPlayer
      * $url        URL of the song
      * @param string $name
      * @param $url
-     * @return bool
      */
-    public function add($name, $url)
+    public function add($name, $url): bool
     {
         $aurl = urlencode($url);
         $aurl .= "&";
@@ -79,7 +78,7 @@ class VlcPlayer
      * version
      * No version returned in the standard xml file, just need to check for xml returned
      */
-    public function version()
+    public function version(): bool
     {
         $args    = array();
         $results = $this->sendCommand('status.xml', $args);
@@ -218,9 +217,8 @@ class VlcPlayer
      * random
      * this toggles the random state of VLC
      * @param $value
-     * @return bool
      */
-    public function random($value)
+    public function random($value): bool
     {
         $args    = array('command' => 'pl_random');
         $results = $this->sendCommand('status.xml?', $args);
@@ -235,9 +233,8 @@ class VlcPlayer
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return bool
      */
-    public function delete_pos($track)
+    public function delete_pos($track): bool
     {
         $args    = array('command' => 'pl_delete', '&id' => $track);
         $results = $this->sendCommand('status.xml?', $args);
@@ -252,7 +249,7 @@ class VlcPlayer
      * state
      * This returns the current state of the VLC player
      */
-    public function state()
+    public function state(): string
     {
         $args = array();
 
@@ -292,7 +289,7 @@ class VlcPlayer
      * volume_up
      * This increases the volume of VLC, set to +20 can be changed to your preference
      */
-    public function volume_up()
+    public function volume_up(): bool
     {
         $args    = array('command' => 'volume', '&val' => '%2B20');
         $results = $this->sendCommand('status.xml?', $args);
@@ -307,7 +304,7 @@ class VlcPlayer
      * volume_down
      * This decreases the volume of VLC, can be set to your preference
      */
-    public function volume_down()
+    public function volume_down(): bool
     {
         $args    = array('command' => 'volume', '&val' => '-20');
         $results = $this->sendCommand('status.xml?', $args);
@@ -322,9 +319,8 @@ class VlcPlayer
      * set_volume
      * This sets the volume as best it can, i think it's from 0 to 400, need more testing'
      * @param $value
-     * @return bool
      */
-    public function set_volume($value)
+    public function set_volume($value): bool
     {
         // Convert it to base 400
         $value   = $value * 4;
@@ -341,7 +337,7 @@ class VlcPlayer
      * clear_playlist
      * this flushes the playlist cache (I hope this means clear)
      */
-    public function clear_playlist()
+    public function clear_playlist(): bool
     {
         $args    = array('command' => 'pl_empty');
         $results = $this->sendcommand('status.xml?', $args);

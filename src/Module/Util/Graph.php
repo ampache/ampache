@@ -48,9 +48,8 @@ class Graph
     /**
      * @param string $field
      * @param string $zoom
-     * @return string
      */
-    protected function get_sql_date_format($field, $zoom)
+    protected function get_sql_date_format($field, $zoom): string
     {
         switch ($zoom) {
             case 'hour':
@@ -85,7 +84,8 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null
-    ) {
+    ): string
+    {
         $start_date = (int)($start_date);
         $end_date   = (int)($end_date);
         if ($end_date == 0) {
@@ -124,7 +124,8 @@ class Graph
         $catalog_id = 0,
         $start_date = null,
         $end_date = null
-    ) {
+    ): string
+    {
         $start_date = (int)($start_date);
         $end_date   = (int)($end_date);
         if ($end_date == 0) {
@@ -677,9 +678,8 @@ class Graph
      * @param int $user_id
      * @param int $start_date
      * @param int $end_date
-     * @return int
      */
-    public function get_total_bandwidth($user_id = 0, $start_date = null, $end_date = null)
+    public function get_total_bandwidth($user_id = 0, $start_date = null, $end_date = null): int
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_bandwidth_pts', $user_id, null, 0, $start_date, $end_date, 'month');
@@ -694,9 +694,8 @@ class Graph
      * @param int $user_id
      * @param int $start_date
      * @param int $end_date
-     * @return int
      */
-    public function get_total_time($user_id = 0, $start_date = null, $end_date = null)
+    public function get_total_time($user_id = 0, $start_date = null, $end_date = null): int
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_time_pts', $user_id, null, 0, $start_date, $end_date, 'month');
@@ -711,9 +710,8 @@ class Graph
      * @param int $user_id
      * @param int $start_date
      * @param int $end_date
-     * @return int
      */
-    public function get_total_hits($user_id = 0, $start_date = null, $end_date = null)
+    public function get_total_hits($user_id = 0, $start_date = null, $end_date = null): int
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_hits_pts', $user_id, null, 0, $start_date, $end_date, 'month');

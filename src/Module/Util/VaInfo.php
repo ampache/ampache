@@ -276,9 +276,8 @@ final class VaInfo implements VaInfoInterface
      * encoding.
      * @param $tags
      * @param $mb_order
-     * @return string
      */
-    private static function _detect_encoding($tags, $mb_order)
+    private static function _detect_encoding($tags, $mb_order): string
     {
         if (!function_exists('mb_detect_encoding')) {
             return 'ISO-8859-1';
@@ -366,9 +365,8 @@ final class VaInfo implements VaInfoInterface
      * check_time
      * check a cached file is close to the expected time
      * @param int $time
-     * @return bool
      */
-    public function check_time($time)
+    public function check_time($time): bool
     {
         $this->gather_tags();
         foreach ($this->tags as $results) {
@@ -751,9 +749,8 @@ final class VaInfo implements VaInfoInterface
     /**
      * is_mbid
      * @param string $mbid
-     * @return bool
      */
-    public static function is_mbid($mbid)
+    public static function is_mbid($mbid): bool
     {
         if (preg_match(self::MBID_REGEX, $mbid)) {
             return true;
@@ -865,9 +862,8 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * get_metadata_order_key
-     * @return string
      */
-    private function get_metadata_order_key()
+    private function get_metadata_order_key(): string
     {
         if (!in_array('music', $this->gatherTypes)) {
             return 'metadata_order_video';
@@ -999,9 +995,8 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * @param string $string
-     * @return string
      */
-    private function trimAscii($string)
+    private function trimAscii($string): string
     {
         return preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim((string)$string));
     }
@@ -1010,9 +1005,8 @@ final class VaInfo implements VaInfoInterface
      * _clean_type
      * This standardizes the type that we are given into a recognized type.
      * @param $type
-     * @return string
      */
-    private function _clean_type($type)
+    private function _clean_type($type): string
     {
         switch ($type) {
             case 'mp2':
@@ -1845,8 +1839,7 @@ final class VaInfo implements VaInfoInterface
                     preg_match("~\d+(?=[Xx])~", $file, $season);
                     preg_match("~(?<=[Xx])\d+~", $file, $episode);
                 } else {
-                    if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~",
-                        $file, $seasonEpisode)) {
+                    if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
                         $temp = preg_split("~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",
                             $file, 3);
                         preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
@@ -1983,9 +1976,8 @@ final class VaInfo implements VaInfoInterface
     /**
      * removeCommonAbbreviations
      * @param string $name
-     * @return string
      */
-    private function removeCommonAbbreviations($name)
+    private function removeCommonAbbreviations($name): string
     {
         $abbr         = explode(",", $this->configContainer->get(ConfigurationKeyEnum::COMMON_ABBR));
         $commonabbr   = preg_replace("~\n~", '', $abbr);
@@ -2003,9 +1995,8 @@ final class VaInfo implements VaInfoInterface
     /**
      * formatVideoName
      * @param string $name
-     * @return string
      */
-    private function formatVideoName($name)
+    private function formatVideoName($name): string
     {
         return ucwords(trim((string)$this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name)),
             "\s\t\n\r\0\x0B\.\_\-"));

@@ -441,9 +441,8 @@ class Playlist extends playlist_object
      * This simply returns a int of how many media elements exist in this playlist
      * For now let's consider a dyn_media a single entry
      * @param string $type
-     * @return int
      */
-    public function get_media_count($type = '')
+    public function get_media_count($type = ''): int
     {
         $user    = Core::get_global('user');
         $user_id = $user->id ?? 0;
@@ -478,7 +477,7 @@ class Playlist extends playlist_object
     * Get the total duration of all songs.
     * @return int
     */
-    public function get_total_duration()
+    public function get_total_duration(): int
     {
         $songs  = $this->get_songs();
         $idlist = '(' . implode(',', $songs) . ')';
@@ -501,9 +500,8 @@ class Playlist extends playlist_object
      * update
      * This function takes a key'd array of data and runs updates
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         if (isset($data['name']) && $data['name'] != $this->name) {
             $this->update_name($data['name']);
@@ -638,9 +636,8 @@ class Playlist extends playlist_object
     /**
      * add_medias
      * @param array $medias
-     * @return bool
      */
-    public function add_medias($medias)
+    public function add_medias($medias): bool
     {
         if (empty($medias)) {
             return false;
@@ -773,9 +770,8 @@ class Playlist extends playlist_object
      * delete_all
      *
      * this deletes all tracks from a playlist, you specify the playlist.id here
-     * @return bool
      */
-    public function delete_all()
+    public function delete_all(): bool
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?";
         Dba::write($sql, array($this->id));
@@ -790,9 +786,8 @@ class Playlist extends playlist_object
      * delete_song
      * @param int $object_id
      * this deletes a single track, you specify the playlist_data.id here
-     * @return bool
      */
-    public function delete_song($object_id)
+    public function delete_song($object_id): bool
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $object_id));
@@ -807,9 +802,8 @@ class Playlist extends playlist_object
      * delete_track
      * this deletes a single track, you specify the playlist_data.id here
      * @param int $object_id
-     * @return bool
      */
-    public function delete_track($object_id)
+    public function delete_track($object_id): bool
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $object_id));
@@ -824,9 +818,8 @@ class Playlist extends playlist_object
      * delete_track_number
      * this deletes a single track by it's track #, you specify the playlist_data.track here
      * @param int $track
-     * @return bool
      */
-    public function delete_track_number($track)
+    public function delete_track_number($track): bool
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $track));
@@ -842,9 +835,8 @@ class Playlist extends playlist_object
      * this deletes a single track by it's track #, you specify the playlist_data.track here
      * @param int $object_id
      * @param int $track
-     * @return bool
      */
-    public function set_by_track_number($object_id, $track)
+    public function set_by_track_number($object_id, $track): bool
     {
         $sql = "UPDATE `playlist_data` SET `object_id` = ? WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ?";
         Dba::write($sql, array($object_id, $this->id, $track));
@@ -860,9 +852,8 @@ class Playlist extends playlist_object
      * look for the track id or the object id in a playlist
      * @param int $object
      * @param int $track
-     * @return bool
      */
-    public function has_item($object = null, $track = null)
+    public function has_item($object = null, $track = null): bool
     {
         $results = array();
         if ($object) {
@@ -915,7 +906,7 @@ class Playlist extends playlist_object
      * delete
      * This deletes the current playlist and all associated data
      */
-    public function delete()
+    public function delete(): bool
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist` = ?";
         Dba::write($sql, array($this->id));
@@ -933,7 +924,7 @@ class Playlist extends playlist_object
     /**
      * Sort the tracks and save the new position
      */
-    public function sort_tracks()
+    public function sort_tracks(): bool
     {
         /* First get all of the songs in order of their tracks */
         $sql = "SELECT `list`.`id` FROM `playlist_data` AS `list` LEFT JOIN `song` ON `list`.`object_id` = `song`.`id` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `artist` ON `album`.`album_artist` = `artist`.`id` WHERE `list`.`playlist` = ? ORDER BY `artist`.`name`, `album`.`name`, `album`.`year`, `song`.`disk`, `song`.`track`, `song`.`title`";

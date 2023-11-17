@@ -57,7 +57,7 @@ class AmpacheDiscogs
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
         if (Preference::exists('discogs_api_key')) {
             return false;
@@ -72,7 +72,7 @@ class AmpacheDiscogs
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         Preference::delete('discogs_api_key');
         Preference::delete('discogs_secret_api_key');
@@ -85,9 +85,8 @@ class AmpacheDiscogs
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

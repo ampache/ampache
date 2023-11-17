@@ -286,9 +286,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * get_description
-     * @return string
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->f_description;
     }
@@ -637,9 +636,8 @@ class Podcast extends database_object implements library_item
     /**
      * sync_episodes
      * @param bool $gather
-     * @return bool
      */
-    public function sync_episodes($gather = false)
+    public function sync_episodes($gather = false): bool
     {
         debug_event(self::class, 'Syncing feed ' . $this->feed . ' ...', 4);
 
@@ -695,9 +693,8 @@ class Podcast extends database_object implements library_item
      * Get episode id from the source url.
      *
      * @param string $url
-     * @return int
      */
-    public static function get_id_from_source($url)
+    public static function get_id_from_source($url): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
         $db_results = Dba::read($sql, array($url));
@@ -715,9 +712,8 @@ class Podcast extends database_object implements library_item
      * Get episode id from the guid.
      *
      * @param string $url
-     * @return int
      */
-    public static function get_id_from_guid($url)
+    public static function get_id_from_guid($url): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `guid` = ?";
         $db_results = Dba::read($sql, array($url));
@@ -737,9 +733,8 @@ class Podcast extends database_object implements library_item
      * @param int $podcast_id
      * @param string $title
      * @param int $time
-     * @return int
      */
-    public static function get_id_from_title($podcast_id, $title, $time)
+    public static function get_id_from_title($podcast_id, $title, $time): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND title = ? AND `time` = ?";
         $db_results = Dba::read($sql, array($podcast_id, $title, $time));
@@ -758,9 +753,8 @@ class Podcast extends database_object implements library_item
      *
      * @param int $podcast_id
      * @param int $pubdate
-     * @return int
      */
-    public static function get_id_from_pubdate($podcast_id, $pubdate)
+    public static function get_id_from_pubdate($podcast_id, $pubdate): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND pubdate = ?";
         $db_results = Dba::read($sql, array($podcast_id, $pubdate));
@@ -798,9 +792,8 @@ class Podcast extends database_object implements library_item
      * create_catalog_path
      * This returns the catalog types that are available
      * @param string $path
-     * @return bool
      */
-    private static function create_catalog_path($path)
+    private static function create_catalog_path($path): bool
     {
         if (!is_dir($path)) {
             if (mkdir($path) === false) {

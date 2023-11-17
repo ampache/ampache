@@ -63,7 +63,7 @@ class Ampachelistenbrainz
      * This is a required plugin function. It inserts our preferences
      * into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('listenbrainz_token')) {
@@ -90,7 +90,7 @@ class Ampachelistenbrainz
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version == 0) {
@@ -107,9 +107,8 @@ class Ampachelistenbrainz
      * save_mediaplay
      * This takes care of queuing and then submitting the tracks.
      * @param Song $song
-     * @return bool
      */
-    public function save_mediaplay($song)
+    public function save_mediaplay($song): bool
     {
         // Only support songs
         if (get_class($song) != Song::class) {
@@ -204,9 +203,8 @@ class Ampachelistenbrainz
      * This takes care of spreading your love on ListenBrainz
      * @param Song $song
      * @param bool $flagged
-     * @return bool
      */
-    public function set_flag($song, $flagged)
+    public function set_flag($song, $flagged): bool
     {
         return true;
     } // set_flag
@@ -216,9 +214,8 @@ class Ampachelistenbrainz
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

@@ -63,7 +63,7 @@ class AmpacheMusicBrainz
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
         Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
 
@@ -74,7 +74,7 @@ class AmpacheMusicBrainz
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         Preference::delete('mb_overwrite_name');
 
@@ -85,7 +85,7 @@ class AmpacheMusicBrainz
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version == 0) {
@@ -109,9 +109,8 @@ class AmpacheMusicBrainz
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -178,9 +177,8 @@ class AmpacheMusicBrainz
      * Update an object (label or artist for now) using musicbrainz
      * @param Label|Artist $object
      * @param string $object_type
-     * @return bool
      */
-    public function get_external_metadata($object, string $object_type)
+    public function get_external_metadata($object, string $object_type): bool
     {
         $valid_types = array('label', 'artist');
         // Artist metadata only for now

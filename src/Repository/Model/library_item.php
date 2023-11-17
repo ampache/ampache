@@ -47,9 +47,9 @@ interface library_item extends playable_item
     public function get_default_art_kind(): string;
 
     /**
-     * @return mixed
+     * get_description
      */
-    public function get_description();
+    public function get_description(): string;
 
     /**
      * display_art

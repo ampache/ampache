@@ -350,9 +350,8 @@ class Stream_Playlist
 
     /**
      * check_autoplay_append
-     * @return bool
      */
-    public static function check_autoplay_append()
+    public static function check_autoplay_append(): bool
     {
         // For now, only iframed web player support media append in the currently played playlist
         return ((AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player') || AmpConfig::get('play_type') == 'localplay');
@@ -360,9 +359,8 @@ class Stream_Playlist
 
     /**
      * check_autoplay_next
-     * @return bool
      */
-    public static function check_autoplay_next()
+    public static function check_autoplay_next(): bool
     {
         // Currently only supported for web player
         return (AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player');
@@ -371,9 +369,8 @@ class Stream_Playlist
     /**
      * @param $type
      * @param bool $redirect
-     * @return bool
      */
-    public function generate_playlist($type, $redirect = false)
+    public function generate_playlist($type, $redirect = false): bool
     {
         if (!count($this->urls)) {
             debug_event(self::class, 'Error: Empty URL array for ' . $this->id, 2);
@@ -458,9 +455,8 @@ class Stream_Playlist
      * Add an array of urls. This is used for things that aren't coming
      * from media objects like democratic playlists
      * @param array $urls
-     * @return bool
      */
-    public function add_urls($urls = array())
+    public function add_urls($urls = array()): bool
     {
         if (!is_array($urls)) {
             return false;
@@ -493,9 +489,8 @@ class Stream_Playlist
      * get_m3u_string
      * creates an m3u file, this includes the EXTINFO and as such can be
      * large with very long playlists
-     * @return string
      */
-    public function get_m3u_string()
+    public function get_m3u_string(): string
     {
         $ret = "#EXTM3U\n";
 
@@ -516,9 +511,8 @@ class Stream_Playlist
 
     /**
      * get_pls_string
-     * @return string
      */
-    public function get_pls_string()
+    public function get_pls_string(): string
     {
         $ret = "[playlist]\n";
         $ret .= 'NumberOfEntries=' . count($this->urls) . "\n";
@@ -543,9 +537,8 @@ class Stream_Playlist
     /**
      * get_asx_string
      * This should really only be used if all of the content is ASF files.
-     * @return string
      */
-    public function get_asx_string()
+    public function get_asx_string(): string
     {
         $ret = '<ASX VERSION="3.0" BANNERBAR="auto">' . "\n";
         $ret .= "<TITLE>" . ($this->title ?? T_("Ampache ASX Playlist")) . "</TITLE>\n";
@@ -576,9 +569,8 @@ class Stream_Playlist
 
     /**
      * get_xspf_string
-     * @return string
      */
-    public function get_xspf_string()
+    public function get_xspf_string(): string
     {
         $result = "";
         foreach ($this->urls as $url) {
@@ -628,9 +620,8 @@ class Stream_Playlist
 
     /**
      * get_hls_string
-     * @return string
      */
-    public function get_hls_string()
+    public function get_hls_string(): string
     {
         $ssize = 10;
         $ret   = "#EXTM3U\n";
@@ -765,7 +756,7 @@ class Stream_Playlist
      * create_download
      * This prompts for a download of the song
      */
-    private function create_download()
+    private function create_download(): bool
     {
         // There should only be one here...
         if (count($this->urls) != 1) {

@@ -44,9 +44,8 @@ interface VaInfoInterface
      * check_time
      * check a cached file is close to the expected time
      * @param int $time
-     * @return bool
      */
-    public function check_time($time);
+    public function check_time($time): bool;
 
     /**
      * write_id3

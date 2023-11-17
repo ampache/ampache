@@ -39,9 +39,8 @@ class WebPlayer
     /**
      * Check if the playlist is a radio playlist.
      * @param Stream_Playlist $playlist
-     * @return bool
      */
-    public static function is_playlist_radio($playlist)
+    public static function is_playlist_radio($playlist): bool
     {
         $radios = array();
 
@@ -57,9 +56,8 @@ class WebPlayer
     /**
      * Check if the playlist is a video playlist.
      * @param Stream_Playlist $playlist
-     * @return bool
      */
-    public static function is_playlist_video($playlist)
+    public static function is_playlist_video($playlist): bool
     {
         return (count($playlist->urls) > 0 && $playlist->urls[0]->type == "video");
     }
@@ -67,9 +65,8 @@ class WebPlayer
     /**
      * Check if the playlist is a random playlist.
      * @param Stream_Playlist $playlist
-     * @return bool
      */
-    public static function is_playlist_random($playlist)
+    public static function is_playlist_random($playlist): bool
     {
         return (count($playlist->urls) > 0 && $playlist->urls[0]->title == "Random");
     }
@@ -77,9 +74,8 @@ class WebPlayer
     /**
      * Check if the playlist is a democratic playlist.
      * @param Stream_Playlist $playlist
-     * @return bool
      */
-    public static function is_playlist_democratic($playlist)
+    public static function is_playlist_democratic($playlist): bool
     {
         return (count($playlist->urls) > 0 && $playlist->urls[0]->title == "Democratic");
     }
@@ -190,9 +186,8 @@ class WebPlayer
      * @param array $urlinfo
      * @param string $force_type
      * @param array $transcode_cfg
-     * @return bool
      */
-    public static function can_transcode($media_type, $file_type, $types, $urlinfo, $transcode_cfg, $force_type = '')
+    public static function can_transcode($media_type, $file_type, $types, $urlinfo, $transcode_cfg, $force_type = ''): bool
     {
         $transcode = false;
 
@@ -229,9 +224,8 @@ class WebPlayer
      * Get add_media javascript.
      * @param Stream_Playlist $playlist
      * @param string $callback_container
-     * @return string
      */
-    public static function add_media_js($playlist, $callback_container = '')
+    public static function add_media_js($playlist, $callback_container = ''): string
     {
         $transcode_cfg = AmpConfig::get('transcode');
         $addjs         = "";
@@ -251,9 +245,8 @@ class WebPlayer
      * Get play_next javascript.
      * @param Stream_Playlist $playlist
      * @param string $callback_container
-     * @return string
      */
-    public static function play_next_js($playlist, $callback_container = '')
+    public static function play_next_js($playlist, $callback_container = ''): string
     {
         $transcode_cfg = AmpConfig::get('transcode');
         $addjs         = "";
@@ -275,9 +268,8 @@ class WebPlayer
      * @param Stream_URL $item
      * @param string $force_type
      * @param array $transcode_cfg
-     * @return string
      */
-    public static function get_media_js_param($item, $transcode_cfg, $force_type = '')
+    public static function get_media_js_param($item, $transcode_cfg, $force_type = ''): string
     {
         $json = array();
         foreach (array('title', 'author') as $member) {

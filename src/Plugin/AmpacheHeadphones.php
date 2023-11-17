@@ -59,7 +59,7 @@ class AmpacheHeadphones
      * This is a required plugin function. It inserts our preferences
      * into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('headphones_api_url')) {
@@ -77,7 +77,7 @@ class AmpacheHeadphones
      * This is a required plugin function. It removes our preferences from
      * the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         Preference::delete('headphones_api_url');
         Preference::delete('headphones_api_key');
@@ -89,7 +89,7 @@ class AmpacheHeadphones
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
     } // upgrade
@@ -98,9 +98,8 @@ class AmpacheHeadphones
      * process_wanted
      * This takes care of auto-download accepted Wanted List albums
      * @param Wanted $wanted
-     * @return bool
      */
-    public function process_wanted($wanted)
+    public function process_wanted($wanted): bool
     {
         set_time_limit(0);
 
@@ -123,9 +122,8 @@ class AmpacheHeadphones
     /**
      * @param $command
      * @param $params
-     * @return bool
      */
-    protected function headphones_call($command, $params)
+    protected function headphones_call($command, $params): bool
     {
         if (empty($this->api_url) || empty($this->api_key)) {
             debug_event(self::class, 'Headphones url or api key missing', 3);
@@ -158,9 +156,8 @@ class AmpacheHeadphones
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

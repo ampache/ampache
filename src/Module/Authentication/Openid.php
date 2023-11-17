@@ -64,9 +64,9 @@ class Openid
     }
 
     /**
-     * @return string
+     * get_return_url
      */
-    public static function get_return_url()
+    public static function get_return_url(): string
     {
         return AmpConfig::get('web_path') . '/login.php?auth_mod=openid&step=2';
     }

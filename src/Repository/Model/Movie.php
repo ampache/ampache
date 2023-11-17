@@ -81,9 +81,8 @@ class Movie extends Video
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return mixed
      */
-    public static function insert(array $data, $gtypes = array(), $options = array())
+    public static function insert(array $data, $gtypes = array(), $options = array()): int
     {
         $trimmed = Catalog::trim_prefix(trim((string)$data['original_name']));
         $name    = $trimmed['string'];
@@ -92,16 +91,15 @@ class Movie extends Video
         $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
 
-        return $data['id'];
+        return (int)$data['id'];
     } // create
 
     /**
      * update
      * This takes a key'd array of data as input and updates a movie entry
      * @param array $data
-     * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         parent::update($data);
 

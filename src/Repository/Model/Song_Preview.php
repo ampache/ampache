@@ -139,9 +139,8 @@ class Song_Preview extends database_object implements Media, playable_item
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
      * @param array $song_ids
-     * @return bool
      */
-    public static function build_cache($song_ids)
+    public static function build_cache($song_ids): bool
     {
         if (empty($song_ids)) {
             return false;
@@ -204,9 +203,8 @@ class Song_Preview extends database_object implements Media, playable_item
      * get_artist_fullname
      * gets the name of $this->artist, allows passing of id
      * @param int $artist_id
-     * @return string
      */
-    public function get_artist_fullname($artist_id = 0)
+    public function get_artist_fullname($artist_id = 0): string
     {
         if (!$artist_id) {
             $artist_id = $this->artist;
@@ -351,9 +349,8 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param string $additional_params
      * @param string $player
      * @param bool $local
-     * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false)
+    public function play_url($additional_params = '', $player = '', $local = false): string
     {
         $user_id = (!empty(Core::get_global('user')))
             ? scrub_out(Core::get_global('user')->id)

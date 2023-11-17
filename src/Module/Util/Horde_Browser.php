@@ -620,10 +620,8 @@ class Horde_Browser
 
     /**
      * Returns the currently matched platform.
-     *
-     * @return string  The user's platform.
      */
-    private function getPlatform()
+    private function getPlatform(): string
     {
         return $this->_platform;
     }
@@ -642,10 +640,8 @@ class Horde_Browser
      * Determines if the given browser is the same as the current.
      *
      * @param string $browser The browser to check.
-     *
-     * @return bool  Is the given browser the same as the current?
      */
-    public function isBrowser($browser)
+    public function isBrowser($browser): bool
     {
         return ($this->_browser === $browser);
     }
@@ -686,10 +682,8 @@ class Horde_Browser
      * Checks unique behavior for the current browser.
      *
      * @param string $quirk The behavior to check.
-     *
-     * @return bool  Does the browser have the behavior set?
      */
-    private function hasQuirk($quirk)
+    private function hasQuirk($quirk): bool
     {
         return !empty($this->_quirks[$quirk]);
     }

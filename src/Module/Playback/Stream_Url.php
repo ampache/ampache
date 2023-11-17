@@ -119,9 +119,8 @@ class Stream_Url extends MemoryObject
      * Add options to an existing stream url.
      * @param string $url
      * @param string $options
-     * @return string
      */
-    public static function add_options($url, $options)
+    public static function add_options($url, $options): string
     {
         if (AmpConfig::get('stream_beautiful_url')) {
             // We probably want beautiful url to have a real mp3 filename at the end.
@@ -156,9 +155,8 @@ class Stream_Url extends MemoryObject
      * format
      * This format the string url according to settings.
      * @param string $url
-     * @return string
      */
-    public static function format($url)
+    public static function format($url): string
     {
         if (AmpConfig::get('stream_beautiful_url')) {
             $url = str_replace('index.php?&', '', $url);

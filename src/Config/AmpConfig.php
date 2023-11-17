@@ -76,9 +76,8 @@ class AmpConfig
      * get_rating_filter
      * Find out whether you are filtering ratings on your search
      * This function is used in mashup and random queries
-     * @return int
      */
-    public static function get_rating_filter()
+    public static function get_rating_filter(): int
     {
         $rating_filter = 0;
         if (self::get('rating_browse_filter')) {
@@ -98,9 +97,8 @@ class AmpConfig
      * @param string $name
      * @param $value
      * @param bool $clobber
-     * @return bool
      */
-    public static function set($name, $value, $clobber = false)
+    public static function set($name, $value, $clobber = false): bool
     {
         if (isset(self::$_global[$name]) && !$clobber) {
             debug_event(self::class, "Tried to overwrite existing key $name without setting clobber", 5);

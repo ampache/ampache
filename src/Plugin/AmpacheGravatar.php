@@ -51,7 +51,7 @@ class AmpacheGravatar
      * This is a required plugin function. It inserts our preferences
      * into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         return true;
     } // install
@@ -61,7 +61,7 @@ class AmpacheGravatar
      * This is a required plugin function. It removes our preferences from
      * the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         return true;
     } // uninstall
@@ -70,7 +70,7 @@ class AmpacheGravatar
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
     } // upgrade
@@ -78,9 +78,8 @@ class AmpacheGravatar
     /**
      * @param User $user
      * @param int $size
-     * @return string
      */
-    public function get_avatar_url($user, $size = 80)
+    public function get_avatar_url($user, $size = 80): string
     {
         $url = '';
         if (!empty($user->email)) {
@@ -100,9 +99,8 @@ class AmpacheGravatar
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
 

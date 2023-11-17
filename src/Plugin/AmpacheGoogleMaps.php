@@ -57,7 +57,7 @@ class AmpacheGoogleMaps
      * This is a required plugin function. It inserts our preferences
      * into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         if (Preference::exists('gmaps_api_key')) {
             return false;
@@ -72,7 +72,7 @@ class AmpacheGoogleMaps
      * This is a required plugin function. It removes our preferences from
      * the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         Preference::delete('gmaps_api_key');
 
@@ -83,7 +83,7 @@ class AmpacheGoogleMaps
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
     } // upgrade
@@ -91,9 +91,8 @@ class AmpacheGoogleMaps
     /**
      * @param $latitude
      * @param $longitude
-     * @return string
      */
-    public function get_location_name($latitude, $longitude)
+    public function get_location_name($latitude, $longitude): string
     {
         $name = "";
         try {
@@ -113,9 +112,8 @@ class AmpacheGoogleMaps
 
     /**
      * @param $pts
-     * @return bool
      */
-    public function display_map($pts)
+    public function display_map($pts): bool
     {
         if (!$this->api_key) {
             debug_event(self::class, 'Missing API key, display map plugin skipped.', 3);
@@ -169,9 +167,8 @@ class AmpacheGoogleMaps
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

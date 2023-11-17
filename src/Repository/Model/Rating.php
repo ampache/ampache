@@ -89,7 +89,7 @@ class Rating extends database_object
      * @param string $object_type
      * @param int $object_id
      */
-    public static function garbage_collection($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null): void
     {
         $types = array(
             'album',
@@ -132,9 +132,8 @@ class Rating extends database_object
      * @param string $type
      * @param array $ids
      * @param int $user_id
-     * @return bool
      */
-    public static function build_cache($type, $ids, $user_id = null)
+    public static function build_cache($type, $ids, $user_id = null): bool
     {
         if (empty($ids)) {
             return false;
@@ -246,9 +245,8 @@ class Rating extends database_object
      * Get highest sql
      * @param string $input_type
      * @param int $user_id
-     * @return string
      */
-    public static function get_highest_sql($input_type, $user_id = null)
+    public static function get_highest_sql($input_type, $user_id = null): string
     {
         $type    = Stats::validate_type($input_type);
         $user_id = (int)($user_id);
@@ -281,6 +279,7 @@ class Rating extends database_object
      * @param string $input_type
      * @param int $count
      * @param int $offset
+     * @param int $user_id
      * @return array
      */
     public static function get_highest($input_type, $count = 0, $offset = 0, $user_id = null)
@@ -318,9 +317,8 @@ class Rating extends database_object
      * If no user_id is passed in, we use the currently logged in user.
      * @param string $rating
      * @param int $user_id
-     * @return bool
      */
-    public function set_rating($rating, $user_id = null)
+    public function set_rating($rating, $user_id = null): bool
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -356,7 +354,7 @@ class Rating extends database_object
      * @param int $new_rating
      * @param int $user_id
      */
-    public static function save_rating($object_id, $object_type, $new_rating, $user_id)
+    public static function save_rating($object_id, $object_type, $new_rating, $user_id): void
     {
         $rating = new Rating($object_id, $object_type);
         $user   = new User($user_id);

@@ -59,7 +59,7 @@ class AmpachePaypal
      * This is a required plugin function. It inserts our preferences
      * into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         // Check and see if it's already installed
         if (Preference::exists('paypal_business')) {
@@ -77,7 +77,7 @@ class AmpachePaypal
      * This is a required plugin function. It removes our preferences from
      * the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         Preference::delete('paypal_business');
         Preference::delete('paypal_currency_code');
@@ -89,7 +89,7 @@ class AmpachePaypal
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
     }
@@ -125,9 +125,8 @@ class AmpachePaypal
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $this->user = $user;
         $user->set_preferences();

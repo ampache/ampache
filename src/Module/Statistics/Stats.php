@@ -223,7 +223,8 @@ class Stats
         $location = [],
         $count_type = 'stream',
         $date = null
-    ) {
+    ): bool
+    {
         if (AmpConfig::get('use_auth') && $user_id < 0) {
             debug_event(self::class, 'Invalid user given ' . $user_id, 3);
 
@@ -280,9 +281,8 @@ class Stats
      * @param string $agent
      * @param int $time
      * @param bool $exact
-     * @return bool
      */
-    public static function is_already_inserted($type, $object_id, $user, $agent, $time, $exact = false)
+    public static function is_already_inserted($type, $object_id, $user, $agent, $time, $exact = false): bool
     {
         $sql = ($exact)
             ? "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND `object_count`.`date` = $time "
@@ -314,9 +314,8 @@ class Stats
      * @param int $object_id
      * @param string $threshold
      * @param string $count_type
-     * @return int
      */
-    public static function get_object_count($object_type, $object_id, $threshold = null, $count_type = 'stream')
+    public static function get_object_count($object_type, $object_id, $threshold = null, $count_type = 'stream'): int
     {
         if ($threshold === null || $threshold === '') {
             $threshold = 0;
@@ -345,9 +344,8 @@ class Stats
      * @param int $object_id
      * @param string $threshold
      * @param string $count_type
-     * @return int
      */
-    public static function get_object_total($object_type, $object_id, $threshold = null, $count_type = 'stream')
+    public static function get_object_total($object_type, $object_id, $threshold = null, $count_type = 'stream'): int
     {
         if ($threshold === null || $threshold === '') {
             $threshold = 0;
@@ -459,9 +457,8 @@ class Stats
      * get the time for the object (song, video, podcast_episode)
      * @param int $object_id
      * @param string $object_type
-     * @return int
      */
-    public static function get_time($object_id, $object_type)
+    public static function get_time($object_id, $object_type): int
     {
         // you can't get the last played when you haven't played something before
         if (!$object_id || !$object_type) {
@@ -521,9 +518,8 @@ class Stats
      * @param int $user_id
      * @param string $agent
      * @param int $date
-     * @return bool
      */
-    public static function has_played_history($object_type, $object, $user_id, $agent, $date)
+    public static function has_played_history($object_type, $object, $user_id, $agent, $date): bool
     {
         if (AmpConfig::get('use_auth') && $user_id == -1) {
             return false;
@@ -622,7 +618,8 @@ class Stats
         $user_id = null,
         $random = false,
         bool $addAdditionalColumns = false
-    ) {
+    ): string
+    {
         $type           = self::validate_type($input_type);
         $date           = time() - (86400 * (int)$threshold);
         $catalog_filter = (AmpConfig::get('catalog_filter'));
@@ -759,9 +756,8 @@ class Stats
      * @param string $input_type
      * @param int $user_id
      * @param bool $newest
-     * @return string
      */
-    public static function get_recent_sql($input_type, $user_id = null, $newest = true)
+    public static function get_recent_sql($input_type, $user_id = null, $newest = true): string
     {
         $type              = self::validate_type($input_type);
         $ordersql          = ($newest === true) ? 'DESC' : 'ASC';
@@ -924,9 +920,8 @@ class Stats
      * This function takes a type and returns only those
      * which are allowed, ensures good data gets put into the db
      * @param string $type
-     * @return string
      */
-    public static function validate_type($type)
+    public static function validate_type($type): string
     {
         switch ($type) {
             case 'artist':
@@ -959,9 +954,8 @@ class Stats
      * This returns the get_newest sql
      * @param string $input_type
      * @param int $catalog_id
-     * @return string
      */
-    public static function get_newest_sql($input_type, $catalog_id = 0, $user_id = null)
+    public static function get_newest_sql($input_type, $catalog_id = 0, $user_id = null): string
     {
         $type = self::validate_type($input_type);
         // all objects could be filtered

@@ -49,9 +49,8 @@ class UPnPDevice
     /**
      * Reads description URL from session
      * @param $descriptionUrl
-     * @return bool
      */
-    private function restoreDescriptionUrl($descriptionUrl)
+    private function restoreDescriptionUrl($descriptionUrl): bool
     {
         debug_event('upnpdevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
         $this->_settings = json_decode(Session::read('upnp_dev_' . $descriptionUrl), true);
@@ -107,9 +106,8 @@ class UPnPDevice
      * @param string $method Method name
      * @param array $arguments Key-Value array
      * @param string $type
-     * @return string
      */
-    public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl')
+    public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl'): string
     {
         if (!array_key_exists('host', $this->_settings) || !array_key_exists('controlURLs', $this->_settings)) {
             return '';
@@ -168,9 +166,8 @@ class UPnPDevice
      * @param $command
      * @param string $type
      * @param int $instance_id
-     * @return string
      */
-    public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0)
+    public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0): string
     {
         $args = array('InstanceID' => $instance_id);
         //$response = \Format::forge($response, 'xml:ns')->to_array();

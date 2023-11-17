@@ -74,7 +74,7 @@ final class Localplay3Method
         $results = array(
             'localplay' => array(
                 'command' => array(
-                    $input['command'] => make_bool($result)
+                    $input['command'] => $result
                 )
             )
         );

@@ -139,9 +139,8 @@ class CliHandler extends Handler
      * Assemble the command for CLI
      * @param string $command beets command (e.g. 'ls myArtist')
      * @param bool $disableCostomFields disables the -f switch for this time
-     * @return string
      */
-    protected function assembleCommand($command, $disableCostomFields = false)
+    protected function assembleCommand($command, $disableCostomFields = false): string
     {
         $commandParts = array(
             escapeshellcmd($this->beetsCommand),
@@ -158,9 +157,8 @@ class CliHandler extends Handler
     /**
      *
      * @param string $item
-     * @return bool
      */
-    protected function itemIsComlete($item)
+    protected function itemIsComlete($item): bool
     {
         $offset   = strlen($this->itemEnd);
         $position = (strlen($item) > $offset)
@@ -188,9 +186,8 @@ class CliHandler extends Handler
 
     /**
      * Create the format string for beet ls -f
-     * @return string
      */
-    protected function getFieldFormat()
+    protected function getFieldFormat(): string
     {
         if (!isset($this->fieldFormat)) {
             $this->fields      = $this->getFields();

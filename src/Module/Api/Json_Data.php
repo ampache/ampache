@@ -242,9 +242,8 @@ class Json_Data
      * This takes a name array of objects and return the data in JSON list object
      *
      * @param array $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
-     * @return string  JSON Object "list"
      */
-    public static function lists($objects)
+    public static function lists($objects): string
     {
         $output = array(
             "total_count" => count($objects)
@@ -281,9 +280,8 @@ class Json_Data
      * @param string $parent_type
      * @param string $child_type
      * @param int|null $catalog_id
-     * @return string JSON Object "browse"
      */
-    public static function browses($objects, $parent_id, $parent_type, $child_type, $catalog_id)
+    public static function browses($objects, $parent_id, $parent_type, $child_type, $catalog_id): string
     {
         $output = array(
             "total_count" => count($objects),
@@ -321,7 +319,6 @@ class Json_Data
      *
      * @param int[] $objects
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "live_stream"
      */
     public static function live_streams($objects, $object = true): string
     {
@@ -361,7 +358,6 @@ class Json_Data
      *
      * @param int[] $objects Licence id's assigned to songs and artists
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "license"
      */
     public static function licenses($objects, $object = true): string
     {
@@ -398,7 +394,6 @@ class Json_Data
      *
      * @param int[] $objects
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "label"
      */
     public static function labels($objects, $object = true): string
     {
@@ -442,7 +437,6 @@ class Json_Data
      *
      * @param int[] $objects Genre id's to include
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "genre"
      */
     public static function genres($objects, $object = true): string
     {
@@ -660,7 +654,6 @@ class Json_Data
      * @param User $user
      * @param bool $songs
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string  JSON Object "playlist"
      */
     public static function playlists($objects, $user, $songs = false, $object = true): string
     {
@@ -748,7 +741,6 @@ class Json_Data
      *
      * @param int[] $objects Share id's to include
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "share"
      */
     public static function shares($objects, $object = true): string
     {
@@ -812,7 +804,6 @@ class Json_Data
      * @param int[] $objects Bookmark id's to include
      * @param bool $include if true include the object in the bookmark
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "bookmark"
      */
     public static function bookmarks($objects, $include = false, $object = true): string
     {
@@ -877,7 +868,6 @@ class Json_Data
      *
      * @param int[] $objects group of catalog id's
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "catalog"
      */
     public static function catalogs($objects, $object = true): string
     {
@@ -939,7 +929,6 @@ class Json_Data
      * @param User $user
      * @param bool $episodes include the episodes of the podcast
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "podcast"
      */
     public static function podcasts($objects, $user, $episodes = false, $object = true): string
     {
@@ -1283,7 +1272,6 @@ class Json_Data
      * @param array $object_ids Object IDs
      * @param User $user
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string       JSON Object "song"
      */
     public static function democratic($object_ids, $user, $object = true): string
     {
@@ -1352,7 +1340,6 @@ class Json_Data
      * @param User $user User Object
      * @param bool $fullinfo
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string  JSON Object "user"
      */
     public static function user(User $user, $fullinfo, $object = true): string
     {
@@ -1401,7 +1388,6 @@ class Json_Data
      *
      * @param int[] $users User id list
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "user"
      */
     public static function users($users, $object = true): string
     {
@@ -1425,7 +1411,6 @@ class Json_Data
      *
      * @param int[] $shouts Shout id list
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "shout"
      */
     public static function shouts($shouts, $object = true): string
     {
@@ -1456,7 +1441,6 @@ class Json_Data
      *
      * @param int[] $activities Activity id list
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "activity"
      */
     public static function timeline($activities, $object = true): string
     {
@@ -1489,7 +1473,6 @@ class Json_Data
      *
      * @param string $object_type ('song', 'podcast_episode', 'video')
      * @param array $objects deleted object list
-     * @return string JSON Object "deleted"
      */
     public static function deleted($object_type, $objects): string
     {

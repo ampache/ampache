@@ -377,9 +377,8 @@ class mpd
      * method. The syntax for queueing commands is identical to SendCommand.
      * @param $command
      * @param string $arguments
-     * @return bool
      */
-    public function QueueCommand($command, $arguments = '')
+    public function QueueCommand($command, $arguments = ''): bool
     {
         $this->_debug('QueueCommand', "start; cmd: $command args: " . json_encode($arguments), 5);
         if (!$this->connected) {
@@ -441,9 +440,8 @@ class mpd
      *
      * Updates all class properties with the values from the MPD server.
      * NOTE: This function is automatically called on Connect()
-     * @return bool
      */
-    public function RefreshInfo()
+    public function RefreshInfo(): bool
     {
         $stats  = $this->SendCommand(self::COMMAND_STATISTICS, null, false);
         $status = $this->SendCommand(self::COMMAND_STATUS, null, false);
@@ -1084,9 +1082,8 @@ class mpd
      * incompatibilities.
      * @param $cmd
      * @param $mpd_version
-     * @return bool
      */
-    private function _checkCompatibility($cmd, $mpd_version)
+    private function _checkCompatibility($cmd, $mpd_version): bool
     {
         $mpd = self::_computeVersionValue($mpd_version);
 

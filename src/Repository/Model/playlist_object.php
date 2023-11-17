@@ -99,9 +99,8 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * does the item have art?
-     * @return bool
      */
-    public function has_art()
+    public function has_art(): bool
     {
         if (!isset($this->has_art)) {
             $this->has_art = ($this instanceof Search)
@@ -117,9 +116,8 @@ abstract class playlist_object extends database_object implements library_item
      * This function returns true or false if the current user
      * has access to this playlist
      * @param int $user_id
-     * @return bool
      */
-    public function has_access($user_id = null)
+    public function has_access($user_id = null): bool
     {
         if (Access::check('interface', 100)) {
             return true;
@@ -210,9 +208,8 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * Get item type (public / private).
-     * @return string
      */
-    public function get_f_type()
+    public function get_f_type(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_type)) {
@@ -264,11 +261,11 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return mixed|null
+     * get_description
      */
-    public function get_description()
+    public function get_description(): string
     {
-        return null;
+        return '';
     }
 
     /**

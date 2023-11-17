@@ -65,9 +65,9 @@ class Metadata extends DatabaseObject implements Model
 
     /**
      *
-     * @return int
+     * getObjectId
      */
-    public function getObjectId()
+    public function getObjectId(): int
     {
         return $this->objectId;
     }
@@ -82,10 +82,9 @@ class Metadata extends DatabaseObject implements Model
     }
 
     /**
-     *
-     * @return string
+     * getData
      */
-    public function getData()
+    public function getData(): string
     {
         return $this->data;
     }
@@ -118,10 +117,9 @@ class Metadata extends DatabaseObject implements Model
     }
 
     /**
-     *
-     * @return string
+     * getType
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }

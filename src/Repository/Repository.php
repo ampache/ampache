@@ -252,9 +252,8 @@ class Repository
      * Create query for one or multiple fields
      * @param string $table
      * @param array $fields
-     * @return string
      */
-    public function assembleQuery($table, $fields)
+    public function assembleQuery($table, $fields): string
     {
         $sql = "SELECT * FROM `$table`";
         if (!empty($fields)) {
@@ -275,9 +274,8 @@ class Repository
     /**
      * camelCaseToUnderscore
      * @param string $string
-     * @return string
      */
-    public function camelCaseToUnderscore($string)
+    public function camelCaseToUnderscore($string): string
     {
         return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', '_$1', $string));
     }
