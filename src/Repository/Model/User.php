@@ -282,9 +282,8 @@ class User extends database_object
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
      * @param string $username
-     * @return User|null $user
      */
-    public static function get_from_username($username)
+    public static function get_from_username($username): ?User
     {
         return static::getUserRepository()->findByUsername($username);
     } // get_from_username
@@ -733,7 +732,7 @@ class User extends database_object
     /**
      * update_counts for individual users
      */
-    public static function update_counts()
+    public static function update_counts(): void
     {
         $catalog_disable = AmpConfig::get('catalog_disable');
         $catalog_filter  = AmpConfig::get('catalog_filter');
@@ -860,7 +859,7 @@ class User extends database_object
      * @param User $user
      * @param Song $media
      */
-    public static function save_mediaplay($user, $media)
+    public static function save_mediaplay($user, $media): void
     {
         foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
@@ -943,8 +942,7 @@ class User extends database_object
         $city = '',
         $disabled = false,
         $encrypted = false
-    ): int
-    {
+    ): int {
         // don't try to overwrite users that already exist
         if (static::getUserRepository()->idByUsername($username) > 0 || static::getUserRepository()->idByEmail($email) > 0) {
             return 0;
@@ -1146,7 +1144,7 @@ class User extends database_object
      * table.
      * @param int $user_id
      */
-    public static function fix_preferences($user_id)
+    public static function fix_preferences($user_id): void
     {
         // Check default group (autoincrement starts at 1 so force it to be 0)
         $sql        = "SELECT `id`, `name` FROM `catalog_filter_group` WHERE `name` = 'DEFAULT';";

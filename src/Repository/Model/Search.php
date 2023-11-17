@@ -1669,6 +1669,9 @@ class Search extends playlist_object
             $this->limit
         ));
         $insert_id = Dba::insert_id();
+        if (!$insert_id) {
+            return null;
+        }
         $this->id  = (int)$insert_id;
         Catalog::count_table('search');
 

@@ -328,13 +328,13 @@ class TvShow extends database_object implements library_item
      * @param $year
      * @param $tvshow_summary
      * @param bool $readonly
-     * @return int|string|null
+     * @return int|null
      */
     public static function check($name, $year, $tvshow_summary, $readonly = false)
     {
         // null because we don't have any unique id like mbid for now
         if (isset(self::$_mapcache[$name]['null'])) {
-            return self::$_mapcache[$name]['null'];
+            return (int)self::$_mapcache[$name]['null'];
         }
 
         $tvshow_id  = 0;
@@ -356,9 +356,9 @@ class TvShow extends database_object implements library_item
         }
 
         if ($exists && (int)$tvshow_id > 0) {
-            self::$_mapcache[$name]['null'] = $tvshow_id;
+            self::$_mapcache[$name]['null'] = (int)$tvshow_id;
 
-            return $tvshow_id;
+            return (int)$tvshow_id;
         }
 
         if ($readonly) {
@@ -371,10 +371,13 @@ class TvShow extends database_object implements library_item
             return null;
         }
         $tvshow_id = Dba::insert_id();
+        if (!$tvshow_id) {
+            return null;
+        }
 
-        self::$_mapcache[$name]['null'] = $tvshow_id;
+        self::$_mapcache[$name]['null'] = (int)$tvshow_id;
 
-        return $tvshow_id;
+        return (int)$tvshow_id;
     }
 
     /**

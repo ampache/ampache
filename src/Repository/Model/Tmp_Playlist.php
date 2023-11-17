@@ -223,6 +223,9 @@ class Tmp_Playlist extends database_object
         Dba::write($sql, array($data['session_id'], $data['type'], $data['object_type']));
 
         $tmp_id = Dba::insert_id();
+        if (!$tmp_id) {
+            return null;
+        }
 
         /* Clean any other playlists associated with this session */
         self::session_clean($data['session_id'], $tmp_id);
@@ -235,17 +238,15 @@ class Tmp_Playlist extends database_object
      * This deletes any other tmp_playlists associated with this
      * session
      * @param $sessid
-     * @param string|null $plist_id
+     * @param string|false $plist_id
      */
-    public static function session_clean($sessid, $plist_id): bool
+    public static function session_clean($sessid, $plist_id): void
     {
         $sql = "DELETE FROM `tmp_playlist` WHERE `session`= ? AND `id` != ?";
         Dba::write($sql, array($sessid, $plist_id));
 
         /* Remove associated tracks */
         self::prune_tracks();
-
-        return true;
     } // session_clean
 
     /**
@@ -276,10 +277,9 @@ class Tmp_Playlist extends database_object
      * prune_tracks
      * This prunes tracks that don't have playlists or don't have votes
      */
-    public static function prune_tracks()
+    public static function prune_tracks(): void
     {
-        // This prune is always run and clears data for playlists that
-        // don't exist anymore
+        // This prune is always run and clears data for playlists that don't exist anymore
         $sql = "DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `tmp_playlist` ON `tmp_playlist_data`.`tmp_playlist`=`tmp_playlist`.`id` WHERE `tmp_playlist`.`id` IS NULL";
         Dba::write($sql);
     } // prune_tracks

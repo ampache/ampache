@@ -339,14 +339,14 @@ class Query
         if (!$cached) {
             $this->id = 'nocache';
 
-            return true;
+            return;
         }
         $this->user_id = (!empty(Core::get_global('user')))
             ? Core::get_global('user')->id
             : null;
 
         if ($this->user_id === null) {
-            return false;
+            return;
         }
 
         if ($query_id === null || $query_id === 0) {
@@ -355,9 +355,13 @@ class Query
 
             $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
             Dba::write($sql, array($sid, $data));
-            $this->id = Dba::insert_id();
+            $insert_id = Dba::insert_id();
+            if (!$insert_id) {
+                return;
+            }
+            $this->id = (int)$insert_id;
 
-            return true;
+            return;
         } else {
             $sql = 'SELECT `data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
 
@@ -366,13 +370,11 @@ class Query
                 $this->id     = $query_id;
                 $this->_state = (array)self::_unserialize($results['data']);
 
-                return true;
+                return;
             }
         }
 
         AmpError::add('browse', T_('Browse was not found or expired, try reloading the page'));
-
-        return false;
     }
 
     /**

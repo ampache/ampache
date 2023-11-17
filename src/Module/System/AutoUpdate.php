@@ -293,7 +293,7 @@ class AutoUpdate
     /**
      * Display information from the Ampache Project as a message. (Develop branch only)
      */
-    public static function show_ampache_message()
+    public static function show_ampache_message(): void
     {
         if (self::is_develop()) {
             echo '<div id="autoupdate">';
@@ -307,7 +307,7 @@ class AutoUpdate
     /**
      * Display new version information and update link if possible.
      */
-    public static function show_new_version()
+    public static function show_new_version(): void
     {
         $current = self::get_current_version();
         $latest  = self::get_latest_version();
@@ -338,7 +338,7 @@ class AutoUpdate
      * Update local git repository.
      * @param bool $api
      */
-    public static function update_files($api = false)
+    public static function update_files($api = false): void
     {
         $cmd        = 'git pull https://github.com/ampache/ampache.git';
         $git_branch = self::is_force_git_branch();

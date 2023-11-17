@@ -1509,6 +1509,9 @@ class Subsonic_Api
         if (!empty($matches)) {
             $sub_id = (string)(100000000 + (int)$matches[1]);
         }
+        if (!is_string($sub_id)) {
+            return;
+        }
         $size   = $input['size'] ?? false;
         $type   = Subsonic_Xml_Data::_getAmpacheType($sub_id);
         if ($type == "") {
@@ -1752,8 +1755,8 @@ class Subsonic_Api
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?? 0;
                 $prev_date = $previous['date'] ?? 0;
-                $type      = Subsonic_Xml_Data::_getAmpacheType($subsonic_id);
-                $media     = Subsonic_Xml_Data::_getAmpacheObject($subsonic_id);
+                $type      = Subsonic_Xml_Data::_getAmpacheType((string)$subsonic_id);
+                $media     = Subsonic_Xml_Data::_getAmpacheObject((int)$subsonic_id);
                 $media->format();
 
                 // long pauses might cause your now_playing to hide
@@ -2668,7 +2671,7 @@ class Subsonic_Api
             return;
         }
         $comment   = $input['comment'] ?? '';
-        $type      = Subsonic_Xml_Data::_getAmpacheType($object_id);
+        $type      = Subsonic_Xml_Data::_getAmpacheType((string)$object_id);
 
         if (!empty($type)) {
             $bookmark = new Bookmark(Subsonic_Xml_Data::_getAmpacheId($object_id), $type);
@@ -2706,7 +2709,7 @@ class Subsonic_Api
         if (!$object_id) {
             return;
         }
-        $type = Subsonic_Xml_Data::_getAmpacheType($object_id);
+        $type = Subsonic_Xml_Data::_getAmpacheType((string)$object_id);
 
         $bookmark = new Bookmark(Subsonic_Xml_Data::_getAmpacheId($object_id), $type, $user->id);
         if ($bookmark->id) {
@@ -2745,8 +2748,8 @@ class Subsonic_Api
      */
     public static function saveplayqueue($input, $user): void
     {
-        $current = (int)($input['current'] ?? 0);
-        $media   = Subsonic_Xml_Data::_getAmpacheObject($current);
+        $current = (string)($input['current'] ?? '0');
+        $media   = Subsonic_Xml_Data::_getAmpacheObject((int)$current);
         if ($media->id) {
             $response       = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
             $position       = (array_key_exists('position', $input))

@@ -189,7 +189,7 @@ class Shoutbox
      * create
      * This takes a key'd array of data as input and inserts a new shoutbox entry, it returns the auto_inc id
      * @param array $data
-     * @return bool|string|null
+     * @return string|false
      * @throws \PHPMailer\PHPMailer\Exception
      */
     public static function create(array $data)

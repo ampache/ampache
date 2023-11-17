@@ -150,12 +150,12 @@ class Share extends database_object
         if (!self::is_valid_type($object_type)) {
             debug_event(self::class, 'create_share: Bad object_type ' . $object_type, 1);
 
-            return '';
+            return null;
         }
         if (!$allow_stream && !$allow_download) {
             debug_event(self::class, 'create_share: must allow stream OR allow download', 1);
 
-            return '';
+            return null;
         }
 
         if ($description == '') {
@@ -192,6 +192,9 @@ class Share extends database_object
         Dba::write($sql, $params);
 
         $share_id = Dba::insert_id();
+        if (!$share_id) {
+            return null;
+        }
 
         $url = self::get_url($share_id, $secret);
         // Get a shortener url if any available

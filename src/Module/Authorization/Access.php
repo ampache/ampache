@@ -118,12 +118,10 @@ class Access
      * check_function
      *
      * This checks if specific functionality is enabled.
-     * @param string $type
-     * @return bool
-     *
+     * @param string $type     *
      * @deprecated See FunctionChecker::check
      */
-    public static function check_function($type)
+    public static function check_function($type): bool
     {
         global $dic;
 
@@ -143,11 +141,9 @@ class Access
      * @param string $type
      * @param int $level
      * @param int|null $user_id
-     * @return bool
-     *
      * @deprecated See PrivilegeChecker::check
      */
-    public static function check($type, $level, $user_id = null)
+    public static function check($type, $level, $user_id = null): bool
     {
         global $dic;
 

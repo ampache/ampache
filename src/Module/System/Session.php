@@ -568,7 +568,7 @@ final class Session implements SessionInterface
      * @param float $longitude
      * @param string $name
      */
-    public static function update_geolocation($sid, $latitude, $longitude, $name)
+    public static function update_geolocation($sid, $latitude, $longitude, $name): void
     {
         if ($sid) {
             $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
@@ -659,7 +659,7 @@ final class Session implements SessionInterface
      * a cookie at the same time as a header redirect. As such on view of a
      * login a cookie is set with the proper name.
      */
-    public static function create_cookie()
+    public static function create_cookie(): void
     {
         $cookie_params = [
             'lifetime' => (int)AmpConfig::get('cookie_life'),
@@ -698,7 +698,7 @@ final class Session implements SessionInterface
      * It also creates a cookie to store used language.
      * @param string $username
      */
-    public static function create_user_cookie($username)
+    public static function create_user_cookie($username): void
     {
         $session_name   = AmpConfig::get('session_name');
         $cookie_options = [
@@ -719,7 +719,7 @@ final class Session implements SessionInterface
      * This function just creates the remember me cookie, nothing special.
      * @param string $username
      */
-    public static function create_remember_cookie($username)
+    public static function create_remember_cookie($username): void
     {
         $session_name    = AmpConfig::get('session_name');
         $remember_length = (int)(time() + AmpConfig::get('remember_length', 604800));
@@ -753,7 +753,7 @@ final class Session implements SessionInterface
      * createGlobalUser
      * Set up the global user
      */
-    public static function createGlobalUser(?User $user)
+    public static function createGlobalUser(?User $user): void
     {
         if (empty(Core::get_global('user'))) {
             if ($user instanceof User && $user->id > 0) {

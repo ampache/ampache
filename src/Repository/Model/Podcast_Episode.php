@@ -484,7 +484,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param bool $new_played
      * @param int $id
      */
-    public static function update_played($new_played, $id)
+    public static function update_played($new_played, $id): void
     {
         self::_update_item('played', ($new_played ? 1 : 0), $id);
     } // update_played
@@ -495,7 +495,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param string $path
      * @param int $id
      */
-    public static function update_file($path, $id)
+    public static function update_file($path, $id): void
     {
         self::_update_item('file', $path, $id);
     } // update_file

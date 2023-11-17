@@ -55,7 +55,7 @@ class AmpError
      * @param string $message
      * @param int $clobber
      */
-    public static function add($name, $message, $clobber = 0)
+    public static function add($name, $message, $clobber = 0): void
     {
         // Make sure its set first
         if (!isset(AmpError::$errors[$name])) {

@@ -787,7 +787,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param int $video_id
      * @param Video $new_video
      */
-    public static function update_video($video_id, Video $new_video)
+    public static function update_video($video_id, Video $new_video): void
     {
         $update_time  = time();
         $release_date = is_numeric($new_video->release_date) ? $new_video->release_date : null;
@@ -802,7 +802,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      *
      * @param int $video_id
      */
-    public static function update_video_counts($video_id)
+    public static function update_video_counts($video_id): void
     {
         if ($video_id > 0) {
             $params = array($video_id);
@@ -835,7 +835,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param int $video_id
      * @param bool $overwrite
      */
-    public static function generate_preview($video_id, $overwrite = false)
+    public static function generate_preview($video_id, $overwrite = false): void
     {
         if ($overwrite || !Art::has_db($video_id, 'video', 'preview')) {
             $artp  = new Art($video_id, 'video', 'preview');
@@ -1167,7 +1167,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param int $video_id
      * @param int $time
      */
-    public static function update_utime($video_id, $time = 0)
+    public static function update_utime($video_id, $time = 0): void
     {
         if (!$time) {
             $time = time();
@@ -1182,7 +1182,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param bool $new_played
      * @param int $song_id
      */
-    public static function update_played($new_played, $song_id)
+    public static function update_played($new_played, $song_id): void
     {
         self::_update_item('played', ($new_played ? 1 : 0), $song_id, '25');
     } // update_played

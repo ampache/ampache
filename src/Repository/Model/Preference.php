@@ -570,7 +570,7 @@ class Preference extends database_object
      * @param $old
      * @param $new
      */
-    public static function rename($old, $new)
+    public static function rename($old, $new): void
     {
         $sql = "UPDATE `preference` SET `name` = ? WHERE `name` = ?";
         Dba::write($sql, array($new, $old));
@@ -580,7 +580,7 @@ class Preference extends database_object
      * clean_preferences
      * This removes any garbage
      */
-    public static function clean_preferences()
+    public static function clean_preferences(): void
     {
         // First remove garbage
         $sql = "DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` WHERE `preference`.`id` IS NULL";
@@ -632,7 +632,7 @@ class Preference extends database_object
      * set_defaults
      * Make sure the default prefs are set! (taken from the default DB file `resources/sql/ampache.sql`)
      */
-    public static function set_defaults()
+    public static function set_defaults(): void
     {
         $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES " .
             "(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'), " .
@@ -757,7 +757,7 @@ class Preference extends database_object
      * translate_db
      * Make sure the default prefs are readable by the users
      */
-    public static function translate_db()
+    public static function translate_db(): void
     {
         $sql        = "UPDATE `preference` SET `preference`.`description` = ? WHERE `preference`.`name` = ? AND `preference`.`description` != ?;";
         $pref_array = array(
@@ -975,7 +975,7 @@ class Preference extends database_object
      * This clears the users preferences, this is done whenever modifications are made to the preferences
      * or the admin resets something
      */
-    public static function clear_from_session()
+    public static function clear_from_session(): void
     {
         if (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata'])) {
             unset($_SESSION['userdata']['preferences']);

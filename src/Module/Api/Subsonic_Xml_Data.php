@@ -147,7 +147,7 @@ class Subsonic_Xml_Data
      * addLicense
      * @param SimpleXMLElement $xml
      */
-    public static function addLicense($xml)
+    public static function addLicense($xml): void
     {
         $xlic = $xml->addChild('license');
         $xlic->addAttribute('valid', 'true');
@@ -159,7 +159,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param int[] $catalogs
      */
-    public static function addMusicFolders($xml, $catalogs)
+    public static function addMusicFolders($xml, $catalogs): void
     {
         $xfolders = $xml->addChild('musicFolders');
         foreach ($catalogs as $folder_id) {
@@ -179,7 +179,7 @@ class Subsonic_Xml_Data
      * @param array $artists
      * @param $lastModified
      */
-    public static function addIndexes($xml, $artists, $lastModified)
+    public static function addIndexes($xml, $artists, $lastModified): void
     {
         $xindexes = $xml->addChild('indexes');
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
@@ -250,7 +250,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $artists
      */
-    public static function addArtists($xml, $artists)
+    public static function addArtists($xml, $artists): void
     {
         $xartists = $xml->addChild('artists');
         self::addIgnoredArticles($xartists);
@@ -265,7 +265,7 @@ class Subsonic_Xml_Data
      * @param bool $albums
      * @param bool $albumsSet
      */
-    public static function addArtist($xml, $artist, $extra = false, $albums = false, $albumsSet = false)
+    public static function addArtist($xml, $artist, $extra = false, $albums = false, $albumsSet = false): void
     {
         $artist->format();
         $sub_id  = (string)self::_getArtistId($artist->id);
@@ -340,7 +340,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param $albums
      */
-    public static function addAlbumList($xml, $albums)
+    public static function addAlbumList($xml, $albums): void
     {
         $xlist = $xml->addChild(htmlspecialchars('albumList'));
         foreach ($albums as $album_id) {
@@ -354,7 +354,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param $albums
      */
-    public static function addAlbumList2($xml, $albums)
+    public static function addAlbumList2($xml, $albums): void
     {
         $xlist = $xml->addChild(htmlspecialchars('albumList2'));
         foreach ($albums as $album_id) {
@@ -370,7 +370,7 @@ class Subsonic_Xml_Data
      * @param bool $songs
      * @param string $elementName
      */
-    public static function addAlbum($xml, $album, $songs = false, $elementName = "album")
+    public static function addAlbum($xml, $album, $songs = false, $elementName = "album"): void
     {
         $album->format();
         $sub_id    = (string)self::_getAlbumId($album->id);
@@ -378,7 +378,7 @@ class Subsonic_Xml_Data
         $xalbum    = $xml->addChild(htmlspecialchars($elementName));
         $f_name    = (string)self::_checkName($album->get_fullname());
         $xalbum->addAttribute('id', $sub_id);
-        $xalbum->addAttribute('parent', $subParent);
+        $xalbum->addAttribute('parent', (string)$subParent);
         $xalbum->addAttribute('album', $f_name);
         $xalbum->addAttribute('title', $f_name);
         $xalbum->addAttribute('name', $f_name);
@@ -390,8 +390,8 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->total_duration);
-        $xalbum->addAttribute('playCount', $album->total_count);
-        $xalbum->addAttribute('artistId', $subParent);
+        $xalbum->addAttribute('playCount', (string)$album->total_count);
+        $xalbum->addAttribute('artistId', (string)$subParent);
         $xalbum->addAttribute('artist', (string) self::_checkName($album->get_artist_fullname()));
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
@@ -433,7 +433,7 @@ class Subsonic_Xml_Data
      * @param string $elementName
      * @return SimpleXMLElement
      */
-    public static function addSong($xml, $song_id, $elementName = 'song')
+    public static function addSong($xml, $song_id, $elementName = 'song'): SimpleXMLElement
     {
         $song        = new Song($song_id);
         $catalogData = self::_getCatalogData($song->catalog, $song->file);
@@ -521,7 +521,7 @@ class Subsonic_Xml_Data
      * @param string $sub_id
      * @param string $dirType
      */
-    public static function addDirectory($xml, $sub_id, $dirType)
+    public static function addDirectory($xml, $sub_id, $dirType): void
     {
         switch ($dirType) {
             case 'artist':
@@ -569,6 +569,7 @@ class Subsonic_Xml_Data
     {
         $album = new Album(self::_getAmpacheId($album_id));
         $album->format();
+        /** @var SimpleXMLElement $xdir */
         $xdir = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$album_id);
         if ($album->album_artist) {
@@ -611,7 +612,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $tags
      */
-    public static function addGenres($xml, $tags)
+    public static function addGenres($xml, $tags): void
     {
         $xgenres = $xml->addChild('genres');
 
@@ -629,7 +630,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param Video[] $videos
      */
-    public static function addVideos($xml, $videos)
+    public static function addVideos($xml, $videos): void
     {
         $xvideos = $xml->addChild('videos');
         foreach ($videos as $video) {
@@ -690,10 +691,10 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param int $video_id
      */
-    public static function addVideoInfo($xml, $video_id)
+    public static function addVideoInfo($xml, $video_id): void
     {
         $xvideoinfo = $xml->addChild('videoinfo');
-        $xvideoinfo->addAttribute('id', $video_id);
+        $xvideoinfo->addAttribute('id', (string)$video_id);
     }
 
     /**
@@ -704,7 +705,7 @@ class Subsonic_Xml_Data
      * @param array $smartplaylists
      * @param bool $hide_dupe_searches
      */
-    public static function addPlaylists($xml, $user_id, $playlists, $smartplaylists = array(), $hide_dupe_searches = false)
+    public static function addPlaylists($xml, $user_id, $playlists, $smartplaylists = array(), $hide_dupe_searches = false): void
     {
         $playlist_names = array();
         $xplaylists     = $xml->addChild('playlists');
@@ -730,7 +731,7 @@ class Subsonic_Xml_Data
      * @param Playlist|Search $playlist
      * @param bool $songs
      */
-    public static function addPlaylist($xml, $playlist, $songs = false)
+    public static function addPlaylist($xml, $playlist, $songs = false): void
     {
         if ($playlist instanceof Playlist) {
             self::addPlaylist_Playlist($xml, $playlist, $songs);
@@ -754,7 +755,7 @@ class Subsonic_Xml_Data
         $xplaylist = $xml->addChild('playlist');
         $xplaylist->addAttribute('id', $sub_id);
         $xplaylist->addAttribute('name', (string)self::_checkName($playlist->get_fullname()));
-        $xplaylist->addAttribute('owner', (string)$playlist->username);
+        $xplaylist->addAttribute('owner', $playlist->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('songCount', (string)$songcount);
         $xplaylist->addAttribute('duration', (string)$duration);
@@ -785,7 +786,7 @@ class Subsonic_Xml_Data
         $xplaylist = $xml->addChild('playlist');
         $xplaylist->addAttribute('id', $sub_id);
         $xplaylist->addAttribute('name', (string) self::_checkName($search->get_fullname()));
-        $xplaylist->addAttribute('owner', (string)$search->username);
+        $xplaylist->addAttribute('owner', $search->username);
         $xplaylist->addAttribute('public', ($search->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('created', date("c", (int)$search->date));
         $xplaylist->addAttribute('changed', date("c", time()));
@@ -814,7 +815,7 @@ class Subsonic_Xml_Data
      * @param User_Playlist $playQueue
      * @param string $username
      */
-    public static function addPlayQueue($xml, $playQueue, $username)
+    public static function addPlayQueue($xml, $playQueue, $username): void
     {
         $items     = $playQueue->get_items();
         if (!empty($items)) {
@@ -824,8 +825,8 @@ class Subsonic_Xml_Data
             $date->setTimezone(new DateTimeZone('UTC'));
             $changedBy  = $playQueue->client ?? '';
             $xplayqueue = $xml->addChild('playQueue');
-            $xplayqueue->addAttribute('current', self::_getSongId($current['object_id']));
-            $xplayqueue->addAttribute('position', (string)$current['current_time'] * 1000);
+            $xplayqueue->addAttribute('current', (string)self::_getSongId($current['object_id']));
+            $xplayqueue->addAttribute('position', (string)($current['current_time'] * 1000));
             $xplayqueue->addAttribute('username', (string)$username);
             $xplayqueue->addAttribute('changed', $date->format("c"));
             $xplayqueue->addAttribute('changedBy', (string)$changedBy);
@@ -842,7 +843,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $songs
      */
-    public static function addRandomSongs($xml, $songs)
+    public static function addRandomSongs($xml, $songs): void
     {
         $xsongs = $xml->addChild('randomSongs');
         foreach ($songs as $song_id) {
@@ -855,7 +856,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $songs
      */
-    public static function addSongsByGenre($xml, $songs)
+    public static function addSongsByGenre($xml, $songs): void
     {
         $xsongs = $xml->addChild('songsByGenre');
         foreach ($songs as $song_id) {
@@ -868,7 +869,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $songs
      */
-    public static function addTopSongs($xml, $songs)
+    public static function addTopSongs($xml, $songs): void
     {
         $xsongs = $xml->addChild('topSongs');
         foreach ($songs as $song_id) {
@@ -881,7 +882,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $data
      */
-    public static function addNowPlaying($xml, $data)
+    public static function addNowPlaying($xml, $data): void
     {
         $xplaynow = $xml->addChild('nowPlaying');
         foreach ($data as $row) {
@@ -902,7 +903,7 @@ class Subsonic_Xml_Data
      * @param array $albums
      * @param array $songs
      */
-    public static function addSearchResult2($xml, $artists, $albums, $songs)
+    public static function addSearchResult2($xml, $artists, $albums, $songs): void
     {
         $xresult = $xml->addChild(htmlspecialchars('searchResult2'));
         foreach ($artists as $artist_id) {
@@ -925,7 +926,7 @@ class Subsonic_Xml_Data
      * @param array $albums
      * @param array $songs
      */
-    public static function addSearchResult3($xml, $artists, $albums, $songs)
+    public static function addSearchResult3($xml, $artists, $albums, $songs): void
     {
         $xresult = $xml->addChild(htmlspecialchars('searchResult3'));
         foreach ($artists as $artist_id) {
@@ -948,7 +949,7 @@ class Subsonic_Xml_Data
      * @param array $albums
      * @param array $songs
      */
-    public static function addStarred($xml, $artists, $albums, $songs)
+    public static function addStarred($xml, $artists, $albums, $songs): void
     {
         $xstarred = $xml->addChild(htmlspecialchars('starred'));
 
@@ -974,7 +975,7 @@ class Subsonic_Xml_Data
      * @param array $albums
      * @param array $songs
      */
-    public static function addStarred2($xml, $artists, $albums, $songs)
+    public static function addStarred2($xml, $artists, $albums, $songs): void
     {
         $xstarred = $xml->addChild(htmlspecialchars('starred2'));
 
@@ -998,7 +999,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param User $user
      */
-    public static function addUser($xml, $user)
+    public static function addUser($xml, $user): void
     {
         $xuser = $xml->addChild('user');
         $xuser->addAttribute('username', (string)$user->username);
@@ -1024,7 +1025,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $users
      */
-    public static function addUsers($xml, $users)
+    public static function addUsers($xml, $users): void
     {
         $xusers = $xml->addChild('users');
         foreach ($users as $user_id) {
@@ -1040,7 +1041,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param $radios
      */
-    public static function addInternetRadioStations($xml, $radios)
+    public static function addInternetRadioStations($xml, $radios): void
     {
         $xradios = $xml->addChild('internetRadioStations');
         foreach ($radios as $radio_id) {
@@ -1068,7 +1069,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $shares
      */
-    public static function addShares($xml, $shares)
+    public static function addShares($xml, $shares): void
     {
         $xshares = $xml->addChild('shares');
         foreach ($shares as $share_id) {
@@ -1126,7 +1127,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param LocalPlay $localplay
      */
-    public static function addJukeboxPlaylist($xml, LocalPlay $localplay)
+    public static function addJukeboxPlaylist($xml, LocalPlay $localplay): void
     {
         $xjbox  = self::addJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
         $tracks = $localplay->get();
@@ -1144,19 +1145,18 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param LocalPlay $localplay
      * @param string $elementName
-     * @return SimpleXMLElement
      */
-    public static function addJukeboxStatus($xml, LocalPlay $localplay, $elementName = 'jukeboxStatus')
+    public static function addJukeboxStatus($xml, LocalPlay $localplay, $elementName = 'jukeboxStatus'): SimpleXMLElement
     {
         $xjbox  = $xml->addChild(htmlspecialchars($elementName));
         $status = $localplay->status();
         $index  = (AmpConfig::get('localplay_controller') == 'mpd') // TODO a way for this to support all localplay types
             ? $status['track'] - 1
             : 0;
-        $xjbox->addAttribute('currentIndex', $index);
+        $xjbox->addAttribute('currentIndex', (string)$index);
         $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
         $xjbox->addAttribute('gain', (string)$status['volume']);
-        $xjbox->addAttribute('position', 0); // TODO Not supported
+        $xjbox->addAttribute('position', '0'); // TODO Not supported
 
         return $xjbox;
     }
@@ -1168,7 +1168,7 @@ class Subsonic_Xml_Data
      * @param $title
      * @param $song_id
      */
-    public static function addLyrics($xml, $artist, $title, $song_id)
+    public static function addLyrics($xml, $artist, $title, $song_id): void
     {
         $song = new Song($song_id);
         $song->fill_ext_info('lyrics');
@@ -1193,7 +1193,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $info
      */
-    public static function addAlbumInfo($xml, $info)
+    public static function addAlbumInfo($xml, $info): void
     {
         $album = new Album((int) $info['id']);
 
@@ -1212,7 +1212,7 @@ class Subsonic_Xml_Data
      * @param array $info
      * @param array $similars
      */
-    public static function addArtistInfo($xml, $info, $similars, $elementName = 'artistInfo')
+    public static function addArtistInfo($xml, $info, $similars, $elementName = 'artistInfo'): void
     {
         $artist = new Artist((int) $info['id']);
 
@@ -1240,7 +1240,7 @@ class Subsonic_Xml_Data
      * @param array $info
      * @param array $similars
      */
-    public static function addArtistInfo2($xml, $info, $similars)
+    public static function addArtistInfo2($xml, $info, $similars): void
     {
         self::addArtistInfo($xml, $info, $similars, 'artistInfo2');
     }
@@ -1251,7 +1251,7 @@ class Subsonic_Xml_Data
      * @param array $similar_songs
      * @param string $child
      */
-    public static function addSimilarSongs($xml, $similar_songs, $child)
+    public static function addSimilarSongs($xml, $similar_songs, $child): void
     {
         $xsimilar = $xml->addChild(htmlspecialchars($child));
         foreach ($similar_songs as $similar_song) {
@@ -1267,7 +1267,7 @@ class Subsonic_Xml_Data
      * @param array $similar_songs
      * @param string $child
      */
-    public static function addSimilarSongs2($xml, $similar_songs, $child)
+    public static function addSimilarSongs2($xml, $similar_songs, $child): void
     {
         $xsimilar = $xml->addChild(htmlspecialchars($child));
         foreach ($similar_songs as $similar_song) {
@@ -1283,7 +1283,7 @@ class Subsonic_Xml_Data
      * @param Podcast[] $podcasts
      * @param bool $includeEpisodes
      */
-    public static function addPodcasts($xml, $podcasts, $includeEpisodes = true)
+    public static function addPodcasts($xml, $podcasts, $includeEpisodes = true): void
     {
         $xpodcasts = $xml->addChild('podcasts');
         foreach ($podcasts as $podcast) {
@@ -1313,7 +1313,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param Podcast_Episode[] $episodes
      */
-    public static function addNewestPodcasts($xml, $episodes)
+    public static function addNewestPodcasts($xml, $episodes): void
     {
         $xpodcasts = $xml->addChild('newestPodcasts');
         foreach ($episodes as $episode) {
@@ -1327,7 +1327,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param Bookmark[] $bookmarks
      */
-    public static function addBookmarks($xml, $bookmarks)
+    public static function addBookmarks($xml, $bookmarks): void
     {
         $xbookmarks = $xml->addChild('bookmarks');
         foreach ($bookmarks as $bookmark) {
@@ -1405,7 +1405,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param int[] $messages
      */
-    public static function addChatMessages($xml, $messages)
+    public static function addChatMessages($xml, $messages): void
     {
         $xmessages = $xml->addChild('chatMessages');
         if (empty($messages)) {
@@ -1422,13 +1422,13 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param User $user
      */
-    public static function addScanStatus($xml, $user)
+    public static function addScanStatus($xml, $user): void
     {
         $counts = Catalog::get_server_counts($user->id);
         $count  = $counts['artist'] + $counts['album'] + $counts['song'] + $counts['podcast_episode'];
         $xscan  = $xml->addChild(htmlspecialchars('scanStatus'));
         $xscan->addAttribute('scanning', "false");
-        $xscan->addAttribute('count', $count);
+        $xscan->addAttribute('count', (string)$count);
     }
 
     /**
@@ -1455,7 +1455,7 @@ class Subsonic_Xml_Data
      * @param string $status
      * @return SimpleXMLElement
      */
-    private static function _createResponse($version, $status = 'ok')
+    private static function _createResponse($version, $status = 'ok'): SimpleXMLElement
     {
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
@@ -1485,7 +1485,7 @@ class Subsonic_Xml_Data
      * @param string $function
      * @return SimpleXMLElement
      */
-    private static function _createFailedResponse($function = '')
+    private static function _createFailedResponse($function = ''): SimpleXMLElement
     {
         $version  = self::API_VERSION;
         $response = self::_createResponse($version, 'failed');
@@ -1625,7 +1625,7 @@ class Subsonic_Xml_Data
         foreach ($object_ids as $object_id) {
             $ampidarrays[] = array(
                 'object_id' => self::_getAmpacheId($object_id),
-                'object_type' => self::_getAmpacheType($object_id),
+                'object_type' => self::_getAmpacheType((string)$object_id),
                 'track' => $track
             );
             $track++;
@@ -1637,9 +1637,8 @@ class Subsonic_Xml_Data
     /**
      * _getAmpacheType
      * @param string $object_id
-     * @return string
      */
-    public static function _getAmpacheType($object_id)
+    public static function _getAmpacheType($object_id): string
     {
         if (self::_isArtist($object_id)) {
             return "artist";
@@ -1664,36 +1663,32 @@ class Subsonic_Xml_Data
 
     /**
      * @param string $artist_id
-     * @return bool
      */
-    public static function _isArtist($artist_id)
+    public static function _isArtist($artist_id): bool
     {
         return (self::_cleanId($artist_id) >= self::AMPACHEID_ARTIST && $artist_id < self::AMPACHEID_ALBUM);
     }
 
     /**
      * @param string $album_id
-     * @return bool
      */
-    public static function _isAlbum($album_id)
+    public static function _isAlbum($album_id): bool
     {
         return (self::_cleanId($album_id) >= self::AMPACHEID_ALBUM && $album_id < self::AMPACHEID_SONG);
     }
 
     /**
      * @param string $song_id
-     * @return bool
      */
-    public static function _isSong($song_id)
+    public static function _isSong($song_id): bool
     {
         return (self::_cleanId($song_id) >= self::AMPACHEID_SONG && $song_id < self::AMPACHEID_SMARTPL);
     }
 
     /**
      * @param string $video_id
-     * @return bool
      */
-    public static function _isVideo($video_id)
+    public static function _isVideo($video_id): bool
     {
         $video_id = self::_cleanId($video_id);
 
@@ -1702,36 +1697,32 @@ class Subsonic_Xml_Data
 
     /**
      * @param string $podcast_id
-     * @return bool
      */
-    public static function _isPodcast($podcast_id)
+    public static function _isPodcast($podcast_id): bool
     {
         return (self::_cleanId($podcast_id) >= self::AMPACHEID_PODCAST && $podcast_id < self::AMPACHEID_PODCASTEP);
     }
 
     /**
      * @param string $episode_id
-     * @return bool
      */
-    public static function _isPodcastEpisode($episode_id)
+    public static function _isPodcastEpisode($episode_id): bool
     {
         return (self::_cleanId($episode_id) >= self::AMPACHEID_PODCASTEP && $episode_id < self::AMPACHEID_PLAYLIST);
     }
 
     /**
      * @param string $plist_id
-     * @return bool
      */
-    public static function _isPlaylist($plist_id)
+    public static function _isPlaylist($plist_id): bool
     {
         return (self::_cleanId($plist_id) >= self::AMPACHEID_PLAYLIST);
     }
 
     /**
      * @param string $plist_id
-     * @return bool
      */
-    public static function _isSmartPlaylist($plist_id)
+    public static function _isSmartPlaylist($plist_id): bool
     {
         return (self::_cleanId($plist_id) >= self::AMPACHEID_SMARTPL && $plist_id < self::AMPACHEID_VIDEO);
     }

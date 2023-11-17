@@ -96,7 +96,7 @@ abstract class database_object
     /**
      * clear_cache
      */
-    public static function clear_cache()
+    public static function clear_cache(): void
     {
         self::$object_cache = array();
     }

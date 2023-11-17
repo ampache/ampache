@@ -49,7 +49,7 @@ class Random
      * artist
      * This returns the ID of a random artist, nothing special here for now
      */
-    public static function artist()
+    public static function artist(): int
     {
         $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
         $sql     = "SELECT `artist`.`id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
@@ -64,7 +64,7 @@ class Random
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return $results['id'];
+        return (int)$results['id'];
     } // artist
 
     /**

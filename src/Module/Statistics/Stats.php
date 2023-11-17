@@ -61,7 +61,7 @@ class Stats
      * This clears all stats for _everything.
      * @param int $user_id
      */
-    public static function clear($user_id = 0)
+    public static function clear($user_id = 0): void
     {
         if ($user_id > 0) {
             Dba::write("DELETE FROM `object_count` WHERE `user` = ?;", array($user_id));
@@ -119,7 +119,7 @@ class Stats
     /**
      * When creating an artist_map, duplicate the stat rows
      */
-    public static function duplicate_map(string $source_type, int $source_id, string $dest_type, int $dest_id)
+    public static function duplicate_map(string $source_type, int $source_id, string $dest_type, int $dest_id): void
     {
         if ($source_id > 0 && $dest_id > 0) {
             debug_event(__CLASS__, "duplicate_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
@@ -135,7 +135,7 @@ class Stats
     /**
      * When deleting an artist_map, remove the stat rows too
      */
-    public static function delete_map(string $source_type, int $source_id, string $dest_type, int $dest_id)
+    public static function delete_map(string $source_type, int $source_id, string $dest_type, int $dest_id): void
     {
         if ($source_id > 0 && $dest_id > 0) {
             debug_event(__CLASS__, "delete_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
@@ -151,7 +151,7 @@ class Stats
     /**
      * Delete a user activity in object_count, find related objects and reduce counts for parent/child objects
      */
-    public static function delete(int $activity_id)
+    public static function delete(int $activity_id): void
     {
         if ($activity_id > 0) {
             $sql        = "SELECT `object_count`.`object_id`, `object_count`.`object_type`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`id` = ?;";
@@ -176,7 +176,7 @@ class Stats
     /**
      * update the play_count for an object
      */
-    public static function count(string $type, int $object_id, $count_type = 'up')
+    public static function count(string $type, int $object_id, $count_type = 'up'): void
     {
         switch ($type) {
             case 'song':
@@ -223,8 +223,7 @@ class Stats
         $location = [],
         $count_type = 'stream',
         $date = null
-    ): bool
-    {
+    ): bool {
         if (AmpConfig::get('use_auth') && $user_id < 0) {
             debug_event(self::class, 'Invalid user given ' . $user_id, 3);
 
@@ -440,7 +439,7 @@ class Stats
      * @param int $original_date
      * @param int $new_date
      */
-    public static function shift_last_play($user_id, $agent, $original_date, $new_date)
+    public static function shift_last_play($user_id, $agent, $original_date, $new_date): void
     {
         // update the object_count table
         $sql = "UPDATE `object_count` SET `object_count`.`date` = ? WHERE `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`date` = ?";
@@ -618,8 +617,7 @@ class Stats
         $user_id = null,
         $random = false,
         bool $addAdditionalColumns = false
-    ): string
-    {
+    ): string {
         $type           = self::validate_type($input_type);
         $date           = time() - (86400 * (int)$threshold);
         $catalog_filter = (AmpConfig::get('catalog_filter'));

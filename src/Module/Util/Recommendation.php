@@ -43,7 +43,6 @@ class Recommendation
      * @param string $method
      * @param string $query
      * @return SimpleXMLElement
-     *
      * @throws LastFmQueryFailedException
      */
     public static function get_lastfm_results($method, $query)
@@ -477,7 +476,7 @@ class Recommendation
      * @param string $object_type
      * @param int $old_object_id
      */
-    public static function migrate($object_type, $old_object_id)
+    public static function migrate($object_type, $old_object_id): void
     {
         self::delete_recommendation_cache($object_type, $old_object_id);
     }

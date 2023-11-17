@@ -388,6 +388,9 @@ class Live_Stream extends database_object implements Media, library_item
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));
         $insert_id = Dba::insert_id();
+        if (!$insert_id) {
+            return null;
+        }
         Catalog::count_table('live_stream');
 
         return $insert_id;

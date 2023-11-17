@@ -561,7 +561,7 @@ class Art extends database_object
      * clear_image
      * Clear the image column (if you have the image on disk)
      */
-    public static function clear_image($image_id)
+    public static function clear_image($image_id): void
     {
         $sql = "UPDATE `image` SET `image` = NULL WHERE `id` = ?";
         Dba::write($sql, array($image_id));
@@ -620,9 +620,8 @@ class Art extends database_object
      * @param int $uid
      * @param $kind
      * @param $mime
-     * @return bool
      */
-    private static function write_to_dir($source, $sizetext, $type, $uid, $kind, $mime)
+    private static function write_to_dir($source, $sizetext, $type, $uid, $kind, $mime): bool
     {
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
         if ($path === false) {
@@ -631,7 +630,7 @@ class Art extends database_object
         if (!Core::is_readable($path)) {
             debug_event(self::class, 'Local image art directory ' . $path . ' does not exist.', 1);
 
-            return null;
+            return false;
         }
         $path .= "art-" . $sizetext . "." . self::extension($mime);
         if (Core::is_readable($path)) {
@@ -704,7 +703,7 @@ class Art extends database_object
      * @param string $uid
      * @param string $kind
      */
-    private static function delete_from_dir($type, $uid, $kind = '')
+    private static function delete_from_dir($type, $uid, $kind = ''): void
     {
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, $kind);
@@ -718,7 +717,7 @@ class Art extends database_object
      * delete_rec_dir
      * @param string $path
      */
-    private static function delete_rec_dir($path)
+    private static function delete_rec_dir($path): void
     {
         debug_event(self::class, 'Deleting ' . (string) $path . ' directory...', 5);
 
@@ -1416,8 +1415,7 @@ class Art extends database_object
         $link = null,
         $show_default = true,
         $kind = 'default'
-    ): bool
-    {
+    ): bool {
         if (!self::is_valid_type($object_type)) {
             return false;
         }
@@ -1514,8 +1512,7 @@ class Art extends database_object
         $link = null,
         $show_default = true,
         $kind = 'default'
-    ): string
-    {
+    ): string {
         self::display(
             $object_type,
             $object_id,

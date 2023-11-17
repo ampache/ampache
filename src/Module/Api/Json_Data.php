@@ -204,36 +204,50 @@ class Json_Data
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
-    public static function indexes($objects, $type, $user, $include = false)
+    public static function indexes($objects, $type, $user, $include = false): string
     {
         // here is where we call the object type
         switch ($type) {
             case 'song':
-                return self::songs($objects, $user);
+                /** @var string $results */
+                $results = self::songs($objects, $user);
+                break;
             case 'album':
                 $include_array = ($include) ? array('songs') : array();
-
-                return self::albums($objects, $include_array, $user);
+                /** @var string $results */
+                $results = self::albums($objects, $include_array, $user);
+                break;
             case 'artist':
                 $include_array = ($include) ? array('songs', 'albums') : array();
-
-                return self::artists($objects, $include_array, $user);
+                /** @var string $results */
+                $results = self::artists($objects, $include_array, $user);
+                break;
             case 'playlist':
-                return self::playlists($objects, $user, $include);
+                $results = self::playlists($objects, $user, $include);
+                break;
             case 'share':
-                return self::shares($objects);
+                $results = self::shares($objects);
+                break;
             case 'podcast':
-                return self::podcasts($objects, $user, $include);
+                $results = self::podcasts($objects, $user, $include);
+                break;
             case 'podcast_episode':
-                return self::podcast_episodes($objects, $user);
+                /** @var string $results */
+                $results = self::podcast_episodes($objects, $user);
+                break;
             case 'video':
-                return self::videos($objects, $user);
+                /** @var string $results */
+                $results = self::videos($objects, $user);
+                break;
             case 'live_stream':
-                return self::live_streams($objects);
+                $results = self::live_streams($objects);
+                break;
             default:
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+                $results = self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
         }
+
+        return $results;
     } // indexes
 
     /**

@@ -88,7 +88,7 @@ class MetadataField extends DatabaseObject implements Model
     /**
      * Set public to false
      */
-    public function hide():void
+    public function hide(): void
     {
         $this->public = false;
     }

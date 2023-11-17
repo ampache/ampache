@@ -143,6 +143,7 @@ class Democratic extends Tmp_Playlist
     /**
      * get_playlists
      * This returns all of the current valid 'Democratic' Playlists that have been created.
+     * @return int[]
      */
     public static function get_playlists()
     {
@@ -162,7 +163,7 @@ class Democratic extends Tmp_Playlist
      * This returns the current users current playlist, or if specified
      * this current playlist of the user
      */
-    public static function get_current_playlist($user = false)
+    public static function get_current_playlist($user = false): Democratic
     {
         if (!$user) {
             $user = Core::get_global('user');
@@ -535,13 +536,11 @@ class Democratic extends Tmp_Playlist
      * This replaces the normal prune tracks and correctly removes the votes
      * as well
      */
-    public static function prune_tracks(): bool
+    public static function prune_tracks(): void
     {
         // This deletes data without votes, if it's a voting democratic playlist
         $sql = "DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `user_vote` ON `tmp_playlist_data`.`id`=`user_vote`.`object_id` LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id`=`tmp_playlist_data`.`tmp_playlist` WHERE `user_vote`.`object_id` IS NULL AND `tmp_playlist`.`type` = 'vote'";
         Dba::write($sql);
-
-        return true;
     } // prune_tracks
 
     /**

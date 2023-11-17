@@ -42,7 +42,7 @@ class Dba
     public static $stats = array('query' => 0);
 
     private static $_sql;
-    private static $_error;
+    private static string $_error;
 
     /**
      * query
@@ -98,12 +98,12 @@ class Dba
         }
 
         if (!$stmt) {
-            self::$_error = json_encode($dbh->errorInfo());
+            self::$_error = (string)json_encode($dbh->errorInfo());
             debug_event(__CLASS__, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
             debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
             self::disconnect();
         } elseif ($stmt->errorCode() && $stmt->errorCode() != '00000') {
-            self::$_error = json_encode($stmt->errorInfo());
+            self::$_error = (string)json_encode($stmt->errorInfo());
             debug_event(__CLASS__, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
             debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
             self::finish($stmt);
@@ -325,7 +325,7 @@ class Dba
      * This closes a result handle and clears the memory associated with it
      * @param $resource
      */
-    public static function finish($resource)
+    public static function finish($resource): void
     {
         if ($resource) {
             $resource->closeCursor();
@@ -410,7 +410,7 @@ class Dba
         try {
             $dbh->exec('USE `' . $database . '`');
         } catch (PDOException $error) {
-            self::$_error = json_encode($dbh->errorInfo());
+            self::$_error = (string)json_encode($dbh->errorInfo());
             debug_event(__CLASS__, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }
 
@@ -434,7 +434,7 @@ class Dba
 
         if (!$dbh || $dbh->errorCode()) {
             if ($dbh) {
-                self::$_error = json_encode($dbh->errorInfo());
+                self::$_error = (string)json_encode($dbh->errorInfo());
             }
 
             return false;
@@ -471,7 +471,7 @@ class Dba
      *
      * This function is used for debug, helps with profiling
      */
-    public static function show_profile()
+    public static function show_profile(): void
     {
         if (AmpConfig::get('sql_profiling')) {
             print '<br/>Profiling data: <br/>';
@@ -536,7 +536,7 @@ class Dba
 
     /**
      * insert_id
-     * @return string|null
+     * @return string|false
      */
     public static function insert_id()
     {
@@ -545,14 +545,14 @@ class Dba
             return $dbh->lastInsertId();
         }
 
-        return null;
+        return false;
     }
 
     /**
      * error
      * this returns the error of the db
      */
-    public static function error()
+    public static function error(): string
     {
         return self::$_error;
     }
@@ -620,7 +620,7 @@ class Dba
      * This can be slow, but is a good idea to do from time to time.
      * We do it in case the dba isn't doing it... which we're going to assume they aren't.
      */
-    public static function optimize_tables()
+    public static function optimize_tables(): void
     {
         $sql        = "SHOW TABLES";
         $db_results = self::read($sql);

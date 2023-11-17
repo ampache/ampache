@@ -84,8 +84,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null
-    ): string
-    {
+    ): string {
         $start_date = (int)($start_date);
         $end_date   = (int)($end_date);
         if ($end_date == 0) {
@@ -124,8 +123,7 @@ class Graph
         $catalog_id = 0,
         $start_date = null,
         $end_date = null
-    ): string
-    {
+    ): string {
         $start_date = (int)($start_date);
         $end_date   = (int)($end_date);
         if ($end_date == 0) {

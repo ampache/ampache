@@ -280,7 +280,7 @@ class Wanted extends database_object
      * @param string $mbid
      * @throws \MusicBrainz\Exception
      */
-    public static function delete_wanted_release($mbid)
+    public static function delete_wanted_release($mbid): void
     {
         if (static::getWantedRepository()->getAcceptedCount() > 0) {
             $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
@@ -325,7 +325,7 @@ class Wanted extends database_object
      * @param string $name
      * @param int $year
      */
-    public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
+    public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year): void
     {
         $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $accept = Core::get_global('user')->has_access(75) ? true : AmpConfig::get('wanted_auto_accept', false);

@@ -164,7 +164,7 @@ class Repository
 
     /**
      * @param $properties
-     * @return string|null
+     * @return string|false
      */
     protected function insertRecord($properties)
     {
@@ -221,7 +221,7 @@ class Repository
      * Only used in case where a property should not publicly writable
      * @param Model $object
      * @param string $property
-     * @param string|null $value
+     * @param string|false $value
      * @throws ReflectionException
      */
     protected function setPrivateProperty(Model $object, $property, $value)

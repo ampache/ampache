@@ -854,7 +854,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * Add artist map for a single item
      */
-    public static function add_artist_map($artist_id, $object_type, $object_id)
+    public static function add_artist_map($artist_id, $object_type, $object_id): void
     {
         if ((int)$artist_id > 0 && (int)$object_id > 0) {
             debug_event(__CLASS__, "add_artist_map artist_id {" . $artist_id . "} $object_type {" . $object_id . "}", 5);
@@ -866,7 +866,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * Delete the artist map for a single item
      */
-    public static function remove_artist_map($artist_id, $object_type, $object_id)
+    public static function remove_artist_map($artist_id, $object_type, $object_id): void
     {
         if ((int)$artist_id > 0 && (int)$object_id > 0) {
             debug_event(__CLASS__, "remove_artist_map artist_id {" . $artist_id . "} $object_type {" . $object_id . "}", 5);
@@ -1069,7 +1069,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * update_artist_counts
      */
-    public static function update_table_counts()
+    public static function update_table_counts(): void
     {
         debug_event(__CLASS__, 'update_table_counts', 5);
         // artist.time
@@ -1093,7 +1093,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Update artist last_update time.
      * @param int $object_id
      */
-    public static function set_last_update($object_id)
+    public static function set_last_update($object_id): void
     {
         $sql = "UPDATE `artist` SET `last_update` = ? WHERE `id` = ?";
         Dba::write($sql, array(time(), $object_id));

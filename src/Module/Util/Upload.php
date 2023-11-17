@@ -218,7 +218,7 @@ class Upload
      * @param string $targetdir
      * @param string $targetfile
      */
-    public static function upload_script($targetdir, $targetfile)
+    public static function upload_script($targetdir, $targetfile): void
     {
         $script = AmpConfig::get('upload_script');
         if (AmpConfig::get('allow_upload_scripts') && $script) {

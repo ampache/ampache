@@ -239,7 +239,7 @@ class Userflag extends database_object
      * @param Song $song
      * @param bool $flagged
      */
-    public static function save_flag($user, $song, $flagged)
+    public static function save_flag($user, $song, $flagged): void
     {
         foreach (Plugin::get_plugins('set_flag') as $plugin_name) {
             try {

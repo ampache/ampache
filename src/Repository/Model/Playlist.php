@@ -87,17 +87,20 @@ class Playlist extends playlist_object
      * This is what builds the cache from the objects
      * @param array $ids
      */
-    public static function build_cache($ids)
+    public static function build_cache($ids): bool
     {
-        if (!empty($ids)) {
-            $idlist     = '(' . implode(',', $ids) . ')';
-            $sql        = "SELECT * FROM `playlist` WHERE `id` IN $idlist";
-            $db_results = Dba::read($sql);
-
-            while ($row = Dba::fetch_assoc($db_results)) {
-                parent::add_to_cache('playlist', $row['id'], $row);
-            }
+        if (empty($ids)) {
+            return false;
         }
+        $idlist     = '(' . implode(',', $ids) . ')';
+        $sql        = "SELECT * FROM `playlist` WHERE `id` IN $idlist";
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            parent::add_to_cache('playlist', $row['id'], $row);
+        }
+
+        return true;
     } // build_cache
 
     /**
@@ -733,7 +736,6 @@ class Playlist extends playlist_object
         $sql  = "INSERT INTO `playlist` (`name`, `user`, `username`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $user_id, $username, $type, $date, $date));
         $insert_id = Dba::insert_id();
-
         if (empty($insert_id)) {
             return null;
         }

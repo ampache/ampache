@@ -88,7 +88,7 @@ class Daap_Api
      * follow_stream
      * @param string $url
      */
-    public static function follow_stream($url)
+    public static function follow_stream($url): void
     {
         set_time_limit(0);
         ob_end_clean();
@@ -163,7 +163,7 @@ class Daap_Api
      * server_info (Based on the server_info part of the forkedd-daapd project)
      * @param $input
      */
-    public static function server_info($input)
+    public static function server_info($input): void
     {
         $output = self::tlv('dmap.status', 200);
         $output .= self::tlv('dmap.protocolversion', '0.2.0.0');
@@ -202,7 +202,7 @@ class Daap_Api
      * content_codes
      * @param $input
      */
-    public static function content_codes($input)
+    public static function content_codes($input): void
     {
         $output = self::tlv('dmap.status', 200);
         foreach (self::$tags as $name => $tag) {
@@ -222,7 +222,7 @@ class Daap_Api
      * login
      * @param $input
      */
-    public static function login($input)
+    public static function login($input): void
     {
         self::check_auth('dmap.loginresponse');
 
@@ -303,7 +303,7 @@ class Daap_Api
      * logout
      * @param $input
      */
-    public static function logout($input)
+    public static function logout($input): void
     {
         self::check_auth();
 
@@ -320,7 +320,7 @@ class Daap_Api
      * update
      * @param $input
      */
-    public static function update($input)
+    public static function update($input): void
     {
         self::check_session('dmap.updateresponse');
 
@@ -732,7 +732,7 @@ class Daap_Api
         return self::tlv_string($tag, $value);
     }
 
-    public static function create_dictionary()
+    public static function create_dictionary(): void
     {
         self::add_dict('mdcl', 'list', 'dmap.dictionary'); // a dictionary entry
         self::add_dict('mstt', 'int', 'dmap.status'); // the response status code, these appear to be http status codes
@@ -891,7 +891,7 @@ class Daap_Api
     /**
      * @param string $string
      */
-    public static function apiOutput($string)
+    public static function apiOutput($string): void
     {
         self::setHeaders();
 

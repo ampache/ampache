@@ -167,7 +167,7 @@ class Broadcast extends database_object implements library_item
             $params = array(Core::get_global('user')->id, $name, $description);
             Dba::write($sql, $params);
 
-            return Dba::insert_id();
+            return (int)Dba::insert_id();
         }
 
         return 0;

@@ -330,14 +330,14 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      * @param $tvshow
      * @param $season_number
      * @param bool $readonly
-     * @return string|null
+     * @return int|null
      */
     public static function check($tvshow, $season_number, $readonly = false)
     {
         $name = $tvshow . '_' . $season_number;
         // null because we don't have any unique id like mbid for now
         if (isset(self::$_mapcache[$name]['null'])) {
-            return self::$_mapcache[$name]['null'];
+            return (int)self::$_mapcache[$name]['null'];
         }
 
         $object_id  = 0;
@@ -356,9 +356,9 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         }
 
         if ($exists && (int)$object_id > 0) {
-            self::$_mapcache[$name]['null'] = $object_id;
+            self::$_mapcache[$name]['null'] = (int)$object_id;
 
-            return $object_id;
+            return (int)$object_id;
         }
 
         if ($readonly) {
@@ -372,10 +372,13 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
             return null;
         }
         $object_id = Dba::insert_id();
+        if (!$object_id) {
+            return null;
+        }
 
-        self::$_mapcache[$name]['null'] = $object_id;
+        self::$_mapcache[$name]['null'] = (int)$object_id;
 
-        return $object_id;
+        return (int)$object_id;
     }
 
     /**

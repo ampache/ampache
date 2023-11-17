@@ -341,7 +341,7 @@ class Label extends database_object implements library_item
     /**
      * helper
      * @param string $name
-     * @return string
+     * @return string|false
      */
     public static function helper(string $name)
     {
@@ -365,7 +365,7 @@ class Label extends database_object implements library_item
     /**
      * create
      * @param array $data
-     * @return string
+     * @return string|false
      */
     public static function create(array $data)
     {

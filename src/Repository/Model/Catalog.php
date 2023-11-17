@@ -1024,7 +1024,7 @@ abstract class Catalog extends database_object
     /**
      * Run the cache_catalog_proc() on music catalogs.
      */
-    public static function cache_catalogs()
+    public static function cache_catalogs(): void
     {
         $path   = (string)AmpConfig::get('cache_path', '');
         $target = (string)AmpConfig::get('cache_target', '');
@@ -1170,7 +1170,7 @@ abstract class Catalog extends database_object
     /**
      * clear_catalog_cache
      */
-    public static function clear_catalog_cache()
+    public static function clear_catalog_cache(): void
     {
         // clear caches if enabled to allow getting the new object
         parent::remove_from_cache('user_catalog');
@@ -2988,7 +2988,7 @@ abstract class Catalog extends database_object
     /**
      * update the artist or album counts on catalog changes
      */
-    public static function update_counts()
+    public static function update_counts(): void
     {
         $update_time = self::get_update_info('update_counts', -1);
         $now_time    = time();
@@ -3271,7 +3271,7 @@ abstract class Catalog extends database_object
     /**
      * clean_empty_albums
      */
-    public static function clean_empty_albums()
+    public static function clean_empty_albums(): void
     {
         $sql        = "SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS (SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`);";
         $db_results = Dba::read($sql);
@@ -3292,7 +3292,7 @@ abstract class Catalog extends database_object
      *
      * Artists that have the same mbid shouldn't be duplicated but can be created and updated based on names
      */
-    public static function clean_duplicate_artists()
+    public static function clean_duplicate_artists(): void
     {
         debug_event(__CLASS__, "Clean Artists with duplicate mbid's", 5);
         $sql        = "SELECT `mbid`, min(`id`) AS `minid`, max(`id`) AS `maxid` FROM `artist` WHERE `mbid` IS NOT NULL GROUP BY `mbid` HAVING count(`mbid`) >1;";
@@ -3922,7 +3922,7 @@ abstract class Catalog extends database_object
     /**
      * Update the catalog mapping for various types
      */
-    public static function garbage_collect_mapping()
+    public static function garbage_collect_mapping(): void
     {
         // delete non-existent maps
         $tables = ['song', 'album', 'video', 'podcast', 'podcast_episode', 'live_stream'];
@@ -3941,7 +3941,7 @@ abstract class Catalog extends database_object
     /**
      * Delete catalog filters that might have gone missing
      */
-    public static function garbage_collect_filters()
+    public static function garbage_collect_filters(): void
     {
         Dba::write("DELETE FROM `catalog_filter_group_map` WHERE `group_id` NOT IN (SELECT `id` FROM `catalog_filter_group`);");
         Dba::write("UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` NOT IN (SELECT `id` FROM `catalog_filter_group`);");
@@ -3951,7 +3951,7 @@ abstract class Catalog extends database_object
     /**
      * Update the catalog map for a single item
      */
-    public static function update_map($catalog, $object_type, $object_id)
+    public static function update_map($catalog, $object_type, $object_id): void
     {
         debug_event(__CLASS__, "update_map $object_type: {{$object_id}}", 5);
         if ($object_type == 'artist') {

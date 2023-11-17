@@ -128,8 +128,12 @@ class Song_Preview extends database_object implements Media, playable_item
 
             return null;
         }
+        $preview_id = Dba::insert_id();
+        if (!$preview_id) {
+            return null;
+        }
 
-        return Dba::insert_id();
+        return $preview_id;
     }
 
     /**

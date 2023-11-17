@@ -258,7 +258,7 @@ class Plugin
     /**
      * Check all plugins for updates and update them if required.
      */
-    public static function update_all()
+    public static function update_all(): void
     {
         foreach (PluginEnum::LIST as $name => $className) {
             $plugin            = new Plugin($name);
@@ -318,7 +318,7 @@ class Plugin
     /**
      * Display Plugin Update information and update links.
      */
-    public static function show_update_available()
+    public static function show_update_available(): void
     {
         $web_path = AmpConfig::get('web_path');
         echo '<div id="autoupdate">';
