@@ -1,6 +1,9 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,9 +24,11 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\WebPlayer;
 
-?>
+/** @var Stream_Playlist $this */
+$width = (WebPlayer::is_playlist_video($this)) ? 880 : 730; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,11 +37,6 @@ use Ampache\Module\Playback\WebPlayer;
 <!-- begin
 function PlayerPopUp(URL)
 {
-<?php
-$width = 730;
-if (WebPlayer::is_playlist_video($this)) {
-    $width = 880;
-} ?>
     window.open(URL, 'Web_player', 'width=<?php echo $width; ?>,height=285,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');
     window.location = '<?php echo return_referer(); ?>';
     return false;
