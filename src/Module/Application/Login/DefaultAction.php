@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Login;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
@@ -64,7 +65,7 @@ final class DefaultAction implements ApplicationActionInterface
 
     private NetworkCheckerInterface $networkChecker;
 
-    private EnvironmentInterface $environment;
+    private UserTrackerInterface $userTracker;
 
     public function __construct(
         RequestParserInterface $requestParser,
@@ -73,7 +74,7 @@ final class DefaultAction implements ApplicationActionInterface
         ResponseFactoryInterface $responseFactory,
         LoggerInterface $logger,
         NetworkCheckerInterface $networkChecker,
-        EnvironmentInterface $environment
+        UserTrackerInterface $userTracker
     ) {
         $this->requestParser         = $requestParser;
         $this->configContainer       = $configContainer;
@@ -81,7 +82,7 @@ final class DefaultAction implements ApplicationActionInterface
         $this->responseFactory       = $responseFactory;
         $this->logger                = $logger;
         $this->networkChecker        = $networkChecker;
-        $this->environment           = $environment;
+        $this->userTracker           = $userTracker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -285,9 +286,7 @@ final class DefaultAction implements ApplicationActionInterface
             unset($_SESSION['userdata']['avatar']);
 
             // Record the IP of this person!
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::TRACK_USER_IP)) {
-                $user->insert_ip_history();
-            }
+            $this->userTracker->trackIpAddress($user);
 
             if (isset($username)) {
                 Session::create_user_cookie($username);

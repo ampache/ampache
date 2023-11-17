@@ -18,47 +18,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\User\Tracking;
 
 use Ampache\Repository\Model\User;
-use DateTimeInterface;
-use Traversable;
 
-interface IpHistoryRepositoryInterface
+interface UserTrackerInterface
 {
     /**
-     * This returns the ip_history for the provided user
-     *
-     * @return Traversable<array{ip: string, date: DateTimeInterface}>
+     * Records the users ip in the ip history
      */
-    public function getHistory(
-        User $user,
-        int $limit = 1,
-        bool $distinct = false
-    ): Traversable;
-
-    /**
-     * Returns the most recent ip-address used by the provided user
-     *
-     * @return string|null Most recent ip-address or null if no data is available
-     */
-    public function getRecentIpForUser(User $user): ?string;
-
-    /**
-     * Deletes outdated records
-     */
-    public function collectGarbage(): void;
-
-    /**
-     * Inserts a new row into the database
-     */
-    public function create(
-        User $user,
-        string $ipAddress,
-        string $userAgent,
-        DateTimeInterface $date
-    ): void;
+    public function trackIpAddress(User $user): void;
 }
