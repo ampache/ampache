@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UPnP simple service discovery protocol (SSDP)
  * https://github.com/clue/reactphp-multicast/blob/master/examples/ssdp.php

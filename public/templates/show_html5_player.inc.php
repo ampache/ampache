@@ -133,7 +133,9 @@ echo implode(',', $solutions); ?>",
                 } elseif ($isRadio) {
                     // No size
                 } else {
-                    if ($iframed) { ?>
+                    if ($isRandom) { ?>
+                    visibility: "hidden",
+                <?php } elseif ($iframed) { ?>
                 width: "80px",
                 height: "80px",
                 <?php } else { ?>
@@ -210,7 +212,7 @@ echo implode(',', $solutions); ?>",
                     }
 
                     <?php if (!$isVideo && !$isRadio && !$isShare) {
-                        if ($iframed && !$isRadio && !$isRandom && !$isDemocratic) {
+                        if ($iframed) {
                             if (AmpConfig::get('sociable')) {
                                 echo "ajaxPut(jsAjaxUrl + '?page=' + currenttype + '&action=shouts&object_type=' + currenttype + '&object_id=' + currentjpitem.attr('data-media_id'), 'shouts_data');";
                             }
@@ -224,7 +226,7 @@ echo implode(',', $solutions); ?>",
                                 echo "actionsobj += (typeof actiontype !== 'undefined') ? ' <a href=\"javascript:NavigateTo(\'" . $web_path . "/shout.php?action=show_add_shout&type=' + currenttype + '&id=' + currentjpitem.attr('data-media_id') + '\');\">" . Ui::get_icon('comment', addslashes(T_('Post Shout'))) . "</a> |' : '';";
                             }
                             echo "actionsobj += '<div id=\'action_buttons\'></div>';";
-                            if (AmpConfig::get('waveform') && !$isShare) {
+                            if (AmpConfig::get('waveform')) {
                                 echo "var waveformobj = '';";
                                 if (AmpConfig::get('sociable') && Access::check('interface', 25)) {
                                     echo "waveformobj += '<a href=\"#\" title=\"" . addslashes(T_('Double click to post a new shout')) . "\" onClick=\"javascript:WaveformClick(' + currentjpitem.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
@@ -365,14 +367,14 @@ if ($embed) {
 }
 
 // hide that awful art section for shares
-$shareStyle = ($isShare)
+$shareStyle = ($isShare || $isRandom)
     ? "display: none;"
     : '';
 
 if (!$isVideo) {
     $containerClass = "jp-audio";
     $playerClass    = "jp-jplayer-audio"; ?>
-    <div class="playing_info">
+    <div class="playing_info"<?php echo ($isRandom) ? ' style="left: 10px;"' : '' ?>>
         <div class="playing_artist"></div>
         <div class="playing_title"></div>
         <div class="playing_features">
