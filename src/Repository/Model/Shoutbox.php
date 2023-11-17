@@ -211,7 +211,7 @@ class Shoutbox
         $insert_id = Dba::insert_id();
 
         // Never send email in case of user impersonation
-        if (!isset($data['user']) && $insert_id !== null) {
+        if (!isset($data['user']) && $insert_id !== false) {
             $className = ObjectTypeToClassNameMapper::map($data['object_type']);
             /** @var class-string<library_item> $className */
             $libitem       = new $className($data['object_id']);

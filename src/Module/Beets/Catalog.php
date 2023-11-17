@@ -167,7 +167,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'] ?? null, $song['mb_releasegroupid'] ?? null, $song['album_artist'] ?? null, $song['release_type'] ?? null, $song['release_status'] ?? null, $song['original_year'] ?? null, $song['barcode'] ?? null, $song['catalog_number'] ?? null, $song['version'] ?? null);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
-            if (Song::isCustomMetadataEnabled() && $songId) {
+            if (Song::isCustomMetadataEnabled() && $songId !== false) {
                 $songObj = new Song($songId);
                 $this->addMetadata($songObj, $song);
                 $this->updateUi('add', ++$this->addedSongs, $song);

@@ -398,7 +398,7 @@ class TvShow extends database_object implements library_item
             $tvshow_id = self::check($name, $year, true);
 
             // If it's changed we need to update
-            if ($tvshow_id != $this->id && $tvshow_id != null) {
+            if ($tvshow_id !== null && $tvshow_id != $this->id) {
                 $seasons = $this->get_seasons();
                 foreach ($seasons as $season_id) {
                     TVShow_Season::update_tvshow($tvshow_id, $season_id);
