@@ -125,15 +125,8 @@ class Api4
         'videos' => Method\Api4\Videos4Method::class
     ];
 
-    /**
-     * @var string $auth_version
-     */
-    public static $auth_version = '350001';
-
-    /**
-     * @var string $version
-     */
-    public static $version = '443000'; // AMPACHE_VERSION
+    public static string $auth_version = '350001';
+    public static string $version      = '443000'; // AMPACHE_VERSION
 
     /**
      * constructor

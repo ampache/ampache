@@ -168,22 +168,11 @@ class Api
     /**
      * @var int $data_version
      */
-    public const  DEFAULT_VERSION = 6; // AMPACHE_VERSION
+    public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
-    /**
-     * @var string $auth_version
-     */
-    public static $auth_version = '350001';
-
-    /**
-     * @var string $version
-     */
-    public static $version = '6.1.0'; // AMPACHE_VERSION
-
-    /**
-     * @var string $version_numeric
-     */
-    public static $version_numeric = '610000'; // AMPACHE_VERSION
+    public static string $auth_version    = '350001';
+    public static string $version         = '6.1.0'; // AMPACHE_VERSION
+    public static string $version_numeric = '610000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse

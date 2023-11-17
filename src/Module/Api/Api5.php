@@ -153,20 +153,9 @@ class Api5
         Method\Api5\DeletedPodcastEpisodes5Method::ACTION => Method\Api5\DeletedPodcastEpisodes5Method::class,
     ];
 
-    /**
-     * @var string $auth_version
-     */
-    public static $auth_version = '350001';
-
-    /**
-     * @var string $version
-     */
-    public static $version = '5.5.6'; // AMPACHE_VERSION
-
-    /**
-     * @var string $version_numeric
-     */
-    public static $version_numeric = '556000'; // AMPACHE_VERSION
+    public static string $auth_version    = '350001';
+    public static string $version         = '5.5.6'; // AMPACHE_VERSION
+    public static string $version_numeric = '556000'; // AMPACHE_VERSION
 
     /**
      * message

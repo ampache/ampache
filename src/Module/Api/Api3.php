@@ -84,14 +84,8 @@ class Api3
         'videos' => Method\Api3\Videos3Method::class
     ];
 
-    /**
-     * @var string $auth_version
-     */
-    public static $auth_version = '350001';
-    /**
-     * @var string $version
-     */
-    public static $version = '390001'; // AMPACHE_VERSION
+    public static string $auth_version = '350001';
+    public static string $version      = '390001'; // AMPACHE_VERSION
 
     /**
      * constructor

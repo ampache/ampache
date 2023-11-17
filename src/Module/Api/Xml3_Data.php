@@ -52,9 +52,9 @@ use Ampache\Repository\Model\Useractivity;
 class Xml3_Data
 {
     // This is added so that we don't pop any webservers
-    private static $limit  = 5000;
-    private static $offset = 0;
-    private static $type   = '';
+    private static ?int $limit  = 5000;
+    private static int $offset  = 0;
+    private static string $type = '';
 
     /**
      * constructor
