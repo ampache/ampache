@@ -93,7 +93,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
         if ($mediaIds !== [] || $urls !== []) {
-            if ($streamType != 'democratic') {
+            if (!defined('NO_SESSION') && $streamType != 'democratic') {
                 if (!User::stream_control($mediaIds)) {
                     $this->logger->warning(
                         'Stream control failed for user ' . Core::get_global('user')->username,
