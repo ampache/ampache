@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 /**
@@ -21,13 +20,28 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Module\Application\Exception;
 
-final class AccessDeniedException extends ApplicationException
+use PHPUnit\Framework\TestCase;
+
+class ObjectNotFoundExceptionTest extends TestCase
 {
-    /** @var string */
-    protected $message = 'Access denied';
+    private int $objectId = 666;
+
+    private ObjectNotFoundException $subject;
+
+    protected function setUp(): void
+    {
+        $this->subject = new ObjectNotFoundException($this->objectId);
+    }
+
+    public function testGetObjectIdReturnsValue(): void
+    {
+        static::assertSame(
+            $this->objectId,
+            $this->subject->getObjectId()
+        );
+    }
 }

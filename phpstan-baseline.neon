@@ -6571,11 +6571,6 @@ parameters:
 			path: src/Module/Application/Admin/Shout/ShowEditAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Admin\\\\Shout\\\\ShowEditAction\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Shout/ShowEditAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$current of method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:generate_config\\(\\) expects array, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Admin/System/GenerateConfigAction.php
@@ -6734,11 +6729,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Batch\\\\DefaultAction\\:\\:getMediaFiles\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Exception\\\\AccessDeniedException\\:\\:\\$message has no type specified\\.$#"
-			count: 1
-			path: src/Module/Application/Exception/AccessDeniedException.php
 
 		-
 			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
@@ -7867,11 +7857,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$searchresult of static method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:clean_search_results\\(\\) expects array, array\\<int\\|string, array\\|int\\>\\|false given\\.$#"
-			count: 1
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(int\\|string\\)\\: mixed, string given\\.$#"
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 

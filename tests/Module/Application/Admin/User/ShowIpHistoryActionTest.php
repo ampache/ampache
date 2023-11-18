@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,12 +23,11 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -70,10 +71,11 @@ class ShowIpHistoryActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $user       = $this->createMock(User::class);
 
         $userId = -1;
 
-        static::expectOutputString('You have requested an object that does not exist');
+        static::expectException(ObjectNotFoundException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
@@ -85,19 +87,16 @@ class ShowIpHistoryActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['user_id' => (string) $userId]);
 
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
+        $this->modelFactory->shouldReceive('createUser')
+            ->with($userId)
+            ->once()
+            ->andReturn($user);
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $this->subject->run($request, $gatekeeper);
     }
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void
@@ -145,6 +144,9 @@ class ShowIpHistoryActionTest extends MockeryTestCase
         $user->expects(static::once())
             ->method('get_fullname')
             ->willReturn($userFullName);
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
 
         $this->configContainer->expects(static::once())
             ->method('get')

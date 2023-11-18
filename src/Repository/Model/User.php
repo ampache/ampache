@@ -1512,6 +1512,14 @@ class User extends database_object
     }
 
     /**
+     * Returns `true` if the user does not exist
+     */
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
+    /**
      * Returns a concatenated version of several names
      *
      * In some cases (e.g. admin backend), we want to be as verbose as possible,
