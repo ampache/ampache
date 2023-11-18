@@ -75,7 +75,7 @@ class Ldap
      * array_filter_key
      *
      * @param array $array
-     * @param string $callback
+     * @param callable-string $callback
      * @return array
      */
     private static function array_filter_key($array, $callback)

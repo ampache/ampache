@@ -244,19 +244,6 @@ class Shoutbox
         return $insert_id;
     } // create
 
-    /**
-     * update
-     * This takes a key'd array of data as input and updates a shoutbox entry
-     * @param array $data
-     */
-    public function update(array $data): int
-    {
-        $sql = "UPDATE `user_shout` SET `text` = ?, `sticky` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['comment'], (int) make_bool($data['sticky']), $this->id));
-
-        return $this->id;
-    } // create
-
     public function getStickyFormatted(): string
     {
         return $this->sticky == '0' ? 'No' : 'Yes';
@@ -270,6 +257,14 @@ class Shoutbox
     public function getDateFormatted(): string
     {
         return get_datetime((int)$this->date);
+    }
+
+    /**
+     * Returns true if the object is new/unknown
+     */
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
     }
 
     /**
