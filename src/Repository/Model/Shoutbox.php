@@ -128,6 +128,7 @@ class Shoutbox
     /**
      * get_sticky
      * This returns all current sticky shoutbox items
+     * @return int[]
      */
     private static function get_sticky()
     {
@@ -136,7 +137,7 @@ class Shoutbox
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;

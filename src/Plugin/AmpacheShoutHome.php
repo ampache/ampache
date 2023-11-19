@@ -100,7 +100,11 @@ class AmpacheShoutHome
     {
         if (AmpConfig::get('sociable')) {
             echo "<div id='shout_objects'>\n";
-            $shouts = Shoutbox::get_top($this->maxitems);
+            $ids    = Shoutbox::get_top($this->maxitems);
+            $shouts = array();
+            foreach ($ids as $shout_id) {
+                $shouts[] = new Shoutbox($shout_id);
+            }
             if (count($shouts)) {
                 require_once Ui::find_template('show_shoutbox.inc.php');
             }
