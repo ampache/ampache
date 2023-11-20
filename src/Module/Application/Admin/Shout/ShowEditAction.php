@@ -42,18 +42,14 @@ final class ShowEditAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ConfigContainerInterface $configContainer;
-
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
+        $this->ui           = $ui;
+        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

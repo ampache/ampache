@@ -30,15 +30,15 @@ use Ampache\Repository\Model\User;
 use Exception;
 use Moinax;
 
-class AmpacheTvdb
+class AmpacheTvdb implements AmpachePluginInterface
 {
-    public $name        = 'Tvdb';
-    public $categories  = 'metadata';
-    public $description = 'TVDb metadata integration';
-    public $url         = 'http://thetvdb.com';
-    public $version     = '000003';
-    public $min_ampache = '370009';
-    public $max_ampache = '999999';
+    public string $name        = 'Tvdb';
+    public string $categories  = 'metadata';
+    public string $description = 'TVDb metadata integration';
+    public string $url         = 'http://thetvdb.com';
+    public string $version     = '000003';
+    public string $min_ampache = '370009';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
@@ -50,21 +50,17 @@ class AmpacheTvdb
     public function __construct()
     {
         $this->description = T_('TVDb metadata integration');
-
-        return true;
     }
 
     /**
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('tvdb_api_key')) {
+        if (!Preference::exists('tvdb_api_key') && !Preference::insert('tvdb_api_key', T_('TVDb API key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('tvdb_api_key', T_('TVDb API key'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -73,21 +69,27 @@ class AmpacheTvdb
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('tvdb_api_key');
-
-        return true;
+        return Preference::delete('tvdb_api_key');
     } // uninstall
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
+    }
 
     /**
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

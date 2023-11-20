@@ -57,7 +57,7 @@ if ($libitem->fullname_public || Access::check('interface', 100)) {
             if (AmpConfig::get('track_user_ip')) { ?>
                 <td class="cel_lastip">
                     <a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user_id=<?php echo $libitem->id; ?>">
-                        <?php echo $libitem->ip_history; ?>
+                        <?php echo $libitem->getRecentIp(); ?>
                     </a>
                 </td>
                 <?php

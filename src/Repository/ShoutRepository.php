@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Generator;
@@ -126,6 +127,23 @@ final class ShoutRepository implements ShoutRepositoryInterface
         $this->connection->query(
             'DELETE FROM `user_shout` WHERE `id` = ?',
             [$shoutBoxId]
+        );
+    }
+
+    /**
+     * Updates the ShoutBox item with the provided data
+     *
+     * @param array{comment: string, sticky: bool} $data
+     */
+    public function update(Shoutbox $shout, array $data): void
+    {
+        $this->connection->query(
+            'UPDATE `user_shout` SET `text` = ?, `sticky` = ? WHERE `id` = ?',
+            [
+                $data['comment'],
+                (int) $data['sticky'],
+                $shout->getId()
+            ]
         );
     }
 }

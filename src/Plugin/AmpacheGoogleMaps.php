@@ -30,54 +30,47 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheGoogleMaps
+class AmpacheGoogleMaps implements AmpachePluginInterface
 {
-    public $name        = 'GoogleMaps';
-    public $categories  = 'geolocation';
-    public $description = 'Show user\'s location with Google Maps';
-    public $url         = 'http://maps.google.com';
-    public $version     = '000001';
-    public $min_ampache = '370022';
-    public $max_ampache = '999999';
+    public string $name        = 'GoogleMaps';
+    public string $categories  = 'geolocation';
+    public string $description = 'Show user\'s location with Google Maps';
+    public string $url         = 'http://maps.google.com';
+    public string $version     = '000001';
+    public string $min_ampache = '370022';
+    public string $max_ampache = '999999';
 
+    // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Show user\'s location with Google Maps');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        if (Preference::exists('gmaps_api_key')) {
+        if (!Preference::exists('gmaps_api_key') && !Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
     public function uninstall(): bool
     {
-        Preference::delete('gmaps_api_key');
-
-        return true;
+        return Preference::delete('gmaps_api_key');
     } // uninstall
 
     /**
@@ -90,8 +83,8 @@ class AmpacheGoogleMaps
     } // upgrade
 
     /**
-     * @param $latitude
-     * @param $longitude
+     * @param float $latitude
+     * @param float $longitude
      */
     public function get_location_name($latitude, $longitude): string
     {
@@ -112,9 +105,9 @@ class AmpacheGoogleMaps
     }
 
     /**
-     * @param $pts
+     * @param array $points
      */
-    public function display_map($pts): bool
+    public function display_map($points): bool
     {
         if (!$this->api_key) {
             debug_event(self::class, 'Missing API key, display map plugin skipped.', 3);
@@ -125,8 +118,8 @@ class AmpacheGoogleMaps
         echo '<script>' . "\n";
         echo 'function map_ready() {' . "\n";
         echo 'var mapOptions = {' . "\n";
-        if (count($pts) > 0) {
-            echo 'center: { lat: ' . $pts[0]['latitude'] . ', lng: ' . $pts[0]['longitude'] . ' }, ' . "\n";
+        if (count($points) > 0) {
+            echo 'center: { lat: ' . $points[0]['latitude'] . ', lng: ' . $points[0]['longitude'] . ' }, ' . "\n";
         } else {
             // No geolocation data? Display `Paris` city.
             echo 'center: { lat: 48.853, lng: 2.348 }, ' . "\n";
@@ -136,14 +129,14 @@ class AmpacheGoogleMaps
         echo 'var map = new google.maps.Map(document.getElementById("map-canvas"), ' . "\n";
         echo 'mapOptions);' . "\n";
         echo 'var marker;' . "\n";
-        foreach ($pts as $pt) {
-            $ptdescr = T_("Hits") . ": " . $pt['hits'] . "\\n";
-            $ptdescr .= T_("Last activity") . ": " . date("r", $pt['last_date']);
-            if (!empty($pt['name'])) {
-                $ptdescr = $pt['name'] . "\\n" . $ptdescr;
+        foreach ($points as $point) {
+            $ptdescr = T_("Hits") . ": " . $point['hits'] . "\\n";
+            $ptdescr .= T_("Last activity") . ": " . date("r", $point['last_date']);
+            if (!empty($point['name'])) {
+                $ptdescr = $point['name'] . "\\n" . $ptdescr;
             }
             echo 'marker = new google.maps.Marker({' . "\n";
-            echo 'position: { lat: ' . $pt['latitude'] . ', lng: ' . $pt['longitude'] . ' }, ' . "\n";
+            echo 'position: { lat: ' . $point['latitude'] . ', lng: ' . $point['longitude'] . ' }, ' . "\n";
             echo 'title:"' . $ptdescr . '"' . "\n";
             echo '});' . "\n";
             echo 'marker.setMap(map);' . "\n";
@@ -165,8 +158,7 @@ class AmpacheGoogleMaps
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

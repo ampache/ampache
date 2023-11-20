@@ -132,6 +132,8 @@ class Core
     /**
      * get_user_ip
      * check for the ip of the request
+     *
+     * @todo make dynamic and testable
      */
     public static function get_user_ip(): string
     {

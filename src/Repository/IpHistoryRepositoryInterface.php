@@ -24,6 +24,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\User;
+use DateTimeInterface;
 use Traversable;
 
 interface IpHistoryRepositoryInterface
@@ -31,10 +32,7 @@ interface IpHistoryRepositoryInterface
     /**
      * This returns the ip_history for the provided user
      *
-     * @param User $user
-     * @param int $limit
-     * @param bool $distinct
-     * @return Traversable<array{ip: string, date: int}>
+     * @return Traversable<array{ip: string, date: DateTimeInterface}>
      */
     public function getHistory(
         User $user,
@@ -48,4 +46,19 @@ interface IpHistoryRepositoryInterface
      * @return string|null Most recent ip-address or null if no data is available
      */
     public function getRecentIpForUser(User $user): ?string;
+
+    /**
+     * Deletes outdated records
+     */
+    public function collectGarbage(): void;
+
+    /**
+     * Inserts a new row into the database
+     */
+    public function create(
+        User $user,
+        string $ipAddress,
+        string $userAgent,
+        DateTimeInterface $date
+    ): void;
 }

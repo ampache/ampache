@@ -30,65 +30,62 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
-class AmpacheStreamBandwidth
+class AmpacheStreamBandwidth implements AmpachePluginInterface
 {
-    public $name        = 'Stream Bandwidth';
-    public $categories  = 'stream_control';
-    public $description = 'Control bandwidth per user';
-    public $url         = '';
-    public $version     = '000001';
-    public $min_ampache = '370024';
-    public $max_ampache = '999999';
+    public string $name        = 'Stream Bandwidth';
+    public string $categories  = 'stream_control';
+    public string $description = 'Control bandwidth per user';
+    public string $url         = '';
+    public string $version     = '000001';
+    public string $min_ampache = '370024';
+    public string $max_ampache = '999999';
 
+    // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
     private $bandwidth_days;
     private $bandwidth_max;
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Control bandwidth per user');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('stream_control_bandwidth_max')) {
+        if (!Preference::exists('stream_control_bandwidth_max') && !Preference::insert('stream_control_bandwidth_max', T_('Stream control maximal bandwidth (month)'), 1024, 50, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        Preference::insert('stream_control_bandwidth_max', T_('Stream control maximal bandwidth (month)'), 1024, 50, 'integer', 'plugins', $this->name);
-        Preference::insert('stream_control_bandwidth_days', T_('Stream control bandwidth history (days)'), 30, 50, 'integer', 'plugins', $this->name);
+        if (!Preference::exists('stream_control_bandwidth_days') && !Preference::insert('stream_control_bandwidth_days', T_('Stream control bandwidth history (days)'), 30, 50, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('stream_control_bandwidth_max');
-        Preference::delete('stream_control_bandwidth_days');
-
-        return true;
+        return (
+            Preference::delete('stream_control_bandwidth_max') &&
+            Preference::delete('stream_control_bandwidth_days')
+        );
     } // uninstall
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
     } // upgrade
@@ -96,9 +93,8 @@ class AmpacheStreamBandwidth
     /**
      * Check stream control
      * @param array $media_ids
-     * @return bool
      */
-    public function stream_control($media_ids)
+    public function stream_control($media_ids): bool
     {
         // No check if unlimited bandwidth (= -1)
         if ($this->bandwidth_max < 0) {
@@ -132,12 +128,10 @@ class AmpacheStreamBandwidth
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,17 +23,19 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders the users edit view
+ */
 final class ShowEditAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'show_edit';
@@ -60,6 +64,10 @@ final class ShowEditAction extends AbstractUserAction
 
         $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
         $user   = $this->modelFactory->createUser($userId);
+
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
+        }
 
         $user->format();
 

@@ -26,31 +26,27 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheFacebook
+class AmpacheFacebook implements AmpachePluginInterface
 {
-    public $name        = 'Facebook';
-    public $categories  = 'share';
-    public $description = 'Facebook share';
-    public $url         = 'https://facebook.com';
-    public $version     = '000001';
-    public $min_ampache = '370027';
-    public $max_ampache = '999999';
+    public string $name        = 'Facebook';
+    public string $categories  = 'share';
+    public string $description = 'Facebook share';
+    public string $url         = 'https://facebook.com';
+    public string $version     = '000001';
+    public string $min_ampache = '370027';
+    public string $max_ampache = '999999';
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Facebook share');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
@@ -59,8 +55,7 @@ class AmpacheFacebook
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
     public function uninstall(): bool
     {
@@ -91,8 +86,7 @@ class AmpacheFacebook
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool
