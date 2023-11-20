@@ -302,7 +302,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getArtistLink(): string
     {
-        return $this->albumDisk->get_f_artist_link();
+        return (string)$this->albumDisk->get_f_artist_link();
     }
 
     public function canShowYear(): bool

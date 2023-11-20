@@ -147,83 +147,83 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $has_art;
     /**
-     * @var int $f_release_date
+     * @var null|int $f_release_date
      */
     public $update_time;
     /**
-     * @var int $f_release_date
+     * @var null|int $f_release_date
      */
     public $addition_time;
     /**
-     * @var string $f_name
+     * @var null|string $f_name
      */
     public $f_name;
     /**
-     * @var string $f_full_title
+     * @var null|string $f_full_title
      */
     public $f_full_title;
     /**
-     * @var string $f_artist_full
+     * @var null|string $f_artist_full
      */
     public $f_artist_full;
     /**
-     * @var string $f_time
+     * @var null|string $f_time
      */
     public $f_time;
     /**
-     * @var string $f_time_h
+     * @var null|string $f_time_h
      */
     public $f_time_h;
     /**
-     * @var string $f_size
+     * @var null|string $f_size
      */
     public $f_size;
     /**
-     * @var string $link
+     * @var null|string $link
      */
     public $link;
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
     /**
-     * @var string $f_codec
+     * @var null|string $f_codec
      */
     public $f_codec;
     /**
-     * @var string $f_resolution
+     * @var null|string $f_resolution
      */
     public $f_resolution;
     /**
-     * @var string $f_display
+     * @var null|string $f_display
      */
     public $f_display;
     /**
-     * @var string $f_bitrate
+     * @var null|string $f_bitrate
      */
     public $f_bitrate;
     /**
-     * @var string $f_video_bitrate
+     * @var null|string $f_video_bitrate
      */
     public $f_video_bitrate;
     /**
-     * @var string $f_frame_rate
+     * @var null|string $f_frame_rate
      */
     public $f_frame_rate;
     /**
-     * @var string $f_tags
+     * @var null|string $f_tags
      */
     public $f_tags;
     /**
-     * @var string $f_length
+     * @var null|string $f_length
      */
     public $f_length;
     /**
-     * @var string $f_file
+     * @var null|string $f_file
      */
     public $f_file;
     /**
-     * @var string $f_release_date
+     * @var null|string $f_release_date
      */
     public $f_release_date;
 

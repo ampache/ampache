@@ -297,7 +297,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getArtistLink(): string
     {
-        return $this->album->get_f_artist_link();
+        return (string)$this->album->get_f_artist_link();
     }
 
     public function canShowYear(): bool
