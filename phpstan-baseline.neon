@@ -6806,11 +6806,6 @@ parameters:
 			path: src/Module/Application/Login/DefaultAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Login\\\\DefaultAction\\:\\:\\$environment is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Login/DefaultAction.php
-
-		-
 			message: "#^Variable \\$auth in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: src/Module/Application/Login/DefaultAction.php
@@ -7867,11 +7862,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$searchresult of static method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:clean_search_results\\(\\) expects array, array\\<int\\|string, array\\|int\\>\\|false given\\.$#"
-			count: 1
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(int\\|string\\)\\: mixed, string given\\.$#"
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
@@ -14126,6 +14116,11 @@ parameters:
 			path: src/Module/Util/Graph.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:display_map\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Graph.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_all_pts\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
@@ -16377,11 +16372,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$data of function simplexml_load_string expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Parameter \\#1 \\$time of function get_datetime expects int, int\\|false given\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheRSSView.php
 
@@ -21666,11 +21656,6 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
@@ -21877,11 +21862,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$prefs type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between non\\-falsy\\-string\\|false and true will always evaluate to false\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
