@@ -30,30 +30,26 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
-class AmpacheLyristLyrics
+class AmpacheLyristLyrics implements AmpachePluginInterface
 {
-    public $name        = 'Lyrist Lyrics';
-    public $categories  = 'lyrics';
-    public $description = 'Get lyrics from a public Lyrist instance';
-    public $url         = 'https://github.com/asrvd/lyrist';
-    public $version     = '000002';
-    public $min_ampache = '360022';
-    public $max_ampache = '999999';
-
+    public string $name        = 'Lyrist Lyrics';
+    public string $categories  = 'lyrics';
+    public string $description = 'Get lyrics from a public Lyrist instance';
+    public string $url         = 'https://github.com/asrvd/lyrist';
+    public string $version     = '000002';
+    public string $min_ampache = '360022';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private string $api_host;
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Get lyrics from a public Lyrist instance');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
@@ -61,10 +57,9 @@ class AmpacheLyristLyrics
      */
     public function install(): bool
     {
-        if (Preference::exists('lyrist_api_url')) {
+        if (!Preference::exists('lyrist_api_url') && !Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
-        Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -77,6 +72,15 @@ class AmpacheLyristLyrics
     {
         return true;
     } // uninstall
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
+    }
 
     /**
      * load
@@ -104,7 +108,7 @@ class AmpacheLyristLyrics
      * get_lyrics
      * This will look web services for a song lyrics.
      * @param Song $song
-     * @return array|bool
+     * @return array|false
      */
     public function get_lyrics($song)
     {

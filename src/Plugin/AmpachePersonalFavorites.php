@@ -31,15 +31,15 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-class AmpachePersonalFavorites
+class AmpachePersonalFavorites implements AmpachePluginInterface
 {
-    public $name        = 'Personal Favorites';
-    public $categories  = 'home';
-    public $description = 'Personal favorites on homepage';
-    public $url         = '';
-    public $version     = '000002';
-    public $min_ampache = '370021';
-    public $max_ampache = '999999';
+    public string $name        = 'Personal Favorites';
+    public string $categories  = 'home';
+    public string $description = 'Personal favorites on homepage';
+    public string $url         = '';
+    public string $version     = '000002';
+    public string $min_ampache = '370021';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $display;
@@ -49,46 +49,42 @@ class AmpachePersonalFavorites
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Personal favorites on homepage');
-
-        return true;
     }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        // Check and see if it's already installed
-        if (Preference::exists('personalfav_display')) {
+        if (!Preference::exists('personalfav_display') && !Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean', 'plugins', $this->name);
-        Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', 25, 'integer', 'plugins', $this->name);
-        Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', 25, 'integer', 'plugins', $this->name);
+        if (!Preference::exists('personalfav_playlist') && !Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', 25, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('personalfav_smartlist') && !Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', 25, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
     public function uninstall(): bool
     {
-        Preference::delete('personalfav_display');
-        Preference::delete('personalfav_playlist');
-        Preference::delete('personalfav_smartlist');
-
-        return true;
+        return (
+            Preference::delete('personalfav_display') &&
+            Preference::delete('personalfav_playlist') &&
+            Preference::delete('personalfav_smartlist')
+        );
     }
 
     /**
@@ -104,7 +100,7 @@ class AmpachePersonalFavorites
      * display_home
      * This display the module in home page
      */
-    public function display_home()
+    public function display_home(): void
     {
         // display if you've enabled it
         if ($this->display) {

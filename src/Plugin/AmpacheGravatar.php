@@ -26,31 +26,27 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheGravatar
+class AmpacheGravatar implements AmpachePluginInterface
 {
-    public $name        = 'Gravatar';
-    public $categories  = 'avatar';
-    public $description = 'User\'s avatars with Gravatar';
-    public $url         = 'https://gravatar.com';
-    public $version     = '000001';
-    public $min_ampache = '360040';
-    public $max_ampache = '999999';
+    public string $name        = 'Gravatar';
+    public string $categories  = 'avatar';
+    public string $description = 'User\'s avatars with Gravatar';
+    public string $url         = 'https://gravatar.com';
+    public string $version     = '000001';
+    public string $min_ampache = '360040';
+    public string $max_ampache = '999999';
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_("User's avatars from Gravatar");
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
@@ -59,8 +55,7 @@ class AmpacheGravatar
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
     public function uninstall(): bool
     {
@@ -97,8 +92,7 @@ class AmpacheGravatar
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

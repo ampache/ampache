@@ -27,15 +27,15 @@ namespace Ampache\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
-class AmpacheGoogleAnalytics
+class AmpacheGoogleAnalytics implements AmpachePluginInterface
 {
-    public $name        = 'GoogleAnalytics';
-    public $categories  = 'stats';
-    public $description = 'Google Analytics statistics';
-    public $url         = '';
-    public $version     = '000001';
-    public $min_ampache = '370034';
-    public $max_ampache = '999999';
+    public string $name        = 'GoogleAnalytics';
+    public string $categories  = 'stats';
+    public string $description = 'Google Analytics statistics';
+    public string $url         = '';
+    public string $version     = '000001';
+    public string $min_ampache = '370034';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user;
@@ -43,42 +43,32 @@ class AmpacheGoogleAnalytics
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Google Analytics statistics');
-
-        return true;
     }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        // Check and see if it's already installed
-        if (Preference::exists('googleanalytics_tracking_id')) {
+        if (!Preference::exists('googleanalytics_tracking_id') && !Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', 100, 'string', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', 100, 'string', 'plugins', $this->name);
 
         return true;
     }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
     public function uninstall(): bool
     {
-        Preference::delete('googleanalytics_tracking_id');
-
-        return true;
+        return Preference::delete('googleanalytics_tracking_id');
     }
 
     /**
@@ -94,7 +84,7 @@ class AmpacheGoogleAnalytics
      * display_user_field
      * This display the module in user page
      */
-    public function display_on_footer()
+    public function display_on_footer(): void
     {
         echo "<!-- Google Analytics -->\n";
         echo "<script>\n";
@@ -109,8 +99,7 @@ class AmpacheGoogleAnalytics
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

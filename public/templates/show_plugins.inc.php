@@ -35,6 +35,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
             <th class="cel_description"><?php echo T_('Description'); ?></th>
+            <th class="cel_category"><?php echo T_('Category'); ?></th>
             <th class="cel_version"><?php echo T_('Version'); ?></th>
             <th class="cel_iversion"><?php echo T_('Installed Version'); ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
@@ -58,10 +59,11 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
                 }
             } ?>
         <tr>
-            <td class="cel_name"><?php echo scrub_out($plugin->_plugin->name); ?></td>
+            <td class="cel_name"><?php echo scrub_out(T_($plugin->_plugin->name)); ?></td>
             <td class="cel_description"><?php echo scrub_out($plugin->_plugin->description); ?></td>
+            <td class="cel_category"><?php echo scrub_out($plugin->_plugin->categories); ?></td>
             <td class="cel_version"><?php echo scrub_out($plugin->_plugin->version); ?></td>
-            <td class="cel_iversion"><?php echo scrub_out($installed_version); ?></td>
+            <td class="cel_iversion"><?php echo $installed_version; ?></td>
             <td class="cel_action"><?php echo $action; ?></td>
         </tr>
         <?php
@@ -75,6 +77,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
         <tr class="th-bottom">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
             <th class="cel_description"><?php echo T_('Description'); ?></th>
+            <th class="cel_category"><?php echo T_('Category'); ?></th>
             <th class="cel_version"><?php echo T_('Version'); ?></th>
             <th class="cel_iversion"><?php echo T_('Installed Version'); ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?></th>

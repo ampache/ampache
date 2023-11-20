@@ -76,12 +76,12 @@ final class ConfigAction implements ApplicationActionInterface
         if (empty($results)) {
             $link = __DIR__ . '/../../../../public/test.php?action=config';
         }
-        /* Temp Fixes */
-        $results = Preference::fix_preferences($results);
-
-        $this->configContainer->updateConfig($results);
+        if (is_array($results)) {
+            /* Temp Fixes */
+            $results = Preference::fix_preferences($results);
+            $this->configContainer->updateConfig($results);
+        }
         unset($results);
-
         // Try to load localization from cookie
         $session_name = $this->configContainer->getSessionName();
 
