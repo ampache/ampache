@@ -31,15 +31,15 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
 
-class AmpacheLastfm
+class AmpacheLastfm implements AmpachePluginInterface
 {
-    public $name        = 'Last.FM';
-    public $categories  = 'scrobbling';
-    public $description = 'Records your played songs to your Last.FM account';
-    public $url;
-    public $version     = '000005';
-    public $min_ampache = '360003';
-    public $max_ampache = '999999';
+    public string $name        = 'Last.FM';
+    public string $categories  = 'scrobbling';
+    public string $description = 'Records your played songs to your Last.FM account';
+    public string $url         = '';
+    public string $version     = '000005';
+    public string $min_ampache = '360003';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
@@ -52,50 +52,45 @@ class AmpacheLastfm
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Scrobble songs you play to your Last.FM account');
         $this->url         = $this->scheme . '://' . $this->host;
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        // Check and see if it's already installed (they've just hit refresh, those dorks)
-        if (Preference::exists('lastfm_challenge')) {
+        if (!Preference::exists('lastfm_challenge') && !Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name)) {
             return false;
         }
-
-        Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name);
-        Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
+        if (!Preference::exists('lastfm_grant_link') && !Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('lastfm_challenge');
-        Preference::delete('lastfm_grant_link');
-        // make sure the old ones are deleted just in case
-        Preference::delete('lastfm_pass');
-        Preference::delete('lastfm_md5_pass');
-        Preference::delete('lastfm_user');
-        Preference::delete('lastfm_url');
-        Preference::delete('lastfm_host');
-        Preference::delete('lastfm_port');
+        return (
+            Preference::delete('lastfm_challenge') &&
+            Preference::delete('lastfm_grant_link') &&
+            Preference::delete('lastfm_pass') &&
+            Preference::delete('lastfm_md5_pass') &&
+            Preference::delete('lastfm_user') &&
+            Preference::delete('lastfm_url') &&
+            Preference::delete('lastfm_host') &&
+            Preference::delete('lastfm_port')
+        );
     } // uninstall
 
     /**
@@ -173,24 +168,22 @@ class AmpacheLastfm
      * @param Song $song
      * @param bool $flagged
      */
-    public function set_flag($song, $flagged): bool
+    public function set_flag($song, $flagged): void
     {
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
             debug_event('lastfm.plugin', 'Session key missing', 5);
 
-            return false;
+            return;
         }
         // Create our scrobbler and then queue it
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
         if (!$scrobbler->love($flagged, $song->get_artist_fullname(), $song->title)) {
             debug_event('lastfm.plugin', 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
-            return false;
+            return ;
         }
         debug_event('lastfm.plugin', 'Sent Love Successfully', 5);
-
-        return true;
     } // set_flag
 
     /**
@@ -219,8 +212,7 @@ class AmpacheLastfm
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

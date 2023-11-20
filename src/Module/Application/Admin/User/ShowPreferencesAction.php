@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\PreferenceRepositoryInterface;
@@ -56,9 +57,12 @@ final class ShowPreferencesAction extends AbstractUserAction
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        $user = $this->modelFactory->createUser(
-            (int) ($request->getQueryParams()['user_id'] ?? 0)
-        );
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
+        $user   = $this->modelFactory->createUser($userId);
+
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
+        }
 
         $this->ui->showHeader();
         $this->ui->show(

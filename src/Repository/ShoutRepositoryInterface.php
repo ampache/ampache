@@ -46,4 +46,11 @@ interface ShoutRepositoryInterface
      * this function deletes the shout-box entry
      */
     public function delete(int $shoutBoxId): void;
+
+    /**
+     * Updates the ShoutBox item with the provided data
+     *
+     * @param array{comment: string, sticky: bool} $data
+     */
+    public function update(Shoutbox $shout, array $data): void;
 }

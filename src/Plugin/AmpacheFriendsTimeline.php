@@ -33,57 +33,47 @@ use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-class AmpacheFriendsTimeline
+class AmpacheFriendsTimeline implements AmpachePluginInterface
 {
-    public $name        = 'Friends Timeline';
-    public $categories  = 'home';
-    public $description = 'Friends Timeline on homepage';
-    public $url         = '';
-    public $version     = '000001';
-    public $min_ampache = '370040';
-    public $max_ampache = '999999';
+    public string $name        = 'Friends Timeline';
+    public string $categories  = 'home';
+    public string $description = 'Friends Timeline on homepage';
+    public string $url         = '';
+    public string $version     = '000001';
+    public string $min_ampache = '370040';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_("Friend's Timeline on homepage");
-
-        return true;
     }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        // Check and see if it's already installed
-        if (Preference::exists('ftl_max_items')) {
+        if (!Preference::exists('ftl_max_items') && !Preference::insert('ftl_max_items', T_('Friends timeline max items'), 5, 25, 'integer', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('ftl_max_items', T_('Friends timeline max items'), 5, 25, 'integer', 'plugins', $this->name);
 
         return true;
     }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
     public function uninstall(): bool
     {
-        Preference::delete('ftl_max_items');
-
-        return true;
+        return Preference::delete('ftl_max_items');
     }
 
     /**
@@ -99,7 +89,7 @@ class AmpacheFriendsTimeline
      * display_home
      * This display the module in home page
      */
-    public function display_home()
+    public function display_home(): void
     {
         if (AmpConfig::get('sociable')) {
             $user    = Core::get_global('user');
@@ -130,8 +120,7 @@ class AmpacheFriendsTimeline
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,20 +23,39 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\User;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Generator;
+use PDO;
 
+/**
+ * Manages ip-history related database access
+ *
+ * Table: `ip_history`
+ */
 final class IpHistoryRepository implements IpHistoryRepositoryInterface
 {
+    private DatabaseConnectionInterface $connection;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        DatabaseConnectionInterface $connection,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->connection      = $connection;
+        $this->configContainer = $configContainer;
+    }
+
     /**
      * This returns the ip_history for the provided user
      *
-     * @return Generator<array{ip: string, date: int}>
+     * @return Generator<array{ip: string, date: DateTimeInterface}>
      */
     public function getHistory(
         User $user,
@@ -45,31 +66,29 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
         $limit_sql = '';
 
         if ($limit > 0) {
-            $limit_sql = sprintf(' LIMIT %d', $limit);
+            $limit_sql = sprintf('LIMIT %d', $limit);
         }
 
         if ($distinct === true) {
-            $group_sql = ' GROUP BY ip, date';
+            $group_sql = 'GROUP BY ip, date';
         }
 
-        /* Select ip history */
-        $sql = sprintf(
-            'SELECT ip, date FROM ip_history WHERE user = ? %s ORDER BY date DESC %s',
-            $group_sql,
-            $limit_sql,
-        );
 
-        $db_results = Dba::read(
-            $sql,
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT ip, date FROM ip_history WHERE user = ? %s ORDER BY date DESC %s',
+                $group_sql,
+                $limit_sql,
+            ),
             [
                 $user->getId(),
             ]
         );
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             yield [
-                'ip' => $row['ip'],
-                'date' => (int) $row['date']
+                'ip' => (string) inet_ntop($row['ip']),
+                'date' => new DateTimeImmutable(sprintf('@%d', $row['date']))
             ];
         }
     }
@@ -81,13 +100,54 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
      */
     public function getRecentIpForUser(User $user): ?string
     {
-        $result = Dba::read(
+        $result = $this->connection->fetchOne(
             'SELECT ip FROM ip_history WHERE user = ? ORDER BY date DESC LIMIT 1',
             [
                 $user->getId(),
             ]
         );
 
-        return Dba::fetch_assoc($result)['ip'] ?? null;
+        if ($result !== false) {
+            return (string) inet_ntop($result);
+        }
+
+        return null;
+    }
+
+    /**
+     * Deletes outdated records
+     */
+    public function collectGarbage(): void
+    {
+        $this->connection->query(
+            'DELETE FROM `ip_history` WHERE `date` < `date` - ?',
+            [
+                86400 * (int) $this->configContainer->get('user_ip_cardinality')
+            ]
+        );
+    }
+
+    /**
+     * Inserts a new row into the database
+     */
+    public function create(
+        User $user,
+        string $ipAddress,
+        string $userAgent,
+        DateTimeInterface $date
+    ): void {
+        if ($ipAddress !== '') {
+            $ipAddress = inet_pton($ipAddress);
+        }
+
+        $this->connection->query(
+            'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES (?, ?, ?, ?)',
+            [
+                $ipAddress,
+                $user->getId(),
+                $date->getTimestamp(),
+                $userAgent
+            ]
+        );
     }
 }

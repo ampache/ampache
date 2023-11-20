@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,29 +23,24 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 class EnableActionTest extends MockeryTestCase
 {
     private MockInterface&UiInterface $ui;
-
-    private MockInterface&LoggerInterface $logger;
 
     private MockInterface&ModelFactoryInterface $modelFactory;
 
@@ -54,13 +51,11 @@ class EnableActionTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
 
         $this->subject = new EnableAction(
             $this->ui,
-            $this->logger,
             $this->modelFactory,
             $this->configContainer
         );
@@ -111,8 +106,20 @@ class EnableActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $user       = $this->createMock(User::class);
 
         $userId = -1;
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $this->modelFactory->shouldReceive('createUser')
+            ->with($userId)
+            ->once()
+            ->andReturn($user);
+
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -128,25 +135,6 @@ class EnableActionTest extends MockeryTestCase
             ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnFalse();
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        static::expectOutputString('You have requested an object that does not exist');
-
-        $this->logger->shouldReceive('warning')
-            ->with(
-                'Requested a user that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
-            )
-            ->once();
 
         $this->assertNull(
             $this->subject->run(
@@ -165,8 +153,6 @@ class EnableActionTest extends MockeryTestCase
         $userId   = 42;
         $username = 'some-name';
 
-        $user->fullname = $username;
-
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
@@ -176,6 +162,15 @@ class EnableActionTest extends MockeryTestCase
             ->with($userId)
             ->once()
             ->andReturn($user);
+
+        $user->shouldReceive('getFullDisplayName')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($username);
+        $user->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(false);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)

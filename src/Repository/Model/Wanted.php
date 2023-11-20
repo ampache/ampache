@@ -416,8 +416,7 @@ class Wanted extends database_object
                             foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
                                 $plugin = new Plugin($plugin_name);
                                 if ($plugin->load(Core::get_global('user'))) {
-                                    $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name,
-                                        $track->title);
+                                    $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
                                     if ($song['file'] != null) {
                                         break;
                                     }

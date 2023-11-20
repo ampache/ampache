@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,13 +23,12 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
@@ -36,7 +37,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Generate an api-key for a user
+ * Generates an api-key for a user
  */
 final class GenerateApiKeyAction extends AbstractUserAction
 {
@@ -78,6 +79,10 @@ final class GenerateApiKeyAction extends AbstractUserAction
 
         $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
         $user   = $this->modelFactory->createUser($userId);
+
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
+        }
 
         $this->userKeyGenerator->generateApikey($user);
 

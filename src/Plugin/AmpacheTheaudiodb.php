@@ -36,15 +36,15 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheTheaudiodb
+class AmpacheTheaudiodb implements AmpachePluginInterface
 {
-    public $name        = 'TheAudioDb';
-    public $categories  = 'metadata';
-    public $description = 'TheAudioDb metadata integration';
-    public $url         = 'http://www.theaudiodb.com';
-    public $version     = '000003';
-    public $min_ampache = '370009';
-    public $max_ampache = '999999';
+    public string $name        = 'TheAudioDb';
+    public string $categories  = 'metadata';
+    public string $description = 'TheAudioDb metadata integration';
+    public string $url         = 'http://www.theaudiodb.com';
+    public string $version     = '000003';
+    public string $min_ampache = '370009';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
@@ -57,23 +57,21 @@ class AmpacheTheaudiodb
     public function __construct()
     {
         $this->description = T_('TheAudioDb metadata integration');
-
-        return true;
     }
 
     /**
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('tadb_api_key')) {
+        // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
+        if (!Preference::exists('tadb_api_key') && !Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-
-        // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name);
-        Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+        if (!Preference::exists('tadb_overwrite_name') && !Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
@@ -82,19 +80,19 @@ class AmpacheTheaudiodb
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('tadb_api_key');
-        Preference::delete('tadb_overwrite_name');
-
-        return true;
+        return (
+            Preference::delete('tadb_api_key') &&
+            Preference::delete('tadb_overwrite_name')
+        );
     } // uninstall
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version == 0) {
@@ -112,9 +110,8 @@ class AmpacheTheaudiodb
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -214,7 +211,7 @@ class AmpacheTheaudiodb
      * @param string $object_type
      * @return bool
      */
-    public function get_external_metadata($object, string $object_type)
+    public function get_external_metadata($object, string $object_type): bool
     {
         $valid_types = array('artist');
         // Artist metadata only for now

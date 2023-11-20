@@ -79,6 +79,17 @@ class Ui implements UiInterface
         }
     }
 
+    public function showObjectNotFound(): void
+    {
+        $this->showHeader();
+        echo T_('You have requested an object that does not exist');
+        $this->showQueryStats();
+        $this->showFooter();
+    }
+
+    /**
+     * Displays the default error page
+     */
     public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
@@ -87,6 +98,9 @@ class Ui implements UiInterface
         require_once self::find_template('show_denied.inc.php');
     }
 
+    /**
+     * Displays an error page when you can't write the config
+     */
     public function permissionDenied(string $fileName): void
     {
         // Clear any buffered crap

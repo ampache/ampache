@@ -29,15 +29,15 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
-class AmpacheFlattr
+class AmpacheFlattr implements AmpachePluginInterface
 {
-    public $name        = 'Flattr';
-    public $categories  = 'user';
-    public $description = 'Flattr donation button on user page';
-    public $url         = '';
-    public $version     = '000001';
-    public $min_ampache = '370034';
-    public $max_ampache = '999999';
+    public string $name        = 'Flattr';
+    public string $categories  = 'user';
+    public string $description = 'Flattr donation button on user page';
+    public string $url         = '';
+    public string $version     = '000001';
+    public string $min_ampache = '370034';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user;
@@ -45,42 +45,32 @@ class AmpacheFlattr
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Flattr donation button on user page');
-
-        return true;
     }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        // Check and see if it's already installed
-        if (Preference::exists('flattr_user_id')) {
+        if (!Preference::exists('flattr_user_id') && !Preference::insert('flattr_user_id', T_('Flattr User ID'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('flattr_user_id', T_('Flattr User ID'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
     }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
     public function uninstall(): bool
     {
-        Preference::delete('flattr_user_id');
-
-        return true;
+        return Preference::delete('flattr_user_id');
     }
 
     /**
@@ -97,7 +87,7 @@ class AmpacheFlattr
      * This display the module in user page
      * @param library_item|null $libitem
      */
-    public function display_user_field(library_item $libitem = null)
+    public function display_user_field(library_item $libitem = null): void
     {
         $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
         $link = ($libitem != null && $libitem->get_link()) ? $libitem->get_link() : $this->user->get_link();
@@ -107,8 +97,7 @@ class AmpacheFlattr
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

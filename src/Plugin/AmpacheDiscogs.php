@@ -30,16 +30,17 @@ use Ampache\Repository\Model\User;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheDiscogs
+class AmpacheDiscogs implements AmpachePluginInterface
 {
-    public $name        = 'Discogs';
-    public $categories  = 'metadata';
-    public $description = 'Discogs metadata integration';
-    public $url         = 'http://www.discogs.com';
-    public $version     = '000001';
-    public $min_ampache = '370021';
-    public $max_ampache = '999999';
+    public string $name        = 'Discogs';
+    public string $categories  = 'metadata';
+    public string $description = 'Discogs metadata integration';
+    public string $url         = 'http://www.discogs.com';
+    public string $version     = '000001';
+    public string $min_ampache = '370021';
+    public string $max_ampache = '999999';
 
+    // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
     private $secret;
 
@@ -50,8 +51,6 @@ class AmpacheDiscogs
     public function __construct()
     {
         $this->description = T_('Discogs metadata integration');
-
-        return true;
     }
 
     /**
@@ -60,11 +59,12 @@ class AmpacheDiscogs
      */
     public function install(): bool
     {
-        if (Preference::exists('discogs_api_key')) {
+        if (!Preference::exists('discogs_api_key') && !Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', 75, 'string', 'plugins', $this->name);
-        Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', 75, 'string', 'plugins', $this->name);
+        if (!Preference::exists('discogs_secret_api_key') && !Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
@@ -75,11 +75,20 @@ class AmpacheDiscogs
      */
     public function uninstall(): bool
     {
-        Preference::delete('discogs_api_key');
-        Preference::delete('discogs_secret_api_key');
-
-        return true;
+        return (
+            Preference::delete('discogs_api_key') &&
+            Preference::delete('discogs_secret_api_key')
+        );
     } // uninstall
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
+    }
 
     /**
      * load
@@ -181,7 +190,7 @@ class AmpacheDiscogs
      * Returns song metadata for what we're passed in.
      * @param array $gather_types
      * @param array $media_info
-     * @return array|null
+     * @return array
      */
     public function get_metadata($gather_types, $media_info)
     {
@@ -191,7 +200,7 @@ class AmpacheDiscogs
         if (!in_array('music', $gather_types)) {
             debug_event(self::class, 'Not a valid media type, skipped.', 5);
 
-            return null;
+            return array();
         }
 
         $results = array();
