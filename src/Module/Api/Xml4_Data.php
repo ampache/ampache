@@ -446,7 +446,7 @@ class Xml4_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param array $licenses    (description here...)
+     * @param array $licenses
      */
     public static function licenses($licenses): string
     {
@@ -468,7 +468,7 @@ class Xml4_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param array $tags    (description here...)
+     * @param array $tags
      */
     public static function tags($tags): string
     {
@@ -658,7 +658,7 @@ class Xml4_Data
      *
      * This returns shares to the user, in a pretty xml document with the information
      *
-     * @param array $shares    (description here...)
+     * @param array $shares
      */
     public static function shares($shares): string
     {
@@ -707,7 +707,7 @@ class Xml4_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param array $podcasts    (description here...)
+     * @param array $podcasts
      * @param User $user
      * @param bool $episodes include the episodes of the podcast //optional
      */

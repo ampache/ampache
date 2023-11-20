@@ -36,18 +36,18 @@ use MusicBrainz\Filters\LabelFilter;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
-class AmpacheMusicBrainz
+class AmpacheMusicBrainz implements AmpachePluginInterface
 {
-    public $name        = 'MusicBrainz';
-    public $categories  = 'metadata';
-    public $description = 'MusicBrainz metadata integration';
-    public $url         = 'http://www.musicbrainz.org';
-    public $version     = '000003';
-    public $min_ampache = '360003';
-    public $max_ampache = '999999';
+    public string $name        = 'MusicBrainz';
+    public string $categories  = 'metadata';
+    public string $description = 'MusicBrainz metadata integration';
+    public string $url         = 'http://www.musicbrainz.org';
+    public string $version     = '000003';
+    public string $min_ampache = '360003';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    public $overwrite_name;
+    private $overwrite_name;
 
     /**
      * Constructor
@@ -56,8 +56,6 @@ class AmpacheMusicBrainz
     public function __construct()
     {
         $this->description = T_('MusicBrainz metadata integration');
-
-        return true;
     }
 
     /**
@@ -66,7 +64,9 @@ class AmpacheMusicBrainz
      */
     public function install(): bool
     {
-        Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+        if (!Preference::exists('mb_overwrite_name') && !Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
@@ -77,8 +77,6 @@ class AmpacheMusicBrainz
      */
     public function uninstall(): bool
     {
-        Preference::delete('mb_overwrite_name');
-
         return true;
     } // uninstall
 
@@ -129,18 +127,18 @@ class AmpacheMusicBrainz
      * get_metadata
      * Returns song metadata for what we're passed in.
      * @param array $gather_types
-     * @param array $song_info
-     * @return array|null
+     * @param array $media_info
+     * @return array
      */
-    public function get_metadata($gather_types, $song_info)
+    public function get_metadata($gather_types, $media_info)
     {
         // Music metadata only
         if (!in_array('music', $gather_types)) {
-            return null;
+            return array();
         }
 
-        if (!$mbid = $song_info['mb_trackid']) {
-            return null;
+        if (!$mbid = $media_info['mb_trackid']) {
+            return array();
         }
 
         $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
@@ -153,7 +151,7 @@ class AmpacheMusicBrainz
         } catch (Exception $error) {
             debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
-            return null;
+            return array();
         }
 
         $results = array();
@@ -178,6 +176,7 @@ class AmpacheMusicBrainz
      * Update an object (label or artist for now) using musicbrainz
      * @param Label|Artist $object
      * @param string $object_type
+     * @return bool
      */
     public function get_external_metadata($object, string $object_type): bool
     {
