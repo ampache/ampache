@@ -487,7 +487,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
-			count: 6
+			count: 5
 			path: src/Gui/Song/SongViewAdapter.php
 
 		-

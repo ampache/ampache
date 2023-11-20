@@ -1031,7 +1031,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * gets the catalog_number of $this->album, allows passing of id
      * @param int $album_id
      */
-    public function get_album_catalog_number($album_id = null): string
+    public function get_album_catalog_number($album_id = null): ?string
     {
         if ($album_id === null) {
             $album_id = $this->album;
@@ -1046,7 +1046,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * gets the original_year of $this->album, allows passing of id
      * @param int $album_id
      */
-    public function get_album_original_year($album_id = null): int
+    public function get_album_original_year($album_id = null): ?int
     {
         if ($album_id === null) {
             $album_id = $this->album;
@@ -1061,7 +1061,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * gets the barcode of $this->album, allows passing of id
      * @param int $album_id
      */
-    public function get_album_barcode($album_id = null): string
+    public function get_album_barcode($album_id = null): ?string
     {
         if (!$album_id) {
             $album_id = $this->album;
