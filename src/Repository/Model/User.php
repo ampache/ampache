@@ -1269,7 +1269,7 @@ class User extends database_object
     public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if (!isset($this->link) && $this->id > 0) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . '/stats.php?action=show_user&user_id=' . $this->id;
         }
@@ -1283,7 +1283,7 @@ class User extends database_object
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_link)) {
+        if (!isset($this->f_link) && $this->id > 0) {
             $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
