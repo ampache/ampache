@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,26 +23,24 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
+/**
+ * Renders the user disable confirmation
+ */
 final class DisableAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'disable';
 
     private UiInterface $ui;
-
-    private LoggerInterface $logger;
 
     private ModelFactoryInterface $modelFactory;
 
@@ -48,12 +48,10 @@ final class DisableAction extends AbstractUserAction
 
     public function __construct(
         UiInterface $ui,
-        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
-        $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
@@ -64,29 +62,25 @@ final class DisableAction extends AbstractUserAction
             return null;
         }
 
-        $this->ui->showHeader();
-
         $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
-        if ($userId < 1) {
-            $this->logger->warning(
-                'Requested a user that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            echo T_('You have requested an object that does not exist');
-        } else {
-            $user = $this->modelFactory->createUser($userId);
-            $this->ui->showConfirmation(
-                T_('Are You Sure?'),
-                /* HINT: User Fullname */
-                sprintf(T_('This will disable the user "%s"'), $user->fullname),
-                sprintf(
-                    'admin/users.php?action=confirm_disable&amp;user_id=%s',
-                    $userId
-                ),
-                1,
-                'disable_user'
-            );
+        $user   = $this->modelFactory->createUser($userId);
+
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
         }
+
+        $this->ui->showHeader();
+        $this->ui->showConfirmation(
+            T_('Are You Sure?'),
+            /* HINT: User Fullname */
+            sprintf(T_('This will disable the user "%s"'), $user->getFullDisplayName()),
+            sprintf(
+                'admin/users.php?action=confirm_disable&amp;user_id=%s',
+                $userId
+            ),
+            1,
+            'disable_user'
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

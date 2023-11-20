@@ -65,8 +65,8 @@ use Ampache\Repository\SongRepositoryInterface;
 class Json5_Data
 {
     // This is added so that we don't pop any webservers
-    private static ?int $limit = 5000;
-    private static int $offset = 0;
+    private static ?int $limit  = 5000;
+    private static int $offset  = 0;
 
     /**
      * set_offset

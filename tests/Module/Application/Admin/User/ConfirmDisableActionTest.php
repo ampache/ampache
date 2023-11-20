@@ -2,13 +2,32 @@
 
 declare(strict_types=1);
 
-namespace Module\Application\Admin\User;
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2023
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Application\Admin\User\ConfirmDisableAction;
-use Ampache\Module\Application\Admin\User\ConfirmEnableAction;
-use Ampache\Module\Application\Admin\User\UserAdminAccessTestTrait;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\User\UserStateTogglerInterface;
@@ -65,6 +84,45 @@ class ConfirmDisableActionTest extends TestCase
         return 'disable_user';
     }
 
+    public function testRunErrorsIfUserWasNotFound(): void
+    {
+        $userId = 666;
+
+        $user = $this->createMock(User::class);
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->willReturn(true);
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->willReturn(false);
+
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with($this->getValidationFormName())
+            ->willReturn(true);
+
+        $this->request->expects(static::once())
+            ->method('getQueryParams')
+            ->willReturn(['user_id' => (string) $userId]);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createUser')
+            ->with($userId)
+            ->willReturn($user);
+
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
     public function testRunDisables(): void
     {
         $userId   = 666;
@@ -99,6 +157,9 @@ class ConfirmDisableActionTest extends TestCase
         $user->expects(static::once())
             ->method('getFullDisplayName')
             ->willReturn($userName);
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
 
         $this->userStateToggler->expects(static::once())
             ->method('disable')

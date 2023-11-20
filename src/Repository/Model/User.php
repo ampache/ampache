@@ -1469,13 +1469,11 @@ class User extends database_object
     }
 
     /**
-     * Returns the users most recent ip
-     *
-     * Will return an error info if the ip was not determinable
+     * Returns `true` if the user does not exist
      */
-    public function getRecentIp(): string
+    public function isNew(): bool
     {
-        return $this->ip_history;
+        return $this->getId() === 0;
     }
 
     /**

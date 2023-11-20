@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 /**
@@ -21,13 +20,34 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Module\Application\Exception;
 
-final class AccessDeniedException extends ApplicationException
+/**
+ * Thrown if users try to load items which don't exist
+ */
+final class ObjectNotFoundException extends ApplicationException
 {
     /** @var string */
-    protected $message = 'Access denied';
+    protected $message = 'Object not found';
+
+    /** @var int|string $objectId */
+    private $objectId;
+
+    /**
+     * @param int|string $objectId The requested objectId
+     */
+    public function __construct($objectId)
+    {
+        $this->objectId = $objectId;
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getObjectId()
+    {
+        return $this->objectId;
+    }
 }
