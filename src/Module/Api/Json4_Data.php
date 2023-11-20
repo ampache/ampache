@@ -61,7 +61,7 @@ use Ampache\Repository\SongRepositoryInterface;
 class Json4_Data
 {
     // This is added so that we don't pop any webservers
-    private static ?int $limit  = 5000;
+    private static ?int $limit = 5000;
     private static int $offset = 0;
 
     /**
@@ -245,7 +245,7 @@ class Json4_Data
      *
      * This returns tags to the user, in a pretty JSON document with the information
      *
-     * @param array $tags    (description here...)
+     * @param array $tags
      */
     public static function tags($tags): string
     {
@@ -848,7 +848,7 @@ class Json4_Data
      *
      * This builds the JSON document for displaying video objects
      *
-     * @param array $videos    (description here...)
+     * @param array $videos
      * @param User $user
      */
     public static function videos($videos, $user): string

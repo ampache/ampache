@@ -71,7 +71,7 @@ class Xml3_Data
      *
      * This takes an int and changes the offset
      *
-     * @param int $offset    (description here...)
+     * @param int $offset
      */
     public static function set_offset($offset): void
     {
@@ -83,7 +83,7 @@ class Xml3_Data
      *
      * This sets the limit for any ampache transactions
      *
-     * @param int|string $limit    (description here...)
+     * @param int|string $limit
      */
     public static function set_limit($limit): bool
     {
@@ -130,7 +130,7 @@ class Xml3_Data
      *
      * This takes two values, first the key second the string
      *
-     * @param string $key    (description here...)
+     * @param string $key
      * @param string $string    xml data
      */
     public static function single_string($key, $string = ''): string
@@ -225,8 +225,8 @@ class Xml3_Data
      *
      * This will build an xml document from a key'd array,
      *
-     * @param array $array    (description here...)
-     * @param bool $callback    (description here...)
+     * @param array $array
+     * @param bool $callback
      */
     public static function keyed_array($array, $callback = ''): string
     {
@@ -262,7 +262,7 @@ class Xml3_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param array $tags    (description here...)
+     * @param array $tags
      */
     public static function tags($tags): string
     {
@@ -291,7 +291,7 @@ class Xml3_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param array $artists    (description here...)
+     * @param array $artists
      * @param array $include    Array of other items to include
      * @param User $user
      * @param bool $full_xml  whether to return a full XML document or just the node
@@ -352,7 +352,7 @@ class Xml3_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param array $albums    (description here...)
+     * @param array $albums
      * @param array $include    Array of other items to include
      * @param User $user
      * @param bool $full_xml  whether to return a full XML document or just the node
@@ -408,7 +408,7 @@ class Xml3_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param array $playlists    (description here...)
+     * @param array $playlists
      */
     public static function playlists($playlists): string
     {
@@ -498,7 +498,7 @@ class Xml3_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param array $videos    (description here...)
+     * @param array $videos
      */
     public static function videos($videos): string
     {
