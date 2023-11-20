@@ -75,8 +75,8 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 }
                 $items = array();
                 foreach ($ids as $playlist_id) {
-                    $searchId   = (int)str_replace('smart_', '', $playlist_id);
-                    $playlist   = ($user->id)
+                    $searchId = (int)str_replace('smart_', '', $playlist_id);
+                    $playlist = ($user->id)
                         ? new Search($searchId, 'song', $user)
                         : new Search($searchId);
                     if ($playlist->id) {

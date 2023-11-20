@@ -128,8 +128,8 @@ if (!$gart) {
         <?php } ?>
     </dd>
 <?php
-$videoprops[T_('Title')]   = scrub_out($video->f_name);
-$videoprops[T_('Length')]  = scrub_out($video->f_time);
+$videoprops[T_('Title')]  = scrub_out($video->f_name);
+$videoprops[T_('Length')] = scrub_out($video->f_time);
 if (get_class($video) != Video::class) {
     require Ui::find_template('show_partial_' . ObjectTypeToClassNameMapper::reverseMap(get_class($video)) . '.inc.php');
 }
@@ -148,11 +148,11 @@ if (Access::check('interface', 75)) {
     $videoprops[T_('Size')]     = $video->f_size;
 }
 if ($video->update_time) {
-    $videoprops[T_('Last Updated')]   = get_datetime((int) $video->update_time);
+    $videoprops[T_('Last Updated')] = get_datetime((int) $video->update_time);
 }
-$videoprops[T_('Added')]   = get_datetime((int) $video->addition_time);
+$videoprops[T_('Added')] = get_datetime((int) $video->addition_time);
 if (AmpConfig::get('show_played_times')) {
-    $videoprops[T_('Played')]   = scrub_out($video->total_count);
+    $videoprops[T_('Played')] = scrub_out($video->total_count);
 }
 
 foreach ($videoprops as $key => $value) {

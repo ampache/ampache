@@ -68,7 +68,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
 
                 $broadcast = new Broadcast((int) $broadcast_id);
                 if ($broadcast->id) {
-                    $key  = Broadcast::generate_key();
+                    $key = Broadcast::generate_key();
                     $broadcast->update_state(true, $key);
                     $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
                 }

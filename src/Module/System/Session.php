@@ -163,7 +163,7 @@ final class Session implements SessionInterface
         $expire = ($perpetual)
             ? 0
             : time() + AmpConfig::get('session_length', 3600);
-        $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
+        $sql = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
         debug_event(self::class, 'Writing to ' . $key . ' with expiration ' . $expire, 5);
@@ -259,7 +259,7 @@ final class Session implements SessionInterface
      */
     private static function _read($key, $column): string
     {
-        $sql        = (AmpConfig::get('perpetual_api_session'))
+        $sql = (AmpConfig::get('perpetual_api_session'))
             ? "SELECT * FROM `session` WHERE `id` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
             : "SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?;";
         $db_results = Dba::read($sql, array($key, time()));

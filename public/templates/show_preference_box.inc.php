@@ -80,12 +80,12 @@ foreach ($preferences['prefs'] as $pref) {
                 if (!$is_system) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
                 <td class="cel_level">
-                    <?php $name         = 'on_' . (string)$pref['level'];
-                    $on_5               = '';
-                    $on_25              = '';
-                    $on_50              = '';
-                    $on_75              = '';
-                    $on_100             = '';
+                    <?php $name = 'on_' . (string)$pref['level'];
+                    $on_5       = '';
+                    $on_25      = '';
+                    $on_50      = '';
+                    $on_75      = '';
+                    $on_100     = '';
                     switch ($name) {
                         case 'on_5':
                             $on_5 = 'selected="selected"';

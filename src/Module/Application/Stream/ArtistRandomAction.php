@@ -55,10 +55,10 @@ final class ArtistRandomAction extends AbstractStreamAction
         SongRepositoryInterface $songRepository
     ) {
         parent::__construct($logger, $configContainer);
-        $this->requestParser    = $requestParser;
-        $this->modelFactory     = $modelFactory;
-        $this->configContainer  = $configContainer;
-        $this->songRepository   = $songRepository;
+        $this->requestParser   = $requestParser;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
+        $this->songRepository  = $songRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

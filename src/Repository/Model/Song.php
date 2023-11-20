@@ -688,7 +688,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $tags    = array();
 
         // Song data cache
-        $sql   = (AmpConfig::get('catalog_disable'))
+        $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id`, `file`, `catalog`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `played`, `song`.`enabled`, `update_time`, `tag_map`.`tag_id`, `mbid`, `addition_time`, `license`, `composer`, `user_upload`, `song`.`total_count`, `song`.`total_skip` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id`, `file`, `catalog`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `played`, `song`.`enabled`, `update_time`, `tag_map`.`tag_id`, `mbid`, `addition_time`, `license`, `composer`, `user_upload`, `song`.`total_count`, `song`.`total_skip` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' WHERE `song`.`id` IN $idlist";
 
@@ -1918,8 +1918,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         // don't do anything if it's formatted
         if (!isset($this->f_artist_link)) {
-            $this->f_artist_link  = '';
-            $web_path             = AmpConfig::get('web_path');
+            $this->f_artist_link = '';
+            $web_path            = AmpConfig::get('web_path');
             if (!isset($this->artists)) {
                 $this->get_artists();
             }

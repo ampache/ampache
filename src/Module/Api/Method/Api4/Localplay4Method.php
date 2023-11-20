@@ -69,14 +69,14 @@ final class Localplay4Method
         switch ($input['command']) {
             case 'add':
                 // for add commands get the object details
-                $object_id   = (int)($input['oid'] ?? 0);
-                $type        = $input['type'] ? (string) $input['type'] : 'Song';
+                $object_id = (int)($input['oid'] ?? 0);
+                $type      = $input['type'] ? (string) $input['type'] : 'Song';
                 if (!AmpConfig::get('allow_video') && $type == 'Video') {
                     Api4::message('error', T_('Access Denied: allow_video is not enabled.'), '400', $input['api_format']);
 
                     return false;
                 }
-                $clear       = (int)($input['clear'] ?? 0);
+                $clear = (int)($input['clear'] ?? 0);
                 // clear before the add
                 if ($clear == 1) {
                     $localplay->delete_all();

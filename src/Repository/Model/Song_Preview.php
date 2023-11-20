@@ -283,7 +283,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
-            $this->f_link       = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_name) . "</a>";
+            $this->f_link = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_name) . "</a>";
         }
 
         return $this->f_link;

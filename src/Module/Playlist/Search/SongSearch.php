@@ -44,13 +44,13 @@ final class SongSearch implements SearchInterface
         $catalog_filter     = AmpConfig::get('catalog_filter');
         $subsearch_count    = 0;
 
-        $where       = array();
-        $table       = array();
-        $join        = array();
-        $group       = array();
-        $having      = array();
-        $parameters  = array();
-        $metadata    = array();
+        $where      = array();
+        $table      = array();
+        $join       = array();
+        $group      = array();
+        $having     = array();
+        $parameters = array();
+        $metadata   = array();
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
@@ -117,14 +117,14 @@ final class SongSearch implements SearchInterface
                     $where[]        = ($operator_sql == "NOT LIKE")
                         ? "`album`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)"
                         : "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $operator_sql ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
-                    $parameters[]   = $input;
+                    $parameters[] = $input;
                     break;
                 case 'artist_genre':
-                    $where[]         = ($operator_sql == "NOT LIKE")
+                    $where[] = ($operator_sql == "NOT LIKE")
                         ? "`artist`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)"
                         : "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $operator_sql ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
-                    $parameters[]    = $input;
-                    $join['artist']  = true;
+                    $parameters[]   = $input;
+                    $join['artist'] = true;
                     break;
                 case 'no_genre':
                     $where[] = "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
@@ -163,26 +163,26 @@ final class SongSearch implements SearchInterface
                     $join['song_data'] = true;
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`song_data`.`comment` IS NULL";
+                            $where[] = "`song_data`.`comment` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`song_data`.`comment` IS NOT NULL";
+                            $where[] = "`song_data`.`comment` IS NOT NULL";
                             break;
                         }
                     }
-                    $where[]           = "`song_data`.`comment` $operator_sql ?";
-                    $parameters[]      = $input;
+                    $where[]      = "`song_data`.`comment` $operator_sql ?";
+                    $parameters[] = $input;
                     break;
                 case 'label':
                     $join['song_data'] = true;
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`song_data`.`label` IS NULL";
+                            $where[] = "`song_data`.`label` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`song_data`.`label` IS NOT NULL";
+                            $where[] = "`song_data`.`label` IS NOT NULL";
                             break;
                         }
                     }
@@ -193,11 +193,11 @@ final class SongSearch implements SearchInterface
                     $join['song_data'] = true;
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`song_data`.`lyrics` IS NULL";
+                            $where[] = "`song_data`.`lyrics` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`song_data`.`lyrics` IS NOT NULL";
+                            $where[] = "`song_data`.`lyrics` IS NOT NULL";
                             break;
                         }
                     }
@@ -447,11 +447,11 @@ final class SongSearch implements SearchInterface
                 case 'mbid':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`song`.`mbid` IS NULL";
+                            $where[] = "`song`.`mbid` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`song`.`mbid` IS NOT NULL";
+                            $where[] = "`song`.`mbid` IS NOT NULL";
                             break;
                         }
                     }
@@ -462,25 +462,25 @@ final class SongSearch implements SearchInterface
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album` = `album`.`id`";
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`album`.`mbid` IS NULL";
+                            $where[] = "`album`.`mbid` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`album`.`mbid` IS NOT NULL";
+                            $where[] = "`album`.`mbid` IS NOT NULL";
                             break;
                         }
                     }
-                    $where[]        = "`album`.`mbid` $operator_sql ?";
-                    $parameters[]   = $input;
+                    $where[]      = "`album`.`mbid` $operator_sql ?";
+                    $parameters[] = $input;
                     break;
                 case 'mbid_artist':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`artist`.`mbid` IS NULL";
+                            $where[] = "`artist`.`mbid` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`artist`.`mbid` IS NOT NULL";
+                            $where[] = "`artist`.`mbid` IS NOT NULL";
                             break;
                         }
                     }

@@ -99,25 +99,25 @@ final class ApiHandler implements ApiHandlerInterface
         // block html and visual output
         define('API', true);
 
-        $action        = $this->requestParser->getFromRequest('action');
-        $is_handshake  = $action == HandshakeMethod::ACTION;
-        $is_ping       = $action == PingMethod::ACTION;
-        $is_register   = $action == RegisterMethod::ACTION;
-        $is_forgotten  = $action == LostPasswordMethod::ACTION;
-        $is_public     = ($is_handshake || $is_ping || $is_register || $is_forgotten);
-        $input         = $request->getQueryParams();
-        $header_auth   = false;
+        $action       = $this->requestParser->getFromRequest('action');
+        $is_handshake = $action == HandshakeMethod::ACTION;
+        $is_ping      = $action == PingMethod::ACTION;
+        $is_register  = $action == RegisterMethod::ACTION;
+        $is_forgotten = $action == LostPasswordMethod::ACTION;
+        $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
+        $input        = $request->getQueryParams();
+        $header_auth  = false;
         if (!isset($input['auth'])) {
             if (!$is_public || $is_ping) {
                 $header_auth = true;
             }
             $input['auth'] = $gatekeeper->getAuth();
         }
-        $api_format    = $input['api_format'];
-        $version       = (isset($input['version'])) ? $input['version'] : Api::$version;
-        $user          = $gatekeeper->getUser();
-        $userId        = $user->id ?? -1;
-        $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
+        $api_format  = $input['api_format'];
+        $version     = (isset($input['version'])) ? $input['version'] : Api::$version;
+        $user        = $gatekeeper->getUser();
+        $userId      = $user->id ?? -1;
+        $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
             $api_version = ($is_public || $header_auth)

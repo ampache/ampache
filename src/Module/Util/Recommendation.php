@@ -459,7 +459,7 @@ class Recommendation
 
         $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
             ($xml->album->wiki->summary ?? '')));
-        $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
+        $results['summary'] = str_replace("Read more on Last.fm", "", $results['summary']);
 
         if ($album->id) {
             $results['id']          = $album->id;

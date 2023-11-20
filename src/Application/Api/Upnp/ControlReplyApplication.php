@@ -207,7 +207,7 @@ final class ControlReplyApplication implements ApplicationInterface
             } else {
                 $domDIDL = Upnp_Api::createDIDL($items, $filter);
                 if ($numRet == 0) {
-                    $numRet  = count($items);
+                    $numRet = count($items);
                 }
             }
             $xmlDIDL  = $domDIDL->saveXML();

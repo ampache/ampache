@@ -64,8 +64,8 @@ final class ConfirmUninstallPluginAction implements ApplicationActionInterface
             $this->configContainer->getWebPath(),
             $plugin
         );
-        $title  = T_('Are You Sure?');
-        $body   = T_('This will disable the Plugin and remove your settings');
+        $title = T_('Are You Sure?');
+        $body  = T_('This will disable the Plugin and remove your settings');
 
         $this->ui->showConfirmation($title, $body, $url, 1);
 

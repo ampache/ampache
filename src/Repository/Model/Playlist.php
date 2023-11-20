@@ -243,7 +243,7 @@ class Playlist extends playlist_object
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;
         }
-        $key  = 'smartlists';
+        $key = 'smartlists';
         if (empty($playlist_name)) {
             if (parent::is_cached($key, $user_id)) {
                 return parent::get_from_cache($key, $user_id);
@@ -314,8 +314,8 @@ class Playlist extends playlist_object
         $user_id = $user->id ?? 0;
 
         // Iterate over the object types
-        $sql              = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
-        $db_object_types  = Dba::read($sql);
+        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
+        $db_object_types = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_object_types)) {
             $object_type = $row['object_type'];
@@ -342,7 +342,7 @@ class Playlist extends playlist_object
                     $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist`= ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' ORDER BY `track`";
                     debug_event(__CLASS__, "get_items(): $object_type not handled", 5);
             }
-            $db_results  = Dba::read($sql, $params);
+            $db_results = Dba::read($sql, $params);
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = array(
@@ -374,8 +374,8 @@ class Playlist extends playlist_object
         $user_id = $user->id ?? 0;
 
         // Iterate over the object types
-        $sql              = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
-        $db_object_types  = Dba::read($sql);
+        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
+        $db_object_types = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_object_types)) {
             $object_type = $row['object_type'];
@@ -397,7 +397,7 @@ class Playlist extends playlist_object
                     $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist`= ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' AND `playlist_data`.`object_type` != 'live_stream' ORDER BY `track`";
                     debug_event(__CLASS__, "get_items(): $object_type not handled", 5);
             }
-            $db_results  = Dba::read($sql . $limit_sql, $params);
+            $db_results = Dba::read($sql . $limit_sql, $params);
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = array(
                     'object_type' => $row['object_type'],
@@ -430,7 +430,7 @@ class Playlist extends playlist_object
             $params[] = $user_id;
         }
         $sql .= "ORDER BY `playlist_data`.`track`";
-        $db_results  = Dba::read($sql, $params);
+        $db_results = Dba::read($sql, $params);
         //	debug_event(__CLASS__, "get_songs(): " . $sql, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {

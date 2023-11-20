@@ -84,9 +84,9 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     break;
                 case 'music':
                 default:
-                    $type      = 'song';
-                    $file_id   = Catalog::get_id_from_file($filePath, $type);
-                    $media     = new Song($file_id);
+                    $type    = 'song';
+                    $file_id = Catalog::get_id_from_file($filePath, $type);
+                    $media   = new Song($file_id);
                     break;
             }
             $file_test = is_file($filePath);

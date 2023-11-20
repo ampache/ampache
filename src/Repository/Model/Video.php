@@ -312,7 +312,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     {
         $this->f_full_title = $this->get_fullname();
         $this->get_f_link();
-        $this->f_codec      = $this->video_codec . ' / ' . $this->audio_codec;
+        $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
         }
@@ -685,11 +685,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
         if ($check_file > 0) {
             return $check_file;
         }
-        $bitrate        = (int) $data['bitrate'];
-        $mode           = $data['mode'];
-        $rezx           = $data['resolution_x'];
-        $rezy           = $data['resolution_y'];
-        $release_date   = $data['release_date'] ?? null;
+        $bitrate      = (int) $data['bitrate'];
+        $mode         = $data['mode'];
+        $rezx         = $data['resolution_x'];
+        $rezy         = $data['resolution_y'];
+        $release_date = $data['release_date'] ?? null;
         // No release date, then release date = production year
         if (!$release_date && array_key_exists('year', $data)) {
             $release_date = strtotime((string) $data['year'] . '-01-01');

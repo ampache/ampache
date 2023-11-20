@@ -39,9 +39,9 @@ final class PasswordGenerator implements PasswordGeneratorInterface
         if ($length === null) {
             $length = rand(14, 20);
         }
-        $strong   = true;
-        $string   = openssl_random_pseudo_bytes((int) ceil($length * 0.67), $strong);
-        $encode   = str_replace('=', '', base64_encode($string));
+        $strong = true;
+        $string = openssl_random_pseudo_bytes((int) ceil($length * 0.67), $strong);
+        $encode = str_replace('=', '', base64_encode($string));
 
         return strtr($encode, '+/', '^*');
     }

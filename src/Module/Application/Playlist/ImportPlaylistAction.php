@@ -56,8 +56,8 @@ final class ImportPlaylistAction implements ApplicationActionInterface
 
         // first we rename the file to it's original name before importing.
         // Otherwise the playlist name will have the $_FILES['filename']['tmp_name'] which doesn't look right...
-        $dir       = dirname($_FILES['filename']['tmp_name']) . "/";
-        $filename  = $dir . basename($_FILES['filename']['name']);
+        $dir      = dirname($_FILES['filename']['tmp_name']) . "/";
+        $filename = $dir . basename($_FILES['filename']['name']);
         move_uploaded_file($_FILES['filename']['tmp_name'], $filename);
         // allow setting public or private for your imports
         $playlist_type = filter_input(INPUT_POST, 'playlist_visibility', FILTER_SANITIZE_SPECIAL_CHARS);

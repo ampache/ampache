@@ -1120,7 +1120,7 @@ class Search extends playlist_object
             $user    = Core::get_global('user');
             $user_id = $user->id ?: 0;
         }
-        $key     = 'searches';
+        $key = 'searches';
         if (parent::is_cached($key, $user_id)) {
             return parent::get_from_cache($key, $user_id);
         }
@@ -1673,7 +1673,7 @@ class Search extends playlist_object
         if (!$insert_id) {
             return null;
         }
-        $this->id  = (int)$insert_id;
+        $this->id = (int)$insert_id;
         Catalog::count_table('search');
 
         return $insert_id;

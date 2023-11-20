@@ -225,7 +225,7 @@ class AmpacheRss
         );
         foreach ($data as $element) {
             /** @var Song|Video $media */
-            $media        = $element['media'];
+            $media = $element['media'];
             /** @var User $client */
             $client      = $element['client'];
             $title       = $format;
@@ -291,7 +291,7 @@ class AmpacheRss
         $user    = ($rsstoken)
             ? static::getUserRepository()->getByRssToken($rsstoken)
             : null;
-        $data    = ($user)
+        $data = ($user)
             ? Stats::get_recently_played($user->id, 'stream', 'song')
             : Stats::get_recently_played(-1, 'stream', 'song');
 
@@ -389,7 +389,7 @@ class AmpacheRss
     public static function load_latest_shout($rsstoken = "")
     {
         unset($rsstoken);
-        $ids  = Shoutbox::get_top(10);
+        $ids = Shoutbox::get_top(10);
 
         $results = array();
 

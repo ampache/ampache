@@ -48,11 +48,11 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
             }
             $catalog->format();
             if ($catalog->is_installed()) {
-                $action        = 'confirm_uninstall_catalog_type';
-                $action_txt    = T_('Disable');
+                $action     = 'confirm_uninstall_catalog_type';
+                $action_txt = T_('Disable');
             } else {
-                $action        = 'install_catalog_type';
-                $action_txt    = T_('Activate');
+                $action     = 'install_catalog_type';
+                $action_txt = T_('Activate');
             } ?>
         <tr>
             <td class="cel_type"><?php echo scrub_out($catalog->get_type()); ?></td>

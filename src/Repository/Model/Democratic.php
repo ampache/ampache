@@ -171,9 +171,9 @@ class Democratic extends Tmp_Playlist
         }
         $democratic_id = AmpConfig::get('democratic_id', false);
         if (!$democratic_id) {
-            $sql           = "SELECT `id` FROM `democratic` WHERE `level` <= ? ORDER BY `level` DESC,`primary` DESC";
-            $db_results    = Dba::read($sql, array($user->access ?? 0));
-            $row           = Dba::fetch_assoc($db_results);
+            $sql        = "SELECT `id` FROM `democratic` WHERE `level` <= ? ORDER BY `level` DESC,`primary` DESC";
+            $db_results = Dba::read($sql, array($user->access ?? 0));
+            $row        = Dba::fetch_assoc($db_results);
             if (!empty($row)) {
                 $democratic_id = $row['id'];
             }
@@ -259,11 +259,11 @@ class Democratic extends Tmp_Playlist
             $base_playlist = ($use_search)
                 ? new Search($this->base_playlist)
                 : new Playlist($this->base_playlist);
-            $data          = $base_playlist->get_random_items(1);
+            $data = $base_playlist->get_random_items(1);
 
             return $data[0]['object_id'];
         } else {
-            $sql        = "SELECT `id` FROM `song` WHERE `enabled`='1'";
+            $sql = "SELECT `id` FROM `song` WHERE `enabled`='1'";
             if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
                 $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')->id);
             }
@@ -616,7 +616,7 @@ class Democratic extends Tmp_Playlist
         $playlists        = ($use_search)
             ? Search::get_search_array($user->id)
             : Playlist::get_playlist_array($user->id);
-        $nb_items         = count($playlists);
+        $nb_items = count($playlists);
 
         foreach ($playlists as $key => $value) {
             $select_txt = '';

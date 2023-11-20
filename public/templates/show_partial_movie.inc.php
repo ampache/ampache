@@ -23,5 +23,5 @@
 
 /** @var Ampache\Repository\Model\Movie $video */
 
-$videoprops[T_('Summary')]   = $video->summary;
-$videoprops[T_('Year')]      = $video->year;
+$videoprops[T_('Summary')] = $video->summary;
+$videoprops[T_('Year')]    = $video->year;

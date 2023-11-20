@@ -1229,7 +1229,7 @@ class Album extends database_object implements library_item
     {
         if ((int)$album_id > 0 && (int)$object_id > 0) {
             // Remove the album_map if this was the last track
-            $sql        = ($object_type == 'album')
+            $sql = ($object_type == 'album')
                 ? "SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` = ? AND object_type = ?;"
                 : "SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` IN (SELECT `id` from `song` WHERE `album` = ?) AND object_type = ?;";
             $db_results = Dba::read($sql, array($object_id, $album_id, $object_type));

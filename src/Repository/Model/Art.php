@@ -416,7 +416,7 @@ class Art extends database_object
                 );
 
                 if (is_null($apics)) {
-                    $ndata['attached_picture'][]    = $new_pic;
+                    $ndata['attached_picture'][] = $new_pic;
                 } else {
                     switch (count($apics)) {
                         case 1:
@@ -440,8 +440,8 @@ class Art extends database_object
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][0] = $new_pic;
                             } else {
-                                $apicsId                              = ($idx == 0) ? 1 : 0;
-                                $ndata['attached_picture'][$apicsId]  = array(
+                                $apicsId                             = ($idx == 0) ? 1 : 0;
+                                $ndata['attached_picture'][$apicsId] = array(
                                     'data' => $apics[$apicsId]['data'],
                                     'mime' => $apics[$apicsId][$apic_mimetype],
                                     'picturetypeid' => $apics[$apicsId][$apic_typeid],
@@ -453,8 +453,8 @@ class Art extends database_object
                     }
                 }
                 unset($apics);
-                $tags    = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'vorbiscomment' : 'id3v2';
-                $ndata   = array_merge($ndata, $vainfo->prepare_metadata_for_writing($data['tags'][$tags]));
+                $tags  = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'vorbiscomment' : 'id3v2';
+                $ndata = array_merge($ndata, $vainfo->prepare_metadata_for_writing($data['tags'][$tags]));
                 $vainfo->write_id3($ndata);
             } // foreach song
         } // write_id3
@@ -483,11 +483,11 @@ class Art extends database_object
         $cnt = count($apics);
         for ($i = 0; $i < $cnt; $i++) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
-                $ndata['attached_picture'][$i]['description']       = $new_pic['description'];
-                $ndata['attached_picture'][$i]['data']              = $new_pic['data'];
-                $ndata['attached_picture'][$i]['mime']              = $new_pic['mime'];
-                $ndata['attached_picture'][$i]['picturetypeid']     = $new_pic['picturetypeid'];
-                $idx                                                = $i;
+                $ndata['attached_picture'][$i]['description']   = $new_pic['description'];
+                $ndata['attached_picture'][$i]['data']          = $new_pic['data'];
+                $ndata['attached_picture'][$i]['mime']          = $new_pic['mime'];
+                $ndata['attached_picture'][$i]['picturetypeid'] = $new_pic['picturetypeid'];
+                $idx                                            = $i;
                 break;
             }
         }
@@ -1240,10 +1240,10 @@ class Art extends database_object
             case 'tvshow':
             case 'tvshow_season':
             case 'tvshow_episode':
-                $gtypes[]                                   = 'tvshow';
-                $media_info['tvshow']                       = $options['tvshow'];
-                $media_info['tvshow_season']                = $options['tvshow_season'];
-                $media_info['tvshow_episode']               = $options['tvshow_episode'];
+                $gtypes[]                     = 'tvshow';
+                $media_info['tvshow']         = $options['tvshow'];
+                $media_info['tvshow_season']  = $options['tvshow_season'];
+                $media_info['tvshow_episode'] = $options['tvshow_episode'];
                 break;
             case 'song':
                 $media_info['mb_trackid'] = $options['mb_trackid'];

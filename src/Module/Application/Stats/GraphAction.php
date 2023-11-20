@@ -39,7 +39,7 @@ final class GraphAction extends AbstractGraphRendererAction
     public function __construct(
         UiInterface $ui
     ) {
-        $this->ui           = $ui;
+        $this->ui = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

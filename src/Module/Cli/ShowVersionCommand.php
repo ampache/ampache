@@ -37,7 +37,7 @@ final class ShowVersionCommand extends Command
     ) {
         parent::__construct('show:version', T_('Version'));
 
-        $this->configContainer        = $configContainer;
+        $this->configContainer = $configContainer;
 
         $this
             ->usage('<bold>  show:version</end> <comment> ## ' . T_('Version') . '<eol/>');

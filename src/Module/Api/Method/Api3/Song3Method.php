@@ -41,7 +41,7 @@ final class Song3Method
      */
     public static function song(array $input, User $user): void
     {
-        $uid  = scrub_in($input['filter']);
+        $uid = scrub_in($input['filter']);
 
         ob_end_clean();
         echo Xml3_Data::songs(array((int)$uid), $user);

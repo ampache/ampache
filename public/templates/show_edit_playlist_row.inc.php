@@ -51,7 +51,7 @@ use Ampache\Repository\Model\Playlist;
                 </td>
                 <td>
                     <?php
-                    $options   = array();
+                    $options = array();
 if (!empty($users)) {
     foreach ($users as $user_id => $username) {
         $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';

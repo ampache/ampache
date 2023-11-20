@@ -80,11 +80,11 @@ final class GrantAction implements ApplicationActionInterface
             if ($plugin = new Plugin($plugin_name)) {
                 $plugin->load($user);
                 if ($plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))) {
-                    $title    = T_('No Problem');
-                    $text     = T_('Your account has been updated') . ' : ' . $plugin_name;
+                    $title = T_('No Problem');
+                    $text  = T_('Your account has been updated') . ' : ' . $plugin_name;
                 } else {
-                    $title    = T_('There Was a Problem');
-                    $text     = T_('Your account has not been updated') . ' : ' . $plugin_name;
+                    $title = T_('There Was a Problem');
+                    $text  = T_('Your account has not been updated') . ' : ' . $plugin_name;
                 }
                 $next_url = sprintf(
                     '%s/preferences.php?tab=plugins',

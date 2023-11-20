@@ -62,7 +62,7 @@ final class PlaylistGenerate4Method
     public static function playlist_generate(array $input, User $user): void
     {
         // parameter defaults
-        $mode   = (array_key_exists('mode', $input) && in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true))
+        $mode = (array_key_exists('mode', $input) && in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true))
             ? $input['mode']
             : 'random';
         $format = (array_key_exists('format', $input) && in_array($input['format'], array('song', 'index', 'id'), true))

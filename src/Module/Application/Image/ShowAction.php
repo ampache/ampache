@@ -259,7 +259,7 @@ final class ShowAction implements ApplicationActionInterface
             $reqheaders = getallheaders();
             if (is_array($reqheaders) && array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
                 if (!array_key_exists('Cache-Control', $reqheaders) || (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache')) {
-                    $cetag  = str_replace('"','', $reqheaders['If-None-Match']);
+                    $cetag = str_replace('"','', $reqheaders['If-None-Match']);
                     // Same image than the cached one? Use the cache.
                     if ($cetag == $etag) {
                         return $response->withStatus(304);

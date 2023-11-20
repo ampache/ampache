@@ -39,10 +39,10 @@ final class UserSearch implements SearchInterface
     ): array {
         $sql_logic_operator = $search->logic_operator;
 
-        $where       = array();
-        $table       = array();
-        $join        = array();
-        $parameters  = array();
+        $where      = array();
+        $table      = array();
+        $join       = array();
+        $parameters = array();
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);

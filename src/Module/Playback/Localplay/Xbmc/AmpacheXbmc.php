@@ -676,8 +676,8 @@ class AmpacheXbmc extends localplay_controller
                     'properties' => array('position')
                 ));
 
-                $array['track']  = $playposition['position'] + 1;
-                $playlist_item   = rawurldecode($currentplay['item']['file']);
+                $array['track'] = $playposition['position'] + 1;
+                $playlist_item  = rawurldecode($currentplay['item']['file']);
 
                 $url_data = $this->parse_url($playlist_item);
                 $song     = new Song($url_data['oid']);

@@ -23,14 +23,14 @@ $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 7, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 7, path: '/', samesite: 'Strict'";
 
-$autoplay       = true;
-$iframed        = $iframed ?? false;
-$isShare        = $isShare ?? false;
-$embed          = $embed ?? false;
-$loop           = ($isRandom || $isDemocratic);
-$jp_volume      = (float)AmpConfig::get('jp_volume', 0.80);
-$removeCount    = (int)AmpConfig::get('webplayer_removeplayed', 0);
-$removePlayed   = ($removeCount > 0);
+$autoplay     = true;
+$iframed      = $iframed ?? false;
+$isShare      = $isShare ?? false;
+$embed        = $embed ?? false;
+$loop         = ($isRandom || $isDemocratic);
+$jp_volume    = (float)AmpConfig::get('jp_volume', 0.80);
+$removeCount  = (int)AmpConfig::get('webplayer_removeplayed', 0);
+$removePlayed = ($removeCount > 0);
 if ($removePlayed && $removeCount === 999) {
     $removeCount = 0;
 }

@@ -79,7 +79,7 @@ class UPnPFind
      */
     private static function discover($timeout = 2): array
     {
-        $msg  = 'M-SEARCH * HTTP/1.1' . "\r\n";
+        $msg = 'M-SEARCH * HTTP/1.1' . "\r\n";
         $msg .= 'HOST: 239.255.255.250:1900' . "\r\n";
         $msg .= 'MAN: "ssdp:discover"' . "\r\n";
         $msg .= "MX: 3\r\n";

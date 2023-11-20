@@ -47,11 +47,11 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
 
     public function testRegisterActivityRegisterArtistActivity(): void
     {
-        $objectId           = 666;
-        $objectType         = 'some-object-type';
-        $action             = 'some-action';
-        $userId             = 42;
-        $date               = 123;
+        $objectId   = 666;
+        $objectType = 'some-object-type';
+        $action     = 'some-action';
+        $userId     = 42;
+        $date       = 123;
 
         $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(

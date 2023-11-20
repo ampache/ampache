@@ -53,7 +53,7 @@ if (array_key_exists('browse_uid', $_REQUEST)) {
     $uid = AmpConfig::get('list_header_uid');
     AmpConfig::set('list_header_uid', ++$uid, true);
 }
-$sides  = 0;
+$sides = 0;
 ?>
 <?php if (!$browse->is_use_pages() && !$is_header) { ?>
 <?php $this->show_next_link(); ?>

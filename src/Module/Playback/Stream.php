@@ -509,7 +509,7 @@ class Stream
                 'handle' => null
             );
         } else {
-            $parray  = array(
+            $parray = array(
                 'process' => $process,
                 'handle' => $pipes[1],
                 'stderr' => $pipes[2]

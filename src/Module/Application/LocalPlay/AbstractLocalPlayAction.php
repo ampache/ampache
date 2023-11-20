@@ -65,7 +65,7 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
     {
         $refresh_limit = (int)$this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0;
         if ($refresh_limit > 5) {
-            $ajax_url      = '?page=localplay&action=command&command=refresh';
+            $ajax_url = '?page=localplay&action=command&command=refresh';
             require_once Ui::find_template('javascript_refresh.inc.php');
         }
     }

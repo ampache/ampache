@@ -75,7 +75,7 @@ final class AccessRepository implements AccessRepositoryInterface
     ): bool {
         $sql = 'SELECT COUNT(`id`) FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ?';
 
-        $params  = [inet_pton($userIp), inet_pton($userIp), $level, $type];
+        $params = [inet_pton($userIp), inet_pton($userIp), $level, $type];
 
         if (
             $userId !== null

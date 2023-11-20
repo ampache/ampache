@@ -857,7 +857,7 @@ class Json4_Data
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
 
-        $JSON   = [];
+        $JSON = [];
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
             $video->format();

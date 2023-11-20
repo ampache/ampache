@@ -180,8 +180,8 @@ require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
 <?php if ($allow_upload) { ?>
         <div id="artists" class="tab_content">
-    <?php $sql  = Catalog::get_uploads_sql('artist', $client->id);
-    $browse     = new Browse();
+    <?php $sql = Catalog::get_uploads_sql('artist', $client->id);
+    $browse    = new Browse();
     $browse->set_type('artist', $sql);
     $browse->set_simple_browse(true);
     $browse->show_objects();

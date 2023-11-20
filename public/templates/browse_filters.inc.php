@@ -70,8 +70,8 @@ if (!empty($browse_filters) && array_diff($allowed_filters, $browse_filters)) { 
         <?php echo Ajax::observe('show_allplCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=playlist_type&value=1', ''));
     }
     if (in_array('object_type', $browse_filters)) {
-        $string       = 'otype_' . $browse->get_filter('object_type');
-        ${$string}    = 'selected="selected"'; ?>
+        $string    = 'otype_' . $browse->get_filter('object_type');
+        ${$string} = 'selected="selected"'; ?>
         <input id="typeSongRadio" type="radio" name="object_type" value="1" <?php echo $otype_song; ?>/>
         <label id="typeSongLabel" for="typeSongRadio"><?php echo T_('Song Title'); ?></label><br />
         <?php echo Ajax::observe('typeSongRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=song', '')); ?>
@@ -88,12 +88,12 @@ if (!empty($browse_filters) && array_diff($allowed_filters, $browse_filters)) { 
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
-                <?php $results  = array();
-        $catalogs               = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
+                <?php $results = array();
+        $catalogs              = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
         if (!empty($catalogs)) {
             // Only show the catalogs this user is allowed to access
-            $sql               = 'SELECT `id`, `name` FROM `catalog` WHERE `id` IN (' . $catalogs . ') ORDER BY `name`';
-            $db_results        = Dba::read($sql);
+            $sql        = 'SELECT `id`, `name` FROM `catalog` WHERE `id` IN (' . $catalogs . ') ORDER BY `name`';
+            $db_results = Dba::read($sql);
             while ($data = Dba::fetch_assoc($db_results)) {
                 $results[] = $data;
             }

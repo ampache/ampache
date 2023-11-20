@@ -71,8 +71,8 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $podcastId  = (int) ($request->getQueryParams()['podcast'] ?? 0);
-        $podcast    = $this->modelFactory->createPodcast($podcastId);
+        $podcastId = (int) ($request->getQueryParams()['podcast'] ?? 0);
+        $podcast   = $this->modelFactory->createPodcast($podcastId);
         if ($podcast->isNew()) {
             $this->logger->warning(
                 'Requested a podcast that does not exist',

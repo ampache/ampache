@@ -23,5 +23,5 @@
 
 /** @var Ampache\Repository\Model\Clip $video */
 
-$videoprops[T_('Artist')]   = $video->f_artist;
-$videoprops[T_('Song')]     = $video->f_song;
+$videoprops[T_('Artist')] = $video->f_artist;
+$videoprops[T_('Song')]   = $video->f_song;

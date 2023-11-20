@@ -47,13 +47,13 @@ $random          = $_REQUEST['random'] ?? 0;
 $albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
-$browse_id       = (isset($browse))
+$browse_id = (isset($browse))
     ? $browse->id
     : 0;
-$currentType     = (isset($searchType))
+$currentType = (isset($searchType))
     ? $searchType
     : Core::get_request('type');
-$currentType     = (in_array($currentType, Search::VALID_TYPES))
+$currentType = (in_array($currentType, Search::VALID_TYPES))
     ? $currentType
     : null;
 if (!$currentType) {

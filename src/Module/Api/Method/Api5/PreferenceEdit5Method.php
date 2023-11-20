@@ -52,7 +52,7 @@ final class PreferenceEdit5Method
         if (!Api5::check_parameter($input, array('filter', 'value'), self::ACTION)) {
             return false;
         }
-        $all  = array_key_exists('all', $input) && (int)$input['all'] == 1;
+        $all = array_key_exists('all', $input) && (int)$input['all'] == 1;
         // don't apply to all when you aren't an admin
         if ($all && !Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;

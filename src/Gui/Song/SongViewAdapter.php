@@ -345,9 +345,9 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         $songprops = [];
 
-        $songprops[T_('Title')]         = scrub_out($this->song->title);
-        $songprops[T_('Song Artist')]   = $this->song->get_f_artist_link();
-        $songprops[T_('Album Artist')]  = $this->song->get_f_albumartist_link();
+        $songprops[T_('Title')]        = scrub_out($this->song->title);
+        $songprops[T_('Song Artist')]  = $this->song->get_f_artist_link();
+        $songprops[T_('Album Artist')] = $this->song->get_f_albumartist_link();
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true) {
             $songprops[T_('Album')] = $this->song->get_f_album_link();
         } else {
@@ -429,8 +429,8 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         $owner_id = $this->song->get_user_owner();
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) && $owner_id > 0) {
-            $owner                         = $this->modelFactory->createUser($owner_id);
-            $songprops[T_('Uploaded by')]  = $owner->get_f_link();
+            $owner                        = $this->modelFactory->createUser($owner_id);
+            $songprops[T_('Uploaded by')] = $owner->get_f_link();
         }
 
         return $songprops;

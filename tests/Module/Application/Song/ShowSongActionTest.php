@@ -139,8 +139,8 @@ class ShowSongActionTest extends MockeryTestCase
         $title   = 'some-song-title';
         $content = 'some-content';
 
-        $song->id      = $song_id;
-        $song->f_name  = $title;
+        $song->id     = $song_id;
+        $song->f_name = $title;
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()

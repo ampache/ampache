@@ -38,7 +38,7 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         RequestParserInterface $requestParser
     ) {
-        $this->requestParser   = $requestParser;
+        $this->requestParser = $requestParser;
     }
 
     public function handle(): void
@@ -63,7 +63,7 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
                 $catalog->enabled = (int)$new_enabled;
 
                 // Return the new Ajax::button
-                $id  = 'button_flip_state_' . $catalog->id;
+                $id = 'button_flip_state_' . $catalog->id;
                 if ($new_enabled) {
                     $button     = 'disable';
                     $buttontext = T_('Disable');

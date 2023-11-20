@@ -77,8 +77,8 @@ final class CreateAction implements ApplicationActionInterface
         ])) {
             $this->ui->show('show_add_podcast.inc.php');
         } else {
-            $title  = T_('No Problem');
-            $body   = T_('Subscribed to the Podcast');
+            $title = T_('No Problem');
+            $body  = T_('Subscribed to the Podcast');
             $this->ui->showConfirmation(
                 $title,
                 $body,

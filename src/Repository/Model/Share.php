@@ -241,8 +241,8 @@ class Share extends database_object
      */
     public static function get_share_list_sql(User $user): string
     {
-        $sql     = "SELECT `id` FROM `share` ";
-        $multi   = 'WHERE ';
+        $sql   = "SELECT `id` FROM `share` ";
+        $multi = 'WHERE ';
         if (!$user->has_access(75)) {
             $sql .= "WHERE `user` = " . $user->id;
             $multi = ' AND ';

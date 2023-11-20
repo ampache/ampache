@@ -65,7 +65,7 @@ UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_pla
     </thead>
     <tbody>
     <?php
-    $count    = 0;
+    $count = 0;
 foreach ($data as $row) {
     $row_id   = ($row['user'] > 0) ? (int) $row['user'] : -1;
     $row_user = new User($row_id);

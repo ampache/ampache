@@ -255,7 +255,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
         // Check to see if we should create a user here
         if (strlen((string) $db_user) && strlen((string) $db_pass)) {
-            $db_host  = AmpConfig::get('database_hostname');
+            $db_host = AmpConfig::get('database_hostname');
             // create the user account
             $sql_user = "CREATE USER '" . Dba::escape($db_user) . "'";
             if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
@@ -538,10 +538,10 @@ final class InstallationHelper implements InstallationHelperInterface
 
         switch ($case) {
             case 'minimalist':
-                $trconfig['ratings']                   = 'false';
-                $trconfig['sociable']                  = 'false';
-                $trconfig['wanted']                    = 'false';
-                $trconfig['live_stream']               = 'false';
+                $trconfig['ratings']     = 'false';
+                $trconfig['sociable']    = 'false';
+                $trconfig['wanted']      = 'false';
+                $trconfig['live_stream'] = 'false';
 
                 $dbconfig['download']    = '0';
                 $dbconfig['allow_video'] = '0';
@@ -558,13 +558,13 @@ final class InstallationHelper implements InstallationHelperInterface
                 setcookie('browse_artist_grid_view', 'false', $cookie_options);
                 break;
             case 'community':
-                $trconfig['use_auth']                                = 'false';
-                $trconfig['licensing']                               = 'true';
-                $trconfig['wanted']                                  = 'false';
-                $trconfig['live_stream']                             = 'false';
-                $trconfig['allow_public_registration']               = 'true';
-                $trconfig['cookie_disclaimer']                       = 'true';
-                $trconfig['share']                                   = 'true';
+                $trconfig['use_auth']                  = 'false';
+                $trconfig['licensing']                 = 'true';
+                $trconfig['wanted']                    = 'false';
+                $trconfig['live_stream']               = 'false';
+                $trconfig['allow_public_registration'] = 'true';
+                $trconfig['cookie_disclaimer']         = 'true';
+                $trconfig['share']                     = 'true';
 
                 $dbconfig['download']             = '0';
                 $dbconfig['share']                = '1';

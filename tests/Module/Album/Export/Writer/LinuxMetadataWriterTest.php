@@ -43,9 +43,9 @@ class LinuxMetadataWriterTest extends MockeryTestCase
 
         $dir->addChild($file);
 
-        $fileName      = 'some-full-name';
-        $dirName       = $dir->url();
-        $iconFileName  = 'some-file-name';
+        $fileName     = 'some-full-name';
+        $dirName      = $dir->url();
+        $iconFileName = 'some-file-name';
 
         $this->subject->write(
             $fileName,

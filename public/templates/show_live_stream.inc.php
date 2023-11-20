@@ -52,10 +52,10 @@ Art::display('live_stream', $radio->id, $radio->get_fullname(), $thumb); ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'add', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id); ?>
     </dd>
-<?php $itemprops[T_('Name')]     = $radio->get_fullname();
-$itemprops[T_('Website')]        = scrub_out($radio->site_url);
-$itemprops[T_('Stream')]         = $radio->f_url_link;
-$itemprops[T_('Codec')]          = scrub_out($radio->codec);
+<?php $itemprops[T_('Name')] = $radio->get_fullname();
+$itemprops[T_('Website')]    = scrub_out($radio->site_url);
+$itemprops[T_('Stream')]     = $radio->f_url_link;
+$itemprops[T_('Codec')]      = scrub_out($radio->codec);
 
 foreach ($itemprops as $key => $value) {
     if (trim($value)) {

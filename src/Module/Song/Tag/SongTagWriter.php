@@ -167,7 +167,7 @@ final class SongTagWriter implements SongTagWriterInterface
                     }
                 }
             }
-            $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg')
+            $apic_typeid = ($fileformat == 'flac' || $fileformat == 'ogg')
                 ? 'typeid'
                 : 'picturetypeid';
             $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
@@ -319,7 +319,7 @@ final class SongTagWriter implements SongTagWriterInterface
                     );
                 }
             }
-            $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg')
+            $apic_typeid = ($fileformat == 'flac' || $fileformat == 'ogg')
                 ? 'typeid'
                 : 'picturetypeid';
             $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
@@ -518,7 +518,7 @@ final class SongTagWriter implements SongTagWriterInterface
             }
         }
 
-        $meta['genre']  = [];
+        $meta['genre'] = [];
 
         if (!empty($song->tags)) {
             foreach ($song->tags as $tag) {

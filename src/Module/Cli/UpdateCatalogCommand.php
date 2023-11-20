@@ -37,7 +37,7 @@ final class UpdateCatalogCommand extends Command
     ) {
         parent::__construct('run:updateCatalog', T_('Perform catalog actions for all files of a catalog. If no options are given, the defaults actions -ceag are assumed'));
 
-        $this->updateCatalog   = $updateCatalog;
+        $this->updateCatalog = $updateCatalog;
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)

@@ -63,9 +63,9 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
         /* Update the catalog */
         Catalog::update_settings($_POST);
 
-        $url       = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
-        $title     = T_('No Problem');
-        $body      = T_('The Catalog has been updated');
+        $url   = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
+        $title = T_('No Problem');
+        $body  = T_('The Catalog has been updated');
 
         $this->ui->showConfirmation($title, $body, $url);
 

@@ -165,10 +165,10 @@ class EditActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $name          = 'some-name';
-        $description   = 'some-description';
-        $data          = ['name' => $name, 'description' => $description];
-        $webPath       = 'some-path';
+        $name        = 'some-name';
+        $description = 'some-description';
+        $data        = ['name' => $name, 'description' => $description];
+        $webPath     = 'some-path';
 
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()

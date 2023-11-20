@@ -152,7 +152,7 @@ final class Play2Action implements ApplicationActionInterface
             $random  = (int)scrub_in($new_request['random'] ?? 0);
 
             // don't put this one here
-            $cpaction     = null;
+            $cpaction = null;
         } else {
             /* These parameters had better come in on the url. */
             $action       = (string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -597,13 +597,13 @@ final class Play2Action implements ApplicationActionInterface
             );
         }
 
-        $transcode      = false;
-        $transcode_cfg  = AmpConfig::get('transcode');
-        $cache_path     = (string)AmpConfig::get('cache_path', '');
-        $cache_target   = (string)AmpConfig::get('cache_target', '');
-        $cache_file     = false;
-        $file_target    = false;
-        $mediaOwnerId   = ($media instanceof Song_Preview)
+        $transcode     = false;
+        $transcode_cfg = AmpConfig::get('transcode');
+        $cache_path    = (string)AmpConfig::get('cache_path', '');
+        $cache_target  = (string)AmpConfig::get('cache_target', '');
+        $cache_file    = false;
+        $file_target   = false;
+        $mediaOwnerId  = ($media instanceof Song_Preview)
             ? null
             : $media->get_user_owner();
         $mediaCatalogId = ($media instanceof Song_Preview)
@@ -680,7 +680,7 @@ final class Play2Action implements ApplicationActionInterface
         ignore_user_abort(true);
 
         // Format the media name
-        $media_name   = (!empty($stream_name))
+        $media_name = (!empty($stream_name))
             ? $stream_name
             : $media->get_stream_name() . "." . $media->type;
         $transcode_to = ($transcode_cfg == 'never' || $cache_file || ($is_download && !$transcode_to))
@@ -693,7 +693,7 @@ final class Play2Action implements ApplicationActionInterface
         $agent      = (!empty($client))
             ? $client
             : Session::agent($sessionkey);
-        $location   = Session::get_geolocation($sessionkey);
+        $location = Session::get_geolocation($sessionkey);
 
         // If they are just trying to download make sure they have rights and then present them with the download file
         if ($is_download && !$transcode_to) {

@@ -100,7 +100,7 @@ class Bookmark extends database_object
      */
     public static function getBookmarks($data)
     {
-        $bookmarks   = array();
+        $bookmarks = array();
         if ($data['object_type'] !== 'bookmark') {
             $comment_sql = (!empty($data['comment'])) ? "AND `comment` = '" . scrub_in($data['comment']) . "'" : "";
             $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql . ' ORDER BY `update_date` DESC;';

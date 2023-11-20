@@ -263,8 +263,8 @@ class User extends database_object
      */
     public function get_playlists($show_all): array
     {
-        $results    = array();
-        $sql        = ($show_all)
+        $results = array();
+        $sql     = ($show_all)
             ? "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`;"
             : "SELECT `id` FROM `playlist` WHERE `user` = ? AND `type` = 'public' ORDER BY `name`;";
 
@@ -765,7 +765,7 @@ class User extends database_object
             debug_event(self::class, 'Update counts for ' . $user_id, 5);
             // get counts per user (filtered catalogs aren't counted)
             foreach ($count_array as $table) {
-                $sql        = (in_array($table, array('search', 'user', 'license')))
+                $sql = (in_array($table, array('search', 'user', 'license')))
                     ? "SELECT COUNT(`id`) FROM `$table`"
                     : "SELECT COUNT(`id`) FROM `$table` WHERE" . Catalog::get_user_filter($table, $user_id);
                 $db_results = Dba::read($sql);
@@ -782,7 +782,7 @@ class User extends database_object
                 if (empty($catalog_array)) {
                     continue;
                 }
-                $sql        = ($catalog_disable)
+                $sql = ($catalog_disable)
                     ? "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ") AND `$table`.`enabled`='1';"
                     : "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ");";
                 $db_results = Dba::read($sql);
@@ -1172,7 +1172,7 @@ class User extends database_object
                 if (isset($zero_results[$key])) {
                     $row['value'] = $zero_results[$key];
                 }
-                $sql   = "INSERT INTO user_preference (`user`, `preference`, `value`) VALUES (?, ?, ?)";
+                $sql = "INSERT INTO user_preference (`user`, `preference`, `value`) VALUES (?, ?, ?)";
                 Dba::write($sql, array($user_id, $key, $row['value']));
             }
         } // while preferences

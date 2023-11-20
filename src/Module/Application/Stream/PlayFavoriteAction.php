@@ -68,7 +68,7 @@ final class PlayFavoriteAction extends AbstractStreamAction
         switch ($inputType) {
             case 'artist':
                 foreach ($data as $value) {
-                    $mediaIds  = array_merge(
+                    $mediaIds = array_merge(
                         $mediaIds,
                         $this->songRepository->getByArtist((int) $value->id)
                     );
@@ -76,7 +76,7 @@ final class PlayFavoriteAction extends AbstractStreamAction
                 break;
             case 'album':
                 foreach ($data as $value) {
-                    $mediaIds  = array_merge(
+                    $mediaIds = array_merge(
                         $mediaIds,
                         $this->songRepository->getByAlbum((int) $value->id)
                     );

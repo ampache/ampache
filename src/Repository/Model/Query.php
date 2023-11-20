@@ -2238,7 +2238,7 @@ class Query
                         $sql = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time`";
                         break;
                     case 'year':
-                        $sql   = "`album`.`year` $order, `album`.`addition_time`";
+                        $sql = "`album`.`year` $order, `album`.`addition_time`";
                         break;
                     case 'disk_count':
                     case 'song_count':

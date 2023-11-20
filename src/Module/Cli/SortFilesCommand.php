@@ -37,7 +37,7 @@ final class SortFilesCommand extends Command
     ) {
         parent::__construct('cleanup:sortSongs', T_('Sort songs files'));
 
-        $this->songSorter      = $songSorter;
+        $this->songSorter = $songSorter;
 
         $this
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)

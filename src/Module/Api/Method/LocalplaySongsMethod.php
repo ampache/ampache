@@ -60,7 +60,7 @@ final class LocalplaySongsMethod
             return false;
         }
         // Pull the current playlist and return the objects
-        $songs        = $localplay->get();
+        $songs = $localplay->get();
         if (empty($songs)) {
             Api::empty('localplay_songs', $input['api_format']);
 

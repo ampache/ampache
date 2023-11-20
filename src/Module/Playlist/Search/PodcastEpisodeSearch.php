@@ -43,12 +43,12 @@ final class PodcastEpisodeSearch implements SearchInterface
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
-        $where       = array();
-        $table       = array();
-        $join        = array();
-        $group       = array();
-        $having      = array();
-        $parameters  = array();
+        $where      = array();
+        $table      = array();
+        $join       = array();
+        $group      = array();
+        $having     = array();
+        $parameters = array();
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
@@ -81,7 +81,7 @@ final class PodcastEpisodeSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'state':
-                    $where[]      = "`podcast_episode`.`state` $operator_sql ?";
+                    $where[] = "`podcast_episode`.`state` $operator_sql ?";
                     switch ($input) {
                         case 0:
                             $parameters[] = 'skipped';

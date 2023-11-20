@@ -684,7 +684,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return parent::get_from_cache('tags_list', 'no_name');
         }
 
-        $results  = array();
+        $results = array();
         if ($type == 'tag_hidden') {
             $sql = "SELECT `tag`.`id` AS `tag_id`, `tag`.`name`, `tag`.`is_hidden` FROM `tag` WHERE `tag`.`is_hidden` = true ";
         } else {
@@ -786,7 +786,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             //debug_event(self::class, 'ctag {' . $ctid . '} = ' . print_r($ctv, true), 5);
             $found = false;
             if ($ctv['id'] != '') {
-                $ctag  = new Tag($ctv['id']);
+                $ctag = new Tag($ctv['id']);
                 foreach ($editedTags as $tk => $tv) {
                     //debug_event(self::class, 'from_tags {' . $tk . '} = ' . $tv, 5);
                     if (strtolower($ctag->name) == strtolower($tv)) {

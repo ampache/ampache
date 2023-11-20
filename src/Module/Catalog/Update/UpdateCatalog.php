@@ -323,7 +323,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 true
             );
         }
-        $time_diff  = time() - $start_time;
+        $time_diff = time() - $start_time;
         $interactor->info(
             T_('Time') . ": " . date('i:s', $time_diff),
             true
@@ -341,7 +341,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $newPath     = $catalogType;
             $catalogType = 'local';
         }
-        $result  = $this->lookupCatalogs(
+        $result = $this->lookupCatalogs(
             $catalogType,
             $catalogName
         );

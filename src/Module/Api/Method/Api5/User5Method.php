@@ -60,8 +60,8 @@ final class User5Method
             return false;
         }
 
-        $check_user  = User::get_from_username($username);
-        $valid       = $check_user instanceof User && in_array($check_user->id, static::getUserRepository()->getValid(true));
+        $check_user = User::get_from_username($username);
+        $valid      = $check_user instanceof User && in_array($check_user->id, static::getUserRepository()->getValid(true));
         if (!$valid) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);

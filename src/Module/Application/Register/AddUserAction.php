@@ -100,14 +100,14 @@ final class AddUserAction implements ApplicationActionInterface
          * possibly by logging them in right then and there with their current info
          * and 'click here to login' would just be a link back to index.php
          */
-        $fullname       = (string) scrub_in(Core::get_post('fullname'));
-        $username       = (string) scrub_in(Core::get_post('username'));
-        $email          = (string) scrub_in(Core::get_post('email'));
-        $pass1          = Core::get_post('password_1');
-        $pass2          = Core::get_post('password_2');
-        $website        = (string) scrub_in(Core::get_post('website'));
-        $state          = (string) scrub_in(Core::get_post('state'));
-        $city           = (string) scrub_in(Core::get_post('city'));
+        $fullname = (string) scrub_in(Core::get_post('fullname'));
+        $username = (string) scrub_in(Core::get_post('username'));
+        $email    = (string) scrub_in(Core::get_post('email'));
+        $pass1    = Core::get_post('password_1');
+        $pass2    = Core::get_post('password_2');
+        $website  = (string) scrub_in(Core::get_post('website'));
+        $state    = (string) scrub_in(Core::get_post('state'));
+        $city     = (string) scrub_in(Core::get_post('city'));
 
         /* If we're using the captcha stuff */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {

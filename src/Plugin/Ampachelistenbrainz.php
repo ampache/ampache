@@ -44,8 +44,8 @@ class Ampachelistenbrainz implements AmpachePluginInterface
     // These are internal settings used by this class, run this->load to fill them out
     private $token;
     private $api_host;
-    private $scheme   = 'https';
-    private $host     = 'listenbrainz.org';
+    private $scheme = 'https';
+    private $host   = 'listenbrainz.org';
 
     /**
      * Constructor

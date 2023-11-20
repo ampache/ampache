@@ -228,7 +228,7 @@ class Label extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
-            $this->f_link  = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
         }
 
         return $this->f_link;

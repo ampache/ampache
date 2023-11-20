@@ -157,10 +157,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if ($art->type == 'album') {
             $songs = $this->songRepository->getByAlbum($art->uid);
         } else {
-            $songs  = $this->songRepository->getByArtist($art->uid);
+            $songs = $this->songRepository->getByArtist($art->uid);
         }
 
-        $data  = [];
+        $data = [];
 
         // Foreach songs in this album
         foreach ($songs as $song_id) {
@@ -202,7 +202,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
             $image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
             if (array_key_exists('data', $image)) {
-                $images[]    = array(
+                $images[] = array(
                     'raw' => $image['data'],
                     'mime' => $image['mime'],
                     'title' => 'ID3 asf'
@@ -214,8 +214,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
                 if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                    $type        = self::getPictureType((int)$image['picturetypeid']);
-                    $images[]    = [
+                    $type     = self::getPictureType((int)$image['picturetypeid']);
+                    $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['mime'],
                         'title' => 'ID3 ' . $type
@@ -228,8 +228,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['PIC'] as $image) {
                 if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                    $type        = self::getPictureType((int)$image['picturetypeid']);
-                    $images[]    = [
+                    $type     = self::getPictureType((int)$image['picturetypeid']);
+                    $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $type
@@ -242,8 +242,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['flac']['PICTURE'] as $image) {
                 if (isset($image['typeid']) && array_key_exists('data', $image)) {
-                    $type        = self::getPictureType((int)$image['typeid']);
-                    $images[]    = [
+                    $type     = self::getPictureType((int)$image['typeid']);
+                    $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $type
@@ -256,14 +256,14 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['comments']['picture'] as $image) {
                 if (isset($image['picturetype']) && array_key_exists('data', $image)) {
-                    $images[]    = [
+                    $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $image['picturetype']
                     ];
                 }
                 if (isset($image['description']) && array_key_exists('data', $image)) {
-                    $images[]    = [
+                    $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $image['description']

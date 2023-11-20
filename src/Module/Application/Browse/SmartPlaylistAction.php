@@ -44,8 +44,8 @@ final class SmartPlaylistAction implements ApplicationActionInterface
         ModelFactoryInterface $modelFactory,
         UiInterface $ui
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
+        $this->modelFactory = $modelFactory;
+        $this->ui           = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

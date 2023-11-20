@@ -409,7 +409,7 @@ class UPnPPlayer
             'Channel' => $channel
         ));
 
-        $responseXML  = simplexml_load_string($response);
+        $responseXML = simplexml_load_string($response);
         if (empty($responseXML)) {
             return '';
         }

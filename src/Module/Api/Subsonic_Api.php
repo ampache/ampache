@@ -480,8 +480,8 @@ class Subsonic_Api
     {
         set_time_limit(300);
 
-        $musicFolderId    = $input['musicFolderId'] ?? '-1';
-        $ifModifiedSince  = $input['ifModifiedSince'] ?? '';
+        $musicFolderId   = $input['musicFolderId'] ?? '-1';
+        $ifModifiedSince = $input['ifModifiedSince'] ?? '';
 
         $catalogs = array();
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
@@ -966,11 +966,11 @@ class Subsonic_Api
         $toYear        = $input['toYear'] ?? null;
         $musicFolderId = $input['musicFolderId'] ?? 0;
 
-        $data             = array();
-        $data['limit']    = $size;
-        $data['random']   = 1;
-        $data['type']     = "song";
-        $count            = 0;
+        $data           = array();
+        $data['limit']  = $size;
+        $data['random'] = 1;
+        $data['type']   = "song";
+        $count          = 0;
         if ($genre) {
             $data['rule_' . $count . '_input']    = $genre;
             $data['rule_' . $count . '_operator'] = 0;
@@ -1119,7 +1119,7 @@ class Subsonic_Api
         $original = unhtmlentities((string)self::_check_parameter($input, 'query'));
         $query    = $original;
         if (substr($original, 0, 1) == '"' && (substr($original, -1) == '"')) {
-            $query    = substr($original, 1, -1);
+            $query = substr($original, 1, -1);
             // query is non-optional, but some clients send empty queries to fetch
             // all items. Fall back on default contains in such cases.
             if (strlen($query) > 0) {
@@ -1130,9 +1130,9 @@ class Subsonic_Api
             $query    = substr($original, 1, -2);
             $operator = 4; // equals
         }
-        $artists  = array();
-        $albums   = array();
-        $songs    = array();
+        $artists = array();
+        $albums  = array();
+        $songs   = array();
 
         if (strlen($query) > 1) {
             // if we didn't catch a "wrapped" query it might just be a starts with
@@ -1223,7 +1223,7 @@ class Subsonic_Api
      */
     public static function getplaylists($input, $user): void
     {
-        $user  = (isset($input['username']))
+        $user = (isset($input['username']))
             ? User::get_from_username($input['username'])
             : $user;
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
@@ -1513,8 +1513,8 @@ class Subsonic_Api
         if (!is_string($sub_id)) {
             return;
         }
-        $size   = $input['size'] ?? false;
-        $type   = Subsonic_Xml_Data::_getAmpacheType($sub_id);
+        $size = $input['size'] ?? false;
+        $type = Subsonic_Xml_Data::_getAmpacheType($sub_id);
         if ($type == "") {
             self::_setHeader($input['f'] ?? 'xml');
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getcoverart');
@@ -1817,7 +1817,7 @@ class Subsonic_Api
             $expire_days  = (isset($input['expires']))
                 ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000)
                 : $share_expire;
-            $object_type  = null;
+            $object_type = null;
             if (is_array($object_id) && Subsonic_Xml_Data::_isSong($object_id[0])) {
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
                 $song_id     = Subsonic_Xml_Data::_getAmpacheId($object_id[0]);
@@ -1832,7 +1832,7 @@ class Subsonic_Api
                 } elseif (Subsonic_Xml_Data::_isPlaylist($object_id)) {
                     $object_type = 'playlist';
                 }
-                $object_id   = Subsonic_Xml_Data::_getAmpacheId($object_id);
+                $object_id = Subsonic_Xml_Data::_getAmpacheId($object_id);
             }
             debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
@@ -1884,7 +1884,7 @@ class Subsonic_Api
                 $expires = (isset($input['expires']))
                     ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000)
                     : $share->expire_days;
-                $data    = array(
+                $data = array(
                     'max_counter' => $share->max_counter,
                     'expire' => $expires,
                     'allow_stream' => $share->allow_stream,
@@ -2671,8 +2671,8 @@ class Subsonic_Api
         if (!$object_id || !$position) {
             return;
         }
-        $comment   = $input['comment'] ?? '';
-        $type      = Subsonic_Xml_Data::_getAmpacheType((string)$object_id);
+        $comment = $input['comment'] ?? '';
+        $type    = Subsonic_Xml_Data::_getAmpacheType((string)$object_id);
 
         if (!empty($type)) {
             $bookmark = new Bookmark(Subsonic_Xml_Data::_getAmpacheId($object_id), $type);
@@ -2752,8 +2752,8 @@ class Subsonic_Api
         $current = (string)($input['current'] ?? '0');
         $media   = Subsonic_Xml_Data::_getAmpacheObject((int)$current);
         if ($media->id) {
-            $response       = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
-            $position       = (array_key_exists('position', $input))
+            $response = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
+            $position = (array_key_exists('position', $input))
                 ? (int)((int)$input['position'] / 1000)
                 : 0;
             $client         = scrub_in($input['c'] ?? 'Subsonic');
@@ -2784,7 +2784,7 @@ class Subsonic_Api
                 $sub_ids   = (is_array($input['id']))
                     ? $input['id']
                     : array($input['id']);
-                $playlist  = Subsonic_Xml_Data::_getAmpacheIdArrays($sub_ids);
+                $playlist = Subsonic_Xml_Data::_getAmpacheIdArrays($sub_ids);
                 $playQueue->set_items($playlist, $type, $media->id, $position, $time);
             }
         } else {
@@ -2816,16 +2816,16 @@ class Subsonic_Api
         $albums = false;
         switch ($type) {
             case "random":
-                $albums   = static::getAlbumRepository()->getRandom(
+                $albums = static::getAlbumRepository()->getRandom(
                     $user->id,
                     $size
                 );
                 break;
             case "newest":
-                $albums   = Stats::get_newest("album", $size, $offset, $musicFolderId, $user->id);
+                $albums = Stats::get_newest("album", $size, $offset, $musicFolderId, $user->id);
                 break;
             case "highest":
-                $albums   = Rating::get_highest("album", $size, $offset, $user->id);
+                $albums = Rating::get_highest("album", $size, $offset, $user->id);
                 break;
             case "frequent":
                 $albums = Stats::get_top("album", $size, 0, $offset);
@@ -2834,7 +2834,7 @@ class Subsonic_Api
                 $albums = Stats::get_recent("album", $size, $offset);
                 break;
             case "starred":
-                $albums   = Userflag::get_latest('album', 0, $size, $offset);
+                $albums = Userflag::get_latest('album', 0, $size, $offset);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);
@@ -2847,8 +2847,8 @@ class Subsonic_Api
                 $toYear   = max($input['fromYear'], $input['toYear']);
 
                 if ($fromYear || $toYear) {
-                    $data     = Search::year_search($fromYear, $toYear, $size, $offset);
-                    $albums   = Search::run($data, $user);
+                    $data   = Search::year_search($fromYear, $toYear, $size, $offset);
+                    $albums = Search::run($data, $user);
                 }
                 break;
             case "byGenre":

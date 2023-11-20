@@ -130,9 +130,9 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
 <?php if ($show_direct_play) {
-    $play       = T_('Play');
-    $playnext   = T_('Play next');
-    $playlast   = T_('Play last'); ?>
+    $play     = T_('Play');
+    $playnext = T_('Play next');
+    $playlast = T_('Play last'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id, 'play', $play, 'directplay_full_' . $album->id); ?>
         </li>
@@ -225,7 +225,7 @@ if ($isAlbumEditable) {
 <?php
 }
 if ($zip_album) {
-    $download   = T_('Download'); ?>
+    $download = T_('Download'); ?>
             <li>
                 <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('batch_download', $download);

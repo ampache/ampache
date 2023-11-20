@@ -422,7 +422,7 @@ class Catalog_subsonic extends Catalog
         if ($user_bit_rate > $max_bitrate) {
             $max_bitrate = $user_bit_rate;
         }
-        $options    = array(
+        $options = array(
             'format' => $target,
             'maxBitRate' => $max_bitrate
         );

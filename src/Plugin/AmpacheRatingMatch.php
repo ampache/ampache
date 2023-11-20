@@ -61,7 +61,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
      */
     public function __construct()
     {
-        $this->description   = T_('Raise the album and artist rating to match the highest song rating');
+        $this->description = T_('Raise the album and artist rating to match the highest song rating');
     }
 
     /**
@@ -209,7 +209,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
     public function set_flag($song, $flagged): void
     {
         if ($this->match_flags > 0 && $flagged) {
-            $album  = new Album($song->album);
+            $album = new Album($song->album);
             // flag the album
             $fAlbum = new Userflag($song->album, 'album');
             $fAlbum->set_flag($flagged, $this->user->id);

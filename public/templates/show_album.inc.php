@@ -87,8 +87,8 @@ if ($directplay_limit > 0) {
     <?php } ?>
     </div>
     <?php
-        $name  = '[' . scrub_out($album->f_artist_name) . '] ' . scrub_out($f_name);
-$thumb         = Ui::is_grid_view('album') ? 32 : 11;
+        $name = '[' . scrub_out($album->f_artist_name) . '] ' . scrub_out($f_name);
+$thumb        = Ui::is_grid_view('album') ? 32 : 11;
 Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) {
@@ -124,9 +124,9 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
         <?php if ($show_direct_play) {
-            $play       = T_('Play');
-            $playnext   = T_('Play next');
-            $playlast   = T_('Play last'); ?>
+            $play     = T_('Play');
+            $playnext = T_('Play next');
+            $playlast = T_('Play last'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id, 'play', $play, 'directplay_full_' . $album->id); ?>
         </li>
@@ -186,7 +186,7 @@ if (Access::check('interface', 25)) {
             <?php }
     }
 if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->id) || Access::check('interface', 50)) {
-    $saveorder  = T_('Save Track Order');
+    $saveorder = T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
@@ -229,7 +229,7 @@ if ($isAlbumEditable) {
         <?php
 }
 if ($zip_album) {
-    $download   = T_('Download'); ?>
+    $download = T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
                 <?php echo Ui::get_icon('batch_download', $download);

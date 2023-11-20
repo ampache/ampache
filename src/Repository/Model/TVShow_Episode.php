@@ -113,8 +113,8 @@ class TVShow_Episode extends Video
 
         $sdata = $data;
         // Replace relation name with db ids
-        $sdata['tvshow']                      = $tvshow;
-        $sdata['tvshow_season']               = $tvshow_season;
+        $sdata['tvshow']        = $tvshow;
+        $sdata['tvshow_season'] = $tvshow_season;
 
         return self::create($sdata);
     }

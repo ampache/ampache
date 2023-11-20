@@ -615,7 +615,7 @@ final class VaInfo implements VaInfoInterface
             $info['mb_artistid']      = (!$info['mb_artistid'] && array_key_exists('mb_artistid', $tags)) ? trim((string)$tags['mb_artistid']) : $info['mb_artistid'];
             $info['mb_albumartistid'] = (!$info['mb_albumartistid'] && array_key_exists('mb_albumartistid', $tags)) ? trim((string)$tags['mb_albumartistid']) : $info['mb_albumartistid'];
             // groups of artists can be ID'd using their mbid easily
-            $info['mb_artistid_array']      = (!$info['mb_artistid_array'] && array_key_exists('mb_artistid_array', $tags) && !empty($tags['mb_artistid_array']))
+            $info['mb_artistid_array'] = (!$info['mb_artistid_array'] && array_key_exists('mb_artistid_array', $tags) && !empty($tags['mb_artistid_array']))
                 ? $tags['mb_artistid_array']
                 : $info['mb_artistid_array'];
             $info['mb_albumartistid_array'] = (!$info['mb_albumartistid_array'] && array_key_exists('mb_albumartistid_array', $tags) && !empty($tags['mb_albumartistid_array']))
@@ -903,7 +903,7 @@ final class VaInfo implements VaInfoInterface
             ? Core::get_global('user')
             : new User(-1);
         // don't loop over getid3 and filename
-        $tag_order    = array_diff($tag_order, array('getid3','filename'));
+        $tag_order = array_diff($tag_order, array('getid3','filename'));
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
                 $plugin            = new Plugin($tag_source);
@@ -1178,7 +1178,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['totaltracks'] = $data[0];
                     break;
                 case 'discnumber':
-                    $parsed['disk']       = $data[0];
+                    $parsed['disk'] = $data[0];
                     break;
                 case 'discsubtitle':
                     $parsed['disksubtitle'] = $data[0];

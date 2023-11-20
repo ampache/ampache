@@ -56,7 +56,7 @@ class PasswordGeneratorTest extends MockeryTestCase
 
     public function testGenerateReturnsRandomPasswordsWithVariableLength(): void
     {
-        $result  = $this->subject->generate();
+        $result = $this->subject->generate();
 
         static::assertTrue(
             in_array(

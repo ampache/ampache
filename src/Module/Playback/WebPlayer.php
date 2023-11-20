@@ -91,7 +91,7 @@ class WebPlayer
      */
     protected static function get_types($item, $urlinfo, $transcode_cfg, $force_type = '')
     {
-        $types   = array('real' => 'mp3', 'player' => '');
+        $types = array('real' => 'mp3', 'player' => '');
 
         if ($item->codec && array_key_exists('type', $urlinfo)) {
             $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
@@ -283,10 +283,10 @@ class WebPlayer
             $json[$kmember] = $item->$member;
         }
 
-        $url_data  = Stream_Url::parse($item->url);
-        $types     = self::get_types($item, $url_data, $transcode_cfg, $force_type);
-        $url       = $url_data['base_url'];
-        $media     = self::get_media_object($url_data);
+        $url_data = Stream_Url::parse($item->url);
+        $types    = self::get_types($item, $url_data, $transcode_cfg, $force_type);
+        $url      = $url_data['base_url'];
+        $media    = self::get_media_object($url_data);
         // stream urls that don't send a type (democratic playlists)
         $item->type = (empty($item->type) && !empty($url_data['type']))
             ? $url_data['type']
@@ -344,11 +344,11 @@ class WebPlayer
             }
             if (!empty($item->info_url)) {
                 preg_match($regex, $item->info_url, $matches);
-                $json['media_id']   = $matches[1] ?? null;
+                $json['media_id'] = $matches[1] ?? null;
             }
             if (!empty($url)) {
                 preg_match($regex, $item->url, $matches);
-                $json['media_id']   = $matches[1] ?? null;
+                $json['media_id'] = $matches[1] ?? null;
             }
             $json['media_type'] = $item->type;
         }

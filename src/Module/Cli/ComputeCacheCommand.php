@@ -37,7 +37,7 @@ final class ComputeCacheCommand extends Command
     ) {
         parent::__construct('run:computeCache', T_('Update the object cache tables'));
 
-        $this->objectCache     = $objectCache;
+        $this->objectCache = $objectCache;
     }
 
     public function execute(): void

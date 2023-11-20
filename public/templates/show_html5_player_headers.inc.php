@@ -13,7 +13,7 @@ $web_path         = (string)AmpConfig::get('web_path', '');
 $webplayer_debug  = (AmpConfig::get('webplayer_debug'))
     ? 'js'
     : 'min.js';
-$cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
+$cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";
 $iframed   = $iframed ?? false;

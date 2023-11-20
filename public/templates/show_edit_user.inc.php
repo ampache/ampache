@@ -132,8 +132,8 @@ switch ($var_name) {
             <td><?php echo T_('Catalog Filter'); ?>:</td>
             <td><?php
 
-    $filters  = Catalog::get_catalog_filters();
-    $options  = array();
+    $filters = Catalog::get_catalog_filters();
+    $options = array();
     foreach ($filters as $filter) {
         $selected = "";
         if ($filter['id'] == $client->catalog_filter_group) {

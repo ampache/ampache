@@ -37,7 +37,7 @@ final class MoveCatalogPathCommand extends Command
     ) {
         parent::__construct('run:moveCatalogPath', T_('Change a Catalog path'));
 
-        $this->updateCatalog   = $updateCatalog;
+        $this->updateCatalog = $updateCatalog;
 
         $this
             ->argument('[catalogName]', T_('The name of the catalog to update'))

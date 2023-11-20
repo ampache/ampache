@@ -66,7 +66,7 @@ final class SongAjaxHandler implements AjaxHandlerInterface
                 $song->enabled = $new_enabled;
 
                 // Return the new Ajax::button
-                $id           = 'button_flip_state_' . $song->id;
+                $id = 'button_flip_state_' . $song->id;
                 if ($new_enabled) {
                     $button     = 'disable';
                     $buttontext = T_('Disable');
@@ -87,8 +87,8 @@ final class SongAjaxHandler implements AjaxHandlerInterface
                     echo "<script>\r\n";
                     echo "shouts = {};\r\n";
                     foreach ($shouts as $shout) {
-                        $key   = (int)$shout->data;
-                        $time  = (int)$media->time;
+                        $key  = (int)$shout->data;
+                        $time = (int)$media->time;
                         echo "if (typeof shouts['" . $key . "'] === 'undefined') { shouts['" . $key . "'] = new Array(); }\r\n";
                         echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";
                         echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($key / $time) * 400) - 1) . "px;\' />');\r\n";

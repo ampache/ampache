@@ -92,23 +92,23 @@ $albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
 // expanded by default
-$state_home_browse   = (isset($_COOKIE['sb_home_browse']) && $_COOKIE['sb_home_browse'] == 'collapsed')
+$state_home_browse = (isset($_COOKIE['sb_home_browse']) && $_COOKIE['sb_home_browse'] == 'collapsed')
     ? 'collapsed'
     : 'expanded';
-$state_home_video    = (isset($_COOKIE['sb_home_video']) && $_COOKIE['sb_home_video'] == 'collapsed')
+$state_home_video = (isset($_COOKIE['sb_home_video']) && $_COOKIE['sb_home_video'] == 'collapsed')
     ? 'collapsed'
     : 'expanded';
-$state_home_search   = (isset($_COOKIE['sb_home_search']) && $_COOKIE['sb_home_search'] == 'collapsed')
+$state_home_search = (isset($_COOKIE['sb_home_search']) && $_COOKIE['sb_home_search'] == 'collapsed')
     ? 'collapsed'
     : 'expanded';
 $state_home_playlist = (isset($_COOKIE['sb_home_playlist']) && $_COOKIE['sb_home_playlist'] == 'collapsed')
     ? 'collapsed'
     : 'expanded';
 // collapsed by default
-$state_home_dashboard     = (!isset($_COOKIE['sb_home_dashboard']) || $_COOKIE['sb_home_dashboard'] == 'expanded')
+$state_home_dashboard = (!isset($_COOKIE['sb_home_dashboard']) || $_COOKIE['sb_home_dashboard'] == 'expanded')
     ? 'expanded'
     : 'collapsed';
-$state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE['sb_home_information'] == 'expanded')
+$state_home_information = (!isset($_COOKIE['sb_home_information']) || $_COOKIE['sb_home_information'] == 'expanded')
     ? 'expanded'
     : 'collapsed';
 ?>
@@ -242,9 +242,9 @@ if ($text) {
               <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo $t_democratic; ?></a></li>
             <?php } ?>
             <?php if ($server_allow && $controller) { ?>
-            <?php $localplay           = new LocalPlay(AmpConfig::get('localplay_controller'));
-                $current_instance      = $localplay->current_instance();
-                $class                 = $current_instance ? '' : ' class="active_instance"'; ?>
+            <?php $localplay      = new LocalPlay(AmpConfig::get('localplay_controller'));
+                $current_instance = $localplay->current_instance();
+                $class            = $current_instance ? '' : ' class="active_instance"'; ?>
                 <li id="sb_home_playlist_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo $t_localplay; ?></a></li>
             <?php } ?>
         </ul>

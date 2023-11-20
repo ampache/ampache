@@ -82,7 +82,7 @@ final class Localplay5Method
 
                     return false;
                 }
-                $clear       = (int)($input['clear'] ?? 0);
+                $clear = (int)($input['clear'] ?? 0);
                 // clear before the add
                 if ($clear == 1) {
                     $localplay->delete_all();

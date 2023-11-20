@@ -121,7 +121,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                     break;
                 }
 
-                $songs  = $this->songRepository->getByArtist($artist_id);
+                $songs = $this->songRepository->getByArtist($artist_id);
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }

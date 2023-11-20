@@ -77,7 +77,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $metadataWriter = $this->mock(MetadataWriterInterface::class);
         $art            = $this->mock(Art::class);
 
-        $albumId  = 666;
+        $albumId = 666;
 
         $catalog->shouldReceive('get_album_ids')
             ->withNoArgs()

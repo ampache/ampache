@@ -818,11 +818,11 @@ class Subsonic_Xml_Data
      */
     public static function addPlayQueue($xml, $playQueue, $username): void
     {
-        $items     = $playQueue->get_items();
+        $items = $playQueue->get_items();
         if (!empty($items)) {
-            $current    = $playQueue->get_current_object();
-            $play_time  = date("Y-m-d H:i:s", $playQueue->get_time());
-            $date       = new DateTime($play_time);
+            $current   = $playQueue->get_current_object();
+            $play_time = date("Y-m-d H:i:s", $playQueue->get_time());
+            $date      = new DateTime($play_time);
             $date->setTimezone(new DateTimeZone('UTC'));
             $changedBy  = $playQueue->client ?? '';
             $xplayqueue = $xml->addChild('playQueue');

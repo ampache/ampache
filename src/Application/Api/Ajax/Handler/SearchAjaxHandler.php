@@ -248,8 +248,8 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if ($target == 'missing_artist' && AmpConfig::get('wanted')) {
-                    $sres     = $this->missingArtistFinder->find($search);
-                    $count    = 0;
+                    $sres  = $this->missingArtistFinder->find($search);
+                    $count = 0;
                     foreach ($sres as $artist) {
                         $results[] = array(
                             'type' => T_('Missing Artists'),

@@ -499,7 +499,7 @@ class Stats
                 self::count('artist', $artist_id, 'down');
             }
             if (in_array($object_type, array('song', 'video', 'podcast_episode'))) {
-                $sql  = "UPDATE `user_data`, (SELECT `$object_type`.`size` FROM `$object_type` WHERE `$object_type`.`id` = ?) AS `$object_type` SET `value` = `value` - `$object_type`.`size` WHERE `user` = ? AND `value` = 'play_size'";
+                $sql = "UPDATE `user_data`, (SELECT `$object_type`.`size` FROM `$object_type` WHERE `$object_type`.`id` = ?) AS `$object_type` SET `value` = `value` - `$object_type`.`size` WHERE `user` = ? AND `value` = 'play_size'";
                 Dba::write($sql, array($object_id, $object_id));
             }
         }
@@ -528,7 +528,7 @@ class Stats
         if (self::is_already_inserted($object_type, $object->id, $user_id, '', $date, true)) {
             return false;
         }
-        $previous  = self::get_last_play($user_id, $agent, $date);
+        $previous = self::get_last_play($user_id, $agent, $date);
         // no previous data?
         if (!array_key_exists('object_id', $previous) || !array_key_exists('object_type', $previous)) {
             return true;
@@ -758,10 +758,10 @@ class Stats
      */
     public static function get_recent_sql($input_type, $user_id = null, $newest = true): string
     {
-        $type              = self::validate_type($input_type);
-        $ordersql          = ($newest === true) ? 'DESC' : 'ASC';
-        $user_sql          = (!empty($user_id)) ? " AND `user` = '" . $user_id . "'" : '';
-        $catalog_filter    = (AmpConfig::get('catalog_filter'));
+        $type           = self::validate_type($input_type);
+        $ordersql       = ($newest === true) ? 'DESC' : 'ASC';
+        $user_sql       = (!empty($user_id)) ? " AND `user` = '" . $user_id . "'" : '';
+        $catalog_filter = (AmpConfig::get('catalog_filter'));
 
         $sql = "SELECT `object_id` AS `id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = 'stream'" . $user_sql;
         if ($input_type == 'album_disk') {

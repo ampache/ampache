@@ -181,11 +181,11 @@ class AmpacheTvdb implements AmpachePluginInterface
                         ltrim($media_info['tvshow_season'], "0"),
                         ltrim($media_info['tvshow_episode'], "0"));
                     if ($release->id) {
-                        $results['tvdb_id']                      = $release->id;
-                        $results['tvshow_season']                = $release->season;
-                        $results['tvshow_episode']               = $release->number;
-                        $results['original_name']                = $release->name;
-                        $results['imdb_id']                      = $release->imdbId;
+                        $results['tvdb_id']        = $release->id;
+                        $results['tvshow_season']  = $release->season;
+                        $results['tvshow_episode'] = $release->number;
+                        $results['original_name']  = $release->name;
+                        $results['imdb_id']        = $release->imdbId;
                         if ($release->firstAired) {
                             $results['release_date'] = $release->firstAired->getTimestamp();
                             $results['year']         = $release->firstAired->format('Y');

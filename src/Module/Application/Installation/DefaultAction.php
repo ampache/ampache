@@ -192,12 +192,12 @@ final class DefaultAction implements ApplicationActionInterface
                 $all  = (isset($_POST['create_all']));
                 $skip = (isset($_POST['skip_config']));
                 if (!$skip) {
-                    $write                     = (isset($_POST['write']));
-                    $download                  = (isset($_POST['download']));
-                    $download_htaccess_rest    = (isset($_POST['download_htaccess_rest']));
-                    $download_htaccess_play    = (isset($_POST['download_htaccess_play']));
-                    $write_htaccess_rest       = (isset($_POST['write_htaccess_rest']));
-                    $write_htaccess_play       = (isset($_POST['write_htaccess_play']));
+                    $write                  = (isset($_POST['write']));
+                    $download               = (isset($_POST['download']));
+                    $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
+                    $download_htaccess_play = (isset($_POST['download_htaccess_play']));
+                    $write_htaccess_rest    = (isset($_POST['write_htaccess_rest']));
+                    $write_htaccess_play    = (isset($_POST['write_htaccess_play']));
 
                     $created_config = true;
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
