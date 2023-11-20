@@ -29,26 +29,23 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
-class Ampachechartlyrics
+class Ampachechartlyrics implements AmpachePluginInterface
 {
-    public $name        = 'ChartLyrics';
-    public $categories  = 'lyrics';
-    public $description = 'Get lyrics from ChartLyrics';
-    public $url         = 'http://www.chartlyrics.com';
-    public $version     = '000001';
-    public $min_ampache = '360022';
-    public $max_ampache = '999999';
+    public string $name        = 'ChartLyrics';
+    public string $categories  = 'lyrics';
+    public string $description = 'Get lyrics from ChartLyrics';
+    public string $url         = 'http://www.chartlyrics.com';
+    public string $version     = '000001';
+    public string $min_ampache = '360022';
+    public string $max_ampache = '999999';
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Get lyrics from ChartLyrics');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
@@ -69,6 +66,15 @@ class Ampachechartlyrics
     } // uninstall
 
     /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
+    }
+
+    /**
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
@@ -85,7 +91,7 @@ class Ampachechartlyrics
      * get_lyrics
      * This will look web services for a song lyrics.
      * @param Song $song
-     * @return array|bool
+     * @return array|false
      */
     public function get_lyrics($song)
     {

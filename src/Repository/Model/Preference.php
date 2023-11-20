@@ -270,7 +270,7 @@ class Preference extends database_object
     /**
      * update
      * This updates a single preference from the given name or id
-     * @param string $preference
+     * @param string|int $preference
      * @param int $user_id
      * @param array|string|int|bool|\SimpleXMLElement $value
      * @param bool $applytoall
@@ -322,8 +322,8 @@ class Preference extends database_object
     /**
      * update_level
      * This takes a preference ID and updates the level required to update it (performed by an admin)
-     * @param $preference
-     * @param $level
+     * @param string|int $preference
+     * @param int $level
      */
     public static function update_level($preference, $level): bool
     {
@@ -334,11 +334,8 @@ class Preference extends database_object
             $preference_id = $preference;
         }
 
-        $preference_id = Dba::escape($preference_id);
-        $level         = Dba::escape($level);
-
-        $sql = "UPDATE `preference` SET `level`='$level' WHERE `id`='$preference_id'";
-        Dba::write($sql);
+        $sql = "UPDATE `preference` SET `level` = ? WHERE `id` = ?;";
+        Dba::write($sql, array($level, $preference_id));
 
         return true;
     } // update_level
@@ -368,14 +365,17 @@ class Preference extends database_object
     /**
      * exists
      * This just checks to see if a preference currently exists
-     * @param string $preference
+     * @param string|int $preference
      */
     public static function exists($preference): int
     {
-        // We assume it's the name
-        $name       = Dba::escape($preference);
-        $sql        = "SELECT * FROM `preference` WHERE `name`='$name'";
-        $db_results = Dba::read($sql);
+        // Don't assume it's the name
+        if (!is_numeric($preference)) {
+            $sql = "SELECT * FROM `preference` WHERE `name` = ?";
+        } else {
+            $sql = "SELECT * FROM `preference` WHERE `id` = ?";
+        }
+        $db_results = Dba::read($sql, array($preference));
 
         return Dba::num_rows($db_results);
     } // exists
@@ -384,7 +384,7 @@ class Preference extends database_object
      * has_access
      * This checks to see if the current user has access to modify this preference
      * as defined by the preference name
-     * @param $preference
+     * @param string $preference
      */
     public static function has_access($preference): bool
     {
@@ -393,10 +393,8 @@ class Preference extends database_object
             return false;
         }
 
-        $preference = Dba::escape($preference);
-
-        $sql        = "SELECT `level` FROM `preference` WHERE `name`='$preference'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `level` FROM `preference` WHERE `name` = ?;";
+        $db_results = Dba::read($sql, array($preference));
         $data       = Dba::fetch_assoc($db_results);
 
         if (Access::check('interface', $data['level'])) {
@@ -455,6 +453,7 @@ class Preference extends database_object
      * get_categories
      * This returns an array of the names of the different possible sections
      * it ignores the 'internal' category
+     * @return array
      */
     public static function get_categories()
     {
@@ -548,11 +547,14 @@ class Preference extends database_object
 
     /**
      * delete
-     * This deletes the specified preference, a name or a ID can be passed
+     * This deletes the specified preference, a name or an ID can be passed
      * @param string|int $preference
      */
-    public static function delete($preference)
+    public static function delete($preference): bool
     {
+        if (!Preference::exists($preference)) {
+            return true;
+        }
         // First prepare
         if (!is_numeric($preference)) {
             $sql = "DELETE FROM `preference` WHERE `name` = ?";
@@ -560,16 +562,20 @@ class Preference extends database_object
             $sql = "DELETE FROM `preference` WHERE `id` = ?";
         }
 
-        Dba::write($sql, array($preference));
+        if (Dba::write($sql, array($preference)) !== false) {
+            self::clean_preferences();
 
-        self::clean_preferences();
+            return true;
+        }
+
+        return false;
     } // delete
 
     /**
      * rename
      * This renames a preference in the database
-     * @param $old
-     * @param $new
+     * @param string $old
+     * @param string $new
      */
     public static function rename($old, $new): void
     {
@@ -592,7 +598,7 @@ class Preference extends database_object
      * fix_preferences
      * This takes the preferences, explodes what needs to
      * become an array and boolean everything
-     * @param $results
+     * @param array $results
      * @return array
      */
     public static function fix_preferences($results)
@@ -988,7 +994,7 @@ class Preference extends database_object
      * This returns true / false if the preference in question is a boolean preference
      * This is currently only used by the debug view, could be used other places.. wouldn't be a half
      * bad idea
-     * @param $key
+     * @param string $key
      */
     public static function is_boolean($key): bool
     {

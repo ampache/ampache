@@ -74,8 +74,8 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             $name         = (string) $data['name'];
             $apply_to_all = 'check_' . $data['name'];
             $new_level    = 'level_' . $data['name'];
-            $pref_id      = $data['id'];
-            $value        = scrub_in($_REQUEST[$name] ?? '');
+            $pref_id      = (string)$data['id'];
+            $value        = (string)scrub_in($_REQUEST[$name] ?? '');
 
             // Some preferences require some extra checks to be performed
             switch ($name) {
@@ -107,7 +107,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             }
 
             if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) && array_key_exists($new_level, $_REQUEST)) {
-                Preference::update_level($pref_id, $_REQUEST[$new_level]);
+                Preference::update_level($pref_id, (int)$_REQUEST[$new_level]);
             }
         } // end foreach preferences
 

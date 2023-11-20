@@ -30,65 +30,62 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
-class AmpacheStreamTime
+class AmpacheStreamTime implements AmpachePluginInterface
 {
-    public $name        = 'Stream Time';
-    public $categories  = 'stream_control';
-    public $description = 'Control time per user';
-    public $url         = '';
-    public $version     = '000001';
-    public $min_ampache = '370024';
-    public $max_ampache = '999999';
+    public string $name        = 'Stream Time';
+    public string $categories  = 'stream_control';
+    public string $description = 'Control time per user';
+    public string $url         = '';
+    public string $version     = '000001';
+    public string $min_ampache = '370024';
+    public string $max_ampache = '999999';
 
+    // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
     private $time_days;
     private $time_max;
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Control time per user');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('stream_control_time_max')) {
+        if (!Preference::exists('stream_control_time_max') && !Preference::insert('stream_control_time_max', T_('Stream control maximal time (minutes)'), -1, 50, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        Preference::insert('stream_control_time_max', T_('Stream control maximal time (minutes)'), -1, 50, 'integer', 'plugins', $this->name);
-        Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), 30, 50, 'integer', 'plugins', $this->name);
+        if (!Preference::exists('stream_control_time_days') && !Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), 30, 50, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('stream_control_time_max');
-        Preference::delete('stream_control_time_days');
-
-        return true;
+        return (
+            Preference::delete('stream_control_time_max') &&
+            Preference::delete('stream_control_time_days')
+        );
     } // uninstall
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
     } // upgrade
@@ -96,9 +93,8 @@ class AmpacheStreamTime
     /**
      * Check stream control
      * @param array $media_ids
-     * @return bool
      */
-    public function stream_control($media_ids)
+    public function stream_control($media_ids): bool
     {
         // No check if unlimited bandwidth (= -1)
         if ($this->time_max < 0) {
@@ -132,12 +128,10 @@ class AmpacheStreamTime
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return bool
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

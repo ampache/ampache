@@ -27,31 +27,27 @@ namespace Ampache\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 
-class AmpacheLibravatar
+class AmpacheLibravatar implements AmpachePluginInterface
 {
-    public $name        = 'Libravatar';
-    public $categories  = 'avatar';
-    public $description = 'Users avatar\'s with Libravatar';
-    public $url         = 'https://www.libravatar.org';
-    public $version     = '000001';
-    public $min_ampache = '360040';
-    public $max_ampache = '999999';
+    public string $name        = 'Libravatar';
+    public string $categories  = 'avatar';
+    public string $description = 'Users avatar\'s with Libravatar';
+    public string $url         = 'https://www.libravatar.org';
+    public string $version     = '000001';
+    public string $min_ampache = '360040';
+    public string $max_ampache = '999999';
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_("Users avatar's with Libravatar");
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
@@ -60,8 +56,7 @@ class AmpacheLibravatar
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
     public function uninstall(): bool
     {
@@ -78,7 +73,7 @@ class AmpacheLibravatar
     } // upgrade
 
     /**
-     * @param $user
+     * @param User $user
      * @param int $size
      */
     public function get_avatar_url($user, $size = 80): string
@@ -102,8 +97,7 @@ class AmpacheLibravatar
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

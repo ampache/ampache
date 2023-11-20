@@ -14126,11 +14126,6 @@ parameters:
 			path: src/Module/Util/Graph.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:display_map\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_all_pts\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
@@ -16011,17 +16006,7 @@ parameters:
 			path: src/Module/WebDav/WebDavFile.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampache7digital\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampache7digital\\:\\:get_song_preview\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampache7digital\\:\\:stream_song_preview\\(\\) has parameter \\$file with no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampache7digital.php
 
@@ -16036,49 +16021,9 @@ parameters:
 			path: src/Plugin/Ampache7digital.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$secret has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
@@ -16121,51 +16066,6 @@ parameters:
 			path: src/Plugin/AmpacheAmazon.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$bitly_api_key has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheBitly.php
@@ -16176,67 +16076,7 @@ parameters:
 			path: src/Plugin/AmpacheBitly.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheBitly.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:display_home\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$gridview has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$max_ampache has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheCatalogFavorites.php
 
@@ -16244,31 +16084,6 @@ parameters:
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$maxitems has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
@@ -16321,124 +16136,9 @@ parameters:
 			path: src/Plugin/AmpacheDiscogs.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:\\$secret has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFacebook\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFacebook.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:display_user_field\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
 
 		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:\\$user has no type specified\\.$#"
@@ -16451,102 +16151,12 @@ parameters:
 			path: src/Plugin/AmpacheFlattr.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:display_home\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$maxitems has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheFriendsTimeline.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:display_on_footer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$tracking_id has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$url has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheGoogleAnalytics.php
 
@@ -16561,27 +16171,7 @@ parameters:
 			path: src/Plugin/AmpacheGoogleAnalytics.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:display_map\\(\\) has parameter \\$pts with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:get_location_name\\(\\) has parameter \\$latitude with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:get_location_name\\(\\) has parameter \\$longitude with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:display_map\\(\\) has parameter \\$points with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheGoogleMaps.php
 
@@ -16591,97 +16181,7 @@ parameters:
 			path: src/Plugin/AmpacheGoogleMaps.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleMaps.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGravatar\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGravatar.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:headphones_call\\(\\) has parameter \\$command with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:headphones_call\\(\\) has parameter \\$params with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool given\\.$#"
+			message: "#^Method Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:headphones_call\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheHeadphones.php
 
@@ -16696,51 +16196,6 @@ parameters:
 			path: src/Plugin/AmpacheHeadphones.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$api_host has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLastfm.php
@@ -16751,37 +16206,12 @@ parameters:
 			path: src/Plugin/AmpacheLastfm.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$challenge has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLastfm.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$host has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$name has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLastfm.php
 
@@ -16796,72 +16226,12 @@ parameters:
 			path: src/Plugin/AmpacheLastfm.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$user_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLastfm.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:get_avatar_url\\(\\) has parameter \\$user with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLibravatar\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLibravatar.php
-
-		-
 			message: "#^Access to an undefined property object\\:\\:\\$image\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLyristLyrics.php
 
@@ -16876,92 +16246,12 @@ parameters:
 			path: src/Plugin/AmpacheLyristLyrics.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:display_on_footer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$matomo_url has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMatomo.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$site_id has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMatomo.php
 
@@ -16981,11 +16271,6 @@ parameters:
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMusicBrainz.php
@@ -16996,7 +16281,7 @@ parameters:
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_metadata\\(\\) has parameter \\$song_info with no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_metadata\\(\\) has parameter \\$media_info with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMusicBrainz.php
 
@@ -17006,49 +16291,9 @@ parameters:
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$overwrite_name has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
@@ -17076,57 +16321,7 @@ parameters:
 			path: src/Plugin/AmpacheOmdb.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:display_user_field\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$business has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$categories has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePaypal.php
 
@@ -17136,77 +16331,12 @@ parameters:
 			path: src/Plugin/AmpachePaypal.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePaypal.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:display_home\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$display has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$name has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePersonalFavorites.php
 
@@ -17221,17 +16351,7 @@ parameters:
 			path: src/Plugin/AmpachePersonalFavorites.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePersonalFavorites.php
 
@@ -17239,41 +16359,6 @@ parameters:
 			message: "#^Variable \\$list_array in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:display_on_footer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
 
 		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$piwik_url has no type specified\\.$#"
@@ -17286,43 +16371,8 @@ parameters:
 			path: src/Plugin/AmpachePiwik.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
 			message: "#^Cannot access property \\$channel on SimpleXMLElement\\|false\\.$#"
 			count: 3
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:display_home\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: src/Plugin/AmpacheRSSView.php
 
 		-
@@ -17336,22 +16386,7 @@ parameters:
 			path: src/Plugin/AmpacheRSSView.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$feed_url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$max_ampache has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheRSSView.php
 
@@ -17361,63 +16396,13 @@ parameters:
 			path: src/Plugin/AmpacheRSSView.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:rule_process\\(\\) has parameter \\$rule_array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:save_rating\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:set_flag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:uninstall\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheRatingMatch.php
 
 		-
 			message: "#^Parameter \\#1 \\$rating of method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:set_rating\\(\\) expects string, int given\\.$#"
 			count: 9
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$description has no type specified\\.$#"
-			count: 1
 			path: src/Plugin/AmpacheRatingMatch.php
 
 		-
@@ -17431,22 +16416,7 @@ parameters:
 			path: src/Plugin/AmpacheRatingMatch.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$min_stars has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$name has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheRatingMatch.php
 
@@ -17481,77 +16451,12 @@ parameters:
 			path: src/Plugin/AmpacheRatingMatch.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$write_tags has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheRatingMatch.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:display_home\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:\\$maxitems has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheShoutHome.php
 
@@ -17561,27 +16466,7 @@ parameters:
 			path: src/Plugin/AmpacheStreamBandwidth.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:stream_control\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheStreamBandwidth.php
 
@@ -17596,77 +16481,12 @@ parameters:
 			path: src/Plugin/AmpacheStreamBandwidth.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$user_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheStreamBandwidth.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:stream_control\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$description has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheStreamHits.php
 
@@ -17681,32 +16501,7 @@ parameters:
 			path: src/Plugin/AmpacheStreamHits.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$user_id has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheStreamHits.php
 
@@ -17716,52 +16511,7 @@ parameters:
 			path: src/Plugin/AmpacheStreamTime.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:stream_control\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$name has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheStreamTime.php
 
@@ -17776,27 +16526,12 @@ parameters:
 			path: src/Plugin/AmpacheStreamTime.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$user_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheStreamTime.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Artist\\|Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$prefix\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTheaudiodb.php
 
@@ -17826,22 +16561,7 @@ parameters:
 			path: src/Plugin/AmpacheTheaudiodb.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:search_track\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTheaudiodb.php
 
@@ -17851,52 +16571,12 @@ parameters:
 			path: src/Plugin/AmpacheTheaudiodb.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$overwrite_name has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTheaudiodb.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
 			message: "#^Argument of an invalid type string supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTvdb.php
 
@@ -17946,16 +16626,6 @@ parameters:
 			path: src/Plugin/AmpacheTvdb.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
 			message: "#^Offset 'tvshow_art' does not exist on array\\{tvdb_tvshow_id\\: mixed, tvshow_imdb_id\\: mixed, tvshow_summary\\: string, tvshow\\: mixed, tvshow_year\\?\\: mixed, tvshow_banner_art\\?\\: non\\-falsy\\-string, genre\\?\\: non\\-empty\\-array\\}\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTvdb.php
@@ -17966,143 +16636,8 @@ parameters:
 			path: src/Plugin/AmpacheTvdb.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:install\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTwitter\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTwitter.php
-
-		-
 			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
 			count: 2
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:\\$version has no type specified\\.$#"
-			count: 1
 			path: src/Plugin/AmpacheYourls.php
 
 		-
@@ -18121,57 +16656,12 @@ parameters:
 			path: src/Plugin/AmpacheYourls.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:get_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/Ampachechartlyrics.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
 			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Plugin/Ampacheflickr.php
 
@@ -18201,51 +16691,6 @@ parameters:
 			path: src/Plugin/Ampacheflickr.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$api_host has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelibrefm.php
@@ -18256,37 +16701,12 @@ parameters:
 			path: src/Plugin/Ampachelibrefm.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$challenge has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelibrefm.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$host has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$name has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelibrefm.php
 
@@ -18301,29 +16721,9 @@ parameters:
 			path: src/Plugin/Ampachelibrefm.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$user_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
 
 		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
@@ -18341,32 +16741,7 @@ parameters:
 			path: src/Plugin/Ampachelistenbrainz.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$host has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$max_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$min_ampache has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$name has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelistenbrainz.php
 
@@ -18377,16 +16752,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$token has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelistenbrainz.php
 
@@ -21336,12 +19701,7 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:fix_preferences\\(\\) has parameter \\$results with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:fix_preferences\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php
 
@@ -21356,17 +19716,7 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_categories\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:has_access\\(\\) has parameter \\$preference with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:is_boolean\\(\\) has parameter \\$key with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_categories\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php
 
@@ -21376,27 +19726,7 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:rename\\(\\) has parameter \\$new with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:rename\\(\\) has parameter \\$old with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update_level\\(\\) has parameter \\$level with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update_level\\(\\) has parameter \\$preference with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php
 
@@ -21972,11 +20302,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:get_sticky\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Shoutbox.php
 
