@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,13 +23,12 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
@@ -35,6 +36,9 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Disables a user
+ */
 final class ConfirmDisableAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'confirm_disable';
@@ -73,8 +77,12 @@ final class ConfirmDisableAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
-        $user_id = (int)$request->getQueryParams()['user_id'];
-        $user    = $this->modelFactory->createUser($user_id);
+        $userId = (int)$request->getQueryParams()['user_id'];
+        $user   = $this->modelFactory->createUser($userId);
+
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
+        }
 
         $this->ui->showHeader();
         if ($this->userStateToggler->disable($user) === true) {

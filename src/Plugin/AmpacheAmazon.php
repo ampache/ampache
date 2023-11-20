@@ -29,21 +29,22 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\AmazonSearch;
 
-class AmpacheAmazon
+class AmpacheAmazon implements AmpachePluginInterface
 {
-    public $name        = 'Amazon';
-    public $categories  = 'metadata';
-    public $description = 'Amazon arts';
-    public $url         = 'http://www.amazon.com';
-    public $version     = '000001';
-    public $min_ampache = '370009';
-    public $max_ampache = '999999';
+    public string $name        = 'Amazon';
+    public string $categories  = 'metadata';
+    public string $description = 'Amazon arts';
+    public string $url         = 'http://www.amazon.com';
+    public string $version     = '000001';
+    public string $min_ampache = '370009';
+    public string $max_ampache = '999999';
 
-    public $amazon_base_url;
-    public $amazon_max_results_pages;
-    public $amazon_developer_public_key;
-    public $amazon_developer_private_api_key;
-    public $amazon_developer_associate_tag;
+    // These are internal settings used by this class, run this->load to fill them out
+    private $amazon_base_url;
+    private $amazon_max_results_pages;
+    private $amazon_developer_public_key;
+    private $amazon_developer_private_api_key;
+    private $amazon_developer_associate_tag;
 
     /**
      * Constructor
@@ -52,8 +53,6 @@ class AmpacheAmazon
     public function __construct()
     {
         $this->description = T_('Amazon art search');
-
-        return true;
     }
 
     /**
@@ -62,15 +61,21 @@ class AmpacheAmazon
      */
     public function install(): bool
     {
-        if (Preference::exists('amazon_base_url')) {
+        if (!Preference::exists('amazon_base_url') && !Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name);
-        Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name);
-        Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name);
+        if (!Preference::exists('amazon_max_results_pages') && !Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('amazon_developer_public_key') && !Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('amazon_developer_private_api_key') && !Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('amazon_developer_associate_tag') && !Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
@@ -81,14 +86,23 @@ class AmpacheAmazon
      */
     public function uninstall(): bool
     {
-        Preference::delete('amazon_base_url');
-        Preference::delete('amazon_max_results_pages');
-        Preference::delete('amazon_developer_public_key');
-        Preference::delete('amazon_developer_private_api_key');
-        Preference::delete('amazon_developer_associate_tag');
-
-        return true;
+        return (
+            Preference::delete('amazon_base_url') &&
+            Preference::delete('amazon_max_results_pages') &&
+            Preference::delete('amazon_developer_public_key') &&
+            Preference::delete('amazon_developer_private_api_key') &&
+            Preference::delete('amazon_developer_associate_tag')
+        );
     } // uninstall
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
+    }
 
     /**
      * load

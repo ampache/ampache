@@ -30,15 +30,15 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheOmdb
+class AmpacheOmdb implements AmpachePluginInterface
 {
-    public $name        = 'Omdb';
-    public $categories  = 'metadata';
-    public $description = 'OMDb metadata integration';
-    public $url         = 'http://www.omdbapi.com';
-    public $version     = '000001';
-    public $min_ampache = '370009';
-    public $max_ampache = '999999';
+    public string $name        = 'Omdb';
+    public string $categories  = 'metadata';
+    public string $description = 'OMDb metadata integration';
+    public string $url         = 'http://www.omdbapi.com';
+    public string $version     = '000001';
+    public string $min_ampache = '370009';
+    public string $max_ampache = '999999';
 
     /**
      * Constructor
@@ -47,8 +47,6 @@ class AmpacheOmdb
     public function __construct()
     {
         $this->description = T_('OMDb metadata integration');
-
-        return true;
     }
 
     /**
@@ -68,6 +66,15 @@ class AmpacheOmdb
     {
         return true;
     } // uninstall
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
+    }
 
     /**
      * load

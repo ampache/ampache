@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,13 +23,11 @@
  *
  */
 
-declare(strict_types=1);
-
-namespace Module\Application\Admin\User;
+namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Application\Admin\User\ShowEditAction;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -85,6 +85,40 @@ class ShowEditActionTest extends TestCase
         );
     }
 
+    public function testRunErrorsIfUserWasNotFound(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $userId = 666;
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->willReturn(true);
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->willReturn(false);
+
+        $this->request->expects(static::once())
+            ->method('getQueryParams')
+            ->willReturn(['user_id' => (string) $userId]);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createUser')
+            ->with($userId)
+            ->willReturn($user);
+
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
     public function testRunRenders(): void
     {
         $user = $this->createMock(User::class);
@@ -112,6 +146,9 @@ class ShowEditActionTest extends TestCase
 
         $user->expects(static::once())
             ->method('format');
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
 
         $this->ui->expects(static::once())
             ->method('showHeader');

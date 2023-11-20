@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,14 +23,11 @@
  *
  */
 
-declare(strict_types=1);
-
-namespace Module\Application\Admin\User;
+namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Application\Admin\User\DeleteApiKeyAction;
-use Ampache\Module\Application\Admin\User\UserAdminAccessTestTrait;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
@@ -74,6 +73,47 @@ class DeleteApiKeyActionTest extends TestCase
         );
     }
 
+    public function testRunErrorsIfUserWasNotFound(): void
+    {
+        $userId = 666;
+
+        $user = $this->createMock(User::class);
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->willReturn(true);
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->willReturn(false);
+
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with($this->getValidationFormName())
+            ->willReturn(true);
+
+        $this->request->expects(static::once())
+            ->method('getQueryParams')
+            ->willReturn(['user_id' => (string) $userId]);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createUser')
+            ->with($userId)
+            ->willReturn($user);
+
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        static::assertNull(
+            $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
     public function testRunDeletesApiKey(): void
     {
         $userId = 666;
@@ -106,6 +146,9 @@ class DeleteApiKeyActionTest extends TestCase
 
         $user->expects(static::once())
             ->method('deleteApiKey');
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
 
         $this->ui->expects(static::once())
             ->method('showHeader');

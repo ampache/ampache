@@ -49,6 +49,8 @@ interface UiInterface
 
     public function showBoxBottom(): void;
 
+    public function showObjectNotFound(): void;
+
     /**
      * Displays the default error page
      */

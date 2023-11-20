@@ -31,15 +31,15 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-class Ampachelistenbrainz
+class Ampachelistenbrainz implements AmpachePluginInterface
 {
-    public $name        = 'ListenBrainz';
-    public $categories  = 'scrobbling';
-    public $description = 'Records your played songs to your ListenBrainz Account';
-    public $url;
-    public $version     = '000002';
-    public $min_ampache = '380004';
-    public $max_ampache = '999999';
+    public string $name        = 'ListenBrainz';
+    public string $categories  = 'scrobbling';
+    public string $description = 'Records your played songs to your ListenBrainz Account';
+    public string $url         = '';
+    public string $version     = '000002';
+    public string $min_ampache = '380004';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $token;
@@ -49,42 +49,36 @@ class Ampachelistenbrainz
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Scrobble songs you play to your ListenBrainz Account');
         $this->url         = $this->scheme . '://' . $this->host;
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        // Check and see if it's already installed (they've just hit refresh, those dorks)
-        if (Preference::exists('listenbrainz_token')) {
+        if (!Preference::exists('listenbrainz_token') && !Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name);
-        Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name);
+        if (!Preference::exists('listenbrainz_api_url') && !Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('listenbrainz_token');
+        return Preference::delete('listenbrainz_token');
     } // uninstall
 
     /**
@@ -205,15 +199,13 @@ class Ampachelistenbrainz
      * @param Song $song
      * @param bool $flagged
      */
-    public function set_flag($song, $flagged): bool
+    public function set_flag($song, $flagged): void
     {
-        return true;
     } // set_flag
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

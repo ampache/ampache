@@ -29,15 +29,15 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 
-class AmpacheMatomo
+class AmpacheMatomo implements AmpachePluginInterface
 {
-    public $name        = 'Matomo';
-    public $categories  = 'stats';
-    public $description = 'Matomo statistics';
-    public $url         = '';
-    public $version     = '000001';
-    public $min_ampache = '370034';
-    public $max_ampache = '999999';
+    public string $name        = 'Matomo';
+    public string $categories  = 'stats';
+    public string $description = 'Matomo statistics';
+    public string $url         = '';
+    public string $version     = '000001';
+    public string $min_ampache = '370034';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $site_id;
@@ -45,44 +45,38 @@ class AmpacheMatomo
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Matomo statistics');
-
-        return true;
     }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        // Check and see if it's already installed
-        if (Preference::exists('matomo_site_id')) {
+        if (!Preference::exists('matomo_site_id') && !Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', 100, 'string', 'plugins', 'matomo')) {
             return false;
         }
-
-        Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', 100, 'string', 'plugins', 'matomo');
-        Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get('web_path') . '/matomo/', 100, 'string', 'plugins', $this->name);
+        if (!Preference::exists('matomo_url') && !Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get('web_path') . '/matomo/', 100, 'string', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
     public function uninstall(): bool
     {
-        Preference::delete('matomo_site_id');
-        Preference::delete('matomo_url');
-
-        return true;
+        return (
+            Preference::delete('matomo_site_id') &&
+            Preference::delete('matomo_url')
+        );
     }
 
     /**
@@ -98,7 +92,7 @@ class AmpacheMatomo
      * display_user_field
      * This display the module in user page
      */
-    public function display_on_footer()
+    public function display_on_footer(): void
     {
         $currentUrl = scrub_out("http" . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . Core::get_server('HTTP_HOST') . Core::get_server('REQUEST_URI'));
         echo "<!-- Matomo -->\n";
@@ -123,8 +117,7 @@ class AmpacheMatomo
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

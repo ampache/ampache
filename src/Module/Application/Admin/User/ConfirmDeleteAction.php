@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -71,8 +72,13 @@ final class ConfirmDeleteAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
-        $userId      = (int) $request->getQueryParams()['user_id'];
-        $user        = $this->modelFactory->createUser($userId);
+        $userId = (int) $request->getQueryParams()['user_id'];
+        $user   = $this->modelFactory->createUser($userId);
+
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
+        }
+
         $redirectUrl = sprintf('%s/admin/users.php', $this->configContainer->getWebPath());
 
         $this->ui->showHeader();
