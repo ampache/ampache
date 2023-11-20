@@ -151,10 +151,9 @@ class User extends database_object
      * @var string $f_usage
      */
     public $f_usage;
-    /**
-     * @var string $ip_history
-     */
-    public $ip_history;
+
+    private string $ip_history = '';
+
     /**
      * @var string $f_avatar
      */
@@ -876,47 +875,6 @@ class User extends database_object
     }
 
     /**
-     * insert_ip_history
-     * This inserts a row into the IP History recording this user at this
-     * address at this time in this place, doing this thing.. you get the point
-     */
-    public function insert_ip_history(): bool
-    {
-        $sip = (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-            ? filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)
-            : filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
-        debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
-
-        // Remove port information if any
-        if (!empty($sip)) {
-            // Use parse_url to support easily ipv6
-            if (filter_var($sip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === true) {
-                $sipar = parse_url("http://" . $sip);
-            } else {
-                $sipar = parse_url("http://[" . $sip . "]");
-            }
-            $sip = $sipar['host'];
-        }
-
-        $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim((string)$sip, "[]"))) : '';
-        $date    = time();
-        $user_id = (int)$this->id;
-        $agent   = Dba::escape(Core::get_server('HTTP_USER_AGENT'));
-
-        $sql = "INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
-        Dba::write($sql);
-
-        /* Clean up old records... sometimes  */
-        if (rand(1, 100) > 60) {
-            $date = time() - (86400 * AmpConfig::get('user_ip_cardinality'));
-            $sql  = "DELETE FROM `ip_history` WHERE `date` < $date";
-            Dba::write($sql);
-        }
-
-        return true;
-    } // insert_ip_history
-
-    /**
      * create
      * inserts a new user into Ampache
      * @param string $username
@@ -1073,8 +1031,7 @@ class User extends database_object
             $recent_user_ip = $this->getIpHistoryRepository()->getRecentIpForUser($this);
             // Get Users Last ip
             if ($recent_user_ip !== null) {
-                $user_ip          = inet_ntop($recent_user_ip);
-                $this->ip_history = (!empty($user_ip) && filter_var($user_ip, FILTER_VALIDATE_IP)) ? $user_ip : T_('Invalid');
+                $this->ip_history = ($recent_user_ip !== '' && filter_var($recent_user_ip, FILTER_VALIDATE_IP)) ? $recent_user_ip : T_('Invalid');
             } else {
                 $this->ip_history = T_('Not Enough Data');
             }
@@ -1509,6 +1466,14 @@ class User extends database_object
     public function getUsername(): string
     {
         return $this->username;
+    }
+
+    /**
+     * Returns `true` if the user does not exist
+     */
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
     }
 
     /**

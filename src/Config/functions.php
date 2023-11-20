@@ -445,13 +445,17 @@ function get_web_path(): string
 
 /**
  * get_datetime
- * @param int $time
+ * @param DateTimeInterface|int $time
  * @param string $date_format
  * @param string $time_format
  * @param string $overwrite
  */
 function get_datetime($time, $date_format = 'short', $time_format = 'short', $overwrite = ''): string
 {
+    if ($time instanceof DateTimeInterface) {
+        $time = $time->getTimestamp();
+    }
+
     // allow time or date only
     $date_type = ($date_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
     $time_type = ($time_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;

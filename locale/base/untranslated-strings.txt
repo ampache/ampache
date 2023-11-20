@@ -114,3 +114,143 @@ msgstr ""
 #: ./untranslated-strings.txt:118
 msgid "subsonic"
 msgstr ""
+
+#: ./untranslated-strings.txt:119
+msgid "7digital"
+msgstr ""
+
+#: ./untranslated-strings.txt:120
+msgid "Amazon"
+msgstr ""
+
+#: ./untranslated-strings.txt:121
+msgid "Bit.ly"
+msgstr ""
+
+#: ./untranslated-strings.txt:122
+msgid "Catalog Favorites"
+msgstr ""
+
+#: ./untranslated-strings.txt:123
+msgid "ChartLyrics"
+msgstr ""
+
+#: ./untranslated-strings.txt:124
+msgid "Discogs"
+msgstr ""
+
+#: ./untranslated-strings.txt:125
+msgid "Facebook"
+msgstr ""
+
+#: ./untranslated-strings.txt:126
+msgid "Flattr"
+msgstr ""
+
+#: ./untranslated-strings.txt:127
+msgid "Flickr"
+msgstr ""
+
+#: ./untranslated-strings.txt:128
+msgid "Friends Timeline"
+msgstr ""
+
+#: ./untranslated-strings.txt:129
+msgid "GoogleAnalytics"
+msgstr ""
+
+#: ./untranslated-strings.txt:130
+msgid "GoogleMaps"
+msgstr ""
+
+#: ./untranslated-strings.txt:131
+msgid "Gravatar"
+msgstr ""
+
+#: ./untranslated-strings.txt:132
+msgid "Headphones"
+msgstr ""
+
+#: ./untranslated-strings.txt:133
+msgid "Last.FM"
+msgstr ""
+
+#: ./untranslated-strings.txt:134
+msgid "Libravatar"
+msgstr ""
+
+#: ./untranslated-strings.txt:135
+msgid "Libre.FM"
+msgstr ""
+
+#: ./untranslated-strings.txt:136
+msgid "ListenBrainz"
+msgstr ""
+
+#: ./untranslated-strings.txt:137
+msgid "Lyrist Lyrics"
+msgstr ""
+
+#: ./untranslated-strings.txt:138
+msgid "Matomo"
+msgstr ""
+
+#: ./untranslated-strings.txt:139
+msgid "MusicBrainz"
+msgstr ""
+
+#: ./untranslated-strings.txt:140
+msgid "Omdb"
+msgstr ""
+
+#: ./untranslated-strings.txt:141
+msgid "Paypal"
+msgstr ""
+
+#: ./untranslated-strings.txt:142
+msgid "Personal Favorites"
+msgstr ""
+
+#: ./untranslated-strings.txt:143
+msgid "Piwik"
+msgstr ""
+
+#: ./untranslated-strings.txt:144
+msgid "RatingMatch"
+msgstr ""
+
+#: ./untranslated-strings.txt:145
+msgid "RSSView"
+msgstr ""
+
+#: ./untranslated-strings.txt:146
+msgid "Shout Home"
+msgstr ""
+
+#: ./untranslated-strings.txt:147
+msgid "Stream Bandwidth"
+msgstr ""
+
+#: ./untranslated-strings.txt:148
+msgid "Stream Hits"
+msgstr ""
+
+#: ./untranslated-strings.txt:149
+msgid "Stream Time"
+msgstr ""
+
+#: ./untranslated-strings.txt:150
+msgid "TheAudioDb"
+msgstr ""
+
+#: ./untranslated-strings.txt:151
+msgid "Tvdb"
+msgstr ""
+
+#: ./untranslated-strings.txt:152
+msgid "Twitter"
+msgstr ""
+
+#: ./untranslated-strings.txt:153
+msgid "YOURLS"
+msgstr ""

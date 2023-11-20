@@ -30,15 +30,15 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheYourls
+class AmpacheYourls implements AmpachePluginInterface
 {
-    public $name        = 'YOURLS';
-    public $categories  = 'shortener';
-    public $description = 'URL shorteners on shared links with YOURLS';
-    public $url         = 'http://yourls.org';
-    public $version     = '000002';
-    public $min_ampache = '360037';
-    public $max_ampache = '999999';
+    public string $name        = 'YOURLS';
+    public string $categories  = 'shortener';
+    public string $description = 'URL shorteners on shared links with YOURLS';
+    public string $url         = 'http://yourls.org';
+    public string $version     = '000002';
+    public string $min_ampache = '360037';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $yourls_domain;
@@ -47,44 +47,42 @@ class AmpacheYourls
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('URL shorteners on shared links with YOURLS');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        // Check and see if it's already installed (they've just hit refresh, those dorks)
-        if (Preference::exists('yourls_domain')) {
+        if (!Preference::exists('yourls_domain') && !Preference::insert('yourls_domain', T_('YOURLS domain name'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('yourls_domain', T_('YOURLS domain name'), '', 75, 'string', 'plugins', $this->name);
-        Preference::insert('yourls_use_idn', T_('YOURLS use IDN'), '0', 75, 'boolean', 'plugins', $this->name);
-        Preference::insert('yourls_api_key', T_('YOURLS API key'), '', 75, 'string', 'plugins', $this->name);
+        if (!Preference::exists('yourls_use_idn') && !Preference::insert('yourls_use_idn', T_('YOURLS use IDN'), '0', 75, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('yourls_api_key') && !Preference::insert('yourls_api_key', T_('YOURLS API key'), '', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('yourls_domain');
-        Preference::delete('yourls_use_idn');
-        Preference::delete('yourls_api_key');
+        return (
+            Preference::delete('yourls_domain') &&
+            Preference::delete('yourls_use_idn') &&
+            Preference::delete('yourls_api_key')
+        );
     } // uninstall
 
     /**
@@ -133,8 +131,7 @@ class AmpacheYourls
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

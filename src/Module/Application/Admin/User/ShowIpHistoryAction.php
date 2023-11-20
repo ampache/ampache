@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=0);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -66,38 +67,35 @@ final class ShowIpHistoryAction extends AbstractUserAction
         $userId      = (int) ($queryParams['user_id'] ?? 0);
         $showAll     = isset($queryParams['all']);
 
-        $this->ui->showHeader();
-
-        if ($userId < 1) {
-            echo T_('You have requested an object that does not exist');
-        } else {
-            /* get the user and their history */
-            $workingUser = $this->modelFactory->createUser($userId);
-
-            if ($showAll === false) {
-                $history = $this->ipHistoryRepository->getHistory(
-                    $workingUser,
-                    (int) $this->configContainer->get('user_ip_cardinality'),
-                    true,
-                );
-            } else {
-                $history = $this->ipHistoryRepository->getHistory(
-                    $workingUser,
-                );
-            }
-
-            $this->ui->showBoxTop(sprintf(T_('%s IP History'), $workingUser->get_fullname()));
-            $this->ui->show(
-                'show_ip_history.inc.php',
-                [
-                    'workingUser' => $workingUser,
-                    'history' => $history,
-                    'showAll' => $showAll,
-                    'webPath' => $this->configContainer->getWebPath(),
-                ]
-            );
-            $this->ui->showBoxBottom();
+        $user = $this->modelFactory->createUser($userId);
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
         }
+
+        if ($showAll === false) {
+            $history = $this->ipHistoryRepository->getHistory(
+                $user,
+                (int) $this->configContainer->get('user_ip_cardinality'),
+                true,
+            );
+        } else {
+            $history = $this->ipHistoryRepository->getHistory(
+                $user,
+            );
+        }
+
+        $this->ui->showHeader();
+        $this->ui->showBoxTop(sprintf(T_('%s IP History'), $user->get_fullname()));
+        $this->ui->show(
+            'show_ip_history.inc.php',
+            [
+                'workingUser' => $user,
+                'history' => $history,
+                'showAll' => $showAll,
+                'webPath' => $this->configContainer->getWebPath(),
+            ]
+        );
+        $this->ui->showBoxBottom();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

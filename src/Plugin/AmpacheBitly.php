@@ -30,15 +30,15 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheBitly
+class AmpacheBitly implements AmpachePluginInterface
 {
-    public $name        = 'Bit.ly';
-    public $categories  = 'shortener';
-    public $description = 'URL shorteners on shared links with Bit.ly';
-    public $url         = 'http://bitly.com';
-    public $version     = '000002';
-    public $min_ampache = '360037';
-    public $max_ampache = '999999';
+    public string $name        = 'Bit.ly';
+    public string $categories  = 'shortener';
+    public string $description = 'URL shorteners on shared links with Bit.ly';
+    public string $url         = 'http://bitly.com';
+    public string $version     = '000002';
+    public string $min_ampache = '360037';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $bitly_username;
@@ -46,42 +46,38 @@ class AmpacheBitly
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('URL shorteners on shared links with Bit.ly');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        // Check and see if it's already installed (they've just hit refresh, those dorks)
-        if (Preference::exists('bitly_username')) {
+        if (!Preference::exists('bitly_username') && !Preference::insert('bitly_username', T_('Bit.ly Username'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('bitly_username', T_('Bit.ly Username'), '', 75, 'string', 'plugins', $this->name);
-        Preference::insert('bitly_api_key', T_('Bit.ly API key'), '', 75, 'string', 'plugins', $this->name);
+        if (!Preference::exists('bitly_api_key') && !Preference::insert('bitly_api_key', T_('Bit.ly API key'), '', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('bitly_username');
-        Preference::delete('bitly_api_key');
+        return (
+            Preference::delete('bitly_username') &&
+            Preference::delete('bitly_api_key')
+        );
     } // uninstall
 
     /**
@@ -102,7 +98,7 @@ class AmpacheBitly
         if (empty($this->bitly_username) || empty($this->bitly_api_key)) {
             debug_event('bitly.plugin', 'Bit.ly username or api key missing', 3);
 
-            return false;
+            return '';
         }
 
         $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
@@ -120,8 +116,7 @@ class AmpacheBitly
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool

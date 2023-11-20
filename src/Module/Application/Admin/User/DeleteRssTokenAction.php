@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,19 +23,21 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Deletes the users rss-token
+ */
 final class DeleteRssTokenAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'delete_rsstoken';
@@ -71,6 +75,10 @@ final class DeleteRssTokenAction extends AbstractUserAction
         $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
         $user   = $this->modelFactory->createUser($userId);
 
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
+        }
+
         $user->deleteRssToken();
 
         $this->ui->showHeader();
@@ -79,7 +87,6 @@ final class DeleteRssTokenAction extends AbstractUserAction
             T_('Token has been deleted'),
             'admin/users.php',
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

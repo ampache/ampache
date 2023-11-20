@@ -31,15 +31,15 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
 
-class Ampachelibrefm
+class Ampachelibrefm implements AmpachePluginInterface
 {
-    public $name        = 'Libre.FM';
-    public $categories  = 'scrobbling';
-    public $description = 'Records your played songs to your Libre.FM Account';
-    public $url;
-    public $version     = '000003';
-    public $min_ampache = '360003';
-    public $max_ampache = '999999';
+    public string $name        = 'Libre.FM';
+    public string $categories  = 'scrobbling';
+    public string $description = 'Records your played songs to your Libre.FM Account';
+    public string $url         = '';
+    public string $version     = '000003';
+    public string $min_ampache = '360003';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
@@ -52,50 +52,45 @@ class Ampachelibrefm
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Scrobble songs you play to your Libre.FM Account');
         $this->url         = $this->scheme . '://' . $this->host;
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
-        // Check and see if it's already installed (they've just hit refresh, those dorks)
-        if (Preference::exists('librefm_user')) {
+        if (!Preference::exists('librefm_challenge') && !Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name)) {
             return false;
         }
-
-        Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name);
-        Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
+        if (!Preference::exists('librefm_grant_link') && !Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('librefm_challenge');
-        Preference::delete('librefm_grant_link');
-        // make sure the old ones are deleted just in case
-        Preference::delete('librefm_pass');
-        Preference::delete('librefm_md5_pass');
-        Preference::delete('librefm_user');
-        Preference::delete('librefm_url');
-        Preference::delete('librefm_host');
-        Preference::delete('librefm_port');
+        return (
+            Preference::delete('librefm_challenge') &&
+            Preference::delete('librefm_grant_link') &&
+            Preference::delete('librefm_pass') &&
+            Preference::delete('librefm_md5_pass') &&
+            Preference::delete('librefm_user') &&
+            Preference::delete('librefm_url') &&
+            Preference::delete('librefm_host') &&
+            Preference::delete('librefm_port')
+        );
     } // uninstall
 
     /**
@@ -174,24 +169,22 @@ class Ampachelibrefm
      * @param Song $song
      * @param bool $flagged
      */
-    public function set_flag($song, $flagged): bool
+    public function set_flag($song, $flagged): void
     {
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
             debug_event(self::class, 'Session key missing', 5);
 
-            return false;
+            return;
         }
         // Create our scrobbler and then queue it
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
         if (!$scrobbler->love($flagged, $song->get_artist_fullname(), $song->title)) {
             debug_event(self::class, 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
-            return false;
+            return;
         }
         debug_event(self::class, 'Sent Love Successfully', 5);
-
-        return true;
     } // set_flag
 
     /**
@@ -220,8 +213,7 @@ class Ampachelibrefm
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
      */
     public function load($user): bool
