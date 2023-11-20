@@ -59,7 +59,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
                 }
             } ?>
         <tr>
-            <td class="cel_name"><?php echo scrub_out($plugin->_plugin->name); ?></td>
+            <td class="cel_name"><?php echo scrub_out(T_($plugin->_plugin->name)); ?></td>
             <td class="cel_description"><?php echo scrub_out($plugin->_plugin->description); ?></td>
             <td class="cel_category"><?php echo scrub_out($plugin->_plugin->categories); ?></td>
             <td class="cel_version"><?php echo scrub_out($plugin->_plugin->version); ?></td>
