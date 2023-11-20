@@ -208,11 +208,9 @@ class Stream
 
     /**
      * Get stream types for media type.
-     * @param string $type
-     * @param string $player
-     * @return array
+     * @return list<string>
      */
-    public static function get_stream_types_for_type($type, $player = 'webplayer')
+    public static function get_stream_types_for_type(string $type, ?string $player = 'webplayer'): array
     {
         $types     = array();
         $transcode = AmpConfig::get('transcode_' . $type);

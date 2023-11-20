@@ -28,7 +28,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use PDOStatement;
 use SimpleXMLElement;
 
 class Podcast extends database_object implements library_item
@@ -108,10 +107,9 @@ class Podcast extends database_object implements library_item
     /**
      * get_episodes
      * gets all episodes for this podcast
-     * @param string $state_filter
      * @return list<int>
      */
-    public function get_episodes($state_filter = '')
+    public function get_episodes(string $state_filter = ''): array
     {
         $params          = array();
         $sql             = "SELECT `podcast_episode`.`id` FROM `podcast_episode` ";
@@ -343,11 +341,13 @@ class Podcast extends database_object implements library_item
 
     /**
      * create
-     * @param array $data
-     * @param bool $return_id
+     * @param array{
+     *  feed: string,
+     *  catalog: int
+     * } $data
      * @return bool|int
      */
-    public static function create(array $data, $return_id = false)
+    public static function create(array $data, bool $return_id = false)
     {
         $feed = (string) $data['feed'];
         // Feed must be http/https
@@ -470,11 +470,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * add_episodes
-     * @param SimpleXMLElement $episodes
-     * @param int $lastSync
-     * @param bool $gather
      */
-    public function add_episodes($episodes, $lastSync = 0, $gather = false)
+    public function add_episodes(SimpleXMLElement $episodes, int $lastSync = 0, bool $gather = false): void
     {
         foreach ($episodes as $episode) {
             $this->add_episode($episode, $lastSync);
@@ -523,11 +520,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * add_episode
-     * @param SimpleXMLElement $episode
-     * @param int $lastSync
-     * @return PDOStatement|bool
      */
-    private function add_episode(SimpleXMLElement $episode, $lastSync = 0)
+    private function add_episode(SimpleXMLElement $episode, int $lastSync = 0): void
     {
         $title       = html_entity_decode((string)$episode->title);
         $website     = (string)$episode->link;
@@ -563,36 +557,36 @@ class Podcast extends database_object implements library_item
         if ($pubdate < 1) {
             debug_event(self::class, 'Invalid episode publication date, skipped', 3);
 
-            return false;
+            return;
         }
         if (empty($source)) {
             debug_event(self::class, 'Episode source URL not found, skipped', 3);
 
-            return false;
+            return;
         }
         // don't keep adding the same episodes
         if (self::get_id_from_guid($guid) > 0) {
             debug_event(self::class, 'Episode guid already exists, skipped', 3);
 
-            return false;
+            return;
         }
         // don't keep adding urls
         if (self::get_id_from_source($source) > 0) {
             debug_event(self::class, 'Episode source URL already exists, skipped', 3);
 
-            return false;
+            return;
         }
         // podcast urls can change over time so check these
         if (self::get_id_from_title($this->id, $title, $time) > 0) {
             debug_event(self::class, 'Episode title already exists, skipped', 3);
 
-            return false;
+            return;
         }
         // podcast pubdate can be used to skip duplicate/fixed episodes when you already have them
         if (self::get_id_from_pubdate($this->id, $pubdate) > 0) {
             debug_event(self::class, 'Episode with the same publication date already exists, skipped', 3);
 
-            return false;
+            return;
         }
 
         // by default you want to download all the episodes
@@ -605,7 +599,7 @@ class Podcast extends database_object implements library_item
         debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
         $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array(
+        Dba::write($sql, array(
             $title,
             $guid,
             $this->id,
@@ -624,21 +618,22 @@ class Podcast extends database_object implements library_item
 
     /**
      * update_lastsync
-     * @param int $time
-     * @return PDOStatement|bool
      */
-    private function update_lastsync($time)
+    private function update_lastsync(int $time): void
     {
-        $sql = "UPDATE `podcast` SET `lastsync` = ? WHERE `id` = ?";
-
-        return Dba::write($sql, array($time, $this->id));
+        Dba::write(
+            'UPDATE `podcast` SET `lastsync` = ? WHERE `id` = ?',
+            [
+                $time,
+                $this->id,
+            ],
+        );
     }
 
     /**
      * sync_episodes
-     * @param bool $gather
      */
-    public function sync_episodes($gather = false): bool
+    public function sync_episodes(bool $gather = false): bool
     {
         debug_event(self::class, 'Syncing feed ' . $this->feed . ' ...', 4);
 
@@ -692,10 +687,8 @@ class Podcast extends database_object implements library_item
      * get_id_from_source
      *
      * Get episode id from the source url.
-     *
-     * @param string $url
      */
-    public static function get_id_from_source($url): int
+    private static function get_id_from_source(string $url): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
         $db_results = Dba::read($sql, array($url));
@@ -711,10 +704,8 @@ class Podcast extends database_object implements library_item
      * get_id_from_guid
      *
      * Get episode id from the guid.
-     *
-     * @param string $url
      */
-    public static function get_id_from_guid($url): int
+    private static function get_id_from_guid(string $url): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `guid` = ?";
         $db_results = Dba::read($sql, array($url));
@@ -730,12 +721,8 @@ class Podcast extends database_object implements library_item
      * get_id_from_title
      *
      * Get episode id from the source url.
-     *
-     * @param int $podcast_id
-     * @param string $title
-     * @param int $time
      */
-    public static function get_id_from_title($podcast_id, $title, $time): int
+    private static function get_id_from_title(int $podcast_id, string $title, int $time): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND title = ? AND `time` = ?";
         $db_results = Dba::read($sql, array($podcast_id, $title, $time));
@@ -751,11 +738,8 @@ class Podcast extends database_object implements library_item
      * get_id_from_pubdate
      *
      * Get episode id from the source url.
-     *
-     * @param int $podcast_id
-     * @param int $pubdate
      */
-    public static function get_id_from_pubdate($podcast_id, $pubdate): int
+    private static function get_id_from_pubdate(int $podcast_id, int $pubdate): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND pubdate = ?";
         $db_results = Dba::read($sql, array($podcast_id, $pubdate));
@@ -792,9 +776,8 @@ class Podcast extends database_object implements library_item
     /**
      * create_catalog_path
      * This returns the catalog types that are available
-     * @param string $path
      */
-    private static function create_catalog_path($path): bool
+    private static function create_catalog_path(string $path): bool
     {
         if (!is_dir($path)) {
             if (mkdir($path) === false) {

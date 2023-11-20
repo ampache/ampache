@@ -482,10 +482,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * update_played
      * sets the played flag
-     * @param bool $new_played
-     * @param int $id
      */
-    public static function update_played($new_played, $id): void
+    private static function update_played(bool $new_played, int $id): void
     {
         self::_update_item('played', ($new_played ? 1 : 0), $id);
     } // update_played
@@ -493,10 +491,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * update_file
      * sets the file path
-     * @param string $path
-     * @param int $id
      */
-    public static function update_file($path, $id): void
+    private static function update_file(string $path, int $id): void
     {
         self::_update_item('file', $path, $id);
     } // update_file
@@ -511,22 +507,20 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param string|int $value
      * @param int $episode_id
      */
-    private static function _update_item($field, $value, $episode_id): bool
+    private static function _update_item(string $field, $value, int $episode_id): void
     {
         /* Check them Rights! */
         if (!Access::check('interface', 25)) {
-            return false;
+            return;
         }
 
         /* Can't update to blank */
         if (!strlen(trim((string)$value))) {
-            return false;
+            return;
         }
 
         $sql = "UPDATE `podcast_episode` SET `$field` = ? WHERE `id` = ?";
         Dba::write($sql, array($value, $episode_id));
-
-        return true;
     } // _update_item
 
     /**
@@ -591,10 +585,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * Get stream types.
-     * @param string $player
-     * @return array
+     * @param null|string $player
+     * @return list<string>
      */
-    public function get_stream_types($player = null)
+    public function get_stream_types($player = null): array
     {
         return Stream::get_stream_types_for_type($this->type, $player);
     }
@@ -625,14 +619,12 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * change_state
-     * @param string $state
-     * @return PDOStatement|bool
      */
-    public function change_state($state)
+    public function change_state(string $state): void
     {
         $sql = "UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($state, $this->id));
+        Dba::write($sql, array($state, $this->id));
     }
 
     /**
@@ -692,28 +684,40 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * get_deleted
      * get items from the deleted_podcast_episodes table
-     * @return int[]
+     * @return list<array{
+     *  id: int,
+     *  addition_time: int,
+     *  delete_time: int,
+     *  title: string,
+     *  file: string,
+     *  catalog: int,
+     *  total_count: int,
+     *  total_skip: int,
+     *  podcast: int
+     * }>
      */
-    public static function get_deleted()
+    public static function get_deleted(): array
     {
         $deleted    = array();
         $sql        = "SELECT * FROM `deleted_podcast_episode`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
+            /**
+             * @var array{
+             *  id: int,
+             *  addition_time: int,
+             *  delete_time: int,
+             *  title: string,
+             *  file: string,
+             *  catalog: int,
+             *  total_count: int,
+             *  total_skip: int,
+             *  podcast: int
+             * } $row
+             */
             $deleted[] = $row;
         }
 
         return $deleted;
     } // get_deleted
-
-    /**
-     * type_to_mime
-     *
-     * Returns the mime type for the specified file extension/type
-     * @param string $type
-     */
-    public static function type_to_mime($type): string
-    {
-        return Song::type_to_mime($type);
-    }
 }

@@ -11436,11 +11436,6 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_stream_types_for_type\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_transcode_settings_for_media\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
@@ -19156,16 +19151,6 @@ parameters:
 			path: src/Repository/Model/Podcast.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:add_episodes\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:display_art\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
@@ -19356,11 +19341,6 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_deleted\\(\\) should return array\\<int\\> but returns array\\<int\\<0, max\\>, array\\>\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -19372,11 +19352,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_stream_types\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -19412,11 +19387,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Parameter \\#2 \\$player of static method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_stream_types_for_type\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -20663,11 +20633,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$mbid of static method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:check\\(\\) expects string, array\\|string given\\.$#"
 			count: 2
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Parameter \\#2 \\$player of static method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_stream_types_for_type\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
 			path: src/Repository/Model/Song.php
 
 		-
@@ -22112,11 +22077,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Parameter \\#2 \\$player of static method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_stream_types_for_type\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 

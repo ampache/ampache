@@ -67,9 +67,14 @@ final class CreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $data = $request->getParsedBody();
+
         $this->ui->showHeader();
 
-        if (!Podcast::create($_POST)) {
+        if (!Podcast::create([
+            'catalog' => (int) ($data['catalog'] ?? 0),
+            'feed' => $data['feed'] ?? ''
+        ])) {
             $this->ui->show('show_add_podcast.inc.php');
         } else {
             $title  = T_('No Problem');
