@@ -127,9 +127,8 @@ class AmpacheOmdb implements AmpachePluginInterface
      * Returns song metadata for what we're passed in.
      * @param array $gather_types
      * @param array $media_info
-     * @return array|null
      */
-    public function get_metadata($gather_types, $media_info)
+    public function get_metadata($gather_types, $media_info): ?array
     {
         debug_event('omdb.plugin', 'Getting metadata from OMDb...', 5);
 

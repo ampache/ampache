@@ -271,9 +271,10 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return null
+     * get_parent
+     * Return parent `object_type`, `object_id` ; null otherwise.
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         return null;
     }

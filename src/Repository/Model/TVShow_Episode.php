@@ -226,9 +226,9 @@ class TVShow_Episode extends Video
 
     /**
      * get_parent
-     * @return array
+     * Return parent `object_type`, `object_id` ; null otherwise.
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         return array(
             'object_type' => 'tvshow_season',

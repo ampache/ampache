@@ -1211,7 +1211,7 @@ class Xml_Data
             }
             $dom->formatOutput = true;
 
-            return $dom->saveXML();
+            return $dom->saveXML() ?: '';
         }
 
         return $xml;

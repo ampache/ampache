@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 
@@ -53,8 +54,9 @@ final class Rate3Method
             echo Xml3_Data::error('401', T_('Wrong library item type.'));
         } else {
             $className = ObjectTypeToClassNameMapper::map($type);
-            $item      = new $className($object_id);
-            if (!$item->id) {
+            /** @var library_item $item */
+            $item = new $className($object_id);
+            if ($item->getId() === 0) {
                 echo Xml3_Data::error('404', T_('Library item not found.'));
             } else {
                 $rate = new Rating($object_id, $type);

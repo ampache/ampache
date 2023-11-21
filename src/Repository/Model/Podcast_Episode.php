@@ -324,9 +324,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     }
 
     /**
-     * @return array
+     * get_parent
+     * Return parent `object_type`, `object_id` ; null otherwise.
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         return array(
             'object_type' => 'podcast',

@@ -820,10 +820,10 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * Get parent item description.
-     * @return array|null
+     * get_parent
+     * Return parent `object_type`, `object_id` ; null otherwise.
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         if ($this->artist_count == 1) {
             return array(

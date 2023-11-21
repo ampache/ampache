@@ -218,9 +218,8 @@ class UPnPPlayer
     /**
      * @param $song
      * @param $prefix
-     * @return array|null
      */
-    private function prepareURIRequest($song, $prefix)
+    private function prepareURIRequest($song, $prefix): ?array
     {
         if ($song == null) {
             return null;

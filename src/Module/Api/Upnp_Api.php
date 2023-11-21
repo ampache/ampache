@@ -585,9 +585,8 @@ class Upnp_Api
 
     /**
      * @param string $prmPath
-     * @return array|null
      */
-    public static function _musicMetadata($prmPath)
+    public static function _musicMetadata($prmPath): ?array
     {
         $root    = 'amp://music';
         $pathreq = explode('/', $prmPath);
@@ -996,9 +995,8 @@ class Upnp_Api
 
     /**
      * @param string $prmPath
-     * @return array|null
      */
-    public static function _videoMetadata($prmPath)
+    public static function _videoMetadata($prmPath): ?array
     {
         $root    = 'amp://video';
         $pathreq = explode('/', $prmPath);

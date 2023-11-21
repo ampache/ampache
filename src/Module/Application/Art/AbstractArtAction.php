@@ -43,7 +43,8 @@ abstract class AbstractArtAction implements ApplicationActionInterface
         }
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
-        $item      = new $className($object_id);
+        /** @var library_item $item */
+        $item = new $className($object_id);
 
         // If not a content manager user then kick em out
         if (

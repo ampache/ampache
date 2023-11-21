@@ -183,9 +183,10 @@ class Clip extends Video
     }
 
     /**
-     * @return array|null
+     * get_parent
+     * Return parent `object_type`, `object_id` ; null otherwise.
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         if ($this->artist) {
             return array(

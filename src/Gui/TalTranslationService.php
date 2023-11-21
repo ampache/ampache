@@ -31,7 +31,7 @@ final class TalTranslationService implements TranslationServiceInterface
 {
     public function setLanguage(...$langs): string
     {
-        return current($langs);
+        return (string)current($langs);
     }
 
     /**

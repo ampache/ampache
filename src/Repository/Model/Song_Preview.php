@@ -290,9 +290,10 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @return null
+     * get_parent
+     * Return parent `object_type`, `object_id` ; null otherwise.
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         // Wanted album is not part of the library, cannot return it.
         return null;

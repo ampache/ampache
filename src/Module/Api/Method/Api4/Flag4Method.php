@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Api4;
@@ -80,8 +81,9 @@ final class Flag4Method
             Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {
             $className = ObjectTypeToClassNameMapper::map($type);
-            $item      = new $className($object_id);
-            if (!$item->id) {
+            /** @var library_item $item */
+            $item = new $className($object_id);
+            if ($item->getId() === 0) {
                 Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 
                 return false;

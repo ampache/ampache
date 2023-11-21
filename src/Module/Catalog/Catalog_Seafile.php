@@ -484,7 +484,7 @@ class Catalog_Seafile extends Catalog
      * @return array|null
      * @throws Exception
      */
-    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
+    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern): ?array
     {
         // if you have the file it's all good
         /** @var Song $media */

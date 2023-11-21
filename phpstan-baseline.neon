@@ -516,11 +516,6 @@ parameters:
 			path: src/Gui/System/UpdateViewAdapterInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Gui\\\\TalTranslationService\\:\\:setLanguage\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Gui/TalTranslationService.php
-
-		-
 			message: "#^Method Ampache\\\\Gui\\\\TalView\\:\\:setContext\\(\\) has parameter \\$context with no type specified\\.$#"
 			count: 1
 			path: src/Gui/TalView.php
@@ -1796,11 +1791,6 @@ parameters:
 			path: src/Module/Api/Method/Api3/Playlists3Method.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Rate3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Rate3Method\\:\\:rate\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Rate3Method.php
@@ -2034,11 +2024,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Download4Method\\:\\:download\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Download4Method.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Flag4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Flag4Method\\:\\:flag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2319,11 +2304,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Share4Method\\:\\:share\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Share4Method.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/ShareCreate4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\ShareCreate4Method\\:\\:share_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -6306,11 +6286,6 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:output_xml\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:output_xml_from_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -6589,21 +6564,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Application\\\\Album\\\\ShowDiskAction\\:\\:\\$albumRepository is never read, only written\\.$#"
 			count: 1
 			path: src/Module/Application/Album/ShowDiskAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Art/AbstractArtAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_user_owner\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Art/AbstractArtAction.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Application\\\\Art\\\\AbstractArtAction\\:\\:getItem\\(\\) should return Ampache\\\\Repository\\\\Model\\\\library_item\\|null but returns object\\.$#"
-			count: 1
-			path: src/Module/Application/Art/AbstractArtAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$instance of static method Ampache\\\\Module\\\\Util\\\\InterfaceImplementationChecker\\:\\:is_library_item\\(\\) expects string, string\\|false\\|null given\\.$#"
@@ -11006,11 +10966,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:sendCommand\\(\\) should return array\\|null but returns array\\|void\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:set_volume\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
@@ -11027,11 +10982,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:xmltoarray\\(\\) has parameter \\$contents with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:xmltoarray\\(\\) never returns void so it can be removed from the return type\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -18431,6 +18381,11 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Label.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -18522,6 +18477,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:get_medias\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Live_Stream.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
 
@@ -19032,6 +18992,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:get_medias\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Podcast.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
 
@@ -20606,6 +20571,11 @@ parameters:
 			path: src/Repository/Model/Song_Preview.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Song_Preview.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_song_previews\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
@@ -21091,6 +21061,11 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Tag.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tag_objects\\(\\) has parameter \\$tag_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
@@ -21287,6 +21262,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:get_medias\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/TvShow.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TvShow.php
 
@@ -22086,7 +22066,7 @@ parameters:
 			path: src/Repository/Model/playable_item.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_parent\\(\\) has no return type specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playable_item.php
 
@@ -22132,6 +22112,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_medias\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/playlist_object.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
 

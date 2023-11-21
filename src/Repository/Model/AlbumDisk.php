@@ -525,15 +525,19 @@ class AlbumDisk extends database_object implements library_item
     }
 
     /**
-     * Get parent item description.
-     * @return array|null
+     * get_parent
+     * Return parent `object_type`, `object_id` ; null otherwise.
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
-        return array(
-            'object_type' => 'album',
-            'object_id' => $this->album_id
-        );
+        if ($this->album_id) {
+            return array(
+                'object_type' => 'album',
+                'object_id' => $this->album_id
+            );
+        }
+
+        return null;
     }
 
     /**

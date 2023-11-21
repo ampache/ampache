@@ -373,9 +373,8 @@ class VlcPlayer
      * request to the VLC server and getting the response
      * @param $cmd
      * @param $args
-     * @return array|null
      */
-    private function sendCommand($cmd, $args)
+    private function sendCommand($cmd, $args): ?array
     {
         $fsock = fsockopen($this->host, (int)$this->port, $errno, $errstr);
 
@@ -431,7 +430,7 @@ class VlcPlayer
      * @param $contents
      * @param int $get_attributes
      * @param string $priority
-     * @return array|void
+     * @return array
      */
     private function xmltoarray($contents, $get_attributes = 1, $priority = 'attribute')
     {
@@ -454,7 +453,7 @@ class VlcPlayer
         xml_parser_free($parser);
 
         if (!$xml_values) {
-            return;
+            return array();
         } // Hmm...
 
         // Initializations
