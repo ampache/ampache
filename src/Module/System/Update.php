@@ -5500,6 +5500,8 @@ class Update
      */
     private static function _update_600035(Interactor $interactor = null): bool
     {
+        $sql = "ALTER TABLE `podcast_episode` DROP COLUMN `enabled`;";
+        Dba::write($sql);
         $sql = "ALTER TABLE `podcast_episode` ADD COLUMN `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 AFTER `played`;";
         if (self::_write($interactor, $sql) === false) {
             return false;
@@ -5593,6 +5595,7 @@ class Update
      */
     private static function _update_600039(Interactor $interactor = null): bool
     {
+        Preference::delete('custom_timezone');
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', 25, 'string', 'interface', 'custom')";
         if (self::_write($interactor, $sql) === false) {
             return false;
@@ -5609,11 +5612,14 @@ class Update
      */
     private static function _update_600040(Interactor $interactor = null): bool
     {
+        $sql = "ALTER TABLE `song_data` DROP COLUMN `disksubtitle`;";
+        Dba::write($sql);
         $sql = "ALTER TABLE `song_data` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL;";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-
+        $sql = "ALTER TABLE `album_disk` DROP COLUMN `disksubtitle`;";
+        Dba::write($sql);
         $sql = "ALTER TABLE `album_disk` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL;";
         if (self::_write($interactor, $sql) === false) {
             return false;
