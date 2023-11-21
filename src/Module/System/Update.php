@@ -5632,7 +5632,7 @@ class Update
      */
     private static function _update_600041(Interactor $interactor = null): bool
     {
-        $sql = "ALTER TABLE `label` DROP KEY `label_asso_label_IDX`;";
+        $sql = "ALTER TABLE `label_asso` DROP KEY `label_asso_label_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`);";
 
