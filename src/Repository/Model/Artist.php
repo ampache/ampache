@@ -53,7 +53,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $name;
 
     /**
-     * @var string $summary
+     * @var null|string $summary
      */
     public $summary;
 
@@ -681,7 +681,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function get_description(): string
     {
-        return $this->summary;
+        return $this->summary ?? '';
     }
 
     /**

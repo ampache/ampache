@@ -71,7 +71,7 @@ class Label extends database_object implements library_item
      */
     public $website;
     /**
-     * @var string $summary
+     * @var null|string $summary
      */
     public $summary;
     /**
@@ -192,7 +192,7 @@ class Label extends database_object implements library_item
      */
     public function get_description(): string
     {
-        return $this->summary;
+        return $this->summary ?? '';
     }
 
     /**

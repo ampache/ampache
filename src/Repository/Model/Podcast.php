@@ -289,6 +289,10 @@ class Podcast extends database_object implements library_item
      */
     public function get_description(): string
     {
+        if (!isset($this->f_description)) {
+            $this->f_description = scrub_out($this->description ?? '');
+        }
+
         return $this->f_description;
     }
 
