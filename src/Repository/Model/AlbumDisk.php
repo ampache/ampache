@@ -191,52 +191,52 @@ class AlbumDisk extends database_object implements library_item
     public $has_art;
 
     /**
-     * @var string $f_artist_name
+     * @var null|string $f_artist_name
      */
     public $f_artist_name;
 
     /**
-     * @var string $f_artist_link
+     * @var null|string $f_artist_link
      */
     public $f_artist_link;
 
     /**
-     * @var string $f_artist
+     * @var null|string $f_artist
      */
     public $f_artist;
 
     /**
-     * @var string $f_name // Prefix + Name, generated
+     * @var null|string $f_name // Prefix + Name, generated
      */
     public $f_name;
 
     /**
-     * @var string $link
+     * @var null|string $link
      */
     public $link;
 
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
 
     /**
-     * @var string $f_tags
+     * @var null|string $f_tags
      */
     public $f_tags;
 
     /**
-     * @var string $f_year
+     * @var null|string $f_year
      */
     public $f_year;
 
     /**
-     * @var string $f_year_link
+     * @var null|string $f_year_link
      */
     public $f_year_link;
 
     /**
-     * @var string $f_release_type
+     * @var null|string $f_release_type
      */
     public $f_release_type;
 
@@ -313,7 +313,7 @@ class AlbumDisk extends database_object implements library_item
      * @param int $album_id
      * @param int $disk
      * @param int $catalog_id
-     * @param string|null $disksubtitle
+     * @param null|string $disksubtitle
      */
     public static function check($album_id, $disk, $catalog_id, $disksubtitle): void
     {
@@ -456,7 +456,7 @@ class AlbumDisk extends database_object implements library_item
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -470,7 +470,7 @@ class AlbumDisk extends database_object implements library_item
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -515,7 +515,7 @@ class AlbumDisk extends database_object implements library_item
     /**
      * Get item album_artist fullname.
      */
-    public function get_artist_fullname(): string
+    public function get_artist_fullname(): ?string
     {
         if (!isset($this->f_artist_name)) {
             $this->f_artist_name = $this->album->get_artist_fullname();

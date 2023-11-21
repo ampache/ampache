@@ -54,7 +54,7 @@ use Ampache\Module\Util\Ui;
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php Art::display('podcast', $libitem->id, $libitem->get_fullname(), 2, $libitem->get_link()); ?>
+    <?php Art::display('podcast', $libitem->id, (string)$libitem->get_fullname(), 2, $libitem->get_link()); ?>
 </td>
 <td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_siteurl"><?php echo $libitem->f_website_link; ?></td>

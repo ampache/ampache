@@ -70,15 +70,15 @@ class Broadcast extends database_object implements library_item
      */
     public $tags;
     /**
-     * @var string $f_name
+     * @var null|string $f_name
      */
     public $f_name;
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
     /**
-     * @var string $f_tags
+     * @var null|string $f_tags
      */
     public $f_tags;
     /**
@@ -86,7 +86,7 @@ class Broadcast extends database_object implements library_item
      */
     public $is_private;
     /**
-     * @var string $link
+     * @var null|string $link
      */
     public $link;
 
@@ -218,7 +218,7 @@ class Broadcast extends database_object implements library_item
     /**
      * Get item fullname.
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->name;
@@ -230,7 +230,7 @@ class Broadcast extends database_object implements library_item
     /**
      * get_link
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -244,7 +244,7 @@ class Broadcast extends database_object implements library_item
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -347,7 +347,7 @@ class Broadcast extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'broadcast') || $force) {
-            Art::display('broadcast', $this->id, $this->get_fullname(), $thumb);
+            Art::display('broadcast', $this->id, (string)$this->get_fullname(), $thumb);
         }
     }
 

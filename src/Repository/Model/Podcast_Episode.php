@@ -237,7 +237,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * get_fullname
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->title;
@@ -249,7 +249,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -263,7 +263,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -414,7 +414,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->get_link());
+            Art::display($type, $episode_id, (string)$this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -528,7 +528,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_stream_name(): string
     {
-        return $this->get_f_podcast() . " - " . $this->get_fullname();
+        return (string)($this->get_f_podcast() . " - " . $this->get_fullname());
     }
 
     /**
@@ -552,7 +552,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param string $player
      * @param bool $local
      * @param int|string $uid
-     * @param string|null $streamToken
+     * @param null|string $streamToken
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
     {

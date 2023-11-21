@@ -176,7 +176,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     /**
      * get_fullname
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
@@ -189,7 +189,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -203,7 +203,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -320,7 +320,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         }
 
         if ($tvshow_id !== null && $type !== null) {
-            Art::display($type, $tvshow_id, $this->get_fullname(), $thumb, $this->get_link());
+            Art::display($type, $tvshow_id, (string)$this->get_fullname(), $thumb, $this->get_link());
         }
     }
 

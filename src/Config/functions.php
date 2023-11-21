@@ -85,7 +85,7 @@ function scrub_in($input)
  * onto the page, it htmlentities the mojo
  * This is the inverse of the scrub_in function
  * (Not deprecated yet see Ui::scrubOut)
- * @param string|null $string
+ * @param null|string $string
  *
  */
 function scrub_out($string): string

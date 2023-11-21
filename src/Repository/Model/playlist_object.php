@@ -58,7 +58,7 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $type;
     /**
-     * @var string $link
+     * @var null|string $link
      */
     public $link;
     /**
@@ -66,15 +66,15 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $has_art;
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
     /**
-     * @var string $f_type
+     * @var null|string $f_type
      */
     public $f_type;
     /**
-     * @var string $f_name
+     * @var null|string $f_name
      */
     public $f_name;
 
@@ -166,7 +166,7 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * get_fullname
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         $show_fullname = AmpConfig::get('show_playlist_username');
         $my_playlist   = (!empty(Core::get_global('user')) && ($this->user == Core::get_global('user')->id));
@@ -180,7 +180,7 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -196,7 +196,7 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * Get item link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -282,7 +282,7 @@ abstract class playlist_object extends database_object implements library_item
             $list_type = ($this instanceof Search)
                 ? 'search'
                 : 'playlist';
-            Art::display($list_type, $this->id, $this->get_fullname(), $thumb, $add_link);
+            Art::display($list_type, $this->id, (string)$this->get_fullname(), $thumb, $add_link);
         }
     }
 

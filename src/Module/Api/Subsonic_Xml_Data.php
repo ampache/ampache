@@ -1568,7 +1568,7 @@ class Subsonic_Xml_Data
     /**
      * _checkName
      * This to fix xml=>json which can result to wrong type parsing
-     * @param string $name
+     * @param null|string $name
      * @return string|null
      */
     private static function _checkName($name)
@@ -1581,7 +1581,7 @@ class Subsonic_Xml_Data
             }
         }
 
-        return html_entity_decode($name, ENT_NOQUOTES, 'UTF-8');
+        return html_entity_decode((string)$name, ENT_NOQUOTES, 'UTF-8');
     }
 
     /**

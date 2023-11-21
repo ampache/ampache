@@ -289,7 +289,7 @@ class TVShow_Episode extends Video
         }
 
         if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->get_link());
+            Art::display($type, $episode_id, (string)$this->get_fullname(), $thumb, $this->get_link());
         }
     }
 

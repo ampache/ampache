@@ -361,13 +361,13 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = $this->song->get_album_original_year($this->song->album);
         $songprops[T_('Length')]        = scrub_out($this->song->f_time);
-        $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>" .
-            "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>" .
-            "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+        $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>" .
+            "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>" .
+            "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
         if ($this->song->mbid) {
             $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/recording/" . $this->song->mbid . "\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         } else {
-            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode($this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode((string)$this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         }
         $songprops[T_('Comment')] = scrub_out($this->song->comment);
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
@@ -463,17 +463,17 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getTrackNumber(): string
     {
-        return $this->song->f_track;
+        return (string)$this->song->f_track;
     }
 
     public function getSongUrl(): string
     {
-        return $this->song->get_link();
+        return (string)$this->song->get_link();
     }
 
     public function getSongLink(): string
     {
-        return $this->song->get_f_link();
+        return (string)$this->song->get_f_link();
     }
 
     public function getArtistLink(): string
@@ -498,12 +498,12 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getGenre(): string
     {
-        return $this->song->f_tags;
+        return (string)$this->song->f_tags;
     }
 
     public function getPlayDuration(): string
     {
-        return $this->song->f_time;
+        return (string)$this->song->f_time;
     }
 
     public function getLicenseLink(): string

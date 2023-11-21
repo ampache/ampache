@@ -953,7 +953,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_fullname
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         return $this->name;
     }
@@ -961,7 +961,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         return '';
     }
@@ -969,7 +969,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         return '';
     }
@@ -1066,7 +1066,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'tag') || $force) {
-            Art::display('tag', $this->id, $this->get_fullname(), $thumb);
+            Art::display('tag', $this->id, (string)$this->get_fullname(), $thumb);
         }
     }
 

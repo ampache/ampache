@@ -134,7 +134,7 @@ class Art extends database_object
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
      * @param list<int> $object_ids
-     * @param string|null $type
+     * @param null|string $type
      */
     public static function build_cache(array $object_ids, $type = null): bool
     {

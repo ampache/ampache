@@ -128,42 +128,42 @@ class User extends database_object
     public $playlist;
 
     /**
-     * @var string $f_name
+     * @var null|string $f_name
      */
     public $f_name;
     /**
-     * @var string $f_last_seen
+     * @var null|string $f_last_seen
      */
     public $f_last_seen;
     /**
-     * @var string $f_create_date
+     * @var null|string $f_create_date
      */
     public $f_create_date;
     /**
-     * @var string $link
+     * @var null|string $link
      */
     public $link;
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
     /**
-     * @var string $f_usage
+     * @var null|string $f_usage
      */
     public $f_usage;
 
     private string $ip_history = '';
 
     /**
-     * @var string $f_avatar
+     * @var null|string $f_avatar
      */
     public $f_avatar;
     /**
-     * @var string $f_avatar_mini
+     * @var null|string $f_avatar_mini
      */
     public $f_avatar_mini;
     /**
-     * @var string $f_avatar_medium
+     * @var null|string $f_avatar_medium
      */
     public $f_avatar_medium;
 
@@ -222,12 +222,12 @@ class User extends database_object
         }
 
         // If the ID is -1 then send back generic data
-        if ($user_id == '-1') {
+        if ($user_id === -1) {
             return array(
                 'id' => -1,
                 'username' => 'System',
                 'fullname' => 'Ampache User',
-                'access' => '25',
+                'access' => 25,
                 'catalog_filter_group' => 0,
                 'catalogs' => self::get_user_catalogs(-1)
             );
@@ -1252,7 +1252,7 @@ class User extends database_object
     /**
      * Get item fullname.
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             $this->f_name = ($this->fullname_public)
@@ -1266,7 +1266,7 @@ class User extends database_object
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link) && $this->id > 0) {
@@ -1280,7 +1280,7 @@ class User extends database_object
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link) && $this->id > 0) {

@@ -96,7 +96,7 @@ class Ampachechartlyrics implements AmpachePluginInterface
     public function get_lyrics($song)
     {
         $base    = 'http://api.chartlyrics.com/apiv1.asmx/';
-        $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->get_artist_fullname()) . '&song=' . urlencode($song->title);
+        $uri     = $base . 'SearchLyricDirect?artist=' . urlencode((string)$song->get_artist_fullname()) . '&song=' . urlencode($song->title);
         $request = Requests::get($uri, array(), Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);

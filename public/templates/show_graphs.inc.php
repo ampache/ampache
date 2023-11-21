@@ -31,9 +31,9 @@ use Ampache\Module\Util\Ui;
 /** @var string $object_type */
 /** @var int $user_id */
 /** @var int $end_date */
-/** @var string $f_end_date */
+/** @var null|string $f_end_date */
 /** @var int $start_date */
-/** @var string $f_start_date */
+/** @var null|string $f_start_date */
 /** @var string $zoom */
 /** @var array $gtypes */
 /** @var string $blink */

@@ -46,19 +46,19 @@ interface playable_item
      *
      * Get the item full name.
      */
-    public function get_fullname(): string;
+    public function get_fullname(): ?string;
 
     /**
      * get_link
      *
      * Get the item link.
      */
-    public function get_link(): string;
+    public function get_link(): ?string;
 
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string;
+    public function get_f_link(): ?string;
 
     /**
      * get_parent

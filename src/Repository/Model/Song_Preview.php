@@ -209,7 +209,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * gets the name of $this->artist, allows passing of id
      * @param int $artist_id
      */
-    public function get_artist_fullname($artist_id = 0): string
+    public function get_artist_fullname($artist_id = 0): ?string
     {
         if (!$artist_id) {
             $artist_id = $this->artist;
@@ -254,7 +254,7 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * Get item fullname.
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->title;
@@ -266,7 +266,7 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -279,7 +279,7 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -407,11 +407,11 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @return mixed
+     * get_stream_name
      */
-    public function get_stream_name()
+    public function get_stream_name(): string
     {
-        return $this->title;
+        return (string)$this->title;
     }
 
     /**

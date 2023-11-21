@@ -170,7 +170,7 @@ class Recommendation
 
         $song     = new Song($song_id);
         $artist   = new Artist($song->artist);
-        $fullname = $artist->get_fullname();
+        $fullname = (string)$artist->get_fullname();
         $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
         if (isset($song->mbid)) {
@@ -263,7 +263,7 @@ class Recommendation
         if (!array_key_exists('id', $cache)) {
             $artist   = new Artist($artist_id);
             $similars = array();
-            $fullname = $artist->get_fullname();
+            $fullname = (string)$artist->get_fullname();
             $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
             try {
@@ -385,7 +385,7 @@ class Recommendation
         $artist = new Artist($artist_id);
         $query  = ($artist->mbid)
             ? 'mbid=' . rawurlencode($artist->mbid)
-            : 'artist=' . rawurlencode($artist->get_fullname());
+            : 'artist=' . rawurlencode((string)$artist->get_fullname());
 
         // Data newer than 6 months, use it
         if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
@@ -440,7 +440,7 @@ class Recommendation
         $album = new Album($album_id);
         $query = ($album->mbid)
             ? 'mbid=' . rawurlencode($album->mbid)
-            : 'artist=' . rawurlencode($album->get_artist_fullname()) . '&album=' . rawurlencode($album->get_fullname());
+            : 'artist=' . rawurlencode((string)$album->get_artist_fullname()) . '&album=' . rawurlencode((string)$album->get_fullname());
 
         $results = array(
             'id' => $album_id,

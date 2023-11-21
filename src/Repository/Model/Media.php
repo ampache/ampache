@@ -72,7 +72,7 @@ interface Media
      * get_stream_name
      * Get the complete name to display for the stream.
      */
-    public function get_stream_name();
+    public function get_stream_name(): string;
 
     /**
      * @param int $user_id

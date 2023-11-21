@@ -66,11 +66,11 @@ if (!isset($video_type)) {
 <td class="<?php echo $cel_cover; ?>">
     <?php $art_showed = false;
 if ($libitem->get_default_art_kind() == 'preview') {
-    $art_showed = Art::display('video', $libitem->id, $libitem->get_fullname(), 9, $libitem->get_link(), false, 'preview');
+    $art_showed = Art::display('video', $libitem->id, (string)$libitem->get_fullname(), 9, $libitem->get_link(), false, 'preview');
 }
 if (!$art_showed) {
     $thumb = (isset($browse) && !$browse->is_grid_view()) ? 7 : 6;
-    Art::display('video', $libitem->id, $libitem->get_fullname(), $thumb, $libitem->get_link());
+    Art::display('video', $libitem->id, (string)$libitem->get_fullname(), $thumb, $libitem->get_link());
 } ?>
 </td>
 <td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>

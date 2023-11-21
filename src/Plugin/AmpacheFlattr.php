@@ -89,8 +89,12 @@ class AmpacheFlattr implements AmpachePluginInterface
      */
     public function display_user_field(library_item $libitem = null): void
     {
-        $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
-        $link = ($libitem != null && $libitem->get_link()) ? $libitem->get_link() : $this->user->get_link();
+        $name = ($libitem != null)
+            ? (string)$libitem->get_fullname()
+            : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
+        $link = ($libitem != null && $libitem->get_link())
+            ? (string)$libitem->get_link()
+            : (string)$this->user->get_link();
 
         echo "<a class='nohtml' href='https://flattr.com/submit/auto?user_id=" . scrub_out($this->user_id) . "&url=" . rawurlencode($link) . "&category=audio&title=" . rawurlencode($name) . "' target='_blank'><img src='//button.flattr.com/flattr-badge-large.png' alt='" . T_('Flattr this') . "' title='" . T_('Flattr this') . "'></a>";
     }

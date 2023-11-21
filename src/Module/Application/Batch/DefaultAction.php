@@ -122,7 +122,7 @@ final class DefaultAction implements ApplicationActionInterface
                 $libitem = new $className($item);
                 if ($libitem->id) {
                     $libitem->format();
-                    $name      = $libitem->get_fullname();
+                    $name      = (string)$libitem->get_fullname();
                     $media_ids = array_merge($media_ids, $libitem->get_medias());
                 }
             }
@@ -217,9 +217,9 @@ final class DefaultAction implements ApplicationActionInterface
                     /** @var class-string<library_item> $className */
                     $pobj = new $className($parent['object_id']);
                     $pobj->format();
-                    $dirname = $pobj->get_fullname();
+                    $dirname = (string)$pobj->get_fullname();
                 }
-                if (!array_key_exists($dirname, $media_files)) {
+                if (!empty($dirname) && !array_key_exists($dirname, $media_files)) {
                     $media_files[$dirname] = [];
                 }
                 $media_files[$dirname][] = Core::conv_lc_file($media->file);

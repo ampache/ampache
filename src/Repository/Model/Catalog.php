@@ -172,37 +172,37 @@ abstract class Catalog extends database_object
     public $gather_types;
 
     /**
-     * @var string $f_name
+     * @var null|string $f_name
      */
     public $f_name;
     /**
-     * @var string $link
+     * @var null|string $link
      */
     public $link;
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
     /**
-     * @var string $f_update
+     * @var null|string $f_update
      */
     public $f_update;
     /**
-     * @var string $f_add
+     * @var null|string $f_add
      */
     public $f_add;
     /**
-     * @var string $f_clean
+     * @var null|string $f_clean
      */
     public $f_clean;
     /**
      * alias for catalog paths, urls, etc etc
-     * @var string $f_full_info
+     * @var null|string $f_full_info
      */
     public $f_full_info;
     /**
      * alias for catalog paths, urls, etc etc
-     * @var string $f_info
+     * @var null|string $f_info
      */
     public $f_info;
     /**
@@ -451,7 +451,7 @@ abstract class Catalog extends database_object
     /**
      * get_fullname
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->name;
@@ -463,7 +463,7 @@ abstract class Catalog extends database_object
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -477,7 +477,7 @@ abstract class Catalog extends database_object
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -4322,7 +4322,7 @@ abstract class Catalog extends database_object
         // Do the various check
         $album_object = new Album($song->album);
         $album_object->format();
-        $artist = ($album_object->get_artist_fullname() != "")
+        $artist = (!empty($album_object->f_artist_name))
             ? self::sort_clean_name($album_object->f_artist_name, '%a', $windowsCompat)
             : $various_artist;
         $disk           = self::sort_clean_name($song->disk, '%d');

@@ -233,16 +233,16 @@ class AmpacheRss
             foreach ($string_map as $search => $replace) {
                 switch ($replace) {
                     case 'title':
-                        $text = $media->get_fullname();
+                        $text = (string)$media->get_fullname();
                         break;
                     case 'artist':
                         $text = ($media instanceof Song)
-                            ? $media->get_artist_fullname()
+                            ? (string)$media->get_artist_fullname()
                             : '';
                         break;
                     case 'album':
                         $text = ($media instanceof Song)
-                            ? $media->get_album_fullname($media->album, true)
+                            ? (string)$media->get_album_fullname($media->album, true)
                             : '';
                         break;
                     default:
@@ -308,7 +308,7 @@ class AmpacheRss
 
                 $xml_array = array(
                     'title' => $song->f_name . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-                    'link' => str_replace('&amp;', '&', $song->get_link()),
+                    'link' => str_replace('&amp;', '&', (string)$song->get_link()),
                     'description' => $description,
                     'comments' => $client->username,
                     'pubDate' => date("r", (int)$item['date'])

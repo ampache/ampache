@@ -82,7 +82,7 @@ final class ShowAction implements ApplicationActionInterface
         } else {
             $podcast->format();
 
-            $this->ui->showBoxTop($podcast->get_fullname(), 'info-box');
+            $this->ui->showBoxTop((string)$podcast->get_fullname(), 'info-box');
             $this->ui->show(
                 'show_podcast.inc.php',
                 [

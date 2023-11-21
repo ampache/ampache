@@ -123,7 +123,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $has_art;
 
     /**
-     * @var string $f_tags
+     * @var null|string $f_tags
      */
     public $f_tags;
 
@@ -133,7 +133,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $labels;
 
     /**
-     * @var string $f_labels
+     * @var null|string $f_labels
      */
     public $f_labels;
 
@@ -143,22 +143,22 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $total_count;
 
     /**
-     * @var string $f_name // Prefix + Name, generated
+     * @var null|string $f_name // Prefix + Name, generated
      */
     public $f_name;
 
     /**
-     * @var string $link
+     * @var null|string $link
      */
     public $link;
 
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
 
     /**
-     * @var string $f_time
+     * @var null|string $f_time
      */
     public $f_time;
 
@@ -474,7 +474,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * Get item fullname.
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             // set the full name
@@ -553,7 +553,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -569,7 +569,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -700,7 +700,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         if ($artist_id !== null && $type !== null) {
-            Art::display($type, $artist_id, $this->get_fullname(), $thumb, $this->get_link());
+            Art::display($type, $artist_id, (string)$this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -1057,7 +1057,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * Update artist associated user.
      * @param string $name
-     * @param string|null $prefix
+     * @param null|string $prefix
      * @return PDOStatement|bool
      */
     public function update_artist_name($name, $prefix)

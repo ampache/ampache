@@ -228,19 +228,19 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $has_art;
     /**
-     * @var string $f_name
+     * @var null|string $f_name
      */
     public $f_name;
     /**
-     * @var string $f_artist
+     * @var null|string $f_artist
      */
     public $f_artist;
     /**
-     * @var string $f_album
+     * @var null|string $f_album
      */
     public $f_album;
     /**
-     * @var string $f_artist_full
+     * @var null|string $f_artist_full
      */
     public $f_artist_full;
     /**
@@ -248,23 +248,23 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $albumartist;
     /**
-     * @var string $f_albumartist_full
+     * @var null|string $f_albumartist_full
      */
     public $f_albumartist_full;
     /**
-     * @var string $f_album_full
+     * @var null|string $f_album_full
      */
     public $f_album_full;
     /**
-     * @var string $f_time
+     * @var null|string $f_time
      */
     public $f_time;
     /**
-     * @var string $f_time_h
+     * @var null|string $f_time_h
      */
     public $f_time_h;
     /**
-     * @var string $f_track
+     * @var null|string $f_track
      */
     public $f_track;
     /**
@@ -276,61 +276,61 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $disksubtitle;
     /**
-     * @var string $f_bitrate
+     * @var null|string $f_bitrate
      */
     public $f_bitrate;
     /**
-     * @var string $link
+     * @var null|string $link
      */
     public $link;
     /**
-     * @var string $f_file
+     * @var null|string $f_file
      */
     public $f_file;
     /**
-     * @var string $f_name_full
+     * @var null|string $f_name_full
      */
     public $f_name_full;
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
     /**
-     * @var string $f_album_link
+     * @var null|string $f_album_link
      */
     public $f_album_link;
     /**
-     * @var string $f_album_disk_link
+     * @var null|string $f_album_disk_link
      */
-    public string $f_album_disk_link;
+    public $f_album_disk_link;
     /**
-     * @var string $f_artist_link
+     * @var null|string $f_artist_link
      */
     public $f_artist_link;
     /**
-     * @var string $f_albumartist_link
+     * @var null|string $f_albumartist_link
      */
     public $f_albumartist_link;
 
     /**
-     * @var string $f_year_link
+     * @var null|string $f_year_link
      */
     public $f_year_link;
 
     /**
-     * @var string $f_tags
+     * @var null|string $f_tags
      */
     public $f_tags;
     /**
-     * @var string $f_size
+     * @var null|string $f_size
      */
     public $f_size;
     /**
-     * @var string $f_lyrics
+     * @var null|string $f_lyrics
      */
     public $f_lyrics;
     /**
-     * @var string $f_pattern
+     * @var null|string $f_pattern
      */
     public $f_pattern;
     /**
@@ -338,15 +338,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $count;
     /**
-     * @var string $f_publisher
+     * @var null|string $f_publisher
      */
     public $f_publisher;
     /**
-     * @var string $f_composer
+     * @var null|string $f_composer
      */
     public $f_composer;
     /**
-     * @var string $f_license
+     * @var null|string $f_license
      */
     public $f_license;
 
@@ -1074,9 +1074,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * get_artist_fullname
      * gets the name of $this->artist, allows passing of id
-     * @param int $artist_id
+     * @param int|null $artist_id
      */
-    public function get_artist_fullname($artist_id = 0): string
+    public function get_artist_fullname($artist_id = 0): ?string
     {
         if ($artist_id > 0) {
             return Artist::get_fullname_by_id($artist_id);
@@ -1093,7 +1093,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * gets the name of $this->albumartist, allows passing of id
      * @param int $album_artist_id
      */
-    public function get_album_artist_fullname($album_artist_id = 0): string
+    public function get_album_artist_fullname($album_artist_id = 0): ?string
     {
         if ($album_artist_id) {
             return self::get_artist_fullname($album_artist_id);
@@ -1862,7 +1862,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * Get item fullname.
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->title;
@@ -1874,7 +1874,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -1888,7 +1888,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -2129,7 +2129,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         if ($object_id !== null && $type !== null) {
-            Art::display($type, $object_id, $this->get_fullname(), $thumb, $this->get_link());
+            Art::display($type, $object_id, (string)$this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -2164,7 +2164,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param string $player
      * @param bool $local
      * @param int|string $uid
-     * @param string|null $streamToken
+     * @param null|string $streamToken
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
     {
@@ -2222,7 +2222,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_stream_name(): string
     {
-        return $this->get_artist_fullname() . " - " . $this->title;
+        return (string)($this->get_artist_fullname() . " - " . $this->title);
     }
 
     /**
@@ -2293,9 +2293,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
             $run = str_replace("%f", $this->file, $action['run']);
             $run = str_replace("%c", $codec, $run);
-            $run = str_replace("%a", $this->f_artist, $run);
-            $run = str_replace("%A", $this->f_album, $run);
-            $run = str_replace("%t", $this->get_fullname(), $run);
+            $run = str_replace("%a", $this->f_artist ?? '%a', $run);
+            $run = str_replace("%A", $this->f_album ?? '%A', $run);
+            $run = str_replace("%t", $this->get_fullname() ?? '%t', $run);
 
             debug_event(self::class, "Running custom play action: " . $run, 3);
 

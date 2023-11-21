@@ -104,7 +104,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
 
         foreach ($items as $item) {
             $item->format();
-            $name = $item->get_fullname();
+            $name = (string)$item->get_fullname();
             // We don't know about file system encoding / specificity
             // For now, we only keep simple characters to be sure it will work everywhere
             $name       = preg_replace('/[:]/', '.', $name);

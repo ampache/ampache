@@ -1397,12 +1397,12 @@ class Xml_Data
             $media      = new $className($media_info['object_id']);
             $media->format();
             $xitem = $xchannel->addChild("item");
-            $xitem->addChild("title", htmlspecialchars($media->get_fullname()));
+            $xitem->addChild("title", htmlspecialchars((string)$media->get_fullname()));
             if ($media->f_artist_full) {
                 $xitem->addChild("xmlns:itunes:author", htmlspecialchars($media->f_artist_full));
             }
             //$xmlink = $xitem->addChild("link", htmlspecialchars($media->get_link()));
-            $xitem->addChild("guid", htmlspecialchars($media->get_link()));
+            $xitem->addChild("guid", htmlspecialchars((string)$media->get_link()));
             if ($media->addition_time) {
                 $xitem->addChild("pubDate", date("r", (int)$media->addition_time));
             }

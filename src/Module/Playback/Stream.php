@@ -716,7 +716,7 @@ class Stream
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      * @param bool $local
-     * @param string|null $streamToken
+     * @param null|string $streamToken
      */
     public static function get_base_url($local = false, $streamToken = null): string
     {

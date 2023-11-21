@@ -382,7 +382,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * Get item fullname.
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->title;
@@ -394,7 +394,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -408,7 +408,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * Get item link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -535,7 +535,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'video') || $force) {
-            Art::display('video', $this->id, $this->get_fullname(), $thumb, $this->get_link());
+            Art::display('video', $this->id, (string)$this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -580,7 +580,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param string $player
      * @param bool $local
      * @param int|string $uid
-     * @param string|null $streamToken
+     * @param null|string $streamToken
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
     {
@@ -616,7 +616,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function get_stream_name(): string
     {
-        return $this->title;
+        return (string)$this->title;
     }
 
     /**

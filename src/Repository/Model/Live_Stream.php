@@ -59,7 +59,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public $url;
     /**
-     * @var string $link
+     * @var null|string $link
      */
     public $link;
     /**
@@ -76,24 +76,24 @@ class Live_Stream extends database_object implements Media, library_item
     public $catalog;
 
     /**
-     * @var string $f_name
+     * @var null|string $f_name
      */
     public $f_name;
 
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
     /**
-     * @var string $f_name_link
+     * @var null|string $f_name_link
      */
     public $f_name_link;
     /**
-     * @var string $f_url_link
+     * @var null|string $f_url_link
      */
     public $f_url_link;
     /**
-     * @var string $f_site_url_link
+     * @var null|string $f_site_url_link
      */
     public $f_site_url_link;
 
@@ -148,7 +148,7 @@ class Live_Stream extends database_object implements Media, library_item
     /**
      * get_fullname
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->name;
@@ -160,7 +160,7 @@ class Live_Stream extends database_object implements Media, library_item
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {
@@ -174,7 +174,7 @@ class Live_Stream extends database_object implements Media, library_item
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -292,7 +292,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'live_stream') || $force) {
-            Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->get_link());
+            Art::display('live_stream', $this->id, (string)$this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -427,7 +427,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_stream_name(): string
     {
-        return $this->get_fullname();
+        return (string)$this->get_fullname();
     }
 
     /**

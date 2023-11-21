@@ -11531,11 +11531,6 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$f_resolution \\(string\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between int and null will always evaluate to false\\.$#"
 			count: 2
 			path: src/Module/Playback/Stream.php
@@ -16811,37 +16806,12 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$f_artist_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$f_artist_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
 
@@ -16859,11 +16829,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
@@ -16926,37 +16891,12 @@ parameters:
 			path: src/Repository/Model/AlbumDisk.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$f_artist_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$f_artist_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -17391,16 +17331,6 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -17412,11 +17342,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$labels type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
 
@@ -17591,22 +17516,7 @@ parameters:
 			path: src/Repository/Model/Broadcast.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
 
@@ -18141,22 +18051,7 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -18561,22 +18456,7 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
 
@@ -18676,29 +18556,9 @@ parameters:
 			path: src/Repository/Model/Live_Stream.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_name\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Media.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -20676,41 +20536,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$f_album_full \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$f_album_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$f_albumartist_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$f_artist_full \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$f_artist_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -20727,11 +20552,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -21766,21 +21586,6 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$prefs type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
@@ -22101,27 +21906,12 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$f_name \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 
@@ -22176,11 +21966,6 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 2
 			path: src/Repository/Model/Wanted.php
@@ -22227,11 +22012,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
 
@@ -22356,22 +22136,7 @@ parameters:
 			path: src/Repository/Model/playlist_object.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:\\$f_link \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:\\$f_type \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:\\$link \\(string\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
 

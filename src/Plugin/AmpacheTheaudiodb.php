@@ -289,7 +289,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
                     $data['yearformed']  = $release->intFormedYear ?? null;
 
                     // when you come in with an mbid you might want to keep the name updated (ignore case)
-                    if ($this->overwrite_name && Vainfo::is_mbid($object->mbid) && strtolower($data['name'] ?? '') !== strtolower($object->get_fullname())) {
+                    if ($this->overwrite_name && Vainfo::is_mbid($object->mbid) && strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         $object->prefix = $name_check['prefix'];
                         $object->name   = $name_check['name'];
@@ -339,12 +339,14 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     }
 
     /**
-     * @param string $name
+     * @param null|string $name
      * @return mixed|null
      */
     private function search_artists($name)
     {
-        return $this->api_call('search.php?s=' . rawurlencode($name));
+        return ($name)
+            ? $this->api_call('search.php?s=' . rawurlencode($name))
+            : null;
     }
 
     /**

@@ -287,12 +287,12 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAlbumUrl(): string
     {
-        return $this->album->get_link();
+        return (string)$this->album->get_link();
     }
 
     public function getAlbumLink(): string
     {
-        return $this->album->get_f_link();
+        return (string)$this->album->get_f_link();
     }
 
     public function getArtistLink(): string
@@ -314,7 +314,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getGenre(): string
     {
-        return $this->album->f_tags;
+        return (string)$this->album->f_tags;
     }
 
     public function getSongCount(): int

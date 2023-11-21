@@ -80,20 +80,20 @@ class Wanted extends database_object
     public $user;
 
     /**
-     * @var string $link
+     * @var null|string $link
      */
     public $link;
 
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
     /**
-     * @var string $f_artist_link
+     * @var null|string $f_artist_link
      */
     public $f_artist_link;
     /**
-     * @var string $f_user
+     * @var null|string $f_user
      */
     public $f_user;
     /**
@@ -460,7 +460,7 @@ class Wanted extends database_object
     /**
      * get_fullname
      */
-    public function get_fullname(): string
+    public function get_fullname(): ?string
     {
         return $this->name;
     }
@@ -468,7 +468,7 @@ class Wanted extends database_object
     /**
      * Get item link.
      */
-    public function get_link(): string
+    public function get_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->link)) {

@@ -223,7 +223,7 @@ class Share extends database_object
     /**
      * get_url
      * @param string $secret
-     * @param string|null $share_id
+     * @param null|string $share_id
      */
     public static function get_url($share_id, $secret): string
     {
@@ -301,12 +301,12 @@ class Share extends database_object
 
     public function getObjectUrl(): string
     {
-        return $this->getObject()->get_f_link();
+        return (string)$this->getObject()->get_f_link();
     }
 
     public function getObjectName(): string
     {
-        return $this->getObject()->get_fullname();
+        return (string)$this->getObject()->get_fullname();
     }
 
     public function getUserName(): string
