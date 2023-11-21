@@ -509,19 +509,26 @@ class Preference extends database_object
      * it does NOT sync up the users, that should be done independently
      * @param string $name
      * @param string $description
-     * @param string|int $default
+     * @param string|int|float $default
      * @param int $level
      * @param string $type
      * @param string $category
-     * @param string $subcategory
+     * @param null|string $subcategory
+     * @param bool $replace
      */
-    public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null): bool
+    public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null, $replace = false): bool
     {
+        if ($replace) {
+            self::delete($name);
+        }
+        if (!$replace && self::exists($name)) {
+            return true;
+        }
         if ($subcategory !== null) {
             $subcategory = strtolower((string)$subcategory);
         }
         $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, (int) $level, $type, $category, $subcategory));
+        $db_results = Dba::write($sql, array($name, $description, $default, (int)$level, $type, $category, $subcategory));
 
         if (!$db_results) {
             return false;

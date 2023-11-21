@@ -12686,11 +12686,6 @@ parameters:
 			path: src/Module/System/Update.php
 
 		-
-			message: "#^Parameter \\#4 \\$level of static method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:insert\\(\\) expects int, string given\\.$#"
-			count: 3
-			path: src/Module/System/Update.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\System\\\\Update\\:\\:\\$key has no type specified\\.$#"
 			count: 1
 			path: src/Module/System/Update.php
