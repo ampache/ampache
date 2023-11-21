@@ -5645,6 +5645,7 @@ class Update
      */
     private static function _update_600042(Interactor $interactor = null): bool
     {
+        Preference::delete('bookmark_latest');
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('bookmark_latest', '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options')";
         if (self::_write($interactor, $sql) === false) {
             return false;
@@ -5666,6 +5667,7 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
+        Preference::delete('jp_volume');
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('jp_volume', 0.80, 'Default webplayer volume', 25, 'special', 'streaming', 'player')";
         if (self::_write($interactor, $sql) === false) {
             return false;
@@ -5683,6 +5685,7 @@ class Update
      */
     private static function _update_600044(Interactor $interactor = null): bool
     {
+        Preference::delete('perpetual_api_session');
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('perpetual_api_session', '0', 'API sessions do not expire', 100, 'boolean', 'system', 'backend')";
         if (self::_write($interactor, $sql) === false) {
             return false;
