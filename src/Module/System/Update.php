@@ -5634,7 +5634,9 @@ class Update
      */
     private static function _update_600041(Interactor $interactor = null): bool
     {
-        $sql = "CREATE INDEX `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`);";
+        $sql = "ALTER TABLE `label` DROP KEY `label_asso_label_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX IF NOT EXISTS `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`);";
 
         return (self::_write($interactor, $sql) !== false);
     }
