@@ -77,6 +77,23 @@ use SimpleXMLElement;
  */
 class Subsonic_Api
 {
+    // List of internal functions that should be skipped when called from SubsonicApiApplication
+    public const SYSTEM_LIST = [
+        '_albumList',
+        '_apiOutput',
+        '_apiOutput2',
+        '_check_parameter',
+        '_decrypt_password',
+        '_follow_stream',
+        '_hasNestedArray',
+        '_output_body',
+        '_output_header',
+        '_setHeader',
+        '_setStar',
+        '_updatePlaylist',
+        '_xml2json'
+    ];
+
     private const ALWAYS_ARRAY = [
         'musicFolder',
         'channel',

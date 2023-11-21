@@ -163,25 +163,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
         Preference::init();
 
-        // Define list of internal functions that should be skipped
-        $internal_functions = array(
-            '_albumList',
-            '_apiOutput',
-            '_apiOutput2',
-            '_check_parameter',
-            '_decrypt_password',
-            '_follow_stream',
-            '_hasNestedArray',
-            '_output_body',
-            '_output_header',
-            '_setHeader',
-            '_setStar',
-            '_updatePlaylist',
-            '_xml2json'
-        );
-
         // Get the list of possible methods for the Ampache API
-        $methods = array_diff(get_class_methods(Subsonic_Api::class), $internal_functions);
+        $methods = array_diff(get_class_methods(Subsonic_Api::class), Subsonic_Api::SYSTEM_LIST);
 
         // We do not use $_GET because of multiple parameters with the same name
         $query_string = $_SERVER['QUERY_STRING'];
@@ -239,6 +222,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         // Call your function if it's valid
         if (in_array($action, $methods)) {
+            /** @see Subsonic_Api */
             call_user_func(array(Subsonic_Api::class, $action), $input, $user);
             // We only allow a single function to be called, and we assume it's cleaned up!
             return;
