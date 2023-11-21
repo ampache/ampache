@@ -22,11 +22,14 @@
  */
 
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
+
+/** @var Catalog $this */
 
 Ui::show_box_top(T_('Verify Catalog'), 'box box_verify_catalog');
 /* HINT: Catalog Name */
 printf(T_('Updating the %s Catalog'), "<strong>[ $this->name ]</strong>");
 echo "<br />\n\n";
-echo T_('Verified') . ': <span id="verify_count_' . $this->id . '">' . $catalog_verify_found . '</span><br />';
-echo T_('Reading') . ': <span id="verify_dir_' . $this->id . '">' . $catalog_verify_directory . '</span>';
+echo T_('Verified') . ': <span id="verify_count_' . $this->id . '"></span><br />';
+echo T_('Reading') . ': <span id="verify_dir_' . $this->id . '"></span>';
 Ui::show_box_bottom();

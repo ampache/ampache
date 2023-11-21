@@ -30,11 +30,11 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var int|string $upload_max */
+/** @var string $ajaxfs */
 
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 Ui::show_box_top(T_('Upload'));
-$ajaxfs   = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
 $artist   = (int) (Core::get_request('artist'));
 $album    = (int) (Core::get_request('album'));
 $web_path = (string)AmpConfig::get('web_path', '');

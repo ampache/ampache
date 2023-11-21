@@ -571,12 +571,11 @@ class Query
     /**
      * get_filter
      * returns the specified filter value
-     * @param string $key
-     * @return string|bool
+     * @return string|null
      */
-    public function get_filter($key)
+    public function get_filter(string $key)
     {
-        return (isset($this->_state['filter'][$key])) ? $this->_state['filter'][$key] : false;
+        return (isset($this->_state['filter'][$key])) ? $this->_state['filter'][$key] : null;
     } // get_filter
 
     /**

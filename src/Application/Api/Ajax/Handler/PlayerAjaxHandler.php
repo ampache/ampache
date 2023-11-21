@@ -54,6 +54,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'show_broadcasts':
                 ob_start();
+                $ajaxUri = $this->ajaxUriRetriever->getAjaxUri();
                 require Ui::find_template('show_broadcasts_dialog.inc.php');
                 $results = ob_get_contents();
                 ob_end_clean();

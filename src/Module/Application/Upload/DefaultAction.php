@@ -78,6 +78,7 @@ final class DefaultAction implements ApplicationActionInterface
 
         $upload_max = return_bytes(ini_get('upload_max_filesize'));
         $post_max   = return_bytes(ini_get('post_max_size'));
+        $ajaxfs     = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
         if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
             $upload_max = $post_max;
         }

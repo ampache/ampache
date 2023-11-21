@@ -22,6 +22,9 @@
  */
 
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
+
+/** @var Catalog $this */
 
 Ui::show_box_top(T_('Clean Catalog'), 'box box_clean_catalog');
 /* HINT: Catalog Name */

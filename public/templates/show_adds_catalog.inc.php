@@ -22,6 +22,9 @@
  */
 
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
+
+/** @var Catalog $this */
 
 Ui::show_box_top(T_('Starting New Media Search'), 'box box_adds_catalog');
 /* HINT: Catalog Name */

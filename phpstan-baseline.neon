@@ -101,11 +101,6 @@ parameters:
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
 
 		-
-			message: "#^Property Ampache\\\\Application\\\\Api\\\\Ajax\\\\Handler\\\\PlayerAjaxHandler\\:\\:\\$ajaxUriRetriever is never read, only written\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/PlayerAjaxHandler.php
-
-		-
 			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/PlaylistAjaxHandler.php
@@ -7293,11 +7288,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$val of function return_bytes expects string, string\\|false given\\.$#"
 			count: 2
-			path: src/Module/Application/Upload/DefaultAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Upload\\\\DefaultAction\\:\\:\\$ajaxUriRetriever is never read, only written\\.$#"
-			count: 1
 			path: src/Module/Application/Upload/DefaultAction.php
 
 		-

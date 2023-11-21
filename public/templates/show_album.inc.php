@@ -45,6 +45,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 /** @var Album $album */
 /** @var bool $isAlbumEditable */
 
+/** @var ContainerInterface $dic */
 global $dic;
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 $batch_dl   = Access::check_function('batch_download');

@@ -56,7 +56,7 @@ if (array_key_exists('browse_uid', $_REQUEST)) {
 $sides = 0;
 ?>
 <?php if (!$browse->is_use_pages() && !$is_header) { ?>
-<?php $this->show_next_link(); ?>
+<?php $browse->show_next_link(); ?>
 </p>
 </div>
 <script>

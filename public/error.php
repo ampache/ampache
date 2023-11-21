@@ -23,10 +23,11 @@
 
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
-
-/** @var \Psr\Container\ContainerInterface $dic */
+use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', 1);
+
+/** @var ContainerInterface $dic */
 $dic = require_once __DIR__ . '/../src/Config/Init.php';
 $dic->get(UiInterface::class)->accessDenied();
 if (array_key_exists('permission', $_REQUEST)) {

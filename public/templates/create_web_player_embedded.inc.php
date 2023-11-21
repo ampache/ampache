@@ -24,9 +24,10 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\WebPlayer;
 
-?>
+/** @var Stream_Playlist $this */ ?>
 <!DOCTYPE html>
 <html>
 <head>

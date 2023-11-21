@@ -27,6 +27,11 @@ declare(strict_types=0);
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 
+/** @var string $web_path */
+/** @var string $configfile */
+/** @var string $htaccess_play_file */
+/** @var string $htaccess_rest_file */
+
 $web_path_guess = $_REQUEST['web_path'] ?? '';
 if (empty($web_path_guess)) {
     $web_path_guess = get_web_path();
