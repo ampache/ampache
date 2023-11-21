@@ -1914,7 +1914,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * Get item f_artist_link.
      */
-    public function get_f_artist_link(): string
+    public function get_f_artist_link(): ?string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_artist_link)) {
