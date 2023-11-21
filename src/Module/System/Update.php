@@ -4544,26 +4544,24 @@ class Update
     {
         $sql = "ALTER TABLE `object_count` DROP KEY `object_count_full_index`;";
         Dba::write($sql);
-        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_type_IDX`;";
-        Dba::write($sql);
-        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_date_IDX`;";
-        Dba::write($sql);
-        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_user_IDX`;";
-        Dba::write($sql);
-        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_unique`;";
-        Dba::write($sql);
         $sql = "CREATE INDEX `object_count_full_index` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_type_IDX`;";
+        Dba::write($sql);
         $sql = "CREATE INDEX `object_count_type_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`);";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_date_IDX`;";
+        Dba::write($sql);
         $sql = "CREATE INDEX `object_count_date_IDX` USING BTREE ON `object_count` (`date`, `count_type`);";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_user_IDX`;";
+        Dba::write($sql);
         $sql = "CREATE INDEX `object_count_user_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `user`, `count_type`);";
 
         return (self::_write($interactor, $sql) !== false);
@@ -5244,7 +5242,7 @@ class Update
      */
     private static function _update_600016(Interactor $interactor = null): bool
     {
-        $sql = "ALTER TABLE `artist_map` DROP KEY `object_type_IDX`;";
+        $sql = "ALTER TABLE `album_map` DROP KEY `object_type_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `object_type_IDX` USING BTREE ON `album_map` (`object_type`);";
         if (self::_write($interactor, $sql) === false) {
@@ -5636,7 +5634,7 @@ class Update
     {
         $sql = "ALTER TABLE `label` DROP KEY `label_asso_label_IDX`;";
         Dba::write($sql);
-        $sql = "CREATE INDEX IF NOT EXISTS `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`);";
+        $sql = "CREATE INDEX `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`);";
 
         return (self::_write($interactor, $sql) !== false);
     }
