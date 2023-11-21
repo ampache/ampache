@@ -39,6 +39,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
@@ -73,13 +74,16 @@ final class PlayAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
+    private UserTrackerInterface $userTracker;
+
     public function __construct(
         RequestParserInterface $requestParser,
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
         UserRepositoryInterface $userRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UserTrackerInterface $userTracker
     ) {
         $this->requestParser         = $requestParser;
         $this->browser               = $browser;
@@ -87,6 +91,7 @@ final class PlayAction implements ApplicationActionInterface
         $this->networkChecker        = $networkChecker;
         $this->userRepository        = $userRepository;
         $this->logger                = $logger;
+        $this->userTracker           = $userTracker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -719,8 +724,8 @@ final class PlayAction implements ApplicationActionInterface
         set_time_limit(0);
 
         // We're about to start. Record this user's IP.
-        if (AmpConfig::get('track_user_ip')) {
-            Core::get_global('user')->insert_ip_history();
+        if (AmpConfig::get('track_user_ip') && !empty(Core::get_global('user'))) {
+            $this->userTracker->trackIpAddress(Core::get_global('user'));
         }
 
         $this->logger->debug(
