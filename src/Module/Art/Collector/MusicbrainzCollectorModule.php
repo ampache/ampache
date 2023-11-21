@@ -69,7 +69,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             return $images;
         }
 
-        if (!array_key_exists('mb_albumid', $data)) {
+        if (!array_key_exists('mb_albumid', $data) || $data['mb_albumid'] === null) {
             return $images;
         }
         $this->logger->debug(

@@ -48,9 +48,19 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $id;
 
     /**
-     * @var string $name
+     * @var null|string $name
      */
     public $name;
+
+    /**
+     * @var null|string $prefix
+     */
+    public $prefix;
+
+    /**
+     * @var null|string $mbid
+     */
+    public $mbid; // MusicBrainz ID
 
     /**
      * @var null|string $summary
@@ -58,12 +68,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $summary;
 
     /**
-     * @var string $placeformed
+     * @var null|string $placeformed
      */
     public $placeformed;
 
     /**
-     * @var int $yearformed
+     * @var int|null $yearformed
      */
     public $yearformed;
 
@@ -71,6 +81,26 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @var int $last_update
      */
     public $last_update;
+
+    /**
+     * @var int $catalog_id
+     */
+    public $catalog_id;
+
+    /**
+     * @var int|null $time
+     */
+    public $time;
+
+    /**
+     * @var int|null $user
+     */
+    public $user;
+
+    /**
+     * @var bool $manual_update
+     */
+    public $manual_update;
 
     /**
      * @var int $songs
@@ -81,36 +111,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @var int $albums
      */
     public $albums;
-
-    /**
-     * @var string $prefix
-     */
-    public $prefix;
-
-    /**
-     * @var string $mbid
-     */
-    public $mbid; // MusicBrainz ID
-
-    /**
-     * @var int $catalog_id
-     */
-    public $catalog_id;
-
-    /**
-     * @var int $time
-     */
-    public $time;
-
-    /**
-     * @var int $user
-     */
-    public $user;
-
-    /**
-     * @var bool $manual_update
-     */
-    public $manual_update;
 
     /**
      * @var array $tags
@@ -1020,8 +1020,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * Update artist information.
      * @param string $summary
-     * @param string $placeformed
-     * @param int $yearformed
+     * @param null|string $placeformed
+     * @param null|int $yearformed
      * @param bool $manual
      * @return PDOStatement|bool
      */

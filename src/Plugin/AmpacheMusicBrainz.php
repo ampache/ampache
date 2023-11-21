@@ -190,7 +190,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
 
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
         $results = array();
-        if (Vainfo::is_mbid($object->mbid)) {
+        if ($object->mbid !== null && Vainfo::is_mbid($object->mbid)) {
             try {
                 $results = $mbrainz->lookup($object_type, $object->mbid);
             } catch (Exception $error) {
@@ -251,7 +251,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
                     );
 
                     // when you come in with an mbid you might want to keep the name updated
-                    if ($this->overwrite_name && Vainfo::is_mbid($object->mbid) && $data['name'] !== $object->get_fullname()) {
+                    if ($this->overwrite_name && $object->mbid !== null && Vainfo::is_mbid($object->mbid) && $data['name'] !== $object->get_fullname()) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         $object->prefix = $name_check['prefix'];
                         $object->name   = $name_check['name'];

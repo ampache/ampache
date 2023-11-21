@@ -17281,37 +17281,12 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$name \\(string\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$placeformed \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$prefix \\(string\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$song_count \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$summary \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$yearformed \\(int\\) does not accept int\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
 

@@ -47,7 +47,7 @@ class Wanted extends database_object
      */
     public $id;
     /**
-     * @var string $mbid
+     * @var null|string $mbid
      */
     public $mbid;
     /**
@@ -55,7 +55,7 @@ class Wanted extends database_object
      */
     public $artist;
     /**
-     * @var string $artist_mbid
+     * @var null|string $artist_mbid
      */
     public $artist_mbid;
     /**
@@ -71,7 +71,7 @@ class Wanted extends database_object
      */
     public $accepted;
     /**
-     * @var string $release_mbid
+     * @var null|string $release_mbid
      */
     public $release_mbid;
     /**
@@ -357,6 +357,7 @@ class Wanted extends database_object
             if (
                 Core::get_global('user')->has_access(75) ||
                 (
+                    $this->mbid !== null &&
                     static::getWantedRepository()->find($this->mbid, Core::get_global('user')->id) &&
                     $this->accepted != '1'
                 )
@@ -378,53 +379,57 @@ class Wanted extends database_object
         $this->songs = array();
 
         try {
-            $group = $mbrainz->lookup('release-group', $this->mbid, array('releases'));
-            // Set fresh data
-            $this->name = $group->title;
-            $this->year = date("Y", strtotime($group->{'first-release-date'}));
+            if ($this->mbid !== null) {
+                $group = $mbrainz->lookup('release-group', $this->mbid, array('releases'));
+                // Set fresh data
+                $this->name = $group->title;
+                $this->year = date("Y", strtotime($group->{'first-release-date'}));
 
-            // Load from database if already cached
-            $this->songs = Song_Preview::get_song_previews($this->mbid);
-            if (count($group->releases) > 0) {
-                $this->release_mbid = $group->releases[0]->id;
-                if ($track_details && count($this->songs) == 0) {
-                    // Use the first release as reference for track content
-                    $release = $mbrainz->lookup('release', $this->release_mbid, array('recordings'));
-                    foreach ($release->media as $media) {
-                        foreach ($media->tracks as $track) {
-                            $song          = array();
-                            $song['disk']  = Album::sanitize_disk($media->position);
-                            $song['track'] = $track->number;
-                            $song['title'] = $track->title;
-                            $song['mbid']  = $track->id;
-                            if ($this->artist) {
-                                $song['artist'] = $this->artist;
-                            }
-                            $song['artist_mbid'] = $this->artist_mbid;
-                            $song['session']     = session_id();
-                            $song['album_mbid']  = $this->mbid;
+                // Load from database if already cached
+                $this->songs = Song_Preview::get_song_previews($this->mbid);
+                if (count($group->releases) > 0) {
+                    $this->release_mbid = $group->releases[0]->id;
+                    if ($track_details && count($this->songs) == 0) {
+                        // Use the first release as reference for track content
+                        $release = $mbrainz->lookup('release', $this->release_mbid, array('recordings'));
+                        foreach ($release->media as $media) {
+                            foreach ($media->tracks as $track) {
+                                $song          = array();
+                                $song['disk']  = Album::sanitize_disk($media->position);
+                                $song['track'] = $track->number;
+                                $song['title'] = $track->title;
+                                $song['mbid']  = $track->id;
+                                if ($this->artist) {
+                                    $song['artist'] = $this->artist;
+                                }
+                                $song['artist_mbid'] = $this->artist_mbid;
+                                $song['session']     = session_id();
+                                $song['album_mbid']  = $this->mbid;
 
-                            if ($this->artist) {
-                                $artist      = new Artist($this->artist);
-                                $artist_name = $artist->name;
-                            } else {
-                                $wartist     = Wanted::get_missing_artist($this->artist_mbid);
-                                $artist_name = $wartist['name'];
-                            }
+                                if ($this->artist) {
+                                    $artist = new Artist($this->artist);
+                                    $artist_name = $artist->name;
+                                } elseif ($this->artist_mbid !== null) {
+                                    $wartist     = Wanted::get_missing_artist($this->artist_mbid);
+                                    $artist_name = $wartist['name'];
+                                } else {
+                                    $artist_name = '';
+                                }
 
-                            $song['file'] = null;
-                            foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
-                                $plugin = new Plugin($plugin_name);
-                                if ($plugin->load(Core::get_global('user'))) {
-                                    $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
-                                    if ($song['file'] != null) {
-                                        break;
+                                $song['file'] = null;
+                                foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
+                                    $plugin = new Plugin($plugin_name);
+                                    if ($plugin->load(Core::get_global('user'))) {
+                                        $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
+                                        if ($song['file'] != null) {
+                                            break;
+                                        }
                                     }
                                 }
-                            }
 
-                            if ($song != null) {
-                                $this->songs[] = new Song_Preview(Song_Preview::insert($song));
+                                if ($song != null) {
+                                    $this->songs[] = new Song_Preview(Song_Preview::insert($song));
+                                }
                             }
                         }
                     }
@@ -448,9 +453,11 @@ class Wanted extends database_object
         if ($this->artist) {
             $artist              = new Artist($this->artist);
             $this->f_artist_link = $artist->get_f_link();
-        } else {
+        } elseif ($this->artist_mbid !== null) {
             $wartist             = Wanted::get_missing_artist($this->artist_mbid);
             $this->f_artist_link = $wartist['link'];
+        } else {
+            $this->f_artist_link = '';
         }
         $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->name) . "</a>";
         $user         = new User($this->user);

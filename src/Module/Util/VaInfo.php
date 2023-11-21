@@ -749,10 +749,13 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * is_mbid
-     * @param string $mbid
+     * @param null|string $mbid
      */
     public static function is_mbid($mbid): bool
     {
+        if ($mbid === null) {
+            return false;
+        }
         if (preg_match(self::MBID_REGEX, $mbid)) {
             return true;
         }

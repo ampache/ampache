@@ -412,13 +412,17 @@ class Recommendation
         $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
             ($xml->artist->bio->summary ?? '')));
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
-        $results['placeformed'] = ($xml->artist->bio->placeformed ?? '');
-        $results['yearformed']  = ($xml->artist->bio->yearformed ?? '');
+        $results['placeformed'] = (isset($xml->artist->bio->yearformed))
+            ? (string)$xml->artist->bio->placeformed
+            : null;
+        $results['yearformed'] = (isset($xml->artist->bio->yearformed))
+            ? (int)$xml->artist->bio->yearformed
+            : null;
 
         if ($artist->id) {
             $results['id'] = $artist->id;
             if (!empty($results['summary'])) {
-                $artist->update_artist_info($results['summary'], $results['placeformed'], (int)$results['yearformed']);
+                $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
             }
             $results['largephoto']  = Art::url($artist->id, 'artist', null, 174);
             $results['smallphoto']  = Art::url($artist->id, 'artist', null, 34);
