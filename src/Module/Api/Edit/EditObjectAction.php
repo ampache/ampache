@@ -134,7 +134,9 @@ final class EditObjectAction extends AbstractEditAction
             }
         }
 
-        $libitem->format();
+        if (method_exists($libitem, 'format')) {
+            $libitem->format();
+        }
         $new_id = $libitem->update($_POST);
         if ($new_id !== false) {
             $new_id = $object_id;

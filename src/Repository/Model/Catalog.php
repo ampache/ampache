@@ -1941,7 +1941,9 @@ abstract class Catalog extends database_object
         }
         $inserted = false;
         $options  = array();
-        $libitem->format();
+        if (method_exists($libitem, 'format')) {
+            $libitem->format();
+        }
         if ($libitem->id) {
             // Only search on items with default art kind AS `default`.
             if ($libitem->get_default_art_kind() == 'default') {

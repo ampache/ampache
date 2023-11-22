@@ -79,7 +79,9 @@ $count     = 1; ?>
                     $className = ObjectTypeToClassNameMapper::map($object_type);
                     /** @var Ampache\Repository\Model\playable_item $libitem */
                     $libitem = new $className($object['object_id']);
-                    $libitem->format();
+                    if (method_exists($libitem, 'format')) {
+                        $libitem->format();
+                    }
                     $playlist_track = (int)($object['track'] ?? $count); ?>
                     <tr id="track_<?php echo($object['track_id'] ?? $count); ?>">
                         <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>

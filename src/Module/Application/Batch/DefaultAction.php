@@ -121,7 +121,9 @@ final class DefaultAction implements ApplicationActionInterface
                 /** @var class-string<library_item> $className */
                 $libitem = new $className($item);
                 if ($libitem->id) {
-                    $libitem->format();
+                    if (method_exists($libitem, 'format')) {
+                        $libitem->format();
+                    }
                     $name      = (string)$libitem->get_fullname();
                     $media_ids = array_merge($media_ids, $libitem->get_medias());
                 }

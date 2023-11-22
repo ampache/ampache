@@ -223,7 +223,9 @@ class Shoutbox
                 if (Preference::get_by_user($item_owner_id, 'notify_email')) {
                     $item_owner = new User($item_owner_id);
                     if (!empty($item_owner->email) && Mailer::is_mail_enabled()) {
-                        $libitem->format();
+                        if (method_exists($libitem, 'format')) {
+                            $libitem->format();
+                        }
                         $mailer = new Mailer();
                         $mailer->set_default_sender();
                         $mailer->recipient      = $item_owner->email;
