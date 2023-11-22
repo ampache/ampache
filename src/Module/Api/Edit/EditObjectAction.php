@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -73,6 +74,10 @@ final class EditObjectAction extends AbstractEditAction
 
             return $data;
         };
+
+        /** @var User $user */
+        $user = $gatekeeper->getUser();
+
         $entities($_POST);
         if (empty($object_type)) {
             $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -84,9 +89,9 @@ final class EditObjectAction extends AbstractEditAction
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
         $className = ObjectTypeToClassNameMapper::map((string)$object_type);
-        /** @var library_item $libitem */
+        /** @var library_item|Share $libitem */
         $libitem = new $className($_POST['id']);
-        if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
+        if ($libitem->get_user_owner() === $user->getId() && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
             // TODO: improve this uniqueness check
             if (isset($_POST['user'])) {
                 unset($_POST['user']);
@@ -124,22 +129,21 @@ final class EditObjectAction extends AbstractEditAction
             }
         }
 
-        if (method_exists($libitem, 'format')) {
-            $libitem->format();
-        }
-        $new_id = $libitem->update($_POST);
-        if ($new_id !== false) {
-            $new_id = $object_id;
-        }
-        /** @var library_item $libitem */
-        $libitem = new $className($new_id);
-        if (method_exists($libitem, 'format')) {
-            $libitem->format();
+        if ($libitem instanceof Share) {
+            $libitem->update($_POST, $user);
+        } else {
+            // @todo: is it really necessary to call format before updating the object?
+            if (method_exists($libitem, 'format')) {
+                $libitem->format();
+            }
+            $libitem->update($_POST);
         }
 
         xoutput_headers();
-        $results = array('id' => $new_id);
-        echo (string) xoutput_from_array($results);
+
+        echo (string) xoutput_from_array([
+            'id' => $object_id
+        ]);
 
         return null;
     }
