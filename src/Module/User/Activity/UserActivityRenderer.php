@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Activity;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Useractivity;
@@ -52,7 +51,7 @@ final class UserActivityRenderer implements UserActivityRendererInterface
         Useractivity $useractivity
     ): string {
         // If user flags aren't enabled don't do anything
-        if (!AmpConfig::get('ratings') || !$useractivity->id) {
+        if (!$this->configContainer->get('ratings') || !$useractivity->id) {
             return '';
         }
 

@@ -37,15 +37,11 @@ use Ampache\Module\Album\Export\Writer\MetadataWriterInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
-use Psr\Log\LoggerInterface;
 
 class AlbumArtExporterTest extends MockeryTestCase
 {
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
 
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
@@ -58,13 +54,11 @@ class AlbumArtExporterTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->songRepository  = $this->mock(SongRepositoryInterface::class);
 
         $this->subject = new AlbumArtExporter(
             $this->configContainer,
-            $this->logger,
             $this->modelFactory,
             $this->songRepository
         );

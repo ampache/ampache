@@ -22,22 +22,17 @@
 
 namespace Ampache\Module\Label;
 
-use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Label;
 
 final class LabelListUpdater implements LabelListUpdaterInterface
 {
     private LabelRepositoryInterface $labelRepository;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        LabelRepositoryInterface $labelRepository,
-        ModelFactoryInterface $modelFactory
+        LabelRepositoryInterface $labelRepository
     ) {
         $this->labelRepository = $labelRepository;
-        $this->modelFactory    = $modelFactory;
     }
 
     /**

@@ -47,18 +47,14 @@ final class PopularAlbumAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private VideoRepositoryInterface $videoRepository;
-
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        VideoRepositoryInterface $videoRepository
+        ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
-        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

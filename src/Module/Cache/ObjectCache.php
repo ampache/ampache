@@ -25,20 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Cache;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 
 final class ObjectCache implements ObjectCacheInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
-    }
-
     public function compute(): void
     {
         $count_types = ['stream', 'download', 'skip'];

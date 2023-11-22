@@ -32,7 +32,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Album\Export;
 use Ampache\Repository\SongRepositoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * This runs through all of the albums and tries to dump the
@@ -42,20 +41,16 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
 {
     private ConfigContainerInterface $configContainer;
 
-    private LoggerInterface $logger;
-
     private ModelFactoryInterface $modelFactory;
 
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory,
         SongRepositoryInterface $songRepository
     ) {
         $this->configContainer = $configContainer;
-        $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
         $this->songRepository  = $songRepository;
     }

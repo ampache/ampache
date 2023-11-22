@@ -32,7 +32,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,14 +41,10 @@ final class ShowAddUserAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private UiInterface $ui;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        ConfigContainerInterface $configContainer
     ) {
         $this->configContainer = $configContainer;
-        $this->ui              = $ui;
     }
 
     /**

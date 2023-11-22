@@ -33,7 +33,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,18 +42,14 @@ final class AddShoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'add_shout';
 
-    private UiInterface $ui;
-
     private ResponseFactoryInterface $responseFactory;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        UiInterface $ui,
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer
     ) {
-        $this->ui              = $ui;
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;
     }

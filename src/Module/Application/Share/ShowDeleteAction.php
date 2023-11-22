@@ -34,7 +34,6 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ShowDeleteAction implements ApplicationActionInterface
 {
@@ -46,18 +45,15 @@ final class ShowDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
 
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger
+        UiInterface $ui
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

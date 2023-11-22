@@ -37,35 +37,24 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\User;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
 final class EditObjectAction extends AbstractEditAction
 {
     public const REQUEST_KEY = 'edit_object';
 
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
     private LabelRepositoryInterface $labelRepository;
 
     private LoggerInterface $logger;
 
     public function __construct(
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
         LabelRepositoryInterface $labelRepository,
         LoggerInterface $logger
     ) {
         parent::__construct($configContainer, $logger);
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
         $this->labelRepository = $labelRepository;
         $this->logger          = $logger;
     }

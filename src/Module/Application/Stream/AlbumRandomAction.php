@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -38,20 +37,16 @@ final class AlbumRandomAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'album_random';
 
-    private ModelFactoryInterface $modelFactory;
-
     private ConfigContainerInterface $configContainer;
 
     private AlbumRepositoryInterface $albumRepository;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         AlbumRepositoryInterface $albumRepository
     ) {
         parent::__construct($logger, $configContainer);
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
         $this->albumRepository = $albumRepository;
     }

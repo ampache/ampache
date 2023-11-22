@@ -25,26 +25,17 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Repository\Model\Album;
-use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\User;
 use RuntimeException;
 
 class Upload
 {
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker
-    ) {
-        $this->privilegeChecker = $privilegeChecker;
-    }
-
     /**
      * process
      */

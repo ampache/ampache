@@ -41,19 +41,12 @@ final class DefaultAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
-    /**
-     * @var ConfigContainerInterface
-     */
     private ConfigContainerInterface $configContainer;
 
-    /**
-     * @var UiInterface
-     */
     private UiInterface $ui;
-    /**
-     * @var AjaxUriRetrieverInterface
-     */
+
     private AjaxUriRetrieverInterface $ajaxUriRetriever;
+
 
     public function __construct(
         ConfigContainerInterface $configContainer,

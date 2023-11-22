@@ -47,7 +47,7 @@ final class ShowAddInstanceAction extends AbstractLocalPlayAction
         ConfigContainerInterface $configContainer,
         UiInterface $ui
     ) {
-        parent::__construct($configContainer, $ui);
+        parent::__construct($configContainer);
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
