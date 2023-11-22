@@ -50,16 +50,14 @@ class User_Playlist extends database_object
     public function __construct($user_id, $client = null)
     {
         if (!$user_id) {
-            return false;
+            return;
         }
         $client = $client ?? $this->get_latest();
         if (empty($client)) {
-            return false;
+            return;
         }
         $this->user   = (int)$user_id;
         $this->client = substr($client, 0, 254);
-
-        return true;
     } // __construct
 
     /**

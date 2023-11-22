@@ -54,12 +54,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     public function __construct($tag_id)
     {
         if (!$tag_id) {
-            return false;
+            return;
         }
 
         $info = $this->get_info($tag_id, static::DB_TABLENAME);
         if (empty($info)) {
-            return false;
+            return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -67,8 +67,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         // the ui is sometimes looking for a formatted name...
         $this->f_name = scrub_out($this->name);
-
-        return true;
     } // constructor
 
     public function getId(): int

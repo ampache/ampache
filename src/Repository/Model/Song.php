@@ -388,7 +388,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public function __construct($songid = null)
     {
         if ($songid === null) {
-            return false;
+            return;
         }
 
         $this->id = (int)($songid);
@@ -408,11 +408,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $this->total_count = (int)$this->total_count;
         } else {
             $this->id = null;
-
-            return false;
         }
-
-        return true;
     } // constructor
 
     public function getId(): int

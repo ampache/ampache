@@ -254,12 +254,12 @@ class AlbumDisk extends database_object implements library_item
     {
         $info = $this->get_info($album_disk_id, static::DB_TABLENAME);
         if (empty($info)) {
-            return false;
+            return;
         }
         // make sure the album is valid before going further
         $this->album = new Album($info['album_id']);
         if (!($this->album)) {
-            return false;
+            return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -287,8 +287,6 @@ class AlbumDisk extends database_object implements library_item
 
         // finally; set up your formatted name
         $this->f_name = $this->get_fullname();
-
-        return true;
     } // constructor
 
     public function getId(): int

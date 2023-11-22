@@ -69,8 +69,6 @@ class Rating extends database_object
     {
         $this->id   = (int)$rating_id;
         $this->type = $type;
-
-        return true;
     } // Constructor
 
     public function getId(): int

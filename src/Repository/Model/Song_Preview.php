@@ -82,11 +82,7 @@ class Song_Preview extends database_object implements Media, playable_item
             }
         } else {
             $this->id = null;
-
-            return false;
         }
-
-        return true;
     } // constructor
 
     public function getId(): int

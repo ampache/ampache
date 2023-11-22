@@ -58,7 +58,7 @@ class Bookmark extends database_object
     public function __construct($object_id, $object_type = null, $user_id = null)
     {
         if (!$object_id) {
-            return false;
+            return;
         }
 
         if ($object_type === null) {
@@ -69,14 +69,14 @@ class Bookmark extends database_object
                 $user_id = $user->id ?? 0;
             }
             if ($user_id === 0) {
-                return false;
+                return;
             }
 
             $sql        = "SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?";
             $db_results = Dba::read($sql, array($object_type, $object_id, $user_id));
 
             if (!$db_results) {
-                return false;
+                return;
             }
 
             $info = Dba::fetch_assoc($db_results);
@@ -85,7 +85,7 @@ class Bookmark extends database_object
             $this->$key = $value;
         }
 
-        return true;
+        return;
     }
 
     public function getId(): int

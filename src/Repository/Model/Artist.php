@@ -199,12 +199,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         /* If they failed to pass in an id, just run for it */
         if ($artist_id === null) {
-            return false;
+            return;
         }
 
         $info = $this->get_info($artist_id, static::DB_TABLENAME);
         if (empty($info)) {
-            return false;
+            return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -218,8 +218,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $this->song_count       = (int)$this->song_count;
         $this->catalog_id       = (int)$catalog_init;
         $this->get_fullname();
-
-        return true;
     } // constructor
 
     public function getId(): int

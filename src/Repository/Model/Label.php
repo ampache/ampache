@@ -120,14 +120,12 @@ class Label extends database_object implements library_item
     {
         $info = $this->get_info($label_id, static::DB_TABLENAME);
         if (empty($info)) {
-            return false;
+            return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
         $this->active = (int)$this->active;
-
-        return true;
     }
 
     public function getId(): int

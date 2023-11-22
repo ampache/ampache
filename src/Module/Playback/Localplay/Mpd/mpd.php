@@ -225,14 +225,14 @@ class mpd
         if (empty($this->host)) {
             $this->_error('construct', 'Host is empty');
 
-            return false;
+            return;
         }
 
         $response = $this->Connect();
         if (!$response) {
             $this->_error('construct', 'Could not connect');
 
-            return false;
+            return;
         }
 
         $version           = sscanf($response, self::RESPONSE_OK . " MPD %s\n");
@@ -243,18 +243,12 @@ class mpd
                 // bad password or command
                 $this->connected = false;
                 $this->_error('construct', 'Password supplied is incorrect or Invalid Command');
-
-                return false;
             }
         } elseif (!$this->RefreshInfo()) {
             // no read access, might as well be disconnected
             $this->connected = false;
             $this->_error('construct', 'Password required to access server');
-
-            return false;
         }
-
-        return true;
     } // constructor
 
     /**

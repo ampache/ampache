@@ -51,13 +51,11 @@ class Movie extends Video
 
         $info = $this->get_info($movie_id, static::DB_TABLENAME);
         if (empty($info)) {
-            return false;
+            return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     } // Constructor
 
     public function getId(): int

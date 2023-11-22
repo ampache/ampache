@@ -45,12 +45,7 @@ class Plugin
      */
     public function __construct($name)
     {
-        /* Load the plugin */
-        if (!$this->has_info($name)) {
-            return false;
-        }
-
-        return true;
+        $this->has_info($name);
     } // Constructor
 
     /**

@@ -49,15 +49,13 @@ class Useractivity extends database_object
     public function __construct($useract_id)
     {
         if (!$useract_id) {
-            return false;
+            return;
         }
 
         $info = $this->get_info($useract_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     } // Constructor
 
     public function getId(): int

@@ -93,13 +93,13 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public function __construct($episode_id = null)
     {
         if ($episode_id === null) {
-            return false;
+            return;
         }
 
         $this->id = (int)$episode_id;
         $info     = $this->get_info($this->id, static::DB_TABLENAME);
         if (empty($info)) {
-            return false;
+            return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -110,8 +110,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
         }
-
-        return true;
     } // constructor
 
     public function getId(): int

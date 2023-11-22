@@ -58,10 +58,7 @@ class Shoutbox
      */
     public function __construct($shout_id)
     {
-        // Load the data from the database
         $this->has_info($shout_id);
-
-        return true;
     } // Constructor
 
     public function getId(): int

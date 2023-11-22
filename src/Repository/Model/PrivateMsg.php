@@ -80,8 +80,6 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     }
 
     public function getId(): int

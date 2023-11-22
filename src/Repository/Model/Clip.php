@@ -53,8 +53,6 @@ class Clip extends Video
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     } // Constructor
 
     public function getId(): int

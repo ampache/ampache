@@ -72,15 +72,13 @@ class Podcast extends database_object implements library_item
     {
         /* If they failed to pass in an id, just run for it */
         if (!$podcast_id) {
-            return false;
+            return;
         }
 
         $info = $this->get_info($podcast_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     } // constructor
 
     public function getId(): int

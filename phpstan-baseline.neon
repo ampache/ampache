@@ -7656,16 +7656,6 @@ parameters:
 			path: src/Module/Authorization/Check/FunctionChecker.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authorization\\\\GuiGatekeeper\\:\\:getUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Authorization/GuiGatekeeper.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authorization\\\\GuiGatekeeperInterface\\:\\:getUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Authorization/GuiGatekeeperInterface.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:\\$description\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
@@ -7737,11 +7727,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:deleteSongs\\(\\) has parameter \\$songs with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:format\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -8156,11 +8141,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:get_media_tags\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
@@ -8346,11 +8326,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_dropbox.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:insert_song\\(\\) has parameter \\$dropbox with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_dropbox.php
@@ -8501,11 +8476,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:get_from_path\\(\\) has parameter \\$path with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
@@ -8646,11 +8616,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_remote.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_remote.php
-
-		-
 			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_remote.php
@@ -8712,11 +8677,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:format\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_subsonic.php
 
@@ -9606,11 +9566,6 @@ parameters:
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
@@ -10052,16 +10007,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:__construct\\(\\) has parameter \\$server with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 4
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -16446,16 +16391,6 @@ parameters:
 			path: src/Repository/AlbumRepositoryInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:_get_extra_info\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -16549,16 +16484,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 2
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:display_art\\(\\) has no return type specified\\.$#"
@@ -16921,16 +16846,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 2
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:add_artist_map\\(\\) has parameter \\$artist_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -17081,16 +16996,6 @@ parameters:
 			path: src/Repository/Model/Bookmark.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 3
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Bookmark.php
@@ -17144,11 +17049,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:display_art\\(\\) has no return type specified\\.$#"
@@ -17357,11 +17257,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:export\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:format\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -17831,11 +17726,6 @@ parameters:
 			path: src/Repository/Model/Clip.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:_get_artist_id\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
@@ -17971,11 +17861,6 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:format\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:get_cool_songs\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -18076,16 +17961,6 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -18166,27 +18041,12 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\License\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/License.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\License\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/License.php
 
 		-
 			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
 
@@ -18366,16 +18226,6 @@ parameters:
 			path: src/Repository/Model/Movie.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Movie.php
@@ -18434,11 +18284,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:insert\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -18641,16 +18486,6 @@ parameters:
 			path: src/Repository/Model/Plugin.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:get_ampache_db_version\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Plugin.php
@@ -18697,16 +18532,6 @@ parameters:
 
 		-
 			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
 
@@ -18877,16 +18702,6 @@ parameters:
 
 		-
 			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 2
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -19216,11 +19031,6 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\PrivateMsg\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/PrivateMsg.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\PrivateMsg\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/PrivateMsg.php
@@ -19354,11 +19164,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Repository/Model/Random.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
@@ -19656,11 +19461,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:delete_share\\(\\) has parameter \\$share_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Share.php
@@ -19781,11 +19581,6 @@ parameters:
 			path: src/Repository/Model/Shoutbox.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Shoutbox.php
@@ -19867,16 +19662,6 @@ parameters:
 
 		-
 			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 2
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -20281,16 +20066,6 @@ parameters:
 			path: src/Repository/Model/Song_Preview.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:build_cache\\(\\) has parameter \\$song_ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
@@ -20481,11 +20256,6 @@ parameters:
 			path: src/Repository/Model/TVShow_Episode.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Episode.php
@@ -20577,11 +20347,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:__construct\\(\\) has parameter \\$show_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Season.php
 
@@ -20721,16 +20486,6 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 2
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
@@ -20861,16 +20616,6 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:add_medias\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
@@ -20952,11 +20697,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:__construct\\(\\) has parameter \\$show_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/TvShow.php
 
@@ -21116,22 +20856,7 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) has parameter \\$catalog_filter_group with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:format\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
@@ -21321,16 +21046,6 @@ parameters:
 			path: src/Repository/Model/User_Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 2
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:add_items\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User_Playlist.php
@@ -21381,16 +21096,6 @@ parameters:
 			path: src/Repository/Model/User_Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Useractivity.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Useractivity.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:\\$action has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Useractivity.php
@@ -21419,11 +21124,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Useractivity.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Userflag.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
@@ -21467,16 +21167,6 @@ parameters:
 
 		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 2
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 
@@ -21691,17 +21381,7 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:accept\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:format\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
 

@@ -56,8 +56,6 @@ class Userflag extends database_object
     {
         $this->id   = (int)($object_id);
         $this->type = $type;
-
-        return true;
     } // Constructor
 
     public function getId(): int

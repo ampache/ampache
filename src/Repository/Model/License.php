@@ -56,10 +56,7 @@ class License
      */
     public function __construct($license_id)
     {
-        // Load the data from the database
         $this->has_info($license_id);
-
-        return true;
     } // Constructor
 
     public function getId(): int

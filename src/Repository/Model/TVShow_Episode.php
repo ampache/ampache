@@ -56,8 +56,6 @@ class TVShow_Episode extends Video
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     }
 
     public function getId(): int

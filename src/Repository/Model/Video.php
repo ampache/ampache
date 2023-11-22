@@ -236,12 +236,12 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function __construct($video_id = null)
     {
         if ($video_id === null) {
-            return false;
+            return;
         }
 
         $info = $this->get_info($video_id, static::DB_TABLENAME);
         if (empty($info)) {
-            return false;
+            return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -250,8 +250,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
         $data              = pathinfo($this->file);
         $this->type        = strtolower((string)($data['extension'] ?? ''));
         $this->total_count = (int)$this->total_count;
-
-        return true;
     } // Constructor
 
     public function getId(): int

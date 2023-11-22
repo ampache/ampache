@@ -106,13 +106,11 @@ class Live_Stream extends database_object implements Media, library_item
     {
         $info = $this->get_info($stream_id, static::DB_TABLENAME);
         if (empty($info)) {
-            return false;
+            return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     } // constructor
 
     public function getId(): int

@@ -60,7 +60,7 @@ class Tmp_Playlist extends database_object
     public function __construct($playlist_id = '')
     {
         if (!$playlist_id) {
-            return false;
+            return;
         }
 
         $this->id = (int)($playlist_id);
@@ -68,8 +68,6 @@ class Tmp_Playlist extends database_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     } // __construct
 
     public function getId(): int

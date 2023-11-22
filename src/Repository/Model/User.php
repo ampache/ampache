@@ -186,7 +186,7 @@ class User extends database_object
     public function __construct($user_id = 0)
     {
         if (!$user_id) {
-            return false;
+            return;
         }
 
         $info = $this->has_info((int)$user_id);
@@ -200,8 +200,6 @@ class User extends database_object
         if (strlen((string)$this->fullname) < 1) {
             $this->fullname = $this->username;
         }
-
-        return true;
     } // Constructor
 
     public function getId(): int

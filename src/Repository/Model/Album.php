@@ -269,7 +269,7 @@ class Album extends database_object implements library_item
     {
         $info = $this->get_info($album_id, static::DB_TABLENAME);
         if (empty($info)) {
-            return false;
+            return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -292,8 +292,6 @@ class Album extends database_object implements library_item
 
         // finally; set up your formatted name
         $this->f_name = $this->get_fullname();
-
-        return true;
     } // constructor
 
     public function getId(): int

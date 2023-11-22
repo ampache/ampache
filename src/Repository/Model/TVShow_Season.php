@@ -62,8 +62,6 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     } // constructor
 
     public function getId(): int

@@ -65,8 +65,6 @@ class TvShow extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     } // constructor
 
     public function getId(): int
