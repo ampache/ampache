@@ -77,8 +77,8 @@ final class GrantAction implements ApplicationActionInterface
                 in_array($plugin_name, Plugin::get_plugins('save_mediaplay'))
             ) {
                 // we receive a token for a valid plugin, have to call getSession and obtain a session key
-                if ($plugin = new Plugin($plugin_name)) {
-                    $plugin->load($user);
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->load($user)) {
                     if ($plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))) {
                         $title = T_('No Problem');
                         $text  = T_('Your account has been updated') . ' : ' . $plugin_name;
