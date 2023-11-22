@@ -330,7 +330,7 @@ class User extends database_object
      * []['title'] = uppercase type name
      * []['prefs'] = array(array('name', 'display', 'value'));
      * []['admin'] = t/f value if this is an admin only section
-     * @param int $type
+     * @param int|string $type
      * @param bool $system
      * @return array
      */
@@ -999,7 +999,7 @@ class User extends database_object
      * user object
      * @param bool $details
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         if (!$this->id) {
             return;

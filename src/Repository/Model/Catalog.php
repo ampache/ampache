@@ -966,7 +966,7 @@ abstract class Catalog extends database_object
      *
      * This makes the object human-readable.
      */
-    public function format()
+    public function format(): void
     {
         $this->get_fullname();
         $this->get_link();

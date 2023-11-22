@@ -448,7 +448,7 @@ class Wanted extends database_object
     /**
      * Format data.
      */
-    public function format()
+    public function format(): void
     {
         if ($this->artist) {
             $artist              = new Artist($this->artist);

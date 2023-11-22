@@ -87,7 +87,7 @@ class LocalPlay
      * This makes the Localplay/plugin information
      * human readable
      */
-    public function format()
+    public function format(): void
     {
         if (is_object($this->_player)) {
             $this->f_name        = ucfirst($this->type);

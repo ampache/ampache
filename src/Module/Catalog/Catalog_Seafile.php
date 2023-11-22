@@ -617,7 +617,7 @@ class Catalog_Seafile extends Catalog
      *
      * This makes the object human-readable.
      */
-    public function format()
+    public function format(): void
     {
         parent::format();
 

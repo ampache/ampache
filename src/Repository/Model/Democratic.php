@@ -134,7 +134,7 @@ class Democratic extends Tmp_Playlist
      * format
      * This makes the variables pretty so that they can be displayed
      */
-    public function format()
+    public function format(): void
     {
         $this->f_cooldown = $this->cooldown . ' ' . T_('minutes');
         $this->f_primary  = $this->primary ? T_('Primary') : '';
