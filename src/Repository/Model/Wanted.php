@@ -407,7 +407,7 @@ class Wanted extends database_object
                                 $song['album_mbid']  = $this->mbid;
 
                                 if ($this->artist) {
-                                    $artist = new Artist($this->artist);
+                                    $artist      = new Artist($this->artist);
                                     $artist_name = $artist->name;
                                 } elseif ($this->artist_mbid !== null) {
                                     $wartist     = Wanted::get_missing_artist($this->artist_mbid);
