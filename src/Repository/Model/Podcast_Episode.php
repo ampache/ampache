@@ -96,14 +96,14 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
             return;
         }
 
-        $this->id = (int)$episode_id;
-        $info     = $this->get_info($this->id, static::DB_TABLENAME);
+        $info = $this->get_info($this->id, static::DB_TABLENAME);
         if (empty($info)) {
             return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+        $this->id = (int)$episode_id;
         if (!empty($this->file)) {
             $data          = pathinfo($this->file);
             $this->type    = strtolower((string)$data['extension']);
