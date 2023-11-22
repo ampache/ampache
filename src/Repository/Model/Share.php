@@ -330,7 +330,7 @@ class Share extends database_object
      * @param User $user
      * @return PDOStatement|bool
      */
-    public function update(array $data, $user)
+    public function update(array $data, User $user)
     {
         $this->max_counter    = (int)($data['max_counter']);
         $this->expire_days    = (int)($data['expire']);
