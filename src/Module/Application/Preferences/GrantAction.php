@@ -70,41 +70,42 @@ final class GrantAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $plugin_name = mb_strtolower($this->requestParser->getFromRequest('plugin'));
+        if ($user !== null) {
+            $plugin_name = mb_strtolower($this->requestParser->getFromRequest('plugin'));
+            if (
+                $this->requestParser->getFromRequest('token') &&
+                in_array($plugin_name, Plugin::get_plugins('save_mediaplay'))
+            ) {
+                // we receive a token for a valid plugin, have to call getSession and obtain a session key
+                if ($plugin = new Plugin($plugin_name)) {
+                    $plugin->load($user);
+                    if ($plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))) {
+                        $title = T_('No Problem');
+                        $text  = T_('Your account has been updated') . ' : ' . $plugin_name;
+                    } else {
+                        $title = T_('There Was a Problem');
+                        $text  = T_('Your account has not been updated') . ' : ' . $plugin_name;
+                    }
+                    $next_url = sprintf(
+                        '%s/preferences.php?tab=plugins',
+                        $this->configContainer->getWebPath()
+                    );
 
-        if (
-            $this->requestParser->getFromRequest('token') &&
-            in_array($plugin_name, Plugin::get_plugins('save_mediaplay'))
-        ) {
-            // we receive a token for a valid plugin, have to call getSession and obtain a session key
-            if ($plugin = new Plugin($plugin_name)) {
-                $plugin->load($user);
-                if ($plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))) {
-                    $title = T_('No Problem');
-                    $text  = T_('Your account has been updated') . ' : ' . $plugin_name;
-                } else {
-                    $title = T_('There Was a Problem');
-                    $text  = T_('Your account has not been updated') . ' : ' . $plugin_name;
+                    $this->ui->showConfirmation($title, $text, $next_url);
+
+                    return null;
                 }
-                $next_url = sprintf(
-                    '%s/preferences.php?tab=plugins',
-                    $this->configContainer->getWebPath()
-                );
-
-                $this->ui->showConfirmation($title, $text, $next_url);
-
-                return null;
             }
-        }
 
-        $this->ui->show(
-            'show_preferences.inc.php',
-            [
-                'fullname' => $user->fullname,
-                'preferences' => $user->get_preferences($this->requestParser->getFromRequest('tab')),
-                'ui' => $this->ui,
-            ]
-        );
+            $this->ui->show(
+                'show_preferences.inc.php',
+                [
+                    'fullname' => $user->fullname,
+                    'preferences' => $user->get_preferences($this->requestParser->getFromRequest('tab')),
+                    'ui' => $this->ui,
+                ]
+            );
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

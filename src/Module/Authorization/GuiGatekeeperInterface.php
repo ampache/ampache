@@ -23,6 +23,8 @@
 
 namespace Ampache\Module\Authorization;
 
+use Ampache\Repository\Model\User;
+
 interface GuiGatekeeperInterface
 {
     /**
@@ -38,5 +40,5 @@ interface GuiGatekeeperInterface
     /**
      * Returns the currently logged in user
      */
-    public function getUser();
+    public function getUser(): ?User;
 }

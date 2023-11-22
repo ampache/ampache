@@ -37,6 +37,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -75,8 +76,10 @@ final class EditObjectAction extends AbstractEditAction
             return $data;
         };
 
-        /** @var User $user */
-        $user = $gatekeeper->getUser();
+        $user   = $gatekeeper->getUser();
+        $userId = ($user)
+            ? $user->getId()
+            : null;
 
         $entities($_POST);
         if (empty($object_type)) {
@@ -91,7 +94,7 @@ final class EditObjectAction extends AbstractEditAction
         $className = ObjectTypeToClassNameMapper::map((string)$object_type);
         /** @var library_item|Share $libitem */
         $libitem = new $className($_POST['id']);
-        if ($libitem->get_user_owner() === $user->getId() && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
+        if ($libitem->get_user_owner() === $userId && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
             // TODO: improve this uniqueness check
             if (isset($_POST['user'])) {
                 unset($_POST['user']);
@@ -129,7 +132,7 @@ final class EditObjectAction extends AbstractEditAction
             }
         }
 
-        if ($libitem instanceof Share) {
+        if ($libitem instanceof Share && $user !== null) {
             $libitem->update($_POST, $user);
         } else {
             // @todo: is it really necessary to call format before updating the object?

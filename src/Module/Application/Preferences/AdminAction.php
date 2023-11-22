@@ -52,17 +52,19 @@ final class AdminAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $tab = $request->getQueryParams()['tab'] ?? '';
-
-        $this->ui->showHeader();
-        $this->ui->show(
-            'show_preferences.inc.php',
-            [
-                'fullname' => T_('Server'),
-                'preferences' => $gatekeeper->getUser()->get_preferences($tab, true),
-                'ui' => $this->ui
-            ]
-        );
+        $tab  = $request->getQueryParams()['tab'] ?? '';
+        $user = $gatekeeper->getUser();
+        if ($user !== null) {
+            $this->ui->showHeader();
+            $this->ui->show(
+                'show_preferences.inc.php',
+                [
+                    'fullname' => T_('Server'),
+                    'preferences' => $user->get_preferences($tab, true),
+                    'ui' => $this->ui
+                ]
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

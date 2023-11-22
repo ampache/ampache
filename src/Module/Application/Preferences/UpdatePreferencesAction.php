@@ -98,15 +98,17 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
             display_notification($notification_text);
         }
 
-        // Show the default preferences page
-        $this->ui->show(
-            'show_preferences.inc.php',
-            [
-                'fullname' => $fullname,
-                'preferences' => $user->get_preferences($_REQUEST['tab'], $system),
-                'ui' => $this->ui
-            ]
-        );
+        if ($user !== null) {
+            // Show the default preferences page
+            $this->ui->show(
+                'show_preferences.inc.php',
+                [
+                    'fullname' => $fullname,
+                    'preferences' => $user->get_preferences($_REQUEST['tab'], $system),
+                    'ui' => $this->ui
+                ]
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
