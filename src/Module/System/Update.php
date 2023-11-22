@@ -1048,7 +1048,7 @@ class Update
      * @param string $category
      * @param null|string $subcategory
      */
-    private static function _write_preference($interactor, $name, $default, $description, $level, $type, $category, $subcategory = null): bool
+    private static function _write_preference($interactor, $name, $description, $default, $level, $type, $category, $subcategory = null): bool
     {
         if (Preference::insert($name, $description, $default, $level, $type, $category, $subcategory, true) === false) {
             if ($interactor) {
@@ -1134,8 +1134,8 @@ class Update
         }
 
         // Now add in the min_object_count preference and the random_method
-        self::_write_preference($interactor, 'bandwidth', '50', 'Bandwidth', 5, 'integer', 'interface');
-        self::_write_preference($interactor, 'features', '50', 'Features', 5, 'integer', 'interface');
+        self::_write_preference($interactor, 'bandwidth', 'Bandwidth', '50', 5, 'integer', 'interface');
+        self::_write_preference($interactor, 'features', 'Features', '50', 5, 'integer', 'interface');
 
         return true;
     }
@@ -1332,7 +1332,7 @@ class Update
      */
     private static function _update_360015(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'iframes', '1', 'Iframes', 25, 'boolean', 'interface');
+        return self::_write_preference($interactor, 'iframes', 'Iframes', '1', 25, 'boolean', 'interface');
     }
 
     /*
@@ -1342,7 +1342,7 @@ class Update
      */
     private static function _update_360016(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'now_playing_per_user', '1', 'Now playing filtered per user', 50, 'boolean', 'interface');
+        return self::_write_preference($interactor, 'now_playing_per_user', 'Now playing filtered per user', '1', 50, 'boolean', 'interface');
     }
 
     /**
@@ -1365,7 +1365,7 @@ class Update
      */
     private static function _update_360018(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'album_sort', '0', 'Album Default Sort', 25, 'string', 'interface');
+        return self::_write_preference($interactor, 'album_sort', 'Album Default Sort', '0', 25, 'string', 'interface');
     }
 
     /**
@@ -1375,7 +1375,7 @@ class Update
      */
     private static function _update_360019(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface');
+        return self::_write_preference($interactor, 'show_played_times', 'Show # played', '0', 25, 'string', 'interface');
     }
 
     /**
@@ -1438,7 +1438,7 @@ class Update
             return false;
         }
 
-        return self::_write_preference($interactor, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface');
+        return self::_write_preference($interactor, 'song_page_title', 'Show current song in Web player page title', '1', 25, 'boolean', 'interface');
     }
 
     /**
@@ -1464,10 +1464,10 @@ class Update
      */
     private static function _update_360023(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'subsonic_backend', '1', 'Use SubSonic backend', 100, 'boolean', 'system') === false) {
+        if (self::_write_preference($interactor, 'subsonic_backend', 'Use SubSonic backend', '1', 100, 'boolean', 'system') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'plex_backend', '0', 'Use Plex backend', 100, 'boolean', 'system') === false) {
+        if (self::_write_preference($interactor, 'plex_backend', 'Use Plex backend', '0', 100, 'boolean', 'system') === false) {
             return false;
         }
 
@@ -1491,10 +1491,10 @@ class Update
      */
     private static function _update_360025(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'webplayer_flash', '1', 'Authorize Flash Web Player(s)', 25, 'boolean', 'streaming') === false) {
+        if (self::_write_preference($interactor, 'webplayer_flash', 'Authorize Flash Web Player(s)', '1', 25, 'boolean', 'streaming') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'webplayer_html5', '1', 'Authorize HTML5 Web Player(s)', 25, 'boolean', 'streaming') === false) {
+        if (self::_write_preference($interactor, 'webplayer_html5', 'Authorize HTML5 Web Player(s)', '1', 25, 'boolean', 'streaming') === false) {
             return false;
         }
 
@@ -1518,7 +1518,7 @@ class Update
      */
     private static function _update_360027(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'allow_personal_info', '1', 'Allow to show my personal info to other users (now playing, recently played)', 25, 'boolean', 'interface');
+        return self::_write_preference($interactor, 'allow_personal_info', 'Allow to show my personal info to other users (now playing, recently played)', '1', 25, 'boolean', 'interface');
     }
 
     /**
@@ -1537,15 +1537,15 @@ class Update
         }
 
         // Insert new recently played preference
-        if (self::_write_preference($interactor, 'allow_personal_info_recent', '1', 'Personal information visibility - Recently played / actions', 25, 'boolean', 'interface') === false) {
+        if (self::_write_preference($interactor, 'allow_personal_info_recent', 'Personal information visibility - Recently played / actions', '1', 25, 'boolean', 'interface') === false) {
             return false;
         }
         // Insert streaming time preference
-        if (self::_write_preference($interactor, 'allow_personal_info_time', '1', 'Personal information visibility - Recently played - Allow to show streaming date/time', 25, 'boolean', 'interface') === false) {
+        if (self::_write_preference($interactor, 'allow_personal_info_time', 'Personal information visibility - Recently played - Allow to show streaming date/time', '1', 25, 'boolean', 'interface') === false) {
             return false;
         }
         // Insert streaming agent preference
-        if (self::_write_preference($interactor, 'allow_personal_info_agent', '1', 'Personal information visibility - Recently played - Allow to show streaming agent', 25, 'boolean', 'interface') === false) {
+        if (self::_write_preference($interactor, 'allow_personal_info_agent', 'Personal information visibility - Recently played - Allow to show streaming agent', '1', 25, 'boolean', 'interface') === false) {
             return false;
         }
 
@@ -1585,7 +1585,7 @@ class Update
      */
     private static function _update_360031(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface');
+        return self::_write_preference($interactor, 'ui_fixed', 'Fix header position on compatible themes', '0', 25, 'boolean', 'interface');
     }
 
     /**
@@ -1595,16 +1595,16 @@ class Update
      */
     private static function _update_360032(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system') === false) {
+        if (self::_write_preference($interactor, 'autoupdate', 'Check for Ampache updates automatically', '1', 100, 'boolean', 'system') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal') === false) {
+        if (self::_write_preference($interactor, 'autoupdate_lastcheck', 'AutoUpdate last check time', '', 25, 'string', 'internal') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal') === false) {
+        if (self::_write_preference($interactor, 'autoupdate_lastversion', 'AutoUpdate last version from last check', '', 25, 'string', 'internal') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal') === false) {
+        if (self::_write_preference($interactor, 'autoupdate_lastversion_new', 'AutoUpdate last version from last check is newer', '', 25, 'boolean', 'internal') === false) {
             return false;
         }
 
@@ -1634,10 +1634,10 @@ class Update
      */
     private static function _update_360034(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface') === false) {
+        if (self::_write_preference($interactor, 'webplayer_confirmclose', 'Confirmation when closing current playing window', '0', 25, 'boolean', 'interface') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'webplayer_pausetabs', '1', 'Auto-pause betweens tabs', 25, 'boolean', 'interface') === false) {
+        if (self::_write_preference($interactor, 'webplayer_pausetabs', 'Auto-pause betweens tabs', '1', 25, 'boolean', 'interface') === false) {
             return false;
         }
 
@@ -1656,7 +1656,7 @@ class Update
      */
     private static function _update_360035(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'stream_beautiful_url', '0', 'Use beautiful stream url', 100, 'boolean', 'streaming');
+        return self::_write_preference($interactor, 'stream_beautiful_url', 'Use beautiful stream url', '0', 100, 'boolean', 'streaming');
     }
 
     /**
@@ -1701,10 +1701,10 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'share', '0', 'Allow Share', 100, 'boolean', 'options') === false) {
+        if (self::_write_preference($interactor, 'share', 'Allow Share', '0', 100, 'boolean', 'options') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system') === false) {
+        if (self::_write_preference($interactor, 'share_expire', 'Share links default expiration days (0=never)', '7', 100, 'integer', 'system') === false) {
             return false;
         }
 
@@ -1786,7 +1786,7 @@ class Update
      */
     private static function _update_360043(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface');
+        return self::_write_preference($interactor, 'slideshow_time', 'Artist slideshow inactivity time', '0', 25, 'integer', 'interface');
     }
 
     /**
@@ -1829,7 +1829,7 @@ class Update
      */
     private static function _update_360046(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming');
+        return self::_write_preference($interactor, 'broadcast_by_default', 'Broadcast web player by default', '0', 25, 'boolean', 'streaming');
     }
 
     /**
@@ -1851,10 +1851,10 @@ class Update
      */
     private static function _update_360048(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface') === false) {
+        if (self::_write_preference($interactor, 'concerts_limit_future', 'Limit number of future events', '0', 25, 'integer', 'interface') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface') === false) {
+        if (self::_write_preference($interactor, 'concerts_limit_past', 'Limit number of past events', '0', 25, 'integer', 'interface') === false) {
             return false;
         }
 
@@ -1868,7 +1868,7 @@ class Update
      */
     private static function _update_360049(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'album_group', '0', 'Album - Group multiple disks', 25, 'boolean', 'interface');
+        return self::_write_preference($interactor, 'album_group', 'Album - Group multiple disks', '0', 25, 'boolean', 'interface');
     }
 
     /**
@@ -1878,7 +1878,7 @@ class Update
      */
     private static function _update_360050(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface');
+        return self::_write_preference($interactor, 'topmenu', 'Top menu', '0', 25, 'boolean', 'interface');
     }
 
     /**
@@ -1903,7 +1903,7 @@ class Update
             return false;
         }
 
-        return self::_write_preference($interactor, 'demo_clear_sessions', '0', 'Clear democratic votes of expired user sessions', 25, 'boolean', 'playlist');
+        return self::_write_preference($interactor, 'demo_clear_sessions', 'Clear democratic votes of expired user sessions', '0', 25, 'boolean', 'playlist');
     }
 
     /**
@@ -1923,7 +1923,7 @@ class Update
      */
     private static function _update_370003(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface');
+        return self::_write_preference($interactor, 'show_donate', 'Show donate button in footer', '1', 25, 'boolean', 'interface');
     }
 
     /**
@@ -1937,22 +1937,22 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        if (self::_write_preference($interactor, 'upload_catalog', '-1', 'Uploads catalog destination', 100, 'integer', 'system') === false) {
+        if (self::_write_preference($interactor, 'upload_catalog', 'Uploads catalog destination', '-1', 100, 'integer', 'system') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'allow_upload', '0', 'Allow users to upload media', 75, 'boolean', 'options') === false) {
+        if (self::_write_preference($interactor, 'allow_upload', 'Allow users to upload media', '0', 75, 'boolean', 'options') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'upload_subdir', '1', 'Upload: create a subdirectory per user (recommended)', 100, 'boolean', 'system') === false) {
+        if (self::_write_preference($interactor, 'upload_subdir', 'Upload: create a subdirectory per user (recommended)', '1', 100, 'boolean', 'system') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'upload_user_artist', '0', 'Upload: consider the user sender as the track\'s artist', 100, 'boolean', 'system') === false) {
+        if (self::_write_preference($interactor, 'upload_user_artist', 'Upload: consider the user sender as the track\'s artist', '0', 100, 'boolean', 'system') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'upload_script', '', 'Upload: run the following script after upload (current directory = upload target directory)', 100, 'string', 'system') === false) {
+        if (self::_write_preference($interactor, 'upload_script', 'Upload: run the following script after upload (current directory = upload target directory)', '', 100, 'string', 'system') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'upload_allow_edit', '1', 'Upload: allow users to edit uploaded songs', 100, 'boolean', 'system') === false) {
+        if (self::_write_preference($interactor, 'upload_allow_edit', 'Upload: allow users to edit uploaded songs', '1', 100, 'boolean', 'system') === false) {
             return false;
         }
         $sql_array = array(
@@ -2013,10 +2013,10 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        if (self::_write_preference($interactor, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system') === false) {
+        if (self::_write_preference($interactor, 'daap_backend', 'Use DAAP backend', '0', 100, 'boolean', 'system') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system') === false) {
+        if (self::_write_preference($interactor, 'daap_pass', 'DAAP backend password', '', 100, 'string', 'system') === false) {
             return false;
         }
         $sql = "CREATE TABLE IF NOT EXISTS `daap_session` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `creationdate` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
@@ -2031,7 +2031,7 @@ class Update
      */
     private static function _update_370008(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system');
+        return self::_write_preference($interactor, 'upnp_backend', 'Use UPnP backend', '0', 100, 'boolean', 'system');
     }
 
     /**
@@ -2059,7 +2059,7 @@ class Update
             }
         }
 
-        return self::_write_preference($interactor, 'allow_video', '1', 'Allow video features', 75, 'integer', 'options');
+        return self::_write_preference($interactor, 'allow_video', 'Allow video features', '1', 75, 'integer', 'options');
     }
 
     /**
@@ -2114,7 +2114,7 @@ class Update
             return false;
         }
 
-        return self::_write_preference($interactor, 'allow_video', '1', 'Allow video features', 75, 'integer', 'options');
+        return self::_write_preference($interactor, 'allow_video', 'Allow video features', '1', 75, 'integer', 'options');
     }
 
     /**
@@ -2129,7 +2129,7 @@ class Update
             return false;
         }
 
-        return self::_write_preference($interactor, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface');
+        return self::_write_preference($interactor, 'ajax_load', 'Ajax page load', '1', 25, 'boolean', 'interface');
     }
 
     /**
@@ -2162,7 +2162,7 @@ class Update
      */
     private static function _update_370016(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface');
+        return self::_write_preference($interactor, 'direct_play_limit', 'Limit direct play to maximum media count', '0', 25, 'integer', 'interface');
     }
 
     /**
@@ -2172,16 +2172,16 @@ class Update
      */
     private static function _update_370017(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'home_moment_albums', '1', 'Show Albums of the moment at home page', 25, 'integer', 'interface') === false) {
+        if (self::_write_preference($interactor, 'home_moment_albums', 'Show Albums of the moment at home page', '1', 25, 'integer', 'interface') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'home_moment_videos', '1', 'Show Videos of the moment at home page', 25, 'integer', 'interface') === false) {
+        if (self::_write_preference($interactor, 'home_moment_videos', 'Show Videos of the moment at home page', '1', 25, 'integer', 'interface') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'home_now_playing', '1', 'Show Now Playing at home page', 25, 'integer', 'interface') === false) {
+        if (self::_write_preference($interactor, 'home_now_playing', 'Show Now Playing at home page', '1', 25, 'integer', 'interface') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'custom_logo', '', 'Custom logo url', 25, 'string', 'interface') === false) {
+        if (self::_write_preference($interactor, 'custom_logo', 'Custom logo url', '', 25, 'string', 'interface') === false) {
             return false;
         }
 
@@ -2239,7 +2239,7 @@ class Update
      */
     private static function _update_370019(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type Sort', 25, 'string', 'interface');
+        return self::_write_preference($interactor, 'album_release_type_sort', 'Album - Group per release type Sort', 'album,ep,live,single', 25, 'string', 'interface');
     }
 
     /**
@@ -2249,10 +2249,10 @@ class Update
      */
     private static function _update_370020(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'browser_notify', '1', 'WebPlayer browser notifications', 25, 'integer', 'interface') === false) {
+        if (self::_write_preference($interactor, 'browser_notify', 'WebPlayer browser notifications', '1', 25, 'integer', 'interface') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'browser_notify_timeout', '10', 'WebPlayer browser notifications timeout (seconds)', 25, 'integer', 'interface') === false) {
+        if (self::_write_preference($interactor, 'browser_notify_timeout', 'WebPlayer browser notifications timeout (seconds)', '10', 25, 'integer', 'interface') === false) {
             return false;
         }
 
@@ -2285,7 +2285,7 @@ class Update
             return false;
         }
 
-        return self::_write_preference($interactor, 'geolocation', '0', 'Allow geolocation', 25, 'integer', 'options');
+        return self::_write_preference($interactor, 'geolocation', 'Allow geolocation', '0', 25, 'integer', 'options');
     }
 
     /**
@@ -2295,7 +2295,7 @@ class Update
      */
     private static function _update_370023(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming');
+        return self::_write_preference($interactor, 'webplayer_aurora', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', '1', 25, 'boolean', 'streaming');
     }
 
     /**
@@ -2392,7 +2392,7 @@ class Update
      */
     private static function _update_370030(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 100, 'boolean', 'system');
+        return self::_write_preference($interactor, 'upload_allow_remove', 'Upload: allow users to remove uploaded songs', '1', 100, 'boolean', 'system');
     }
 
     /**
@@ -2402,13 +2402,13 @@ class Update
      */
     private static function _update_370031(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface') === false) {
+        if (self::_write_preference($interactor, 'custom_login_logo', 'Custom login page logo url', '', 75, 'string', 'interface') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'custom_favicon', '', 'Custom favicon url', 75, 'string', 'interface') === false) {
+        if (self::_write_preference($interactor, 'custom_favicon', 'Custom favicon url', '', 75, 'string', 'interface') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface') === false) {
+        if (self::_write_preference($interactor, 'custom_text_footer', 'Custom text footer', '', 75, 'string', 'interface') === false) {
             return false;
         }
 
@@ -2422,7 +2422,7 @@ class Update
      */
     private static function _update_370032(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system');
+        return self::_write_preference($interactor, 'webdav_backend', 'Use WebDAV backend', '0', 100, 'boolean', 'system');
     }
 
     /**
@@ -2463,7 +2463,7 @@ class Update
             return false;
         }
 
-        return self::_write_preference($interactor, 'notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options');
+        return self::_write_preference($interactor, 'notify_email', 'Receive notifications by email (shouts, private messages, ...)', '0', 25, 'boolean', 'options');
     }
 
     /**
@@ -2503,7 +2503,7 @@ class Update
      */
     private static function _update_370038(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'theme_color', 'dark', 'Theme color',0, 'special', 'interface');
+        return self::_write_preference($interactor, 'theme_color', 'Theme color', 'dark', 0, 'special', 'interface');
     }
 
     /**
@@ -2548,10 +2548,10 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)', 100, 'string', 'system') === false) {
+        if (self::_write_preference($interactor, 'disabled_custom_metadata_fields', 'Disable custom metadata fields (ctrl / shift click to select multiple)', '', 100, 'string', 'system') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'disabled_custom_metadata_fields_input', '', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', 100, 'string', 'system') === false) {
+        if (self::_write_preference($interactor, 'disabled_custom_metadata_fields_input', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', '', 100, 'string', 'system') === false) {
             return false;
         }
 
@@ -2576,10 +2576,10 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'podcast_keep', '10', 'Podcast: # latest episodes to keep', 100, 'integer', 'system') === false) {
+        if (self::_write_preference($interactor, 'podcast_keep', 'Podcast: # latest episodes to keep', '10', 100, 'integer', 'system') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'podcast_new_download', '1', 'Podcast: # episodes to download when new episodes are available', 100, 'integer', 'system') === false) {
+        if (self::_write_preference($interactor, 'podcast_new_download', 'Podcast: # episodes to download when new episodes are available', '1', 100, 'integer', 'system') === false) {
             return false;
         }
         $sql = "ALTER TABLE `rating` CHANGE `object_type` `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') NULL";
@@ -2639,7 +2639,7 @@ class Update
      */
     private static function _update_380006(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'libitem_contextmenu', '1', 'Library item context menu',0, 'boolean', 'interface', 'library');
+        return self::_write_preference($interactor, 'libitem_contextmenu', 'Library item context menu', '1', 0, 'boolean', 'interface', 'library');
     }
 
     /**
@@ -2649,10 +2649,10 @@ class Update
      */
     private static function _update_380007(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload') === false) {
+        if (self::_write_preference($interactor, 'upload_catalog_pattern', 'Rename uploaded file according to catalog pattern', '0', 100, 'boolean', 'system', 'upload') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', 100, 'boolean', 'system', 'catalog') === false) {
+        if (self::_write_preference($interactor, 'catalog_check_duplicate', 'Check library item at import time and disable duplicates', '0', 100, 'boolean', 'system', 'catalog') === false) {
             return false;
         }
 
@@ -2666,10 +2666,10 @@ class Update
      */
     private static function _update_380008(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'library') === false) {
+        if (self::_write_preference($interactor, 'browse_filter', 'Show filter box on browse', '0', 25, 'boolean', 'interface', 'library') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme') === false) {
+        if (self::_write_preference($interactor, 'sidebar_light', 'Light sidebar by default', '0', 25, 'boolean', 'interface', 'theme') === false) {
             return false;
         }
 
@@ -2693,13 +2693,13 @@ class Update
      */
     private static function _update_380010(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom') === false) {
+        if (self::_write_preference($interactor, 'custom_blankalbum', 'Custom blank album default image', '', 75, 'string', 'interface', 'custom') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom') === false) {
+        if (self::_write_preference($interactor, 'custom_blankmovie', 'Custom blank video default image', '', 75, 'string', 'interface', 'custom') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'library') === false) {
+        if (self::_write_preference($interactor, 'libitem_browse_alpha', 'Alphabet browsing by default for following library items (album,artist,...)', '', 75, 'string', 'interface', 'library') === false) {
             return false;
         }
 
@@ -2977,10 +2977,10 @@ class Update
      */
     private static function _update_400007(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'library') === false) {
+        if (self::_write_preference($interactor, 'show_skipped_times', 'Show # skipped', '0', 25, 'boolean', 'interface', 'library') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom') === false) {
+        if (self::_write_preference($interactor, 'custom_datetime', 'Custom datetime', '', 25, 'string', 'interface', 'custom') === false) {
             return false;
         }
 
@@ -2994,7 +2994,7 @@ class Update
      */
     private static function _update_400008(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog') === false) {
+        if (self::_write_preference($interactor, 'cron_cache', 'Cache computed SQL data (eg. media hits stats) using a cron', '0', 100, 'boolean', 'system', 'catalog') === false) {
             return false;
         }
 
@@ -3021,7 +3021,7 @@ class Update
      */
     private static function _update_400009(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist');
+        return self::_write_preference($interactor, 'unique_playlist', 'Only add unique items to playlists', '0', 25, 'boolean', 'playlist');
     }
 
     /**
@@ -3154,7 +3154,7 @@ class Update
      */
     private static function _update_400019(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home');
+        return self::_write_preference($interactor, 'of_the_moment', 'Set the amount of items Album/Video of the Moment will display', '6', 25, 'integer', 'interface', 'home');
     }
 
     /**
@@ -3164,7 +3164,7 @@ class Update
      */
     private static function _update_400020(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom');
+        return self::_write_preference($interactor, 'custom_login_background', 'Custom URL - Login page background', '', 75, 'string', 'interface', 'custom');
     }
 
     /**
@@ -3437,7 +3437,7 @@ class Update
             return false;
         }
 
-        return self::_write_preference($interactor, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse');
+        return self::_write_preference($interactor, 'show_license', 'Show License', '1', 25, 'boolean', 'interface', 'browse');
     }
 
     /**
@@ -3475,7 +3475,7 @@ class Update
      */
     private static function _update_500009(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse');
+        return self::_write_preference($interactor, 'use_original_year', 'Browse by Original Year for albums (falls back to Year)', '0', 25, 'boolean', 'interface', 'browse');
     }
 
     /**
@@ -3485,7 +3485,7 @@ class Update
      */
     private static function _update_500010(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse');
+        return self::_write_preference($interactor, 'hide_single_artist', 'Hide the Song Artist column for Albums with one Artist', '0', 25, 'boolean', 'interface', 'browse');
     }
 
     /**
@@ -3622,7 +3622,7 @@ class Update
      */
     private static function _update_500015(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse');
+        return self::_write_preference($interactor, 'hide_genres', 'Hide the Genre column in browse table rows', '0', 25, 'boolean', 'interface', 'browse');
     }
 
     /**
@@ -3684,7 +3684,7 @@ class Update
      */
     private static function _update_510005(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic');
+        return self::_write_preference($interactor, 'subsonic_always_download', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', '0', 25, 'boolean', 'options', 'subsonic');
     }
 
     /**
@@ -3695,16 +3695,16 @@ class Update
      */
     private static function _update_520000(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'api_enable_3', '1', 'Enable API3 responses', 25, 'boolean', 'options') === false) {
+        if (self::_write_preference($interactor, 'api_enable_3', 'Enable API3 responses', '1', 25, 'boolean', 'options') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'api_enable_4', '1', 'Enable API4 responses', 25, 'boolean', 'options') === false) {
+        if (self::_write_preference($interactor, 'api_enable_4', 'Enable API4 responses', '1', 25, 'boolean', 'options') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'api_enable_5', '1', 'Enable API5 responses', 25, 'boolean', 'options') === false) {
+        if (self::_write_preference($interactor, 'api_enable_5', 'Enable API5 responses', '1', 25, 'boolean', 'options') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'api_force_version', '0', 'Force a specific API response (even if that version is disabled)', 25, 'special', 'options') === false) {
+        if (self::_write_preference($interactor, 'api_force_version', 'Force a specific API response (even if that version is disabled)', '0', 25, 'special', 'options') === false) {
             return false;
         }
 
@@ -3743,7 +3743,7 @@ class Update
      */
     private static function _update_520002(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse');
+        return self::_write_preference($interactor, 'show_playlist_username', 'Show playlist owner username in titles', '1', 25, 'boolean', 'interface', 'browse');
     }
 
     /**
@@ -3753,7 +3753,7 @@ class Update
      */
     private static function _update_520003(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options');
+        return self::_write_preference($interactor, 'api_hidden_playlists', 'Hide playlists in Subsonic and API clients that start with this string', '', 25, 'string', 'options');
     }
 
     /**
@@ -3775,7 +3775,7 @@ class Update
      */
     private static function _update_520005(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options');
+        return self::_write_preference($interactor, 'api_hide_dupe_searches', 'Hide smartlists that match playlist names in Subsonic and API clients', '0', 25, 'boolean', 'options');
     }
 
     /**
@@ -4135,10 +4135,10 @@ class Update
      */
     private static function _update_530015(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme') === false) {
+        if (self::_write_preference($interactor, 'show_album_artist', 'Show \'Album Artists\' link in the main sidebar', '1', 25, 'boolean', 'interface', 'theme') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme') === false) {
+        if (self::_write_preference($interactor, 'show_artist', 'Show \'Artists\' link in the main sidebar', '0', 25, 'boolean', 'interface', 'theme') === false) {
             return false;
         }
 
@@ -4349,7 +4349,7 @@ class Update
      */
     private static function _update_550003(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 25, 'boolean', 'playlist');
+        return self::_write_preference($interactor, 'demo_use_search', 'Democratic - Use smartlists for base playlist', '0', 25, 'boolean', 'playlist');
     }
 
     /** _update_550004
@@ -4391,7 +4391,7 @@ class Update
      */
     private static function _update_600001(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player');
+        return self::_write_preference($interactor, 'webplayer_removeplayed', 'Remove tracks before the current playlist item in the webplayer when played', '0', 25, 'special', 'streaming', 'player');
     }
 
     /** _update_600002
@@ -4705,7 +4705,7 @@ class Update
      */
     private static function _update_600013(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'api_enable_6', '1', 'Enable API6 responses', 25, 'boolean', 'options');
+        return self::_write_preference($interactor, 'api_enable_6', 'Enable API6 responses', '1', 25, 'boolean', 'options');
     }
 
     /**
@@ -4842,7 +4842,7 @@ class Update
      */
     private static function _update_600023(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'upload_access_level', '25', 'Upload Access Level', 100, 'special', 'system', 'upload');
+        return self::_write_preference($interactor, 'upload_access_level', 'Upload Access Level', '25', 100, 'special', 'system', 'upload');
     }
 
     /**
@@ -4853,10 +4853,10 @@ class Update
      */
     private static function _update_600024(Interactor $interactor = null): bool
     {
-        if (self::_write_preference($interactor, 'show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse') === false) {
+        if (self::_write_preference($interactor, 'show_subtitle', 'Show Album subtitle on links (if available)', '1', 25, 'boolean', 'interface', 'browse') === false) {
             return false;
         }
-        if (self::_write_preference($interactor, 'show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse') === false) {
+        if (self::_write_preference($interactor, 'show_original_year', 'Show Album original year on links (if available)', '1', 25, 'boolean', 'interface', 'browse') === false) {
             return false;
         }
 
@@ -4870,7 +4870,7 @@ class Update
      */
     private static function _update_600025(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface');
+        return self::_write_preference($interactor, 'show_header_login', 'Show the login / registration links in the site header', '1', 100, 'boolean', 'system', 'interface');
     }
 
     /** _update_600026
@@ -4879,7 +4879,7 @@ class Update
      */
     private static function _update_600026(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player');
+        return self::_write_preference($interactor, 'use_play2', 'Use an alternative playback action for streaming if you have issues with playing music', '0', 25, 'special', 'streaming', 'player');
     }
 
     /**
@@ -5060,7 +5060,7 @@ class Update
      */
     private static function _update_600039(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', 25, 'string', 'interface', 'custom');
+        return self::_write_preference($interactor, 'custom_timezone', 'Custom timezone (Override PHP date.timezone)', '', 25, 'string', 'interface', 'custom');
     }
 
     /** _update_600040
@@ -5104,7 +5104,7 @@ class Update
      */
     private static function _update_600042(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'bookmark_latest', '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options');
+        return self::_write_preference($interactor, 'bookmark_latest', 'Only keep the latest media bookmark', '0', 25, 'boolean', 'options');
     }
 
     /** _update_600043
@@ -5119,7 +5119,7 @@ class Update
             return false;
         }
 
-        return self::_write_preference($interactor, 'jp_volume', 0.80, 'Default webplayer volume', 25, 'special', 'streaming', 'player');
+        return self::_write_preference($interactor, 'jp_volume', 'Default webplayer volume', 0.80, 25, 'special', 'streaming', 'player');
     }
 
     /** _update_600044
@@ -5128,6 +5128,6 @@ class Update
      */
     private static function _update_600044(Interactor $interactor = null): bool
     {
-        return self::_write_preference($interactor, 'perpetual_api_session', '0', 'API sessions do not expire', 100, 'boolean', 'system', 'backend');
+        return self::_write_preference($interactor, 'perpetual_api_session', 'API sessions do not expire', '0', 100, 'boolean', 'system', 'backend');
     }
 } // end update.class
