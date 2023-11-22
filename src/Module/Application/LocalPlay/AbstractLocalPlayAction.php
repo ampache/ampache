@@ -31,7 +31,6 @@ use Ampache\Module\Application\Exception\ApplicationException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,14 +38,10 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
 {
     private ConfigContainerInterface $configContainer;
 
-    private UiInterface $ui;
-
     protected function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        ConfigContainerInterface $configContainer
     ) {
         $this->configContainer = $configContainer;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

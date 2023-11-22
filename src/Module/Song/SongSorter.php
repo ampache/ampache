@@ -32,7 +32,6 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -43,16 +42,12 @@ final class SongSorter implements SongSorterInterface
 
     private LoggerInterface $logger;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory
+        LoggerInterface $logger
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
-        $this->modelFactory    = $modelFactory;
     }
 
     public function sort(

@@ -35,14 +35,11 @@ final class DownloadAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'download';
 
-    private LoggerInterface $logger;
-
     public function __construct(
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer
     ) {
         parent::__construct($logger, $configContainer);
-        $this->logger = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

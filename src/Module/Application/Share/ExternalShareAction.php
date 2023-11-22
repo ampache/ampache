@@ -38,7 +38,6 @@ use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,8 +51,6 @@ final class ExternalShareAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private UiInterface $ui;
-
     private PasswordGeneratorInterface $passwordGenerator;
 
     private ResponseFactoryInterface $responseFactory;
@@ -63,14 +60,12 @@ final class ExternalShareAction implements ApplicationActionInterface
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
         PasswordGeneratorInterface $passwordGenerator,
         ResponseFactoryInterface $responseFactory,
         FunctionCheckerInterface $functionChecker
     ) {
         $this->requestParser     = $requestParser;
         $this->configContainer   = $configContainer;
-        $this->ui                = $ui;
         $this->passwordGenerator = $passwordGenerator;
         $this->responseFactory   = $responseFactory;
         $this->functionChecker   = $functionChecker;

@@ -38,7 +38,6 @@ use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -51,19 +50,15 @@ final class AddUserAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private UiInterface $ui;
-
     private UserRepositoryInterface $userRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
         UserRepositoryInterface $userRepository
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
         $this->userRepository  = $userRepository;
     }
 

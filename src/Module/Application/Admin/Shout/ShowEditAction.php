@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Shout;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;

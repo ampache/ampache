@@ -29,9 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Repository\Model\database_object;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,31 +44,25 @@ final class ShowEditPlaylistAction extends AbstractEditAction
 
     private StreamFactoryInterface $streamFactory;
 
-    private AjaxUriRetrieverInterface $ajaxUriRetriever;
 
     private TalFactoryInterface $talFactory;
 
     private GuiFactoryInterface $guiFactory;
 
-    private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        AjaxUriRetrieverInterface $ajaxUriRetriever,
         TalFactoryInterface $talFactory,
-        GuiFactoryInterface $guiFactory,
-        ModelFactoryInterface $modelFactory
+        GuiFactoryInterface $guiFactory
     ) {
         parent::__construct($configContainer, $logger);
         $this->responseFactory  = $responseFactory;
         $this->streamFactory    = $streamFactory;
-        $this->ajaxUriRetriever = $ajaxUriRetriever;
         $this->talFactory       = $talFactory;
         $this->guiFactory       = $guiFactory;
-        $this->modelFactory     = $modelFactory;
     }
 
     protected function handle(

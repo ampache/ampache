@@ -33,10 +33,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\Util\Horde_Browser;
-use Ampache\Module\Util\UiInterface;
-use Mockery;
 use Mockery\MockInterface;
-use org\bovigo\vfs\DirectoryIterationTestCase;
 use org\bovigo\vfs\vfsStream;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -55,9 +52,6 @@ class GenerateConfigActionTest extends MockeryTestCase
     /** @var InstallationHelperInterface|MockInterface|null */
     private MockInterface $installationHelper;
 
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
     /** @var ResponseFactoryInterface|MockInterface|null */
     private MockInterface $responseFactory;
 
@@ -71,7 +65,6 @@ class GenerateConfigActionTest extends MockeryTestCase
         $this->configContainer    = $this->mock(ConfigContainerInterface::class);
         $this->browser            = $this->mock(Horde_Browser::class);
         $this->installationHelper = $this->mock(InstallationHelperInterface::class);
-        $this->ui                 = $this->mock(UiInterface::class);
         $this->responseFactory    = $this->mock(ResponseFactoryInterface::class);
         $this->streamFactory      = $this->mock(StreamFactoryInterface::class);
 
@@ -79,7 +72,6 @@ class GenerateConfigActionTest extends MockeryTestCase
             $this->configContainer,
             $this->browser,
             $this->installationHelper,
-            $this->ui,
             $this->responseFactory,
             $this->streamFactory
         );

@@ -40,8 +40,6 @@ final class DemocraticAction extends AbstractStreamAction
 
     private RequestParserInterface $requestParser;
 
-    private LoggerInterface $logger;
-
     private ConfigContainerInterface $configContainer;
 
     private ModelFactoryInterface $modelFactory;
@@ -53,7 +51,6 @@ final class DemocraticAction extends AbstractStreamAction
         ModelFactoryInterface $modelFactory
     ) {
         $this->requestParser   = $requestParser;
-        $this->logger          = $logger;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
 

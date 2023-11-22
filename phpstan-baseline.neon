@@ -521,11 +521,6 @@ parameters:
 			path: src/Gui/TalViewInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Album\\\\Export\\\\AlbumArtExporter\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Album/Export/AlbumArtExporter.php
-
-		-
 			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
 			count: 1
 			path: src/Module/Album/Export/Writer/LinuxMetadataWriter.php
@@ -876,16 +871,6 @@ parameters:
 			path: src/Module/Api/Edit/EditObjectAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Edit\\\\EditObjectAction\\:\\:\\$responseFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Edit\\\\EditObjectAction\\:\\:\\$streamFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, string\\|false\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/RefreshUpdatedAction.php
@@ -899,16 +884,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/ShowEditObjectAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Edit\\\\ShowEditPlaylistAction\\:\\:\\$ajaxUriRetriever is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/ShowEditPlaylistAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Edit\\\\ShowEditPlaylistAction\\:\\:\\$modelFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/ShowEditPlaylistAction.php
 
 		-
 			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
@@ -6361,11 +6336,6 @@ parameters:
 			path: src/Module/Application/Admin/Export/ExportAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Admin\\\\Export\\\\ExportAction\\:\\:\\$ui is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Export/ExportAction.php
-
-		-
 			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 1
 			path: src/Module/Application/Admin/Filter/AddFilterAction.php
@@ -6521,11 +6491,6 @@ parameters:
 			path: src/Module/Application/Admin/System/GenerateConfigAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Admin\\\\System\\\\GenerateConfigAction\\:\\:\\$ui is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/System/GenerateConfigAction.php
-
-		-
 			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 6
 			path: src/Module/Application/Admin/User/AddUserAction.php
@@ -6554,11 +6519,6 @@ parameters:
 			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 1
 			path: src/Module/Application/Album/SetTrackNumbersAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Album\\\\ShowDiskAction\\:\\:\\$albumRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Album/ShowDiskAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$instance of static method Ampache\\\\Module\\\\Util\\\\InterfaceImplementationChecker\\:\\:is_library_item\\(\\) expects string, string\\|false\\|null given\\.$#"
@@ -6609,11 +6569,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$mbid of static method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_artist\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/Artist/ShowMissingAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Artist\\\\UpdateFromTagsAction\\:\\:\\$modelFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Artist/UpdateFromTagsAction.php
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$enabled\\.$#"
@@ -6696,21 +6651,6 @@ parameters:
 			path: src/Module/Application/LocalPlay/AbstractLocalPlayAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\LocalPlay\\\\AbstractLocalPlayAction\\:\\:\\$ui is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/LocalPlay/AbstractLocalPlayAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\LocalPlay\\\\AddInstanceAction\\:\\:\\$ui is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/LocalPlay/AddInstanceAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\LocalPlay\\\\UpdateInstanceAction\\:\\:\\$ui is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/LocalPlay/UpdateInstanceAction.php
-
-		-
 			message: "#^Cannot call method is_logged_in\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
 			count: 1
 			path: src/Module/Application/Login/DefaultAction.php
@@ -6732,11 +6672,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/LostPassword/SendAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\LostPassword\\\\SendAction\\:\\:\\$ui is never read, only written\\.$#"
 			count: 1
 			path: src/Module/Application/LostPassword/SendAction.php
 
@@ -7066,19 +7001,9 @@ parameters:
 			path: src/Module/Application/Register/AddUserAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Register\\\\AddUserAction\\:\\:\\$ui is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Register/AddUserAction.php
-
-		-
 			message: "#^Variable \\$captcha in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 2
 			path: src/Module/Application/Register/AddUserAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Register\\\\ShowAddUserAction\\:\\:\\$ui is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Register/ShowAddUserAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$string of function trim expects string, array\\|string given\\.$#"
@@ -7111,24 +7036,9 @@ parameters:
 			path: src/Module/Application/Share/ExternalShareAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Share\\\\ExternalShareAction\\:\\:\\$ui is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Share/ExternalShareAction.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with non\\-falsy\\-string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Application/Share/ShowCreateAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Share\\\\ShowDeleteAction\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Share/ShowDeleteAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Shout\\\\AddShoutAction\\:\\:\\$ui is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Shout/AddShoutAction.php
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$id\\.$#"
@@ -7156,86 +7066,6 @@ parameters:
 			path: src/Module/Application/StatisticGraph/ShowAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\PopularAlbumAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/PopularAlbumAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\PopularAlbumArtistAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/PopularAlbumArtistAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\PopularAlbumDiskAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/PopularAlbumDiskAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\PopularArtistAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/PopularArtistAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\PopularPlaylistAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/PopularPlaylistAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\PopularPodcastEpisodeAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/PopularPodcastEpisodeAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\PopularSongAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/PopularSongAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\ShowAction\\:\\:\\$modelFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/ShowAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\UserflagAlbumAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/UserflagAlbumAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\UserflagAlbumArtistAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/UserflagAlbumArtistAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\UserflagAlbumDiskAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/UserflagAlbumDiskAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\UserflagArtistAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/UserflagArtistAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\UserflagPlaylistAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/UserflagPlaylistAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\UserflagPodcastEpisodeAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/UserflagPodcastEpisodeAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\UserflagSongAction\\:\\:\\$videoRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/UserflagSongAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stats\\\\WantedAction\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/WantedAction.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Stream\\\\AbstractStreamAction\\:\\:stream\\(\\) has parameter \\$mediaIds with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Application/Stream/AbstractStreamAction.php
@@ -7244,21 +7074,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Stream\\\\AbstractStreamAction\\:\\:stream\\(\\) has parameter \\$urls with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Application/Stream/AbstractStreamAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stream\\\\AlbumRandomAction\\:\\:\\$modelFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stream/AlbumRandomAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stream\\\\DemocraticAction\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stream/DemocraticAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stream\\\\DownloadAction\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stream/DownloadAction.php
 
 		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
@@ -7274,11 +7089,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:insert\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Application/Stream/PlayItemAction.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stream\\\\RandomAction\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Stream/RandomAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
@@ -8282,11 +8092,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$threshold of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_top_sql\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Cache/ObjectCache.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Cache\\\\ObjectCache\\:\\:\\$configContainer is never read, only written\\.$#"
 			count: 1
 			path: src/Module/Cache/ObjectCache.php
 
@@ -9524,11 +9329,6 @@ parameters:
 			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
 			count: 1
 			path: src/Module/Cli/UpdateDbCommand.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Label\\\\LabelListUpdater\\:\\:\\$modelFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Label/LabelListUpdater.php
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$f_album\\.$#"
@@ -11986,11 +11786,6 @@ parameters:
 			path: src/Module/Song/SongSorter.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Song\\\\SongSorter\\:\\:\\$modelFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
 			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Module/Song/Tag/SongTagWriter.php
@@ -12719,11 +12514,6 @@ parameters:
 			message: "#^Class Ampache\\\\Module\\\\User\\\\Activity\\\\TypeHandler\\\\SongActivityTypeHandler constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: src/Module/User/Activity/TypeHandler/ActivityTypeHandlerMapper.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\User\\\\Activity\\\\UserActivityRenderer\\:\\:\\$configContainer is never read, only written\\.$#"
-			count: 1
-			path: src/Module/User/Activity/UserActivityRenderer.php
 
 		-
 			message: "#^Parameter \\#1 \\$userId of method Ampache\\\\Repository\\\\UserRepositoryInterface\\:\\:updateApiKey\\(\\) expects string, int given\\.$#"
@@ -15141,11 +14931,6 @@ parameters:
 			path: src/Module/Util/Upload.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Upload\\:\\:\\$privilegeChecker is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\UtilityFactory\\:\\:createVaInfo\\(\\) has parameter \\$gatherTypes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/UtilityFactory.php
@@ -17507,11 +17292,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:getField\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 

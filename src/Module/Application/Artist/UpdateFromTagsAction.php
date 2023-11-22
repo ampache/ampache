@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -41,16 +40,12 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

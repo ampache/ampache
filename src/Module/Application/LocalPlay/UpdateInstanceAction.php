@@ -45,17 +45,13 @@ final class UpdateInstanceAction extends AbstractLocalPlayAction
 
     private ResponseFactoryInterface $responseFactory;
 
-    private UiInterface $ui;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory,
-        UiInterface $ui
+        ResponseFactoryInterface $responseFactory
     ) {
-        parent::__construct($configContainer, $ui);
+        parent::__construct($configContainer);
         $this->configContainer = $configContainer;
         $this->responseFactory = $responseFactory;
-        $this->ui              = $ui;
     }
 
     protected function handle(

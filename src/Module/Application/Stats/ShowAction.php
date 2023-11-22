@@ -29,7 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -42,8 +41,6 @@ final class ShowAction extends AbstractGraphRendererAction
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     private ConfigContainerInterface $configContainer;
 
     private GuiFactoryInterface $guiFactory;
@@ -52,13 +49,11 @@ final class ShowAction extends AbstractGraphRendererAction
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
         GuiFactoryInterface $guiFactory,
         TalFactoryInterface $talFactory
     ) {
         $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
         $this->guiFactory      = $guiFactory;
         $this->talFactory      = $talFactory;
