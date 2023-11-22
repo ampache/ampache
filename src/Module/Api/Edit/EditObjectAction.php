@@ -141,7 +141,9 @@ final class EditObjectAction extends AbstractEditAction
         }
         /** @var library_item $libitem */
         $libitem = new $className($new_id);
-        $libitem->format();
+        if (method_exists($libitem, 'format')) {
+            $libitem->format();
+        }
 
         xoutput_headers();
         $results = array('id' => $new_id);
