@@ -99,12 +99,14 @@ class Upnp_Api
     {
         usleep($delay * 1000); // we are supposed to delay before sending
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-        // when broadcast, set broadcast socket option
-        if ($host == "239.255.255.250") {
-            socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
+        if ($socket !== false) {
+            // when broadcast, set broadcast socket option
+            if ($host == "239.255.255.250") {
+                socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
+            }
+            socket_sendto($socket, $buf, strlen((string)$buf), 0, $host, $port);
+            socket_close($socket);
         }
-        socket_sendto($socket, $buf, strlen((string) $buf), 0, $host, $port);
-        socket_close($socket);
     }
 
     /**

@@ -5696,21 +5696,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Parameter \\#1 \\$socket of function socket_close expects Socket, Socket\\|false given\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$socket of function socket_sendto expects Socket, Socket\\|false given\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$socket of function socket_set_option expects Socket, Socket\\|false given\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Parameter \\#1 \\$stream_id of class Ampache\\\\Repository\\\\Model\\\\Live_Stream constructor expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -7889,11 +7874,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:\\$verbose has no type specified\\.$#"
 			count: 1
 			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Parameter \\#2 \\$threshold of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_top_sql\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Cache/ObjectCache.php
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:\\$tags\\.$#"
@@ -11601,21 +11581,6 @@ parameters:
 			path: src/Module/Song/Tag/SongTagWriter.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Default value of the parameter \\#3 \\$object_type \\(false\\) of method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_recently_played\\(\\) is incompatible with type string\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:count\\(\\) has parameter \\$count_type with no type specified\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_cached_place_name\\(\\) has parameter \\$latitude with no type specified\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
@@ -11627,11 +11592,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_last_play\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_newest_sql\\(\\) has parameter \\$user_id with no type specified\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
 
@@ -11662,51 +11622,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:insert\\(\\) has parameter \\$location with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, int\\<1, max\\> given\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Parameter \\#2 \\$threshold of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_top_sql\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Parameter \\#5 \\$time of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:is_already_inserted\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:\\$agent has no type specified\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:\\$date has no type specified\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:\\$object_id has no type specified\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:\\$object_type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
 

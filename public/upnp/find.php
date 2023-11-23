@@ -86,13 +86,16 @@ class UPnPFind
         $msg .= "ST: upnp:rootdevice\r\n";
         $msg .= "\r\n";
 
-        $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+        $response = array();
+        $socket   = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+        if ($socket === false) {
+            return $response;
+        }
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
         socket_sendto($socket, $msg, strlen($msg), 0, '239.255.255.250', 1900);
 
         socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $timeout, 'usec' => 0));
 
-        $response = array();
         do {
             $buf  = null;
             $from = null;
