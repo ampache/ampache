@@ -146,7 +146,7 @@ class Dba
      * into the sql
      * @param mixed $var
      */
-    public static function escape($var): string
+    public static function escape($var): ?string
     {
         $dbh = self::dbh();
         if (!$dbh) {

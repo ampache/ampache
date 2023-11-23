@@ -65,7 +65,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * Constructor
      *
      * Song Preview class
-     * @param int $object_id
+     * @param int|null $object_id
      */
     public function __construct($object_id)
     {
@@ -95,9 +95,8 @@ class Song_Preview extends database_object implements Media, playable_item
      *
      * This inserts the song preview described by the passed array
      * @param array $results
-     * @return string|null
      */
-    public static function insert($results)
+    public static function insert($results): ?int
     {
         if ((int)$results['disk'] == 0) {
             $results['disk'] = Album::sanitize_disk($results['disk']);
@@ -130,7 +129,7 @@ class Song_Preview extends database_object implements Media, playable_item
             return null;
         }
 
-        return $preview_id;
+        return (int)$preview_id;
     }
 
     /**
@@ -170,11 +169,14 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * has_info
-     * @param int $preview_id
+     * @param int|null $preview_id
      * @return array
      */
     private function has_info($preview_id)
     {
+        if ($preview_id === null) {
+            return array();
+        }
         if (parent::is_cached('song_preview', $preview_id)) {
             return parent::get_from_cache('song_preview', $preview_id);
         }

@@ -42,7 +42,7 @@ class Wanted extends database_object
 
     /* Variables from DB */
     public int $id = 0;
-    public int $user;
+    public ?int $user;
     public ?int $artist;
     public ?string $artist_mbid;
     public ?string $mbid;
@@ -433,8 +433,10 @@ class Wanted extends database_object
             $this->f_artist_link = '';
         }
         $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->name) . "</a>";
-        $user         = new User($this->user);
-        $this->f_user = $user->get_fullname();
+        if (isset($this->user)) {
+            $user         = new User($this->user);
+            $this->f_user = $user->get_fullname();
+        }
     }
 
     /**

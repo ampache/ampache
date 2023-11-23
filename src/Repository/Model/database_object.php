@@ -54,8 +54,8 @@ abstract class database_object
         $table     = $this->getTableName($table_name);
         $object_id = (int)$object_id;
 
-        // Make sure we've got a real id
-        if ($object_id < 1) {
+        // Make sure we've got a real id and table
+        if ($table === null || $object_id < 1) {
             return array();
         }
 
@@ -84,7 +84,7 @@ abstract class database_object
     /**
      * getTableName
      */
-    private function getTableName($table_name): string
+    private function getTableName($table_name): ?string
     {
         if (!$table_name) {
             $table_name = static::DB_TABLENAME;

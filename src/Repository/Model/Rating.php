@@ -55,8 +55,8 @@ class Rating extends database_object
     );
 
     // Public variables
-    public $id; // The ID of the object rated
-    public $type; // The type of object we want
+    public int $id; // The object_id of the object rated
+    public string $type; // The object_type of object we want
 
     /**
      * Constructor

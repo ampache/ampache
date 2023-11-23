@@ -42,8 +42,8 @@ class Userflag extends database_object
     protected const DB_TABLENAME = 'user_flag';
 
     // Public variables
-    public $id; // The ID of the object flagged
-    public $type; // The type of object we want
+    public int $id; // The object_id of the object flagged
+    public string $type; // The object_type of object we want
 
     /**
      * Constructor

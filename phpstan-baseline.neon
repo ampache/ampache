@@ -21131,9 +21131,9 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$update_time has no type specified\\.$#"
+			message: "#^Cannot access property \\$artist on array\\.$#"
 			count: 1
-			path: src/Repository/Model/Video.php
+			path: src/Repository/Model/Wanted.php
 
 		-
 			message: "#^Cannot access property \\$first\\-release\\-date on array\\.$#"

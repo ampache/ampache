@@ -44,10 +44,13 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
                 // FIXME: Break things in the future.
                 $hashed_password   = [];
                 $hashed_password[] = hash('sha256', $password);
-                $hashed_password[] = hash('sha256', Dba::escape(stripslashes(htmlspecialchars(strip_tags($password)))));
+                $escaped_password  = Dba::escape(stripslashes(htmlspecialchars(strip_tags($password))));
+                if ($escaped_password) {
+                    $hashed_password[] = hash('sha256', $escaped_password);
+                }
 
                 // Automagically update the password if it's old and busted.
-                if ($row['password'] == $hashed_password[1] && $hashed_password[0] != $hashed_password[1]) {
+                if (isset($hashed_password[1]) && $row['password'] == $hashed_password[1] && $hashed_password[0] != $hashed_password[1]) {
                     $user = User::get_from_username($username);
                     $user->update_password($password);
                 }

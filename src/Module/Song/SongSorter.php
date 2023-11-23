@@ -59,7 +59,7 @@ final class SongSorter implements SongSorterInterface
         ?string $various_artist_override = null,
         ?string $catalogName = null
     ): void {
-        $various_artist = 'Various Artists';
+        $various_artist = T_('Various Artists');
 
         if ($various_artist_override !== null) {
             $interactor->info(
@@ -67,7 +67,7 @@ final class SongSorter implements SongSorterInterface
                 true
             );
 
-            $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $various_artist_override));
+            $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $various_artist_override)) ?? $various_artist;
         }
         $move_count = 0;
 

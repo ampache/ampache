@@ -3478,7 +3478,7 @@ abstract class Catalog extends database_object
     public static function check_title($title, $file = ''): string
     {
         if (strlen(trim((string)$title)) < 1) {
-            $title = Dba::escape($file);
+            $title = Dba::escape($file) ?? '';
         }
 
         return $title;

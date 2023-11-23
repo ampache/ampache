@@ -246,19 +246,17 @@ class Preference extends database_object
     public static function get_by_user($user_id, $pref_name)
     {
         //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '}...', 5);
-        $user_id   = (int) Dba::escape($user_id);
-        $pref_name = Dba::escape($pref_name);
-        $pref_id   = self::id_from_name($pref_name);
+        $pref_id = self::id_from_name($pref_name);
 
         if (parent::is_cached('get_by_user-' . $pref_name, $user_id) && is_array((parent::get_from_cache('get_by_user-' . $pref_name, $user_id)))) {
             return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
         }
 
-        $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$pref_id' AND `user`='$user_id'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user` = ?";
+        $db_results = Dba::read($sql, array($pref_id, $user_id));
         if (Dba::num_rows($db_results) < 1) {
-            $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$pref_id' AND `user`='-1'";
-            $db_results = Dba::read($sql);
+            $sql        = "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user`='-1'";
+            $db_results = Dba::read($sql, array($pref_id));
         }
         $data = Dba::fetch_assoc($db_results);
 
@@ -412,8 +410,6 @@ class Preference extends database_object
      */
     public static function id_from_name($name)
     {
-        $name = Dba::escape($name);
-
         if (parent::is_cached('id_from_name', $name)) {
             return (int)(parent::get_from_cache('id_from_name', $name))[0];
         }
