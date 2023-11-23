@@ -48,7 +48,7 @@ final class FollowingMethod
      * Get users followed by the user
      * Error when user not found or no followers
      *
-     * username = (string) $username
+     * username = (string) $username//optional
      */
     public static function following(array $input, User $user): bool
     {
@@ -57,11 +57,9 @@ final class FollowingMethod
 
             return false;
         }
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
-        }
-        unset($user);
-        $username = $input['username'];
+        $username = (isset($input['username']))
+            ? $input['username']
+            : $user->username;
         $leader   = User::get_from_username($username);
         if ($leader === null || $leader->id < 1) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
