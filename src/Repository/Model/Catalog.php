@@ -2440,7 +2440,7 @@ abstract class Catalog extends database_object
         $media = $catalog->prepare_media($media);
 
         /** @var Song|Podcast_Episode|Video $media */
-        if (Core::get_filesize(Core::conv_lc_file($media->file)) == 0) {
+        if ($media->file === null || Core::get_filesize(Core::conv_lc_file($media->file)) == 0) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading file ' . $media->file, 2);
             $array['error'] = true;
 
@@ -2460,21 +2460,22 @@ abstract class Catalog extends database_object
             },
         ];
 
-        $callable = $functions[$type];
-
-        // try and get the tags from your file
-        debug_event(__CLASS__, 'Reading tags from ' . $media->file, 4);
-        $extension = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
-        $results   = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
-        // for files without tags try to update from their file name instead
-        if ($media->id && in_array($extension, array('wav', 'shn'))) {
-            // match against your catalog 'Filename Pattern' and 'Folder Pattern'
-            $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
-            $results = array_merge($results, $patres);
+        $update = array();
+        if ($media->file !== null) {
+            $callable = $functions[$type];
+            // try and get the tags from your file
+            debug_event(__CLASS__, 'Reading tags from ' . $media->file, 4);
+            $extension = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
+            $results   = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
+            // for files without tags try to update from their file name instead
+            if ($media->id && in_array($extension, array('wav', 'shn'))) {
+                // match against your catalog 'Filename Pattern' and 'Folder Pattern'
+                $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
+                $results = array_merge($results, $patres);
+            }
+            /** @var array $update */
+            $update = $callable($results, $media);
         }
-        /** @var array $update */
-        $update = $callable($results, $media);
-
         // remote catalogs should unlink the temp files if needed //TODO add other types of remote catalog
         if ($catalog instanceof Catalog_Seafile) {
             $catalog->clean_tmp_file($media->file);
@@ -3200,6 +3201,9 @@ abstract class Catalog extends database_object
         if (!$sort_pattern || !$rename_pattern) {
             $sort_pattern   = $this->sort_pattern;
             $rename_pattern = $this->rename_pattern;
+        }
+        if ($media->file === null) {
+            return array();
         }
 
         $vainfo = $this->getUtilityFactory()->createVaInfo(

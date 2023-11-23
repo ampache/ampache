@@ -509,11 +509,11 @@ class Catalog_Seafile extends Catalog
      *
      * Clean up temp files after use.
      *
-     * @param string $tempfilename
+     * @param string|null $tempfilename
      */
-    public function clean_tmp_file($tempfilename)
+    public function clean_tmp_file($tempfilename): void
     {
-        if (file_exists($tempfilename)) {
+        if ($tempfilename !== null && file_exists($tempfilename)) {
             unlink($tempfilename);
         }
     } // clean_file

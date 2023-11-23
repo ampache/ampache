@@ -175,7 +175,7 @@ final class ShowAction implements ApplicationActionInterface
             }
         }
         if (!$typeManaged) {
-            $object_id = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+            $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
             $className = ObjectTypeToClassNameMapper::map($type);
             $item      = new $className($object_id);
             if ($item instanceof Song || $item instanceof Video || $item instanceof Podcast || $item instanceof Podcast_Episode) {

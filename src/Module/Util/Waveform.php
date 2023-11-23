@@ -87,7 +87,7 @@ class Waveform
             } else {
                 $waveform = $media->waveform;
             }
-            if (!$waveform) {
+            if (empty($waveform)) {
                 $catalog = Catalog::create_from_id($media->catalog);
                 if ($catalog !== null && $catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';
@@ -99,7 +99,9 @@ class Waveform
                         if ($basedir) {
                             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
                                 $tmpfile = tempnam($basedir, $transcode_to);
-
+                                if (!$tmpfile) {
+                                    return null;
+                                }
                                 $tfp = fopen($tmpfile, 'wb');
                                 if (!is_resource($tfp)) {
                                     debug_event(self::class, "Failed to open " . $tmpfile, 3);
@@ -137,7 +139,7 @@ class Waveform
                         } else {
                             debug_event(self::class, 'tmp_dir_path setting required for waveform.', 3);
                         }
-                    } else {
+                    } elseif ($media->file !== null) {
                         // Already wav file, no transcode required
                         $waveform = self::create_waveform($media->file);
                     }
@@ -191,18 +193,20 @@ class Waveform
      * Return content of a Waveform file.
      * @param int $object_id
      * @param string $object_type
-     * @return string|false
      */
-    public static function get_from_file($object_id, $object_type)
+    public static function get_from_file($object_id, $object_type): ?string
     {
         $file = self::get_filepath($object_id, $object_type);
         if ($file !== false && file_exists($file)) {
             debug_event(self::class, 'get_from_file ' . $file, 5);
+            $waveform = file_get_contents($file);
 
-            return file_get_contents($file);
+            if ($waveform !== false) {
+                return $waveform;
+            }
         }
 
-        return false;
+        return null;
     }
 
     /**

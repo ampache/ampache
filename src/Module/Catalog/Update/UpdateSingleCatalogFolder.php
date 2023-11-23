@@ -95,6 +95,9 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 /** @var Song|Podcast_Episode|Video $className */
                 $media     = new $className($file_id);
                 $file_path = $media->file;
+                if (empty($file_path)) {
+                    break;
+                }
                 $file_test = is_file($file_path);
                 // deleted file
                 if (!$file_test && $cleanupMode == 1) {

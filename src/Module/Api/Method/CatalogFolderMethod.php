@@ -139,7 +139,7 @@ final class CatalogFolderMethod
                     }
                     switch ($item) {
                         case 'clean':
-                            if ($media->id) {
+                            if ($media->file) {
                                 /** @var Catalog_local $catalog */
                                 if ($catalog->clean_file($media->file, $type)) {
                                     $changed++;

@@ -7971,11 +7971,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:clean_tmp_file\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:create_type\\(\\) has parameter \\$catalog_id with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
@@ -15301,21 +15296,6 @@ parameters:
 			path: src/Module/Util/Waveform.php
 
 		-
-			message: "#^Parameter \\#1 \\$filename of function fopen expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of function unlink expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of static method Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:create_waveform\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
 			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
@@ -15352,16 +15332,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$data of function fwrite expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#3 \\$waveform of static method Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:save_to_db\\(\\) expects string, array\\|float\\|int\\|string given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#3 \\$waveform of static method Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:save_to_file\\(\\) expects string, array\\|float\\|int\\|string given\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
 
@@ -17576,11 +17546,6 @@ parameters:
 			path: src/Repository/Model/Clip.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$artist has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$f_artist has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
@@ -17591,17 +17556,7 @@ parameters:
 			path: src/Repository/Model/Clip.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$song has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$video has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
 
@@ -17701,16 +17656,6 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$base_playlist has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$cooldown has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$f_cooldown has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -17726,32 +17671,12 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$level has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$object_ids has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$primary has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$tmp_playlist has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
 
@@ -18066,32 +17991,7 @@ parameters:
 			path: src/Repository/Model/Movie.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:\\$original_name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:\\$prefix has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:\\$summary has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:\\$video has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:\\$year has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Movie.php
 
@@ -18121,22 +18021,7 @@ parameters:
 			path: src/Repository/Model/Personal_Video.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:\\$location has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:\\$summary has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:\\$video has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Personal_Video.php
 
@@ -18566,11 +18451,6 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 2
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function rawurlencode expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -18582,46 +18462,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$date of method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:check_play_history\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$addition_time has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$author has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$bitrate has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$catalog has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$category has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$channels has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$enabled has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -18706,22 +18546,7 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$file has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$guid has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$has_art has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$id has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -18736,77 +18561,7 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$mode has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$played has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$podcast has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$pubdate has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$rate has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$size has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$source has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$state has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$time has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$title has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$total_count has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$total_skip has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$waveform has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$website has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -20071,11 +19826,6 @@ parameters:
 			path: src/Repository/Model/TVShow_Episode.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$episode_number has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$f_season has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Episode.php
@@ -20092,26 +19842,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$f_tvshow_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$original_name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$season has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$summary has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Episode.php
 
@@ -20431,37 +20161,7 @@ parameters:
 			path: src/Repository/Model/Tmp_Playlist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$base_playlist has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$created has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$items has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$object_type has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$session has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$type has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
 
@@ -20891,11 +20591,6 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:compare_video_information\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
@@ -21031,37 +20726,12 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$addition_time has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$display_y has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$release_date \\(int\\) does not accept int\\|false\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$update_time has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 

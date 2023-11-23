@@ -155,7 +155,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $catalog;
     /**
-     * @var int|null $waveform
+     * @var string|null $waveform
      */
     public $waveform;
     /**

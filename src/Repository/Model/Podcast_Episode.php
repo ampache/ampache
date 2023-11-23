@@ -38,33 +38,34 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 {
     protected const DB_TABLENAME = 'podcast_episode';
 
-    public $id;
-    public $title;
-    public $guid;
-    public $podcast;
-    public $state;
-    public $file;
-    public $source;
-    public $size;
-    public $time;
-    public $played;
+    public int $id = 0;
+    public ?string $title;
+    public ?string $guid;
+    public int $podcast;
+    public ?string $state;
+    public ?string $file;
+    public ?string $source;
+    public int $size;
+    public int $time;
+    public ?string $website;
+    public ?string $description;
+    public ?string $author;
+    public ?string $category;
+    public bool $played;
+    public bool $enabled;
+    public int $pubdate;
+    public int $addition_time;
+    public int $total_count;
+    public int $total_skip;
+    public int $catalog;
+    public int $bitrate;
+    public int $rate;
+    public ?string $mode;
+    public ?int $channels;
+    public ?string $waveform;
+
     public $type;
     public $mime;
-    public $website;
-    public $description;
-    public $author;
-    public $category;
-    public $pubdate;
-    public $addition_time;
-    public $enabled;
-    public $total_count;
-    public $total_skip;
-    public $catalog;
-    public $bitrate;
-    public $rate;
-    public $mode;
-    public $channels;
-    public $waveform;
     public $has_art;
     public $f_name;
     public $f_file;
@@ -105,8 +106,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
         $this->id = $episode_id;
         if (!empty($this->file)) {
-            $data          = pathinfo($this->file);
-            $this->type    = strtolower((string)$data['extension']);
+            $this->type    = strtolower((string)pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
         }
@@ -167,8 +167,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
         // format the file
         if (!empty($this->file)) {
-            $data          = pathinfo($this->file);
-            $this->type    = strtolower((string)$data['extension']);
+            $this->type    = strtolower((string)pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
         }
@@ -428,11 +427,13 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function update(array $data): int
     {
-        $title       = $data['title'] ?? $this->title;
-        $website     = $data['website'] ?? null;
+        $title    = $data['title'] ?? $this->title;
+        $website  = $data['website'] ?? null;
+        $category = $data['category'] ?? null;
+        /** @var string $description */
         $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
-        $author      = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
-        $category    = $data['category'] ?? null;
+        /** @var string $author */
+        $author   = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
 
         $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
         Dba::write($sql, array($title, $website, $description, $author, $category, $this->id));
@@ -649,33 +650,28 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
                     return false;
                 }
                 $pinfo = pathinfo($this->source);
-                $file  = $path . DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
+                $file  = $path . DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', (string)$this->title) . '-' . strtok($pinfo['basename'], '?');
             }
-            if (!empty($file)) {
-                if (Core::get_filesize(Core::conv_lc_file($file)) == 0) {
-                    // the file doesn't exist locally so download it
-                    debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
-                    $handle = fopen($this->source, 'r');
-                    if ($handle && file_put_contents($file, $handle)) {
-                        debug_event(self::class, 'Download completed.', 4);
-                    }
+            if (Core::get_filesize(Core::conv_lc_file($file)) == 0) {
+                // the file doesn't exist locally so download it
+                debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
+                $handle = fopen($this->source, 'r');
+                if ($handle && file_put_contents($file, $handle)) {
+                    debug_event(self::class, 'Download completed.', 4);
                 }
-                if (Core::get_filesize(Core::conv_lc_file($file)) > 0) {
-                    // the file exists so get/update file details in the DB
-                    debug_event(self::class, 'Updating details ' . $file . ' ...', 4);
-                    if (empty($this->file)) {
-                        $this->file = $file;
-                        self::update_file($this->file, $this->id);
-                    }
-                    Catalog::update_media_from_tags($this);
-
-                    return true;
-                }
-                debug_event(self::class, 'Error when downloading podcast episode.', 1);
-
-                return false;
             }
-            debug_event(self::class, 'Cannot download podcast episode ' . $this->id . ', could not generate file path.', 3);
+            if (Core::get_filesize(Core::conv_lc_file($file)) > 0) {
+                // the file exists so get/update file details in the DB
+                debug_event(self::class, 'Updating details ' . $file . ' ...', 4);
+                if (empty($this->file)) {
+                    $this->file = $file;
+                    self::update_file($this->file, $this->id);
+                }
+                Catalog::update_media_from_tags($this);
+
+                return true;
+            }
+            debug_event(self::class, 'Error when downloading podcast episode.', 1);
 
             return false;
         }
