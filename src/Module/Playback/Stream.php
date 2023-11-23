@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
@@ -606,10 +607,9 @@ class Stream
      *
      * This returns the Now Playing information
      * @param int $user_id
-     * @return array
-     * <array{
-     *  media: \Ampache\Repository\Model\library_item,
-     *  client: \Ampache\Repository\Model\User,
+     * @return list<array{
+     *  media: library_item,
+     *  client: User,
      *  agent: string,
      *  expire: int
      * }>
@@ -638,6 +638,7 @@ class Stream
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $className = ObjectTypeToClassNameMapper::map($row['object_type']);
+            /** @var library_item $media */
             $media     = new $className($row['object_id']);
             if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->catalog, (int)$row['user'])) {
                 $client = new User($row['user']);
@@ -647,7 +648,7 @@ class Stream
                     'media' => $media,
                     'client' => $client,
                     'agent' => $row['agent'],
-                    'expire' => $row['expire']
+                    'expire' => (int) $row['expire']
                 );
             }
         } // end while

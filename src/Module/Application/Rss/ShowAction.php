@@ -29,7 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\AmpacheRss;
+use Ampache\Module\Util\AmpacheRssInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -47,17 +47,20 @@ final class ShowAction implements ApplicationActionInterface
     private ResponseFactoryInterface $responseFactory;
 
     private StreamFactoryInterface $streamFactory;
+    private AmpacheRssInterface $ampacheRss;
 
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
+        AmpacheRssInterface $ampacheRss
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
+        $this->ampacheRss      = $ampacheRss;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -72,13 +75,12 @@ final class ShowAction implements ApplicationActionInterface
 
         $type     = $this->requestParser->getFromRequest('type');
         $rsstoken = $this->requestParser->getFromRequest('rsstoken');
-        $rss      = new AmpacheRss($type, $rsstoken);
         $params   = null;
 
         if ($type === 'podcast') {
             $params                = [];
             $params['object_type'] = $this->requestParser->getFromRequest('object_type');
-            $params['object_id']   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+            $params['object_id']   = (int) $this->requestParser->getFromRequest('object_id');
             if (empty($params['object_id'])) {
                 return null;
             }
@@ -93,7 +95,13 @@ final class ShowAction implements ApplicationActionInterface
                 )
             )
             ->withBody(
-                $this->streamFactory->createStream($rss->get_xml($params))
+                $this->streamFactory->createStream(
+                    $this->ampacheRss->get_xml(
+                        $rsstoken,
+                        $type,
+                        $params
+                    )
+                )
             );
     }
 }

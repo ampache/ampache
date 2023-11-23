@@ -20,26 +20,24 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Module\Util;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
+interface AmpacheRssInterface
+{
+    /**
+     * get_xml
+     * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
+     * and then uses the xmlDATA class to build the document
+     *
+     * @param null|array{object_type: string, object_id: int} $params
+     */
+    public function get_xml(string $rssToken, string $type, ?array $params = null): string;
 
-use function DI\autowire;
-
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-    AjaxUriRetrieverInterface::class => autowire(AjaxUriRetriever::class),
-    EnvironmentInterface::class => autowire(Environment::class),
-    ZipHandlerInterface::class => autowire(ZipHandler::class),
-    SlideshowInterface::class => autowire(Slideshow::class),
-    UiInterface::class => autowire(Ui::class),
-    Mailer::class => autowire(),
-    UtilityFactoryInterface::class => autowire(UtilityFactory::class),
-    AmpacheRssInterface::class => autowire(AmpacheRss::class),
-];
+    /**
+     * get_description
+     * This returns the standardized description for the rss feed based on this->type
+     */
+    public function get_description(): string;
+}

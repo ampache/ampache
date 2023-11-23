@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=0);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Util;
 
 use Ampache\Module\System\Core;
@@ -41,53 +41,46 @@ use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\UserRepositoryInterface;
 
-class AmpacheRss
+final class AmpacheRss implements AmpacheRssInterface
 {
-    private const RSS_TYPES = array(
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct(
+        UserRepositoryInterface $userRepository
+    ) {
+        $this->userRepository = $userRepository;
+    }
+
+    /** @var list<string> */
+    private const RSS_TYPES = [
         'now_playing',
         'recently_played',
         'latest_album',
         'latest_artist',
         'latest_shout',
         'podcast'
-    );
-
-    /**
-     * @var string $type
-     */
-    private $type;
-    /**
-     * @var string $rsstoken
-     */
-    private $rsstoken;
-    public $data;
-
-    /**
-     * Constructor
-     * This takes a flagged id and then pulls in the information for said flag entry
-     * @param string $rsstype
-     * @param string $rsstoken
-     */
-    public function __construct($rsstype, $rsstoken = "")
-    {
-        $this->type     = self::validate_type($rsstype);
-        $this->rsstoken = $rsstoken;
-    } // constructor
+    ];
 
     /**
      * get_xml
      * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
      * and then uses the xmlDATA class to build the document
-     * @param array $params
-     * @return string
+     *
+     * @param null|array{object_type: string, object_id: int} $params
      */
-    public function get_xml($params = null)
-    {
-        if ($this->type === "podcast") {
-            $user = static::getUserRepository()->getByRssToken($this->rsstoken);
-            if (is_null($user)) {
-                $user = new User(-1);
-            }
+    public function get_xml(
+        string $rssToken,
+        string $type,
+        ?array $params = null
+    ): string {
+        $type = self::validate_type($type);
+
+        $user = $this->userRepository->getByRssToken($rssToken);
+        if ($user === null) {
+            $user = new User(User::INTERNAL_SYSTEM_USER_ID);
+        }
+
+        if ($type === "podcast") {
             if ($params != null && is_array($params)) {
                 $object_type = $params['object_type'];
                 $object_id   = $params['object_id'];
@@ -102,34 +95,46 @@ class AmpacheRss
                     }
                 }
             }
-        } else {
-            // Function call name
-            $data_function     = 'load_' . $this->type;
-            $pub_date_function = 'pubdate_' . $this->type;
 
-            if ($this->rsstoken) {
-                $data = call_user_func(array(AmpacheRss::class, $data_function), $this->rsstoken);
-            } else {
-                $data = call_user_func(array(AmpacheRss::class, $data_function));
-            }
+            return '';
+        } else {
             $pub_date = null;
-            if (method_exists(AmpacheRss::class, $pub_date_function)) {
-                $pub_date = call_user_func(array(AmpacheRss::class, $pub_date_function));
-            }
+
+            $functions = [
+                'now_playing' => function () use (&$pub_date): array {
+                    $pub_date = $this->pubdate_now_playing();
+
+                    return $this->load_now_playing();
+                },
+                'recently_played' => function () use ($rssToken, &$pub_date): array {
+                    $pub_date = $this->pubdate_recently_played();
+
+                    return $this->load_recently_played($rssToken);
+                },
+                'latest_album' => function () use ($rssToken): array {
+                    return $this->load_latest_album($rssToken);
+                },
+                'latest_artist' => function () use ($rssToken): array {
+                    return $this->load_latest_artist($rssToken);
+                },
+                'latest_shout' => function (): array {
+                    return $this->load_latest_shout();
+                },
+            ];
+
+            $data = $functions[$type]();
 
             Xml_Data::set_type('rss');
 
-            return Xml_Data::rss_feed($data, $this->get_title(), $pub_date);
+            return Xml_Data::rss_feed($data, $this->get_title($type), $pub_date);
         }
-
-        return null;
-    } // get_xml
+    }
 
     /**
      * get_title
      * This returns the standardized title for the rss feed based on this->type
      */
-    public function get_title(): string
+    private function get_title(string $type): string
     {
         $titles = array(
             'now_playing' => T_('Now Playing'),
@@ -139,7 +144,7 @@ class AmpacheRss
             'latest_shout' => T_('Newest Shouts')
         );
 
-        return AmpConfig::get('site_title') . ' - ' . $titles[$this->type];
+        return AmpConfig::get('site_title') . ' - ' . $titles[$type];
     } // get_title
 
     /**
@@ -154,9 +159,8 @@ class AmpacheRss
     /**
      * validate_type
      * this returns a valid type for an rss feed, if the specified type is invalid it returns a default value
-     * @param string $rsstype
      */
-    public static function validate_type($rsstype): string
+    private static function validate_type(string $rsstype): string
     {
         if (!in_array($rsstype, self::RSS_TYPES)) {
             return 'now_playing';
@@ -209,15 +213,20 @@ class AmpacheRss
      * load_now_playing
      * This loads in the Now Playing information. This is just the raw data with key=>value pairs that could be turned
      * into an xml document if we so wished
-     * @return array
+     * @return list<array{
+     *  title: string,
+     *  link: null|string,
+     *  description: string,
+     *  comments: string,
+     *  pubDate: non-empty-string
+     * }>
      */
-    public static function load_now_playing($rsstoken = "")
+    private function load_now_playing(): array
     {
-        unset($rsstoken);
         $data = Stream::get_now_playing();
 
         $results    = array();
-        $format     = AmpConfig::get('rss_format') ?? '%t - %a - %A';
+        $format     = (string) (AmpConfig::get('rss_format') ?? '%t - %a - %A');
         $string_map = array(
             '%t' => 'title',
             '%a' => 'artist',
@@ -262,34 +271,38 @@ class AmpacheRss
         } // end foreach
 
         return $results;
-    } // load_now_playing
+    }
 
     /**
      * pubdate_now_playing
      * this is the pub date we should use for the Now Playing information,
      * this is a little specific as it uses the 'newest' expire we can find
-     * @return int|null
      */
-    public static function pubdate_now_playing()
+    private function pubdate_now_playing(): ?int
     {
         // Little redundent, should be fixed by an improvement in the get_now_playing stuff
         $data    = Stream::get_now_playing();
         $element = array_shift($data);
 
         return $element['expire'] ?? null;
-    } // pubdate_now_playing
+    }
 
     /**
      * load_recently_played
      * This loads in the Recently Played information and formats it up real nice like
-     * @param string $rsstoken
-     * @return array
+     * @return list<array{
+     *  title: string,
+     *  link: string,
+     *  description: string,
+     *  comments: string,
+     *  pubDate: non-empty-string
+     * }>
      */
-    public static function load_recently_played($rsstoken = "")
+    private function load_recently_played(string $rsstoken): array
     {
         $results = array();
-        $user    = ($rsstoken)
-            ? static::getUserRepository()->getByRssToken($rsstoken)
+        $user    = $rsstoken !== ''
+            ? $this->userRepository->getByRssToken($rsstoken)
             : null;
         $data = ($user)
             ? Stats::get_recently_played($user->id, 'stream', 'song')
@@ -318,16 +331,23 @@ class AmpacheRss
         } // end foreach
 
         return $results;
-    } // load_recently_played
+    }
 
     /**
      * load_latest_album
      * This loads in the latest added albums
-     * @return array
+     * @return list<array{
+     *  title: string,
+     *  link: null|string,
+     *  description: string,
+     *  image: string,
+     *  comments: string,
+     *  pubDate: non-empty-string
+     * }>
      */
-    public static function load_latest_album($rsstoken = "")
+    private function load_latest_album(string $rsstoken): array
     {
-        $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $user    = $rsstoken !== '' ? $this->userRepository->getByRssToken($rsstoken) : null;
         $user_id = $user->id ?? 0;
         $ids     = Stats::get_newest('album', 10, 0, 0, $user_id);
 
@@ -348,16 +368,23 @@ class AmpacheRss
         } // end foreach
 
         return $results;
-    } // load_latest_album
+    }
 
     /**
      * load_latest_artist
      * This loads in the latest added artists
-     * @return array
+     * @return list<array{
+     *  title: null|string,
+     *  link: null|string,
+     *  description: null|string,
+     *  image: string,
+     *  comments: string,
+     *  pubDate: string
+     * }>
      */
-    public static function load_latest_artist($rsstoken = "")
+    private function load_latest_artist(string $rsstoken): array
     {
-        $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $user    = $rsstoken !== '' ? $this->userRepository->getByRssToken($rsstoken) : null;
         $user_id = $user->id ?? 0;
         $ids     = Stats::get_newest('artist', 10, 0, 0, $user_id);
 
@@ -379,16 +406,22 @@ class AmpacheRss
         } // end foreach
 
         return $results;
-    } // load_latest_artist
+    }
 
     /**
      * load_latest_shout
      * This loads in the latest added shouts
-     * @return array
+     * @return list<array{
+     *  title: string,
+     *  link: null|string,
+     *  description: string,
+     *  image: string,
+     *  comments: string,
+     *  pubDate: non-empty-string
+     * }>
      */
-    public static function load_latest_shout($rsstoken = "")
+    private function load_latest_shout(): array
     {
-        unset($rsstoken);
         $ids = Shoutbox::get_top(10);
 
         $results = array();
@@ -414,29 +447,19 @@ class AmpacheRss
         } // end foreach
 
         return $results;
-    } // load_latest_shout
+    }
 
     /**
      * pubdate_recently_played
      * This just returns the 'newest' Recently Played entry
      */
-    public static function pubdate_recently_played(): int
+    private function pubdate_recently_played(): int
     {
         $user_id = Core::get_global('user')->id ?? -1;
         $data    = Stats::get_recently_played($user_id, 'stream', 'song');
         $element = array_shift($data);
 
-        return $element['date'];
-    } // pubdate_recently_played
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return (int) $element['date'];
     }
 
     /**
