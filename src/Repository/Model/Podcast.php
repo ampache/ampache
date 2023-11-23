@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=0);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
@@ -35,21 +35,35 @@ class Podcast extends database_object implements library_item
     protected const DB_TABLENAME = 'podcast';
 
     /* Variables from DB */
-    public $id;
-    public $catalog;
-    public $feed;
-    public $title;
-    public $website;
-    public $description;
-    public $language;
-    public $copyright;
-    public $generator;
-    public $lastbuilddate;
-    public $lastsync;
-    public $total_count;
-    public $total_skip;
-    public $episodes;
-    public $has_art;
+    public int $id = 0;
+
+    public int $catalog;
+
+    public ?string $feed;
+
+    public ?string $title;
+
+    public ?string $website;
+
+    public ?string $description;
+
+    public ?string $language;
+
+    public ?string $copyright;
+
+    public ?string $generator;
+
+    public int $lastbuilddate;
+
+    public int $lastsync;
+
+    public int $total_count;
+
+    public int $total_skip;
+
+    public int $episodes;
+
+    public ?bool $has_art = null;
 
     public $f_name;
     public $f_website;
@@ -158,7 +172,7 @@ class Podcast extends database_object implements library_item
      */
     public function has_art(): bool
     {
-        if (!isset($this->has_art)) {
+        if ($this->has_art === null) {
             $this->has_art = Art::has_db($this->id, 'podcast');
         }
 
@@ -309,18 +323,38 @@ class Podcast extends database_object implements library_item
     /**
      * update
      * This takes a key'd array of data and updates the current podcast
-     * @param array $data
+     * @param array{
+     *  feed?: string,
+     *  title?: string,
+     *  website?: string,
+     *  description?: string,
+     *  language?: string,
+     *  generator?: string,
+     *  copyright?: string
+     * } $data
      * @return int|false
      */
     public function update(array $data)
     {
-        $feed        = $data['feed'] ?? $this->feed;
-        $title       = (isset($data['title'])) ? scrub_in($data['title']) : null;
-        $website     = (isset($data['website'])) ? scrub_in($data['website']) : null;
+        $feed = $data['feed'] ?? $this->feed ?? '';
+
+        /** @var null|string $title */
+        $title = (isset($data['title'])) ? scrub_in($data['title']) : null;
+
+        /** @var null|string $website */
+        $website = (isset($data['website'])) ? scrub_in($data['website']) : null;
+
+        /** @var null|string $description */
         $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
-        $language    = (isset($data['language'])) ? scrub_in($data['language']) : null;
-        $generator   = (isset($data['generator'])) ? scrub_in($data['generator']) : null;
-        $copyright   = (isset($data['copyright'])) ? scrub_in($data['copyright']) : null;
+
+        /** @var null|string $language */
+        $language = (isset($data['language'])) ? scrub_in($data['language']) : null;
+
+        /** @var null|string $generator */
+        $generator = (isset($data['generator'])) ? scrub_in($data['generator']) : null;
+
+        /** @var null|string $copyright */
+        $copyright = (isset($data['copyright'])) ? scrub_in($data['copyright']) : null;
 
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             debug_event(self::class, 'Podcast update canceled, bad feed url.', 1);
@@ -640,7 +674,7 @@ class Podcast extends database_object implements library_item
     {
         debug_event(self::class, 'Syncing feed ' . $this->feed . ' ...', 4);
 
-        $xmlstr = file_get_contents($this->feed, false, stream_context_create(Core::requests_options()));
+        $xmlstr = file_get_contents((string) $this->feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
             debug_event(self::class, 'Cannot access feed ' . $this->feed, 1);
 

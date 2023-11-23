@@ -2151,6 +2151,11 @@ parameters:
 			path: src/Module/Api/Method/Api4/PodcastEdit4Method.php
 
 		-
+			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) expects array\\{feed\\?\\: string, title\\?\\: string, website\\?\\: string, description\\?\\: string, language\\?\\: string, generator\\?\\: string, copyright\\?\\: string\\}, array\\{feed\\: string\\|null, title\\: array\\|string\\|null, website\\: string\\|null, description\\: array\\|string\\|null, generator\\: array\\|string\\|null, copyright\\: array\\|string\\|null\\} given\\.$#"
+			count: 1
+			path: src/Module/Api/Method/Api4/PodcastEdit4Method.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\PodcastEpisode4Method\\:\\:podcast_episode\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/PodcastEpisode4Method.php
@@ -2937,6 +2942,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\PodcastEdit5Method\\:\\:podcast_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/Api5/PodcastEdit5Method.php
+
+		-
+			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) expects array\\{feed\\?\\: string, title\\?\\: string, website\\?\\: string, description\\?\\: string, language\\?\\: string, generator\\?\\: string, copyright\\?\\: string\\}, array\\{feed\\: string\\|null, title\\: array\\|string\\|null, website\\: string\\|null, description\\: array\\|string\\|null, generator\\: array\\|string\\|null, copyright\\: array\\|string\\|null\\} given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/PodcastEdit5Method.php
 
@@ -3892,6 +3902,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastEditMethod\\:\\:podcast_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PodcastEditMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) expects array\\{feed\\?\\: string, title\\?\\: string, website\\?\\: string, description\\?\\: string, language\\?\\: string, generator\\?\\: string, copyright\\?\\: string\\}, array\\{feed\\: string\\|null, title\\: array\\|string\\|null, website\\: string\\|null, description\\: array\\|string\\|null, generator\\: array\\|string\\|null, copyright\\: array\\|string\\|null\\} given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PodcastEditMethod.php
 
@@ -18121,31 +18136,6 @@ parameters:
 			path: src/Repository/Model/Podcast.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$catalog has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$copyright has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$episodes has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_copyright has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
@@ -18196,62 +18186,7 @@ parameters:
 			path: src/Repository/Model/Podcast.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$feed has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$generator has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$has_art has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$language has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$lastbuilddate has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$lastsync has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$title has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$total_count has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$total_skip has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$website has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
 
