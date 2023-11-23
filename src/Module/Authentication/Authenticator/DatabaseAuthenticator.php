@@ -52,7 +52,9 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
                 // Automagically update the password if it's old and busted.
                 if (isset($hashed_password[1]) && $row['password'] == $hashed_password[1] && $hashed_password[0] != $hashed_password[1]) {
                     $user = User::get_from_username($username);
-                    $user->update_password($password);
+                    if ($user instanceof User) {
+                        $user->update_password($password);
+                    }
                 }
 
                 if (in_array($row['password'], $hashed_password)) {

@@ -42,6 +42,7 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Repository\Model\TVShow_Season;
@@ -75,6 +76,7 @@ final class ObjectTypeToClassNameMapper
         'search' => Search::class,
         'share' => Share::class,
         'song' => Song::class,
+        'song_preview' => Song_Preview::class,
         'tag_hidden' => Tag::class,
         'tag' => Tag::class,
         'tvshow_episode' => TVShow_Episode::class,
