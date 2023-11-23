@@ -356,6 +356,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if (empty($row)) {
             return 0;
         }
+
         return (int)$row[0];
     }
 

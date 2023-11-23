@@ -43,6 +43,7 @@ $web_path     = (string)AmpConfig::get('web_path', '');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = true;
+$is_group     = (AmpConfig::get('album_group'));
 // hide columns you don't always need
 $hide_artist  = in_array('cel_artist', $hide_columns);
 $hide_album   = in_array('cel_album', $hide_columns);
@@ -105,6 +106,7 @@ foreach ($object_ids as $song_id) {
                 ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
                 ->setContext('ARGUMENT_PARAM', '')
                 ->setContext('IS_TABLE_VIEW', $is_table)
+                ->setContext('IS_ALBUM_GROUP', $is_group)
                 ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
                 ->setContext('IS_SHOW_LICENSE', $show_license)
                 ->setContext('IS_HIDE_GENRE', $hide_genres)
