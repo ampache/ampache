@@ -144,7 +144,7 @@ class Dba
      *
      * This runs an escape on a variable so that it can be safely inserted
      * into the sql
-     * @param $var
+     * @param mixed $var
      */
     public static function escape($var): string
     {
@@ -152,6 +152,9 @@ class Dba
         if (!$dbh) {
             debug_event(__CLASS__, 'Wrong dbh.', 1);
 
+            return '';
+        }
+        if ($var === null) {
             return '';
         }
         $out_var = $dbh->quote($var);
