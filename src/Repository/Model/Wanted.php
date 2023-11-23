@@ -41,43 +41,20 @@ class Wanted extends database_object
     protected const DB_TABLENAME = 'wanted';
 
     /* Variables from DB */
+    public int $id = 0;
+    public int $user;
+    public ?int $artist;
+    public ?string $artist_mbid;
+    public ?string $mbid;
+    public ?string $name;
+    public ?int $year;
+    public int $date;
+    public bool $accepted;
 
-    /**
-     * @var int $id
-     */
-    public $id;
-    /**
-     * @var null|string $mbid
-     */
-    public $mbid;
-    /**
-     * @var int $artist
-     */
-    public $artist;
-    /**
-     * @var null|string $artist_mbid
-     */
-    public $artist_mbid;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var string $year
-     */
-    public $year;
-    /**
-     * @var bool $accepted
-     */
-    public $accepted;
     /**
      * @var null|string $release_mbid
      */
     public $release_mbid;
-    /**
-     * @var int $user
-     */
-    public $user;
 
     /**
      * @var null|string $link
@@ -183,7 +160,7 @@ class Wanted extends database_object
                                     if (strlen((string)$group->{'first-release-date'}) == 4) {
                                         $wanted->year = $group->{'first-release-date'};
                                     } else {
-                                        $wanted->year = date("Y", strtotime($group->{'first-release-date'}));
+                                        $wanted->year = (int)date("Y", strtotime($group->{'first-release-date'}));
                                     }
                                 }
                                 $wanted->accepted = false;
@@ -363,7 +340,7 @@ class Wanted extends database_object
                 echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
             }
         } else {
-            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&client=' . urlencode($this->name) . '&year=' . (int) $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
+            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&client=' . urlencode((string)$this->name) . '&year=' . (int) $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
         }
     }
 
@@ -381,7 +358,7 @@ class Wanted extends database_object
                 $group = $mbrainz->lookup('release-group', $this->mbid, array('releases'));
                 // Set fresh data
                 $this->name = $group->title;
-                $this->year = date("Y", strtotime($group->{'first-release-date'}));
+                $this->year = (int)date("Y", strtotime($group->{'first-release-date'}));
 
                 // Load from database if already cached
                 $this->songs = Song_Preview::get_song_previews($this->mbid);
