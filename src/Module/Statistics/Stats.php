@@ -49,12 +49,12 @@ use PDOStatement;
 class Stats
 {
     /* Base vars */
-    public $id;
-    public $object_type;
-    public $object_id;
-    public $date;
-    public $user;
-    public $agent;
+    public int $id = 0;
+    public ?string $object_type;
+    public int $object_id;
+    public int $date;
+    public int $user;
+    public ?string $agent;
 
     /**
      * clear
@@ -177,7 +177,7 @@ class Stats
     /**
      * update the play_count for an object
      */
-    public static function count(string $type, int $object_id, $count_type = 'up'): void
+    public static function count(string $type, int $object_id, string $count_type): void
     {
         switch ($type) {
             case 'song':
@@ -213,7 +213,7 @@ class Stats
      * @param string $agent
      * @param array $location
      * @param string $count_type
-     * @param int $date
+     * @param int|null $date
      * @return bool
      */
     public static function insert(
@@ -229,6 +229,9 @@ class Stats
             debug_event(self::class, 'Invalid user given ' . $user_id, 3);
 
             return false;
+        }
+        if ($date == null) {
+            $date = time();
         }
         $type = self::validate_type($input_type);
         if (self::is_already_inserted($type, $object_id, $user_id, $agent, $date)) {
@@ -258,7 +261,7 @@ class Stats
         // the count was inserted
         if ($db_results) {
             if (in_array($type, array('song', 'album', 'artist', 'video', 'podcast', 'podcast_episode')) && $count_type === 'stream' && $user_id > 0 && $agent !== 'debug') {
-                self::count($type, $object_id);
+                self::count($type, $object_id, 'up');
                 // don't register activity for album or artist plays
                 if (!in_array($type, array('album', 'artist', 'podcast'))) {
                     static::getUserActivityPoster()->post((int)$user_id, 'play', $type, (int)$object_id, (int)$date);
@@ -468,7 +471,7 @@ class Stats
         $db_results = Dba::read($sql, array($object_id));
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int) $results['time'];
+        return (int)($results['time'] ?? 0);
     } // get_time
 
     /**
@@ -604,7 +607,7 @@ class Stats
      * get_top_sql
      * This returns the get_top sql
      * @param string $input_type
-     * @param string $threshold
+     * @param int $threshold
      * @param string $count_type
      * @param int $user_id
      * @param bool $random
@@ -844,18 +847,18 @@ class Stats
      * It uses the popular threshold to figure out how many to pull it will only return unique object
      * @param int $user_id
      * @param string $count_type
-     * @param string $object_type
+     * @param string|null $object_type
      * @param bool $user_only
      * @return array
      */
-    public static function get_recently_played($user_id, $count_type = 'stream', $object_type = false, $user_only = false)
+    public static function get_recently_played($user_id, $count_type = 'stream', $object_type = null, $user_only = false)
     {
         $personal_info_recent = 91;
         $personal_info_time   = 92;
         $personal_info_agent  = 93;
         $limit                = AmpConfig::get('popular_threshold', 10);
         $access100            = Access::check('interface', 100);
-        $object_string        = (!$object_type)
+        $object_string        = (empty($object_type))
             ? "'song', 'live_stream', 'podcast_episode', 'video'"
             : "'$object_type'";
 
@@ -952,7 +955,8 @@ class Stats
      * get_newest_sql
      * This returns the get_newest sql
      * @param string $input_type
-     * @param int $catalog_id
+     * @param int|null $catalog_id
+     * @param int|null $user_id
      */
     public static function get_newest_sql($input_type, $catalog_id = 0, $user_id = null): string
     {
@@ -1010,8 +1014,8 @@ class Stats
             $sql_type = "`song`.`" . $type . "`";
         }
         // join valid catalogs or a specific one
-        $sql .= ($catalog_id > 0)
-            ? "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog` = '" . (string)scrub_in($catalog_id) . "' "
+        $sql .= ((int)$catalog_id > 0)
+            ? "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog` = '" . $catalog_id . "' "
             : "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
