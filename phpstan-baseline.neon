@@ -171,11 +171,6 @@ parameters:
 			path: src/Config/AmpConfig.php
 
 		-
-			message: "#^Method Ampache\\\\Config\\\\AmpConfig\\:\\:set_by_array\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/AmpConfig.php
-
-		-
 			message: "#^Method Ampache\\\\Config\\\\AmpConfig\\:\\:set_by_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/AmpConfig.php
@@ -641,21 +636,6 @@ parameters:
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:add_dict\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:check_auth\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:check_session\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:content_codes\\(\\) has parameter \\$input with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Daap_Api.php
@@ -707,11 +687,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:server_info\\(\\) has parameter \\$input with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:setHeaders\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Daap_Api.php
 
@@ -4501,11 +4476,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_updatePlaylist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_updatePlaylist\\(\\) has parameter \\$playlist_id with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -5036,11 +5006,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_createSuccessResponse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getAlbumId\\(\\) has parameter \\$album_id with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
@@ -5071,11 +5036,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_setIfStarred\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addAlbumInfo\\(\\) has parameter \\$info with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
@@ -5087,11 +5047,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addAlbumList2\\(\\) has parameter \\$albums with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addArtistArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -5131,47 +5086,12 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addBookmark\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addChildArray\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addChildArray\\(\\) has parameter \\$child with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addDirectory_Album\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addDirectory_Artist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addDirectory_Catalog\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addGenres\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addIgnoredArticles\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addIndex\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -5187,11 +5107,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addIndexes\\(\\) has parameter \\$lastModified with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addInternetRadioStation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -5216,22 +5131,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addMessage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addNowPlaying\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addPlaylist_Playlist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addPlaylist_Search\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -5242,11 +5142,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addPlaylists\\(\\) has parameter \\$smartplaylists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addPodcastEpisode\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -5351,11 +5246,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addVideo\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Parameter \\#1 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:create_from_id\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
@@ -5387,11 +5277,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$video_id of static method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_isVideo\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_cache_path\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -5847,11 +5732,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$socket of function socket_set_option expects Socket, Socket\\|false given\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$songid of class Ampache\\\\Repository\\\\Model\\\\Song constructor expects int\\|null, string given\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
 
@@ -7596,11 +7476,6 @@ parameters:
 			path: src/Module/Authentication/Openid.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authorization\\\\Access\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Module/Authorization/Access.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authorization\\\\Access\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authorization/Access.php
@@ -7797,11 +7672,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:verifySong\\(\\) has parameter \\$beetsSong with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$songid of class Ampache\\\\Repository\\\\Model\\\\Song constructor expects int\\|null, bool\\|int given\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -8511,11 +8381,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Parameter \\#2 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_cache_path\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Parameter \\#2 \\$string2 of function strcmp expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
@@ -8712,11 +8577,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Parameter \\#2 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_cache_path\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_subsonic.php
 
@@ -17161,11 +17021,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Access to an undefined static property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$aliases\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -17187,26 +17042,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:getField\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_default_art_kind\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_fullname\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_keywords\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_parent\\(\\)\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -17377,11 +17212,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:perform_ready\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:process_action\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -17583,11 +17413,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$new_license of static method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:update_license\\(\\) expects string, int\\|null given\\.$#"
 			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, int given\\.$#"
-			count: 2
 			path: src/Repository/Model/Catalog.php
 
 		-
@@ -19971,11 +19796,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Parameter \\#2 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_cache_path\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Parameter \\#2 \\$mbid of static method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:check\\(\\) expects string, array\\|string given\\.$#"
 			count: 2
 			path: src/Repository/Model/Song.php
@@ -20026,11 +19846,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$id \\(int\\) does not accept null\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -20054,11 +19869,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:build_cache\\(\\) has parameter \\$song_ids with no value type specified in iterable type array\\.$#"
@@ -20122,11 +19932,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:stream\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 
@@ -20902,11 +20707,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:is_logged_in\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:load_playlist\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
