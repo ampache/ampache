@@ -653,7 +653,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $song = new Song($pathreq[1]);
+                        $song = new Song((int)$pathreq[1]);
                         if ($song->id) {
                             $song->format();
                             $meta = self::_itemSong($song, $root . '/songs');

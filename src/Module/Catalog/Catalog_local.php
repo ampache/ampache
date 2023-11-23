@@ -954,7 +954,7 @@ class Catalog_local extends Catalog
                     // sort_find_home will replace the % with the correct values.
                     $directory = $this->sort_find_home($song, $this->sort_pattern, $root);
                     $filename  = $this->sort_find_home($song, $this->rename_pattern);
-                    if ($directory === false || $filename === false) {
+                    if ($directory === null || $filename === null) {
                         $fullpath = $song->file;
                     } else {
                         $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION));

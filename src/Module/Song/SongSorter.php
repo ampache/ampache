@@ -140,7 +140,7 @@ final class SongSorter implements SongSorterInterface
                     $directory = ($filesOnly)
                         ? dirname($song->file)
                         : $catalog->sort_find_home($song, $catalog->sort_pattern, $catalog->get_path(), $various_artist, $windowsCompat);
-                    if ($directory === false) {
+                    if ($directory === null) {
                         /* HINT: $sort_pattern after replacing %x values */
                         $interactor->info(
                             sprintf(T_('The sort_pattern has left over variables. %s'), $catalog->sort_pattern),
@@ -148,14 +148,14 @@ final class SongSorter implements SongSorterInterface
                         );
                     }
                     $filename = $catalog->sort_find_home($song, $catalog->rename_pattern, null, $various_artist, $windowsCompat);
-                    if ($filename === false) {
+                    if ($filename === null) {
                         /* HINT: $sort_pattern after replacing %x values */
                         $interactor->info(
                             sprintf(T_('The sort_pattern has left over variables. %s'), $catalog->rename_pattern),
                             true
                         );
                     }
-                    if ($directory === false || $filename === false) {
+                    if ($directory === null || $filename === null) {
                         $fullpath = $song->file;
                     } else {
                         $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION));

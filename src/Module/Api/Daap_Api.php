@@ -244,7 +244,7 @@ class Daap_Api
     /**
      * @param string $code
      */
-    private static function check_session($code)
+    private static function check_session($code): void
     {
         // Purge expired sessions
         $sql = "DELETE FROM `daap_session` WHERE `creationdate` < ?";
@@ -271,7 +271,7 @@ class Daap_Api
     /**
      * @param string $code
      */
-    private static function check_auth($code = '')
+    private static function check_auth($code = ''): void
     {
         $authenticated = false;
         $pass          = AmpConfig::get('daap_pass');
@@ -835,7 +835,7 @@ class Daap_Api
      * @param string $type
      * @param string $name
      */
-    private static function add_dict($code, $type, $name)
+    private static function add_dict($code, $type, $name): void
     {
         self::$tags[$name] = array(
             'type' => $type,
@@ -880,7 +880,7 @@ class Daap_Api
         }
     }
 
-    private static function setHeaders()
+    private static function setHeaders(): void
     {
         header("Content-Type: application/x-dmap-tagged");
         header("DAAP-Server: Ampache");

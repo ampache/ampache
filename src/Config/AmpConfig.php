@@ -120,7 +120,7 @@ class AmpConfig
      * @param array $array
      * @param bool $clobber
      */
-    public static function set_by_array($array, $clobber = false)
+    public static function set_by_array($array, $clobber = false): void
     {
         foreach ($array as $name => $value) {
             self::set($name, $value, $clobber);

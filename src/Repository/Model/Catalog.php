@@ -1937,14 +1937,15 @@ abstract class Catalog extends database_object
             $libitem = Video::create_from_id($object_id);
         } else {
             $className = ObjectTypeToClassNameMapper::map($type);
-            $libitem   = new $className($object_id);
+            /** @var library_item $libitem */
+            $libitem = new $className($object_id);
         }
         $inserted = false;
         $options  = array();
         if (method_exists($libitem, 'format')) {
             $libitem->format();
         }
-        if ($libitem->id) {
+        if ($libitem->getId() > 0) {
             // Only search on items with default art kind AS `default`.
             if ($libitem->get_default_art_kind() == 'default') {
                 $keywords = $libitem->get_keywords();
@@ -4064,7 +4065,7 @@ abstract class Catalog extends database_object
     /**
      * Return full path of the cached music file.
      * @param int $object_id
-     * @param string $catalog_id
+     * @param int $catalog_id
      * @param string $path
      * @param string $target
      * @return false|string
@@ -4080,7 +4081,7 @@ abstract class Catalog extends database_object
             mkdir(rtrim(trim($path), '/') . '/' . $catalog_id, 0775, true);
         }
         // Create subdirectory based on the 2 last digit of the SongID. We prevent having thousands of file in one directory.
-        $path .= '/' . $catalog_id . '/' . substr($object_id, -1, 1) . '/' . substr($object_id, -2, 1) . '/';
+        $path .= '/' . $catalog_id . '/' . substr((string)$object_id, -1, 1) . '/' . substr((string)$object_id, -2, 1) . '/';
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }
@@ -4095,7 +4096,7 @@ abstract class Catalog extends database_object
      * @param array $options
      * @noinspection PhpMissingBreakStatementInspection
      */
-    public static function process_action($action, $catalogs, $options = null)
+    public static function process_action($action, $catalogs, $options = null): void
     {
         if (empty($options)) {
             $options = array(
@@ -4299,9 +4300,8 @@ abstract class Catalog extends database_object
      * @param $base
      * @param string $various_artist
      * @param bool $windowsCompat
-     * @return false|string
      */
-    public function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "Various Artists", $windowsCompat = false)
+    public function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "Various Artists", $windowsCompat = false): ?string
     {
         $home = '';
         if ($base) {
@@ -4356,7 +4356,7 @@ abstract class Catalog extends database_object
         // don't send a mismatched file!
         foreach ($replace_array as $replace_string) {
             if (strpos($sort_pattern, $replace_string) !== false) {
-                return false;
+                return null;
             }
         }
 

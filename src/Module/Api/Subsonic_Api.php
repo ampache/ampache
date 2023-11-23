@@ -2896,7 +2896,7 @@ class Subsonic_Api
         $songIndexToRemove = array(),
         $public = true,
         $clearFirst = false
-    ) {
+    ): void {
         $playlist           = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlist_id));
         $songsIdToAdd_count = count($songsIdToAdd);
         $newdata            = array();
