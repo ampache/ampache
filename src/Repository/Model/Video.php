@@ -63,7 +63,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public ?int $display_x;
     public ?int $display_y;
     public ?float $frame_rate;
-    public string $mode;
+    public ?string $mode;
     public int $total_count;
     public int $total_skip;
 
