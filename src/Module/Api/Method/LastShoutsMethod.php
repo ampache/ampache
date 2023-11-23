@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -52,7 +53,7 @@ final class LastShoutsMethod
     public static function last_shouts(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: sociable'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

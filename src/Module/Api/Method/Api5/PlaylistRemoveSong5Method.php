@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -59,7 +60,7 @@ final class PlaylistRemoveSong5Method
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && $user->access !== 100) {
-            Api5::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
+            Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
         } else {
             if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
                 $playlist->delete_all();
@@ -67,7 +68,7 @@ final class PlaylistRemoveSong5Method
             } elseif (array_key_exists('song', $input)) {
                 $track = (int) scrub_in($input['song']);
                 if (!$playlist->has_item($track)) {
-                    Api5::error(T_('Not Found'), '4704', self::ACTION, 'song', $input['api_format']);
+                    Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
 
                     return false;
                 }
@@ -77,7 +78,7 @@ final class PlaylistRemoveSong5Method
             } elseif (array_key_exists('track', $input)) {
                 $track = (int) scrub_in($input['track']);
                 if (!$playlist->has_item(null, $track)) {
-                    Api5::error(T_('Not Found'), '4704', self::ACTION, 'track', $input['api_format']);
+                    Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'track', $input['api_format']);
 
                     return false;
                 }

@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Repository\Model\User;
@@ -55,7 +56,7 @@ final class LocalplaySongsMethod
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api::error(T_('Unable to connect to localplay controller'), '4710', self::ACTION, 'account', $input['api_format']);
+            Api::error(T_('Unable to connect to localplay controller'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }

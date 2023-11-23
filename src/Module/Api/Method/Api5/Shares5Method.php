@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Repository\Model\User;
@@ -52,7 +53,7 @@ final class Shares5Method
     public static function shares(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api5::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

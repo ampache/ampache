@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
@@ -65,12 +66,12 @@ final class PlaylistSongsMethod
 
         if (!$playlist->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && $user->access !== 100)) {
-            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
+            Api::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }

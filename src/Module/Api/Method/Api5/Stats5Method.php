@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
@@ -75,19 +76,19 @@ final class Stats5Method
         }
         // do you allow video?
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api5::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
-            Api5::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

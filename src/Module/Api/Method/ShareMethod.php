@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\Model\User;
@@ -50,7 +51,7 @@ final class ShareMethod
     public static function share(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

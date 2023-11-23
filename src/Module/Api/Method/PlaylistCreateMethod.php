@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -62,7 +63,7 @@ final class PlaylistCreateMethod
 
         $object_id = Playlist::create($name, $type, $user->id, false);
         if (!$object_id) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
 
             return false;
         }

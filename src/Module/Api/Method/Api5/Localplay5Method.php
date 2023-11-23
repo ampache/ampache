@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -65,7 +66,7 @@ final class Localplay5Method
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api5::error(T_('Unable to connect to localplay controller'), '4710', self::ACTION, 'account', $input['api_format']);
+            Api5::error(T_('Unable to connect to localplay controller'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -78,7 +79,7 @@ final class Localplay5Method
                 $object_id = (int)($input['oid'] ?? 0);
                 $type      = $input['type'] ? (string) $input['type'] : 'Song';
                 if (!AmpConfig::get('allow_video') && $type == 'Video') {
-                    Api5::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+                    Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
                     return false;
                 }
@@ -133,7 +134,7 @@ final class Localplay5Method
                 break;
             default:
                 // They are doing it wrong
-                Api5::error(T_('Bad Request'), '4710', self::ACTION, 'command', $input['api_format']);
+                Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'command', $input['api_format']);
 
                 return false;
         } // end switch on command

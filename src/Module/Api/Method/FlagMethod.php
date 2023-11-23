@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Api;
@@ -54,7 +55,7 @@ final class FlagMethod
     public static function flag(array $input, User $user): bool
     {
         if (!AmpConfig::get('ratings')) {
-            Api::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: ratings'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -67,7 +68,7 @@ final class FlagMethod
         $flag      = (bool)($input['flag'] ?? false);
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -75,12 +76,12 @@ final class FlagMethod
         $className = ObjectTypeToClassNameMapper::map($type);
 
         if (!$className || !$object_id) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
         } else {
             $item = new $className($object_id);
             if (!$item->id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
 
                 return false;
             }
@@ -91,7 +92,7 @@ final class FlagMethod
 
                 return true;
             }
-            Api::error('flag failed ' . $object_id, '4710', self::ACTION, 'system', $input['api_format']);
+            Api::error('flag failed ' . $object_id, ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
         }
 
         return true;

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -55,7 +56,7 @@ final class UrlToSongMethod
         // Don't scrub, the function needs her raw and juicy
         $url_data = Stream_Url::parse($input['url']);
         if (array_key_exists('id', $url_data)) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'url', $input['api_format']);
+            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
 
             return false;
         }

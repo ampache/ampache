@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -80,7 +81,7 @@ final class UserUpdate5Method
 
         if ($password && $update_user->access == 100) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -119,7 +120,7 @@ final class UserUpdate5Method
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+        Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

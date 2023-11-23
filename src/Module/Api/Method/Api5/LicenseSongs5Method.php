@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
@@ -50,7 +51,7 @@ final class LicenseSongs5Method
     public static function license_songs(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
-            Api5::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: licensing'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

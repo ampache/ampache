@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -64,7 +65,7 @@ final class UserDeleteMethod
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

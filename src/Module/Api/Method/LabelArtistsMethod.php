@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -52,7 +53,7 @@ final class LabelArtistsMethod
     public static function label_artists(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
-            Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: label'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

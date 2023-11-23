@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Repository\Model\Album;
@@ -52,7 +53,7 @@ final class Album5Method
         $objectId = $input['filter'] ?? null;
 
         if ($objectId === null) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $objectId), '4710', self::ACTION, 'type', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $objectId), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

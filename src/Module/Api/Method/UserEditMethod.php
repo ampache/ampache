@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\Model\Preference;
@@ -91,13 +92,13 @@ final class UserEditMethod
         $update_user = User::get_from_username($username);
         if ($update_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if ($password && $update_user->access == 100) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

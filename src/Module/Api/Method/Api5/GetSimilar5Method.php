@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Util\Recommendation;
@@ -58,7 +59,7 @@ final class GetSimilar5Method
         $object_id = (int) $input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'artist'))) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

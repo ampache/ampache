@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -60,7 +61,7 @@ final class CatalogAction5Method
         // confirm the correct data
         if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $task), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
 
             return false;
         }
@@ -99,7 +100,7 @@ final class CatalogAction5Method
 
             Api5::message('successfully started: ' . $task, $input['api_format']);
         } else {
-            Api5::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
+            Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
         }
 
         return true;

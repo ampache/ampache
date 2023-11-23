@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -52,7 +53,7 @@ final class DeletedPodcastEpisodes5Method
     {
         unset($user);
         if (!AmpConfig::get('podcast')) {
-            Api5::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

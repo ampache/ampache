@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -56,12 +57,12 @@ final class SongDelete5Method
 
         if (!$song->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         if (!Catalog::can_remove($song, $user->id)) {
-            Api5::error(T_('Require: 75'), '4742', self::ACTION, 'account', $input['api_format']);
+            Api5::error(T_('Require: 75'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -70,7 +71,7 @@ final class SongDelete5Method
             Catalog::count_table('song');
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
         }
 
         return true;

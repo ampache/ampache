@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Json_Data;
@@ -76,13 +77,13 @@ final class AdvancedSearchMethod
 
         $type = (isset($input['type'])) ? (string) $input['type'] : 'song';
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

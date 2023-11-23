@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
@@ -49,7 +50,7 @@ final class ShareDelete5Method
     public static function share_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api5::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -63,11 +64,11 @@ final class ShareDelete5Method
                 Catalog::count_table('share');
             } else {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
+                Api5::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
             }
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
         }
 
         return true;

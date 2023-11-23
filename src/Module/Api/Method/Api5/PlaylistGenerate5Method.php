@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Search;
@@ -71,7 +72,7 @@ final class PlaylistGenerate5Method
             : 'song';
         // confirm the correct data
         if (!in_array($format, array('song', 'index', 'id'))) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $format), '4710', self::ACTION, 'type', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $format), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -66,7 +67,7 @@ final class UpdateArtMethod
 
         // confirm the correct data
         if (!in_array(strtolower($type), array('artist', 'album'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return true;
         }
@@ -76,7 +77,7 @@ final class UpdateArtMethod
         $item = new $className($object_id);
         if (!$item->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
@@ -88,7 +89,7 @@ final class UpdateArtMethod
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
         return true;
     }
