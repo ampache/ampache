@@ -374,7 +374,7 @@ class Wanted extends database_object
                                 $song['track']       = $track->number;
                                 $song['title']       = $track->title;
                                 $song['mbid']        = $track->id;
-                                $song['artist']      = $group->artist ?? $this->artist;
+                                $song['artist']      = $this->artist;
                                 $song['artist_mbid'] = $this->artist_mbid;
                                 $song['session']     = session_id();
                                 $song['album_mbid']  = $this->mbid;
