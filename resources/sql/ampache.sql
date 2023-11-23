@@ -14,12 +14,12 @@
 -- You should have received a copy of the GNU Affero General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- phpMyAdmin SQL Dump
--- version 5.1.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.9
--- Generation Time: Oct 24, 2023 at 03:57 AM
--- Server version: 8.0.31
+-- Generation Time: Nov 23, 2023 at 06:59 AM
+-- Server version: 10.11.4-MariaDB-1~deb12u1-log
 -- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -897,7 +897,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=185 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=187 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -1025,9 +1025,11 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (179, 'show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse'),
 (180, 'show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse'),
 (181, 'show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface'),
-(182, 'use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player'),
+(182, 'use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'boolean', 'streaming', 'player'),
 (183, 'custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', 25, 'string', 'interface', 'custom'),
-(184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options', NULL);
+(184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options', NULL),
+(185, 'jp_volume', '0.8', 'Default webplayer volume', 25, 'special', 'streaming', 'player'),
+(186, 'perpetual_api_session', '0', 'API sessions do not expire', 100, 'boolean', 'system', 'backend');
 
 -- --------------------------------------------------------
 
@@ -1473,7 +1475,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600042'),
+('db_version', '600044'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1739,7 +1741,9 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 181, '1'),
 (-1, 182, '0'),
 (-1, 183, ''),
-(-1, 184, '0');
+(-1, 184, '0'),
+(-1, 185, '0.8'),
+(-1, 186, '0');
 
 -- --------------------------------------------------------
 
