@@ -41,122 +41,66 @@ class Artist extends database_object implements library_item, GarbageCollectible
     protected const DB_TABLENAME = 'artist';
 
     /* Variables from DB */
-
-    /**
-     * @var int $id
-     */
-    public $id;
-
-    /**
-     * @var null|string $name
-     */
-    public $name;
-
-    /**
-     * @var null|string $prefix
-     */
-    public $prefix;
-
-    /**
-     * @var null|string $mbid
-     */
-    public $mbid; // MusicBrainz ID
-
-    /**
-     * @var null|string $summary
-     */
-    public $summary;
-
-    /**
-     * @var null|string $placeformed
-     */
-    public $placeformed;
-
-    /**
-     * @var int|null $yearformed
-     */
-    public $yearformed;
-
-    /**
-     * @var int $last_update
-     */
-    public $last_update;
+    public int $id = 0;
+    public ?string $name;
+    public ?string $prefix;
+    public ?string $mbid; // MusicBrainz ID
+    public ?string $summary;
+    public ?string $placeformed;
+    public ?int $yearformed;
+    public int $last_update;
+    public ?int $user;
+    public bool $manual_update;
+    public ?int $time;
+    public int $song_count;
+    public int $album_count;
+    public int $album_disk_count;
+    public int $total_count;
 
     /**
      * @var int $catalog_id
      */
     public $catalog_id;
-
-    /**
-     * @var int|null $time
-     */
-    public $time;
-
-    /**
-     * @var int|null $user
-     */
-    public $user;
-
-    /**
-     * @var bool $manual_update
-     */
-    public $manual_update;
-
     /**
      * @var int $songs
      */
     public $songs;
-
     /**
      * @var int $albums
      */
     public $albums;
-
     /**
      * @var array $tags
      */
     public $tags;
-
     /**
      * @var bool $has_art
      */
     public $has_art;
-
     /**
      * @var null|string $f_tags
      */
     public $f_tags;
-
     /**
      * @var array $labels
      */
     public $labels;
-
     /**
      * @var null|string $f_labels
      */
     public $f_labels;
-
-    /**
-     * @var int $total_count
-     */
-    public $total_count;
-
     /**
      * @var null|string $f_name // Prefix + Name, generated
      */
     public $f_name;
-
     /**
      * @var null|string $link
      */
     public $link;
-
     /**
      * @var null|string $f_link
      */
     public $f_link;
-
     /**
      * @var null|string $f_time
      */
@@ -167,29 +111,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @var bool $_fake
      */
     public $_fake = false; // Set if construct_from_array() used
-
-    /**
-     * @var int $album_count
-     */
-    public $album_count;
-
-    /**
-     * @var int $album_disk_count
-     */
-    public $album_disk_count;
-
-    /**
-     * @var int $song_count
-     */
-    public $song_count;
-
     /**
      * @var array $_mapcache
      */
     private static $_mapcache = array();
 
     /**
-     * Artist
      * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
      * @param int|null $artist_id

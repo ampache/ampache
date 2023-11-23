@@ -1056,11 +1056,6 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Module/Api/Json4_Data.php
@@ -1262,11 +1257,6 @@ parameters:
 
 		-
 			message: "#^Possibly invalid array key type \\(array\\<int, string\\>\\|string\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -1511,11 +1501,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
@@ -1602,11 +1587,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\ArtistAlbums3Method\\:\\:artist_albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/ArtistAlbums3Method.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/ArtistAlbums3Method.php
 
@@ -1902,11 +1882,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/ArtistAlbums4Method.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/ArtistAlbums4Method.php
 
@@ -5876,11 +5851,6 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
@@ -5976,11 +5946,6 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 2
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 3
 			path: src/Module/Api/Xml4_Data.php
@@ -6058,11 +6023,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 2
 			path: src/Module/Api/Xml5_Data.php
 
 		-
@@ -6173,11 +6133,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:videos\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
 			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 2
 			path: src/Module/Api/Xml_Data.php
 
 		-
@@ -16786,17 +16741,7 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$labels type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$song_count \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
 
