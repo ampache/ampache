@@ -498,11 +498,11 @@ class Subsonic_Xml_Data
                     ? $cache_target
                     : Stream::get_transcode_format($song->type, null, 'api');
 
-                if ($song->type !== $transcode_type) {
+                if (!empty($transcode_type) && $song->type !== $transcode_type) {
                     // Return a file path relative to the catalog root path
                     $xsong->addAttribute('path', preg_replace('"\.' . $song->type . '$"', '.' . $transcode_type, $file_path));
                     // Set transcoding information
-                    $xsong->addAttribute('transcodedSuffix', (string)$transcode_type);
+                    $xsong->addAttribute('transcodedSuffix', $transcode_type);
                     $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
 
                     return $xsong;
@@ -601,7 +601,7 @@ class Subsonic_Xml_Data
         }
         $xdir = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$catalog_id);
-        $xdir->addAttribute('name', $catalog->name);
+        $xdir->addAttribute('name', (string)$catalog->name);
         $allartists = Catalog::get_artist_arrays(array($catalog_id));
         foreach ($allartists as $artist) {
             self::addChildArray($xdir, $artist);

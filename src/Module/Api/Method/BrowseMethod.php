@@ -101,15 +101,12 @@ final class BrowseMethod
 
                 return false;
             }
-            $catalog_media_type = $catalog->gather_types;
-            $output_type        = $catalog_media_type;
-
             $browse = Api::getBrowse();
             $browse->reset_filters();
 
             Api::set_filter('add', $input['add'] ?? '', $browse);
             Api::set_filter('update', $input['update'] ?? '', $browse);
-            switch ($catalog_media_type) {
+            switch ((string)$catalog->gather_types) {
                 case 'clip':
                 case 'tvshow':
                 case 'movie':
@@ -121,13 +118,18 @@ final class BrowseMethod
                 case 'music':
                     $output_type = 'artist';
                     $browse->set_type('album_artist');
-                    $browse->set_filter('gather_types', $catalog_media_type);
+                    $browse->set_filter('gather_types', 'music');
                     break;
                 case 'podcast':
                     $output_type = 'podcast';
                     $browse->set_type('podcast');
-                    $browse->set_filter('gather_types', $catalog_media_type);
+                    $browse->set_filter('gather_types', 'podcast');
                     break;
+                default:
+                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                    Api::error(sprintf(T_('Bad Request: %s'), $catalog_id), '4710', self::ACTION, 'catalog', $input['api_format']);
+
+                    return false;
             }
             $child_type = $output_type;
             $browse->set_sort('name', 'ASC');

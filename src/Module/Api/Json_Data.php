@@ -104,7 +104,7 @@ class Json_Data
      * This generates a JSON Error message
      * nothing fancy here...
      *
-     * @param string $code Error code
+     * @param int|string $code Error code
      * @param string $string Error message
      * @param string $action Error method
      * @param string $type Error type

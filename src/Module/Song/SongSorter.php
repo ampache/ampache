@@ -86,7 +86,7 @@ final class SongSorter implements SongSorterInterface
             }
             /* HINT: Catalog Name */
             $interactor->info(
-                sprintf(T_('Starting Catalog: %s'), stripslashes($catalog->name)),
+                sprintf(T_('Starting Catalog: %s'), stripslashes((string)$catalog->name)),
                 true
             );
 

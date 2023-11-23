@@ -113,10 +113,10 @@ use Ampache\Module\Authorization\Access;
                 <td><?php echo T_('Status'); ?></td>
                 <td>
                     <select name="active">
-                        <option value="1" <?php if ($libitem->active === 1) {
+                        <option value="1" <?php if ($libitem->active) {
                             echo "selected";
                         } ?>><?php echo T_('Active'); ?></option>
-                        <option value="0" <?php if ($libitem->active === 0) {
+                        <option value="0" <?php if (!$libitem->active) {
                             echo "selected";
                         } ?>><?php echo T_('Inactive'); ?></option>
                     </select>

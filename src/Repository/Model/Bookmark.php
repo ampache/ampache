@@ -38,14 +38,14 @@ class Bookmark extends database_object
     protected const DB_TABLENAME = 'bookmark';
 
     // Public variables
-    public $id;
-    public $user;
-    public $object_id;
-    public $object_type;
-    public $position;
-    public $comment;
-    public $creation_date;
-    public $update_date;
+    public int $id = 0;
+    public int $user;
+    public int $position;
+    public ?string $comment;
+    public ?string $object_type;
+    public int $object_id;
+    public int $creation_date;
+    public int $update_date;
 
     /**
      * Constructor

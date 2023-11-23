@@ -45,7 +45,7 @@ final class CatalogDetails implements CatalogDetailsInterface
 
     public function getName(): string
     {
-        return $this->catalog->name;
+        return $this->catalog->name ?? '';
     }
 
     public function getFullInfo(): string

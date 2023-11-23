@@ -40,7 +40,7 @@ $name = scrub_out($libitem->get_fullname()); ?>
 <td class="cel_category"><?php echo $libitem->category; ?></td>
 <td class="cel_artists"><?php echo $libitem->artist_count; ?></td>
 <td class="cel_country"><?php echo $libitem->country; ?></td>
-<?php if ($libitem->active == 1) {
+<?php if ($libitem->active) {
     echo "<td class=\"cel_active\">" . T_('Active') . "</td>";
 } else {
     echo "<td class=\"cel_active\">" . T_('Inactive') . "</td>";
