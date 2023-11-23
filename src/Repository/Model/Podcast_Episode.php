@@ -660,12 +660,12 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
                     debug_event(self::class, 'Download completed.', 4);
                 }
             }
-            if (Core::get_filesize(Core::conv_lc_file($file)) > 0) {
+            if ($file !== null && Core::get_filesize(Core::conv_lc_file($file)) > 0) {
                 // the file exists so get/update file details in the DB
                 debug_event(self::class, 'Updating details ' . $file . ' ...', 4);
                 if (empty($this->file)) {
                     $this->file = $file;
-                    self::update_file($this->file, $this->id);
+                    self::update_file($file, $this->id);
                 }
                 Catalog::update_media_from_tags($this);
 
