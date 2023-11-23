@@ -279,10 +279,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @var null|string $f_bitrate
      */
     public $f_bitrate;
-    /**
-     * @var null|string $link
-     */
-    public $link;
+
+    public ?string $link = null;
+
     /**
      * @var null|string $f_file
      */
@@ -1866,10 +1865,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . "/song.php?action=show_song&song_id=" . $this->id;
         }

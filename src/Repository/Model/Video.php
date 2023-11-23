@@ -103,10 +103,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @var null|string $f_size
      */
     public $f_size;
-    /**
-     * @var null|string $link
-     */
-    public $link;
+
+    public ?string $link = null;
+
     /**
      * @var null|string $f_link
      */
@@ -317,10 +316,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . "/video.php?action=show_video&video_id=" . $this->id;
         }

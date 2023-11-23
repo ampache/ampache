@@ -45,7 +45,9 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     public $f_name;
     public $f_tvshow;
     public $f_tvshow_link;
-    public $link;
+
+    public ?string $link = null;
+
     public $f_link;
 
     // Constructed vars
@@ -187,10 +189,10 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . '/tvshow_seasons.php?action=show&season=' . $this->id;
         }

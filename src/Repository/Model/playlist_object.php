@@ -57,10 +57,9 @@ abstract class playlist_object extends database_object implements library_item
      * @var string $type
      */
     public $type;
-    /**
-     * @var null|string $link
-     */
-    public $link;
+
+    public ?string $link = null;
+
     /**
      * @var bool $has_art
      */
@@ -180,10 +179,10 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = ($this instanceof Search)
                 ? $web_path . '/smartplaylist.php?action=show&playlist_id=' . $this->id

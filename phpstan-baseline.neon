@@ -18231,11 +18231,6 @@ parameters:
 			path: src/Repository/Model/Podcast.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$title has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
@@ -18407,11 +18402,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$has_art has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$link has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -19606,11 +19596,6 @@ parameters:
 			path: src/Repository/Model/Song_Preview.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$mbid has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
@@ -19812,11 +19797,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$link has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Season.php
 
@@ -20127,11 +20107,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$link has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TvShow.php
 

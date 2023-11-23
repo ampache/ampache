@@ -59,7 +59,9 @@ class Podcast extends database_object implements library_item
     public $f_generator;
     public $f_lastbuilddate;
     public $f_lastsync;
-    public $link;
+
+    public ?string $link = null;
+
     public $f_link;
     public $f_website_link;
 
@@ -196,10 +198,10 @@ class Podcast extends database_object implements library_item
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . '/podcast.php?action=show&podcast=' . $this->id;
         }

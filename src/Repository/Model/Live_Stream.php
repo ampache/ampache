@@ -58,10 +58,9 @@ class Live_Stream extends database_object implements Media, library_item
      * @var string $url
      */
     public $url;
-    /**
-     * @var null|string $link
-     */
-    public $link;
+
+    public ?string $link = null;
+
     /**
      * @var int $genre
      */
@@ -158,10 +157,10 @@ class Live_Stream extends database_object implements Media, library_item
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . '/radio.php?action=show&radio=' . scrub_out($this->id);
         }

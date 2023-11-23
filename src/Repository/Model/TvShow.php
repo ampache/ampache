@@ -48,7 +48,9 @@ class TvShow extends database_object implements library_item
     public $episodes;
     public $seasons;
     public $f_name;
-    public $link;
+
+    public ?string $link = null;
+
     public $f_link;
 
     // Constructed vars
@@ -203,10 +205,10 @@ class TvShow extends database_object implements library_item
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . '/tvshows.php?action=show&tvshow=' . $this->id;
         }

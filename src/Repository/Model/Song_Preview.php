@@ -55,7 +55,9 @@ class Song_Preview extends database_object implements Media, playable_item
     public $f_artist_link;
     public $f_name;
     public $f_name_full;
-    public $link;
+
+    public ?string $link = null;
+
     public $f_link;
     public $f_album_link;
     public $f_album;
@@ -263,10 +265,10 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $this->link = "#";
         }
 

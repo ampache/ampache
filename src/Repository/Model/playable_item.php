@@ -53,7 +53,7 @@ interface playable_item
      *
      * Get the item link.
      */
-    public function get_link(): ?string;
+    public function get_link(): string;
 
     /**
      * Get item f_link.

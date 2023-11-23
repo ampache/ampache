@@ -85,10 +85,8 @@ class Broadcast extends database_object implements library_item
      * @var bool $is_private
      */
     public $is_private;
-    /**
-     * @var null|string $link
-     */
-    public $link;
+
+    public ?string $link = null;
 
     /**
      * Constructor
@@ -228,10 +226,10 @@ class Broadcast extends database_object implements library_item
     /**
      * get_link
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . '/broadcast.php?id=' . scrub_out($this->id);
         }
