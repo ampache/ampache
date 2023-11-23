@@ -42,18 +42,16 @@ class Democratic extends Tmp_Playlist
 {
     protected const DB_TABLENAME = 'democratic';
 
-    public $name;
-    public $cooldown;
-    public $level;
-    public $user;
-    public $primary;
-    public $base_playlist;
+    public ?string $name;
+    public ?int $cooldown;
+    public int $level;
+    public int $user;
+    public bool $primary;
+    public int $base_playlist;
 
     public $f_cooldown;
     public $f_primary;
     public $f_level;
-
-    // Build local, buy local
     public $tmp_playlist;
     public $object_ids = array();
     public $vote_ids   = array();
@@ -138,7 +136,7 @@ class Democratic extends Tmp_Playlist
     {
         $this->f_cooldown = $this->cooldown . ' ' . T_('minutes');
         $this->f_primary  = $this->primary ? T_('Primary') : '';
-        $this->f_level    = User::access_level_to_name($this->level);
+        $this->f_level    = User::access_level_to_name((string)$this->level);
     } // format
 
     /**
@@ -228,7 +226,7 @@ class Democratic extends Tmp_Playlist
         if (empty($user)) {
             $user = Core::get_global('user');
         }
-        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out($user->id) . '&demo_id=' . scrub_out($this->id);
+        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out((string)$user->id) . '&demo_id=' . scrub_out((string)$this->id);
 
         return Stream_Url::format($link);
     } // play_url

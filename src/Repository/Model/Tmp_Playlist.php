@@ -40,12 +40,10 @@ class Tmp_Playlist extends database_object
     protected const DB_TABLENAME = 'tmp_playlist';
 
     // Variables from the Database
-    public $id;
-    public $session;
-    public $type;
-    public $object_type;
-    public $base_playlist;
-    public $created;
+    public int $id = 0;
+    public ?string $session;
+    public ?string $type;
+    public ?string $object_type;
 
     // Generated Elements
     public $items = array();

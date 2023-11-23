@@ -69,7 +69,7 @@ final class AdminAddUserCommand extends Command
             $interactor->ok(
                 sprintf(
                     T_('Created %s user %s with password %s'),
-                    User::access_level_to_name((string) $values['level']),
+                    User::access_level_to_name((string)$values['level']),
                     $username,
                     $values['password']
                 ),
