@@ -31,12 +31,12 @@ class Movie extends Video
 {
     protected const DB_TABLENAME = 'movie';
 
-    public $original_name;
-    public $prefix;
-    public $summary;
-    public $year;
-    public $video;
+    public ?string $original_name;
+    public ?string $summary;
+    public ?int $year;
+    public ?string $prefix;
 
+    public $video;
     public $f_original_name;
 
     /**

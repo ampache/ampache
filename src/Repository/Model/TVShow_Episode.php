@@ -31,10 +31,10 @@ class TVShow_Episode extends Video
 {
     protected const DB_TABLENAME = 'tvshow_episode';
 
-    public $original_name;
-    public $season;
-    public $episode_number;
-    public $summary;
+    public ?string $original_name;
+    public int $season;
+    public int $episode_number;
+    public ?string $summary;
 
     public $f_link;
     public $f_season;

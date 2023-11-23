@@ -41,90 +41,31 @@ class Video extends database_object implements Media, library_item, GarbageColle
 {
     protected const DB_TABLENAME = 'video';
 
-    /**
-     * @var int $id
-     */
-    public $id;
-    /**
-     * @var string $title
-     */
-    public $title;
-    /**
-     * @var bool $played
-     */
-    public $played;
-    /**
-     * @var bool $enabled
-     */
-    public $enabled;
-    /**
-     * @var string $file
-     */
-    public $file;
-    /**
-     * @var int $size
-     */
-    public $size;
-    /**
-     * @var string $video_codec
-     */
-    public $video_codec;
-    /**
-     * @var string $audio_codec
-     */
-    public $audio_codec;
-    /**
-     * @var int $resolution_x
-     */
-    public $resolution_x;
-    /**
-     * @var int $resolution_y
-     */
-    public $resolution_y;
-    /**
-     * @var int $time
-     */
-    public $time;
-    /**
-     * @var string $mime
-     */
-    public $mime;
-    /**
-     * @var int $release_date
-     */
-    public $release_date;
-    /**
-     * @var int $catalog
-     */
-    public $catalog;
-    /**
-     * @var int $bitrate
-     */
-    public $bitrate;
-    /**
-     * @var string $mode
-     */
-    public $mode;
-    /**
-     * @var int $channels
-     */
-    public $channels;
-    /**
-     * @var int $display_x
-     */
-    public $display_x;
-    /**
-     * @var int $display_x
-     */
-    public $display_y;
-    /**
-     * @var float $frame_rate
-     */
-    public $frame_rate;
-    /**
-     * @var int $video_bitrate
-     */
-    public $video_bitrate;
+    public int $id = 0;
+    public string $file;
+    public int $catalog;
+    public ?string $title;
+    public ?string $video_codec;
+    public ?string $audio_codec;
+    public int $resolution_x;
+    public int $resolution_y;
+    public int $time;
+    public int $size;
+    public ?string $mime;
+    public int $addition_time;
+    public ?int $update_time;
+    public int $enabled;
+    public bool $played;
+    public ?int $release_date;
+    public ?int $channels;
+    public ?int $bitrate;
+    public ?int $video_bitrate;
+    public ?int $display_x;
+    public ?int $display_y;
+    public ?float $frame_rate;
+    public string $mode;
+    public int $total_count;
+    public int $total_skip;
 
     /**
      * @var string $type
@@ -135,25 +76,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $tags;
     /**
-     * @var int $total_count
-     */
-    public $total_count;
-    /**
-     * @var int $total_skip
-     */
-    public $total_skip;
-    /**
      * @var bool $has_art
      */
     public $has_art;
-    /**
-     * @var null|int $f_release_date
-     */
-    public $update_time;
-    /**
-     * @var null|int $f_release_date
-     */
-    public $addition_time;
     /**
      * @var null|string $f_name
      */
@@ -764,7 +689,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         if (isset($data['release_date'])) {
             $f_release_date     = (string) $data['release_date'];
             $release_date       = strtotime($f_release_date);
-            $this->release_date = $release_date;
+            $this->release_date = $release_date ?: null;
             $sql .= ", `release_date` = ?";
             $params[] = $release_date;
         }

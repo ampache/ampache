@@ -32,10 +32,10 @@ class Clip extends Video
 {
     protected const DB_TABLENAME = 'clip';
 
-    public $artist;
-    public $song;
-    public $video;
+    public ?int $artist;
+    public ?int $song;
 
+    public $video;
     public $f_artist;
     public $f_song;
 

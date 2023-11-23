@@ -31,10 +31,10 @@ class Personal_Video extends Video
 {
     protected const DB_TABLENAME = 'personal_video';
 
-    public $location;
-    public $summary;
-    public $video;
+    public ?string $location;
+    public ?string $summary;
 
+    public $video;
     public $f_location;
 
     /**
