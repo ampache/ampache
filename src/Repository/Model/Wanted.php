@@ -369,14 +369,12 @@ class Wanted extends database_object
                         $release = $mbrainz->lookup('release', $this->release_mbid, array('recordings'));
                         foreach ($release->media as $media) {
                             foreach ($media->tracks as $track) {
-                                $song          = array();
-                                $song['disk']  = Album::sanitize_disk($media->position);
-                                $song['track'] = $track->number;
-                                $song['title'] = $track->title;
-                                $song['mbid']  = $track->id;
-                                if ($this->artist) {
-                                    $song['artist'] = $this->artist;
-                                }
+                                $song                = array();
+                                $song['disk']        = Album::sanitize_disk($media->position);
+                                $song['track']       = $track->number;
+                                $song['title']       = $track->title;
+                                $song['mbid']        = $track->id;
+                                $song['artist']      = $this->artist;
                                 $song['artist_mbid'] = $this->artist_mbid;
                                 $song['session']     = session_id();
                                 $song['album_mbid']  = $this->mbid;
