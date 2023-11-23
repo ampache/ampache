@@ -91,26 +91,29 @@ class Access
      */
     public function __construct($access_id)
     {
-        /* Assign id for use in has_info() */
-        $this->id = (int)$access_id;
-        $info     = $this->has_info();
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
+        if ($access_id === null) {
+            return;
         }
-
-        return true;
+        $info = $this->has_info($access_id);
+        if (!empty($info)) {
+            foreach ($info as $key => $value) {
+                $this->$key = $value;
+            }
+            $this->id = (int)$access_id;
+        }
     }
 
     /**
      * has_info
      *
      * Gets the vars for $this out of the database.
+     * @param int $access_id
      * @return array
      */
-    private function has_info()
+    private function has_info($access_id)
     {
         $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($access_id));
 
         return Dba::fetch_assoc($db_results);
     }

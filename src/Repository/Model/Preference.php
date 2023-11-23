@@ -234,7 +234,7 @@ class Preference extends database_object
     private function __construct()
     {
         // Rien a faire
-    } // __construct
+    }
 
     /**
      * get_by_user

@@ -383,31 +383,28 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * Constructor
      *
      * Song class, for modifying a song.
-     * @param int|null $songid
+     * @param int|null $song_id
      */
-    public function __construct($songid = null)
+    public function __construct($song_id = null)
     {
-        if ($songid === null) {
+        if ($song_id === null) {
             return;
         }
-
-        $this->id = (int)($songid);
 
         if (self::isCustomMetadataEnabled()) {
             $this->initializeMetadata();
         }
 
-        $info = $this->has_info();
-        if ($info !== false && is_array($info)) {
+        $info = $this->has_info($song_id);
+        if (!empty($info)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
+            $this->id          = (int)$song_id;
             $data              = pathinfo($this->file);
             $this->type        = strtolower((string)$data['extension']);
             $this->mime        = self::type_to_mime($this->type);
             $this->total_count = (int)$this->total_count;
-        } else {
-            $this->id = null;
         }
     } // constructor
 
@@ -735,12 +732,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * has_info
-     * @return array|bool
+     * @param int $song_id
+     * @return array
      */
-    private function has_info()
+    private function has_info($song_id)
     {
-        $song_id = $this->id;
-
         if (parent::is_cached('song', $song_id) && !empty(parent::get_from_cache('song', $song_id)['disk'])) {
             return parent::get_from_cache('song', $song_id);
         }
@@ -754,7 +750,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             return $results;
         }
 
-        return false;
+        return array();
     }
 
     /**

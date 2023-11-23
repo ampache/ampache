@@ -58,7 +58,7 @@ class User_Playlist extends database_object
         }
         $this->user   = (int)$user_id;
         $this->client = substr($client, 0, 254);
-    } // __construct
+    }
 
     /**
      * get_current_object

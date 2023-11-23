@@ -69,19 +69,19 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function __construct($object_id)
     {
-        $this->id = (int)($object_id);
-
-        if ($info = $this->has_info()) {
+        $info = $this->has_info($object_id);
+        if (!empty($info)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
+            $this->id = (int)$object_id;
             if ($this->file) {
                 $data       = pathinfo($this->file);
-                $this->type = strtolower((string)$data['extension']) ?? 'mp3';
+                $this->type = (isset($data['extension']))
+                    ? strtolower((string)$data['extension'])
+                    : 'mp3';
                 $this->mime = Song::type_to_mime($this->type);
             }
-        } else {
-            $this->id = null;
         }
     } // constructor
 
@@ -170,12 +170,11 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * has_info
+     * @param int $preview_id
      * @return array
      */
-    private function has_info()
+    private function has_info($preview_id)
     {
-        $preview_id = $this->id;
-
         if (parent::is_cached('song_preview', $preview_id)) {
             return parent::get_from_cache('song_preview', $preview_id);
         }

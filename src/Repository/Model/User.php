@@ -247,7 +247,7 @@ class User extends database_object
      * has a tmp_playlist, creating it if it doesn't, then sets $this->playlist
      * as a tmp_playlist object that can be fiddled with later on
      */
-    public function load_playlist()
+    public function load_playlist(): void
     {
         $session_id = session_id();
 
