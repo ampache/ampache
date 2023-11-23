@@ -7256,11 +7256,6 @@ parameters:
 			path: src/Module/Authentication/Authenticator/AuthenticatorInterface.php
 
 		-
-			message: "#^Cannot call method update_password\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/DatabaseAuthenticator.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\DatabaseAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/DatabaseAuthenticator.php
@@ -11897,11 +11892,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:affected_rows\\(\\) has parameter \\$resource with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Dba.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:escape\\(\\) has parameter \\$var with no type specified\\.$#"
 			count: 1
 			path: src/Module/System/Dba.php
 
@@ -19001,16 +18991,6 @@ parameters:
 			path: src/Repository/Model/Rating.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
-
-		-
 			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:getName\\(\\)\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
@@ -19781,17 +19761,7 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function rawurlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function stripslashes expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -20891,36 +20861,6 @@ parameters:
 			path: src/Repository/Model/User_Playlist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:\\$action has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Useractivity.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:\\$activity_date has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Useractivity.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Useractivity.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:\\$object_id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Useractivity.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:\\$object_type has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Useractivity.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Useractivity.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Userflag.php
@@ -20932,16 +20872,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:get_latest\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Userflag.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Userflag.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:\\$type has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Userflag.php
 
@@ -21131,9 +21061,9 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Cannot access property \\$artist on array\\.$#"
+			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$update_time has no type specified\\.$#"
 			count: 1
-			path: src/Repository/Model/Wanted.php
+			path: src/Repository/Model/Video.php
 
 		-
 			message: "#^Cannot access property \\$first\\-release\\-date on array\\.$#"
@@ -21197,16 +21127,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:show_action_buttons\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of class Ampache\\\\Repository\\\\Model\\\\Song_Preview constructor expects int, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
 
