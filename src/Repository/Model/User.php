@@ -152,7 +152,7 @@ class User extends database_object
      */
     public $f_usage;
 
-    private string $ip_history = '';
+    public string $ip_history = '';
 
     /**
      * @var null|string $f_avatar
