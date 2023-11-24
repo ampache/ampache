@@ -121,7 +121,6 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
                 echo '">';
                 $count = 0;
                 foreach ($list_array as $item) {
-                    $item[0]->format();
                     $this->user->format();
 
                     if ($item[0]->id) {
