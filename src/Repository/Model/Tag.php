@@ -81,7 +81,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $name
      * @return Tag
      */
-    public static function construct_from_name($name)
+    public static function construct_from_name($name): Tag
     {
         $tag_id = self::tag_exists($name);
 
@@ -223,7 +223,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $value
      * @return int|null
      */
-    public static function add_tag($value)
+    public static function add_tag($value): ?int
     {
         if (!strlen((string)$value)) {
             return null;
@@ -1037,7 +1037,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return null;
     }

@@ -274,7 +274,7 @@ class Podcast extends database_object implements library_item
     /**
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return null;
     }

@@ -163,7 +163,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param array $data
      * @return Artist
      */
-    public static function construct_from_array($data)
+    public static function construct_from_array($data): Artist
     {
         $artist = new Artist(0);
         foreach ($data as $key => $value) {
@@ -587,7 +587,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Get item's owner.
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return $this->user;
     }
@@ -637,7 +637,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param bool $readonly
      * @return int|null
      */
-    public static function check($name, $mbid = '', $readonly = false)
+    public static function check($name, $mbid = '', $readonly = false): ?int
     {
         $full_name = $name;
         $trimmed   = Catalog::trim_prefix(trim((string)$name));

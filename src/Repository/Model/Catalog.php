@@ -867,8 +867,6 @@ abstract class Catalog extends database_object
      * get_update_info
      *
      * return the counts from user_data or update_info to speed up responses
-     * @param string $key
-     * @param int $user_id
      */
     public static function get_update_info(string $key, int $user_id): int
     {

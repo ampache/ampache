@@ -665,7 +665,7 @@ class Album extends database_object implements library_item
      * @param int $album_id
      * @return int|null
      */
-    public static function get_album_artist($album_id)
+    public static function get_album_artist($album_id): ?int
     {
         $sql        = "SELECT DISTINCT `album_artist` FROM `album` WHERE `id` = ?;";
         $db_results = Dba::read($sql, array($album_id));
@@ -782,7 +782,7 @@ class Album extends database_object implements library_item
      * Get item's owner.
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         if (!$this->album_artist) {
             return null;
@@ -847,7 +847,7 @@ class Album extends database_object implements library_item
         if (Art::has_db($this->id, 'album')) {
             $album_id = $this->id;
             $type     = 'album';
-        } elseif ($this->album_artist && Art::has_db($this->album_artist, 'artist') || $force) {
+        } elseif ($this->album_artist && (Art::has_db($this->album_artist, 'artist') || $force)) {
             $album_id = $this->album_artist;
             $type     = 'artist';
         }

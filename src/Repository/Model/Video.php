@@ -185,7 +185,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param int $video_id
      * @return Video
      */
-    public static function create_from_id($video_id)
+    public static function create_from_id($video_id): Video
     {
         foreach (ObjectTypeToClassNameMapper::VIDEO_TYPES as $dtype) {
             $sql        = "SELECT `id` FROM `" . strtolower((string) $dtype) . "` WHERE `id` = ?";
@@ -427,7 +427,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * Get item's owner.
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return null;
     }
@@ -763,7 +763,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $artp  = new Art($video_id, 'video', 'preview');
             $video = new Video($video_id);
             $image = Stream::get_image_preview($video);
-            $artp->insert($image, 'image/png');
+            if ($image) {
+                $artp->insert($image, 'image/png');
+            }
         }
     }
 

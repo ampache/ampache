@@ -138,7 +138,7 @@ class Scrobbler
     /**
      * get_queue_count
      */
-    public function get_queue_count()
+    public function get_queue_count(): ?int
     {
         return count($this->queued_tracks);
     } // get_queue_count

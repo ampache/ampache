@@ -292,7 +292,7 @@ class TvShow extends database_object implements library_item
     /**
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return null;
     }
@@ -332,7 +332,7 @@ class TvShow extends database_object implements library_item
      * @param bool $readonly
      * @return int|null
      */
-    public static function check($name, $year, $tvshow_summary, $readonly = false)
+    public static function check($name, $year, $tvshow_summary, $readonly = false): ?int
     {
         // null because we don't have any unique id like mbid for now
         if (isset(self::$_mapcache[$name]['null'])) {

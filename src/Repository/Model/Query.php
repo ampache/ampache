@@ -571,9 +571,8 @@ class Query
     /**
      * get_filter
      * returns the specified filter value
-     * @return string|null
      */
-    public function get_filter(string $key)
+    public function get_filter(string $key): ?string
     {
         return (isset($this->_state['filter'][$key])) ? $this->_state['filter'][$key] : null;
     } // get_filter

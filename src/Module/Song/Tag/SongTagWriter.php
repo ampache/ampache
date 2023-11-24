@@ -375,7 +375,7 @@ final class SongTagWriter implements SongTagWriterInterface
         } // catalog type = local
     } //writeRating
 
-    private function search_txxx($description, $ndata)
+    private function search_txxx($description, $ndata): ?int
     {
         $cnt = count($ndata);
         for ($i = 0; $i < $cnt; $i++) {
@@ -387,7 +387,7 @@ final class SongTagWriter implements SongTagWriterInterface
         return null;
     }
 
-    public function check_for_duplicate($apics, $new_pic, &$ndata, $apic_typeid)
+    public function check_for_duplicate($apics, $new_pic, &$ndata, $apic_typeid): ?int
     {
         $idx = null;
         $cnt = count($apics);

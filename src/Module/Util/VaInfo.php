@@ -709,9 +709,8 @@ final class VaInfo implements VaInfoInterface
      * parse_mbid
      * Get the first valid mbid. (if it's valid)
      * @param string|array $mbid
-     * @return string|null
      */
-    public static function parse_mbid($mbid)
+    public static function parse_mbid($mbid): ?string
     {
         if (empty($mbid)) {
             return null;

@@ -1642,9 +1642,8 @@ class Search extends playlist_object
      * create
      *
      * Save this search to the database for use as a smart playlist
-     * @return string|null
      */
-    public function create()
+    public function create(): ?string
     {
         $user = Core::get_global('user');
         // Make sure we have a unique name

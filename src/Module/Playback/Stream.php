@@ -106,7 +106,7 @@ class Stream
         $target = null,
         $player = null,
         $media_type = 'song'
-    ) {
+    ): ?string {
         // check if we've done this before
         $format = self::get_output_cache($source, $target, $player, $media_type);
         if (!empty($format)) {
@@ -448,7 +448,7 @@ class Stream
      * @param Video $media
      * @return string
      */
-    public static function get_image_preview($media)
+    public static function get_image_preview($media): ?string
     {
         $image = null;
         $sec   = ($media->time >= 30) ? 30 : (int) ($media->time / 2);

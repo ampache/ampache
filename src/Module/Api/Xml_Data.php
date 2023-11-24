@@ -1372,7 +1372,7 @@ class Xml_Data
         $libitem_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem));
         if (Art::has_db($libitem->id, $libitem_type)) {
             $ximg = $xchannel->addChild("xmlns:itunes:image");
-            $ximg->addAttribute("href", Art::url($libitem->id, $libitem_type));
+            $ximg->addAttribute("href", (string)Art::url($libitem->id, $libitem_type));
         }
         $summary = $libitem->get_description();
         if (!empty($summary)) {

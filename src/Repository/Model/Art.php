@@ -260,7 +260,7 @@ class Art extends database_object
         while ($results = Dba::fetch_assoc($db_results)) {
             if ($results['size'] == 'original') {
                 if (AmpConfig::get('album_art_store_disk')) {
-                    $this->raw = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind, $results['mime']);
+                    $this->raw = (string)self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind, $results['mime']);
                 } else {
                     $this->raw = $results['image'];
                 }
@@ -270,7 +270,7 @@ class Art extends database_object
                     continue;
                 }
                 if (AmpConfig::get('album_art_store_disk')) {
-                    $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind, $results['mime']);
+                    $this->thumb = (string)self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind, $results['mime']);
                 } elseif ($results['size'] == '275x275') {
                     $this->thumb = $results['image'];
                 }
@@ -373,7 +373,7 @@ class Art extends database_object
         $mime = $mime ?? 'image/jpeg';
         // Blow it away!
         $this->reset();
-        $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
+        $picturetypeid = ($this->type == 'album') ? 3 : 8;
 
         if (AmpConfig::get('write_tags', false)) {
             $className = ObjectTypeToClassNameMapper::map($this->type);
@@ -411,7 +411,7 @@ class Art extends database_object
                 $new_pic       = array(
                     'data' => $source,
                     'mime' => $mime,
-                    'picturetypeid' => $current_picturetypeid,
+                    'picturetypeid' => $picturetypeid,
                     'description' => $description
                 );
 
@@ -477,7 +477,7 @@ class Art extends database_object
      * @param string $apic_typeid
      * @return int|null
      */
-    private function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid)
+    private function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid): ?int
     {
         $idx = null;
         $cnt = count($apics);
@@ -647,7 +647,7 @@ class Art extends database_object
     /**
      * read_from_images
      */
-    private static function read_from_images()
+    private static function read_from_images(): ?string
     {
         $path = __DIR__ . '/../../../public/images/blankalbum.png';
         if (!Core::is_readable($path)) {
@@ -673,9 +673,8 @@ class Art extends database_object
      * @param int $uid
      * @param string $kind
      * @param $mime
-     * @return string|null
      */
-    private static function read_from_dir($sizetext, $type, $uid, $kind, $mime)
+    private static function read_from_dir($sizetext, $type, $uid, $kind, $mime): ?string
     {
         $path = self::get_dir_on_disk($type, $uid, $kind);
         if ($path === false) {
@@ -1055,7 +1054,7 @@ class Art extends database_object
      * @param int|null $thumb
      * @return string
      */
-    public static function url($uid, $type, $sid = null, $thumb = null)
+    public static function url($uid, $type, $sid = null, $thumb = null): ?string
     {
         if (!self::is_valid_type($type)) {
             return null;

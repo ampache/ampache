@@ -164,7 +164,7 @@ class HttpQPlayer
      * @param $pos
      * @return bool|null
      */
-    public function skip($pos)
+    public function skip($pos): ?bool
     {
         $args    = array('index' => $pos);
         $results = $this->sendCommand('setplaylistpos', $args);

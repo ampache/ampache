@@ -241,7 +241,7 @@ class Label extends database_object implements library_item
     /**
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return $this->user;
     }
@@ -390,7 +390,7 @@ class Label extends database_object implements library_item
      * @param bool $link
      * @return string
      */
-    public static function get_display($labels, $link = false)
+    public static function get_display($labels, $link = false): string
     {
         if (!is_array($labels)) {
             return '';

@@ -46,7 +46,7 @@ class Recommendation
      * @return SimpleXMLElement
      * @throws LastFmQueryFailedException
      */
-    public static function get_lastfm_results($method, $query)
+    public static function get_lastfm_results($method, $query): SimpleXMLElement
     {
         global $dic;
 
@@ -173,7 +173,7 @@ class Recommendation
         $fullname = (string)$artist->get_fullname();
         $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
-        if (isset($song->mbid)) {
+        if (!empty($song->mbid)) {
             $query = 'mbid=' . rawurlencode($song->mbid);
         }
 

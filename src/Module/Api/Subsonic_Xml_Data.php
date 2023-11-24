@@ -93,7 +93,7 @@ class Subsonic_Xml_Data
      * @param string $function
      * @return SimpleXMLElement
      */
-    public static function addSubsonicResponse($function)
+    public static function addSubsonicResponse($function): SimpleXMLElement
     {
         return self::_createSuccessResponse($function);
     }
@@ -106,7 +106,7 @@ class Subsonic_Xml_Data
      * @param string $function
      * @return SimpleXMLElement
      */
-    public static function addError($code, $function)
+    public static function addError($code, $function): SimpleXMLElement
     {
         $xml  = self::_createFailedResponse($function);
         $xerr = $xml->addChild('error');
@@ -1569,9 +1569,8 @@ class Subsonic_Xml_Data
      * _checkName
      * This to fix xml=>json which can result to wrong type parsing
      * @param null|string $name
-     * @return string|null
      */
-    private static function _checkName($name)
+    private static function _checkName($name): string
     {
         // Ensure to have always a string type
         if (self::$enable_json_checks && !empty($name)) {

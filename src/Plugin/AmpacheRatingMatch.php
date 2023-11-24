@@ -183,7 +183,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
                 if ($album->album_artist) {
                     // rate all the album artists (If there are more than one)
                     foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
-                        $rArtist = new Rating($artist_id, 'artist');
+                        $rArtist       = new Rating($artist_id, 'artist');
                         $rating_artist = $rArtist->get_user_rating($this->user->id);
                         if ($rating_artist <= $new_rating) {
                             $rArtist->set_rating($new_rating, $this->user->id);
@@ -216,7 +216,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
             $fAlbum = new Userflag($song->album, 'album');
             $fAlbum->set_flag($flagged, $this->user->id);
             // and individual disks (if set)
-            $fAlbumDisk = new Userflag($song->get_album_disk(), 'album_disk');
+            $fAlbumDisk = new Userflag((int)$song->get_album_disk(), 'album_disk');
             $fAlbumDisk->set_flag($flagged, $this->user->id);
             // rate all the album artists (If there are more than one)
             if ($album->album_artist) {

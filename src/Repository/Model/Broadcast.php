@@ -294,7 +294,7 @@ class Broadcast extends database_object implements library_item
      * Get item's owner.
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return $this->user;
     }
@@ -341,7 +341,7 @@ class Broadcast extends database_object implements library_item
      * @param string $key
      * @return Broadcast|null
      */
-    public static function get_broadcast($key)
+    public static function get_broadcast($key): ?Broadcast
     {
         $sql        = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
         $db_results = Dba::read($sql, array($key));

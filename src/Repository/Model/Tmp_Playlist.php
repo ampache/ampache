@@ -97,7 +97,7 @@ class Tmp_Playlist extends database_object
      * @param string $session_id
      * @return Tmp_Playlist
      */
-    public static function get_from_session($session_id)
+    public static function get_from_session($session_id): Tmp_Playlist
     {
         $sql        = "SELECT `id` FROM `tmp_playlist` WHERE `session` = ?";
         $db_results = Dba::read($sql, array($session_id));
@@ -213,9 +213,8 @@ class Tmp_Playlist extends database_object
      * the current session rather than a user, as you could have the same
      * user logged in from multiple locations.
      * @param array $data
-     * @return string|null
      */
-    public static function create($data)
+    public static function create($data): ?string
     {
         $sql = "INSERT INTO `tmp_playlist` (`session`, `type`, `object_type`) VALUES (?, ?, ?)";
         Dba::write($sql, array($data['session_id'], $data['type'], $data['object_type']));

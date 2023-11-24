@@ -821,7 +821,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_album_disk_fullname(): string
     {
-        $albumDisk = new AlbumDisk($this->get_album_disk());
+        $albumDisk = new AlbumDisk((int)$this->get_album_disk());
 
         return $albumDisk->get_fullname();
     } // get_album_disk_fullname
@@ -913,7 +913,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * gets album_disk of the object
      * @return int
      */
-    public function get_album_disk()
+    public function get_album_disk(): ?int
     {
         if (isset($this->album_disk)) {
             return $this->album_disk;
@@ -1110,7 +1110,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param array $data
      * @return int
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         foreach ($data as $key => $value) {
             debug_event(self::class, $key . '=' . $value, 5);
@@ -1871,7 +1871,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * Get item's owner.
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         if ($this->user_upload !== null) {
             return $this->user_upload;
@@ -1994,7 +1994,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $transcode_type = ($file_target && is_file($file_target))
                 ? $cache_target
                 : Stream::get_transcode_format($this->type, null, $player);
-            if ($this->type !== $transcode_type) {
+            if (!empty($transcode_type) && $this->type !== $transcode_type) {
                 $this->type    = $transcode_type;
                 $this->mime    = self::type_to_mime($this->type);
                 $this->bitrate = ((int)AmpConfig::get('transcode_bitrate', 128)) * 1000;

@@ -138,7 +138,7 @@ class AmpConfig
      * @param int $previous_time
      * @return int
      */
-    public static function get_skip_timer($previous_time)
+    public static function get_skip_timer($previous_time): ?int
     {
         $timekeeper = AmpConfig::get('skip_timer');
         $skip_time  = 20;

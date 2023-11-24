@@ -77,7 +77,7 @@ class Clip extends Video
      * @param array $data
      * @return int|null
      */
-    private static function _get_artist_id($data)
+    private static function _get_artist_id($data): ?int
     {
         if (array_key_exists('artist_id', $data) && !empty($data['artist_id'])) {
             return $data['artist_id'];
@@ -121,7 +121,6 @@ class Clip extends Video
     /**
      * update
      * This takes a key'd array of data as input and updates a clip entry
-     * @param array $data
      */
     public function update(array $data): int
     {

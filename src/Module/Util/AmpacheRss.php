@@ -338,7 +338,7 @@ final class AmpacheRss implements AmpacheRssInterface
      * This loads in the latest added albums
      * @return list<array{
      *  title: string,
-     *  link: null|string,
+     *  link: string,
      *  description: string,
      *  image: string,
      *  comments: string,
@@ -360,7 +360,7 @@ final class AmpacheRss implements AmpacheRssInterface
                 'title' => $album->get_fullname(),
                 'link' => $album->get_link(),
                 'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
-                'image' => Art::url($album->id, 'album', null, 2),
+                'image' => (string)Art::url($album->id, 'album', null, 2),
                 'comments' => '',
                 'pubDate' => date("c", $album->addition_time)
             );
@@ -375,7 +375,7 @@ final class AmpacheRss implements AmpacheRssInterface
      * This loads in the latest added artists
      * @return list<array{
      *  title: null|string,
-     *  link: null|string,
+     *  link: string,
      *  description: null|string,
      *  image: string,
      *  comments: string,
@@ -398,7 +398,7 @@ final class AmpacheRss implements AmpacheRssInterface
                 'title' => $artist->get_fullname(),
                 'link' => $artist->get_link(),
                 'description' => $artist->summary,
-                'image' => Art::url($artist->id, 'artist', null, 2),
+                'image' => (string)Art::url($artist->id, 'artist', null, 2),
                 'comments' => '',
                 'pubDate' => ''
             );
@@ -413,7 +413,7 @@ final class AmpacheRss implements AmpacheRssInterface
      * This loads in the latest added shouts
      * @return list<array{
      *  title: string,
-     *  link: null|string,
+     *  link: string,
      *  description: string,
      *  image: string,
      *  comments: string,
@@ -438,7 +438,7 @@ final class AmpacheRss implements AmpacheRssInterface
                     'title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
                     'link' => $object->get_link(),
                     'description' => $shout->text,
-                    'image' => Art::url($shout->object_id, (string)$shout->object_type, null, 2),
+                    'image' => (string)Art::url($shout->object_id, (string)$shout->object_type, null, 2),
                     'comments' => '',
                     'pubDate' => date("c", (int)$shout->date)
                 );

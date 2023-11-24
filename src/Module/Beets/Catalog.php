@@ -348,7 +348,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * @param string $path
      * @return int
      */
-    protected function getIdFromPath($path)
+    protected function getIdFromPath($path): int
     {
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($path));

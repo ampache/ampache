@@ -112,7 +112,7 @@ class UPnPPlaylist
     /**
      * @return int|null
      */
-    public function NextItem()
+    public function NextItem(): ?int
     {
         if ($this->_current < count($this->_songs) - 1) {
             $nxt = $this->_current + 1;

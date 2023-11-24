@@ -399,7 +399,7 @@ class Upnp_Api
      * @param $filterValue
      * @return DOMDocument
      */
-    public static function createDIDL($prmItems, $filterValue)
+    public static function createDIDL($prmItems, $filterValue): DOMDocument
     {
         $xmlDoc               = new DOMDocument('1.0' /*, 'utf-8'*/);
         $xmlDoc->formatOutput = true; // Note: other players don't seem to do this
@@ -550,7 +550,7 @@ class Upnp_Api
         $prmTotMatches,
         $prmResponseType = 'u:BrowseResponse',
         $prmUpdateID = '0'
-    ) {
+    ): DOMDocument {
         /*
          * $prmDIDL is DIDL XML string
          * XML-Layout:

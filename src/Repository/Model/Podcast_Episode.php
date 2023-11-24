@@ -32,7 +32,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
-use PDOStatement;
 
 class Podcast_Episode extends database_object implements Media, library_item, GarbageCollectibleInterface
 {
@@ -374,7 +373,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return null;
     }

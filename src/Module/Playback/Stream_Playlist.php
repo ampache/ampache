@@ -198,7 +198,7 @@ class Stream_Playlist
      * @param User $user
      * @return Stream_Url
      */
-    public static function media_to_url($media, $additional_params = '', $urltype = 'web', $user = null)
+    public static function media_to_url($media, $additional_params = '', $urltype = 'web', $user = null): ?Stream_Url
     {
         if (!array_key_exists('object_type', $media) || !array_key_exists('object_id', $media)) {
             return null;
@@ -246,7 +246,7 @@ class Stream_Playlist
      * @param User $user
      * @return Stream_Url
      */
-    public static function media_object_to_url($object, $additional_params = '', $urltype = 'web', $user = null)
+    public static function media_object_to_url($object, $additional_params = '', $urltype = 'web', $user = null): ?Stream_Url
     {
         $surl = null;
         $url  = array();
@@ -757,7 +757,7 @@ class Stream_Playlist
      * create_download
      * This prompts for a download of the song
      */
-    private function create_download(): bool
+    public function create_download(): bool
     {
         // There should only be one here...
         if (count($this->urls) != 1) {

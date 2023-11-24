@@ -95,9 +95,9 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return Userflag::show($this->playlist->getId(), 'playlist');
     }
 
-    public function getArt(): ?string
+    public function getArt(): void
     {
-        return $this->playlist->display_art(2, true);
+        $this->playlist->display_art(2, true);
     }
 
     public function canAutoplayNext(): bool

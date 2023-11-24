@@ -117,8 +117,6 @@ class Browse extends Query
     /**
      * is_valid_type
      * Validate the browse is a type of object you can actually browse
-     *
-     * @param string $type
      */
     public function is_valid_type(string $type): bool
     {
@@ -128,9 +126,6 @@ class Browse extends Query
     /**
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
-     *
-     * @param string $class
-     * @param int $uid
      */
     public function add_supplemental_object(string $class, int $uid): bool
     {
@@ -211,9 +206,9 @@ class Browse extends Query
         $extra_objects = $this->get_supplemental_objects();
         $browse        = $this;
 
-        foreach ($extra_objects as $type => $id) {
+        foreach ($extra_objects as $type => $extra_id) {
             $className = ObjectTypeToClassNameMapper::map($type);
-            ${$type}   = new $className($id);
+            ${$type}   = new $className($extra_id);
         }
 
         $match = '';

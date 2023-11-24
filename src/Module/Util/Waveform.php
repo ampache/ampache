@@ -73,10 +73,10 @@ class Waveform
      * Get a song or podcast_episode waveform.
      * @param Song|Podcast_Episode $media
      * @param string $object_type
-     * @return string|null|bool
+     * @return null|string
      * @throws RuntimeException
      */
-    public static function get($media, string $object_type)
+    public static function get($media, string $object_type): ?string
     {
         $waveform = null;
 
@@ -145,7 +145,7 @@ class Waveform
                     }
                 }
 
-                if ($waveform !== null && $waveform !== false) {
+                if (!empty($waveform)) {
                     if (AmpConfig::get('album_art_store_disk')) {
                         self::save_to_file($media->id, $object_type, $waveform);
                     } else {
@@ -257,9 +257,8 @@ class Waveform
     /**
      * Create waveform from song file.
      * @param string $filename
-     * @return string|null
      */
-    protected static function create_waveform($filename)
+    protected static function create_waveform($filename): ?string
     {
         if (!file_exists($filename)) {
             debug_event(self::class, 'File ' . $filename . ' doesn\'t exists', 1);

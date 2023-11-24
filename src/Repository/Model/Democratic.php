@@ -240,7 +240,7 @@ class Democratic extends Tmp_Playlist
      * @param int $offset
      * @return int|null
      */
-    public function get_next_object($offset = 0)
+    public function get_next_object($offset = 0): ?int
     {
         // FIXME: Shouldn't this return object_type?
 
@@ -280,7 +280,7 @@ class Democratic extends Tmp_Playlist
      * @param string $object_type
      * @return int|null
      */
-    public function get_uid_from_object_id($object_id, $object_type = 'song')
+    public function get_uid_from_object_id($object_id, $object_type = 'song'): ?int
     {
         if (!$object_id) {
             return null;
@@ -500,9 +500,8 @@ class Democratic extends Tmp_Playlist
      * create
      * This is the democratic play create function it inserts this into the democratic table
      * @param array $data
-     * @return PDOStatement|bool
      */
-    public static function create($data)
+    public static function create($data): ?string
     {
         // Clean up the input
         $name    = $data['name'];
@@ -519,15 +518,20 @@ class Democratic extends Tmp_Playlist
         $db_results = Dba::write($sql, array($name, $base, $cool, $level, $user, $default));
 
         if ($db_results) {
-            $insert_id = Dba::insert_id();
+            $democratic_id = Dba::insert_id();
+            if (!$democratic_id) {
+                return null;
+            }
             parent::create(array(
-                'session_id' => $insert_id,
+                'session_id' => $democratic_id,
                 'type' => 'vote',
                 'object_type' => 'song'
             ));
+
+            return $democratic_id;
         }
 
-        return $db_results;
+        return null;
     } // create
 
     /**
@@ -580,19 +584,19 @@ class Democratic extends Tmp_Playlist
     /**
      * get_vote
      * This returns the current count for a specific song
-     * @param int $id
+     * @param int $object_id
      */
-    public function get_vote($id): int
+    public function get_vote($object_id): int
     {
-        if (parent::is_cached('democratic_vote', $id)) {
-            return (int)(parent::get_from_cache('democratic_vote', $id))[0];
+        if (parent::is_cached('democratic_vote', $object_id)) {
+            return (int)(parent::get_from_cache('democratic_vote', $object_id))[0];
         }
 
         $sql        = "SELECT COUNT(`user`) AS `count` FROM `user_vote` WHERE `object_id` = ?";
-        $db_results = Dba::read($sql, array($id));
+        $db_results = Dba::read($sql, array($object_id));
 
         $results = Dba::fetch_assoc($db_results);
-        parent::add_to_cache('democratic_vote', $id, array($results['count']));
+        parent::add_to_cache('democratic_vote', $object_id, array($results['count']));
 
         return (int)$results['count'];
     } // get_vote

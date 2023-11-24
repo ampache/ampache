@@ -97,7 +97,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($artist->get_fullname()),
                             'value' => scrub_out($artist->get_fullname()),
                             'rels' => '',
-                            'image' => Art::url($artist->id, 'artist', null, 10),
+                            'image' => (string)Art::url($artist->id, 'artist', null, 10),
                         );
                     }
                 }
@@ -125,7 +125,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($album->get_fullname()),
                             'value' => scrub_out($album->get_fullname()),
                             'rels' => scrub_out($album->get_artist_fullname()),
-                            'image' => Art::url($album->id, 'album', null, 10),
+                            'image' => (string)Art::url($album->id, 'album', null, 10),
                         );
                     }
                 }
@@ -153,7 +153,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($albumdisk->get_fullname()),
                             'value' => scrub_out($albumdisk->get_fullname()),
                             'rels' => scrub_out($albumdisk->get_artist_fullname()),
-                            'image' => Art::url($albumdisk->album_id, 'album', null, 10),
+                            'image' => (string)Art::url($albumdisk->album_id, 'album', null, 10),
                         );
                     }
                 }
@@ -185,7 +185,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($song->title),
                             'value' => scrub_out($song->title),
                             'rels' => scrub_out($song->get_artist_fullname()),
-                            'image' => Art::url($art_object, $art_type, null, 10),
+                            'image' => (string)Art::url($art_object, $art_type, null, 10),
                         );
                     }
                 }
@@ -242,7 +242,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => $label->name,
                             'value' => $label->name,
                             'rels' => '',
-                            'image' => Art::url($label->id, 'label', null, 10),
+                            'image' => (string)Art::url($label->id, 'label', null, 10),
                         );
                     }
                 }

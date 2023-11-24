@@ -140,7 +140,7 @@ class Upload
      * @param $catalog_id
      * @return Catalog|null
      */
-    public static function check($catalog_id)
+    public static function check($catalog_id): ?Catalog
     {
         $allowed   = explode('|', AmpConfig::get('catalog_file_pattern'));
         $extension = strtolower((string) pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION));

@@ -145,7 +145,7 @@ class Share extends database_object
         $secret = '',
         $max_counter = 0,
         $description = ''
-    ) {
+    ): ?int {
         if (!self::is_valid_type($object_type)) {
             debug_event(self::class, 'create_share: Bad object_type ' . $object_type, 1);
 
@@ -450,7 +450,7 @@ class Share extends database_object
     /**
      * @return Stream_Playlist
      */
-    public function create_fake_playlist()
+    public function create_fake_playlist(): Stream_Playlist
     {
         $playlist = new Stream_Playlist(-1);
         $medias   = array();
@@ -484,7 +484,7 @@ class Share extends database_object
     /**
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return $this->user;
     }

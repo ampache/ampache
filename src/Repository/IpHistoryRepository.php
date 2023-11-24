@@ -95,8 +95,6 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
 
     /**
      * Returns the most recent ip-address used by the provided user
-     *
-     * @return string|null Most recent ip-address or null if no data is available
      */
     public function getRecentIpForUser(User $user): ?string
     {

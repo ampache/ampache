@@ -50,11 +50,12 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * nginx
   * IIS
 
-* PHP 7.1-7.4 (Ampache 4.x.x)
-* PHP 7.4 (Ampache 5.0.x and higher)
-* PHP 8.0 (Ampache 5.1.x and higher)
-* PHP 8.1 (Ampache 5.5.0 and higher)
-* PHP 8.2 (Ampache 6.0.0 and higher)
+* The correct PHP version for your Ampache release
+  * PHP 7.1-7.4 (Ampache 4.x.x)
+  * PHP 7.4 (Ampache 5.0.x and higher)
+  * PHP 8.0 (Ampache 5.1.x and higher)
+  * PHP 8.1 (Ampache 5.5.0 and higher)
+  * PHP 8.2+ (Ampache 6.0.0 and higher)
 
 **NOTE** That php7.4 will not be supported for Ampache6 but can still be used.
 

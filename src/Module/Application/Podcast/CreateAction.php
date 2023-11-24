@@ -71,10 +71,12 @@ final class CreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if (!Podcast::create([
-            'catalog' => (int) ($data['catalog'] ?? 0),
-            'feed' => $data['feed'] ?? ''
-        ])) {
+        if (!Podcast::create(
+            [
+                'catalog' => (int) ($data['catalog'] ?? 0),
+                'feed' => $data['feed'] ?? ''
+            ]
+        )) {
             $this->ui->show('show_add_podcast.inc.php');
         } else {
             $title = T_('No Problem');

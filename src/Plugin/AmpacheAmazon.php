@@ -238,9 +238,9 @@ class AmpacheAmazon implements AmpachePluginInterface
         foreach ($final_results as $result) {
             $key = '';
             /* Recurse through the images found */
-            foreach ($possible_keys as $k) {
-                if (strlen($result[$k])) {
-                    $key = $k;
+            foreach ($possible_keys as $pKey) {
+                if (strlen($result[$pKey])) {
+                    $key = $pKey;
                     break;
                 }
             } // foreach

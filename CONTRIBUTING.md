@@ -93,6 +93,7 @@ Following these tips prior to raising a pull request will speed up the review cy
 * Make sure the code you add follows project coding standards and passes all tests before submitting
 * Lines that are not part of your change should not be edited
   * e.g. don't format unchanged lines, don't reorder existing imports
+
 * Add the appropriate [license headers](#license-headers) to any new files
 * Make your own branch for your changes based on the develop branch. (e.g. my-patch-branch)
 
@@ -157,7 +158,6 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
 ```
 
 ### Project layout

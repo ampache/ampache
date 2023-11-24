@@ -43,7 +43,7 @@ interface library_item extends playable_item
     /**
      * @return int|null
      */
-    public function get_user_owner();
+    public function get_user_owner(): ?int;
 
     public function get_default_art_kind(): string;
 

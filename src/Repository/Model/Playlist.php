@@ -714,7 +714,7 @@ class Playlist extends playlist_object
      * @param bool $existing
      * @return int|null
      */
-    public static function create($name, $type, $user_id = null, $existing = true)
+    public static function create($name, $type, $user_id = null, $existing = true): ?int
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');

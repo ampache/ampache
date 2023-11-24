@@ -281,7 +281,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     /**
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return null;
     }
@@ -334,7 +334,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      * @param bool $readonly
      * @return int|null
      */
-    public static function check($tvshow, $season_number, $readonly = false)
+    public static function check($tvshow, $season_number, $readonly = false): ?int
     {
         $name = $tvshow . '_' . $season_number;
         // null because we don't have any unique id like mbid for now

@@ -507,7 +507,7 @@ class Catalog_remote extends Catalog
      * @return bool|null
      * @throws Exception
      */
-    public function prepare_media($media)
+    public function prepare_media($media): ?bool
     {
         $remote_handle = $this->connect();
 

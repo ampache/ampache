@@ -235,8 +235,8 @@ class AmpacheTvdb implements AmpachePluginInterface
 
         if ((count($titles) > 1) && ($year != null)) {
             foreach ($titles as $index) {
-                $y = $index->firstAired->format('Y');
-                if ($year == $y) {
+                $airedYear = $index->firstAired->format('Y');
+                if ($year == $airedYear) {
                     return $index;
                 }
             }

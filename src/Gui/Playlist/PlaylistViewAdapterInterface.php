@@ -33,7 +33,7 @@ interface PlaylistViewAdapterInterface
 
     public function getUserFlags(): string;
 
-    public function getArt(): ?string;
+    public function getArt(): void;
 
     public function canAutoplayNext(): bool;
 

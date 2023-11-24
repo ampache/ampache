@@ -262,7 +262,6 @@ class Dba
             return null;
         }
 
-        /** @var PDOStatement $resource */
         $result = $resource->fetch(PDO::FETCH_COLUMN);
 
         if ($result === false) {

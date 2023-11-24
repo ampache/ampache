@@ -57,9 +57,9 @@ final class AlbumSearch implements SearchInterface
             if (!$type) {
                 continue;
             }
-            foreach ($search->basetypes[$type] as $op) {
-                if ($op['name'] == $rule[1]) {
-                    $operator = $op;
+            foreach ($search->basetypes[$type] as $baseOperator) {
+                if ($baseOperator['name'] == $rule[1]) {
+                    $operator = $baseOperator;
                     break;
                 }
             }

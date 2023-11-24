@@ -30,13 +30,13 @@ To update the repository, Ampache uses a gettext script called `gather-messages.
 
 To use; cd to the base dir
 
-```
+```shell
 cd locale/base
 ```
 
 Then gather the new messages
 
-```
+```shell
 ./gather-messages.sh -g
 ```
 
@@ -52,25 +52,25 @@ https://developers.transifex.com/docs/cli
 
 You can install the latest Transifex CLI by executing:
 
-```
+```shell
 curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
 ```
 
 Now migrate your old config if you had it installed previously
 
-```
+```shell
 tx migrate
 ```
 
 With the cli tool you can pull the changes to the messages with
 
-```
+```shell
 tx pull -f
 ```
 
 Here is an example of my migrated config file (~/.transifexrc) which allows me to pull the translations
 
-```
+```text
 [https://www.transifex.com]
 api_hostname  = https://api.transifex.com
 hostname      = https://www.transifex.com
@@ -84,7 +84,6 @@ Finally, to build all the mo files which Ampache uses you need to install gettex
 
 Now you can forcibly rebuild all the mo files with this command
 
-```
+```shell
 bash gather-messages.sh -fa
 ```
-

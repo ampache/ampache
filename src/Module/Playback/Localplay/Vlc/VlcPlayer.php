@@ -92,7 +92,7 @@ class VlcPlayer
      * clear the playlist
      * Every command returns status.xml no other way
      */
-    public function clear()
+    public function clear(): ?bool
     {
         $args    = array('command' => 'pl_empty');
         $results = $this->sendCommand('status.xml?', $args);
@@ -107,7 +107,7 @@ class VlcPlayer
      * next
      * go to next song
      */
-    public function next()
+    public function next(): ?bool
     {
         $args    = array('command' => 'pl_next');
         $results = $this->sendCommand('status.xml?', $args);
@@ -122,7 +122,7 @@ class VlcPlayer
      * prev
      * go to previous song
      */
-    public function prev()
+    public function prev(): ?bool
     {
         $args    = array('command' => 'pl_previous');
         $results = $this->sendCommand("status.xml?", $args);
@@ -139,7 +139,7 @@ class VlcPlayer
      * @param $pos
      * @return bool|null
      */
-    public function skip($pos)
+    public function skip($pos): ?bool
     {
         $args    = array('command' => 'pl_play', '&id' => $pos);
         $results = $this->sendCommand('status.xml?', $args);
@@ -156,7 +156,7 @@ class VlcPlayer
      * play
      * play the current song
      */
-    public function play()
+    public function play(): ?bool
     {
         $args    = array('command' => 'pl_play');
         $results = $this->sendCommand("status.xml?", $args);
@@ -171,7 +171,7 @@ class VlcPlayer
      * pause
      * toggle pause mode on current song
      */
-    public function pause()
+    public function pause(): ?bool
     {
         $args    = array('command' => 'pl_pause');
         $results = $this->sendCommand("status.xml?", $args);
@@ -186,7 +186,7 @@ class VlcPlayer
      * stop
      * stops the current song amazing!
      */
-    public function stop()
+    public function stop(): ?bool
     {
         $args    = array('command' => 'pl_stop');
         $results = $this->sendCommand('status.xml?', $args);
@@ -203,7 +203,7 @@ class VlcPlayer
      * @param $value
      * @return bool|null
      */
-    public function repeat($value)
+    public function repeat($value): ?bool
     {
         $args    = array('command' => 'pl_repeat');
         $results = $this->sendCommand('status.xml?', $args);

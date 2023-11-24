@@ -241,7 +241,7 @@ class Live_Stream extends database_object implements Media, library_item
     /**
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return null;
     }
@@ -322,9 +322,8 @@ class Live_Stream extends database_object implements Media, library_item
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
      * @param array $data
-     * @return string|null
      */
-    public static function create(array $data)
+    public static function create(array $data): ?string
     {
         // Make sure we've got a name and codec
         if (!strlen((string)$data['name'])) {

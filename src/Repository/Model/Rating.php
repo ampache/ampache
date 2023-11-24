@@ -188,7 +188,7 @@ class Rating extends database_object
      * @param int $user_id
      * @return int|null
      */
-    public function get_user_rating($user_id = null)
+    public function get_user_rating($user_id = null): ?int
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -220,7 +220,7 @@ class Rating extends database_object
      * Get the floored average rating of what everyone has rated this object as.
      * @return double|null
      */
-    public function get_average_rating()
+    public function get_average_rating(): ?float
     {
         $key = 'rating_' . $this->type . '_all';
         if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {

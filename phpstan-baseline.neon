@@ -4896,11 +4896,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_checkName\\(\\) never returns null so it can be removed from the return type\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getAlbumId\\(\\) has parameter \\$album_id with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
@@ -6801,11 +6796,6 @@ parameters:
 			path: src/Module/Application/Video/ShowVideoAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, string\\|true given\\.$#"
-			count: 1
-			path: src/Module/Application/Waveform/ShowAction.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollector\\:\\:collect\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/ArtCollector.php
@@ -7637,11 +7627,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:getListeners\\(\\) should return array\\<Ratchet\\\\ConnectionInterface\\> but returns Ratchet\\\\ConnectionInterface\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:getRunningBroadcast\\(\\) should return Ampache\\\\Repository\\\\Model\\\\Broadcast but returns Ampache\\\\Repository\\\\Model\\\\Broadcast\\|null\\.$#"
 			count: 1
 			path: src/Module/Broadcast/Broadcast_Server.php
 
@@ -10286,11 +10271,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:clear\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:delete_pos\\(\\) has parameter \\$track with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
@@ -10302,26 +10282,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:get_tracks\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:next\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:pause\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:play\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:prev\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -10357,11 +10317,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:skip\\(\\) has parameter \\$pos with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:stop\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -10661,11 +10616,6 @@ parameters:
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:get_queue_count\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:queue_track\\(\\) has parameter \\$album with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Scrobble/Scrobbler.php
@@ -10747,11 +10697,6 @@ parameters:
 
 		-
 			message: "#^Binary operation \"\\.\" between 'Final command is ' and array\\<int, string\\>\\|string results in an error\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_image_preview\\(\\) should return string but returns string\\|null\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -10966,22 +10911,7 @@ parameters:
 			path: src/Module/Playback/Stream_Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_object_to_url\\(\\) should return Ampache\\\\Module\\\\Playback\\\\Stream_Url but returns Ampache\\\\Module\\\\Playback\\\\Stream_Url\\|null\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_object_to_url\\(\\) should return Ampache\\\\Module\\\\Playback\\\\Stream_Url but returns null\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_to_url\\(\\) has parameter \\$media with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_to_url\\(\\) should return Ampache\\\\Module\\\\Playback\\\\Stream_Url but returns null\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
 
@@ -11376,11 +11306,6 @@ parameters:
 			path: src/Module/Song/Tag/SongTagWriter.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:check_for_duplicate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Song/Tag/SongTagWriter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:check_for_duplicate\\(\\) has parameter \\$apic_typeid with no type specified\\.$#"
 			count: 1
 			path: src/Module/Song/Tag/SongTagWriter.php
@@ -11407,11 +11332,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:getVorbisMetadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Song/Tag/SongTagWriter.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:search_txxx\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Song/Tag/SongTagWriter.php
 
@@ -15881,11 +15801,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$_mapcache type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -15947,11 +15862,6 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -16106,22 +16016,12 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:read_from_images\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:reset\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:save_thumb\\(\\) has parameter \\$size with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:url\\(\\) should return string but returns null\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
@@ -16247,11 +16147,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Art\\:\\:\\$raw \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Art\\:\\:\\$thumb \\(string\\) does not accept string\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
@@ -16472,11 +16367,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:update_state\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
 
@@ -17281,11 +17171,6 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$artist_count has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -17372,11 +17257,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
 

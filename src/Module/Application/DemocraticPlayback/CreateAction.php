@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\DemocraticPlayback;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\Democratic;
@@ -34,7 +33,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -73,7 +71,6 @@ final class CreateAction implements ApplicationActionInterface
         if (!$democratic->id) {
             // Create the playlist
             Democratic::create($_POST);
-            Democratic::get_current_playlist();
         } else {
             $democratic->update($_POST);
         }

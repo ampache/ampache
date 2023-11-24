@@ -457,7 +457,7 @@ class AlbumDisk extends database_object implements library_item
      * Get item's owner.
      * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         if (!$this->album->album_artist) {
             return null;
@@ -522,7 +522,7 @@ class AlbumDisk extends database_object implements library_item
         if (Art::has_db($this->album_id, 'album')) {
             $album_id = $this->album_id;
             $type     = 'album';
-        } elseif ($this->album->album_artist && Art::has_db($this->album->album_artist, 'artist') || $force) {
+        } elseif ($this->album->album_artist && (Art::has_db($this->album->album_artist, 'artist') || $force)) {
             $album_id = $this->album->album_artist;
             $type     = 'artist';
         }

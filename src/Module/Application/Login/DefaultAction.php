@@ -27,7 +27,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
-use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
