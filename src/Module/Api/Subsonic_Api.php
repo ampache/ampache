@@ -1779,7 +1779,7 @@ class Subsonic_Api
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
-                Stream::insert_now_playing((int) $media->id, (int) $user->id, ((int)$media->time), $user->username, $type, ((int)$time));
+                Stream::insert_now_playing((int)$media->id, (int)$user->id, ((int)$media->time), (string)$user->username, $type, ((int)$time));
                 // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
                 if ($submission && get_class($media) == Song::class && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
                     // stream has finished
@@ -2753,7 +2753,7 @@ class Subsonic_Api
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplayqueue');
         $client    = scrub_in($input['c'] ?? 'Subsonic');
         $playQueue = new User_Playlist($user->id, $client);
-        Subsonic_Xml_Data::addPlayQueue($response, $playQueue, $user->username);
+        Subsonic_Xml_Data::addPlayQueue($response, $playQueue, (string)$user->username);
         self::_apiOutput($input, $response);
     }
 
@@ -2783,7 +2783,7 @@ class Subsonic_Api
                 $type     = Subsonic_Xml_Data::_getAmpacheType($current);
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
-                Stream::insert_now_playing((int)$media->id, (int)$user_id, ((int)$media->time - $position), $user->username, $type, ($time - $position));
+                Stream::insert_now_playing((int)$media->id, (int)$user_id, ((int)$media->time - $position), (string)$user->username, $type, ($time - $position));
 
                 if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->id) {
                     $time_diff = $time - $previous['date'];

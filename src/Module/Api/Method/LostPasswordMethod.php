@@ -80,6 +80,12 @@ final class LostPasswordMethod
 
                 return false;
             }
+            if (empty($update_user->email)) {
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Bad Request: %s'), $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
+
+                return false;
+            }
 
             $current_ip = Core::get_user_ip();
 

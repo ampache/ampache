@@ -99,7 +99,7 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
         try {
             $streamtoken = bin2hex(random_bytes(20));
             $userId      = $user->getId();
-            $userName    = $user->username;
+            $userName    = (string)$user->username;
 
             $this->userRepository->updateStreamToken(
                 $userId,

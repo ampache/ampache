@@ -323,7 +323,7 @@ final class AmpacheRss implements AmpacheRssInterface
                     'title' => $song->f_name . ' - ' . $song->f_artist . ' - ' . $song->f_album,
                     'link' => str_replace('&amp;', '&', (string)$song->get_link()),
                     'description' => $description,
-                    'comments' => $client->username,
+                    'comments' => (string)$client->username,
                     'pubDate' => date("r", (int)$item['date'])
                 );
                 $results[] = $xml_array;

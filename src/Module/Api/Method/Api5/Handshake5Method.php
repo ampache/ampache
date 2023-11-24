@@ -140,9 +140,9 @@ final class Handshake5Method
             if ($client instanceof User) {
                 // Create the session
                 $data             = array();
-                $data['username'] = $client->username;
+                $data['username'] = (string)$client->username;
                 $data['type']     = 'api';
-                $data['apikey']   = $client->apikey;
+                $data['apikey']   = (string)$client->apikey;
                 $data['value']    = $data_version;
                 if (isset($input['client'])) {
                     $data['agent'] = scrub_in($input['client']);
@@ -156,7 +156,7 @@ final class Handshake5Method
                 if (isset($input['geo_name'])) {
                     $data['geo_name'] = $input['geo_name'];
                 }
-                //Session might not exist or has expired
+                // Session might not exist or has expired
                 if (!Session::read($data['apikey'])) {
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);

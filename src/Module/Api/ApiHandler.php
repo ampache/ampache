@@ -164,7 +164,7 @@ final class ApiHandler implements ApiHandlerInterface
             $data             = [];
             $data['username'] = $user->username;
             $data['type']     = 'header';
-            $data['apikey']   = md5($user->username);
+            $data['apikey']   = md5((string)$user->username);
             $data['value']    = $api_version;
             // Session might not exist or has expired
             if (!Session::read($data['apikey'])) {
@@ -244,7 +244,7 @@ final class ApiHandler implements ApiHandlerInterface
             !$is_public &&
             (
                 !$user instanceof User || // User is required for non-public methods
-                (!$header_auth && $input['auth'] === md5($user->username)) || // require header auth for simplified session
+                (!$header_auth && $input['auth'] === md5((string)$user->username)) || // require header auth for simplified session
                 $gatekeeper->sessionExists($input['auth']) === false // no valid session
             )
         ) {

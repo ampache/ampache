@@ -51,82 +51,34 @@ class User extends database_object
     protected const DB_TABLENAME = 'user';
 
     // Basic Components
-    /**
-     * @var int $id
-     */
-    public $id;
-    /**
-     * @var string $username
-     */
-    public $username;
-    /**
-     * @var string $fullname
-     */
-    public $fullname;
-    /**
-     * @var bool $fullname_public
-     */
-    public $fullname_public;
-    /**
-     * @var int $access
-     */
+    public int $id = 0;
+    public ?string $username;
+    public ?string $fullname;
+    public ?string $email;
+    public ?string $website;
+    public ?string $apikey;
     public int $access;
-    /**
-     * @var bool $disabled
-     */
-    public $disabled;
-    /**
-     * @var string $email
-     */
-    public $email;
-    /**
-     * @var int $last_seen
-     */
-    public $last_seen;
-    /**
-     * @var int $create_date
-     */
-    public $create_date;
-    /**
-     * @var string $validation
-     */
-    public $validation;
-    /**
-     * @var string $website
-     */
-    public $website;
-    /**
-     * @var string $state
-     */
-    public $state;
-    /**
-     * @var string $city
-     */
-    public $city;
-    /**
-     * @var string $apikey
-     */
-    public $apikey;
-    /**
-     * @var string $rsstoken
-     */
-    public $rsstoken;
-    /**
-     * @var string $streamtoken
-     */
-    public $streamtoken;
+    public bool $disabled;
+    public int $last_seen;
+    public ?int $create_date;
+    public ?string $validation;
+    public ?string $state;
+    public ?string $city;
+    public bool $fullname_public;
+    public ?string $rsstoken;
+    public ?string $streamtoken;
+    public int $catalog_filter_group;
 
     // Constructed variables
+    public string $ip_history = '';
     /**
      * @var array $prefs
      */
     public $prefs = array();
-
     /**
      * @var Tmp_Playlist $playlist
      */
     public $playlist;
-
     /**
      * @var null|string $f_name
      */
@@ -151,9 +103,6 @@ class User extends database_object
      * @var null|string $f_usage
      */
     public $f_usage;
-
-    public string $ip_history = '';
-
     /**
      * @var null|string $f_avatar
      */
@@ -166,12 +115,6 @@ class User extends database_object
      * @var null|string $f_avatar_medium
      */
     public $f_avatar_medium;
-
-    /**
-     * @var int $catalog_filter_group;
-     */
-    public $catalog_filter_group;
-
     /**
      * @var array $catalogs;
      */
@@ -1463,7 +1406,7 @@ class User extends database_object
      */
     public function getUsername(): string
     {
-        return $this->username;
+        return $this->username ?? '';
     }
 
     /**
