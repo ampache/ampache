@@ -41,10 +41,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 {
     protected const DB_TABLENAME = 'tag';
 
-    public $id;
-    public $name;
+    public int $id = 0;
+    public ?string $name;
+    public int $is_hidden;
+
     public $f_name;
-    public $is_hidden;
 
     /**
      * constructor
@@ -786,21 +787,21 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             if ($ctv['id'] != '') {
                 $ctag = new Tag($ctv['id']);
                 foreach ($editedTags as $tk => $tv) {
-                    //debug_event(self::class, 'from_tags {' . $tk . '} = ' . $tv, 5);
-                    if (strtolower($ctag->name) == strtolower($tv)) {
+                    debug_event(self::class, 'from_tags {' . $tk . '} = ' . $tv, 5);
+                    if (strtolower((string)$ctag->name) == strtolower($tv)) {
                         $found = true;
                         break;
                     }
                     // check if this thing has been renamed into something else
                     $merged = self::construct_from_name($tv);
-                    if ($merged && $merged->is_hidden && $merged->has_merge($ctag->name)) {
+                    if ($merged->id && $merged->is_hidden && $merged->has_merge((string)$ctag->name)) {
                         $found = true;
                         break;
                     }
                 }
 
                 if ($found) {
-                    unset($editedTags[$ctag->name]);
+                    unset($editedTags[$ctag->id]);
                 }
                 if (!$found && $overwrite && $ctv['user'] == 0) {
                     debug_event(self::class, 'update_tag_list {' . $ctag->name . '} not found. Delete it.', 5);
