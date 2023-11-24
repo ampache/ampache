@@ -582,7 +582,10 @@ class Album extends database_object implements library_item
      */
     public function get_artists()
     {
-        if (empty($this->album_artists) && $this->album_artist) {
+        if (empty($this->album_artist)) {
+            return array();
+        }
+        if (empty($this->album_artists)) {
             $this->album_artists = self::get_parent_array($this->id, $this->album_artist);
         }
 
