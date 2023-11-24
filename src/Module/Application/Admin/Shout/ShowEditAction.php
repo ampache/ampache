@@ -61,8 +61,9 @@ final class ShowEditAction implements ApplicationActionInterface
 
         $shout  = $this->modelFactory->createShoutbox((int)($request->getQueryParams()['shout_id'] ?? 0));
         $object = Shoutbox::get_object((string)$shout->object_type, $shout->object_id);
-        $object->format();
-
+        if ($object) {
+            $object->format();
+        }
         $client = $this->modelFactory->createUser($shout->user);
         $client->format();
 
