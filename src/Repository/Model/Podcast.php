@@ -36,35 +36,21 @@ class Podcast extends database_object implements library_item
 
     /* Variables from DB */
     public int $id = 0;
-
-    public int $catalog;
-
     public ?string $feed;
-
+    public int $catalog;
     public ?string $title;
-
     public ?string $website;
-
     public ?string $description;
-
     public ?string $language;
-
     public ?string $copyright;
-
     public ?string $generator;
-
     public int $lastbuilddate;
-
     public int $lastsync;
-
     public int $total_count;
-
     public int $total_skip;
-
     public int $episodes;
 
     public ?bool $has_art = null;
-
     public $f_name;
     public $f_website;
     public $f_description;
@@ -339,22 +325,22 @@ class Podcast extends database_object implements library_item
         $feed = $data['feed'] ?? $this->feed ?? '';
 
         /** @var null|string $title */
-        $title = (isset($data['title'])) ? scrub_in($data['title']) : null;
+        $title = (isset($data['title'])) ? $data['title'] : null;
 
         /** @var null|string $website */
-        $website = (isset($data['website'])) ? scrub_in($data['website']) : null;
+        $website = (isset($data['website'])) ? $data['website'] : null;
 
         /** @var null|string $description */
-        $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
+        $description = (isset($data['description'])) ? Dba::check_length((string)$data['description'], 4096) : null;
 
         /** @var null|string $language */
-        $language = (isset($data['language'])) ? scrub_in($data['language']) : null;
+        $language = (isset($data['language'])) ? $data['language'] : null;
 
         /** @var null|string $generator */
-        $generator = (isset($data['generator'])) ? scrub_in($data['generator']) : null;
+        $generator = (isset($data['generator'])) ? $data['generator'] : null;
 
         /** @var null|string $copyright */
-        $copyright = (isset($data['copyright'])) ? scrub_in($data['copyright']) : null;
+        $copyright = (isset($data['copyright'])) ? $data['copyright'] : null;
 
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             debug_event(self::class, 'Podcast update canceled, bad feed url.', 1);
@@ -364,14 +350,6 @@ class Podcast extends database_object implements library_item
 
         $sql = 'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `language` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?';
         Dba::write($sql, array($feed, $title, $website, $description, $language, $generator, $copyright, $this->id));
-
-        $this->feed        = $feed;
-        $this->title       = $title;
-        $this->website     = $website;
-        $this->description = $description;
-        $this->language    = $language;
-        $this->generator   = $generator;
-        $this->copyright   = $copyright;
 
         return $this->id;
     }
@@ -673,8 +651,10 @@ class Podcast extends database_object implements library_item
     public function sync_episodes(bool $gather = false): bool
     {
         debug_event(self::class, 'Syncing feed ' . $this->feed . ' ...', 4);
-
-        $xmlstr = file_get_contents((string) $this->feed, false, stream_context_create(Core::requests_options()));
+        if ($this->feed === null) {
+            return false;
+        }
+        $xmlstr = file_get_contents($this->feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
             debug_event(self::class, 'Cannot access feed ' . $this->feed, 1);
 
