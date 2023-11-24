@@ -1424,17 +1424,16 @@ class Json_Data
      *
      * This handles creating an JSON document for a shout list
      *
-     * @param int[] $shouts Shout id list
+     * @param list<Shoutbox> $shouts Shout id list
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function shouts($shouts, $object = true): string
+    public static function shouts(array $shouts, bool $object = true): string
     {
         $JSON = [];
-        foreach ($shouts as $shout_id) {
-            $shout    = new Shoutbox($shout_id);
+        foreach ($shouts as $shout) {
             $user     = new User($shout->user);
             $objArray = array(
-                "id" => (string)$shout_id,
+                "id" => (string)$shout->getId(),
                 "date" => $shout->date,
                 "text" => $shout->text,
                 "user" => array(

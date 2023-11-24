@@ -39,16 +39,21 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 final class AmpacheRss implements AmpacheRssInterface
 {
     private UserRepositoryInterface $userRepository;
 
+    private ShoutRepositoryInterface $shoutRepository;
+
     public function __construct(
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        ShoutRepositoryInterface $shoutRepository
     ) {
-        $this->userRepository = $userRepository;
+        $this->userRepository  = $userRepository;
+        $this->shoutRepository = $shoutRepository;
     }
 
     /** @var list<string> */
@@ -422,12 +427,11 @@ final class AmpacheRss implements AmpacheRssInterface
      */
     private function load_latest_shout(): array
     {
-        $ids = Shoutbox::get_top(10);
+        $shouts = $this->shoutRepository->getTop(10);
 
         $results = array();
 
-        foreach ($ids as $shout_id) {
-            $shout  = new Shoutbox($shout_id);
+        foreach ($shouts as $shout) {
             $object = Shoutbox::get_object((string)$shout->object_type, $shout->object_id);
             if ($object !== null) {
                 $object->format();

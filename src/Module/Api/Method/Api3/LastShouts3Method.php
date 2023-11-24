@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 /**
  * Class LastShouts3Method
@@ -46,15 +47,16 @@ final class LastShouts3Method
         unset($user);
         $limit = (int)($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold');
+            $limit = (int) AmpConfig::get('popular_threshold');
         }
         if (AmpConfig::get('sociable')) {
-            $username = $input['username'];
-            if (!empty($username)) {
-                $results = Shoutbox::get_top($limit, $username);
+            if (!empty($input['username'])) {
+                $username = $input['username'];
             } else {
-                $results = Shoutbox::get_top($limit);
+                $username = null;
             }
+
+            $results = static::getShoutRepository()->getTop($limit, $username);
 
             ob_end_clean();
             echo Xml3_Data::shouts($results);
@@ -62,4 +64,14 @@ final class LastShouts3Method
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
     } // last_shouts
+
+    /**
+     * @todo inject by constructor
+     */
+    private static function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
+    }
 }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Generator;
@@ -144,5 +145,64 @@ final class ShoutRepository implements ShoutRepositoryInterface
                 $shout->getId()
             ]
         );
+    }
+
+    /**
+     * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
+     * number of objects shown
+     *
+     * @return Generator<Shoutbox>
+     */
+    public function getTop(int $limit, ?string $username = null): Generator
+    {
+        $result = $this->connection->query('SELECT id FROM `user_shout` WHERE `sticky` = 1 ORDER BY `date` DESC');
+
+        while ($shoutId = $result->fetchColumn()) {
+            yield $this->modelFactory->createShoutbox((int) $shoutId);
+
+            $limit--;
+
+            if ($limit < 1) {
+                break;
+            }
+        }
+
+        $params  = [];
+        $userSql = '';
+        $sql     = <<<SQL
+        SELECT
+            `user_shout`.`id` AS `id`
+        FROM
+            `user_shout`
+        LEFT JOIN
+            `user`
+        ON
+            `user`.`id` = `user_shout`.`user`
+        WHERE
+            `user_shout`.`sticky` = 0 %s
+        ORDER BY
+            `user_shout`.`date` DESC
+        LIMIT %d
+        SQL;
+
+        if ($username !== null) {
+            $userSql  = 'AND `user`.`username` = ?';
+            $params[] = $username;
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                $sql,
+                $userSql,
+                $limit
+            ),
+            $params
+        );
+
+        while ($shoutId = $result->fetchColumn()) {
+            yield $this->modelFactory->createShoutbox(
+                (int) $shoutId
+            );
+        }
     }
 }
