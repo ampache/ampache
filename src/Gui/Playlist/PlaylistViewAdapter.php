@@ -247,7 +247,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function canBeRefreshed(): bool
     {
-        $search_id = $this->playlist->has_search($this->playlist->user);
+        $search_id = $this->playlist->has_search((int)$this->playlist->user);
 
         return $this->playlist->has_access() &&
             $search_id > 0;
@@ -255,7 +255,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getRefreshUrl(): string
     {
-        $search_id = $this->playlist->has_search($this->playlist->user);
+        $search_id = $this->playlist->has_search((int)$this->playlist->user);
 
         return sprintf(
             '%s/playlist.php?action=refresh_playlist&type=playlist&user_id=%d&playlist_id=%d&search_id=%d',
@@ -288,7 +288,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getUsername(): string
     {
-        return $this->playlist->username;
+        return (string)$this->playlist->username;
     }
 
     public function getLastUpdate(): string

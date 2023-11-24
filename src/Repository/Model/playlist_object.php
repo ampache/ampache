@@ -37,26 +37,12 @@ use Ampache\Module\Util\Ui;
 abstract class playlist_object extends database_object implements library_item
 {
     // Database variables
-    /**
-     * @var int $id
-     */
-    public $id;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var int $user
-     */
-    public $user;
-    /**
-     * @var string $user
-     */
-    public $username;
-    /**
-     * @var string $type
-     */
-    public $type;
+    public int $id = 0;
+    public ?string $name;
+    public ?int $user;
+    public ?string $username;
+    public ?string $type;
+
     /**
      * @var null|string $link
      */

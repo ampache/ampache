@@ -41,40 +41,18 @@ class Live_Stream extends database_object implements Media, library_item
     protected const DB_TABLENAME = 'live_stream';
 
     /* DB based variables */
+    public int $id = 0;
+    public ?string $name;
+    public ?string $site_url;
+    public ?string $url;
+    public int $genre;
+    public int $catalog;
+    public ?string $codec;
 
-    /**
-     * @var int $id
-     */
-    public $id;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var string $site_url
-     */
-    public $site_url;
-    /**
-     * @var string $url
-     */
-    public $url;
     /**
      * @var null|string $link
      */
     public $link;
-    /**
-     * @var int $genre
-     */
-    public $genre;
-    /**
-     * @var string $codec
-     */
-    public $codec;
-    /**
-     * @var int $catalog
-     */
-    public $catalog;
-
     /**
      * @var null|string $f_name
      */

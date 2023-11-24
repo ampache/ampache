@@ -31,22 +31,10 @@ class License
 {
     protected const DB_TABLENAME = 'license';
 
-    /**
-     * @var int $id
-     */
-    public $id;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var string $description
-     */
-    public $description;
-    /**
-     * @var string $external_link
-     */
-    public $external_link;
+    public int $id = 0;
+    public ?string $name;
+    public ?string $description;
+    public ?string $external_link;
 
     /**
      * Constructor

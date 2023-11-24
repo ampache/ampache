@@ -756,7 +756,7 @@ class Subsonic_Xml_Data
         $xplaylist = $xml->addChild('playlist');
         $xplaylist->addAttribute('id', $sub_id);
         $xplaylist->addAttribute('name', (string)self::_checkName($playlist->get_fullname()));
-        $xplaylist->addAttribute('owner', $playlist->username);
+        $xplaylist->addAttribute('owner', (string)$playlist->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('songCount', (string)$songcount);
         $xplaylist->addAttribute('duration', (string)$duration);
@@ -787,7 +787,7 @@ class Subsonic_Xml_Data
         $xplaylist = $xml->addChild('playlist');
         $xplaylist->addAttribute('id', $sub_id);
         $xplaylist->addAttribute('name', (string) self::_checkName($search->get_fullname()));
-        $xplaylist->addAttribute('owner', $search->username);
+        $xplaylist->addAttribute('owner', (string)$search->username);
         $xplaylist->addAttribute('public', ($search->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('created', date("c", (int)$search->date));
         $xplaylist->addAttribute('changed', date("c", time()));

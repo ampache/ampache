@@ -138,8 +138,8 @@ abstract class Catalog extends database_object
     public int $last_add;
     public bool $enabled;
     public string $rename_pattern = '';
-    public string $sort_pattern = '';
-    public string $gather_types = '';
+    public string $sort_pattern   = '';
+    public string $gather_types   = '';
 
     /**
      * @var string $key
