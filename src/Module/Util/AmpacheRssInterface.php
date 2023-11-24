@@ -20,23 +20,24 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\Rss\ShowAction;
-use Nyholm\Psr7Server\ServerRequestCreatorInterface;
-use Psr\Container\ContainerInterface;
+namespace Ampache\Module\Util;
 
-/** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../src/Config/Init.php';
+interface AmpacheRssInterface
+{
+    /**
+     * get_xml
+     * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
+     * and then uses the xmlDATA class to build the document
+     *
+     * @param null|array{object_type: string, object_id: int} $params
+     */
+    public function get_xml(string $rssToken, string $type, ?array $params = null): string;
 
-define('NO_SESSION', '1');
-
-$dic->get(ApplicationRunner::class)->run(
-    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [
-        ShowAction::REQUEST_KEY => ShowAction::class,
-    ],
-    ShowAction::REQUEST_KEY
-);
+    /**
+     * get_description
+     * This returns the standardized description for the rss feed based on this->type
+     */
+    public function get_description(): string;
+}

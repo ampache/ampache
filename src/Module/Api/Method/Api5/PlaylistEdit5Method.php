@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -71,7 +72,7 @@ final class PlaylistEdit5Method
 
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->id || (!$playlist->has_access($user->id) && $user->access !== 100)) {
-            Api5::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
+            Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -103,7 +104,7 @@ final class PlaylistEdit5Method
         }
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
-            Api5::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+            Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
 
             return false;
         }

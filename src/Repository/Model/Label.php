@@ -41,55 +41,18 @@ class Label extends database_object implements library_item
     protected const DB_TABLENAME = 'label';
 
     /* Variables from DB */
-
-    /**
-     * @var int $id
-     */
-    public $id;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var string $mbid
-     */
-    public $mbid; // MusicBrainz ID
-    /**
-     * @var string $category
-     */
-    public $category;
-    /**
-     * @var string $address
-     */
-    public $address;
-    /**
-     * @var string $email
-     */
-    public $email;
-    /**
-     * @var string $website
-     */
-    public $website;
-    /**
-     * @var null|string $summary
-     */
-    public $summary;
-    /**
-     * @var string $country
-     */
-    public $country;
-    /**
-     * @var int $active
-     */
-    public $active;
-    /**
-     * @var int $creation_date
-     */
-    public $creation_date;
-    /**
-     * @var int $user
-     */
-    public $user;
+    public int $id = 0;
+    public ?string $name;
+    public ?string $category;
+    public ?string $summary;
+    public ?string $address;
+    public ?string $email;
+    public ?string $website;
+    public ?int $user;
+    public ?int $creation_date;
+    public ?string $mbid; // MusicBrainz ID
+    public ?string $country;
+    public bool $active;
 
     /**
      * @var null|string $f_name
@@ -124,7 +87,6 @@ class Label extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-        $this->active = (int)$this->active;
     }
 
     public function getId(): int
@@ -255,7 +217,7 @@ class Label extends database_object implements library_item
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song') {
-            $songs = static::getSongRepository()->getByLabel($this->name);
+            $songs = static::getSongRepository()->getByLabel((string)$this->name);
             foreach ($songs as $song_id) {
                 $medias[] = array(
                     'object_type' => 'song',
@@ -329,7 +291,7 @@ class Label extends database_object implements library_item
         $country  = $data['country'] ?? null;
         $email    = $data['email'] ?? null;
         $website  = $data['website'] ?? null;
-        $active   = isset($data['active']) ? (int)$data['active'] : $this->active;
+        $active   = isset($data['active']) ? (bool)$data['active'] : $this->active;
 
         $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $mbid, strtolower($category), $summary, $address, $country, $email, $website, $active, $this->id));

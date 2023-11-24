@@ -126,7 +126,7 @@ class Xml_Data
      * This generates a standard XML Error message
      * nothing fancy here...
      *
-     * @param string $code Error code
+     * @param int|string $code Error code
      * @param string $string Error message
      * @param string $action
      * @param string $type
@@ -1247,13 +1247,13 @@ class Xml_Data
      *
      * @param array $data Keyed array of information to RSS'ify
      * @param string $title RSS feed title
-     * @param string $date publish date
+     * @param int|null $date publish date
      */
     public static function rss_feed($data, $title, $date = null): string
     {
         $string = "\t<title>" . $title . "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
-        if (is_int($date)) {
-            $string .= "<pubDate>" . date("r", (int)$date) . "</pubDate>\n";
+        if ($date !== null) {
+            $string .= "<pubDate>" . date("r", $date) . "</pubDate>\n";
         }
 
         // Pass it to the keyed array xml function

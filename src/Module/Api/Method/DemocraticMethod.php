@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -65,7 +66,7 @@ final class DemocraticMethod
                 $media     = new Song($object_id);
                 if (!$media->id) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'oid', $input['api_format']);
+                    Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
                     break;
                 }
                 $democratic->add_vote(array(
@@ -94,7 +95,7 @@ final class DemocraticMethod
                 $media     = new Song($object_id);
                 if (!$media->id) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'oid', $input['api_format']);
+                    Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
                     break;
                 }
 
@@ -140,7 +141,7 @@ final class DemocraticMethod
                 }
                 break;
             default:
-                Api::error(T_('Invalid Request'), '4710', self::ACTION, 'method', $input['api_format']);
+                Api::error(T_('Invalid Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'method', $input['api_format']);
                 break;
         }
 

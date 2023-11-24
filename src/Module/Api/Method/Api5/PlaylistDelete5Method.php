@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -53,7 +54,7 @@ final class PlaylistDelete5Method
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && $user->access !== 100) {
-            Api5::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
+            Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
         } else {
             $playlist->delete();
             Api5::message('playlist deleted', $input['api_format']);

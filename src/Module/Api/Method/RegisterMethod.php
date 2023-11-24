@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\User\Registration;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -56,7 +57,7 @@ final class RegisterMethod
     public static function register(array $input): bool
     {
         if (!AmpConfig::get('allow_public_registration', false)) {
-            Api::error(T_('Enable: allow_public_registration'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: allow_public_registration'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -95,17 +96,17 @@ final class RegisterMethod
 
         if ($userRepository->idByUsername($username) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'username', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
         if ($userRepository->idByEmail($email) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $email), '4710', self::ACTION, 'email', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $email), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
 
             return false;
         }
-        Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

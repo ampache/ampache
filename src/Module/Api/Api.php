@@ -166,9 +166,7 @@ class Api
         5,
         6
     );
-    /**
-     * @var int $data_version
-     */
+
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version    = '350001';
@@ -211,7 +209,7 @@ class Api
      * error
      * call the correct error message depending on format
      * @param string $message
-     * @param string $error_code
+     * @param int|string $error_code
      * @param string $method
      * @param string $error_type
      * @param string $format

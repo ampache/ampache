@@ -130,47 +130,21 @@ abstract class Catalog extends database_object
         'video' => 0
     ];
 
-    /**
-     * @var int $id
-     */
-    public $id;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var int $last_update
-     */
-    public $last_update;
-    /**
-     * @var int $last_add
-     */
-    public $last_add;
-    /**
-     * @var int $last_clean
-     */
-    public $last_clean;
+    public int $id = 0;
+    public ?string $name;
+    public ?string $catalog_type;
+    public int $last_update;
+    public ?int $last_clean;
+    public int $last_add;
+    public bool $enabled;
+    public string $rename_pattern = '';
+    public string $sort_pattern   = '';
+    public string $gather_types   = '';
+
     /**
      * @var string $key
      */
     public $key;
-    /**
-     * @var string $rename_pattern
-     */
-    public $rename_pattern;
-    /**
-     * @var string $sort_pattern
-     */
-    public $sort_pattern;
-    /**
-     * @var string $catalog_type
-     */
-    public $catalog_type;
-    /**
-     * @var string $gather_types
-     */
-    public $gather_types;
-
     /**
      * @var null|string $f_name
      */
@@ -205,10 +179,6 @@ abstract class Catalog extends database_object
      * @var null|string $f_info
      */
     public $f_info;
-    /**
-     * @var int $enabled
-     */
-    public $enabled;
 
     /**
      * This is a private var that's used during catalog builds
@@ -1295,7 +1265,7 @@ abstract class Catalog extends database_object
             'time' => 0,
             'size' => 0
         );
-        if ($catalog !== null) {
+        if ($catalog instanceof Catalog) {
             $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
             $params    = $catalog_id ? array($catalog_id) : array();
 
@@ -2470,7 +2440,7 @@ abstract class Catalog extends database_object
             // for files without tags try to update from their file name instead
             if ($media->id && in_array($extension, array('wav', 'shn'))) {
                 // match against your catalog 'Filename Pattern' and 'Folder Pattern'
-                $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
+                $patres  = VaInfo::parse_pattern($media->file, $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
                 $results = array_merge($results, $patres);
             }
             /** @var array $update */
@@ -3253,7 +3223,7 @@ abstract class Catalog extends database_object
 
     /**
      * get_table_from_type
-     * @param string $gather_type
+     * @param null|string $gather_type
      */
     public static function get_table_from_type($gather_type): string
     {
@@ -3911,7 +3881,7 @@ abstract class Catalog extends database_object
 
     /**
      * Update the catalog_map table depending on table type
-     * @param string $media_type
+     * @param null|string $media_type
      */
     public static function update_catalog_map($media_type): void
     {

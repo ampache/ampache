@@ -66,21 +66,21 @@ class Search extends playlist_object
         'video'
     );
 
+    // override playlist_object
+    public ?string $type = 'public';
+    // rules used to run a search (User chooses rules from available types for that object)
+    public $rules; // JSON string to decoded to array
+    public ?string $logic_operator = 'AND';
+    public bool $random            = false;
+    public int $limit              = 0;
+    public ?int $last_count        = 0;
+    public ?int $last_duration     = 0;
+
     public $objectType; // the type of object you want to return (self::VALID_TYPES)
-
-    public $logic_operator = 'AND';
-    public $type           = 'public';
-    public $random         = 0;
-    public $limit          = 0;
-    public $last_count     = 0;
-    public $last_duration  = 0;
-    public $date           = 0;
-
-    public $types     = array(); // rules that are available to the objectType (title, year, rating, etc)
-    public $rules     = array(); // rules used to run a search (User chooses rules from available types for that object)
-    public $basetypes = array(); // rule operator subtypes (numeric, text, boolean, etc)
-
     public $search_user; // user running the search
+    public $types     = array(); // rules that are available to the objectType (title, year, rating, etc)
+    public $basetypes = array(); // rule operator subtypes (numeric, text, boolean, etc)
+    public $date      = 0;
 
     private $searchType; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
     private $stars;
@@ -1603,11 +1603,11 @@ class Search extends playlist_object
      */
     public function set_rules($data)
     {
-        $data        = self::_filter_request($data);
+        $data              = self::_filter_request($data);
         $this->rules = array();
-        $user_rules  = array();
+        $user_rules        = array();
         // check that a limit or random flag and operator have been sent
-        $this->random         = (isset($data['random'])) ? (int) $data['random'] : $this->random;
+        $this->random         = (isset($data['random'])) ? (bool)$data['random'] : $this->random;
         $this->limit          = (isset($data['limit'])) ? (int) $data['limit'] : $this->limit;
         $this->logic_operator = $data['operator'] ?? 'AND';
         // match the numeric rules you send (e.g. rule_1, rule_6000)
@@ -1717,10 +1717,10 @@ class Search extends playlist_object
             $this->name   = $data['name'] ?? $this->name;
             $this->type   = $data['pl_type'] ?? $this->type;
             $this->user   = $data['pl_user'] ?? $this->user;
-            $this->random = ((int)($data['random'] ?? 0) > 0) ? 1 : 0;
+            $this->random = $data['random'] ?? $this->random;
             $this->limit  = $data['limit'] ?? $this->limit;
         }
-        $this->username = User::get_username($this->user);
+        $this->username = User::get_username((int)$this->user);
 
         if (!$this->id) {
             return 0;

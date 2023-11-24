@@ -180,7 +180,7 @@ class Api5
      * error
      * call the correct error message depending on format
      * @param string $message
-     * @param string $error_code
+     * @param int|string $error_code
      * @param string $method
      * @param string $error_type
      * @param string $format

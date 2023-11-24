@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\User;
 
 /**
@@ -44,6 +45,6 @@ final class Tags5Method
     public static function tags(array $input, User $user): void
     {
         unset($user);
-        Api5::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
+        Api5::error(T_('Depreciated'), ErrorCodeEnum::DEPRECATED, self::ACTION, 'removed', $input['api_format']);
     }
 }

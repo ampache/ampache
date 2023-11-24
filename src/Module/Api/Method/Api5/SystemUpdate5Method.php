@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\System\Update;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -59,7 +60,7 @@ final class SystemUpdate5Method
             Preference::translate_db();
             // check that the update completed or failed failed.
             if (AutoUpdate::is_update_available(true)) {
-                Api5::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+                Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
                 Session::extend($input['auth'], 'api');
 
                 return false;

@@ -39,11 +39,11 @@ class Playlist extends playlist_object
     protected const DB_TABLENAME = 'playlist';
 
     /* Variables from the database */
-    public $genre;
-    public $date;
-    public $last_update;
-    public $last_duration;
+    public int $date;
+    public int $last_update;
+    public int $last_duration;
 
+    public $genre;
     public $f_date;
     public $f_last_update;
 

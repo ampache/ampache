@@ -498,11 +498,11 @@ class Subsonic_Xml_Data
                     ? $cache_target
                     : Stream::get_transcode_format($song->type, null, 'api');
 
-                if ($song->type !== $transcode_type) {
+                if (!empty($transcode_type) && $song->type !== $transcode_type) {
                     // Return a file path relative to the catalog root path
                     $xsong->addAttribute('path', preg_replace('"\.' . $song->type . '$"', '.' . $transcode_type, $file_path));
                     // Set transcoding information
-                    $xsong->addAttribute('transcodedSuffix', (string)$transcode_type);
+                    $xsong->addAttribute('transcodedSuffix', $transcode_type);
                     $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
 
                     return $xsong;
@@ -601,7 +601,7 @@ class Subsonic_Xml_Data
         }
         $xdir = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$catalog_id);
-        $xdir->addAttribute('name', $catalog->name);
+        $xdir->addAttribute('name', (string)$catalog->name);
         $allartists = Catalog::get_artist_arrays(array($catalog_id));
         foreach ($allartists as $artist) {
             self::addChildArray($xdir, $artist);
@@ -756,7 +756,7 @@ class Subsonic_Xml_Data
         $xplaylist = $xml->addChild('playlist');
         $xplaylist->addAttribute('id', $sub_id);
         $xplaylist->addAttribute('name', (string)self::_checkName($playlist->get_fullname()));
-        $xplaylist->addAttribute('owner', $playlist->username);
+        $xplaylist->addAttribute('owner', (string)$playlist->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('songCount', (string)$songcount);
         $xplaylist->addAttribute('duration', (string)$duration);
@@ -787,7 +787,7 @@ class Subsonic_Xml_Data
         $xplaylist = $xml->addChild('playlist');
         $xplaylist->addAttribute('id', $sub_id);
         $xplaylist->addAttribute('name', (string) self::_checkName($search->get_fullname()));
-        $xplaylist->addAttribute('owner', $search->username);
+        $xplaylist->addAttribute('owner', (string)$search->username);
         $xplaylist->addAttribute('public', ($search->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('created', date("c", (int)$search->date));
         $xplaylist->addAttribute('changed', date("c", time()));

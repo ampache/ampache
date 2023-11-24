@@ -36,35 +36,21 @@ class Broadcast extends database_object implements library_item
 {
     protected const DB_TABLENAME = 'broadcast';
 
-    /**
-     * @var int $id
-     */
-    public $id;
-    /**
-     * @var bool $started
-     */
-    public $started;
-    /**
-     * @var int $listeners
-     */
-    public $listeners;
-    /**
-     * @var int $song
-     */
-    public $song;
+    public int $id = 0;
+    public int $user;
+    public ?string $name;
+    public ?string $description;
+    public bool $is_private;
+    public int $song;
+    public bool $started;
+    public int $listeners;
+    public ?string $key;
+
+    public ?string $link = null;
     /**
      * @var int $song_position
      */
     public $song_position;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var int $user
-     */
-    public $user;
-
     /**
      * @var array $tags
      */
@@ -81,12 +67,6 @@ class Broadcast extends database_object implements library_item
      * @var null|string $f_tags
      */
     public $f_tags;
-    /**
-     * @var bool $is_private
-     */
-    public $is_private;
-
-    public ?string $link = null;
 
     /**
      * Constructor

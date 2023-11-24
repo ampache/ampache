@@ -2151,6 +2151,11 @@ parameters:
 			path: src/Module/Api/Method/Api4/PodcastEdit4Method.php
 
 		-
+			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) expects array\\{feed\\?\\: string, title\\?\\: string, website\\?\\: string, description\\?\\: string, language\\?\\: string, generator\\?\\: string, copyright\\?\\: string\\}, array\\{feed\\: string\\|null, title\\: array\\|string\\|null, website\\: string\\|null, description\\: array\\|string\\|null, generator\\: array\\|string\\|null, copyright\\: array\\|string\\|null\\} given\\.$#"
+			count: 1
+			path: src/Module/Api/Method/Api4/PodcastEdit4Method.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\PodcastEpisode4Method\\:\\:podcast_episode\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/PodcastEpisode4Method.php
@@ -2937,6 +2942,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\PodcastEdit5Method\\:\\:podcast_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/Api5/PodcastEdit5Method.php
+
+		-
+			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) expects array\\{feed\\?\\: string, title\\?\\: string, website\\?\\: string, description\\?\\: string, language\\?\\: string, generator\\?\\: string, copyright\\?\\: string\\}, array\\{feed\\: string\\|null, title\\: array\\|string\\|null, website\\: string\\|null, description\\: array\\|string\\|null, generator\\: array\\|string\\|null, copyright\\: array\\|string\\|null\\} given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/PodcastEdit5Method.php
 
@@ -3896,6 +3906,11 @@ parameters:
 			path: src/Module/Api/Method/PodcastEditMethod.php
 
 		-
+			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) expects array\\{feed\\?\\: string, title\\?\\: string, website\\?\\: string, description\\?\\: string, language\\?\\: string, generator\\?\\: string, copyright\\?\\: string\\}, array\\{feed\\: string\\|null, title\\: array\\|string\\|null, website\\: string\\|null, description\\: array\\|string\\|null, generator\\: array\\|string\\|null, copyright\\: array\\|string\\|null\\} given\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PodcastEditMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastEpisodeDeleteMethod\\:\\:podcast_episode_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PodcastEpisodeDeleteMethod.php
@@ -4246,32 +4261,12 @@ parameters:
 			path: src/Module/Api/Output/JsonOutput.php
 
 		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:error\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Output/JsonOutput.php
-
-		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:error\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Output/JsonOutput.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\XmlOutput\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Output/XmlOutput.php
 
 		-
 			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:error\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Output/XmlOutput.php
-
-		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:error\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Output/XmlOutput.php
-
-		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:error\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Output/XmlOutput.php
 
@@ -6026,11 +6021,6 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Call to function is_int\\(\\) with string\\|null will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -6806,11 +6796,6 @@ parameters:
 			path: src/Module/Application/PrivateMessage/AddMessageAction.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Module/Application/Radio/ShowAction.php
-
-		-
 			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 6
 			path: src/Module/Application/Register/AddUserAction.php
@@ -6859,11 +6844,6 @@ parameters:
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$id\\.$#"
 			count: 1
 			path: src/Module/Application/Shout/ShowAddShoutAction.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:\\$name \\(string\\) does not accept array\\|string\\.$#"
-			count: 1
-			path: src/Module/Application/SmartPlaylist/CreatePlaylistAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:set_rules\\(\\) expects array, array\\|object\\|null given\\.$#"
@@ -10871,17 +10851,12 @@ parameters:
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$catalog\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$catalog\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
 		-
 			message: "#^Binary operation \"\\.\" between 'Final command is ' and array\\<int, string\\>\\|string results in an error\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -10892,11 +10867,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_max_bitrate\\(\\) has parameter \\$transcode_settings with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_now_playing\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -12466,83 +12436,8 @@ parameters:
 			path: src/Module/Util/AmpacheRss.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:get_xml\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:get_xml\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:get_xml\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_album\\(\\) has parameter \\$rsstoken with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_album\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_artist\\(\\) has parameter \\$rsstoken with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_shout\\(\\) has parameter \\$rsstoken with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_shout\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_now_playing\\(\\) has parameter \\$rsstoken with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_now_playing\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_recently_played\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Util\\\\\\\\AmpacheRss', non\\-falsy\\-string\\} given\\.$#"
-			count: 3
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:\\$data has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:getUserKeyGenerator\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 4
 			path: src/Module/Util/AmpacheRss.php
 
 		-
@@ -15651,11 +15546,6 @@ parameters:
 			path: src/Plugin/AmpachePersonalFavorites.php
 
 		-
-			message: "#^Variable \\$list_array in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$piwik_url has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePiwik.php
@@ -16686,46 +16576,6 @@ parameters:
 			path: src/Repository/Model/Bookmark.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:\\$comment has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:\\$creation_date has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:\\$object_id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:\\$object_type has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:\\$position has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:\\$update_date has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:display_art\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
@@ -16782,11 +16632,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
 
@@ -17276,11 +17121,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -17621,11 +17461,6 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:getLabelRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Repository/Model/Label.php
@@ -17634,11 +17469,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\License\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/License.php
 
 		-
 			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
@@ -17707,11 +17537,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
 
@@ -17981,11 +17806,6 @@ parameters:
 			path: src/Repository/Model/Playlist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:\\$date has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:\\$f_date has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
@@ -18002,21 +17822,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:\\$items has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:\\$last_duration has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:\\$last_update has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 
@@ -18121,31 +17926,6 @@ parameters:
 			path: src/Repository/Model/Podcast.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$catalog has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$copyright has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$episodes has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_copyright has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
@@ -18192,61 +17972,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_website_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$feed has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$generator has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$has_art has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$language has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$lastbuilddate has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$lastsync has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$title has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$total_count has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$total_skip has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$website has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
 
@@ -18801,37 +18526,12 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$last_count has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$last_duration has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$limit has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$logic_operator has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$objectType has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$order_by has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$random has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
@@ -20766,11 +20466,6 @@ parameters:
 			path: src/Repository/Model/playlist_object.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:\\$username has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
 			count: 1
 			path: src/Repository/Repository.php
@@ -20934,3 +20629,4 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\WantedRepositoryInterface\\:\\:getById\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/WantedRepositoryInterface.php
+

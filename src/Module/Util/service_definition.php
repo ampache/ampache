@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
 use Ampache\Module\Util\FileSystem\FileNameConverter;
@@ -41,4 +41,5 @@ return [
     UiInterface::class => autowire(Ui::class),
     Mailer::class => autowire(),
     UtilityFactoryInterface::class => autowire(UtilityFactory::class),
+    AmpacheRssInterface::class => autowire(AmpacheRss::class),
 ];

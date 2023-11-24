@@ -304,7 +304,7 @@ class Graph
                     } else {
                         $value = 0;
                     }
-                    $MyData->addPoints($value, $catalog->name);
+                    $MyData->addPoints($value, (string)$catalog->name);
                 }
             }
         }

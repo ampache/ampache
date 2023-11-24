@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
@@ -51,7 +52,7 @@ final class Videos5Method
     public static function videos(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
-            Api5::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

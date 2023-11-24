@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\User\NewPasswordSenderInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Repository\Model\User;
@@ -62,7 +63,7 @@ final class LostPasswordMethod
     public static function handshake(array $input): bool
     {
         if (!Mailer::is_mail_enabled()) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
         }
         if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
@@ -75,7 +76,7 @@ final class LostPasswordMethod
             // no resets for admin users
             if ($update_user->access == 100) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $user_id), '4710', self::ACTION, 'system', $input['api_format']);
+                Api::error(sprintf(T_('Bad Request: %s'), $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
                 return false;
             }
@@ -89,7 +90,7 @@ final class LostPasswordMethod
 
             return true;
         }
-        Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+        Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
 
         return false;
     }

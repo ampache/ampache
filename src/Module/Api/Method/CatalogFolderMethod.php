@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -72,13 +73,13 @@ final class CatalogFolderMethod
 
         // confirm that a valid task is going to happen
         if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {
-            Api::error(T_('Enable: delete_from_disk'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: delete_from_disk'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!file_exists($folder) && !in_array('clean', $task)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $folder), '4704', self::ACTION, 'folder', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $folder), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'folder', $input['api_format']);
 
             return false;
         }
@@ -86,7 +87,7 @@ final class CatalogFolderMethod
         foreach ($task as $item) {
             if (!in_array($item, array('add', 'clean', 'verify', 'remove'))) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $item), '4710', self::ACTION, 'task', $input['api_format']);
+                Api::error(sprintf(T_('Bad Request: %s'), $item), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
 
                 return false;
             }
@@ -97,7 +98,7 @@ final class CatalogFolderMethod
         $catalog     = Catalog::create_from_id($catalog_id);
         if (!$catalog instanceof Catalog) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }
@@ -173,7 +174,7 @@ final class CatalogFolderMethod
             }
             Api::message('successfully started: ' . $output_task . ' for ' . $folder, $input['api_format']);
         } else {
-            Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
+            Api::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
         }
 
         return true;

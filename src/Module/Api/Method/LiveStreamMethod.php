@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -51,7 +52,7 @@ final class LiveStreamMethod
     public static function live_stream(array $input, User $user): bool
     {
         if (!AmpConfig::get('live_stream')) {
-            Api::error(T_('Enable: live_stream'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: live_stream'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -62,7 +63,7 @@ final class LiveStreamMethod
         $live_stream = new Live_Stream($object_id);
         if (!$live_stream->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
