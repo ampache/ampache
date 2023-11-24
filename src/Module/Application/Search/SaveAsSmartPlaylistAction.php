@@ -40,8 +40,6 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'save_as_smartplaylist';
 
-    private RequestParserInterface $requestParser;
-
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -49,12 +47,10 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
@@ -70,8 +66,6 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
 
         $playlist = $this->modelFactory->createSearch();
         $playlist->set_rules($_REQUEST);
-        $playlist->limit  = (int) $this->requestParser->getFromRequest('limit');
-        $playlist->random = (bool) $this->requestParser->getFromRequest('random');
         $playlist->create();
 
         $this->ui->showConfirmation(

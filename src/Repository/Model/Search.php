@@ -71,7 +71,7 @@ class Search extends playlist_object
     // rules used to run a search (User chooses rules from available types for that object)
     public $rules; // JSON string to decoded to array
     public ?string $logic_operator = 'AND';
-    public bool $random            = false;
+    public ?int $random            = 0;
     public int $limit              = 0;
     public ?int $last_count        = 0;
     public ?int $last_duration     = 0;
@@ -1072,7 +1072,7 @@ class Search extends playlist_object
             $request['offset'] = $data['offset'];
         }
         if (array_key_exists('random', $data)) {
-            $request['random'] = $data['random'];
+            $request['random'] = (int)$data['random'];
         }
 
         // Verify the type
@@ -1606,7 +1606,7 @@ class Search extends playlist_object
         $this->rules       = array();
         $user_rules        = array();
         // check that a limit or random flag and operator have been sent
-        $this->random         = (isset($data['random'])) ? (bool)$data['random'] : $this->random;
+        $this->random         = (isset($data['random'])) ? (int)$data['random'] : $this->random;
         $this->limit          = (isset($data['limit'])) ? (int) $data['limit'] : $this->limit;
         $this->logic_operator = $data['operator'] ?? 'AND';
         // match the numeric rules you send (e.g. rule_1, rule_6000)
