@@ -312,9 +312,11 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getDisplayYear(): int
     {
-        return ($this->configContainer->get('use_original_year') && $this->albumDisk->original_year)
-            ? $this->albumDisk->original_year
-            : $this->albumDisk->year;
+        if ($this->configContainer->get('use_original_year') && $this->albumDisk->original_year) {
+            return $this->albumDisk->original_year ?? 0;
+        }
+
+        return $this->albumDisk->year ?? 0;
     }
 
     public function getGenre(): string

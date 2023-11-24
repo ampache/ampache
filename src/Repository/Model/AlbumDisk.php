@@ -37,207 +37,70 @@ class AlbumDisk extends database_object implements library_item
     protected const DB_TABLENAME = 'album_disk';
 
     /* Variables from DB */
-
-    /**
-     * @var int $id
-     */
-    public $id;
-
-    /**
-     * @var int $album_id
-     */
-    public $album_id;
-
-    /**
-     * @var int $disk
-     */
-    public $disk;
-
-    /**
-     * @var string $disksubtitle
-     */
-    public $disksubtitle;
-
-    /**
-     * @var int $time
-     */
-    public $time;
-
-    /**
-     * @var int $song_count
-     */
-    public $song_count;
-
-    /**
-     * @var int $total_count
-     */
-    public $total_count;
-
-    /**
-     * @var int $total_duration
-     */
-    public $total_duration;
-
-    /**
-     * @var int $catalog_id
-     */
-    public $catalog_id;
-
-    /**
-     * @var int $catalog
-     */
-    public $catalog;
+    public int $id = 0;
+    public int $album_id;
+    public int $disk;
+    public int $disk_count;
+    public ?int $time;
+    public int $catalog;
+    public int $song_count;
+    public int $total_count;
+    public ?string $disksubtitle;
 
     /* Variables from parent Album */
-
-    /**
-     * @var string $name
-     */
-    public $name;
-
-    /**
-     * @var int $album_artist
-     */
-    public $album_artist;
-
-    /**
-     * @var array $album_artists
-     */
-    public array $album_artists;
-
-    /**
-     * @var int $year
-     */
-    public $year;
-
-    /**
-     * @var string $prefix
-     */
-    public $prefix;
-
-    /**
-     * @var string $mbid
-     */
-    public $mbid; // MusicBrainz ID
-
-    /**
-     * @var string $mbid_group
-     */
-    public $mbid_group; // MusicBrainz Release Group ID
-
-    /**
-     * @var string $release_type
-     */
-    public $release_type;
-
-    /**
-     * @var string $release_status
-     */
-    public $release_status;
-
-    /**
-     * @var string $catalog_number
-     */
-    public $catalog_number;
-
-    /**
-     * @var string $barcode
-     */
-    public $barcode;
-
-    /**
-     * @var int $addition_time
-     */
-    public $addition_time;
-
-    /**
-     * @var int $original_year
-     */
-    public $original_year;
-
-    /**
-     * @var int $disk_count
-     */
-    public $disk_count;
-
-    /**
-     * @var string $artist_prefix
-     */
-    public $artist_prefix;
-
-    /**
-     * @var string $artist_name
-     */
-    public $artist_name;
-
-    /**
-     * @var array $tags
-     */
-    public $tags;
-
-    /**
-     * @var int $artist_count
-     */
-    public $artist_count;
-
-    /**
-     * @var int $song_artist_count
-     */
-    public $song_artist_count;
-
-    /**
-     * @var bool $has_art
-     */
-    public $has_art;
-
-    /**
-     * @var null|string $f_artist_name
-     */
-    public $f_artist_name;
-
-    /**
-     * @var null|string $f_artist_link
-     */
-    public $f_artist_link;
-
-    /**
-     * @var null|string $f_artist
-     */
-    public $f_artist;
-
-    /**
-     * @var null|string $f_name // Prefix + Name, generated
-     */
-    public $f_name;
+    public ?string $name;
+    public ?string $prefix;
+    public ?string $mbid; // MusicBrainz ID
+    public ?int $year;
+    public ?string $mbid_group; // MusicBrainz Release Group ID
+    public ?string $release_type;
+    public ?int $album_artist;
+    public ?int $original_year;
+    public ?string $barcode;
+    public ?string $catalog_number;
+    public ?string $version;
+    public ?string $release_status;
+    public int $addition_time;
+    public int $artist_count;
+    public int $song_artist_count;
 
     public ?string $link = null;
 
-    /**
-     * @var null|string $f_link
-     */
+    /** @var array $album_artists */
+    public array $album_artists;
+    /** @var string $artist_prefix */
+    public $artist_prefix;
+    /** @var string $artist_name */
+    public $artist_name;
+    /** @var array $tags */
+    public $tags;
+    /** @var bool $has_art */
+    public $has_art;
+    /** @var null|string $f_artist_name */
+    public $f_artist_name;
+    /** @var null|string $f_artist_link */
+    public $f_artist_link;
+    /** @var null|string $f_artist */
+    public $f_artist;
+    /** @var null|string $f_name // Prefix + Name, generated */
+    public $f_name;
+    /** @var null|string $f_link */
     public $f_link;
-
-    /**
-     * @var null|string $f_tags
-     */
+    /** @var null|string $f_tags */
     public $f_tags;
-
-    /**
-     * @var null|string $f_year
-     */
+    /** @var null|string $f_year */
     public $f_year;
-
-    /**
-     * @var null|string $f_year_link
-     */
-    public $f_year_link;
-
-    /**
-     * @var null|string $f_release_type
-     */
+    /** @var null|string $f_release_type */
     public $f_release_type;
+    /** @var int $total_duration */
+    public $total_duration;
+    /** @var int $catalog_id */
+    public $catalog_id;
 
     private Album $album;
+
+    /** @var null|string $f_year_link */
+    public $f_year_link;
 
     /**
      * __construct
@@ -268,19 +131,21 @@ class AlbumDisk extends database_object implements library_item
         $this->disk_count     = (int)$this->disk_count;
         $this->total_count    = (int)$this->total_count;
         // set the album variables just in case
-        $this->name           = $this->album->name;
-        $this->prefix         = $this->album->prefix;
-        $this->mbid           = $this->album->mbid;
-        $this->year           = $this->album->year;
-        $this->mbid_group     = $this->album->mbid_group;
-        $this->release_type   = $this->album->release_type;
-        $this->album_artist   = $this->album->album_artist;
-        $this->original_year  = $this->album->original_year;
-        $this->barcode        = $this->album->barcode;
-        $this->catalog_number = $this->album->catalog_number;
-        $this->release_status = $this->album->release_status;
-        $this->addition_time  = $this->album->addition_time;
-        $this->artist_count   = $this->album->artist_count;
+        $this->name              = $this->album->name;
+        $this->prefix            = $this->album->prefix;
+        $this->mbid              = $this->album->mbid;
+        $this->year              = $this->album->year;
+        $this->mbid_group        = $this->album->mbid_group;
+        $this->release_type      = $this->album->release_type;
+        $this->album_artist      = $this->album->album_artist;
+        $this->original_year     = $this->album->original_year;
+        $this->barcode           = $this->album->barcode;
+        $this->catalog_number    = $this->album->catalog_number;
+        $this->version           = $this->album->version;
+        $this->release_status    = $this->album->release_status;
+        $this->addition_time     = $this->album->addition_time;
+        $this->artist_count      = $this->album->artist_count;
+        $this->song_artist_count = $this->album->song_artist_count;
 
         // finally; set up your formatted name
         $this->f_name = $this->get_fullname();
@@ -521,7 +386,7 @@ class AlbumDisk extends database_object implements library_item
 
     /**
      * get_parent
-     * Return parent `object_type`, `object_id` ; null otherwise.
+     * Return parent `object_type`, `object_id`; null otherwise.
      */
     public function get_parent(): ?array
     {
@@ -657,7 +522,7 @@ class AlbumDisk extends database_object implements library_item
         if (Art::has_db($this->album_id, 'album')) {
             $album_id = $this->album_id;
             $type     = 'album';
-        } elseif (Art::has_db($this->album->album_artist, 'artist') || $force) {
+        } elseif ($this->album->album_artist && Art::has_db($this->album->album_artist, 'artist') || $force) {
             $album_id = $this->album->album_artist;
             $type     = 'artist';
         }

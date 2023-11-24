@@ -43,212 +43,75 @@ class Album extends database_object implements library_item
     protected const DB_TABLENAME = 'album';
 
     /* Variables from DB */
-
-    /**
-     * @var int $id
-     */
-    public $id;
-
-    /**
-     * @var string $name
-     */
-    public $name;
-
-    /**
-     * @var int $album_artist
-     */
-    public $album_artist;
-
-    /**
-     * @var array $album_artists
-     */
-    public array $album_artists;
-
-    /**
-     * @var int $year
-     */
-    public $year;
-
-    /**
-     * @var string $prefix
-     */
-    public $prefix;
-
-    /**
-     * @var string $mbid
-     */
-    public $mbid; // MusicBrainz ID
-
-    /**
-     * @var string $mbid_group
-     */
-    public $mbid_group; // MusicBrainz Release Group ID
-
-    /**
-     * @var string $release_type
-     */
-    public $release_type;
-
-    /**
-     * @var string $release_status
-     */
-    public $release_status;
-
-    /**
-     * @var string $version
-     */
-    public $version;
-
-    /**
-     * @var string $catalog_number
-     */
-    public $catalog_number;
-
-    /**
-     * @var string $barcode
-     */
-    public $barcode;
-
-    /**
-     * @var int $time
-     */
-    public $time;
-
-    /**
-     * @var int $addition_time
-     */
-    public $addition_time;
-
-    /**
-     * @var int $total_duration
-     */
-    public $total_duration;
-
-    /**
-     * @var int $original_year
-     */
-    public $original_year;
-
-    /**
-     * @var int $catalog_id
-     */
-    public $catalog_id;
-
-    /**
-     * @var int $catalog
-     */
-    public $catalog;
-
-    /**
-     * @var int $disk_count
-     */
-    public $disk_count;
-
-    /**
-     * @var int $song_count
-     */
-    public $song_count;
-
-    /**
-     * @var string $artist_prefix
-     */
-    public $artist_prefix;
-
-    /**
-     * @var string $artist_name
-     */
-    public $artist_name;
-
-    /**
-     * @var array $tags
-     */
-    public $tags;
-
-    /**
-     * @var int $artist_count
-     */
-    public $artist_count;
-
-    /**
-     * @var int $song_artist_count
-     */
-    public $song_artist_count;
-
-    /**
-     * @var int $total_count
-     */
-    public $total_count;
-
-    /**
-     * @var bool $has_art
-     */
-    public $has_art;
-
-    /**
-     * @var null|string $f_artist_name
-     */
-    public $f_artist_name;
-
-    /**
-     * @var null|string $f_artist_link
-     */
-    public $f_artist_link;
-
-    /**
-     * @var null|string $f_artist
-     */
-    public $f_artist;
-
-    /**
-     * @var null|string $f_name // Prefix + Name, generated
-     */
-    public $f_name;
+    public int $id = 0;
+    public ?string $name;
+    public ?string $prefix;
+    public ?string $mbid; // MusicBrainz ID
+    public int $year;
+    public int $disk_count;
+    public ?string $mbid_group; // MusicBrainz Release Group ID
+    public ?string $release_type;
+    public ?int $album_artist;
+    public ?int $original_year;
+    public ?string $barcode;
+    public ?string $catalog_number;
+    public ?string $version;
+    public ?int $time;
+    public ?string $release_status;
+    public int $addition_time;
+    public int $catalog;
+    public int $total_count;
+    public int $song_count;
+    public int $artist_count;
+    public int $song_artist_count;
 
     public ?string $link = null;
-
-    /**
-     * @var null|string $f_link
-     */
+    /** @var array $album_artists */
+    public array $album_artists;
+    /** @var int $total_duration */
+    public $total_duration;
+    /** @var int $catalog_id */
+    public $catalog_id;
+    /** @var string $artist_prefix */
+    public $artist_prefix;
+    /** @var string $artist_name */
+    public $artist_name;
+    /** @var array $tags */
+    public $tags;
+    /** @var bool $has_art */
+    public $has_art;
+    /** @var null|string $f_artist_name */
+    public $f_artist_name;
+    /** @var null|string $f_artist_link */
+    public $f_artist_link;
+    /** @var null|string $f_artist */
+    public $f_artist;
+    /** @var null|string $f_name // Prefix + Name, generated */
+    public $f_name;
+    /** @var null|string $f_link */
     public $f_link;
-
-    /**
-     * @var null|string $f_tags
-     */
+    /** @var null|string $f_tags */
     public $f_tags;
-
-    /**
-     * @var null|string $f_year
-     */
+    /** @var null|string $f_year */
     public $f_year;
-
-    /**
-     * @var null|string $f_year_link
-     */
+    /** @var null|string $f_year_link */
     public $f_year_link;
-
-    /**
-     * @var null|string $f_release_type
-     */
+    /** @var null|string $f_release_type */
     public $f_release_type;
-
     /** @var int $song_id */
     public $song_id;
-
     /** @var int $artist_id */
     public $artist_id;
 
     // cached information
-
     /**
      * @var bool $_fake
      */
     public $_fake;
-
     /**
      * @var array $_songs
      */
     public $_songs = array();
-
     /**
      * @var array $_mapcache
      */
@@ -314,7 +177,7 @@ class Album extends database_object implements library_item
      */
     public function getAlbumArtist(): int
     {
-        return $this->album_artist;
+        return $this->album_artist ?? 0;
     }
 
     /**
@@ -719,7 +582,7 @@ class Album extends database_object implements library_item
      */
     public function get_artists()
     {
-        if (empty($this->album_artists)) {
+        if (empty($this->album_artists) && $this->album_artist) {
             $this->album_artists = self::get_parent_array($this->id, $this->album_artist);
         }
 
@@ -816,7 +679,7 @@ class Album extends database_object implements library_item
 
     /**
      * get_parent
-     * Return parent `object_type`, `object_id` ; null otherwise.
+     * Return parent `object_type`, `object_id`; null otherwise.
      */
     public function get_parent(): ?array
     {
@@ -984,7 +847,7 @@ class Album extends database_object implements library_item
         if (Art::has_db($this->id, 'album')) {
             $album_id = $this->id;
             $type     = 'album';
-        } elseif (Art::has_db($this->album_artist, 'artist') || $force) {
+        } elseif ($this->album_artist && Art::has_db($this->album_artist, 'artist') || $force) {
             $album_id = $this->album_artist;
             $type     = 'artist';
         }
@@ -1065,8 +928,8 @@ class Album extends database_object implements library_item
 
             if ($album_artist != $this->album_artist) {
                 self::update_field('album_artist', $album_artist, $this->id);
-                self::add_album_map($this->id, 'album', (int) $album_artist);
-                self::remove_album_map($this->id, 'album', $this->album_artist);
+                self::add_album_map($this->id, 'album', (int)$album_artist);
+                self::remove_album_map($this->id, 'album', (int)$this->album_artist);
             }
             if ($year != $this->year) {
                 self::update_field('year', $year, $this->id);

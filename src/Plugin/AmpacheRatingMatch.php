@@ -180,12 +180,14 @@ class AmpacheRatingMatch implements AmpachePluginInterface
                 if ($rating_album < $new_rating) {
                     $rAlbum->set_rating($new_rating, $this->user->id);
                 }
-                // rate all the album artists (If there are more than one)
-                foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
-                    $rArtist       = new Rating($artist_id, 'artist');
-                    $rating_artist = $rArtist->get_user_rating($this->user->id);
-                    if ($rating_artist <= $new_rating) {
-                        $rArtist->set_rating($new_rating, $this->user->id);
+                if ($album->album_artist) {
+                    // rate all the album artists (If there are more than one)
+                    foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
+                        $rArtist = new Rating($artist_id, 'artist');
+                        $rating_artist = $rArtist->get_user_rating($this->user->id);
+                        if ($rating_artist <= $new_rating) {
+                            $rArtist->set_rating($new_rating, $this->user->id);
+                        }
                     }
                 }
             }
@@ -217,10 +219,12 @@ class AmpacheRatingMatch implements AmpachePluginInterface
             $fAlbumDisk = new Userflag($song->get_album_disk(), 'album_disk');
             $fAlbumDisk->set_flag($flagged, $this->user->id);
             // rate all the album artists (If there are more than one)
-            foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
-                $fArtist = new Userflag($artist_id, 'artist');
-                if (!$fArtist->get_flag($this->user->id, false)) {
-                    $fArtist->set_flag($flagged, $this->user->id);
+            if ($album->album_artist) {
+                foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
+                    $fArtist = new Userflag($artist_id, 'artist');
+                    if (!$fArtist->get_flag($this->user->id, false)) {
+                        $fArtist->set_flag($flagged, $this->user->id);
+                    }
                 }
             }
         }
