@@ -1647,7 +1647,7 @@ class Search extends playlist_object
     {
         $user = Core::get_global('user');
         // Make sure we have a unique name
-        if (!$this->name) {
+        if (!isset($this->name)) {
             $this->name = $user->username . ' - ' . get_datetime(time());
         }
         $sql        = "SELECT `id` FROM `search` WHERE `name` = ? AND `user` = ? AND `type` = ?;";
@@ -1732,7 +1732,7 @@ class Search extends playlist_object
             $this->username,
             json_encode($this->rules),
             $this->logic_operator,
-            $this->random,
+            (int)$this->random,
             $this->limit,
             $this->id
         ));
