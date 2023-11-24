@@ -75,18 +75,18 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public int $total_skip;
 
     /** song_data table */
-    public ?string $comment;
-    public ?string $lyrics;
-    public ?string $label;
-    public ?string $language;
-    public ?string $waveform;
-    public ?float $replaygain_track_gain;
-    public ?float $replaygain_track_peak;
-    public ?float $replaygain_album_gain;
-    public ?float $replaygain_album_peak;
-    public ?int $r128_album_gain;
-    public ?int $r128_track_gain;
-    public ?string $disksubtitle;
+    public ?string $comment = null;
+    public ?string $lyrics = null;
+    public ?string $label = null;
+    public ?string $language = null;
+    public ?string $waveform = null;
+    public ?float $replaygain_track_gain = null;
+    public ?float $replaygain_track_peak = null;
+    public ?float $replaygain_album_gain = null;
+    public ?float $replaygain_album_peak = null;
+    public ?int $r128_album_gain = null;
+    public ?int $r128_track_gain = null;
+    public ?string $disksubtitle = null;
 
     public ?string $link = null;
     /** @var string $type */
