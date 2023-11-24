@@ -31,9 +31,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -90,9 +92,17 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                     }
                     foreach ($object_id as $item) {
                         $className = ObjectTypeToClassNameMapper::map($object_type);
-                        $object    = new $className($item);
-                        $medias    = $object->get_medias();
-                        Core::get_global('user')->playlist->add_medias($medias);
+                        /** @var playable_item $object */
+                        $object = new $className($item);
+                        $medias = $object->get_medias();
+                        /** @var User|string $user */
+                        $user = Core::get_global('user');
+                        if ($user instanceof User) {
+                            if (!$user->playlist instanceof Tmp_Playlist) {
+                                $user->load_playlist();
+                            }
+                            $user->playlist->add_medias($medias);
+                        }
                     }
                 } else {
                     switch ($request_type) {
