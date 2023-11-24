@@ -1542,8 +1542,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $this->fill_ext_info();
 
             // Get the top tags
-            $this->tags   = Tag::get_top_tags('song', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'song');
+            $this->tags        = Tag::get_top_tags('song', $this->id);
+            $this->f_tags      = Tag::get_display($this->tags, true, 'song');
+            $this->f_publisher = $this->label;
         }
 
         if (!isset($this->artists)) {
@@ -1600,7 +1601,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         $this->f_file .= $this->get_fullname() . '.' . $this->type;
 
-        $this->f_publisher = $this->label;
         $this->f_composer  = $this->composer;
 
         $year              = (int)$this->year;
