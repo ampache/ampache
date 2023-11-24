@@ -133,10 +133,11 @@ class User extends database_object
         }
 
         $info = $this->has_info((int)$user_id);
-        if (!empty($info)) {
-            foreach ($info as $key => $value) {
-                $this->$key = $value;
-            }
+        if (empty($info)) {
+            return;
+        }
+        foreach ($info as $key => $value) {
+            $this->$key = $value;
         }
 
         // Make sure the Full name is always filled

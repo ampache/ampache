@@ -95,12 +95,13 @@ class Access
             return;
         }
         $info = $this->has_info($access_id);
-        if (!empty($info)) {
-            foreach ($info as $key => $value) {
-                $this->$key = $value;
-            }
-            $this->id = (int)$access_id;
+        if (empty($info)) {
+            return;
         }
+        foreach ($info as $key => $value) {
+            $this->$key = $value;
+        }
+        $this->id = (int)$access_id;
     }
 
     /**

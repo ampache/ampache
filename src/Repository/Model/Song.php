@@ -205,15 +205,16 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         $info = $this->has_info($song_id);
-        if (!empty($info)) {
-            foreach ($info as $key => $value) {
-                $this->$key = $value;
-            }
-            $this->id          = (int)$song_id;
-            $this->type        = strtolower(pathinfo((string)$this->file, PATHINFO_EXTENSION));
-            $this->mime        = self::type_to_mime($this->type);
-            $this->total_count = (int)$this->total_count;
+        if (empty($info)) {
+            return;
         }
+        foreach ($info as $key => $value) {
+            $this->$key = $value;
+        }
+        $this->id          = (int)$song_id;
+        $this->type        = strtolower(pathinfo((string)$this->file, PATHINFO_EXTENSION));
+        $this->mime        = self::type_to_mime($this->type);
+        $this->total_count = (int)$this->total_count;
     } // constructor
 
     public function getId(): int
@@ -655,16 +656,17 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * This calls the _get_ext_info and then sets the correct vars
      * @param string $data_filter
      */
-    public function fill_ext_info($data_filter = '')
+    public function fill_ext_info($data_filter = ''): void
     {
         $info = $this->_get_ext_info($data_filter);
-        if (!empty($info)) {
-            foreach ($info as $key => $value) {
-                if ($key != 'song_id') {
-                    $this->$key = $value;
-                }
-            } // end foreach
+        if (empty($info)) {
+            return;
         }
+        foreach ($info as $key => $value) {
+            if ($key != 'song_id') {
+                $this->$key = $value;
+            }
+        } // end foreach
     } // fill_ext_info
 
     /**

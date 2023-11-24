@@ -62,12 +62,13 @@ class Tmp_Playlist extends database_object
         }
 
         $info = $this->has_info($playlist_id);
-        if (!empty($info)) {
-            foreach ($info as $key => $value) {
-                $this->$key = $value;
-            }
-            $this->id = (int)$playlist_id;
+        if (empty($info)) {
+            return;
         }
+        foreach ($info as $key => $value) {
+            $this->$key = $value;
+        }
+        $this->id = (int)$playlist_id;
     }
 
     public function getId(): int

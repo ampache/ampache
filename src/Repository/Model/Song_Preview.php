@@ -70,18 +70,19 @@ class Song_Preview extends database_object implements Media, playable_item
     public function __construct($object_id)
     {
         $info = $this->has_info($object_id);
-        if (!empty($info)) {
-            foreach ($info as $key => $value) {
-                $this->$key = $value;
-            }
-            $this->id = (int)$object_id;
-            if ($this->file) {
-                $data       = pathinfo($this->file);
-                $this->type = (isset($data['extension']))
-                    ? strtolower((string)$data['extension'])
-                    : 'mp3';
-                $this->mime = Song::type_to_mime($this->type);
-            }
+        if (empty($info)) {
+            return;
+        }
+        foreach ($info as $key => $value) {
+            $this->$key = $value;
+        }
+        $this->id = (int)$object_id;
+        if ($this->file) {
+            $data       = pathinfo($this->file);
+            $this->type = (isset($data['extension']))
+                ? strtolower((string)$data['extension'])
+                : 'mp3';
+            $this->mime = Song::type_to_mime($this->type);
         }
     } // constructor
 
