@@ -61,7 +61,7 @@ class Tmp_Playlist extends database_object
             return;
         }
 
-        $info = $this->has_info();
+        $info = $this->has_info($playlist_id);
         if (!empty($info)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
@@ -79,12 +79,13 @@ class Tmp_Playlist extends database_object
      * has_info
      * This is an internal (private) function that gathers the information
      * for this object from the playlist_id that was passed in.
+     * @param string $playlist_id
      * @return array
      */
-    private function has_info()
+    private function has_info($playlist_id)
     {
-        $sql        = "SELECT * FROM `tmp_playlist` WHERE `id`='" . Dba::escape($this->id) . "'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT * FROM `tmp_playlist` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, array($playlist_id));
 
         return Dba::fetch_assoc($db_results);
     } // has_info
@@ -98,8 +99,6 @@ class Tmp_Playlist extends database_object
      */
     public static function get_from_session($session_id)
     {
-        $session_id = Dba::escape($session_id);
-
         $sql        = "SELECT `id` FROM `tmp_playlist` WHERE `session` = ?";
         $db_results = Dba::read($sql, array($session_id));
         $row        = Dba::fetch_row($db_results);
