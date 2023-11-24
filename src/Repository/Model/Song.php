@@ -67,7 +67,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public bool $enabled;
     public int $update_time;
     public int $addition_time;
-    public ?int $user_upload;
+    public ?int $user_upload = null;
     public ?int $license;
     public ?string $composer;
     public ?int $channels;
