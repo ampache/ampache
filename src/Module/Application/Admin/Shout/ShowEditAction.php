@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Shout;
 
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -65,6 +66,9 @@ final class ShowEditAction implements ApplicationActionInterface
             $object->format();
         }
         $client = $this->modelFactory->createUser($shout->user);
+        if ($client->isNew()) {
+            throw new ObjectNotFoundException($shout->user);
+        }
         $client->format();
 
         $this->ui->show(
