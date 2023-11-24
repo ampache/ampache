@@ -163,7 +163,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
             return;
         }
 
-        $info = $this->get_info($video_id, static::DB_TABLENAME);
+        $info = $this->get_info($video_id, 'video');
         if (empty($info)) {
             return;
         }
