@@ -1544,7 +1544,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             // Get the top tags
             $this->tags        = Tag::get_top_tags('song', $this->id);
             $this->f_tags      = Tag::get_display($this->tags, true, 'song');
-            $this->f_publisher = $this->label;
+            $this->f_publisher = $this->label ?? null;
         }
 
         if (!isset($this->artists)) {

@@ -357,7 +357,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Genres')]        = $this->song->f_tags;
         $songprops[T_('Track')]         = $this->song->track;
         $songprops[T_('Disk')]          = $this->song->disk;
-        $songprops[T_('Disk Subtitle')] = $this->song->disksubtitle;
+        $songprops[T_('Disk Subtitle')] = $this->song->disksubtitle ?? '';
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = $this->song->get_album_original_year($this->song->album);
         $songprops[T_('Length')]        = scrub_out($this->song->f_time);
@@ -378,7 +378,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
             }
             $songprops[T_('Label')] = rtrim($label_string, ', ');
         } else {
-            $songprops[T_('Label')] = scrub_out($this->song->label);
+            $songprops[T_('Label')] = scrub_out($this->song->label ?? '');
         }
         if ($this->song->language) {
             $songprops[T_('Song Language')] = scrub_out($this->song->language);
