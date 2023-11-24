@@ -1603,7 +1603,7 @@ class Search extends playlist_object
     public function set_rules($data)
     {
         $data              = self::_filter_request($data);
-        $this->rules = array();
+        $this->rules       = array();
         $user_rules        = array();
         // check that a limit or random flag and operator have been sent
         $this->random         = (isset($data['random'])) ? (bool)$data['random'] : $this->random;

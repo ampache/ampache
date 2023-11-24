@@ -48,7 +48,7 @@ class Song_Preview extends database_object implements Media, playable_item
     public ?string $file;
 
     public ?string $link = null;
-    public $enabled = true;
+    public $enabled      = true;
     public $mime;
     public $type;
     public $f_file;
