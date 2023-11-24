@@ -138,7 +138,7 @@ class Live_Stream extends database_object implements Media, library_item
         // don't do anything if it's formatted
         if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
-            $this->link = $web_path . '/radio.php?action=show&radio=' . scrub_out($this->id);
+            $this->link = $web_path . '/radio.php?action=show&radio=' . $this->id;
         }
 
         return $this->link;

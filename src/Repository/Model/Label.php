@@ -174,7 +174,7 @@ class Label extends database_object implements library_item
         // don't do anything if it's formatted
         if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
-            $this->link = $web_path . '/labels.php?action=show&label=' . scrub_out($this->id);
+            $this->link = $web_path . '/labels.php?action=show&label=' . $this->id;
         }
 
         return $this->link;
