@@ -366,7 +366,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * get_parent
-     * Return parent `object_type`, `object_id` ; null otherwise.
+     * Return parent `object_type`, `object_id`; null otherwise.
      */
     public function get_parent(): ?array
     {

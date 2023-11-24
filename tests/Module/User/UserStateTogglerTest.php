@@ -64,7 +64,9 @@ class UserStateTogglerTest extends MockeryTestCase
     {
         $user = $this->mock(User::class);
 
-        $userId = 666;
+        $userId         = 666;
+        $user->email    = "example@email.com";
+        $user->fullname = "name";
 
         $this->userRepository->shouldReceive('enable')
             ->with($userId)
@@ -93,9 +95,10 @@ class UserStateTogglerTest extends MockeryTestCase
         $user   = $this->mock(User::class);
         $mailer = $this->mock(MailerInterface::class);
 
-        $userName = 'some-name';
-
-        $userId = 666;
+        $userName       = 'some-name';
+        $userId         = 666;
+        $user->email    = "example@email.com";
+        $user->fullname = "name";
 
         $this->userRepository->shouldReceive('enable')
             ->with($userId)

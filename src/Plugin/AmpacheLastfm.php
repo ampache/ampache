@@ -181,7 +181,7 @@ class AmpacheLastfm implements AmpachePluginInterface
         if (!empty($song->get_artist_fullname()) && !$scrobbler->love($flagged, $song->get_artist_fullname(), (string)$song->title)) {
             debug_event('lastfm.plugin', 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
-            return ;
+            return;
         }
         debug_event('lastfm.plugin', 'Sent Love Successfully', 5);
     } // set_flag

@@ -289,7 +289,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * get_parent
-     * Return parent `object_type`, `object_id` ; null otherwise.
+     * Return parent `object_type`, `object_id`; null otherwise.
      */
     public function get_parent(): ?array
     {

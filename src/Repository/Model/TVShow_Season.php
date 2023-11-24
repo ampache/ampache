@@ -216,7 +216,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
 
     /**
      * get_parent
-     * Return parent `object_type`, `object_id` ; null otherwise.
+     * Return parent `object_type`, `object_id`; null otherwise.
      */
     public function get_parent(): ?array
     {

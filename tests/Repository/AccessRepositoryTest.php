@@ -206,8 +206,7 @@ class AccessRepositoryTest extends TestCase
         $type        = 'some-type';
         $userId      = 666;
         $name        = 'some-name';
-        ;
-        $level = 123;
+        $level       = 123;
 
         $this->connection->expects(static::once())
             ->method('query')
@@ -234,8 +233,7 @@ class AccessRepositoryTest extends TestCase
         $type        = 'some-type';
         $userId      = 666;
         $name        = 'some-name';
-        ;
-        $level = 123;
+        $level       = 123;
 
         $this->connection->expects(static::once())
             ->method('query')
