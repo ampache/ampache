@@ -717,7 +717,7 @@ class Catalog_dropbox extends Catalog
         $dropbox = new Dropbox($app);
         try {
             set_time_limit(0);
-            $meta = $dropbox->getMetadata($media->file);
+            $meta = $dropbox->getMetadata((string)$media->file);
 
             $outfile = sys_get_temp_dir() . '/' . $meta->getName();
 

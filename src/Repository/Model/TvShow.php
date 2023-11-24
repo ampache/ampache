@@ -36,11 +36,11 @@ class TvShow extends database_object implements library_item
     protected const DB_TABLENAME = 'tvshow';
 
     /* Variables from DB */
-    public $id;
-    public $name;
-    public $prefix;
-    public $summary;
-    public $year;
+    public int $id = 0;
+    public ?string $name;
+    public ?string $prefix;
+    public ?string $summary;
+    public ?int $year;
 
     public $catalog_id;
     public $tags;

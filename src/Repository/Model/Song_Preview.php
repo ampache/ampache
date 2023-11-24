@@ -36,28 +36,27 @@ class Song_Preview extends database_object implements Media, playable_item
 {
     protected const DB_TABLENAME = 'song_preview';
 
-    public $id;
-    public $file;
-    public $artist; // artist.id (Int)
-    public $title;
-    public $disk;
-    public $track;
-    public $album_mbid;
-    public $artist_mbid;
-    public $type;
-    public $mime;
-    public $mbid; // MusicBrainz ID
-    public $enabled = true;
+    public int $id = 0;
+    public ?string $session;
+    public ?int $artist; // artist.id (Int)
+    public ?string $artist_mbid;
+    public ?string $title;
+    public ?string $album_mbid;
+    public ?string $mbid; // MusicBrainz ID
+    public ?int $disk;
+    public ?int $track;
+    public ?string $file;
 
+    public ?string $link = null;
+    public $enabled = true;
+    public $mime;
+    public $type;
     public $f_file;
     public $f_artist;
     public $f_artist_full;
     public $f_artist_link;
     public $f_name;
     public $f_name_full;
-
-    public ?string $link = null;
-
     public $f_link;
     public $f_album_link;
     public $f_album;
@@ -234,7 +233,7 @@ class Song_Preview extends database_object implements Media, playable_item
             $this->f_artist_full = $this->get_artist_fullname();
             $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist_full) . "</a>";
         } else {
-            $wartist             = Wanted::get_missing_artist($this->artist_mbid);
+            $wartist             = Wanted::get_missing_artist((string)$this->artist_mbid);
             $this->f_artist_link = $wartist['link'];
             $this->f_artist_full = $wartist['name'];
         }

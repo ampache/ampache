@@ -36,9 +36,9 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     protected const DB_TABLENAME = 'tvshow_season';
 
     /* Variables from DB */
-    public $id;
-    public $season_number;
-    public $tvshow;
+    public int $id = 0;
+    public int $season_number;
+    public int $tvshow;
 
     public $catalog_id;
     public $episodes;

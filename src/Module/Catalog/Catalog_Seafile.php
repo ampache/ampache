@@ -639,7 +639,7 @@ class Catalog_Seafile extends Catalog
         if ($this->seafile->prepare()) {
             set_time_limit(0);
 
-            $fileinfo = $this->seafile->from_virtual_path($media->file);
+            $fileinfo = $this->seafile->from_virtual_path((string)$media->file);
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
