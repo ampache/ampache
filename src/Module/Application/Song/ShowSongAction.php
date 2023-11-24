@@ -71,8 +71,6 @@ final class ShowSongAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $song = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
-        $song->format();
-        $song->fill_ext_info();
 
         if (!$song->id) {
             $this->logger->warning(
@@ -81,6 +79,8 @@ final class ShowSongAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
+            $song->format();
+            $song->fill_ext_info();
             $this->ui->showBoxTop(
                 scrub_out($song->get_fullname()),
                 'box box_song_details'

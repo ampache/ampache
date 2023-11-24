@@ -103,13 +103,6 @@ class ShowSongActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $song->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $song->shouldReceive('fill_ext_info')
-            ->withNoArgs()
-            ->once();
-
         $this->logger->shouldReceive('warning')
             ->with(
                 'Requested a song that does not exist',

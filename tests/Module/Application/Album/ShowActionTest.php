@@ -88,9 +88,6 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturn($album);
 
-        $album->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
         $album->shouldReceive('isNew')
             ->withNoArgs()
             ->once()

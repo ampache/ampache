@@ -74,7 +74,6 @@ final class ShowDiskAction implements ApplicationActionInterface
         $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
 
         $albumDisk = $this->modelFactory->createAlbumDisk($albumDiskId);
-        $albumDisk->format();
 
         if ($albumDisk->isNew()) {
             $this->logger->warning(
@@ -83,6 +82,7 @@ final class ShowDiskAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
+            $albumDisk->format();
             $this->ui->show(
                 'show_album_disk.inc.php',
                 [
