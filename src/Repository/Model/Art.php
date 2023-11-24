@@ -335,7 +335,7 @@ class Art extends database_object
         debug_event(self::class, 'Insert art from url ' . $url, 4);
         $image = self::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
-        $mime  = "image/" . $rurl['extension'] ?? 'jpg';
+        $mime  = "image/" . ($rurl['extension'] ?? 'jpg');
         $this->insert($image, $mime);
     }
 
@@ -638,8 +638,10 @@ class Art extends database_object
             unlink($path);
         }
         $filepath = fopen($path, "wb");
-        fwrite($filepath, $source);
-        fclose($filepath);
+        if ($filepath) {
+            fwrite($filepath, $source);
+            fclose($filepath);
+        }
 
         return true;
     }
@@ -658,10 +660,12 @@ class Art extends database_object
 
         $image    = '';
         $filepath = fopen($path, "rb");
-        do {
-            $image .= fread($filepath, 2048);
-        } while (!feof($filepath));
-        fclose($filepath);
+        if ($filepath) {
+            do {
+                $image .= fread($filepath, 2048);
+            } while (!feof($filepath));
+            fclose($filepath);
+        }
 
         return $image;
     }
@@ -689,10 +693,12 @@ class Art extends database_object
 
         $image    = '';
         $filepath = fopen($path, "rb");
-        do {
-            $image .= fread($filepath, 2048);
-        } while (!feof($filepath));
-        fclose($filepath);
+        if ($filepath) {
+            do {
+                $image .= fread($filepath, 2048);
+            } while (!feof($filepath));
+            fclose($filepath);
+        }
 
         return $image;
     }
@@ -1026,10 +1032,12 @@ class Art extends database_object
         // Check to see if it's a FILE
         if (isset($data['file'])) {
             $handle     = fopen($data['file'], 'rb');
-            $image_data = (string)fread($handle, Core::get_filesize($data['file']));
-            fclose($handle);
+            if ($handle) {
+                $image_data = (string)fread($handle, Core::get_filesize($data['file']));
+                fclose($handle);
 
-            return $image_data;
+                return $image_data;
+            }
         }
 
         // Check to see if it is embedded in id3 of a song

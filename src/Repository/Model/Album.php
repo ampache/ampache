@@ -66,8 +66,7 @@ class Album extends database_object implements library_item
     public int $song_artist_count;
 
     public ?string $link = null;
-    /** @var array $album_artists */
-    public array $album_artists;
+    public ?array $album_artists;
     /** @var int $total_duration */
     public $total_duration;
     /** @var int $catalog_id */
@@ -607,11 +606,15 @@ class Album extends database_object implements library_item
                 if (empty($this->album_artists)) {
                     $this->get_artists();
                 }
-                foreach ($this->album_artists as $artist_id) {
-                    $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
-                    $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                if (isset($this->album_artists)) {
+                    foreach ($this->album_artists as $artist_id) {
+                        $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
+                        $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                    }
+                    $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");
+                } else {
+                    $this->f_artist_link = '';
                 }
-                $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");
             } else {
                 $this->f_artist_link = '';
             }

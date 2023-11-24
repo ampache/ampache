@@ -65,9 +65,7 @@ class AlbumDisk extends database_object implements library_item
     public int $song_artist_count;
 
     public ?string $link = null;
-
-    /** @var array $album_artists */
-    public array $album_artists;
+    public ?array $album_artists;
     /** @var string $artist_prefix */
     public $artist_prefix;
     /** @var string $artist_name */
