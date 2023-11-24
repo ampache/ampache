@@ -428,7 +428,7 @@ final class AmpacheRss implements AmpacheRssInterface
 
         foreach ($ids as $shout_id) {
             $shout  = new Shoutbox($shout_id);
-            $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
+            $object = Shoutbox::get_object((string)$shout->object_type, $shout->object_id);
             if ($object !== null) {
                 $object->format();
                 $user = new User($shout->user);
@@ -438,7 +438,7 @@ final class AmpacheRss implements AmpacheRssInterface
                     'title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
                     'link' => $object->get_link(),
                     'description' => $shout->text,
-                    'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
+                    'image' => Art::url($shout->object_id, (string)$shout->object_type, null, 2),
                     'comments' => '',
                     'pubDate' => date("c", (int)$shout->date)
                 );

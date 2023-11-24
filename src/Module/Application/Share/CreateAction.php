@@ -94,14 +94,31 @@ final class CreateAction implements ApplicationActionInterface
             Core::get_global('user')->id,
             $_REQUEST['type'] ?? '',
             (int)($_REQUEST['id'] ?? 0),
-            (int)($_REQUEST['allow_stream'] ?? 0),
-            (int)($_REQUEST['allow_download'] ?? 0),
+            (bool)($_REQUEST['allow_stream'] ?? 0),
+            (bool)($_REQUEST['allow_download'] ?? 0),
             (int) $_REQUEST['expire'],
             $_REQUEST['secret'],
             (int) $_REQUEST['max_counter']
         );
 
-        if (!$share_id) {
+        if ($share_id) {
+            $share = new Share($share_id);
+            $body  = T_('Share created') . '<br />' .
+                T_('You can now start sharing the following URL:') . '<br />' .
+                '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />' .
+                '<div id="share_qrcode" style="text-align: center"></div>' .
+                '<script>$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
+                '<br /><br />' .
+                T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
+                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url((int)$share->id, (string)$share->secret) . '&embed=true"></iframe>') . '</i><br />';
+
+            $title = T_('No Problem');
+            $this->ui->showConfirmation(
+                $title,
+                $body,
+                AmpConfig::get('web_path') . '/stats.php?action=share'
+            );
+        } else {
             $this->logger->error(
                 'Share failed: ' . (int)($_REQUEST['id'] ?? 0),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -133,23 +150,6 @@ final class CreateAction implements ApplicationActionInterface
                     AmpConfig::get('web_path') . '/stats.php?action=share'
                 );
             }
-        } else {
-            $share = new Share($share_id);
-            $body  = T_('Share created') . '<br />' .
-                T_('You can now start sharing the following URL:') . '<br />' .
-                '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />' .
-                '<div id="share_qrcode" style="text-align: center"></div>' .
-                '<script>$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
-                '<br /><br />' .
-                T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
-                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, $share->secret) . '&embed=true"></iframe>') . '</i><br />';
-
-            $title = T_('No Problem');
-            $this->ui->showConfirmation(
-                $title,
-                $body,
-                AmpConfig::get('web_path') . '/stats.php?action=share'
-            );
         }
         $this->ui->showFooter();
 

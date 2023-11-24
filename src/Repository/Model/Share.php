@@ -46,20 +46,20 @@ class Share extends database_object
         'video'
     );
 
-    public $id;
-    public $user;
-    public $object_type;
-    public $object_id;
-    public $allow_stream;
-    public $allow_download;
-    public $creation_date;
-    public $lastvisit_date;
-    public $expire_days;
-    public $max_counter;
-    public $counter;
-    public $secret;
-    public $public_url;
-    public $description;
+    public int $id = 0;
+    public int $user;
+    public ?string $object_type;
+    public int $object_id;
+    public bool $allow_stream;
+    public bool $allow_download;
+    public int $expire_days;
+    public int $max_counter;
+    public ?string $secret;
+    public int $counter;
+    public int $creation_date;
+    public int $lastvisit_date;
+    public ?string $public_url;
+    public ?string $description;
 
     public $f_name;
     public $f_user;
@@ -133,7 +133,7 @@ class Share extends database_object
      * @param string $secret
      * @param int $max_counter
      * @param string $description
-     * @return string|null
+     * @return int|null
      */
     public static function create_share(
         $user_id,
@@ -195,7 +195,7 @@ class Share extends database_object
             return null;
         }
 
-        $url = self::get_url($share_id, $secret);
+        $url = self::get_url((int)$share_id, $secret);
         // Get a shortener url if any available
         foreach (Plugin::get_plugins('shortener') as $plugin_name) {
             try {
@@ -215,13 +215,13 @@ class Share extends database_object
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
         Dba::write($sql, array($url, $share_id));
 
-        return $share_id;
+        return (int)$share_id;
     }
 
     /**
      * get_url
+     * @param null|int $share_id
      * @param string $secret
-     * @param null|string $share_id
      */
     public static function get_url($share_id, $secret): string
     {
@@ -290,7 +290,7 @@ class Share extends database_object
     private function getObject()
     {
         if ($this->object === null) {
-            $className    = ObjectTypeToClassNameMapper::map($this->object_type);
+            $className    = ObjectTypeToClassNameMapper::map((string)$this->object_type);
             $this->object = new $className($this->object_id);
         }
 
@@ -428,7 +428,7 @@ class Share extends database_object
             case 'album':
             case 'album_disk':
             case 'playlist':
-                $className = ObjectTypeToClassNameMapper::map($this->object_type);
+                $className = ObjectTypeToClassNameMapper::map((string)$this->object_type);
                 /** @var Album|AlbumDisk|Playlist $object */
                 $object = new $className($this->object_id);
                 $songs  = (isset($object->id)) ? $object->get_songs() : array();
@@ -459,7 +459,7 @@ class Share extends database_object
             case 'album':
             case 'album_disk':
             case 'playlist':
-                $className = ObjectTypeToClassNameMapper::map($this->object_type);
+                $className = ObjectTypeToClassNameMapper::map((string)$this->object_type);
                 /** @var Album|AlbumDisk|Playlist $object */
                 $object = new $className($this->object_id);
                 $songs  = (isset($object->id)) ? $object->get_medias('song') : array();

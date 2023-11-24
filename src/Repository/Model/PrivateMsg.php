@@ -36,40 +36,14 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
     protected const DB_TABLENAME = 'user_pvmsg';
 
     /* Variables from DB */
-    /**
-     * @var int $id
-     */
-    private $id;
+    private int $id = 0;
+    private ?string $subject;
+    private ?string $message;
+    private int $from_user;
+    private int $to_user;
+    private bool $is_read;
+    private ?int $creation_date;
 
-    /**
-     * @var string $subject
-     */
-    private $subject;
-
-    /**
-     * @var string $message
-     */
-    private $message;
-
-    /**
-     * @var int $from_user
-     */
-    private $from_user;
-
-    /**
-     * @var int $to_user
-     */
-    private $to_user;
-
-    /**
-     * @var int $creation_date
-     */
-    private $creation_date;
-
-    /**
-     * @var bool $is_read
-     */
-    private $is_read;
 
     /**
      * @param int $pm_id

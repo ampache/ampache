@@ -41,14 +41,14 @@ class Shoutbox
 {
     protected const DB_TABLENAME = 'user_shout';
 
-    public $id;
-    public $object_type;
-    public $object_id;
-    public $user;
-    public $sticky;
-    public $text;
-    public $data;
-    public $date;
+    public int $id = 0;
+    public int $user;
+    public string $text;
+    public int $date;
+    public bool $sticky;
+    public int $object_id;
+    public ?string $object_type;
+    public ?string $data;
 
     /**
      * Constructor
@@ -178,7 +178,7 @@ class Shoutbox
     public function get_image(): string
     {
         $image_string = '';
-        if (Art::has_db($this->object_id, $this->object_type)) {
+        if (Art::has_db($this->object_id, (string)$this->object_type)) {
             $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?object_id=" . $this->object_id . "&object_type=" . $this->object_type . "&thumb=1\" />";
         }
 
@@ -251,7 +251,7 @@ class Shoutbox
 
     public function getTextFormatted(): string
     {
-        return preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
+        return preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text) ?? '';
     }
 
     public function getDateFormatted(): string
@@ -273,7 +273,10 @@ class Shoutbox
      */
     public function get_display($details = true, $jsbuttons = false): string
     {
-        $object = Shoutbox::get_object($this->object_type, $this->object_id);
+        $object = Shoutbox::get_object((string)$this->object_type, $this->object_id);
+        if ($object === null) {
+            return '';
+        }
         $img    = $this->get_image();
         $html   = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
