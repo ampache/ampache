@@ -177,11 +177,14 @@ class PlaylistViewAdapterTest extends MockeryTestCase
     public function testCanBeRefreshedReturnsTrueIfConditionsAreMet(): void
     {
         $searchId = 1;
+        $userId   = 1;
 
         $this->playlist->shouldReceive('has_access')
             ->withNoArgs()
             ->once()
             ->andReturnTrue();
+
+        $this->playlist->user = $userId;
 
         $this->playlist->shouldReceive('has_search')
             ->with($this->playlist->user)
@@ -201,11 +204,14 @@ class PlaylistViewAdapterTest extends MockeryTestCase
     public function testCanBeRefreshedReturnsFalseIfNotAccessible(): void
     {
         $searchId = 1;
+        $userId   = 1;
 
         $this->playlist->shouldReceive('has_access')
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
+
+        $this->playlist->user = $userId;
 
         $this->playlist->shouldReceive('has_search')
             ->with($this->playlist->user)
@@ -225,11 +231,14 @@ class PlaylistViewAdapterTest extends MockeryTestCase
     public function testCanBeRefreshedReturnsFalseIfHasNoSearch(): void
     {
         $searchId = 0;
+        $userId   = 1;
 
         $this->playlist->shouldReceive('has_access')
             ->withNoArgs()
             ->once()
             ->andReturnTrue();
+
+        $this->playlist->user = $userId;
 
         $this->playlist->shouldReceive('has_search')
             ->with($this->playlist->user)
