@@ -80,7 +80,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $f_website;
     public $f_pubdate;
     public $f_state;
-    public $link;
+
+    public ?string $link = null;
+
     public $f_link;
     public $f_podcast;
     public $f_podcast_link;
@@ -246,10 +248,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
         }

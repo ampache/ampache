@@ -46,6 +46,7 @@ class Broadcast extends database_object implements library_item
     public int $listeners;
     public ?string $key;
 
+    public ?string $link = null;
     /**
      * @var int $song_position
      */
@@ -66,10 +67,6 @@ class Broadcast extends database_object implements library_item
      * @var null|string $f_tags
      */
     public $f_tags;
-    /**
-     * @var null|string $link
-     */
-    public $link;
 
     /**
      * Constructor
@@ -209,10 +206,10 @@ class Broadcast extends database_object implements library_item
     /**
      * get_link
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . '/broadcast.php?id=' . scrub_out($this->id);
         }

@@ -959,7 +959,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         return '';
     }

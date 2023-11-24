@@ -210,10 +210,7 @@ class AlbumDisk extends database_object implements library_item
      */
     public $f_name;
 
-    /**
-     * @var null|string $link
-     */
-    public $link;
+    public ?string $link = null;
 
     /**
      * @var null|string $f_link
@@ -454,10 +451,10 @@ class AlbumDisk extends database_object implements library_item
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = $web_path . '/albums.php?action=show_disk&album_disk=' . scrub_out($this->id);
         }
