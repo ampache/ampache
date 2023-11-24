@@ -163,7 +163,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $albumDisk->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album_disk', 'object_id' => $albumDisk->id)); ?>
         </li>
         <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || $access25) { ?>
