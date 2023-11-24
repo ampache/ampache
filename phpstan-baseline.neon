@@ -6041,11 +6041,6 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Call to function is_int\\(\\) with string\\|null will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -10886,17 +10881,12 @@ parameters:
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$catalog\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$catalog\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
 		-
 			message: "#^Binary operation \"\\.\" between 'Final command is ' and array\\<int, string\\>\\|string results in an error\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -10907,11 +10897,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_max_bitrate\\(\\) has parameter \\$transcode_settings with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_now_playing\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -12481,83 +12466,8 @@ parameters:
 			path: src/Module/Util/AmpacheRss.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:get_xml\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:get_xml\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:get_xml\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_album\\(\\) has parameter \\$rsstoken with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_album\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_artist\\(\\) has parameter \\$rsstoken with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_shout\\(\\) has parameter \\$rsstoken with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_latest_shout\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_now_playing\\(\\) has parameter \\$rsstoken with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_now_playing\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:load_recently_played\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Util\\\\\\\\AmpacheRss', non\\-falsy\\-string\\} given\\.$#"
-			count: 3
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:\\$data has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:getUserKeyGenerator\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Util\\\\AmpacheRss\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 4
 			path: src/Module/Util/AmpacheRss.php
 
 		-
