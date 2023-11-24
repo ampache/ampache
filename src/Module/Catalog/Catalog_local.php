@@ -681,7 +681,7 @@ class Catalog_local extends Catalog
                 Ui::update_text('verify_dir_' . $this->catalog_id, scrub_out($file));
             }
 
-            if (!Core::is_readable(Core::conv_lc_file($row['file']))) {
+            if (!Core::is_readable(Core::conv_lc_file((string)$row['file']))) {
                 /* HINT: filename (file path) */
                 AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
@@ -825,7 +825,7 @@ class Catalog_local extends Catalog
             if ($file_info < 1) {
                 debug_event('local.catalog', '_clean_chunk: {' . $results['id'] . '} File not found or empty ' . $results['file'], 5);
                 $missing[] = $results['file'];
-            } elseif (!Core::is_readable(Core::conv_lc_file($results['file']))) {
+            } elseif (!Core::is_readable(Core::conv_lc_file((string)$results['file']))) {
                 debug_event('local.catalog', "_clean_chunk: " . $results['file'] . ' is not readable, but does exist', 1);
             }
         }
@@ -869,7 +869,7 @@ class Catalog_local extends Catalog
             Dba::write($sql, $params);
 
             return true;
-        } elseif (!Core::is_readable(Core::conv_lc_file($file))) {
+        } elseif (!Core::is_readable(Core::conv_lc_file((string)$file))) {
             debug_event('local.catalog', "clean_file: " . $file . ' is not readable, but does exist', 1);
         }
 
@@ -955,13 +955,13 @@ class Catalog_local extends Catalog
                     $directory = $this->sort_find_home($song, $this->sort_pattern, $root);
                     $filename  = $this->sort_find_home($song, $this->rename_pattern);
                     if ($directory === null || $filename === null) {
-                        $fullpath = $song->file;
+                        $fullpath = (string)$song->file;
                     } else {
-                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION));
+                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo((string)$song->file, PATHINFO_EXTENSION));
                     }
 
                     // don't move over existing files
-                    if (!is_file($fullpath) && $song->file != $fullpath && strlen($fullpath)) {
+                    if (!empty($song->file) && !is_file($fullpath) && $song->file != $fullpath && strlen($fullpath)) {
                         debug_event(self::class, 'Destin: ' . $fullpath, 5);
                         $info      = pathinfo($fullpath);
                         $directory = $info['dirname'] ?? '';

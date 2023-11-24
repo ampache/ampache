@@ -488,11 +488,11 @@ class Catalog_Seafile extends Catalog
     {
         // if you have the file it's all good
         /** @var Song $media */
-        if (is_file($media->file)) {
+        if (!empty($media->file) && is_file($media->file)) {
             return $this->download_metadata($media->file, $sort_pattern, $rename_pattern, $gather_types);
         }
         if ($this->seafile->prepare()) {
-            $fileinfo = $this->seafile->from_virtual_path($media->file);
+            $fileinfo = $this->seafile->from_virtual_path((string)$media->file);
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 

@@ -501,7 +501,7 @@ final class Play2Action implements ApplicationActionInterface
                 $democratic->delete_from_oid($object_id, $type);
 
                 // If the media is disabled
-                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
+                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file((string)$media->file))) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently disabled, song skipped",
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -550,7 +550,7 @@ final class Play2Action implements ApplicationActionInterface
             $media = new Song($object_id);
             if ($media->id > 0) {
                 // If the media is disabled
-                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
+                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file((string)$media->file))) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently disabled, song skipped",
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -671,7 +671,7 @@ final class Play2Action implements ApplicationActionInterface
             : $media->file;
 
         /* If we don't have a file, or the file is not readable */
-        if (!$stream_file || !Core::is_readable(Core::conv_lc_file($stream_file))) {
+        if (!$stream_file || !Core::is_readable(Core::conv_lc_file((string)$stream_file))) {
             $this->logger->error(
                 "Media " . $stream_file . " ($media->title) does not have a valid filename specified",
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

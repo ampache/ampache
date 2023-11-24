@@ -179,7 +179,7 @@ class Ampachelibrefm implements AmpachePluginInterface
         }
         // Create our scrobbler and then queue it
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
-        if (!empty($song->get_artist_fullname()) && !$scrobbler->love($flagged, $song->get_artist_fullname(), $song->title)) {
+        if (!empty($song->get_artist_fullname()) && !$scrobbler->love($flagged, $song->get_artist_fullname(), (string)$song->title)) {
             debug_event(self::class, 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
             return;

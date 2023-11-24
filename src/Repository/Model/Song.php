@@ -48,314 +48,124 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     protected const DB_TABLENAME = 'song';
 
     /* Variables from DB */
+    public int $id = 0;
+    public ?string $file;
+    public int $catalog;
+    public int $album;
+    public ?int $disk;
+    public int $year;
+    public int $artist;
+    public ?string $title;
+    public int $bitrate;
+    public int $rate;
+    public ?string $mode;
+    public int $size;
+    public int $time;
+    public ?int $track;
+    public ?string $mbid;
+    public bool $played;
+    public bool $enabled;
+    public int $update_time;
+    public int $addition_time;
+    public ?int $user_upload;
+    public ?int $license;
+    public ?string $composer;
+    public ?int $channels;
+    public int $total_count;
+    public int $total_skip;
 
-    /**
-     * @var int $id
-     */
-    public $id;
-    /**
-     * @var string $file
-     */
-    public $file;
-    /**
-     * @var int $album
-     */
-    public $album;
-    /**
-     * @var int $album_disk
-     */
-    public $album_disk;
-    /**
-     * @var int $artist
-     */
-    public $artist;
-    /**
-     * @var array $artists
-     */
-    public array $artists;
-    /**
-     * @var array $albumartists
-     */
-    public array $albumartists;
-    /**
-     * @var string $title
-     */
-    public $title;
-    /**
-     * @var int $year
-     */
-    public $year;
-    /**
-     * @var int $bitrate
-     */
-    public $bitrate;
-    /**
-     * @var int $rate
-     */
-    public $rate;
-    /**
-     * @var string $mode
-     */
-    public $mode;
-    /**
-     * @var int $size
-     */
-    public $size;
-    /**
-     * @var int $time
-     */
-    public $time;
-    /**
-     * @var int $track
-     */
-    public $track;
-    /**
-     * @var string $album_mbid
-     */
-    public $album_mbid;
-    /**
-     * @var string $artist_mbid
-     */
-    public $artist_mbid;
-    /**
-     * @var string $albumartist_mbid
-     */
-    public $albumartist_mbid;
-    /**
-     * @var string $type
-     */
-    public $type;
-    /**
-     * @var string $mime
-     */
-    public $mime;
-    /**
-     * @var bool $played
-     */
-    public $played;
-    /**
-     * @var bool $enabled
-     */
-    public $enabled;
-    /**
-     * @var int $addition_time
-     */
-    public $addition_time;
-    /**
-     * @var int $update_time
-     */
-    public $update_time;
-    /**
-     * MusicBrainz ID
-     * @var string $mbid
-     */
-    public $mbid;
-    /**
-     * @var int $catalog
-     */
-    public $catalog;
-    /**
-     * @var string|null $waveform
-     */
-    public $waveform;
-    /**
-     * @var int|null $user_upload
-     */
-    public $user_upload;
-    /**
-     * @var int|null $license
-     */
-    public $license;
-    /**
-     * @var string $composer
-     */
-    public $composer;
-    /**
-     * @var string $catalog_number
-     */
-    public $catalog_number;
-    /**
-     * @var int $channels
-     */
-    public $channels;
-
-    /**
-     * @var array $tags
-     */
-    public $tags;
-    /**
-     * @var string $label
-     */
-    public $label;
-    /**
-     * @var string $language
-     */
-    public $language;
-    /**
-     * @var string $comment
-     */
-    public $comment;
-    /**
-     * @var string $lyrics
-     */
-    public $lyrics;
-    /**
-     * @var float|null $replaygain_track_gain
-     */
-    public $replaygain_track_gain;
-    /**
-     * @var float|null $replaygain_track_peak
-     */
-    public $replaygain_track_peak;
-    /**
-     * @var float|null $replaygain_album_gain
-     */
-    public $replaygain_album_gain;
-    /**
-     * @var float|null $replaygain_album_peak
-     */
-    public $replaygain_album_peak;
-    /**
-     * @var int|null $r128_album_gain
-     */
-    public $r128_album_gain;
-    /**
-     * @var int|null $r128_track_gain
-     */
-    public $r128_track_gain;
-    /**
-     * @var bool $has_art
-     */
-    public $has_art;
-    /**
-     * @var null|string $f_name
-     */
-    public $f_name;
-    /**
-     * @var null|string $f_artist
-     */
-    public $f_artist;
-    /**
-     * @var null|string $f_album
-     */
-    public $f_album;
-    /**
-     * @var null|string $f_artist_full
-     */
-    public $f_artist_full;
-    /**
-     * @var int $albumartist
-     */
-    public $albumartist;
-    /**
-     * @var null|string $f_albumartist_full
-     */
-    public $f_albumartist_full;
-    /**
-     * @var null|string $f_album_full
-     */
-    public $f_album_full;
-    /**
-     * @var null|string $f_time
-     */
-    public $f_time;
-    /**
-     * @var null|string $f_time_h
-     */
-    public $f_time_h;
-    /**
-     * @var null|string $f_track
-     */
-    public $f_track;
-    /**
-     * @var int $disk
-     */
-    public $disk;
-    /**
-     * @var string $disksubtitle
-     */
-    public $disksubtitle;
-    /**
-     * @var null|string $f_bitrate
-     */
-    public $f_bitrate;
+    /** song_data table */
+    public ?string $comment;
+    public ?string $lyrics;
+    public ?string $label;
+    public ?string $language;
+    public ?string $waveform;
+    public ?float $replaygain_track_gain;
+    public ?float $replaygain_track_peak;
+    public ?float $replaygain_album_gain;
+    public ?float $replaygain_album_peak;
+    public ?int $r128_album_gain;
+    public ?int $r128_track_gain;
+    public ?string $disksubtitle;
 
     public ?string $link = null;
-
-    /**
-     * @var null|string $f_file
-     */
+    /** @var string $type */
+    public $type;
+    /** @var string $mime */
+    public $mime;
+    /** @var string $catalog_number */
+    public $catalog_number;
+    /** @var array $artists */
+    public array $artists;
+    /** @var array $albumartists */
+    public array $albumartists;
+    /** @var string $artist_mbid */
+    public $artist_mbid;
+    /** @var string $albumartist_mbid */
+    public $albumartist_mbid;
+    /** @var string $album_mbid */
+    public $album_mbid;
+    /** @var int $album_disk */
+    public $album_disk;
+    /** @var array $tags */
+    public $tags;
+    /** @var bool $has_art */
+    public $has_art;
+    /** @var null|string $f_name */
+    public $f_name;
+    /** @var null|string $f_artist */
+    public $f_artist;
+    /** @var null|string $f_album */
+    public $f_album;
+    /** @var null|string $f_artist_full */
+    public $f_artist_full;
+    /** @var int $albumartist */
+    public $albumartist;
+    /** @var null|string $f_albumartist_full */
+    public $f_albumartist_full;
+    /** @var null|string $f_album_full */
+    public $f_album_full;
+    /** @var null|string $f_time */
+    public $f_time;
+    /** @var null|string $f_time_h */
+    public $f_time_h;
+    /** @var null|string $f_track */
+    public $f_track;
+    /** @var null|string $f_bitrate */
+    public $f_bitrate;
+    /** @var null|string $f_file */
     public $f_file;
-    /**
-     * @var null|string $f_name_full
-     */
+    /** @var null|string $f_name_full */
     public $f_name_full;
-    /**
-     * @var null|string $f_link
-     */
+    /** @var null|string $f_link */
     public $f_link;
-    /**
-     * @var null|string $f_album_link
-     */
+    /** @var null|string $f_album_link */
     public $f_album_link;
-    /**
-     * @var null|string $f_album_disk_link
-     */
+    /** @var null|string $f_album_disk_link */
     public $f_album_disk_link;
-    /**
-     * @var null|string $f_artist_link
-     */
+    /** @var null|string $f_artist_link */
     public $f_artist_link;
-    /**
-     * @var null|string $f_albumartist_link
-     */
+    /** @var null|string $f_albumartist_link */
     public $f_albumartist_link;
-
-    /**
-     * @var null|string $f_year_link
-     */
+    /** @var null|string $f_year_link */
     public $f_year_link;
-
-    /**
-     * @var null|string $f_tags
-     */
+    /** @var null|string $f_tags */
     public $f_tags;
-    /**
-     * @var null|string $f_size
-     */
+    /** @var null|string $f_size */
     public $f_size;
-    /**
-     * @var null|string $f_lyrics
-     */
+    /** @var null|string $f_lyrics */
     public $f_lyrics;
-    /**
-     * @var null|string $f_pattern
-     */
+    /** @var null|string $f_pattern */
     public $f_pattern;
-    /**
-     * @var int $count
-     */
+    /** @var int $count */
     public $count;
-    /**
-     * @var null|string $f_publisher
-     */
+    /** @var null|string $f_publisher */
     public $f_publisher;
-    /**
-     * @var null|string $f_composer
-     */
+    /** @var null|string $f_composer */
     public $f_composer;
-    /**
-     * @var null|string $f_license
-     */
+    /** @var null|string $f_license */
     public $f_license;
-
-    /** @var int $total_count */
-    public $total_count;
-
-    /** @var int $total_skip */
-    public $total_skip;
-
-    /** @var int */
+    /** @var int $tag_id */
     public $tag_id;
 
     /* Setting Variables */
@@ -400,8 +210,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $this->$key = $value;
             }
             $this->id          = (int)$song_id;
-            $data              = pathinfo($this->file);
-            $this->type        = strtolower((string)$data['extension']);
+            $this->type        = strtolower(pathinfo((string)$this->file, PATHINFO_EXTENSION));
             $this->mime        = self::type_to_mime($this->type);
             $this->total_count = (int)$this->total_count;
         }
@@ -2282,7 +2091,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $codec = $this->type;
             }
 
-            $run = str_replace("%f", $this->file, $action['run']);
+            $run = str_replace("%f", $this->file ?? '%f', $action['run']);
             $run = str_replace("%c", $codec, $run);
             $run = str_replace("%a", $this->f_artist ?? '%a', $run);
             $run = str_replace("%A", $this->f_album ?? '%A', $run);

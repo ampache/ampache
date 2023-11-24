@@ -284,7 +284,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     private function gatherMediaTags($media, $data)
     {
         $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
-        $images = self::gatherFileArt($media->file);
+        $images = self::gatherFileArt((string)$media->file);
 
         // stop collecting dupes for each album
         $raw_array = array();

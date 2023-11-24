@@ -4340,7 +4340,7 @@ abstract class Catalog extends database_object
     /**
      * This is run on every individual element of the search before it is put together
      * It removes / and \ and windows-incompatible characters (if you use -w|--windows)
-     * @param string|int $string
+     * @param string|int|null $string
      * @param string $return
      * @param bool $windowsCompat
      */

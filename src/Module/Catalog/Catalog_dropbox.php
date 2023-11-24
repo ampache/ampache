@@ -768,7 +768,7 @@ class Catalog_dropbox extends Catalog
             $searches['artist'] = array();
             foreach ($songs as $song) {
                 if ($song->id) {
-                    $meta    = $dropbox->getMetadata($song->file);
+                    $meta    = $dropbox->getMetadata((string)$song->file);
                     $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
                     // Download File

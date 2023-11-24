@@ -386,26 +386,26 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Catalog Number')] = scrub_out($this->song->get_album_catalog_number($this->song->album));
         $songprops[T_('Barcode')]        = scrub_out($this->song->get_album_barcode($this->song->album));
         $songprops[T_('Bitrate')]        = scrub_out($this->song->f_bitrate);
-        $songprops[T_('Channels')]       = scrub_out($this->song->channels);
+        $songprops[T_('Channels')]       = $this->song->channels;
         $songprops[T_('Song MBID')]      = scrub_out($this->song->mbid);
         $songprops[T_('Album MBID')]     = scrub_out($this->song->album_mbid);
         $songprops[T_('Artist MBID')]    = scrub_out($this->song->artist_mbid);
         if ($this->song->replaygain_track_gain !== null) {
-            $songprops[T_('ReplayGain Track Gain')] = scrub_out($this->song->replaygain_track_gain);
+            $songprops[T_('ReplayGain Track Gain')] = $this->song->replaygain_track_gain;
         }
         if ($this->song->replaygain_album_gain !== null) {
-            $songprops[T_('ReplayGain Album Gain')] = scrub_out($this->song->replaygain_album_gain);
+            $songprops[T_('ReplayGain Album Gain')] = $this->song->replaygain_album_gain;
         }
         if ($this->song->r128_track_gain !== null) {
-            $songprops[T_('R128 Track Gain')] = scrub_out($this->song->r128_track_gain);
+            $songprops[T_('R128 Track Gain')] = $this->song->r128_track_gain;
         }
         if ($this->song->r128_album_gain !== null) {
-            $songprops[T_('R128 Album Gain')] = scrub_out($this->song->r128_album_gain);
+            $songprops[T_('R128 Album Gain')] = $this->song->r128_album_gain;
         }
-        if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)) {
+        if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) && $this->song->file !== null) {
             $data                      = pathinfo($this->song->file);
             $songprops[T_('Path')]     = scrub_out((string)$data['dirname'] ?? '');
-            $songprops[T_('Filename')] = scrub_out((string)($data['filename'] . "." . $data['extension']) ?? '');
+            $songprops[T_('Filename')] = scrub_out(($data['filename'] . "." . $data['extension']) ?? '');
             $songprops[T_('Size')]     = $this->song->f_size;
         }
         if ($this->song->update_time) {
@@ -413,10 +413,10 @@ final class SongViewAdapter implements SongViewAdapterInterface
         }
         $songprops[T_('Added')] = get_datetime((int) $this->song->addition_time);
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_PLAYED_TIMES)) {
-            $songprops[T_('Played')] = scrub_out($this->song->total_count);
+            $songprops[T_('Played')] = $this->song->total_count;
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)) {
-            $songprops[T_('Skipped')] = scrub_out($this->song->total_skip);
+            $songprops[T_('Skipped')] = $this->song->total_skip;
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LYRICS)) {

@@ -11,11 +11,6 @@ parameters:
 			path: src/Application/Api/Ajax/Handler/BrowseAjaxHandler.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:get_medias\\(\\)\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with int will always evaluate to false\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
@@ -468,16 +463,6 @@ parameters:
 		-
 			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 1
-			path: src/Gui/Song/SongViewAdapter.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, float given\\.$#"
-			count: 2
-			path: src/Gui/Song/SongViewAdapter.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
-			count: 5
 			path: src/Gui/Song/SongViewAdapter.php
 
 		-
@@ -3051,22 +3036,7 @@ parameters:
 			path: src/Module/Api/Method/Api5/Share5Method.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/ShareCreate5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\ShareCreate5Method\\:\\:share_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/ShareCreate5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$shares of static method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:shares\\(\\) expects array\\<int\\>, array\\<int, string\\|null\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/ShareCreate5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$shares of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:shares\\(\\) expects array\\<int\\>, array\\<int, string\\|null\\> given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/ShareCreate5Method.php
 
@@ -4016,22 +3986,7 @@ parameters:
 			path: src/Module/Api/Method/SearchSongsMethod.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ShareCreateMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\ShareCreateMethod\\:\\:share_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ShareCreateMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$objects of static method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:shares\\(\\) expects array\\<int\\>, array\\<int, string\\|null\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ShareCreateMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$shares of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:shares\\(\\) expects array\\<int\\>, array\\<int, string\\|null\\> given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/ShareCreateMethod.php
 
@@ -6616,11 +6571,6 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$enabled \\(bool\\) in isset\\(\\) is not nullable\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Variable \\$buf in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
@@ -6751,11 +6701,6 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$enabled \\(bool\\) in isset\\(\\) is not nullable\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
 			message: "#^Variable \\$buf in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
@@ -6814,16 +6759,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\SearchData\\\\ShowAction\\:\\:arrayToJSON\\(\\) has parameter \\$array with no type specified\\.$#"
 			count: 1
 			path: src/Module/Application/SearchData/ShowAction.php
-
-		-
-			message: "#^Parameter \\#4 \\$allow_stream of static method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:create_share\\(\\) expects bool, int given\\.$#"
-			count: 1
-			path: src/Module/Application/Share/CreateAction.php
-
-		-
-			message: "#^Parameter \\#5 \\$allow_download of static method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:create_share\\(\\) expects bool, int given\\.$#"
-			count: 1
-			path: src/Module/Application/Share/CreateAction.php
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
@@ -11546,11 +11481,6 @@ parameters:
 			path: src/Module/Song/Tag/SongTagWriter.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$mbid \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Module/Song/Tag/SongTagWriter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_cached_place_name\\(\\) has parameter \\$latitude with no type specified\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
@@ -14198,11 +14128,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$string of function strip_tags expects string, string\\|null given\\.$#"
 			count: 3
-			path: src/Module/Util/Recommendation.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$mbid \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
 			path: src/Module/Util/Recommendation.php
 
 		-
@@ -17136,11 +17061,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$label \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between Ampache\\\\Module\\\\Catalog\\\\Catalog_beets\\|Ampache\\\\Module\\\\Catalog\\\\Catalog_beetsremote\\|Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\|Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\|Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\|Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\|Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -18171,11 +18091,6 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\PrivateMsg\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/PrivateMsg.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_serialize\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -18596,36 +18511,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$allow_download has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$allow_stream has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$counter has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$creation_date has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$expire_days has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$f_name has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Share.php
@@ -18636,97 +18521,12 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$lastvisit_date has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$max_counter has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$object has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$object_id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$object_type has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$public_url has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$secret has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Cannot call method get_f_link\\(\\) on Ampache\\\\Repository\\\\Model\\\\library_item\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:\\$data has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:\\$date has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:\\$object_id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:\\$object_type has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:\\$sticky has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:\\$text has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Shoutbox.php
 
@@ -19051,11 +18851,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Parameter \\#1 \\$object of method Ampache\\\\Repository\\\\Repository\\:\\:update\\(\\) expects Ampache\\\\Repository\\\\Model\\\\DatabaseObject, false given\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -19117,16 +18912,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$id \\(int\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$id \\(int\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -19211,26 +18996,6 @@ parameters:
 			path: src/Repository/Model/Song_Preview.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$album_mbid has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$artist has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$artist_mbid has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$disk has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$enabled has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
@@ -19286,32 +19051,7 @@ parameters:
 			path: src/Repository/Model/Song_Preview.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$file has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$mbid has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$mime has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$title has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$track has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 
@@ -19496,27 +19236,7 @@ parameters:
 			path: src/Repository/Model/TVShow_Season.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$season_number has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$tvshow has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
 			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Left side of && is always true\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 
@@ -19637,21 +19357,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:\\$f_name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:\\$is_hidden has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:\\$name has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 
@@ -19806,37 +19511,12 @@ parameters:
 			path: src/Repository/Model/TvShow.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$prefix has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$seasons has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TvShow.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$summary has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$tags has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$year has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TvShow.php
 

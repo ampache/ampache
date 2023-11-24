@@ -112,7 +112,7 @@ final class SongSorter implements SongSorterInterface
                         return;
                     }
                     // Check for file existence
-                    if (!file_exists($song->file)) {
+                    if (empty($song->file) || !file_exists($song->file)) {
                         $this->logger->critical(
                             sprintf('Missing: %s', $song->file),
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -138,7 +138,7 @@ final class SongSorter implements SongSorterInterface
 
                     // sort_find_home will replace the % with the correct values.
                     $directory = ($filesOnly)
-                        ? dirname($song->file)
+                        ? dirname((string)$song->file)
                         : $catalog->sort_find_home($song, $catalog->sort_pattern, $catalog->get_path(), $various_artist, $windowsCompat);
                     if ($directory === null) {
                         /* HINT: $sort_pattern after replacing %x values */
@@ -156,9 +156,9 @@ final class SongSorter implements SongSorterInterface
                         );
                     }
                     if ($directory === null || $filename === null) {
-                        $fullpath = $song->file;
+                        $fullpath = (string)$song->file;
                     } else {
-                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION));
+                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo((string)$song->file, PATHINFO_EXTENSION));
                     }
 
                     /* We need to actually do the moving (fake it if we are testing)
@@ -207,7 +207,7 @@ final class SongSorter implements SongSorterInterface
         $test_mode,
         $windowsCompat = false
     ): bool {
-        $old_dir   = dirname($song->file);
+        $old_dir   = dirname((string)$song->file);
         $info      = pathinfo($fullname);
         $directory = $info['dirname'];
         $file      = $info['basename'];
@@ -275,7 +275,7 @@ final class SongSorter implements SongSorterInterface
                 true
             );
 
-            if (!copy($song->file, $fullname)) {
+            if (empty($song->file) || !copy($song->file, $fullname)) {
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to copy file to "%s"'), $fullname),

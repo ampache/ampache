@@ -56,7 +56,7 @@ final class SongDeleter implements SongDeleterInterface
 
     public function delete(Song $song): bool
     {
-        if (file_exists($song->file)) {
+        if (!empty($song->file) && file_exists($song->file)) {
             $deleted = unlink($song->file);
         } else {
             $deleted = true;
