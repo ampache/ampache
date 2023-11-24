@@ -369,7 +369,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         } else {
             $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode((string)$this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         }
-        $songprops[T_('Comment')] = scrub_out($this->song->comment);
+        $songprops[T_('Comment')] = scrub_out($this->song->comment ?? '');
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
             $web_path     = $this->configContainer->getWebPath();
             $label_string = '';
@@ -380,7 +380,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         } else {
             $songprops[T_('Label')] = scrub_out($this->song->label ?? '');
         }
-        if ($this->song->language) {
+        if (isset($this->song->language)) {
             $songprops[T_('Song Language')] = scrub_out($this->song->language);
         }
         $songprops[T_('Catalog Number')] = scrub_out($this->song->get_album_catalog_number($this->song->album));
@@ -390,16 +390,16 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Song MBID')]      = scrub_out($this->song->mbid);
         $songprops[T_('Album MBID')]     = scrub_out($this->song->album_mbid);
         $songprops[T_('Artist MBID')]    = scrub_out($this->song->artist_mbid);
-        if ($this->song->replaygain_track_gain !== null) {
+        if (isset($this->song->replaygain_track_gain) && $this->song->replaygain_track_gain !== null) {
             $songprops[T_('ReplayGain Track Gain')] = $this->song->replaygain_track_gain;
         }
-        if ($this->song->replaygain_album_gain !== null) {
+        if (isset($this->song->replaygain_album_gain) && $this->song->replaygain_album_gain !== null) {
             $songprops[T_('ReplayGain Album Gain')] = $this->song->replaygain_album_gain;
         }
-        if ($this->song->r128_track_gain !== null) {
+        if (isset($this->song->r128_track_gain) && $this->song->r128_track_gain !== null) {
             $songprops[T_('R128 Track Gain')] = $this->song->r128_track_gain;
         }
-        if ($this->song->r128_album_gain !== null) {
+        if (isset($this->song->r128_album_gain) && $this->song->r128_album_gain !== null) {
             $songprops[T_('R128 Album Gain')] = $this->song->r128_album_gain;
         }
         if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) && $this->song->file !== null) {
