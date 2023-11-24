@@ -97,11 +97,10 @@ class Search extends playlist_object
         $this->search_user = ($user instanceof User)
             ? $user
             : Core::get_global('user');
-
-        //debug_event(self::class, "SearchID: $search_id; Search Type: $object_type\n" . print_r($this, true), 5);
         $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
             ? strtolower($object_type)
             : 'song';
+        $this->user = $this->search_user; // define a user for live searches (overwriten if saved before)
         if ($search_id > 0) {
             $info = $this->get_info($search_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
