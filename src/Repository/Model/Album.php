@@ -586,7 +586,7 @@ class Album extends database_object implements library_item
             $this->album_artists = self::get_parent_array($this->id, $this->album_artist);
         }
 
-        return $this->album_artists;
+        return $this->album_artists ?? array();
     }
 
     /**
