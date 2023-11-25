@@ -95,10 +95,8 @@ class User extends database_object
      * @var null|string $link
      */
     public $link;
-    /**
-     * @var null|string $f_link
-     */
-    public $f_link;
+
+    private ?string $f_link = null;
     /**
      * @var null|string $f_usage
      */
@@ -956,9 +954,6 @@ class User extends database_object
             ? T_('Unknown')
             : get_datetime((int)$this->create_date);
 
-        // Base link
-        $this->get_f_link();
-
         if ($details) {
             $user_data = self::get_user_data($this->id, 'play_size');
             if (!isset($user_data['play_size'])) {
@@ -1222,11 +1217,14 @@ class User extends database_object
     /**
      * Get item f_link.
      */
-    public function get_f_link(): ?string
+    public function get_f_link(): string
     {
-        // don't do anything if it's formatted
-        if (!isset($this->f_link) && $this->id > 0) {
-            $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
+        if ($this->f_link === null) {
+            if ($this->getId() === 0) {
+                $this->f_link = '';
+            } else {
+                $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
+            }
         }
 
         return $this->f_link;
