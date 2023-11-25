@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,23 +23,25 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Shout;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Shout\ShoutCreatorInterface;
+use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\Shoutbox;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Teapot\StatusCode;
 
+/**
+ * Creates a new shout for an item
+ */
 final class AddShoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'add_shout';
@@ -46,34 +50,57 @@ final class AddShoutAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ShoutCreatorInterface $shoutCreator;
+
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ShoutCreatorInterface $shoutCreator,
+        RequestParserInterface $requestParser
     ) {
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;
+        $this->shoutCreator    = $shoutCreator;
+        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $user = $gatekeeper->getUser();
+
         // Must be at least a user to do this
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
-            !Core::form_verify('add_shout') ||
-            !InterfaceImplementationChecker::is_library_item(Core::get_post('object_type'))
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
+            || !$this->requestParser->verifyForm('add_shout')
+            || $user === null
         ) {
             throw new AccessDeniedException();
         }
 
-        // Remove unauthorized defined values from here
-        if (isset($_POST['user'])) {
-            unset($_POST['user']);
-        }
-        if (isset($_POST['date'])) {
-            unset($_POST['date']);
+        $body       = (array) $request->getParsedBody();
+        $objectType = $body['object_type'] ?? '';
+        $objectId   = (int) ($body['object_id'] ?? 0);
+        $text       = $body['comment'] ?? '';
+        $isSticky   = array_key_exists('sticky', $body);
+
+        // `data` is only used to mark a song offset (by clicking on the waveform)
+        $songOffset = (int) ($body['data'] ?? 0);
+
+        $libitem = Shoutbox::get_object($objectType, $objectId);
+        if ($libitem === null) {
+            throw new ObjectNotFoundException($objectId);
         }
 
-        Shoutbox::create($_POST);
+        $this->shoutCreator->create(
+            $user,
+            $libitem,
+            $objectType,
+            $text,
+            $isSticky,
+            $songOffset
+        );
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)
@@ -82,8 +109,8 @@ final class AddShoutAction implements ApplicationActionInterface
                 sprintf(
                     '%s/shout.php?action=show_add_shout&type=%s&id=%d',
                     $this->configContainer->getWebPath(),
-                    $_POST['object_type'],
-                    (int) ($_POST['object_id'])
+                    $objectType,
+                    $objectId
                 )
             );
     }

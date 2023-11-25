@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,41 +23,10 @@
  *
  */
 
-namespace Ampache\Module\Database;
+namespace Ampache\Module\Shout;
 
-use Ampache\Module\Database\Exception\DatabaseException;
-use PDOStatement;
+use function DI\autowire;
 
-interface DatabaseConnectionInterface
-{
-    /**
-     * Executes the provided sql query
-     *
-     * If the query fails, a DatabaseException will be thrown
-     *
-     * @param list<mixed> $params
-     *
-     * @throws DatabaseException
-     */
-    public function query(
-        string $sql,
-        array $params = []
-    ): PDOStatement;
-
-    /**
-     * Fetches a single column from the query result
-     *
-     * Useful e.g. for counting-queries
-     *
-     * @param list<mixed> $params
-     */
-    public function fetchOne(
-        string $sql,
-        array $params = []
-    ): mixed;
-
-    /**
-     * Returns the most recent inserted id
-     */
-    public function getLastInsertedId(): int;
-}
+return [
+    ShoutCreatorInterface::class => autowire(ShoutCreator::class),
+];

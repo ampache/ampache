@@ -6196,11 +6196,6 @@ parameters:
 			path: src/Module/Application/Admin/Modules/UninstallLocalplayAction.php
 
 		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\library_item\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Shout/ShowEditAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$current of method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:generate_config\\(\\) expects array, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Admin/System/GenerateConfigAction.php
@@ -15901,11 +15896,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:check_dimensions\\(\\) has parameter \\$dimensions with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
@@ -16036,11 +16026,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Parameter \\#1 \\$dst_image of function imagecopyresampled expects GdImage, GdImage\\|false given\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
@@ -16067,26 +16052,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$image of function imagewebp expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 4
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function feof expects resource, resource\\|false given\\.$#"
-			count: 2
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fread expects resource, resource\\|false given\\.$#"
-			count: 3
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
@@ -18326,16 +18291,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
 			message: "#^Binary operation \"\\.\" between 'Running custom play…' and array\\<int, string\\>\\|string results in an error\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -18407,11 +18362,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:fill_ext_info\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 

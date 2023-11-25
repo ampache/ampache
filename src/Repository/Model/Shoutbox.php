@@ -25,17 +25,14 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\User\Activity\UserActivityPosterInterface;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\Mailer;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
-use PDOStatement;
+use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use PDOStatement;
 
 class Shoutbox
 {
@@ -185,65 +182,6 @@ class Shoutbox
         return $image_string;
     } // get_image
 
-    /**
-     * create
-     * This takes a key'd array of data as input and inserts a new shoutbox entry, it returns the auto_inc id
-     * @param array $data
-     * @return string|false
-     * @throws \PHPMailer\PHPMailer\Exception
-     */
-    public static function create(array $data)
-    {
-        if (!InterfaceImplementationChecker::is_library_item($data['object_type'])) {
-            return false;
-        }
-
-        $sticky  = isset($data['sticky']) ? 1 : 0;
-        $user    = (int)($data['user'] ?? Core::get_global('user')->id);
-        $date    = (int)($data['date'] ?? time());
-        $comment = strip_tags($data['comment']);
-
-        $sql = "INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data'] ?? 0));
-
-        static::getUserActivityPoster()->post((int) $user, 'shout', $data['object_type'], (int) $data['object_id'], time());
-
-        $insert_id = Dba::insert_id();
-
-        // Never send email in case of user impersonation
-        if (!isset($data['user']) && $insert_id !== false) {
-            $className = ObjectTypeToClassNameMapper::map($data['object_type']);
-            /** @var class-string<library_item> $className */
-            $libitem       = new $className($data['object_id']);
-            $item_owner_id = $libitem->get_user_owner();
-            if ($item_owner_id) {
-                if (Preference::get_by_user($item_owner_id, 'notify_email')) {
-                    $item_owner = new User($item_owner_id);
-                    if (!empty($item_owner->email) && Mailer::is_mail_enabled()) {
-                        if (method_exists($libitem, 'format')) {
-                            $libitem->format();
-                        }
-                        $mailer = new Mailer();
-                        $mailer->set_default_sender();
-                        $mailer->recipient      = $item_owner->email;
-                        $mailer->recipient_name = $item_owner->fullname;
-                        $mailer->subject        = T_('New shout on your content');
-                        /* HINT: %1 username %2 item name being commented on */
-                        $mailer->message = sprintf(T_('You just received a new shout from %1$s on your content %2$s'),
-                            Core::get_global('user')->fullname, $libitem->get_fullname());
-                        $mailer->message .= "\n\n----------------------\n\n";
-                        $mailer->message .= $comment;
-                        $mailer->message .= "\n\n----------------------\n\n";
-                        $mailer->message .= AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $data['object_type'] . "&id=" . $data['object_id'] . "#shout" . $insert_id;
-                        $mailer->send();
-                    }
-                }
-            }
-        }
-
-        return $insert_id;
-    } // create
-
     public function getStickyFormatted(): string
     {
         return $this->sticky == '0' ? 'No' : 'Yes';
@@ -337,15 +275,5 @@ class Shoutbox
         $sql = "UPDATE `user_shout` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserActivityPoster(): UserActivityPosterInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityPosterInterface::class);
     }
 }
