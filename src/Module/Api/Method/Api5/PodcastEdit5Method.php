@@ -77,11 +77,11 @@ final class PodcastEdit5Method
         }
 
         $feed        = (array_key_exists('feed', $input) && filter_var($input['feed'], FILTER_VALIDATE_URL)) ? filter_var($input['feed'], FILTER_VALIDATE_URL) : $podcast->feed;
-        $title       = (array_key_exists('title', $input)) ? scrub_in($input['title']) : $podcast->title;
+        $title       = (array_key_exists('title', $input)) ? scrub_in((string) $input['title']) : $podcast->title;
         $website     = (array_key_exists('website', $input) && filter_var($input['website'], FILTER_VALIDATE_URL)) ? filter_var($input['website'], FILTER_VALIDATE_URL) : $podcast->website;
-        $description = (array_key_exists('description', $input)) ? scrub_in($input['description']) : $podcast->description;
-        $generator   = (array_key_exists('generator', $input)) ? scrub_in($input['generator']) : $podcast->generator;
-        $copyright   = (array_key_exists('copyright', $input)) ? scrub_in($input['copyright']) : $podcast->copyright;
+        $description = (array_key_exists('description', $input)) ? scrub_in((string) $input['description']) : $podcast->description;
+        $generator   = (array_key_exists('generator', $input)) ? scrub_in((string) $input['generator']) : $podcast->generator;
+        $copyright   = (array_key_exists('copyright', $input)) ? scrub_in((string) $input['copyright']) : $podcast->copyright;
         $data        = array(
             'feed' => $feed,
             'title' => $title,

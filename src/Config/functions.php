@@ -62,8 +62,11 @@ function set_memory_limit($new_limit): void
 /**
  * scrub_in
  * Run on inputs, stuff that might get stuck in our db
- * @param string|array $input
- * @return string|array
+ *
+ * @template TType of string|array
+ *
+ * @param TType $input
+ * @return TType
  */
 function scrub_in($input)
 {

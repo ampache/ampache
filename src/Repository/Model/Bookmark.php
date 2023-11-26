@@ -95,10 +95,15 @@ class Bookmark extends database_object
 
     /**
      * getBookmarks
-     * @param array $data
-     * @return int[]
+     * @param array{
+     *  object_type: string,
+     *  object_id: int,
+     *  comment: null|string,
+     *  user: int
+     * } $data
+     * @return list<int>
      */
-    public static function getBookmarks($data)
+    public static function getBookmarks(array $data): array
     {
         $bookmarks = array();
         if ($data['object_type'] !== 'bookmark') {
@@ -119,14 +124,19 @@ class Bookmark extends database_object
 
     /**
      * create
-     * @param array $data
+     * @param array{
+     *  comment: null|string,
+     *  object_type: string,
+     *  object_id: int,
+     *  position: int
+     * } $data
      * @param int $userId
      * @param int $updateDate
      * @return PDOStatement|bool
      */
     public static function create(array $data, int $userId, int $updateDate)
     {
-        $comment = scrub_in($data['comment']);
+        $comment = scrub_in((string) $data['comment']);
         if (AmpConfig::get('bookmark_latest', false)) {
             // delete duplicates first
             $sql = "DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?;";
@@ -142,7 +152,10 @@ class Bookmark extends database_object
     /**
      * edit
      * @param int $bookmarkId
-     * @param array $data
+     * @param array{
+     *  position: int,
+     *  comment: null|string
+     * } $data
      * @param int $updateDate
      * @return PDOStatement|bool
      */
@@ -150,7 +163,7 @@ class Bookmark extends database_object
     {
         $sql = "UPDATE `bookmark` SET `position` = ?, `comment` = ?, `update_date` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($data['position'], scrub_in($data['comment']), $updateDate, $bookmarkId));
+        return Dba::write($sql, array($data['position'], scrub_in((string) $data['comment']), $updateDate, $bookmarkId));
     }
 
     /**

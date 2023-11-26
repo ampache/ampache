@@ -60,8 +60,8 @@ final class BookmarkEdit5Method
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $position  = filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT) ?? 0;
-        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : 'AmpacheAPI';
+        $position  = (int) filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT) ?? 0;
+        $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : 'AmpacheAPI';
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);

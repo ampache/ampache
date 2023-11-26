@@ -58,7 +58,7 @@ final class ConfirmUninstallCatalogType implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $type = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url  = sprintf(
             '%s/admin/modules.php?action=uninstall_catalog_type&amp;type=%s',
             $this->configContainer->getWebPath(),

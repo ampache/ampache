@@ -76,12 +76,12 @@ final class DefaultAction implements ApplicationActionInterface
         $htaccess_rest_file = __DIR__ . '/../../../../public/rest/.htaccess';
 
         // Clean up incoming variables
-        $web_path   = scrub_in($_REQUEST['web_path'] ?? '');
-        $username   = (string) scrub_in($_REQUEST['local_username'] ?? '');
+        $web_path   = scrub_in((string) ($_REQUEST['web_path'] ?? ''));
+        $username   = scrub_in((string) ($_REQUEST['local_username'] ?? ''));
         $password   = $_REQUEST['local_pass'] ?? null;
-        $hostname   = scrub_in($_REQUEST['local_host'] ?? '');
-        $database   = scrub_in($_REQUEST['local_db'] ?? '');
-        $port       = scrub_in($_REQUEST['local_port'] ?? '');
+        $hostname   = scrub_in((string) ($_REQUEST['local_host'] ?? ''));
+        $database   = scrub_in((string) ($_REQUEST['local_db'] ?? ''));
+        $port       = scrub_in((string) ($_REQUEST['local_port'] ?? ''));
         $skip_admin = isset($_REQUEST['skip_admin']);
 
         AmpConfig::set_by_array(array(

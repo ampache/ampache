@@ -53,7 +53,7 @@ final class UpdatePodcast4Method
         if (!Api4::check_access('interface', 50, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
-        $object_id = (int) scrub_in($input['filter']);
+        $object_id = (int) scrub_in((string) $input['filter']);
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             if ($podcast->sync_episodes(true)) {

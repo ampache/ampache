@@ -820,9 +820,8 @@ class Playlist extends playlist_object
     /**
      * delete_track_number
      * this deletes a single track by it's track #, you specify the playlist_data.track here
-     * @param int $track
      */
-    public function delete_track_number($track): bool
+    public function delete_track_number(int $track): bool
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $track));
