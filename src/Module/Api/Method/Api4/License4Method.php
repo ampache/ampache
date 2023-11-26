@@ -57,7 +57,7 @@ final class License4Method
             return false;
         }
         unset($user);
-        $results = array((int) scrub_in($input['filter']));
+        $results = array((int) scrub_in((string) $input['filter']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

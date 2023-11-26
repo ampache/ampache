@@ -59,7 +59,7 @@ final class UninstallLocalplayAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $type =  scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $localplay = new LocalPlay($type);
         $localplay->uninstall();

@@ -68,7 +68,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
-            $_GET[$key] = unhtmlentities((string) scrub_in($data));
+            $_GET[$key] = unhtmlentities(scrub_in((string) $data));
 
             $this->logger->debug(
                 sprintf('%d=%s', $key, Core::get_get($key)),

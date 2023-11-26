@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 /**
  * Class LastShouts4Method
@@ -61,14 +62,15 @@ final class LastShouts4Method
         unset($user);
         $limit = (int)($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
+            $limit = (int) AmpConfig::get('popular_threshold', 10);
         }
-        $username = $input['username'];
-        if (!empty($username)) {
-            $results = Shoutbox::get_top($limit, $username);
+        if (!empty($input['username'])) {
+            $username = $input['username'];
         } else {
-            $results = Shoutbox::get_top($limit);
+            $username = null;
         }
+
+        $results = static::getShoutRepository()->getTop($limit, $username);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -81,4 +83,14 @@ final class LastShouts4Method
 
         return true;
     } // last_shouts
+
+    /**
+     * @todo inject by constructor
+     */
+    private static function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
+    }
 }

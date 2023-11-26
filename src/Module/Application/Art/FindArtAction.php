@@ -139,7 +139,7 @@ final class FindArtAction extends AbstractArtAction
 
         if (!empty($_REQUEST['cover'])) {
             $path_info            = pathinfo($_REQUEST['cover']);
-            $cover_url[0]['url']  = scrub_in($_REQUEST['cover']);
+            $cover_url[0]['url']  = scrub_in((string) $_REQUEST['cover']);
             $cover_url[0]['mime'] = 'image/' . $path_info['extension'];
         }
         $images = array_merge($cover_url, $images);

@@ -41,7 +41,7 @@ final class Artist3Method
      */
     public static function artist(array $input, User $user): void
     {
-        $uid     = scrub_in($input['filter']);
+        $uid     = scrub_in((string) $input['filter']);
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);

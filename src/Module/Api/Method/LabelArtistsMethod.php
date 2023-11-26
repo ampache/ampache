@@ -64,7 +64,7 @@ final class LabelArtistsMethod
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
-        $label   = new Label((int) scrub_in($input['filter']));
+        $label   = new Label((int) scrub_in((string) $input['filter']));
         $results = $label->get_artists();
         if (empty($results)) {
             Api::empty('artist', $input['api_format']);

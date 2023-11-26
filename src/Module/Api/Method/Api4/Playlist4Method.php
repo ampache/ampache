@@ -52,7 +52,7 @@ final class Playlist4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $list_id = scrub_in($input['filter']);
+        $list_id = scrub_in((string) $input['filter']);
 
         if (str_replace('smart_', '', $list_id) === $list_id) {
             // Playlists

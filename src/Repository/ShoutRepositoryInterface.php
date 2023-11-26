@@ -26,6 +26,7 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
+use Generator;
 use Traversable;
 
 interface ShoutRepositoryInterface
@@ -69,4 +70,12 @@ interface ShoutRepositoryInterface
         string $objectType,
         int $offset
     ): int;
+
+    /**
+     * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
+     * number of objects shown
+     *
+     * @return Traversable<Shoutbox>
+     */
+    public function getTop(int $limit, ?string $username = null): Traversable;
 }

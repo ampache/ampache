@@ -48,7 +48,7 @@ final class Video4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $video_id = scrub_in($input['filter']);
+        $video_id = scrub_in((string) $input['filter']);
 
         switch ($input['api_format']) {
             case 'json':

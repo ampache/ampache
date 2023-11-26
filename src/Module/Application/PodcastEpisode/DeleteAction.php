@@ -55,14 +55,14 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $episode_id = (string) scrub_in($_REQUEST['podcast_episode_id']);
+        $episode_id = (int) ($request->getQueryParams()['podcast_episode_id'] ?? 0);
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Podcast Episode will be deleted'),
             sprintf(
-                '%s/podcast_episode.php?action=confirm_delete&podcast_episode_id=%s',
+                '%s/podcast_episode.php?action=confirm_delete&podcast_episode_id=%d',
                 $this->configContainer->getWebPath(),
                 $episode_id
             ),

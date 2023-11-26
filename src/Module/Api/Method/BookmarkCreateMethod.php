@@ -63,7 +63,7 @@ final class BookmarkCreateMethod
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = $input['position'];
-        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : null;
+        $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         $include   = (bool)($input['include'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {

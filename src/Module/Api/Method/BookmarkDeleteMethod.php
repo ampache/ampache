@@ -58,7 +58,7 @@ final class BookmarkDeleteMethod
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : null;
+        $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 

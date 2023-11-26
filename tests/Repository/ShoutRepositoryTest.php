@@ -250,4 +250,63 @@ class ShoutRepositoryTest extends TestCase
             )
         );
     }
+
+    public function testGetTopReturnsData(): void
+    {
+        $limit    = 1;
+        $userName = 'some-username';
+        $shoutId1 = 666;
+        $shoutId2 = 42;
+
+        $shout1 = $this->createMock(Shoutbox::class);
+        $shout2 = $this->createMock(Shoutbox::class);
+
+        $result1 = $this->createMock(PDOStatement::class);
+        $result2 = $this->createMock(PDOStatement::class);
+
+        $this->modelFactory->expects(static::exactly(2))
+            ->method('createShoutbox')
+            ->with(...self::withConsecutive([$shoutId1], [$shoutId2]))
+            ->willReturn($shout1, $shout2);
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    ['SELECT id FROM `user_shout` WHERE `sticky` = 1 ORDER BY `date` DESC', []],
+                    [
+                        <<<SQL
+                        SELECT
+                            `user_shout`.`id` AS `id`
+                        FROM
+                            `user_shout`
+                        LEFT JOIN
+                            `user`
+                        ON
+                            `user`.`id` = `user_shout`.`user`
+                        WHERE
+                            `user_shout`.`sticky` = 0 AND `user`.`username` = ?
+                        ORDER BY
+                            `user_shout`.`date` DESC
+                        LIMIT 0
+                        SQL,
+                        [$userName]
+                    ]
+                )
+            )
+            ->willReturn($result1, $result2);
+
+        $result1->expects(static::once())
+            ->method('fetchColumn')
+            ->willReturn((string) $shoutId1);
+
+        $result2->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $shoutId2, false);
+
+        static::assertSame(
+            [$shout1, $shout2],
+            iterator_to_array($this->subject->getTop($limit, $userName))
+        );
+    }
 }

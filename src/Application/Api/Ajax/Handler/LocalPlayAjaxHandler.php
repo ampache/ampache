@@ -96,13 +96,13 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                     case 'stop':
                     case 'play':
                     case 'pause':
-                        $command = scrub_in($_REQUEST['command']);
+                        $command = scrub_in((string) $_REQUEST['command']);
                         $localplay->$command();
                         break;
                     case 'volume_up':
                     case 'volume_down':
                     case 'volume_mute':
-                        $command = scrub_in($_REQUEST['command']);
+                        $command = scrub_in((string) $_REQUEST['command']);
                         $localplay->$command();
 
                         // We actually want to refresh something here

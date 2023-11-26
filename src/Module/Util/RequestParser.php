@@ -34,11 +34,12 @@ final class RequestParser implements RequestParserInterface
      */
     public function getFromRequest(string $variable): string
     {
-        if (!array_key_exists($variable, $_REQUEST)) {
+        $variable = (string) ($_REQUEST[$variable] ?? '');
+        if ($variable === '') {
             return '';
         }
 
-        return scrub_in($_REQUEST[$variable]);
+        return scrub_in($variable);
     }
 
     /**

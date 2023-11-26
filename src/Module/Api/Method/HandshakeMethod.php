@@ -147,7 +147,7 @@ final class HandshakeMethod
                 $data['apikey']   = (string)$client->apikey;
                 $data['value']    = $data_version;
                 if (isset($input['client'])) {
-                    $data['agent'] = scrub_in($input['client']);
+                    $data['agent'] = scrub_in((string) $input['client']);
                 }
                 if (isset($input['geo_latitude'])) {
                     $data['geo_latitude'] = $input['geo_latitude'];

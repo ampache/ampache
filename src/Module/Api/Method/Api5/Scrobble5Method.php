@@ -68,7 +68,7 @@ final class Scrobble5Method
         $song_mbid   = html_entity_decode(scrub_out($input['song_mbid'] ?? $input['songmbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $artist_mbid = html_entity_decode(scrub_out($input['artist_mbid'] ?? $input['artistmbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $album_mbid  = html_entity_decode(scrub_out($input['album_mbid'] ?? $input['albummbid'] ?? ''), ENT_QUOTES, $charset); //optional
-        $date        = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
+        $date        = (array_key_exists('date', $input) && is_numeric(scrub_in((string) $input['date']))) ? (int) scrub_in((string) $input['date']) : time(); //optional
         $user_id     = $user->id;
         $valid       = in_array($user->id, static::getUserRepository()->getValid());
 
@@ -89,7 +89,7 @@ final class Scrobble5Method
         }
 
         // validate client string or fall back to 'api'
-        $agent       = (string)(scrub_in($input['client']) ?? 'api');
+        $agent       = scrub_in((string) ($input['client']) ?? 'api');
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
 
         if ($scrobble_id === '') {

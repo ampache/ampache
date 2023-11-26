@@ -32,6 +32,7 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 /**
  * Class LastShouts5Method
@@ -62,12 +63,14 @@ final class LastShouts5Method
         unset($user);
         $limit = (int)($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
+            $limit = (int) AmpConfig::get('popular_threshold', 10);
         }
-        $username = $input['username'];
-        $results  = (!empty($username))
-            ? Shoutbox::get_top($limit, $username)
-            : Shoutbox::get_top($limit);
+
+        $username = (!empty($input['username']))
+            ? $input['username']
+            : null;
+
+        $results = static::getShoutRepository()->getTop($limit, $username);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -79,5 +82,15 @@ final class LastShouts5Method
         }
 
         return true;
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private static function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
     }
 }

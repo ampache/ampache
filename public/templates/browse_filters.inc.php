@@ -38,7 +38,7 @@ if (!Core::is_session_started()) {
 $browse_type     = $browse->get_type();
 $browse_filters  = Browse::get_allowed_filters($browse_type);
 $allowed_filters = array('starts_with', 'minimum_count', 'rated', 'unplayed', 'playlist_type', 'object_type', 'catalog', 'show_art');
-if (!empty($browse_filters) && in_array($browse_filters, $allowed_filters)) { ?>
+if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_filters))) { ?>
 <li>
     <h4><?php echo T_('Filters'); ?></h4>
     <div class="sb3">

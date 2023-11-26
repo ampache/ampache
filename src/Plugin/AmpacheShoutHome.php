@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 class AmpacheShoutHome implements AmpachePluginInterface
 {
@@ -90,12 +91,11 @@ class AmpacheShoutHome implements AmpachePluginInterface
     {
         if (AmpConfig::get('sociable')) {
             echo "<div id='shout_objects'>\n";
-            $ids    = Shoutbox::get_top($this->maxitems);
-            $shouts = array();
-            foreach ($ids as $shout_id) {
-                $shouts[] = new Shoutbox($shout_id);
-            }
-            if (count($shouts)) {
+            $shouts = iterator_to_array(
+                self::getShoutRepository()->getTop((int) $this->maxitems)
+            );
+
+            if (count($shouts) > 0) {
                 require_once Ui::find_template('show_shoutbox.inc.php');
             }
             echo "</div>\n";
@@ -118,5 +118,15 @@ class AmpacheShoutHome implements AmpachePluginInterface
         }
 
         return true;
+    }
+
+    /**
+     * @todo find a better solution...
+     */
+    private function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
     }
 }

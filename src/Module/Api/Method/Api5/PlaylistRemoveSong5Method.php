@@ -66,7 +66,7 @@ final class PlaylistRemoveSong5Method
                 $playlist->delete_all();
                 Api5::message('all songs removed from playlist', $input['api_format']);
             } elseif (array_key_exists('song', $input)) {
-                $track = (int) scrub_in($input['song']);
+                $track = (int) scrub_in((string) $input['song']);
                 if (!$playlist->has_item($track)) {
                     Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
 
@@ -76,7 +76,7 @@ final class PlaylistRemoveSong5Method
                 $playlist->regenerate_track_numbers();
                 Api5::message('song removed from playlist', $input['api_format']);
             } elseif (array_key_exists('track', $input)) {
-                $track = (int) scrub_in($input['track']);
+                $track = (int) scrub_in((string) $input['track']);
                 if (!$playlist->has_item(null, $track)) {
                     Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'track', $input['api_format']);
 

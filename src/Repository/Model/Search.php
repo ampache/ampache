@@ -1602,9 +1602,10 @@ class Search extends playlist_object
      */
     public function set_rules($data)
     {
-        $data              = self::_filter_request($data);
-        $this->rules       = array();
-        $user_rules        = array();
+        $data        = self::_filter_request($data);
+        $this->rules = array();
+        $user_rules  = array();
+        $this->name  = (isset($data['playlist_name'])) ? (string)$data['playlist_name'] : '';
         // check that a limit or random flag and operator have been sent
         $this->random         = (isset($data['random'])) ? (int)$data['random'] : $this->random;
         $this->limit          = (isset($data['limit'])) ? (int) $data['limit'] : $this->limit;
@@ -1647,7 +1648,7 @@ class Search extends playlist_object
     {
         $user = Core::get_global('user');
         // Make sure we have a unique name
-        if (!isset($this->name)) {
+        if (empty($this->name)) {
             $this->name = $user->username . ' - ' . get_datetime(time());
         }
         $sql        = "SELECT `id` FROM `search` WHERE `name` = ? AND `user` = ? AND `type` = ?;";

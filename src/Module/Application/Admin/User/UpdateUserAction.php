@@ -76,16 +76,16 @@ final class UpdateUserAction extends AbstractUserAction
 
         /* Clean up the variables */
         $user_id              = (int) filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
-        $username             = (string) scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $fullname             = (string) scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $email                = (string) scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website              = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $access               = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $catalog_filter_group = (int) scrub_in(filter_input(INPUT_POST, 'catalog_filter_group', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $username             = scrub_in((string) filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $fullname             = scrub_in((string) filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+        $website              = scrub_in((string) filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $access               = scrub_in((string) filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $catalog_filter_group = (int) scrub_in((string) filter_input(INPUT_POST, 'catalog_filter_group', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $pass1                = Core::get_post('password_1');
         $pass2                = Core::get_post('password_2');
-        $state                = scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $city                 = scrub_in(filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $state                = scrub_in((string) filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $city                 = scrub_in((string) filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $fullname_public      = isset($_POST['fullname_public']);
 
         /* Setup the temp user */

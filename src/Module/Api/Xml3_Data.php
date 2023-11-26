@@ -41,6 +41,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
+use Traversable;
 
 /**
  * Xml_Data Class
@@ -607,15 +608,15 @@ class Xml3_Data
      *
      * This handles creating an xml document for a shout list
      *
-     * @param int[] $shouts    Shout identifier list
+     * @param Traversable<Shoutbox> $shouts Shout identifier list
      */
-    public static function shouts($shouts): string
+    public static function shouts(Traversable $shouts): string
     {
         $string = "<shouts>\n";
-        foreach ($shouts as $shout_id) {
-            $shout = new Shoutbox($shout_id);
+        /** @var Shoutbox $shout */
+        foreach ($shouts as $shout) {
             $user  = new User($shout->user);
-            $string .= "\t<shout id=\"" . $shout_id . "\">\n\t\t<date>" . $shout->date . "</date>\n\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
+            $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->date . "</date>\n\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
             if ($user->id) {
                 $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }

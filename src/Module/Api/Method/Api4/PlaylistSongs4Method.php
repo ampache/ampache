@@ -54,7 +54,7 @@ final class PlaylistSongs4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid = scrub_in($input['filter']);
+        $uid = scrub_in((string) $input['filter']);
         debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists

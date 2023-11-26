@@ -57,7 +57,7 @@ final class BookmarkDelete5Method
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : 'AmpacheAPI';
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
