@@ -6,11 +6,6 @@ parameters:
 			path: src/Application/Api/Ajax/AjaxApplication.php
 
 		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, array\\|string given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/BrowseAjaxHandler.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with int will always evaluate to false\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
@@ -362,16 +357,6 @@ parameters:
 
 		-
 			message: "#^Function print_bool\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function scrub_in\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function scrub_in\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
@@ -812,11 +797,6 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/EditObjectAction.php
 
@@ -1671,11 +1651,6 @@ parameters:
 			path: src/Module/Api/Method/Api3/PlaylistRemoveSong3Method.php
 
 		-
-			message: "#^Parameter \\#1 \\$track of method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:delete_track_number\\(\\) expects int, array\\|string given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/PlaylistRemoveSong3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistSongs3Method\\:\\:playlist_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/PlaylistSongs3Method.php
@@ -2116,11 +2091,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/PodcastEdit4Method.php
 
 		-
-			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) expects array\\{feed\\?\\: string, title\\?\\: string, website\\?\\: string, description\\?\\: string, language\\?\\: string, generator\\?\\: string, copyright\\?\\: string\\}, array\\{feed\\: string\\|null, title\\: array\\|string\\|null, website\\: string\\|null, description\\: array\\|string\\|null, generator\\: array\\|string\\|null, copyright\\: array\\|string\\|null\\} given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/PodcastEdit4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\PodcastEpisode4Method\\:\\:podcast_episode\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/PodcastEpisode4Method.php
@@ -2159,11 +2129,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Rate4Method\\:\\:rate\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Rate4Method.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/RecordPlay4Method.php
 
 		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
@@ -2906,11 +2871,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/PodcastEdit5Method.php
 
 		-
-			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) expects array\\{feed\\?\\: string, title\\?\\: string, website\\?\\: string, description\\?\\: string, language\\?\\: string, generator\\?\\: string, copyright\\?\\: string\\}, array\\{feed\\: string\\|null, title\\: array\\|string\\|null, website\\: string\\|null, description\\: array\\|string\\|null, generator\\: array\\|string\\|null, copyright\\: array\\|string\\|null\\} given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/PodcastEdit5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\PodcastEpisode5Method\\:\\:podcast_episode\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/PodcastEpisode5Method.php
@@ -2966,11 +2926,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/Rate5Method.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/RecordPlay5Method.php
-
-		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/RecordPlay5Method.php
@@ -2979,11 +2934,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\RecordPlay5Method\\:\\:record_play\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/RecordPlay5Method.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Scrobble5Method.php
 
 		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
@@ -3436,11 +3386,6 @@ parameters:
 			path: src/Module/Api/Method/BookmarkMethod.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/BookmarksMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\BookmarksMethod\\:\\:bookmarks\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/BookmarksMethod.php
@@ -3851,11 +3796,6 @@ parameters:
 			path: src/Module/Api/Method/PodcastEditMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:update\\(\\) expects array\\{feed\\?\\: string, title\\?\\: string, website\\?\\: string, description\\?\\: string, language\\?\\: string, generator\\?\\: string, copyright\\?\\: string\\}, array\\{feed\\: string\\|null, title\\: array\\|string\\|null, website\\: string\\|null, description\\: array\\|string\\|null, generator\\: array\\|string\\|null, copyright\\: array\\|string\\|null\\} given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastEditMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastEpisodeDeleteMethod\\:\\:podcast_episode_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PodcastEpisodeDeleteMethod.php
@@ -3916,11 +3856,6 @@ parameters:
 			path: src/Module/Api/Method/RateMethod.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/RecordPlayMethod.php
-
-		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Module/Api/Method/RecordPlayMethod.php
@@ -3934,11 +3869,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\RegisterMethod\\:\\:register\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/RegisterMethod.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ScrobbleMethod.php
 
 		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
@@ -4802,21 +4732,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$source of method DOMDocument\\:\\:loadXML\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function rawurlencode expects string, array\\|string given\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#2 \\$agent of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_last_play\\(\\) expects string, array\\|string given\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#2 \\$agent of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:shift_last_play\\(\\) expects string, array\\|string given\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -6056,46 +5971,6 @@ parameters:
 			path: src/Module/Application/Admin/Export/ExportAction.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Filter/AddFilterAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Filter/AddFilterAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Filter/ShowAddFilterAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Filter/ShowAddFilterAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Filter/ShowEditAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Filter/ShowEditAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Filter/UpdateFilterAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Filter/UpdateFilterAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$licenseId of method Ampache\\\\Repository\\\\LicenseRepositoryInterface\\:\\:update\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Application/Admin/License/EditAction.php
@@ -6141,61 +6016,6 @@ parameters:
 			path: src/Module/Application/Admin/License/EditAction.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/ConfirmUninstallCatalogType.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/ConfirmUninstallCatalogType.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/ConfirmUninstallLocalplayAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/ConfirmUninstallLocalplayAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/ConfirmUninstallPluginAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/InstallCatalogTypeAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/InstallCatalogTypeAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/UninstallCatalogTypeAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/UninstallCatalogTypeAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/UninstallLocalplayAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Modules/UninstallLocalplayAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$current of method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:generate_config\\(\\) expects array, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Admin/System/GenerateConfigAction.php
@@ -6206,32 +6026,7 @@ parameters:
 			path: src/Module/Application/Admin/System/GenerateConfigAction.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 6
-			path: src/Module/Application/Admin/User/AddUserAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 7
-			path: src/Module/Application/Admin/User/AddUserAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 3
-			path: src/Module/Application/Admin/User/UpdateUserAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 8
-			path: src/Module/Application/Admin/User/UpdateUserAction.php
-
-		-
 			message: "#^Binary operation \"\\+\" between non\\-falsy\\-string and 1 results in an error\\.$#"
-			count: 1
-			path: src/Module/Application/Album/SetTrackNumbersAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
 			count: 1
 			path: src/Module/Application/Album/SetTrackNumbersAction.php
 
@@ -6336,11 +6131,6 @@ parameters:
 			path: src/Module/Application/Image/ShowAction.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Installation/DefaultAction.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Module/Application/Installation/DefaultAction.php
@@ -6379,16 +6169,6 @@ parameters:
 			message: "#^Variable \\$auth in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: src/Module/Application/Login/DefaultAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$email of method Ampache\\\\Module\\\\User\\\\NewPasswordSenderInterface\\:\\:send\\(\\) expects string, array\\|string given\\.$#"
-			count: 1
-			path: src/Module/Application/LostPassword/SendAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/LostPassword/SendAction.php
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$bitrate\\.$#"
@@ -6456,11 +6236,6 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 17
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 2
 			path: src/Module/Application/Playback/Play2Action.php
@@ -6468,16 +6243,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
 			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, int\\|string given\\.$#"
-			count: 6
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 9
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
@@ -6591,11 +6356,6 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 17
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 2
 			path: src/Module/Application/Playback/PlayAction.php
@@ -6603,16 +6363,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
 			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, int\\|string given\\.$#"
-			count: 6
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 9
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
@@ -6656,29 +6406,9 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 2
-			path: src/Module/Application/Playlist/CreatePlaylistAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of function scrub_in expects array\\|string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Playlist/CreatePlaylistAction.php
-
-		-
 			message: "#^Parameter \\#3 \\$playlist_type of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:import_playlist\\(\\) expects string, string\\|false\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/Playlist/ImportPlaylistAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Playlist/SetTrackNumbersAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/PodcastEpisode/DeleteAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$recipient of method Ampache\\\\Module\\\\User\\\\PrivateMessage\\\\PrivateMessageCreatorInterface\\:\\:create\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
@@ -6691,19 +6421,9 @@ parameters:
 			path: src/Module/Application/PrivateMessage/AddMessageAction.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 6
-			path: src/Module/Application/Register/AddUserAction.php
-
-		-
 			message: "#^Variable \\$captcha in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 2
 			path: src/Module/Application/Register/AddUserAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function trim expects string, array\\|string given\\.$#"
-			count: 2
-			path: src/Module/Application/Register/ValidateAction.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\SearchData\\\\ShowAction\\:\\:arrayToJSON\\(\\) has parameter \\$array with no type specified\\.$#"
@@ -6734,11 +6454,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:set_rules\\(\\) expects array, array\\|object\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/SmartPlaylist/UpdatePlaylistAction.php
-
-		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/Application/Song/DeleteAction.php
 
 		-
 			message: "#^Parameter \\#2 \\$object_type of method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) expects string, string\\|null given\\.$#"
@@ -7167,11 +6882,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\PamAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/PamAuthenticator.php
-
-		-
-			message: "#^Parameter \\#2 \\$password of function pam_auth expects string, array\\|string given\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/PamAuthenticator.php
 
@@ -11441,32 +11151,7 @@ parameters:
 			path: src/Module/System/Core.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:get_cookie\\(\\) should return string but returns array\\|string\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:get_filesize\\(\\) has parameter \\$filename with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:get_get\\(\\) should return string but returns array\\|string\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:get_post\\(\\) should return string but returns array\\|string\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:get_request\\(\\) should return string but returns array\\|string\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:get_server\\(\\) should return string but returns array\\|string\\.$#"
 			count: 1
 			path: src/Module/System/Core.php
 
@@ -11791,11 +11476,6 @@ parameters:
 			path: src/Module/System/LegacyLogger.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Module/System/PreferencesFromRequestUpdater.php
-
-		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Module/System/PreferencesFromRequestUpdater.php
@@ -11827,11 +11507,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:write\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of function session_id expects string\\|null, array\\|string given\\.$#"
 			count: 1
 			path: src/Module/System/Session.php
 
@@ -13989,11 +13664,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$string of function strip_tags expects string, string\\|null given\\.$#"
 			count: 3
 			path: src/Module/Util/Recommendation.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\RequestParser\\:\\:getFromRequest\\(\\) should return string but returns array\\|string\\.$#"
-			count: 1
-			path: src/Module/Util/RequestParser.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Slideshow\\:\\:getCurrentSlideshow\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -16261,26 +15931,6 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Binary operation \"\\.\" between 'AND `comment` \\= \\\\'' and array\\|string results in an error\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:edit\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Bookmark\\:\\:getBookmarks\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Bookmark.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:display_art\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
@@ -16339,16 +15989,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
-
-		-
-			message: "#^Binary operation \"\\.\" between '&argument\\=' and array\\|string results in an error\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
-			message: "#^Binary operation \"\\.\" between array\\|string and ',' results in an error\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:get_supplemental_objects\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -18986,11 +18626,6 @@ parameters:
 			path: src/Repository/Model/TVShow_Season.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:__construct\\(\\) has parameter \\$tag_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
@@ -19357,11 +18992,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:stream_control\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
