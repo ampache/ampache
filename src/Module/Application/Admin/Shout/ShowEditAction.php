@@ -69,7 +69,6 @@ final class ShowEditAction implements ApplicationActionInterface
         if ($client->isNew()) {
             throw new ObjectNotFoundException($shout->user);
         }
-        $client->format();
 
         $this->ui->show(
             'show_edit_shout.inc.php',

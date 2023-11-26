@@ -68,10 +68,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getSenderUserLink(): string
     {
-        $from_user = new User((int) $this->from_user);
-        $from_user->format();
-
-        return (string)$from_user->f_link;
+        return (new User($this->from_user))->get_f_link();
     }
 
     public function getRecipientUserLink(): string
@@ -79,7 +76,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         $to_user = new User((int) $this->to_user);
         $to_user->format();
 
-        return (string)$to_user->f_link;
+        return (string)$to_user->get_f_link();
     }
 
     public function getCreationDate(): int

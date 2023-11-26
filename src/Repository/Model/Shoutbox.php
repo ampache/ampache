@@ -192,11 +192,10 @@ class Shoutbox
 
         if ($this->user > 0) {
             $user = new User($this->user);
-            $user->format();
             if ($details) {
-                $html .= $user->f_link;
+                $html .= $user->get_f_link();
             } else {
-                $html .= $user->username;
+                $html .= $user->getUsername();
             }
         } else {
             $html .= T_('Guest');
