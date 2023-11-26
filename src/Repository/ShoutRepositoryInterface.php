@@ -23,6 +23,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Shoutbox;
+use Generator;
 use Traversable;
 
 interface ShoutRepositoryInterface
@@ -53,4 +54,12 @@ interface ShoutRepositoryInterface
      * @param array{comment: string, sticky: bool} $data
      */
     public function update(Shoutbox $shout, array $data): void;
+
+    /**
+     * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
+     * number of objects shown
+     *
+     * @return Traversable<Shoutbox>
+     */
+    public function getTop(int $limit, ?string $username = null): Traversable;
 }

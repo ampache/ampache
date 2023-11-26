@@ -50,6 +50,7 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Traversable;
 
 /**
  * JSON_Data Class
@@ -1016,13 +1017,13 @@ class Json4_Data
      *
      * This handles creating an JSON document for a shout list
      *
-     * @param int[] $shouts    Shout identifier list
+     * @param Traversable<Shoutbox> $shouts Shout identifier list
      */
-    public static function shouts($shouts): string
+    public static function shouts(Traversable $shouts): string
     {
         $JSON = [];
-        foreach ($shouts as $shout_id) {
-            $shout        = new Shoutbox($shout_id);
+        /** @var Shoutbox $shout */
+        foreach ($shouts as $shout) {
             $user         = new User($shout->user);
             $user_array   = [];
             $user_array[] = array(
@@ -1030,7 +1031,7 @@ class Json4_Data
                 "username" => $user->username
             );
             $objArray = array(
-                "id" => (string) $shout_id,
+                "id" => (string) $shout->getId(),
                 "date" => $shout->date,
                 "text" => $shout->text,
                 "user" => $user_array
