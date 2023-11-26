@@ -312,13 +312,13 @@ class Podcast extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current podcast
      * @param array{
-     *  feed?: string,
-     *  title?: string,
-     *  website?: string,
-     *  description?: string,
-     *  language?: string,
-     *  generator?: string,
-     *  copyright?: string
+     *  feed?: string|null,
+     *  title?: string|null,
+     *  website?: string|null,
+     *  description?: string|null,
+     *  language?: string|null,
+     *  generator?: string|null,
+     *  copyright?: string|null
      * } $data
      * @return int|false
      */

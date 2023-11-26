@@ -1389,7 +1389,7 @@ class Subsonic_Api
         $format        = $input['format'] ?? null; // mp3, flv or raw
         $timeOffset    = $input['timeOffset'] ?? false;
         $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode
-        $client        = scrub_in($input['c'] ?? 'Subsonic');
+        $client        = scrub_in((string) ($input['c'] ?? 'Subsonic'));
 
         $params = '&client=' . rawurlencode($client);
         if ($contentLength == 'true') {
@@ -1438,7 +1438,7 @@ class Subsonic_Api
     public static function download($input, $user): void
     {
         $fileid = self::_check_parameter($input, 'id', true);
-        $client = scrub_in($input['c'] ?? 'Subsonic');
+        $client = scrub_in((string) ($input['c'] ?? 'Subsonic'));
         $params = '&client=' . rawurlencode($client) . '&cache=1';
         $url    = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
@@ -1757,7 +1757,7 @@ class Subsonic_Api
             return;
         }
         $submission = (array_key_exists('submission', $input) && ($input['submission'] === 'true' || $input['submission'] === '1'));
-        $client     = scrub_in($input['c'] ?? 'Subsonic');
+        $client     = scrub_in((string) ($input['c'] ?? 'Subsonic'));
 
         if (!is_array($object_ids)) {
             $rid        = array();
@@ -2751,7 +2751,7 @@ class Subsonic_Api
     public static function getplayqueue($input, $user): void
     {
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplayqueue');
-        $client    = scrub_in($input['c'] ?? 'Subsonic');
+        $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
         $playQueue = new User_Playlist($user->id, $client);
         Subsonic_Xml_Data::addPlayQueue($response, $playQueue, (string)$user->username);
         self::_apiOutput($input, $response);
@@ -2773,7 +2773,7 @@ class Subsonic_Api
             $position = (array_key_exists('position', $input))
                 ? (int)((int)$input['position'] / 1000)
                 : 0;
-            $client         = scrub_in($input['c'] ?? 'Subsonic');
+            $client         = scrub_in((string) ($input['c'] ?? 'Subsonic'));
             $user_id        = $user->id;
             $playqueue_time = (int)(User::get_user_data($user->id, 'playqueue_time')['playqueue_time'] ?? 0);
             $time           = time();

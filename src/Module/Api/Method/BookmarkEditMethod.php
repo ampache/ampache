@@ -62,8 +62,8 @@ final class BookmarkEditMethod
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $position  = filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT) ?? 0;
-        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : null;
+        $position  = (int) filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT) ?? 0;
+        $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         $include   = (bool)($input['include'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {

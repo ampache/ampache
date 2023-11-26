@@ -76,7 +76,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
         $argument = false;
         if (array_key_exists('argument', $_REQUEST)) {
-            $argument = scrub_in($_REQUEST['argument']);
+            $argument = scrub_in((string) $_REQUEST['argument']);
         }
         // hide some of the useless columns in a browse
         if (array_key_exists('hide', $_REQUEST)) {

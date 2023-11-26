@@ -68,7 +68,7 @@ final class EditObjectAction extends AbstractEditAction
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {
             foreach ($data as $key => $value) {
-                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities((string)scrub_in($value));
+                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities((string)scrub_in((string) $value));
             }
 
             return $data;

@@ -42,7 +42,7 @@ final class Playlist3Method
     public static function playlist(array $input, User $user): void
     {
         unset($user);
-        $uid = scrub_in($input['filter']);
+        $uid = scrub_in((string) $input['filter']);
 
         ob_end_clean();
         echo Xml3_Data::playlists(array($uid));

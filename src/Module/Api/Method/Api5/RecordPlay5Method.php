@@ -76,10 +76,10 @@ final class RecordPlay5Method
         }
         ob_end_clean();
         $object_id = (int) $input['id'];
-        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
+        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in((string) $input['date']))) ? (int) scrub_in((string) $input['date']) : time(); //optional
 
         // validate client string or fall back to 'api'
-        $agent = (string)(scrub_in($input['client']) ?? 'api');
+        $agent = scrub_in((string) $input['client']) ?? 'api';
 
         $media = new Song($object_id);
         if (!$media->id) {

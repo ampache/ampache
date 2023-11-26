@@ -59,7 +59,7 @@ final class LicenseSongsMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $results = static::getSongRepository()->getByLicense((int) scrub_in($input['filter']));
+        $results = static::getSongRepository()->getByLicense((int) scrub_in((string) $input['filter']));
         if (empty($results)) {
             Api::empty('song', $input['api_format']);
 

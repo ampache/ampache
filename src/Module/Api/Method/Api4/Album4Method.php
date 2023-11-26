@@ -51,7 +51,7 @@ final class Album4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid     = (int) scrub_in($input['filter']);
+        $uid     = (int) scrub_in((string) $input['filter']);
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);

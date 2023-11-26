@@ -51,7 +51,7 @@ final class Genre4Method
             return false;
         }
         unset($user);
-        $uid = scrub_in($input['filter']);
+        $uid = scrub_in((string) $input['filter']);
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

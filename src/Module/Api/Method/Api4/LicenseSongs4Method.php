@@ -57,7 +57,7 @@ final class LicenseSongs4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $results = static::getSongRepository()->getByLicense((int) scrub_in($input['filter']));
+        $results = static::getSongRepository()->getByLicense((int) scrub_in((string) $input['filter']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

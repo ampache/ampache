@@ -53,41 +53,41 @@ final class DownloadAction extends AbstractStreamAction
         if (array_key_exists('song_id', $_REQUEST)) {
             $mediaIds[] = array(
                 'object_type' => 'song',
-                'object_id' => scrub_in($_REQUEST['song_id'])
+                'object_id' => scrub_in((string) $_REQUEST['song_id'])
             );
         } elseif (array_key_exists('video_id', $_REQUEST)) {
             $mediaIds[] = array(
                 'object_type' => 'video',
-                'object_id' => scrub_in($_REQUEST['video_id'])
+                'object_id' => scrub_in((string) $_REQUEST['video_id'])
             );
         } elseif (array_key_exists('podcast_episode_id', $_REQUEST)) {
             $mediaIds[] = array(
                 'object_type' => 'podcast_episode',
-                'object_id' => scrub_in($_REQUEST['podcast_episode_id'])
+                'object_id' => scrub_in((string) $_REQUEST['podcast_episode_id'])
             );
         } elseif (array_key_exists('share_id', $_REQUEST)) {
             $mediaIds[] = array(
                 'object_type' => 'share',
-                'object_id' => scrub_in($_REQUEST['share_id'])
+                'object_id' => scrub_in((string) $_REQUEST['share_id'])
             );
         }
         // add the missing request parts
         if (array_key_exists('client', $_REQUEST)) {
-            $mediaIds[0]['client'] = scrub_in($_REQUEST['client']);
+            $mediaIds[0]['client'] = scrub_in((string) $_REQUEST['client']);
         }
         if (array_key_exists('player', $_REQUEST)) {
-            $mediaIds[0]['player'] = scrub_in($_REQUEST['player']);
+            $mediaIds[0]['player'] = scrub_in((string) $_REQUEST['player']);
         }
         if (array_key_exists('cache', $_REQUEST)) {
-            $mediaIds[0]['cache'] = scrub_in($_REQUEST['cache']);
+            $mediaIds[0]['cache'] = scrub_in((string) $_REQUEST['cache']);
         }
         if (array_key_exists('format', $_REQUEST)) {
-            $mediaIds[0]['format'] = scrub_in($_REQUEST['format']);
+            $mediaIds[0]['format'] = scrub_in((string) $_REQUEST['format']);
         } else {
             $mediaIds[0]['format'] = 'raw';
         }
         if (array_key_exists('transcode_to', $_REQUEST)) {
-            $mediaIds[0]['transcode_to'] = scrub_in($_REQUEST['transcode_to']);
+            $mediaIds[0]['transcode_to'] = scrub_in((string) $_REQUEST['transcode_to']);
         }
 
         return $this->stream(

@@ -66,7 +66,7 @@ final class SendAction implements ApplicationActionInterface
         $result = false;
         if (isset($_POST['email']) && Core::get_post('email')) {
             /* Get the email address and the current ip*/
-            $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+            $email      = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
             $current_ip = Core::get_user_ip();
             $result     = $this->newPasswordSender->send($email, $current_ip);
         }

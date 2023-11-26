@@ -50,7 +50,7 @@ final class Song4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $song_id = scrub_in($input['filter']);
+        $song_id = scrub_in((string) $input['filter']);
 
         ob_end_clean();
         switch ($input['api_format']) {

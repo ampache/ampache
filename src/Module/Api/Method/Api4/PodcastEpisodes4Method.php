@@ -59,7 +59,7 @@ final class PodcastEpisodes4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $podcast_id = (int) scrub_in($input['filter']);
+        $podcast_id = (int) scrub_in((string) $input['filter']);
         debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
         $podcast = new Podcast($podcast_id);
         $results = $podcast->get_episodes();

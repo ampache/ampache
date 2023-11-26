@@ -42,7 +42,7 @@ final class Video3Method
     public static function video(array $input, User $user): void
     {
         unset($user);
-        $video_id = scrub_in($input['filter']);
+        $video_id = scrub_in((string) $input['filter']);
 
         echo Xml3_Data::videos(array($video_id));
     } // video

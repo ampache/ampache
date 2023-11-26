@@ -134,27 +134,27 @@ final class Play2Action implements ApplicationActionInterface
             $_REQUEST     = $new_request;
             $action       = (string)$new_request['action'] ?? '';
             $stream_name  = (string)$new_request['name'] ?? '';
-            $object_id    = (int)scrub_in($new_request['oid'] ?? 0);
-            $user_id      = (int)scrub_in($new_request['uid'] ?? 0);
-            $session_id   = (string)scrub_in($new_request['ssid'] ?? '');
-            $type         = (string)scrub_in($new_request['type'] ?? '');
-            $client       = (string)scrub_in($new_request['client'] ?? '');
-            $cache        = (string)scrub_in($new_request['cache'] ?? '1');
-            $bitrate      = (int)scrub_in($new_request['bitrate'] ?? 0);
-            $player       = (string)scrub_in($new_request['player'] ?? '');
-            $format       = (string)scrub_in($new_request['format'] ?? '');
+            $object_id    = (int)scrub_in((string) ($new_request['oid'] ?? 0));
+            $user_id      = (int)scrub_in((string) ($new_request['uid'] ?? 0));
+            $session_id   = scrub_in((string) ($new_request['ssid'] ?? ''));
+            $type         = scrub_in((string) ($new_request['type'] ?? ''));
+            $client       = scrub_in((string) ($new_request['client'] ?? ''));
+            $cache        = scrub_in((string) ($new_request['cache'] ?? '1'));
+            $bitrate      = (int)scrub_in((string) ($new_request['bitrate'] ?? 0));
+            $player       = scrub_in((string) ($new_request['player'] ?? ''));
+            $format       = scrub_in((string) ($new_request['format'] ?? ''));
             $original     = ($format == 'raw');
             $transcode_to = (!$original && $format != '')
                 ? $format
-                : (string)scrub_in($new_request['transcode_to'] ?? '');
+                : scrub_in((string) ($new_request['transcode_to'] ?? ''));
 
             // Share id and secret if used
-            $share_id = (int)scrub_in($new_request['share_id'] ?? 0);
-            $secret   = (string)scrub_in($new_request['share_secret'] ?? '');
+            $share_id = (int)scrub_in((string) ($new_request['share_id'] ?? 0));
+            $secret   = scrub_in((string) ($new_request['share_secret'] ?? ''));
 
             // This is specifically for tmp playlist requests
-            $demo_id = (int)scrub_in($new_request['demo_id'] ?? 0);
-            $random  = (int)scrub_in($new_request['random'] ?? 0);
+            $demo_id = (int)scrub_in((string) ($new_request['demo_id'] ?? 0));
+            $random  = (int)scrub_in((string) ($new_request['random'] ?? 0));
 
             // don't put this one here
             $cpaction = null;
@@ -164,21 +164,21 @@ final class Play2Action implements ApplicationActionInterface
             $stream_name  = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
             $object_id    = (int)filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_NUMBER_INT);
             $user_id      = (int)filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_NUMBER_INT);
-            $session_id   = (string)scrub_in(filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
-            $type         = (string)scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
-            $client       = (string)scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
-            $cache        = (string)scrub_in(filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_NUMBER_INT));
+            $session_id   = scrub_in((string) filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
+            $type         = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+            $client       = scrub_in((string) filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
+            $cache        = scrub_in((string) filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_NUMBER_INT));
             $bitrate      = (int)filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_NUMBER_INT);
-            $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
-            $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
+            $player       = scrub_in((string) filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
+            $format       = scrub_in((string) filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
             $original     = ($format == 'raw');
             $transcode_to = (!$original && $format != '')
                 ? $format
-                : (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
+                : scrub_in((string) filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
 
             // Share id and secret if used
             $share_id = (int)filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
-            $secret   = (string)scrub_in(filter_input(INPUT_GET, 'share_secret', FILTER_SANITIZE_SPECIAL_CHARS));
+            $secret   = scrub_in((string) filter_input(INPUT_GET, 'share_secret', FILTER_SANITIZE_SPECIAL_CHARS));
 
             // This is specifically for tmp playlist requests
             $demo_id = (int)filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_NUMBER_INT);
@@ -246,7 +246,7 @@ final class Play2Action implements ApplicationActionInterface
 
         if (AmpConfig::get('transcode_player_customize') && !$original) {
             // Trick to avoid LimitInternalRecursion reconfiguration
-            $vsettings = (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
+            $vsettings = scrub_in((string) filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
             if (!empty($vsettings)) {
                 $vparts  = explode('-', $vsettings);
                 $v_count = count($vparts);
@@ -578,17 +578,17 @@ final class Play2Action implements ApplicationActionInterface
         } // if random
 
         if ($type == 'video') {
-            $media = new Video($object_id);
+            $media = new Video((int) $object_id);
             if (array_key_exists('subtitle', $_REQUEST)) {
                 $subtitle = $media->get_subtitle_file($this->requestParser->getFromRequest('subtitle'));
             }
         } elseif ($type == 'song_preview') {
-            $media = new Song_Preview($object_id);
+            $media = new Song_Preview((int) $object_id);
         } elseif ($type == 'podcast_episode') {
             $media = new Podcast_Episode((int) $object_id);
         } else {
             // default to song
-            $media = new Song($object_id);
+            $media = new Song((int) $object_id);
         }
         $media->format();
 

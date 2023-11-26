@@ -42,7 +42,7 @@ final class Tag3Method
     public static function tag(array $input, User $user): void
     {
         unset($user);
-        $uid = scrub_in($input['filter']);
+        $uid = scrub_in((string) $input['filter']);
         ob_end_clean();
         echo Xml3_Data::tags(array($uid));
     } // tag

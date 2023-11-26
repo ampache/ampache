@@ -64,7 +64,7 @@ class Core
             return '';
         }
 
-        return scrub_in($_REQUEST[$variable]);
+        return scrub_in((string) $_REQUEST[$variable]);
     }
 
     /**
@@ -79,7 +79,7 @@ class Core
             return '';
         }
 
-        return scrub_in($_GET[$variable]);
+        return scrub_in((string) $_GET[$variable]);
     }
 
     /**
@@ -96,7 +96,7 @@ class Core
             return '';
         }
 
-        return scrub_in($_COOKIE[$variable]);
+        return scrub_in((string) $_COOKIE[$variable]);
     }
 
     /**
@@ -111,7 +111,7 @@ class Core
             return '';
         }
 
-        return scrub_in($_SERVER[$variable]);
+        return scrub_in((string) $_SERVER[$variable]);
     }
 
     /**
@@ -126,7 +126,7 @@ class Core
             return '';
         }
 
-        return scrub_in($_POST[$variable]);
+        return scrub_in((string) $_POST[$variable]);
     }
 
     /**

@@ -62,7 +62,7 @@ final class AddFilterAction extends AbstractFilterAction
 
         $this->ui->showHeader();
 
-        $filter_name = (string) scrub_in(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $filter_name = scrub_in((string) filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         if (empty($filter_name)) {
             AmpError::add('name', T_('A filter name is required'));
         }
