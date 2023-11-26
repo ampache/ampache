@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -18,44 +18,29 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Database;
+namespace Ampache\Module\Shout;
 
-use Ampache\Module\Database\Exception\DatabaseException;
-use PDOStatement;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\User;
+use PHPMailer\PHPMailer\Exception;
 
-interface DatabaseConnectionInterface
+interface ShoutCreatorInterface
 {
     /**
-     * Executes the provided sql query
+     * Creates a new shout item
      *
-     * If the query fails, a DatabaseException will be thrown
+     * This will create a new shout item and inform the owning user about the shout (if enabled)
      *
-     * @param list<mixed> $params
-     *
-     * @throws DatabaseException
+     * @throws Exception
      */
-    public function query(
-        string $sql,
-        array $params = []
-    ): PDOStatement;
-
-    /**
-     * Fetches a single column from the query result
-     *
-     * Useful e.g. for counting-queries
-     *
-     * @param list<mixed> $params
-     */
-    public function fetchOne(
-        string $sql,
-        array $params = []
-    ): mixed;
-
-    /**
-     * Returns the most recent inserted id
-     */
-    public function getLastInsertedId(): int;
+    public function create(
+        User $user,
+        library_item $libItem,
+        string $objectType,
+        string $text,
+        bool $isSticky,
+        int $offset
+    ): void;
 }

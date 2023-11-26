@@ -59,6 +59,7 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Module/Artist/service_definition.php',
     require_once __DIR__ . '/../Module/Wanted/service_definition.php',
     require_once __DIR__ . '/../Module/Share/service_definition.php',
+    require_once __DIR__ . '/../Module/Shout/service_definition.php',
 );
 
 return $builder->build();

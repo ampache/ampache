@@ -17931,16 +17931,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
 			message: "#^Binary operation \"\\.\" between 'Running custom play…' and array\\<int, string\\>\\|string results in an error\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php

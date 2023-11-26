@@ -70,4 +70,13 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
     ): mixed {
         return $this->query($sql, $params)->fetchColumn();
     }
+
+    /**
+     * Returns the most recent inserted id
+     */
+    public function getLastInsertedId(): int
+    {
+        // we assume insertion succeed (errors would throw exceptions), so simply cast it
+        return (int) Dba::insert_id();
+    }
 }

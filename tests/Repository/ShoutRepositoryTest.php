@@ -25,8 +25,11 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\User;
+use DateTime;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -191,6 +194,60 @@ class ShoutRepositoryTest extends TestCase
                 'comment' => $comment,
                 'sticky' => true
             ]
+        );
+    }
+
+    public function testCreateCreatesNewShoutItem(): void
+    {
+        $user    = $this->createMock(User::class);
+        $libitem = $this->createMock(library_item::class);
+
+        $date       = new DateTime();
+        $text       = 'some-text';
+        $isSticky   = true;
+        $objectType = 'some-object';
+        $offset     = 666;
+        $insertedId = 42;
+        $userId     = 21;
+        $libitemId  = 33;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $libitem->expects(static::once())
+            ->method('getId')
+            ->willReturn($libitemId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [
+                    $userId,
+                    $date->getTimestamp(),
+                    $text,
+                    (int) $isSticky,
+                    $libitemId,
+                    $objectType,
+                    $offset
+                ]
+            );
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn($insertedId);
+
+        static::assertSame(
+            $insertedId,
+            $this->subject->create(
+                $user,
+                $date,
+                $text,
+                $isSticky,
+                $libitem,
+                $objectType,
+                $offset
+            )
         );
     }
 

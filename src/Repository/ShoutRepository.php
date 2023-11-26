@@ -26,8 +26,11 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\User;
+use DateTimeInterface;
 use Generator;
 use Psr\Log\LoggerInterface;
 
@@ -145,6 +148,34 @@ final class ShoutRepository implements ShoutRepositoryInterface
                 $shout->getId()
             ]
         );
+    }
+
+    /**
+     * Creates a new shout entry and returns the id of the created shout item
+     */
+    public function create(
+        User $user,
+        DateTimeInterface $date,
+        string $text,
+        bool $isSticky,
+        library_item $libItem,
+        string $objectType,
+        int $offset
+    ): int {
+        $this->connection->query(
+            'INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [
+                $user->getId(),
+                $date->getTimestamp(),
+                $text,
+                (int) $isSticky,
+                $libItem->getId(),
+                $objectType,
+                $offset
+            ]
+        );
+
+        return $this->connection->getLastInsertedId();
     }
 
     /**

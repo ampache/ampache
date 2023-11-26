@@ -22,7 +22,10 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\User;
+use DateTimeInterface;
 use Generator;
 use Traversable;
 
@@ -54,6 +57,19 @@ interface ShoutRepositoryInterface
      * @param array{comment: string, sticky: bool} $data
      */
     public function update(Shoutbox $shout, array $data): void;
+
+    /**
+     * Creates a new shout entry and returns the id of the created shout item
+     */
+    public function create(
+        User $user,
+        DateTimeInterface $date,
+        string $text,
+        bool $isSticky,
+        library_item $libItem,
+        string $objectType,
+        int $offset
+    ): int;
 
     /**
      * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
