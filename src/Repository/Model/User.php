@@ -122,9 +122,9 @@ class User extends database_object
      * Constructor
      * This function is the constructor object for the user
      * class, it currently takes a username
-     * @param int $user_id
+     * @param int|null $user_id
      */
-    public function __construct($user_id = 0)
+    public function __construct($user_id = null)
     {
         if (!$user_id) {
             return;

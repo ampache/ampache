@@ -59,10 +59,13 @@ class TvShow extends database_object implements library_item
     /**
      * TV Show
      * Takes the ID of the tv show and pulls the info from the db
-     * @param $show_id
+     * @param int|null $show_id
      */
-    public function __construct($show_id)
+    public function __construct($show_id = null)
     {
+        if (!$show_id) {
+            return;
+        }
         $info = $this->get_info($show_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;

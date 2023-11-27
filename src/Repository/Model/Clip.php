@@ -43,10 +43,13 @@ class Clip extends Video
      * Constructor
      * This pulls the clip information from the database and returns
      * a constructed object
-     * @param $clip_id
+     * @param int|null $clip_id
      */
-    public function __construct($clip_id)
+    public function __construct($clip_id = null)
     {
+        if (!$clip_id) {
+            return;
+        }
         parent::__construct($clip_id);
 
         $info = $this->get_info($clip_id, static::DB_TABLENAME);

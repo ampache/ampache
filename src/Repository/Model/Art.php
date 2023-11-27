@@ -98,12 +98,15 @@ class Art extends database_object
      * Constructor
      * Art constructor, takes the UID of the object and the
      * object type.
-     * @param int $uid
+     * @param int|null $uid
      * @param string $type
      * @param string $kind
      */
-    public function __construct($uid, $type = 'album', $kind = 'default')
+    public function __construct($uid = null, $type = 'album', $kind = 'default')
     {
+        if (!$uid) {
+            return;
+        }
         if (Art::is_valid_type($type)) {
             $this->type = $type;
             $this->uid  = (int)($uid);
@@ -574,7 +577,7 @@ class Art extends database_object
      * @param string $uid
      * @param string $kind
      * @param bool $autocreate
-     * @return false|string
+     * @return string|false
      */
     public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
     {

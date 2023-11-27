@@ -258,7 +258,7 @@ class mpd
      *
      * NOTE: This is called automatically upon object instantiation; you
      * should not need to call this directly.
-     * @return false|string
+     * @return string|false
      */
     public function connect()
     {

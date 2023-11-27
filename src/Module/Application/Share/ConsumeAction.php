@@ -92,7 +92,7 @@ final class ConsumeAction implements ApplicationActionInterface
             }
         } // access_control is enabled
 
-        $share_id = $this->requestParser->getFromRequest('id');
+        $share_id = (int)$this->requestParser->getFromRequest('id');
         $secret   = $this->requestParser->getFromRequest('secret');
 
         $share = new Share($share_id);

@@ -76,10 +76,13 @@ class Label extends database_object implements library_item
 
     /**
      * __construct
-     * @param $label_id
+     * @param int|null $label_id
      */
-    public function __construct($label_id)
+    public function __construct($label_id = null)
     {
+        if (!$label_id) {
+            return;
+        }
         $info = $this->get_info($label_id, static::DB_TABLENAME);
         if (empty($info)) {
             return;
@@ -302,7 +305,7 @@ class Label extends database_object implements library_item
     /**
      * helper
      * @param string $name
-     * @return string|false
+     * @return int|null
      */
     public static function helper(string $name)
     {
@@ -326,12 +329,12 @@ class Label extends database_object implements library_item
     /**
      * create
      * @param array $data
-     * @return string|false
+     * @return int|null
      */
     public static function create(array $data)
     {
         if (static::getLabelRepository()->lookup($data['name']) !== 0) {
-            return false;
+            return null;
         }
 
         $name          = $data['name'];
@@ -349,7 +352,12 @@ class Label extends database_object implements library_item
         $sql = "INSERT INTO `label` (`name`, `mbid`, `category`, `summary`, `address`, `country`, `email`, `website`, `user`, `active`, `creation_date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $mbid, $category, $summary, $address, $country, $email, $website, $user, $active, $creation_date));
 
-        return Dba::insert_id();
+        $label_id = Dba::insert_id();
+        if (!$label_id) {
+            return null;
+        }
+
+        return (int)$label_id;
     }
 
     /**

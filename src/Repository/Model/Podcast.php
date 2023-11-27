@@ -67,11 +67,10 @@ class Podcast extends database_object implements library_item
     /**
      * Podcast
      * Takes the ID of the podcast and pulls the info from the db
-     * @param int $podcast_id
+     * @param int|null $podcast_id
      */
-    public function __construct($podcast_id = 0)
+    public function __construct($podcast_id = null)
     {
-        /* If they failed to pass in an id, just run for it */
         if (!$podcast_id) {
             return;
         }

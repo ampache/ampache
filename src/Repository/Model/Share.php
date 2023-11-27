@@ -68,10 +68,13 @@ class Share extends database_object
 
     /**
      * Constructor
-     * @param $share_id
+     * @param int|null $share_id
      */
-    public function __construct($share_id)
+    public function __construct($share_id = null)
     {
+        if (!$share_id) {
+            return;
+        }
         $info = $this->get_info($share_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;

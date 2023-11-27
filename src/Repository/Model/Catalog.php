@@ -2559,7 +2559,9 @@ abstract class Catalog extends database_object
         $album_mbid_group = $results['mb_albumid_group'];
         $release_type     = self::check_length($results['release_type'], 32);
         $release_status   = $results['release_status'];
-        $albumartist      = self::check_length($results['albumartist']) ?? $song->get_album_artist_fullname();
+        $albumartist      = (!empty($results['albumartist']))
+            ? self::check_length($results['albumartist'])
+            : $song->get_album_artist_fullname();
         $albumartist      = $albumartist ?? null;
         $original_year    = $results['original_year'];
         $barcode          = self::check_length($results['barcode'], 64);
@@ -2787,8 +2789,8 @@ abstract class Catalog extends database_object
 
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
                 $label_id = Label::helper($label_name) ?? $labelRepository->lookup($label_name);
-                if ($label_id > 0) {
-                    $label   = new Label($label_id);
+                if ((int)$label_id > 0) {
+                    $label   = new Label((int)$label_id);
                     $artists = $label->get_artists();
                     if (!in_array($song->artist, $artists)) {
                         debug_event(__CLASS__, "$song->artist: adding association to $label->name", 4);
@@ -4040,7 +4042,7 @@ abstract class Catalog extends database_object
      * @param int $catalog_id
      * @param string $path
      * @param string $target
-     * @return false|string
+     * @return string|false
      */
     public static function get_cache_path($object_id, $catalog_id, $path = '', $target = '')
     {

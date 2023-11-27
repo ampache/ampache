@@ -88,7 +88,7 @@ class Search extends playlist_object
 
     /**
      * constructor
-     * @param int $search_id // saved searches have rules already
+     * @param int|null $search_id // saved searches have rules already
      * @param string $object_type // map to self::VALID_TYPES
      * @param User|null $user
      */

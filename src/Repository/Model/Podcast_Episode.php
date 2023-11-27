@@ -93,7 +93,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function __construct($episode_id = null)
     {
-        if ($episode_id === null) {
+        if (!$episode_id) {
             return;
         }
 

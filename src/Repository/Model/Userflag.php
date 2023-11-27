@@ -49,7 +49,7 @@ class Userflag extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
-     * @param int $object_id
+     * @param int|null $object_id
      * @param string $type
      */
     public function __construct($object_id, $type)

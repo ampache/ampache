@@ -91,7 +91,7 @@ class Access
      */
     public function __construct($access_id)
     {
-        if ($access_id === null) {
+        if (!$access_id) {
             return;
         }
         $info = $this->has_info($access_id);

@@ -80,10 +80,13 @@ class Wanted extends database_object
 
     /**
      * Constructor
-     * @param int $wanted_id
+     * @param int|null $wanted_id
      */
-    public function __construct($wanted_id)
+    public function __construct($wanted_id = null)
     {
+        if (!$wanted_id) {
+            return;
+        }
         $info = static::getWantedRepository()->getById((int) $wanted_id);
         foreach ($info as $key => $value) {
             $this->$key = $value;

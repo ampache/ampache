@@ -89,7 +89,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 if ((int)$playlistId < 1) {
                     $ids = Playlist::get_playlists($userId);
                 } else {
-                    $ids = array($playlistId);
+                    $ids = array((int)$playlistId);
                 }
                 $items = array();
                 foreach ($ids as $playlist_id) {

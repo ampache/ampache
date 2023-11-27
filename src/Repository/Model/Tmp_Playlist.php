@@ -53,9 +53,9 @@ class Tmp_Playlist extends database_object
      * This takes a playlist_id as an optional argument and gathers the
      * information.  If no playlist_id is passed or the requested one isn't
      * found, return false.
-     * @param string $playlist_id
+     * @param int|null $playlist_id
      */
-    public function __construct($playlist_id = '')
+    public function __construct($playlist_id = null)
     {
         if (!$playlist_id) {
             return;
@@ -77,7 +77,7 @@ class Tmp_Playlist extends database_object
      * has_info
      * This is an internal (private) function that gathers the information
      * for this object from the playlist_id that was passed in.
-     * @param string $playlist_id
+     * @param int $playlist_id
      */
     private function has_info($playlist_id): bool
     {
@@ -115,7 +115,7 @@ class Tmp_Playlist extends database_object
             ));
         }
 
-        return new Tmp_Playlist($row[0]);
+        return new Tmp_Playlist((int)$row[0]);
     } // get_from_session
 
     /**

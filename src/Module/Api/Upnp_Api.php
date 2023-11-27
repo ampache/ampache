@@ -613,7 +613,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $artist = new Artist($pathreq[1]);
+                        $artist = new Artist((int)$pathreq[1]);
                         if ($artist->id) {
                             $artist->format();
                             $meta = self::_itemArtist($artist, $root . '/artists');
@@ -634,7 +634,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $album = new Album($pathreq[1]);
+                        $album = new Album((int)$pathreq[1]);
                         if (isset($album->id)) {
                             $album->format();
                             $meta = self::_itemAlbum($album, $root . '/albums');
@@ -676,7 +676,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $playlist = new Playlist($pathreq[1]);
+                        $playlist = new Playlist((int)$pathreq[1]);
                         if ($playlist->id) {
                             $playlist->format();
                             $meta = self::_itemPlaylist($playlist, $root . '/playlists');
@@ -697,7 +697,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $playlist = new Search($pathreq[1], 'song');
+                        $playlist = new Search((int)$pathreq[1], 'song');
                         if ($playlist->id) {
                             $playlist->format();
                             $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
@@ -718,7 +718,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $radio = new Live_Stream($pathreq[1]);
+                        $radio = new Live_Stream((int)$pathreq[1]);
                         if ($radio->id) {
                             $radio->format();
                             $meta = self::_itemLiveStream($radio, $root . '/live_streams');
@@ -739,14 +739,14 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $podcast = new Podcast($pathreq[1]);
+                        $podcast = new Podcast((int)$pathreq[1]);
                         if ($podcast->id) {
                             $podcast->format();
                             $meta = self::_itemPodcast($podcast, $root . '/podcasts');
                         }
                         break;
                     case 3:
-                        $episode = new Podcast_Episode($pathreq[2]);
+                        $episode = new Podcast_Episode((int)$pathreq[2]);
                         if (isset($episode->id)) {
                             $episode->format();
                             $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
@@ -824,7 +824,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get artist's albums list
-                        $artist = new Artist($pathreq[1]);
+                        $artist = new Artist((int)$pathreq[1]);
                         if ($artist->id) {
                             $album_ids              = static::getAlbumRepository()->getAlbumByArtist($artist->id);
                             [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
@@ -849,7 +849,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get album's songs list
-                        $album = new Album($pathreq[1]);
+                        $album = new Album((int)$pathreq[1]);
                         if (isset($album->id)) {
                             $song_ids              = static::getSongRepository()->getByAlbum($album->id);
                             [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
@@ -892,7 +892,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get playlist's songs list
-                        $playlist = new Playlist($pathreq[1]);
+                        $playlist = new Playlist((int)$pathreq[1]);
                         if ($playlist->id) {
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
@@ -918,7 +918,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get playlist's songs list
-                        $playlist = new Search($pathreq[1], 'song');
+                        $playlist = new Search((int)$pathreq[1], 'song');
                         if ($playlist->id) {
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
@@ -956,7 +956,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get podcast episodes list
-                        $podcast = new Podcast($pathreq[1]);
+                        $podcast = new Podcast((int)$pathreq[1]);
                         if ($podcast->id) {
                             $episodes              = $podcast->get_episodes();
                             [$maxCount, $episodes] = self::_slice($episodes, $start, $count);
@@ -1022,21 +1022,21 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $tvshow = new TvShow($pathreq[1]);
+                        $tvshow = new TvShow((int)$pathreq[1]);
                         if ($tvshow->id) {
                             $tvshow->format();
                             $meta = self::_itemTVShow($tvshow, $root . '/tvshows');
                         }
                         break;
                     case 3:
-                        $season = new TVShow_Season($pathreq[2]);
+                        $season = new TVShow_Season((int)$pathreq[2]);
                         if ($season->id) {
                             $season->format();
                             $meta = self::_itemTVShowSeason($season, $root . '/tvshows/' . $pathreq[1]);
                         }
                         break;
                     case 4:
-                        $video = new TVShow_Episode($pathreq[3]);
+                        $video = new TVShow_Episode((int)$pathreq[3]);
                         if ($video->id) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/tvshows/' . $pathreq[1] . '/' . $pathreq[2]);
@@ -1058,7 +1058,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $video = new Clip($pathreq[1]);
+                        $video = new Clip((int)$pathreq[1]);
                         if ($video->id) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/clips');
@@ -1080,7 +1080,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $video = new Movie($pathreq[1]);
+                        $video = new Movie((int)$pathreq[1]);
                         if ($video->id) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/movies');
@@ -1102,7 +1102,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $video = new Personal_Video($pathreq[1]);
+                        $video = new Personal_Video((int)$pathreq[1]);
                         if ($video->id) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/personal_videos');
@@ -1159,7 +1159,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get season list
-                        $tvshow = new TvShow($pathreq[1]);
+                        $tvshow = new TvShow((int)$pathreq[1]);
                         if ($tvshow->id) {
                             $season_ids                  = $tvshow->get_seasons();
                             [$maxCount, $season_ids]     = self::_slice($season_ids, $start, $count);
@@ -1171,7 +1171,7 @@ class Upnp_Api
                         }
                         break;
                     case 3: // Get episode list
-                        $season = new TVShow_Season($pathreq[2]);
+                        $season = new TVShow_Season((int)$pathreq[2]);
                         if ($season->id) {
                             $episode_ids                  = $season->get_episodes();
                             [$maxCount, $episode_ids]     = self::_slice($episode_ids, $start, $count);

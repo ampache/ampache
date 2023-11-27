@@ -43,10 +43,13 @@ class Movie extends Video
      * Constructor
      * This pulls the movie information from the database and returns
      * a constructed object
-     * @param $movie_id
+     * @param int|null $movie_id
      */
-    public function __construct($movie_id)
+    public function __construct($movie_id = null)
     {
+        if (!$movie_id) {
+            return;
+        }
         parent::__construct($movie_id);
 
         $info = $this->get_info($movie_id, static::DB_TABLENAME);

@@ -16,27 +16,12 @@ parameters:
 			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$browse_id of class Ampache\\\\Repository\\\\Model\\\\Browse constructor expects int\\|null, string given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of class Ampache\\\\Repository\\\\Model\\\\Userflag constructor expects int, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:show\\(\\) expects int, string\\|false\\|null given\\.$#"
 			count: 2
 			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
 
 		-
 			message: "#^Parameter \\#1 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:show\\(\\) expects int, string\\|false\\|null given\\.$#"
-			count: 2
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$rating_id of class Ampache\\\\Repository\\\\Model\\\\Rating constructor expects int, string\\|false\\|null given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
 
@@ -62,16 +47,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$artist_id of class Ampache\\\\Repository\\\\Model\\\\Artist constructor expects int\\|null, string given\\.$#"
-			count: 4
+			count: 3
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
 
 		-
 			message: "#^Parameter \\#1 \\$artist_id of static method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:get_artists_like\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$song_id of static method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:get_songs_like\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
 
@@ -5476,46 +5456,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Parameter \\#1 \\$album_id of class Ampache\\\\Repository\\\\Model\\\\Album constructor expects int, string given\\.$#"
-			count: 2
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$artist_id of class Ampache\\\\Repository\\\\Model\\\\Artist constructor expects int\\|null, string given\\.$#"
-			count: 2
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$episode_id of class Ampache\\\\Repository\\\\Model\\\\Podcast_Episode constructor expects int\\|null, string given\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of class Ampache\\\\Repository\\\\Model\\\\Personal_Video constructor expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of class Ampache\\\\Repository\\\\Model\\\\Playlist constructor expects int, string given\\.$#"
-			count: 2
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$podcast_id of class Ampache\\\\Repository\\\\Model\\\\Podcast constructor expects int, string given\\.$#"
-			count: 2
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$search_id of class Ampache\\\\Repository\\\\Model\\\\Search constructor expects int, string given\\.$#"
-			count: 2
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream_id of class Ampache\\\\Repository\\\\Model\\\\Live_Stream constructor expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -8037,11 +7977,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$to of function rename expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Parameter \\#4 \\$port of class Ampache\\\\Module\\\\Catalog\\\\SubsonicClient constructor expects string, null given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_subsonic.php
 
@@ -10721,11 +10656,6 @@ parameters:
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_id of class Ampache\\\\Repository\\\\Model\\\\Playlist constructor expects int, int\\|string given\\.$#"
-			count: 1
-			path: src/Module/Playlist/PlaylistExporter.php
-
-		-
 			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Playlist/PlaylistExporter.php
@@ -11361,11 +11291,6 @@ parameters:
 			path: src/Module/System/Session.php
 
 		-
-			message: "#^Parameter \\#1 \\$user_id of class Ampache\\\\Repository\\\\Model\\\\User constructor expects int, string given\\.$#"
-			count: 2
-			path: src/Module/System/Session.php
-
-		-
 			message: "#^Parameter \\#2 \\$value of function setcookie expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/System/Session.php
@@ -11424,26 +11349,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\System\\\\Update\\:\\:\\$versions has no type specified\\.$#"
 			count: 1
 			path: src/Module/System/Update.php
-
-		-
-			message: "#^Class Ampache\\\\Module\\\\User\\\\Activity\\\\TypeHandler\\\\AlbumActivityTypeHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/Module/User/Activity/TypeHandler/ActivityTypeHandlerMapper.php
-
-		-
-			message: "#^Class Ampache\\\\Module\\\\User\\\\Activity\\\\TypeHandler\\\\ArtistActivityTypeHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/Module/User/Activity/TypeHandler/ActivityTypeHandlerMapper.php
-
-		-
-			message: "#^Class Ampache\\\\Module\\\\User\\\\Activity\\\\TypeHandler\\\\GenericActivityTypeHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/Module/User/Activity/TypeHandler/ActivityTypeHandlerMapper.php
-
-		-
-			message: "#^Class Ampache\\\\Module\\\\User\\\\Activity\\\\TypeHandler\\\\SongActivityTypeHandler constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/Module/User/Activity/TypeHandler/ActivityTypeHandlerMapper.php
 
 		-
 			message: "#^Parameter \\#1 \\$userId of method Ampache\\\\Repository\\\\UserRepositoryInterface\\:\\:updateApiKey\\(\\) expects string, int given\\.$#"
@@ -13731,51 +13636,6 @@ parameters:
 			path: src/Module/Util/Upload.php
 
 		-
-			message: "#^Offset 'artist_id' does not exist on array\\{user_upload\\: mixed, license\\?\\: string, artist_id\\?\\: int\\|int\\<1, max\\>\\|true\\}\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
-			message: "#^Parameter \\#1 \\$album_id of class Ampache\\\\Repository\\\\Model\\\\Album constructor expects int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true given\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
-			message: "#^Parameter \\#1 \\$artist_id of class Ampache\\\\Repository\\\\Model\\\\Artist constructor expects int\\|null, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true given\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
-			message: "#^Parameter \\#1 \\$file of static method Ampache\\\\Module\\\\Util\\\\Upload\\:\\:rerror\\(\\) expects string\\|null, string\\|true given\\.$#"
-			count: 6
-			path: src/Module/Util/Upload.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
-			message: "#^Parameter \\#1 \\$targetdir of static method Ampache\\\\Module\\\\Util\\\\Upload\\:\\:upload_script\\(\\) expects string, string\\|true given\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
-			message: "#^Parameter \\#2 \\$artist_id of static method Ampache\\\\Module\\\\Util\\\\Upload\\:\\:check_album\\(\\) expects int, int\\|true given\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
-			message: "#^Parameter \\#2 \\$targetfile of static method Ampache\\\\Module\\\\Util\\\\Upload\\:\\:upload_script\\(\\) expects string, string\\|true given\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
-			message: "#^Parameter \\#2 \\$to of function move_uploaded_file expects string, string\\|true given\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\UtilityFactory\\:\\:createVaInfo\\(\\) has parameter \\$gatherTypes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/UtilityFactory.php
@@ -15876,11 +15736,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 2
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Left side of && is always true\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -16351,19 +16206,9 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Variable \\$albumartist on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Variable \\$items in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:__construct\\(\\) has parameter \\$clip_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:_get_artist_id\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -16456,11 +16301,6 @@ parameters:
 			path: src/Repository/Model/DatabaseObject.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:__construct\\(\\) has parameter \\$democratic_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:add_vote\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -16549,11 +16389,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$vote_ids has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:__construct\\(\\) has parameter \\$label_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -16754,46 +16589,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\MetadataField\\:\\:\\$modelClassName has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Metadata/Repository/MetadataField.php
-
-		-
-			message: "#^Parameter \\#1 \\$album_disk_id of class Ampache\\\\Repository\\\\Model\\\\AlbumDisk constructor expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/ModelFactory.php
-
-		-
-			message: "#^Parameter \\#1 \\$album_id of class Ampache\\\\Repository\\\\Model\\\\Album constructor expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/ModelFactory.php
-
-		-
-			message: "#^Parameter \\#1 \\$playlist_id of class Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist constructor expects string, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/ModelFactory.php
-
-		-
-			message: "#^Parameter \\#1 \\$search_id of class Ampache\\\\Repository\\\\Model\\\\Search constructor expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/ModelFactory.php
-
-		-
-			message: "#^Parameter \\#1 \\$uid of class Ampache\\\\Repository\\\\Model\\\\Art constructor expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/ModelFactory.php
-
-		-
-			message: "#^Parameter \\#1 \\$user_id of class Ampache\\\\Repository\\\\Model\\\\User constructor expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/ModelFactory.php
-
-		-
-			message: "#^Parameter \\#1 \\$wanted_id of class Ampache\\\\Repository\\\\Model\\\\Wanted constructor expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/ModelFactory.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:__construct\\(\\) has parameter \\$movie_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -17676,11 +17471,6 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:__construct\\(\\) has parameter \\$share_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:delete_share\\(\\) has parameter \\$share_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Share.php
@@ -18241,11 +18031,6 @@ parameters:
 			path: src/Repository/Model/Song_Preview.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:__construct\\(\\) has parameter \\$episode_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Episode.php
@@ -18309,11 +18094,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$f_tvshow_link has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:__construct\\(\\) has parameter \\$show_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:_get_extra_info\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -18414,11 +18194,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$f_tvshow_link has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:__construct\\(\\) has parameter \\$tag_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
@@ -18579,11 +18354,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$items has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:__construct\\(\\) has parameter \\$show_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:_get_extra_info\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -18884,11 +18654,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\User\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
 			count: 5
 			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:__construct\\(\\) has parameter \\$client with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:add_items\\(\\) has no return type specified\\.$#"

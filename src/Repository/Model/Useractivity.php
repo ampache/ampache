@@ -44,9 +44,9 @@ class Useractivity extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
-     * @param int $useract_id
+     * @param int|null $useract_id
      */
-    public function __construct($useract_id)
+    public function __construct($useract_id = null)
     {
         if (!$useract_id) {
             return;

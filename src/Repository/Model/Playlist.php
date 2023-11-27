@@ -54,10 +54,13 @@ class Playlist extends playlist_object
      * Constructor
      * This takes a playlist_id as an optional argument and gathers the information
      * if not playlist_id is passed returns false (or if it isn't found
-     * @param int $object_id
+     * @param int|null $object_id
      */
-    public function __construct($object_id)
+    public function __construct($object_id = null)
     {
+        if (!$object_id) {
+            return;
+        }
         $info = $this->get_info($object_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;

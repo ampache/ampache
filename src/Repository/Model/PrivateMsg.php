@@ -46,10 +46,13 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
 
     /**
-     * @param int $pm_id
+     * @param int|null $pm_id
      */
-    public function __construct($pm_id)
+    public function __construct($pm_id = null)
     {
+        if (!$pm_id) {
+            return;
+        }
         $info = $this->get_info($pm_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;

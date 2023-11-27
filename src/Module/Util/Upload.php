@@ -53,11 +53,13 @@ class Upload
 
             $rootdir = self::get_root($catalog);
             // check the catalog path is valid
-            if (!$targetdir = self::check_target_dir($rootdir)) {
+            $targetdir = self::check_target_dir($rootdir);
+            if (!$targetdir) {
                 return self::rerror();
             }
             // check the file is valid and doesn't already exist
-            if (!$targetfile = self::check_target_path($targetdir . DIRECTORY_SEPARATOR . $_FILES['upl']['name'])) {
+            $targetfile = self::check_target_path($targetdir . DIRECTORY_SEPARATOR . $_FILES['upl']['name']);
+            if (!$targetfile) {
                 return self::rerror();
             }
             // check that the minimum level of permission is there
@@ -81,7 +83,8 @@ class Upload
                 }
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
-                    if (!$artist_id = self::check_artist(Core::get_request('artist_name'), Core::get_global('user')->id)) {
+                    $artist_id = self::check_artist(Core::get_request('artist_name'), Core::get_global('user')->id);
+                    if (!$artist_id) {
                         return self::rerror($targetfile);
                     }
                     $artist = new Artist($artist_id);
@@ -95,7 +98,8 @@ class Upload
 
                 // Try to create a new album
                 if (Core::get_request('album_name') !== '') {
-                    if (!$album_id = self::check_album(Core::get_request('album_name'), $options['artist_id'])) {
+                    $album_id = self::check_album(Core::get_request('album_name'), ($options['artist_id'] ?? null));
+                    if (!is_int($album_id)) {
                         return self::rerror($targetfile);
                     }
                     $album = new Album($album_id);
@@ -223,7 +227,7 @@ class Upload
      * check_artist
      * @param string $artist_name
      * @param int $user_id
-     * @return bool|int
+     * @return int|null
      */
     public static function check_artist($artist_name, $user_id)
     {
@@ -232,13 +236,13 @@ class Upload
             if (Artist::check($artist_name, '', true) !== null) {
                 debug_event(self::class, 'An artist with the name "' . $artist_name . '" already exists, uploaded song skipped.', 3);
 
-                return false;
+                return null;
             }
             $artist_id = (int)Artist::check($artist_name);
             if ($artist_id === 0) {
                 debug_event(self::class, 'Artist information required, uploaded song skipped.', 3);
 
-                return false;
+                return null;
             }
             $artist = new Artist($artist_id);
             $artist->update_artist_user($user_id); // take ownership of the new artist
@@ -246,14 +250,14 @@ class Upload
             return $artist_id;
         }
 
-        return false;
+        return null;
     } // check_artist
 
     /**
      * check_album
      * @param string $album_name
-     * @param int $artist_id
-     * @return bool|int
+     * @param int|null $artist_id
+     * @return int|false
      */
     public static function check_album($album_name, $artist_id)
     {
@@ -275,7 +279,7 @@ class Upload
     /**
      * check_target_path
      * @param string $targetfile
-     * @return bool|string
+     * @return string|null
      */
     public static function check_target_path($targetfile)
     {
@@ -287,7 +291,7 @@ class Upload
             if (Core::is_readable($targetfile)) {
                 debug_event(self::class, 'File `' . $targetfile . '` already exists.', 1);
 
-                return false;
+                return null;
             }
         }
 
@@ -297,7 +301,7 @@ class Upload
     /**
      * check_target_dir
      * @param string $catalog_dir
-     * @return bool|string
+     * @return string|null
      */
     public static function check_target_dir($catalog_dir)
     {
@@ -310,10 +314,10 @@ class Upload
 
         $targetdir = realpath($targetdir);
         debug_event(self::class, 'Target Directory `' . $targetdir, 4);
-        if (strpos($targetdir, $catalog_dir) === false) {
+        if ($targetdir === false || strpos($targetdir, $catalog_dir) === false) {
             debug_event(self::class, 'Something wrong with final upload path.', 1);
 
-            return false;
+            return null;
         }
 
         return $targetdir;

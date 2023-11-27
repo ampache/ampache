@@ -155,7 +155,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function __construct($video_id = null)
     {
-        if ($video_id === null) {
+        if (!$video_id) {
             return;
         }
 

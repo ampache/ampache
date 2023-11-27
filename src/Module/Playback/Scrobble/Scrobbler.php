@@ -84,7 +84,7 @@ class Scrobbler
      * @param string $url
      * @param string $method
      * @param array $vars
-     * @return false|string
+     * @return string|false
      */
     public function call_url($url, $method = 'GET', $vars = null)
     {

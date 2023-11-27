@@ -45,9 +45,10 @@ class User_Playlist extends database_object
      * This takes a user_id as an optional argument and gathers the
      * information.  If no user_id is passed or the requested one isn't
      * found, return false.
-     * @param int $user_id
+     * @param int|null $user_id
+     * @param string|null $client
      */
-    public function __construct($user_id, $client = null)
+    public function __construct($user_id = null, $client = null)
     {
         if (!$user_id) {
             return;

@@ -109,7 +109,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         case 'browse_set':
                         case 'browse_set_random':
                             $songs   = array();
-                            $browse  = new Browse($this->requestParser->getFromRequest('browse_id'));
+                            $browse  = new Browse((int)$this->requestParser->getFromRequest('browse_id'));
                             $objects = $browse->get_saved();
                             switch ($browse->get_type()) {
                                 case 'album':
@@ -175,7 +175,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 /* Setting ratings */
                 if (User::is_registered()) {
                     ob_start();
-                    $rating = new Rating(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), Core::get_get('rating_type'));
+                    $rating = new Rating((int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), Core::get_get('rating_type'));
                     $rating->set_rating(Core::get_get('rating'));
                     echo Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), Core::get_get('rating_type'));
                     $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . Core::get_get('rating_type');
@@ -191,9 +191,9 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                     ob_start();
                     $flagtype = Core::get_get('userflag_type');
                     $flag_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-                    $userflag = new Userflag($flag_id, $flagtype);
+                    $userflag = new Userflag((int)$flag_id, $flagtype);
                     $userflag->set_flag($_GET['userflag']);
-                    echo Userflag::show($flag_id, $flagtype);
+                    echo Userflag::show((int)$flag_id, $flagtype);
                     $key           = "userflag_" . $flag_id . "_" . $flagtype;
                     $results[$key] = ob_get_contents();
                     ob_end_clean();

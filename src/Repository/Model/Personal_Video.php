@@ -41,10 +41,13 @@ class Personal_Video extends Video
      * Constructor
      * This pulls the personal video information from the database and returns
      * a constructed object
-     * @param int $object_id
+     * @param int|null $object_id
      */
-    public function __construct($object_id)
+    public function __construct($object_id = null)
     {
+        if (!$object_id) {
+            return;
+        }
         parent::__construct($object_id);
 
         $info = $this->get_info($object_id, static::DB_TABLENAME);

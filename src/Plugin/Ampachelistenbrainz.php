@@ -171,7 +171,7 @@ class Ampachelistenbrainz implements AmpachePluginInterface
      * This is a generic poster for HTTP requests
      * @param string $url
      * @param string $content
-     * @return false|string
+     * @return string|false
      */
     private function post_json_url($url, $content)
     {

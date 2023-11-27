@@ -46,10 +46,13 @@ class TVShow_Episode extends Video
      * Constructor
      * This pulls the tv show episode information from the database and returns
      * a constructed object
-     * @param $episode_id
+     * @param int|null $episode_id
      */
-    public function __construct($episode_id)
+    public function __construct($episode_id = null)
     {
+        if (!$episode_id) {
+            return;
+        }
         parent::__construct($episode_id);
 
         $info = $this->get_info($episode_id, static::DB_TABLENAME);

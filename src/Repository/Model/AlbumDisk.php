@@ -104,10 +104,13 @@ class AlbumDisk extends database_object implements library_item
      * to this album from the database it does not
      * pull the album or thumb art by default or
      * get any of the counts.
-     * @param int $album_disk_id
+     * @param int|null $album_disk_id
      */
-    public function __construct($album_disk_id)
+    public function __construct($album_disk_id = null)
     {
+        if (!$album_disk_id) {
+            return;
+        }
         $info = $this->get_info($album_disk_id, static::DB_TABLENAME);
         if (empty($info)) {
             return;

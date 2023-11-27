@@ -40,10 +40,13 @@ class License
      * Constructor
      * This pulls the license information from the database and returns
      * a constructed object
-     * @param int $license_id
+     * @param int|null $license_id
      */
-    public function __construct($license_id)
+    public function __construct($license_id = null)
     {
+        if (!$license_id) {
+            return;
+        }
         $this->has_info($license_id);
     } // Constructor
 

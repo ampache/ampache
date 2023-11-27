@@ -162,7 +162,7 @@ class Waveform
      * Return full path of the Waveform file.
      * @param int $object_id
      * @param string $object_type
-     * @return false|string
+     * @return string|false
      */
     public static function get_filepath($object_id, $object_type)
     {

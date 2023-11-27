@@ -108,7 +108,7 @@ final class Session implements SessionInterface
                 self::create_cookie();
                 self::create($auth);
                 self::check();
-                $GLOBALS['user']           = new User('-1');
+                $GLOBALS['user']           = new User(-1);
                 $GLOBALS['user']->username = $auth['username'];
                 $GLOBALS['user']->fullname = $auth['fullname'];
                 $GLOBALS['user']->access   = (int) ($auth['access']);
@@ -117,7 +117,7 @@ final class Session implements SessionInterface
                 if (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
                     self::createGlobalUser(User::get_from_username($_SESSION['userdata']['username']));
                 } else {
-                    $GLOBALS['user']           = new User('-1');
+                    $GLOBALS['user']           = new User(-1);
                     $GLOBALS['user']->id       = -1;
                     $GLOBALS['user']->username = $auth['username'];
                     $GLOBALS['user']->fullname = $auth['fullname'];

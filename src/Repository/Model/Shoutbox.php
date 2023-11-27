@@ -51,10 +51,13 @@ class Shoutbox
      * Constructor
      * This pulls the shoutbox information from the database and returns
      * a constructed object, uses user_shout table
-     * @param int $shout_id
+     * @param int|null $shout_id
      */
-    public function __construct($shout_id)
+    public function __construct($shout_id = null)
     {
+        if (!$shout_id) {
+            return;
+        }
         $this->has_info($shout_id);
     } // Constructor
 

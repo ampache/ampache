@@ -60,10 +60,13 @@ class Democratic extends Tmp_Playlist
     /**
      * constructor
      * We need a constructor for this class. It does it's own thing now
-     * @param $democratic_id
+     * @param int|null $democratic_id
      */
-    public function __construct($democratic_id)
+    public function __construct($democratic_id = null)
     {
+        if (!$democratic_id) {
+            return;
+        }
         parent::__construct($democratic_id);
 
         $info = $this->get_info($democratic_id, static::DB_TABLENAME);

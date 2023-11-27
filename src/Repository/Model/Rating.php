@@ -62,7 +62,7 @@ class Rating extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the rating for
-     * @param int $rating_id
+     * @param int|null $rating_id
      * @param string $type
      */
     public function __construct($rating_id, $type)

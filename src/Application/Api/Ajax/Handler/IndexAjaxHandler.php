@@ -94,7 +94,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'top_tracks':
-                $artist       = new Artist($this->requestParser->getFromRequest('artist'));
+                $artist       = new Artist((int)$this->requestParser->getFromRequest('artist'));
                 $object_ids   = $this->songRepository->getTopSongsByArtist($artist, (int)AmpConfig::get('popular_threshold', 10));
                 $browse       = new Browse();
                 $hide_columns = array('cel_artist');
@@ -217,7 +217,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 $results['similar_songs'] = ob_get_clean();
                 break;
             case 'similar_now_playing':
-                $media_id = $this->requestParser->getFromRequest('media_id');
+                $media_id = (int)$this->requestParser->getFromRequest('media_id');
                 if (AmpConfig::get('show_similar') && isset($media_id) && array_key_exists('media_artist', $_REQUEST)) {
                     $artists = Recommendation::get_artists_like($this->requestParser->getFromRequest('media_artist'), 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
