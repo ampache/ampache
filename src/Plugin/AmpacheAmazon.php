@@ -187,8 +187,12 @@ class AmpacheAmazon implements AmpachePluginInterface
         set_time_limit(0);
 
         // Create the Search Object
-        $amazon = new AmazonSearch($this->amazon_developer_public_key, $this->amazon_developer_private_api_key,
-            $this->amazon_developer_associate_tag, $this->amazon_base_url);
+        $amazon = new AmazonSearch(
+            $this->amazon_developer_public_key,
+            $this->amazon_developer_private_api_key,
+            $this->amazon_developer_associate_tag,
+            $this->amazon_base_url
+        );
         if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
             $proxyhost = AmpConfig::get('proxy_host');
             $proxyport = AmpConfig::get('proxy_port');
@@ -204,8 +208,10 @@ class AmpacheAmazon implements AmpachePluginInterface
         $max_pages_to_search = max($this->amazon_max_results_pages, $amazon->_default_results_pages);
         // while we have pages to search
         do {
-            $raw_results = $amazon->search(array('artist' => '', 'album' => '', 'keywords' => $options['keyword']),
-                $mediaType);
+            $raw_results = $amazon->search(
+                array('artist' => '', 'album' => '', 'keywords' => $options['keyword']),
+                $mediaType
+            );
             $total = count($raw_results) + count($search_results);
 
             // If we've gotten more then we wanted
@@ -220,8 +226,11 @@ class AmpacheAmazon implements AmpachePluginInterface
 
             $search_results  = array_merge($search_results, $raw_results);
             $pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
-            debug_event('amazon.plugin',
-                "Searched results page " . ($amazon->_currentPage + 1) . '/' . $pages_to_search, 5);
+            debug_event(
+                'amazon.plugin',
+                "Searched results page " . ($amazon->_currentPage + 1) . '/' . $pages_to_search,
+                5
+            );
             $amazon->_currentPage++;
         } while ($amazon->_currentPage < $pages_to_search);
 
@@ -231,8 +240,11 @@ class AmpacheAmazon implements AmpachePluginInterface
         }
 
         /* Log this if we're doin debug */
-        debug_event('amazon.plugin', "Searched using " . $options['keyword'] . ", results: " . count($final_results),
-            5);
+        debug_event(
+            'amazon.plugin',
+            "Searched using " . $options['keyword'] . ", results: " . count($final_results),
+            5
+        );
 
         /* Foreach through what we've found */
         foreach ($final_results as $result) {

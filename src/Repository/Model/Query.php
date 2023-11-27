@@ -2216,8 +2216,13 @@ class Query
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
                         $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('LEFT', '`artist`', 'COALESCE(`album`.`album_artist`, `song`.`artist`)',
-                            '`artist`.`id`', 100);
+                        $this->set_join(
+                            'LEFT',
+                            '`artist`',
+                            'COALESCE(`album`.`album_artist`, `song`.`artist`)',
+                            '`artist`.`id`',
+                            100
+                        );
                         break;
                     case 'album_artist':
                         $sql = "`artist`.`name`";
@@ -2269,8 +2274,13 @@ class Query
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
                         $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('LEFT', '`artist`', 'COALESCE(`album`.`album_artist`, `song`.`artist`)',
-                            '`artist`.`id`', 100);
+                        $this->set_join(
+                            'LEFT',
+                            '`artist`',
+                            'COALESCE(`album`.`album_artist`, `song`.`artist`)',
+                            '`artist`.`id`',
+                            100
+                        );
                         break;
                     case 'album_artist':
                         $sql = "`artist`.`name`";
@@ -2455,13 +2465,23 @@ class Query
                         break;
                     case 'season':
                         $sql = "`tvshow_season`.`season_number`";
-                        $this->set_join('LEFT', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`',
-                            100);
+                        $this->set_join(
+                            'LEFT',
+                            '`tvshow_season`',
+                            '`tvshow_episode`.`season`',
+                            '`tvshow_season`.`id`',
+                            100
+                        );
                         break;
                     case 'tvshow':
                         $sql = "`tvshow`.`name`";
-                        $this->set_join('LEFT', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`',
-                            100);
+                        $this->set_join(
+                            'LEFT',
+                            '`tvshow_season`',
+                            '`tvshow_episode`.`season`',
+                            '`tvshow_season`.`id`',
+                            100
+                        );
                         $this->set_join('LEFT', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
                         break;
                     default:

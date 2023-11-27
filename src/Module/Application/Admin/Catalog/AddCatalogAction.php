@@ -97,7 +97,8 @@ final class AddCatalogAction extends AbstractCatalogAction
             $catalogIds[] = $catalog_id;
             catalog_worker('add_to_catalog', $catalogIds, $_POST);
 
-            $this->ui->showConfirmation(T_('No Problem'),
+            $this->ui->showConfirmation(
+                T_('No Problem'),
                 T_('The Catalog creation process has started'),
                 sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
                 0,

@@ -586,7 +586,8 @@ class mpd
         return $response;
     }
 
-    /**PLMoveTrack
+    /**
+     * PLMoveTrack
      *
      * Moves track number <current_position> to position <new_position> in
      * the playlist. This is used to reorder the songs in the playlist.
@@ -617,7 +618,8 @@ class mpd
         return $response;
     }
 
-    /**PLShuffle
+    /**
+     * PLShuffle
      *
      * Randomly reorders the songs in the playlist.
      * @return bool|string
@@ -631,7 +633,8 @@ class mpd
         return $response;
     }
 
-    /**PLLoad
+    /**
+     * PLLoad
      *
      * Retrieves the playlist from <file>.m3u and loads it into the current
      * playlist.
@@ -647,7 +650,8 @@ class mpd
         return $response;
     }
 
-    /**PLSave
+    /**
+     * PLSave
      *
      * Saves the playlist to <file>.m3u for later retrieval. The file is
      * saved in the MPD playlist directory.
@@ -1088,8 +1092,10 @@ class mpd
             if ($min_version) {
                 $min = self::_computeVersionValue($min_version);
                 if ($mpd < $min) {
-                    $this->_error('compatibility',
-                        "Command '$cmd' is not compatible with this version of MPD, version $min_version required");
+                    $this->_error(
+                        'compatibility',
+                        "Command '$cmd' is not compatible with this version of MPD, version $min_version required"
+                    );
 
                     return false;
                 }
@@ -1099,8 +1105,10 @@ class mpd
                 $max = self::_computeVersionValue($max_version);
 
                 if ($mpd >= $max) {
-                    $this->_error('compatibility',
-                        "Command '$cmd' has been deprecated in this version of MPD.  Last compatible version: $max_version");
+                    $this->_error(
+                        'compatibility',
+                        "Command '$cmd' has been deprecated in this version of MPD.  Last compatible version: $max_version"
+                    );
 
                     return false;
                 }

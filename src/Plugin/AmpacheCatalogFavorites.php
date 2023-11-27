@@ -125,17 +125,27 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
                         echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
-                            echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
-                                'play', T_('Play'), 'play_song_' . $userflag);
+                            echo Ajax::button(
+                                '?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
+                                'play',
+                                T_('Play'),
+                                'play_song_' . $userflag
+                            );
                             if (Stream_Playlist::check_autoplay_next()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&playnext=true',
-                                    'play_next', T_('Play next'),
-                                    'nextplay_song_' . $userflag);
+                                echo Ajax::button(
+                                    '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&playnext=true',
+                                    'play_next',
+                                    T_('Play next'),
+                                    'nextplay_song_' . $userflag
+                                );
                             }
                             if (Stream_Playlist::check_autoplay_append()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
-                                    'play_add', T_('Play last'),
-                                    'addplay_song_' . $userflag);
+                                echo Ajax::button(
+                                    '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
+                                    'play_add',
+                                    T_('Play last'),
+                                    'addplay_song_' . $userflag
+                                );
                             }
                         }
                         echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);

@@ -46,7 +46,7 @@ final class UpdateCatalogCommand extends Command
             ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
             ->option('-f|--find', T_('Find missing files and print a list of filenames'), 'boolval', false)
             ->option('-u|--update', T_('Update local object metadata using external plugins'), 'boolval', false)
-            ->option('-i|--import', T_('Adds new media files and imports playlist files'),  'boolval',false)
+            ->option('-i|--import', T_('Adds new media files and imports playlist files'), 'boolval', false)
             ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
             ->option('-t|--garbage', T_('Update table mapping, counts and delete garbage data'), 'boolval', false)
             ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)

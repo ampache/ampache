@@ -143,8 +143,11 @@ class AmpacheTvdb implements AmpachePluginInterface
                 $release                   = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
                 $results['tvshow_imdb_id'] = $release->imdbId;
-                $results['tvshow_summary'] = substr($release->overview, 0,
-                    255); // Summary column in db is only 256 characters.
+                $results['tvshow_summary'] = substr(
+                    $release->overview,
+                    0,
+                    255
+                ); // Summary column in db is only 256 characters.
                 $results['tvshow'] = $release->name;
 
                 if ($release->FirstAired) {
@@ -177,9 +180,11 @@ class AmpacheTvdb implements AmpachePluginInterface
                 }
 
                 if ($media_info['tvshow_season'] && $media_info['tvshow_episode']) {
-                    $release = $client->getEpisode($results['tvdb_tvshow_id'],
+                    $release = $client->getEpisode(
+                        $results['tvdb_tvshow_id'],
                         ltrim($media_info['tvshow_season'], "0"),
-                        ltrim($media_info['tvshow_episode'], "0"));
+                        ltrim($media_info['tvshow_episode'], "0")
+                    );
                     if ($release->id) {
                         $results['tvdb_id']        = $release->id;
                         $results['tvshow_season']  = $release->season;

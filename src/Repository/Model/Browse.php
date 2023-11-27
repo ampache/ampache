@@ -493,8 +493,10 @@ class Browse extends Query
             if ((isset($_COOKIE[$name]))) {
                 $this->set_use_alpha(Core::get_cookie($name) == 'true');
             } else {
-                $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",",
-                    AmpConfig::get('libitem_browse_alpha'));
+                $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(
+                    ",",
+                    AmpConfig::get('libitem_browse_alpha')
+                );
                 if (in_array($type, $default_alpha)) {
                     $this->set_use_alpha(true, false);
                 }

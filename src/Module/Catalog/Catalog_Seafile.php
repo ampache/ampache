@@ -106,9 +106,12 @@ class Catalog_Seafile extends Catalog
     {
         $help = "<ul><li>" . T_("Install a Seafile server as described in the documentation") . "</li><li>" . T_("Enter URL to server (e.g. 'https://seafile.example.com') and library name (e.g. 'Music').") . "</li><li>" . T_("API Call Delay is the delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accommodate Seafile's Rate Limiting.") . "<br/>" . T_("The default is tuned towards Seafile's default rate limit settings.") . "</li><li>" . T_("After creating the Catalog, you must 'Make it ready' on the Catalog table.") . "</li></ul>";
 
-        return sprintf($help, "<a target='_blank' href='https://www.seafile.com/'>https://www.seafile.com/</a>",
+        return sprintf(
+            $help,
+            "<a target='_blank' href='https://www.seafile.com/'>https://www.seafile.com/</a>",
             "<a href='https://forum.syncwerk.com/t/too-many-requests-when-using-web-api-status-code-429/2330'>",
-            "</a>");
+            "</a>"
+        );
     }
 
     /**
@@ -222,8 +225,10 @@ class Catalog_Seafile extends Catalog
             return true;
         } catch (Exception $error) {
             /* HINT: exception error message */
-            AmpError::add('general',
-                sprintf(T_('There was a problem authenticating against the Seafile API: %s'), $error->getMessage()));
+            AmpError::add(
+                'general',
+                sprintf(T_('There was a problem authenticating against the Seafile API: %s'), $error->getMessage())
+            );
             debug_event('seafile_catalog', 'Exception while Authenticating: ' . $error->getMessage(), 2);
         }
 
@@ -245,8 +250,12 @@ class Catalog_Seafile extends Catalog
                 $this->$key = $value;
             }
 
-            $this->seafile = new SeafileAdapter($info['server_uri'], $info['library_name'], $info['api_call_delay'],
-                $info['api_key']);
+            $this->seafile = new SeafileAdapter(
+                $info['server_uri'],
+                $info['library_name'],
+                $info['api_call_delay'],
+                $info['api_key']
+            );
         }
     }
 
@@ -539,9 +548,15 @@ class Catalog_Seafile extends Catalog
                 try {
                     $exists = $this->seafile->get_file($file['path'], $file['filename']) !== null;
                 } catch (Exception $error) {
-                    Ui::update_text(T_('There Was a Problem'),
-                        /* HINT: %1 filename (File path), %2 Error Message */ sprintf(T_('There was an error while checking this song "%1$s": %2$s'),
-                            $file['filename'], $error->getMessage()));
+                    Ui::update_text(
+                        T_('There Was a Problem'),
+                        /* HINT: %1 filename (File path), %2 Error Message */
+                        sprintf(
+                            T_('There was an error while checking this song "%1$s": %2$s'),
+                            $file['filename'],
+                            $error->getMessage()
+                        )
+                    );
                     debug_event('seafile_catalog', 'Clean Exception: ' . $error->getMessage(), 2);
 
                     continue;

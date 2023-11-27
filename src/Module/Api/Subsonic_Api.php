@@ -119,8 +119,10 @@ class Subsonic_Api
             if ($addheader) {
                 self::_setHeader($input['f'] ?? 'xml');
             }
-            self::_apiOutput($input,
-                Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'check_parameter'));
+            self::_apiOutput(
+                $input,
+                Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'check_parameter')
+            );
 
             return false;
         }
@@ -382,13 +384,17 @@ class Subsonic_Api
                                 $tagsArray[$childTagName] = (object)$childProperties;
                             } else {
                                 // test if tags of this type should always be arrays, no matter the element count
-                                $tagsArray[$childTagName] = in_array($childTagName,
-                                    $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
+                                $tagsArray[$childTagName] = in_array(
+                                    $childTagName,
+                                    $options['alwaysArray']
+                                ) || !$options['autoArray'] ? array($childProperties) : $childProperties;
                             }
                         } else {
                             // test if tags of this type should always be arrays, no matter the element count
-                            $tagsArray[$childTagName] = in_array($childTagName,
-                                $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
+                            $tagsArray[$childTagName] = in_array(
+                                $childTagName,
+                                $options['alwaysArray']
+                            ) || !$options['autoArray'] ? array($childProperties) : $childProperties;
                         }
                     } elseif (is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName]) === range(0, count($tagsArray[$childTagName]) - 1)) {
                         //key already exists and is integer indexed array
@@ -409,8 +415,11 @@ class Subsonic_Api
         }
 
         // stick it all together
-        $propertiesArray = !$options['autoText'] || !empty($attributesArray) || !empty($tagsArray) || ($plainText === '') ? array_merge($attributesArray,
-            $tagsArray, $textContentArray) : $plainText;
+        $propertiesArray = !$options['autoText'] || !empty($attributesArray) || !empty($tagsArray) || ($plainText === '') ? array_merge(
+            $attributesArray,
+            $tagsArray,
+            $textContentArray
+        ) : $plainText;
 
         if (isset($propertiesArray['xmlns'])) {
             unset($propertiesArray['xmlns']);
@@ -1097,12 +1106,20 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::addSubsonicResponse($elementName);
         switch ($elementName) {
             case 'starred':
-                Subsonic_Xml_Data::addStarred($response, Userflag::get_latest('artist', $user->id, 10000),
-                    Userflag::get_latest('album', $user->id, 10000), Userflag::get_latest('song', $user->id, 10000));
+                Subsonic_Xml_Data::addStarred(
+                    $response,
+                    Userflag::get_latest('artist', $user->id, 10000),
+                    Userflag::get_latest('album', $user->id, 10000),
+                    Userflag::get_latest('song', $user->id, 10000)
+                );
                 break;
             case 'starred2':
-                Subsonic_Xml_Data::addStarred2($response, Userflag::get_latest('artist', $user->id, 10000),
-                    Userflag::get_latest('album', $user->id, 10000), Userflag::get_latest('song', $user->id, 10000));
+                Subsonic_Xml_Data::addStarred2(
+                    $response,
+                    Userflag::get_latest('artist', $user->id, 10000),
+                    Userflag::get_latest('album', $user->id, 10000),
+                    Userflag::get_latest('song', $user->id, 10000)
+                );
                 break;
         }
         self::_apiOutput($input, $response);
@@ -1479,7 +1496,8 @@ class Subsonic_Api
         } else {
             self::_apiOutput(
                 $input,
-                Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'hls'));
+                Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'hls')
+            );
         }
         $media['object_id'] = Subsonic_Xml_Data::_getAmpacheId($fileid);
         $medias             = array();

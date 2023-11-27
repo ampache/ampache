@@ -54,7 +54,7 @@ final class PreferenceDelete5Method
             return false;
         }
         $pref_name  = (string)($input['filter'] ?? '');
-        $preference = Preference::get($pref_name,-1);
+        $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
             Api5::error(sprintf(T_('Not Found: %s'), $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 

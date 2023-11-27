@@ -62,7 +62,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         if ($deactivateMemoryLimit === true) {
             // Temporarily deactivate PHP memory limit
             echo "\033[31m- " . T_("Deactivated PHP memory limit") . " -\033[0m\n";
-            ini_set('memory_limit','-1');
+            ini_set('memory_limit', '-1');
             echo "------------------\n\n";
         }
 

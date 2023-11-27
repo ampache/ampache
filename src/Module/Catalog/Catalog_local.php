@@ -419,7 +419,7 @@ class Catalog_local extends Catalog
                     $convok = (strcmp($enc_full_file, $full_file) == 0);
                 }
                 if (!$convok) {
-                    debug_event('local.catalog',  $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
+                    debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
                     /* HINT: FullFile */
                     AmpError::add('catalog_add', sprintf(T_('"%s" does not match site charset'), $full_file));
 
@@ -579,8 +579,10 @@ class Catalog_local extends Catalog
 
         if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_top();
-            Ui::update_text(T_('Catalog Updated'),
-                sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate));
+            Ui::update_text(
+                T_('Catalog Updated'),
+                sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate)
+            );
             Ui::show_box_bottom();
         }
 

@@ -388,8 +388,12 @@ class Broadcast extends database_object implements library_item
     public static function get_unbroadcast_link($broadcast_id): string
     {
         $link = "<div class=\"broadcast-action\">";
-        $link .= Ajax::button('?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id, 'broadcast',
-            T_('Unbroadcast'), 'broadcast_action');
+        $link .= Ajax::button(
+            '?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id,
+            'broadcast',
+            T_('Unbroadcast'),
+            'broadcast_action'
+        );
         $link .= "</div>";
         $link .= "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
 

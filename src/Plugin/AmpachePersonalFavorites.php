@@ -138,10 +138,12 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
                                 echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_playlist_' . $item[0]->id);
                             }
                             if (Stream_Playlist::check_autoplay_append()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id . '&append=true',
+                                echo Ajax::button(
+                                    '?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id . '&append=true',
                                     'play_add',
                                     T_('Play last'),
-                                    'addplay_playlist_' . $item[0]->id);
+                                    'addplay_playlist_' . $item[0]->id
+                                );
                             }
                         }
                         if ($item[0] instanceof Playlist) {

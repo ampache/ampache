@@ -105,7 +105,7 @@ class Clip extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array()): int
     {
-        debug_event(self::class, 'insert ' . print_r($data,true), 5);
+        debug_event(self::class, 'insert ' . print_r($data, true), 5);
         $artist_id = self::_get_artist_id($data);
         $song_id   = Song::find($data);
         if (empty($song_id)) {
@@ -127,10 +127,10 @@ class Clip extends Video
      */
     public function update(array $data): int
     {
-        debug_event(self::class, 'update ' . print_r($data,true), 5);
+        debug_event(self::class, 'update ' . print_r($data, true), 5);
         $artist_id = self::_get_artist_id($data);
         $song_id   = Song::find($data);
-        debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true), 5);
+        debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id], true), 5);
 
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($artist_id, $song_id, $this->id));

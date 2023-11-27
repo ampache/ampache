@@ -123,7 +123,7 @@ final class ControlReplyApplication implements ApplicationInterface
                 debug_event('control-reply', 'Searchcriteria: ' . $upnpRequest['searchcriteria'], 5);
                 debug_event('control-reply', 'Search filter : ' . $filter, 5);
                 $responseType             = 'u:SearchResponse';
-                list($totMatches, $items) = Upnp_Api::_callSearch($upnpRequest['searchcriteria'],$filter,$upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                list($totMatches, $items) = Upnp_Api::_callSearch($upnpRequest['searchcriteria'], $filter, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                 break;
             case 'browse':
                 $responseType = 'u:BrowseResponse';

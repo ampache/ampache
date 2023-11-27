@@ -326,7 +326,9 @@ function get_languages()
                 default:
                     $name = sprintf(
                         /* HINT: File */
-                        T_('Unknown %s'), '(' . $file . ')');
+                        T_('Unknown %s'),
+                        '(' . $file . ')'
+                    );
                     break;
             } // end switch
 
@@ -1347,7 +1349,7 @@ function get_mime_from_image($data): string
             return "image/png";
         case '47494638':
             return "image/gif";
-        case substr($data,0, 4) == '424d':
+        case substr($data, 0, 4) == '424d':
             return 'image/bmp';
         default:
             return 'image/jpeg';

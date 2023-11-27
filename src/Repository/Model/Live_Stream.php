@@ -307,7 +307,8 @@ class Live_Stream extends database_object implements Media, library_item
         }
 
         $sql = "UPDATE `live_stream` SET `name` = ?,`site_url` = ?,`url` = ?, codec = ? WHERE `id` = ?";
-        Dba::write($sql,
+        Dba::write(
+            $sql,
             array(
                 $data['name'] ?? $this->name,
                 $data['site_url'] ?? null,

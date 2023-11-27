@@ -253,8 +253,15 @@ class Graph
         if ($user_id < 1 && $ustats['users'] < 10) {
             $userArray = $userRepository->getValidArray();
             foreach ($userArray as $validUser) {
-                $user_values = $this->get_all_type_pts($fct, $validUser['id'], $object_type, $object_id, $start_date, $end_date,
-                    $zoom);
+                $user_values = $this->get_all_type_pts(
+                    $fct,
+                    $validUser['id'],
+                    $object_type,
+                    $object_id,
+                    $start_date,
+                    $end_date,
+                    $zoom
+                );
                 foreach ($values as $date => $value) {
                     if (array_key_exists($date, $user_values)) {
                         $value = $user_values[$date];
@@ -635,8 +642,16 @@ class Graph
         $height = 0
     ) {
         $MyData = new Data();
-        $this->get_user_all_pts('get_user_hits_pts', $MyData, $user_id, $object_type, $object_id, $start_date, $end_date,
-            $zoom);
+        $this->get_user_all_pts(
+            'get_user_hits_pts',
+            $MyData,
+            $user_id,
+            $object_type,
+            $object_id,
+            $start_date,
+            $end_date,
+            $zoom
+        );
 
         $MyData->setAxisName(0, "Hits");
         $MyData->setAxisDisplay(0, AXIS_FORMAT_METRIC);
@@ -742,8 +757,16 @@ class Graph
         $height = 0
     ) {
         $MyData = new Data();
-        $this->get_catalog_all_pts('get_catalog_files_pts', $MyData, $catalog_id, $object_type, $object_id, $start_date,
-            $end_date, $zoom);
+        $this->get_catalog_all_pts(
+            'get_catalog_files_pts',
+            $MyData,
+            $catalog_id,
+            $object_type,
+            $object_id,
+            $start_date,
+            $end_date,
+            $zoom
+        );
 
         $MyData->setAxisName(0, "Files");
         $MyData->setAxisDisplay(0, AXIS_FORMAT_METRIC);
@@ -772,8 +795,16 @@ class Graph
         $height = 0
     ) {
         $MyData = new Data();
-        $this->get_catalog_all_pts('get_catalog_size_pts', $MyData, $catalog_id, $object_type, $object_id, $start_date,
-            $end_date, $zoom);
+        $this->get_catalog_all_pts(
+            'get_catalog_size_pts',
+            $MyData,
+            $catalog_id,
+            $object_type,
+            $object_id,
+            $start_date,
+            $end_date,
+            $zoom
+        );
 
         $MyData->setAxisName(0, "Size");
         $MyData->setAxisUnit(0, "B");

@@ -1099,7 +1099,7 @@ abstract class Catalog extends database_object
         $gather_types   = $data['gather_media'];
 
         // Should it be an array? Not now.
-        if (!in_array($gather_types,  array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) {
+        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) {
             return 0;
         }
 
@@ -3329,8 +3329,10 @@ abstract class Catalog extends database_object
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_top();
         }
-        Ui::update_text(T_("Catalog Cleaned"),
-            sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total));
+        Ui::update_text(
+            T_("Catalog Cleaned"),
+            sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total)
+        );
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_bottom();
         }
@@ -3359,8 +3361,10 @@ abstract class Catalog extends database_object
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_top();
         }
-        Ui::update_text(T_("Catalog Verified"),
-            sprintf(nT_('%d file updated.', '%d files updated.', $verified), $verified));
+        Ui::update_text(
+            T_("Catalog Verified"),
+            sprintf(nT_('%d file updated.', '%d files updated.', $verified), $verified)
+        );
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_bottom();
         }
@@ -4209,8 +4213,10 @@ abstract class Catalog extends database_object
                 } // end if update
 
                 if ($catalog_id < 1) {
-                    AmpError::add('general',
-                        T_("This subdirectory is not inside an existing Catalog. The update can not be processed."));
+                    AmpError::add(
+                        'general',
+                        T_("This subdirectory is not inside an existing Catalog. The update can not be processed.")
+                    );
                 }
                 break;
             case 'gather_media_art':

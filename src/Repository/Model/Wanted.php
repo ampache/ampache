@@ -328,8 +328,12 @@ class Wanted extends database_object
         if ($this->id) {
             if (!$this->accepted) {
                 if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
-                    echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->mbid, 'enable', T_('Accept'),
-                        'wanted_accept_' . $this->mbid);
+                    echo Ajax::button(
+                        '?page=index&action=accept_wanted&mbid=' . $this->mbid,
+                        'enable',
+                        T_('Accept'),
+                        'wanted_accept_' . $this->mbid
+                    );
                 }
             }
             if (

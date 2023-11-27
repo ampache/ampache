@@ -86,10 +86,18 @@ final class ShoutRenderer implements ShoutRendererInterface
         if ($details) {
             $html .= "<div class='shoutbox-actions'>";
             if ($jsbuttons) {
-                $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $shout->object_type . '&' . $shout->object_type . '_id=' . $shout->object_id,
-                    'play', T_('Play'), 'play_' . $shout->object_type . '_' . $shout->object_id);
-                $html .= Ajax::button('?action=basket&type=' . $shout->object_type . '&id=' . $shout->object_id, 'add',
-                    T_('Add'), 'add_' . $shout->object_type . '_' . $shout->object_id);
+                $html .= Ajax::button(
+                    '?page=stream&action=directplay&playtype=' . $shout->object_type . '&' . $shout->object_type . '_id=' . $shout->object_id,
+                    'play',
+                    T_('Play'),
+                    'play_' . $shout->object_type . '_' . $shout->object_id
+                );
+                $html .= Ajax::button(
+                    '?action=basket&type=' . $shout->object_type . '&id=' . $shout->object_id,
+                    'add',
+                    T_('Add'),
+                    'add_' . $shout->object_type . '_' . $shout->object_id
+                );
             }
             if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)) {
                 $html .= "<a href=\"" . $webPath . "/shout.php?action=show_add_shout&type=" . $shout->object_type . "&id=" . $shout->object_id . "\">" . Ui::get_icon('comment', T_('Post Shout')) . "</a>";

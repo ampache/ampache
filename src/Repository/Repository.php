@@ -125,7 +125,9 @@ class Repository
             '/(?<=.)([A-Z])/',
             function ($name) {
                 return '_' . strtolower((string) $name[0]);
-            }, end($nameParts));
+            },
+            end($nameParts)
+        );
 
         return lcfirst($tableName);
     }

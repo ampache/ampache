@@ -422,9 +422,11 @@ class Catalog_dropbox extends Catalog
                 $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                 Dba::write($sql, array($results['file'], $song_id));
             } else {
-                debug_event('dropbox.catalog',
+                debug_event(
+                    'dropbox.catalog',
                     $results['file'] . " ignored because it is an orphan songs. Please check your catalog patterns.",
-                    5);
+                    5
+                );
             }
             unlink($outfile);
 

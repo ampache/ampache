@@ -1202,8 +1202,11 @@ class Json_Data
 
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
-                    $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_',
-                        $metadata->getField()->getName());
+                    $meta_name = str_replace(
+                        array(' ', '(', ')', '/', '\\', '#'),
+                        '_',
+                        $metadata->getField()->getName()
+                    );
                     $objArray[$meta_name] = $metadata->getData();
                 }
             }

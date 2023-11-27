@@ -246,8 +246,10 @@ class Catalog_subsonic extends Catalog
         // Get all albums
         $offset = 0;
         while (true) {
-            $albumList = $subsonic->querySubsonic('getAlbumList',
-                ['type' => 'alphabeticalByName', 'size' => 500, 'offset' => $offset]);
+            $albumList = $subsonic->querySubsonic(
+                'getAlbumList',
+                ['type' => 'alphabeticalByName', 'size' => 500, 'offset' => $offset]
+            );
             $offset += 500;
             if ($albumList['success']) {
                 if (count($albumList['data']['albumList']) == 0) {
@@ -303,9 +305,14 @@ class Catalog_subsonic extends Catalog
             }
         }
 
-        Ui::update_text(T_("Updated"),
-            T_('Completed updating Subsonic Catalog(s)') . " " . /* HINT: Number of songs */ sprintf(nT_('%s Song added',
-                '%s Songs added', $songsadded), $songsadded));
+        Ui::update_text(
+            T_("Updated"),
+            T_('Completed updating Subsonic Catalog(s)') . " " . /* HINT: Number of songs */ sprintf(nT_(
+                '%s Song added',
+                '%s Songs added',
+                $songsadded
+            ), $songsadded)
+        );
 
         // Update the last update value
         $this->update_last_update();

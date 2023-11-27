@@ -50,7 +50,10 @@ class easy_captcha_utility
                     $_SERVER['TEMPDIR'] ?? null,
                     function_exists("sys_get_temp_dir") ? sys_get_temp_dir() : "",
                     '/tmp'
-                )), "is_writeable"));
+                )
+            ),
+            "is_writeable"
+        ));
     }
 
 

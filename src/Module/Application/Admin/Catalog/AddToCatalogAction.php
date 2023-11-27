@@ -60,12 +60,14 @@ final class AddToCatalogAction extends AbstractCatalogAction
         }
 
         catalog_worker('add_to_catalog', $catalogIds);
-        $this->ui->showConfirmation(T_('Catalog update process has started'),
+        $this->ui->showConfirmation(
+            T_('Catalog update process has started'),
             '',
             sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
             0,
             'confirmation',
-            false);
+            false
+        );
 
         return null;
     }

@@ -94,8 +94,11 @@ class Userflag extends database_object
 
         foreach ($ids as $object_id) {
             if (isset($userflags[$object_id])) {
-                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $object_id,
-                    array(1, $userflags[$object_id]));
+                parent::add_to_cache(
+                    'userflag_' . $type . '_user' . $user_id,
+                    $object_id,
+                    array(1, $userflags[$object_id])
+                );
             } else {
                 parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $object_id, array(false));
             }
@@ -352,14 +355,16 @@ class Userflag extends database_object
             $text = Ajax::text(
                 $base_url . '&userflag=0',
                 '',
-                'userflag_i_' . $userflag->id . '_' . $userflag->type, '',
+                'userflag_i_' . $userflag->id . '_' . $userflag->type,
+                '',
                 'userflag_true'
             );
         } else {
             $text = Ajax::text(
                 $base_url . '&userflag=1',
                 '',
-                'userflag_i_' . $userflag->id . '_' . $userflag->type, '',
+                'userflag_i_' . $userflag->id . '_' . $userflag->type,
+                '',
                 'userflag_false'
             );
         }

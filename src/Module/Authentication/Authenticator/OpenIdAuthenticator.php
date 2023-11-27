@@ -57,7 +57,8 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                 if ($auth_request) {
                     $sreg_request = Auth_OpenID_SRegRequest::build(// Required
                         array('nickname'), // Optional
-                        array('fullname', 'email'));
+                        array('fullname', 'email')
+                    );
                     if ($sreg_request) {
                         $auth_request->addExtension($sreg_request);
                     }
@@ -72,8 +73,10 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                     // For OpenID 1, send a redirect.  For OpenID 2, use a Javascript
                     // form to send a POST request to the server.
                     if ($auth_request->shouldSendRedirect()) {
-                        $redirect_url = $auth_request->redirectURL(AmpConfig::get('web_path'),
-                            Openid::get_return_url());
+                        $redirect_url = $auth_request->redirectURL(
+                            AmpConfig::get('web_path'),
+                            Openid::get_return_url()
+                        );
                         if (Auth_OpenID::isFailure($redirect_url)) {
                             $results['success'] = false;
                             $results['error']   = 'Could not redirect to server: ' . $redirect_url->message;
@@ -85,8 +88,12 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                     } else {
                         // Generate form markup and render it.
                         $form_id   = 'openid_message';
-                        $form_html = $auth_request->htmlMarkup(AmpConfig::get('web_path'), Openid::get_return_url(),
-                            false, array('id' => $form_id));
+                        $form_html = $auth_request->htmlMarkup(
+                            AmpConfig::get('web_path'),
+                            Openid::get_return_url(),
+                            false,
+                            array('id' => $form_id)
+                        );
 
                         if (Auth_OpenID::isFailure($form_html)) {
                             $results['success'] = false;

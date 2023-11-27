@@ -372,12 +372,15 @@ class Waveform
                 // don't print flat values on the canvas if not necessary
                 if (!($value / $height == 0.5 && !$draw_flat)) {
                     // draw the line on the image using the $value and centering it vertically on the canvas
-                    imageline($img, // x1
+                    imageline(
+                        $img, // x1
                         (int)($data_point / $detail),
                         // y1: height of the image minus  as a percentage of the height for the wave amplitude
                         $height - $value, // x2
                         (int)($data_point / $detail), // y2: same as y1, but from the bottom of the image
-                        $height - ($height - $value), imagecolorallocate($img, (int)$red, (int)$green, (int)$blue));
+                        $height - ($height - $value),
+                        imagecolorallocate($img, (int)$red, (int)$green, (int)$blue)
+                    );
                 }
             } else {
                 // skip this one due to lack of detail

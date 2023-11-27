@@ -289,7 +289,8 @@ final class PlayAction implements ApplicationActionInterface
                     : substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
                 // this is a permastream link so create a session
                 if (!Session::exists('stream', $session_id)) {
-                    Session::create(array(
+                    Session::create(
+                        array(
                             'sid' => $session_id,
                             'username' => $user->username,
                             'value' => '',

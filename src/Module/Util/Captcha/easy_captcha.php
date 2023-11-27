@@ -167,8 +167,11 @@ class easy_captcha
             #-- update state
             if ($okay) {
                 $this->passed++;
-                $this->log("::solved", "OKAY",
-                    "captcha passed ($input) for image({$this->image->solution}) and text({$this->text->solution})");
+                $this->log(
+                    "::solved",
+                    "OKAY",
+                    "captcha passed ($input) for image({$this->image->solution}) and text({$this->text->solution})"
+                );
 
                 #-- set cookie on success
                 if (CAPTCHA_PERSISTENT) {
@@ -177,8 +180,11 @@ class easy_captcha
                 }
             } else {
                 $this->failures++;
-                $this->log("::solved", "WRONG",
-                    "solution failure ($input) for image({$this->image->solution}) and text({$this->text->solution})");
+                $this->log(
+                    "::solved",
+                    "WRONG",
+                    "solution failure ($input) for image({$this->image->solution}) and text({$this->text->solution})"
+                );
             }
         }
 
@@ -250,9 +256,11 @@ class easy_captcha
     {
         // append to text file
         if (CAPTCHA_LOG) {
-            file_put_contents(CAPTCHA_TEMP_DIR . "/captcha.log",
+            file_put_contents(
+                CAPTCHA_TEMP_DIR . "/captcha.log",
                 "[$error] -$category- \"$message\" $_SERVER[REMOTE_ADDR] id={$this->id} tries={$this->tries} failures={$this->failures} created/time/expires=$this->created/" . time() . "/$this->expires \n",
-                FILE_APPEND | LOCK_EX);
+                FILE_APPEND | LOCK_EX
+            );
         }
 
         return (true);   // for if-chaining

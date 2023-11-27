@@ -912,9 +912,14 @@ final class VaInfo implements VaInfoInterface
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version > 0) {
                     if ($plugin->_plugin !== null && $plugin->load($user)) {
-                        $this->tags[$tag_source] = $plugin->_plugin->get_metadata($this->gatherTypes,
-                            self::clean_tag_info($this->tags,
-                                self::get_tag_type($this->tags, $this->get_metadata_order_key()), $this->filename));
+                        $this->tags[$tag_source] = $plugin->_plugin->get_metadata(
+                            $this->gatherTypes,
+                            self::clean_tag_info(
+                                $this->tags,
+                                self::get_tag_type($this->tags, $this->get_metadata_order_key()),
+                                $this->filename
+                            )
+                        );
                     }
                 }
             } elseif (!in_array($tag_source, array('filename', 'getid3'))) {
@@ -1843,8 +1848,11 @@ final class VaInfo implements VaInfoInterface
                     preg_match("~(?<=[Xx])\d+~", $file, $episode);
                 } else {
                     if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
-                        $temp = preg_split("~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",
-                            $file, 3);
+                        $temp = preg_split(
+                            "~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",
+                            $file,
+                            3
+                        );
                         preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
                         preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
                     } else {
@@ -2001,8 +2009,10 @@ final class VaInfo implements VaInfoInterface
      */
     private function formatVideoName($name): string
     {
-        return ucwords(trim((string)$this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name)),
-            "\s\t\n\r\0\x0B\.\_\-"));
+        return ucwords(trim(
+            (string)$this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name)),
+            "\s\t\n\r\0\x0B\.\_\-"
+        ));
     }
 
     /**

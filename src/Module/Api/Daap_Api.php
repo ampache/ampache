@@ -263,7 +263,7 @@ class Daap_Api
             ));
 
             if (Dba::num_rows($db_results) == 0) {
-                debug_event(self::class, 'Unknown session id `' . Core::get_get('session-id') . '`.',4);
+                debug_event(self::class, 'Unknown session id `' . Core::get_get('session-id') . '`.', 4);
             }
         }
     }
@@ -739,8 +739,11 @@ class Daap_Api
         self::add_dict('mstt', 'int', 'dmap.status'); // the response status code, these appear to be http status codes
         self::add_dict('miid', 'int', 'dmap.itemid'); // an item's id
         self::add_dict('minm', 'string', 'dmap.itemname'); // an items name
-        self::add_dict('mikd', 'byte',
-            'dmap.itemkind'); // the kind of item. So far, only '2' has been seen, an audio file?
+        self::add_dict(
+            'mikd',
+            'byte',
+            'dmap.itemkind'
+        ); // the kind of item. So far, only '2' has been seen, an audio file?
         self::add_dict('mper', 'long', 'dmap.persistentid'); // a persistent id
         self::add_dict('mcon', 'list', 'dmap.container'); // an arbitrary container
         self::add_dict('mcti', 'int', 'dmap.containeritemid'); // the id of an item in its container

@@ -68,7 +68,8 @@ final class ShowAction implements ApplicationActionInterface
             $this->logger->warning(
                 sprintf(
                     'Access denied, checked cookie session:%s and auth:%s',
-                    $_COOKIE[$this->configContainer->getSessionName()], $_REQUEST['auth']
+                    $_COOKIE[$this->configContainer->getSessionName()],
+                    $_REQUEST['auth']
                 ),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );

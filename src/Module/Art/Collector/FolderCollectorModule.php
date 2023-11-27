@@ -170,7 +170,8 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 if (
                     (
                         $file == $preferred_filename ||
-                        pathinfo($file, PATHINFO_FILENAME) == $preferred_filename) ||
+                        pathinfo($file, PATHINFO_FILENAME) == $preferred_filename
+                    ) ||
                         (
                             $file == $artist_filename ||
                             pathinfo($file, PATHINFO_FILENAME) == $artist_filename

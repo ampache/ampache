@@ -160,8 +160,11 @@ final class UpdateUserAction extends AbstractUserAction
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions (2000x3000) */
-                sprintf(T_('Please check your image is within the minimum %1$s and maximum %2$s dimensions'),
-                    $mindimension, $maxdimension),
+                sprintf(
+                    T_('Please check your image is within the minimum %1$s and maximum %2$s dimensions'),
+                    $mindimension,
+                    $maxdimension
+                ),
                 sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
             );
         } else {

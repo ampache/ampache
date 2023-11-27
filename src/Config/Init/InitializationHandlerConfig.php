@@ -62,7 +62,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             throw new ConfigFileNotParsableException();
         }
 
-        /** This is the version.... fluff nothing more... **/
+        /** This is the version.... fluff nothing more... */
         $results['version']            = static::VERSION;
         $results['int_config_version'] = static::CONFIG_VERSION;
         $results['structure']          = static::STRUCTURE;

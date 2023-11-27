@@ -446,8 +446,10 @@ class AmpacheVlc extends localplay_controller
         // here we look if there are song in the playlist when media libary is used
         if ($list['node']['node'][0]['leaf'][$counter]['attr']['uri']) {
             while ($list['node']['node'][0]['leaf'][$counter]) {
-                $songs[] = htmlspecialchars_decode($list['node']['node'][0]['leaf'][$counter]['attr']['uri'],
-                    ENT_NOQUOTES);
+                $songs[] = htmlspecialchars_decode(
+                    $list['node']['node'][0]['leaf'][$counter]['attr']['uri'],
+                    ENT_NOQUOTES
+                );
                 $song_id[] = $list['node']['node'][0]['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
@@ -458,8 +460,10 @@ class AmpacheVlc extends localplay_controller
         } elseif ($list['node']['node']['leaf'][$counter]['attr']['uri']) {
             // look for songs when media library isn't used
             while ($list['node']['node']['leaf'][$counter]) {
-                $songs[] = htmlspecialchars_decode($list['node']['node']['leaf'][$counter]['attr']['uri'],
-                    ENT_NOQUOTES);
+                $songs[] = htmlspecialchars_decode(
+                    $list['node']['node']['leaf'][$counter]['attr']['uri'],
+                    ENT_NOQUOTES
+                );
                 $song_id[] = $list['node']['node']['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
@@ -552,8 +556,10 @@ class AmpacheVlc extends localplay_controller
         $array['volume'] = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
         $array['repeat'] = $arrayholder['root']['repeat']['value'];
         $array['random'] = $arrayholder['root']['random']['value'];
-        $array['track']  = htmlspecialchars_decode($arrayholder['root']['information']['meta-information']['title']['value'],
-            ENT_NOQUOTES);
+        $array['track']  = htmlspecialchars_decode(
+            $arrayholder['root']['information']['meta-information']['title']['value'],
+            ENT_NOQUOTES
+        );
 
         $url_data = $this->parse_url($array['track']);
         $song     = new Song($url_data['oid']);
