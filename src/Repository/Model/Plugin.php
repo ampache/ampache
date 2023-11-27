@@ -31,10 +31,8 @@ use Ampache\Plugin\PluginEnum;
 
 class Plugin
 {
-    /* Base Variables */
+    /** @var null|string $name */
     public $name;
-
-    /* constructed objects */
     public $_plugin;
 
     /**
@@ -52,13 +50,18 @@ class Plugin
      * has_info
      * @param string $cname
      */
-    public function has_info($cname): bool
+    private function has_info($cname): bool
     {
         $controller = PluginEnum::LIST[strtolower($cname)] ?? null;
         if ($controller === null) {
             debug_event(__CLASS__, 'Cannot find plugin `' . $cname . '`.', 1);
+            $this->_plugin = null;
+            $this->name    = null;
+
+            return false;
         }
         $this->_plugin = new $controller();
+        $this->name    = $cname;
 
         return $this->is_valid();
     }
@@ -82,6 +85,9 @@ class Plugin
         foreach (PluginEnum::LIST as $name => $className) {
             if ($type != '') {
                 $plugin = new Plugin($name);
+                if ($plugin->_plugin === null) {
+                    continue;
+                }
                 if (!Plugin::is_installed($plugin->_plugin->name)) {
                     continue;
                 }
@@ -113,6 +119,9 @@ class Plugin
      */
     public function is_valid(): bool
     {
+        if ($this->_plugin === null) {
+            return false;
+        }
         /* Check the plugin to make sure it's got the needed vars */
         if (!strlen((string)$this->_plugin->name)) {
             return false;
@@ -128,13 +137,15 @@ class Plugin
         if (!method_exists($this->_plugin, 'install')) {
             return false;
         }
-
         if (!method_exists($this->_plugin, 'uninstall')) {
             return false;
         }
-
         if (!method_exists($this->_plugin, 'load')) {
             return false;
+        }
+        if (!method_exists($this->_plugin, 'upgrade')) {
+            // TODO mark upgrade as required for Ampache 7+
+            debug_event(__CLASS__, 'WARNING: Plugin missing upgrade method. ' . $this->_plugin->name . '`.', 1);
         }
 
         /* Make sure it's within the version confines */
@@ -148,7 +159,6 @@ class Plugin
             return false;
         }
 
-        // We've passed all of the tests
         return true;
     } // is_valid
 
@@ -171,7 +181,9 @@ class Plugin
      */
     public function install(): bool
     {
-        if ($this->_plugin->install() && $this->set_plugin_version($this->_plugin->version)) {
+        if ($this->_plugin !== null && $this->_plugin->install()) {
+            $this->set_plugin_version($this->_plugin->version);
+
             return true;
         }
 
@@ -183,11 +195,18 @@ class Plugin
      * This runs the uninstall function of the plugin and removes the row
      * from the update_info table to indicate that it isn't installed.
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        $this->_plugin->uninstall();
+        if ($this->_plugin !== null && method_exists($this->_plugin, 'uninstall')) {
+            if ($this->_plugin->uninstall()) {
+                $this->remove_plugin_version();
 
-        $this->remove_plugin_version();
+                return true;
+            }
+        }
+
+        return false;
+
     } // uninstall
 
     /**
@@ -195,13 +214,17 @@ class Plugin
      * This runs the upgrade function of the plugin (if it exists) and
      * updates the database to indicate our new version.
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
-        if (method_exists($this->_plugin, 'upgrade')) {
+        if ($this->_plugin !== null && method_exists($this->_plugin, 'upgrade')) {
             if ($this->_plugin->upgrade()) {
                 $this->set_plugin_version($this->_plugin->version);
+
+                return true;
             }
         }
+
+        return false;
     } // upgrade
 
     /**
@@ -211,6 +234,9 @@ class Plugin
      */
     public function load($user): bool
     {
+        if ($this->_plugin === null) {
+            return false;
+        }
         $user->set_preferences();
 
         return $this->_plugin->load($user);
@@ -240,11 +266,13 @@ class Plugin
     public static function is_update_available(): bool
     {
         foreach (PluginEnum::LIST as $name => $className) {
-            $plugin            = new Plugin($name);
-            $installed_version = self::get_plugin_version($plugin->_plugin->name);
-            // if any plugin needs an update then you need to update
-            if ($installed_version > 0 && $installed_version < $plugin->_plugin->version) {
-                return true;
+            $plugin = new Plugin($name);
+            if ($plugin->_plugin !== null) {
+                $installed_version = self::get_plugin_version($plugin->_plugin->name);
+                // if any plugin needs an update then you need to update
+                if ($installed_version > 0 && $installed_version < $plugin->_plugin->version) {
+                    return true;
+                }
             }
         }
 
@@ -260,7 +288,7 @@ class Plugin
             $plugin            = new Plugin($name);
             $installed_version = self::get_plugin_version($plugin->_plugin->name);
             if ($installed_version > 0 && $installed_version < $plugin->_plugin->version) {
-                if (method_exists($plugin->_plugin, 'upgrade')) {
+                if ($plugin->_plugin !== null && method_exists($plugin->_plugin, 'upgrade')) {
                     if ($plugin->_plugin->upgrade()) {
                         $plugin->set_plugin_version($plugin->_plugin->version);
                     }
@@ -273,13 +301,13 @@ class Plugin
      * get_ampache_db_version
      * This function returns the Ampache database version
      */
-    public function get_ampache_db_version()
+    public function get_ampache_db_version(): string
     {
         $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key`='db_version'";
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return $results['value'];
+        return (string)$results['value'];
     } // get_ampache_db_version
 
     /**
@@ -287,28 +315,30 @@ class Plugin
      * This sets the plugin version in the update_info table
      * @param $version
      */
-    public function set_plugin_version($version): bool
+    public function set_plugin_version($version): void
     {
+        if ($this->_plugin === null) {
+            return;
+        }
         $name    = Dba::escape('Plugin_' . $this->_plugin->name);
         $version = (int)Dba::escape($version);
 
         $sql = "REPLACE INTO `update_info` SET `key` = ?, `value`= ?";
         Dba::write($sql, array($name, $version));
-
-        return true;
     } // set_plugin_version
 
     /**
      * remove_plugin_version
      * This removes the version row from the db done on uninstall
      */
-    public function remove_plugin_version(): bool
+    public function remove_plugin_version(): void
     {
+        if ($this->_plugin === null) {
+            return;
+        }
         $name = Dba::escape('Plugin_' . $this->_plugin->name);
         $sql  = "DELETE FROM `update_info` WHERE `key`='$name'";
         Dba::write($sql);
-
-        return true;
     } // remove_plugin_version
 
     /**

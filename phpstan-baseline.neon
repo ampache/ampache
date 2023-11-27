@@ -8931,11 +8931,6 @@ parameters:
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:has_info\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:install\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
@@ -17161,18 +17156,23 @@ parameters:
 			path: src/Repository/Model/Plugin.php
 
 		-
+			message: "#^Cannot access property \\$name on class\\-string\\|object\\.$#"
+			count: 1
+			path: src/Repository/Model/Plugin.php
+
+		-
 			message: "#^Cannot access property \\$version on class\\-string\\|object\\.$#"
 			count: 2
 			path: src/Repository/Model/Plugin.php
 
 		-
-			message: "#^Cannot call method upgrade\\(\\) on class\\-string\\|object\\.$#"
-			count: 2
+			message: "#^Cannot call method uninstall\\(\\) on class\\-string\\|object\\.$#"
+			count: 1
 			path: src/Repository/Model/Plugin.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:get_ampache_db_version\\(\\) has no return type specified\\.$#"
-			count: 1
+			message: "#^Cannot call method upgrade\\(\\) on class\\-string\\|object\\.$#"
+			count: 2
 			path: src/Repository/Model/Plugin.php
 
 		-
@@ -17196,22 +17196,7 @@ parameters:
 			path: src/Repository/Model/Plugin.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:uninstall\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:\\$_plugin has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:\\$name has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Plugin.php
 
