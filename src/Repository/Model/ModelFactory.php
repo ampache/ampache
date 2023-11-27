@@ -43,7 +43,7 @@ final class ModelFactory implements ModelFactoryInterface
         bool $cached = true
     ): Browse {
         return new Browse(
-            $browse_id,
+            (int) $browse_id,
             $cached
         );
     }
@@ -52,7 +52,7 @@ final class ModelFactory implements ModelFactoryInterface
         ?int $songId = null
     ): Song {
         return new Song(
-            $songId
+            (int) $songId
         );
     }
 
@@ -69,31 +69,31 @@ final class ModelFactory implements ModelFactoryInterface
     public function createUser(
         ?int $userId = null
     ): User {
-        return new User($userId);
+        return new User((int) $userId);
     }
 
     public function createAlbum(
         ?int $albumId = null
     ): Album {
-        return new Album($albumId);
+        return new Album((int) $albumId);
     }
 
     public function createAlbumDisk(
         ?int $albumDiskId = null
     ): AlbumDisk {
-        return new AlbumDisk($albumDiskId);
+        return new AlbumDisk((int) $albumDiskId);
     }
 
     public function createArtist(
         ?int $artistId = null
     ): Artist {
-        return new Artist($artistId);
+        return new Artist((int) $artistId);
     }
 
     public function createWanted(
         ?int $wantedId = null
     ): Wanted {
-        return new Wanted($wantedId);
+        return new Wanted((int) $wantedId);
     }
 
     public function createArt(
@@ -101,7 +101,7 @@ final class ModelFactory implements ModelFactoryInterface
         string $type = 'album',
         string $kind = 'default'
     ): Art {
-        return new Art($artId, $type, $kind);
+        return new Art((int) $artId, $type, $kind);
     }
 
     public function createBroadcast(
@@ -157,7 +157,7 @@ final class ModelFactory implements ModelFactoryInterface
         string $searchType = 'song',
         ?User $user = null
     ): Search {
-        return new Search($searchId, $searchType, $user);
+        return new Search((int) $searchId, $searchType, $user);
     }
 
     public function createShoutbox(
