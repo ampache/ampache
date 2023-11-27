@@ -1061,7 +1061,7 @@ abstract class Catalog extends database_object
      * @param int|null $catalog_id
      * @return array
      */
-    public static function get_stats($catalog_id = null)
+    public static function get_stats($catalog_id = 0)
     {
         $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::get_server_counts(0);
         $counts         = array_merge(self::getUserRepository()->getStatistics(), $counts);
@@ -1395,7 +1395,7 @@ abstract class Catalog extends database_object
      * @param int|null $catalog_id
      * @param string $type
      */
-    public static function get_videos_count($catalog_id = null, $type = ''): int
+    public static function get_videos_count($catalog_id = 0, $type = ''): int
     {
         $sql = "SELECT COUNT(`video`.`id`) AS `video_cnt` FROM `video` ";
         if (!empty($type)) {
@@ -3807,7 +3807,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param int|null $catalog_id
      */
-    public static function export($type, $catalog_id = null)
+    public static function export($type, $catalog_id = 0)
     {
         // Select all songs in catalog
         $params = array();
@@ -4015,7 +4015,7 @@ abstract class Catalog extends database_object
      * @param Album|AlbumDisk|Artist|Song|Video|Podcast_Episode|TvShow|TVShow_Episode|Label|TVShow_Season $libitem
      * @param int|null $user_id
      */
-    public static function can_remove($libitem, $user_id = null): bool
+    public static function can_remove($libitem, $user_id = 0): bool
     {
         if (!$user_id) {
             $user    = Core::get_global('user');

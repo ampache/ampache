@@ -70,7 +70,7 @@ class Share extends database_object
      * Constructor
      * @param int|null $share_id
      */
-    public function __construct($share_id = null)
+    public function __construct($share_id = 0)
     {
         if (!$share_id) {
             return;

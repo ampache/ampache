@@ -91,7 +91,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * Podcast Episode class
      * @param int|null $episode_id
      */
-    public function __construct($episode_id = null)
+    public function __construct($episode_id = 0)
     {
         if (!$episode_id) {
             return;

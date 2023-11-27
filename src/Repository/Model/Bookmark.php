@@ -55,7 +55,7 @@ class Bookmark extends database_object
      * @param string $object_type
      * @param int $user_id
      */
-    public function __construct($object_id = null, $object_type = null, $user_id = null)
+    public function __construct($object_id = 0, $object_type = null, $user_id = null)
     {
         if (!$object_id) {
             return;

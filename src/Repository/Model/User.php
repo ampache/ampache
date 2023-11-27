@@ -124,7 +124,7 @@ class User extends database_object
      * class, it currently takes a username
      * @param int|null $user_id
      */
-    public function __construct($user_id = null)
+    public function __construct($user_id = 0)
     {
         if (!$user_id) {
             return;

@@ -56,7 +56,7 @@ class Playlist extends playlist_object
      * if not playlist_id is passed returns false (or if it isn't found
      * @param int|null $object_id
      */
-    public function __construct($object_id = null)
+    public function __construct($object_id = 0)
     {
         if (!$object_id) {
             return;
@@ -173,10 +173,10 @@ class Playlist extends playlist_object
     /**
      * get_playlist_array
      * Returns a list of playlists accessible by the user with formatted name.
-     * @param int $user_id
+     * @param int|null $user_id
      * @return int[]
      */
-    public static function get_playlist_array($user_id = null)
+    public static function get_playlist_array($user_id = 0)
     {
         if (!$user_id) {
             $user_id = Core::get_global('user')->id ?? 0;

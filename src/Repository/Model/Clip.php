@@ -45,7 +45,7 @@ class Clip extends Video
      * a constructed object
      * @param int|null $clip_id
      */
-    public function __construct($clip_id = null)
+    public function __construct($clip_id = 0)
     {
         if (!$clip_id) {
             return;

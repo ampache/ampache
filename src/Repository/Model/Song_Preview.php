@@ -67,7 +67,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * Song Preview class
      * @param int|null $object_id
      */
-    public function __construct($object_id = null)
+    public function __construct($object_id = 0)
     {
         if (!$object_id) {
             return;
@@ -176,7 +176,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param int|null $preview_id
      * @return array
      */
-    private function has_info($preview_id): array
+    private function has_info($preview_id = 0): array
     {
         if ($preview_id === null) {
             return array();

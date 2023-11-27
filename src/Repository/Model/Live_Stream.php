@@ -77,7 +77,7 @@ class Live_Stream extends database_object implements Media, library_item
      * This takes a flagged. id and then pulls in the information for said flag entry
      * @param int|null $stream_id
      */
-    public function __construct($stream_id = null)
+    public function __construct($stream_id = 0)
     {
         if (!$stream_id) {
             return;

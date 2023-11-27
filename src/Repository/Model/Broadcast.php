@@ -72,7 +72,7 @@ class Broadcast extends database_object implements library_item
      * Constructor
      * @param int|null $broadcast_id
      */
-    public function __construct($broadcast_id = null)
+    public function __construct($broadcast_id = 0)
     {
         if (!$broadcast_id) {
             return;

@@ -46,7 +46,7 @@ class Useractivity extends database_object
      * the id and type of object that we need to pull the flag for
      * @param int|null $useract_id
      */
-    public function __construct($useract_id = null)
+    public function __construct($useract_id = 0)
     {
         if (!$useract_id) {
             return;

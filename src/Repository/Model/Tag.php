@@ -52,7 +52,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This takes a tag id and returns all of the relevant information
      * @param int|null $tag_id
      */
-    public function __construct($tag_id = null)
+    public function __construct($tag_id = 0)
     {
         if (!$tag_id) {
             return;

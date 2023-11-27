@@ -333,7 +333,7 @@ class Query
      * @param int|null $query_id
      * @param bool $cached
      */
-    public function __construct($query_id = null, $cached = true)
+    public function __construct($query_id = 0, $cached = true)
     {
         $sid = session_id();
 
@@ -350,7 +350,7 @@ class Query
             return;
         }
 
-        if ($query_id === null || $query_id === 0) {
+        if ($query_id === 0) {
             $this->reset();
             $data = self::_serialize($this->_state);
 

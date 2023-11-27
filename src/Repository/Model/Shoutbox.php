@@ -53,7 +53,7 @@ class Shoutbox
      * a constructed object, uses user_shout table
      * @param int|null $shout_id
      */
-    public function __construct($shout_id = null)
+    public function __construct($shout_id = 0)
     {
         if (!$shout_id) {
             return;

@@ -48,7 +48,7 @@ class User_Playlist extends database_object
      * @param int|null $user_id
      * @param string|null $client
      */
-    public function __construct($user_id = null, $client = null)
+    public function __construct($user_id = 0, $client = null)
     {
         if (!$user_id) {
             return;

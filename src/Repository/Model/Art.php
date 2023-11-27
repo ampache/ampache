@@ -102,7 +102,7 @@ class Art extends database_object
      * @param string $type
      * @param string $kind
      */
-    public function __construct($uid = null, $type = 'album', $kind = 'default')
+    public function __construct($uid = 0, $type = 'album', $kind = 'default')
     {
         if (!$uid) {
             return;

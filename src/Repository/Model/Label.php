@@ -78,7 +78,7 @@ class Label extends database_object implements library_item
      * __construct
      * @param int|null $label_id
      */
-    public function __construct($label_id = null)
+    public function __construct($label_id = 0)
     {
         if (!$label_id) {
             return;

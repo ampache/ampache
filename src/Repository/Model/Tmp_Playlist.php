@@ -55,7 +55,7 @@ class Tmp_Playlist extends database_object
      * found, return false.
      * @param int|null $playlist_id
      */
-    public function __construct($playlist_id = null)
+    public function __construct($playlist_id = 0)
     {
         if (!$playlist_id) {
             return;

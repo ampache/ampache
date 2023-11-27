@@ -48,7 +48,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
     /**
      * @param int|null $pm_id
      */
-    public function __construct($pm_id = null)
+    public function __construct($pm_id = 0)
     {
         if (!$pm_id) {
             return;

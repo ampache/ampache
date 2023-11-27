@@ -45,7 +45,7 @@ class Movie extends Video
      * a constructed object
      * @param int|null $movie_id
      */
-    public function __construct($movie_id = null)
+    public function __construct($movie_id = 0)
     {
         if (!$movie_id) {
             return;

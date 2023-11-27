@@ -62,7 +62,7 @@ class Democratic extends Tmp_Playlist
      * We need a constructor for this class. It does it's own thing now
      * @param int|null $democratic_id
      */
-    public function __construct($democratic_id = null)
+    public function __construct($democratic_id = 0)
     {
         if (!$democratic_id) {
             return;

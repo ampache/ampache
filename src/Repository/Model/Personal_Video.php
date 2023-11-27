@@ -43,7 +43,7 @@ class Personal_Video extends Video
      * a constructed object
      * @param int|null $object_id
      */
-    public function __construct($object_id = null)
+    public function __construct($object_id = 0)
     {
         if (!$object_id) {
             return;

@@ -58,7 +58,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      * Takes the ID of the tv show season and pulls the info from the db
      * @param int|null $show_id
      */
-    public function __construct($show_id = null)
+    public function __construct($show_id = 0)
     {
         if (!$show_id) {
             return;

@@ -115,7 +115,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int|null $artist_id
      * @param int $catalog_init
      */
-    public function __construct($artist_id = null, $catalog_init = 0)
+    public function __construct($artist_id = 0, $catalog_init = 0)
     {
         if (!$artist_id) {
             return;

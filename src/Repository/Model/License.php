@@ -42,7 +42,7 @@ class License
      * a constructed object
      * @param int|null $license_id
      */
-    public function __construct($license_id = null)
+    public function __construct($license_id = 0)
     {
         if (!$license_id) {
             return;

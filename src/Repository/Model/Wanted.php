@@ -82,7 +82,7 @@ class Wanted extends database_object
      * Constructor
      * @param int|null $wanted_id
      */
-    public function __construct($wanted_id = null)
+    public function __construct($wanted_id = 0)
     {
         if (!$wanted_id) {
             return;

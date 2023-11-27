@@ -194,7 +194,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * Song class, for modifying a song.
      * @param int|null $song_id
      */
-    public function __construct($song_id = null)
+    public function __construct($song_id = 0)
     {
         if (!$song_id) {
             return;

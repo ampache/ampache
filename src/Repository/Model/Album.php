@@ -124,7 +124,7 @@ class Album extends database_object implements library_item
      * get any of the counts.
      * @param int|null $album_id
      */
-    public function __construct($album_id = null)
+    public function __construct($album_id = 0)
     {
         if (!$album_id) {
             return;

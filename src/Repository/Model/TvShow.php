@@ -61,7 +61,7 @@ class TvShow extends database_object implements library_item
      * Takes the ID of the tv show and pulls the info from the db
      * @param int|null $show_id
      */
-    public function __construct($show_id = null)
+    public function __construct($show_id = 0)
     {
         if (!$show_id) {
             return;
