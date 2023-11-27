@@ -54,7 +54,7 @@ class Shoutbox
             return;
         }
         $this->has_info($shout_id);
-    } // Constructor
+    }
 
     public function getId(): int
     {
@@ -79,7 +79,7 @@ class Shoutbox
         }
 
         return true;
-    } // has_info
+    }
 
     /**
      * get_object
@@ -109,7 +109,7 @@ class Shoutbox
         }
 
         return $object;
-    } // get_object
+    }
 
     public function getStickyFormatted(): string
     {

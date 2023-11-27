@@ -136,7 +136,7 @@ class Upload
         }
 
         return self::rerror();
-    } // process
+    }
 
     /**
      * check
@@ -167,7 +167,7 @@ class Upload
         }
 
         return null;
-    } // check
+    }
 
     /**
      * can_upload
@@ -206,7 +206,7 @@ class Upload
         echo '{"status":"error"}';
 
         return false;
-    } // rerror
+    }
 
     /**
      * upload_script
@@ -221,7 +221,7 @@ class Upload
             $script = str_replace('%FILE%', $targetfile, $script);
             exec($script);
         }
-    } // upload_script
+    }
 
     /**
      * check_artist
@@ -251,7 +251,7 @@ class Upload
         }
 
         return null;
-    } // check_artist
+    }
 
     /**
      * check_album
@@ -274,7 +274,7 @@ class Upload
         }
 
         return false;
-    } // check_album
+    }
 
     /**
      * check_target_path
@@ -296,7 +296,7 @@ class Upload
         }
 
         return $targetfile;
-    } // check_target_path
+    }
 
     /**
      * check_target_dir
@@ -321,7 +321,7 @@ class Upload
         }
 
         return $targetdir;
-    } // check_target_dir
+    }
 
     /**
      * get_root
@@ -355,5 +355,5 @@ class Upload
         }
 
         return $rootdir;
-    } // get_root
+    }
 }

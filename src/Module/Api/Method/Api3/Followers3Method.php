@@ -61,7 +61,7 @@ final class Followers3Method
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    } // followers
+    }
 
     /**
      * @deprecated inject by constructor

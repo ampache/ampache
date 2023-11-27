@@ -57,5 +57,5 @@ final class Videos3Method
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
         echo Xml3_Data::videos($results);
-    } // videos
+    }
 }

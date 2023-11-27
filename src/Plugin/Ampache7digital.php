@@ -66,7 +66,7 @@ class Ampache7digital implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -78,7 +78,7 @@ class Ampache7digital implements AmpachePluginInterface
             Preference::delete('7digital_api_key') &&
             Preference::delete('7digital_secret_api_key')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -87,7 +87,7 @@ class Ampache7digital implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * Get song preview.
@@ -148,5 +148,5 @@ class Ampache7digital implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 }

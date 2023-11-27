@@ -99,5 +99,5 @@ final class Flag4Method
         }
 
         return true;
-    } // flag
+    }
 }

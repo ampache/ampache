@@ -51,7 +51,7 @@ class AmpacheTwitter implements AmpachePluginInterface
     public function install(): bool
     {
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -60,7 +60,7 @@ class AmpacheTwitter implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return true;
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -69,7 +69,7 @@ class AmpacheTwitter implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * external_share
@@ -97,5 +97,5 @@ class AmpacheTwitter implements AmpachePluginInterface
         $user->set_preferences();
 
         return true;
-    } // load
+    }
 }

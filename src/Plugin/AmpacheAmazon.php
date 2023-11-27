@@ -78,7 +78,7 @@ class AmpacheAmazon implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -93,7 +93,7 @@ class AmpacheAmazon implements AmpachePluginInterface
             Preference::delete('amazon_developer_private_api_key') &&
             Preference::delete('amazon_developer_associate_tag')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -161,7 +161,7 @@ class AmpacheAmazon implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 
     /**
      * gather_arts
@@ -274,5 +274,5 @@ class AmpacheAmazon implements AmpachePluginInterface
         } // if we've got something
 
         return $images;
-    } // gather_arts
+    }
 }

@@ -66,5 +66,5 @@ final class Goodbye4Method
         Api4::message('error', 'failed to end session: ' . $input['auth'], '400', $input['api_format']);
 
         return false;
-    } // goodbye
+    }
 }

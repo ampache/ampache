@@ -67,5 +67,5 @@ final class UpdatePodcast4Method
         }
 
         return true;
-    } // update_podcast
+    }
 }

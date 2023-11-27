@@ -68,7 +68,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         // the ui is sometimes looking for a formatted name...
         $this->f_name = scrub_out($this->name);
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -86,7 +86,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $tag_id = self::tag_exists($name);
 
         return new Tag($tag_id);
-    } // construct_from_name
+    }
 
     /**
      * build_cache
@@ -108,7 +108,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return true;
-    } // build_cache
+    }
 
     /**
      * build_map_cache
@@ -163,7 +163,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return true;
-    } // build_map_cache
+    }
 
     /**
      * add
@@ -215,7 +215,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return (int)$map_id;
-    } // add
+    }
 
     /**
      * add_tag
@@ -236,7 +236,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         parent::add_to_cache('tag_name', $value, array($insert_id));
 
         return $insert_id;
-    } // add_tag
+    }
 
     /**
      * update
@@ -299,7 +299,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return $this->id;
-    } // add_tag
+    }
 
     /**
      * merge
@@ -428,7 +428,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id));
 
         return $insert_id;
-    } // add_tag_map
+    }
 
     /**
      * garbage_collection
@@ -500,7 +500,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return 0;
-    } // tag_exists
+    }
 
     /**
      * tag_map_exists
@@ -529,7 +529,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return false;
-    } // tag_map_exists
+    }
 
     /**
      * get_top_tags
@@ -557,7 +557,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return $results;
-    } // get_top_tags
+    }
 
     /**
      * get_object_tags
@@ -585,7 +585,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return $results;
-    } // get_object_tags
+    }
 
     /**
      * get_tag_objects
@@ -626,7 +626,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return $results;
-    } // get_tag_objects
+    }
 
     /**
      * get_tag_ids
@@ -665,7 +665,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return $results;
-    } // get_tag_ids
+    }
 
     /**
      * get_tags
@@ -720,7 +720,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         parent::add_to_cache('tags_list', 'no_name', $results);
 
         return $results;
-    } // get_tags
+    }
 
     /**
      * get_display
@@ -756,7 +756,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $results = rtrim((string)$results, ', ');
 
         return $results;
-    } // get_display
+    }
 
     /**
      * update_tag_list
@@ -817,7 +817,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return true;
-    } // update_tag_list
+    }
 
     /**
      * clean_to_existing
@@ -881,7 +881,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return $results;
-    } // count
+    }
 
     /**
      * remove_map
@@ -905,7 +905,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         Dba::write($sql, array($this->id, $type, $object_id, $uid));
 
         return true;
-    } // remove_map
+    }
 
     /**
      * remove_all_map
@@ -923,7 +923,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         Dba::write($sql, array($object_type, $object_id));
 
         return true;
-    } // remove_all_map
+    }
 
     /**
      * @param bool $details

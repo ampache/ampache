@@ -83,5 +83,5 @@ final class Shares4Method
         }
 
         return true;
-    } // shares
+    }
 }

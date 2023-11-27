@@ -74,5 +74,5 @@ final class UpdateFromTags4Method
         Api4::message('success', 'Updated tags for: ' . (string) $object_id . ' (' . $type . ')', null, $input['api_format']);
 
         return true;
-    } // update_from_tags
+    }
 }

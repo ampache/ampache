@@ -89,7 +89,7 @@ final class UserCreate4Method
         Api4::message('error', 'failed to create: ' . $username, '400', $input['api_format']);
 
         return false;
-    } // user_create
+    }
 
     /**
      * @todo Inject by constructor

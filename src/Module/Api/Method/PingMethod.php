@@ -88,5 +88,5 @@ final class PingMethod
             default:
                 echo Xml_Data::keyed_array($results);
         }
-    } // ping
+    }
 }

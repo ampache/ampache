@@ -96,7 +96,7 @@ final class RecordPlay4Method
         Api4::message('success', 'successfully recorded play: ' . $media->id . ' for: ' . $play_user->username, null, $input['api_format']);
 
         return true;
-    } // record_play
+    }
 
     /**
      * @deprecated inject dependency

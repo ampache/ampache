@@ -58,5 +58,5 @@ final class Playlists3Method
 
         ob_end_clean();
         echo Xml3_Data::playlists($results);
-    } // playlists
+    }
 }

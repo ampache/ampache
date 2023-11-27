@@ -81,7 +81,7 @@ class Broadcast extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // constructor
+    }
 
     public function getId(): int
     {

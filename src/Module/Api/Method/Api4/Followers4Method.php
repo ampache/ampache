@@ -84,7 +84,7 @@ final class Followers4Method
         }
 
         return true;
-    } // followers
+    }
 
     /**
      * @deprecated inject by constructor

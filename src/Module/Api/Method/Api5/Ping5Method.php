@@ -88,5 +88,5 @@ final class Ping5Method
             default:
                 echo Xml5_Data::keyed_array($results);
         }
-    } // ping
+    }
 }

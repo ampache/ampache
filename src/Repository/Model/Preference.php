@@ -263,7 +263,7 @@ class Preference extends database_object
         parent::add_to_cache('get_by_user-' . $pref_name, $user_id, $data);
 
         return $data['value'] ?? '';
-    } // get_by_user
+    }
 
     /**
      * update
@@ -315,7 +315,7 @@ class Preference extends database_object
         }
 
         return false;
-    } // update
+    }
 
     /**
      * update_level
@@ -336,7 +336,7 @@ class Preference extends database_object
         Dba::write($sql, array($level, $preference_id));
 
         return true;
-    } // update_level
+    }
 
     /**
      * update_all
@@ -358,7 +358,7 @@ class Preference extends database_object
         parent::clear_cache();
 
         return true;
-    } // update_all
+    }
 
     /**
      * exists
@@ -376,7 +376,7 @@ class Preference extends database_object
         $db_results = Dba::read($sql, array($preference));
 
         return Dba::num_rows($db_results);
-    } // exists
+    }
 
     /**
      * has_access
@@ -400,7 +400,7 @@ class Preference extends database_object
         }
 
         return false;
-    } // has_access
+    }
 
     /**
      * id_from_name
@@ -424,7 +424,7 @@ class Preference extends database_object
         }
 
         return false;
-    } // id_from_name
+    }
 
     /**
      * name_from_id
@@ -443,7 +443,7 @@ class Preference extends database_object
         $row = Dba::fetch_assoc($db_results);
 
         return $row['name'];
-    } // name_from_id
+    }
 
     /**
      * get_categories
@@ -464,7 +464,7 @@ class Preference extends database_object
         } // end while
 
         return $results;
-    } // get_categories
+    }
 
     /**
      * get
@@ -497,7 +497,7 @@ class Preference extends database_object
         }
 
         return $results;
-    } // get
+    }
 
     /**
      * insert
@@ -546,7 +546,7 @@ class Preference extends database_object
         debug_event(self::class, 'Inserted preference: ' . $name, 3);
 
         return true;
-    } // insert
+    }
 
     /**
      * delete
@@ -572,7 +572,7 @@ class Preference extends database_object
         }
 
         return false;
-    } // delete
+    }
 
     /**
      * rename
@@ -595,7 +595,7 @@ class Preference extends database_object
         // First remove garbage
         $sql = "DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` WHERE `preference`.`id` IS NULL";
         Dba::write($sql);
-    } // rebuild_preferences
+    }
 
     /**
      * fix_preferences
@@ -636,7 +636,7 @@ class Preference extends database_object
         }
 
         return $results;
-    } // fix_preferences
+    }
 
     /**
      * set_defaults
@@ -761,7 +761,7 @@ class Preference extends database_object
             "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
             "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL);";
         Dba::write($sql);
-    } // set_defaults
+    }
 
     /**
      * translate_db
@@ -959,7 +959,7 @@ class Preference extends database_object
         foreach ($pref_array as $key => $value) {
             Dba::write($sql, array($value, $key, $value));
         }
-    } // translate_db
+    }
 
     /**
      * load_from_session
@@ -978,7 +978,7 @@ class Preference extends database_object
         }
 
         return false;
-    } // load_from_session
+    }
 
     /**
      * clear_from_session
@@ -990,7 +990,7 @@ class Preference extends database_object
         if (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata'])) {
             unset($_SESSION['userdata']['preferences']);
         }
-    } // clear_from_session
+    }
 
     /**
      * is_boolean
@@ -1192,7 +1192,7 @@ class Preference extends database_object
         }
 
         return false;
-    } // is_boolean
+    }
 
     /**
      * init
@@ -1258,5 +1258,5 @@ class Preference extends database_object
         $_SESSION['userdata']['uid']         = $user_id;
 
         return true;
-    } // init
+    }
 }

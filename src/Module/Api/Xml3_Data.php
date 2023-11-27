@@ -65,7 +65,7 @@ class Xml3_Data
     private function __construct()
     {
         // Rien a faire
-    } // constructor
+    }
 
     /**
      * set_offset
@@ -77,7 +77,7 @@ class Xml3_Data
     public static function set_offset($offset): void
     {
         self::$offset = (int)$offset;
-    } // set_offset
+    }
 
     /**
      * set_limit
@@ -95,7 +95,7 @@ class Xml3_Data
         self::$limit = (strtolower((string)$limit) == "none") ? null : (int)$limit;
 
         return true;
-    } // set_limit
+    }
 
     /**
      * set_type
@@ -109,7 +109,7 @@ class Xml3_Data
         if (in_array($type, array('rss', 'xspf', 'itunes'))) {
             self::$type = $type;
         }
-    } // set_type
+    }
 
     /**
      * error
@@ -124,7 +124,7 @@ class Xml3_Data
         $string = "\t<error code=\"$code\"><![CDATA[" . $string . "]]></error>";
 
         return Xml_Data::output_xml($string);
-    } // error
+    }
 
     /**
      * single_string
@@ -145,7 +145,7 @@ class Xml3_Data
         $final .= self::_footer();
 
         return $final;
-    } // single_string
+    }
 
     /**
      * header
@@ -157,7 +157,7 @@ class Xml3_Data
     public static function header($title = null): string
     {
         return self::_header($title);
-    } // header
+    }
 
     /**
      * footer
@@ -169,7 +169,7 @@ class Xml3_Data
     public static function footer(): string
     {
         return self::_footer();
-    } // footer
+    }
 
     /**
      * tags_string
@@ -199,7 +199,7 @@ class Xml3_Data
         }
 
         return $string;
-    } // tags_string
+    }
 
     /**
      * playlist_song_tracks_string
@@ -219,7 +219,7 @@ class Xml3_Data
         }
 
         return $playlist_track;
-    } // playlist_song_tracks_string
+    }
 
     /**
      * keyed_array
@@ -256,7 +256,7 @@ class Xml3_Data
         }
 
         return $string;
-    } // keyed_array
+    }
 
     /**
      * tags
@@ -284,7 +284,7 @@ class Xml3_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // tags
+    }
 
     /**
      * artists
@@ -346,7 +346,7 @@ class Xml3_Data
         } // end foreach artists
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // artists
+    }
 
     /**
      * albums
@@ -402,7 +402,7 @@ class Xml3_Data
         } // end foreach
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // albums
+    }
 
     /**
      * playlists
@@ -434,7 +434,7 @@ class Xml3_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // playlists
+    }
 
     /**
      * songs
@@ -492,7 +492,7 @@ class Xml3_Data
         } // end foreach
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // songs
+    }
 
     /**
      * videos
@@ -521,7 +521,7 @@ class Xml3_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // videos
+    }
 
     /**
      * democratic
@@ -562,7 +562,7 @@ class Xml3_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // democratic
+    }
 
     /**
      * user
@@ -582,7 +582,7 @@ class Xml3_Data
         $string .= "</user>\n";
 
         return Xml_Data::output_xml($string);
-    } // user
+    }
 
     /**
      * users
@@ -601,7 +601,7 @@ class Xml3_Data
         $string .= "</users>\n";
 
         return Xml_Data::output_xml($string);
-    } // users
+    }
 
     /**
      * shouts
@@ -625,7 +625,7 @@ class Xml3_Data
         $string .= "</shouts>\n";
 
         return Xml_Data::output_xml($string);
-    } // shouts
+    }
 
     /**
      * timeline
@@ -649,7 +649,7 @@ class Xml3_Data
         $string .= "</timeline>\n";
 
         return self::_header() . $string . self::_footer();
-    } // timeline
+    }
 
     /**
      * _header
@@ -675,7 +675,7 @@ class Xml3_Data
         } // end switch
 
         return $header;
-    } // _header
+    }
 
     /**
      * _footer
@@ -700,7 +700,7 @@ class Xml3_Data
         } // end switch on type
 
         return $footer;
-    } // _footer
+    }
 
     /**
      * @deprecated

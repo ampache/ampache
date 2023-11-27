@@ -168,7 +168,7 @@ class Catalog_beets extends Catalog
     public function get_path(): string
     {
         return $this->beetsdb;
-    } // get_path
+    }
 
     public function format(): void
     {

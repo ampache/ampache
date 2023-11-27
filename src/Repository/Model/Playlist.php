@@ -65,7 +65,7 @@ class Playlist extends playlist_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // Playlist
+    }
 
     public function getId(): int
     {
@@ -105,7 +105,7 @@ class Playlist extends playlist_object
         }
 
         return true;
-    } // build_cache
+    }
 
     /**
      * get_playlists
@@ -168,7 +168,7 @@ class Playlist extends playlist_object
         }
 
         return $results;
-    } // get_playlists
+    }
 
     /**
      * get_playlist_array
@@ -205,7 +205,7 @@ class Playlist extends playlist_object
         parent::add_to_cache($key, $user_id, $results);
 
         return $results;
-    } // get_playlist_array
+    }
 
     /**
      * get_details
@@ -229,7 +229,7 @@ class Playlist extends playlist_object
         }
 
         return $results;
-    } // get_playlists
+    }
 
     /**
      * get_smartlists
@@ -287,7 +287,7 @@ class Playlist extends playlist_object
         }
 
         return $results;
-    } // get_smartlists
+    }
 
     /**
      * format
@@ -301,7 +301,7 @@ class Playlist extends playlist_object
         parent::format($details);
         $this->f_date        = $this->date ? get_datetime((int)$this->date) : T_('Unknown');
         $this->f_last_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Unknown');
-    } // format
+    }
 
     /**
      * get_items
@@ -359,7 +359,7 @@ class Playlist extends playlist_object
         //	debug_event(__CLASS__, "get_items(): Results:\n" . print_r($results,true) , 5);
 
         return $results;
-    } // get_items
+    }
 
     /**
      * get_random_items
@@ -413,7 +413,7 @@ class Playlist extends playlist_object
         //debug_event(__CLASS__, "get_random_items(): " . $sql . $limit_sql, 5);
 
         return $results;
-    } // get_random_items
+    }
 
     /**
      * get_songs
@@ -441,7 +441,7 @@ class Playlist extends playlist_object
         } // end while
 
         return $results;
-    } // get_songs
+    }
 
     /**
      * get_media_count
@@ -477,7 +477,7 @@ class Playlist extends playlist_object
         }
 
         return (int)$row['list_count'];
-    } // get_media_count
+    }
 
     /**
     * get_total_duration
@@ -501,7 +501,7 @@ class Playlist extends playlist_object
         //	debug_event(__CLASS__, "get_total_duration(): " . $sql, 5);
 
         return (int) $row[0];
-    } // get_total_duration
+    }
 
     /**
      * update
@@ -523,7 +523,7 @@ class Playlist extends playlist_object
         $this->format();
 
         return $this->id;
-    } // update
+    }
 
     /**
      * update_type
@@ -535,7 +535,7 @@ class Playlist extends playlist_object
         if ($this->_update_item('type', $new_type)) {
             $this->type = $new_type;
         }
-    } // update_type
+    }
 
     /**
      * update_user
@@ -550,7 +550,7 @@ class Playlist extends playlist_object
             $sql            = "UPDATE `playlist` SET `user` = ?, `username` = ? WHERE `playlist`.`user` = ?;";
             Dba::write($sql, array($this->user, $this->username, $this->user));
         }
-    } // update_type
+    }
 
     /**
      * update_name
@@ -562,7 +562,7 @@ class Playlist extends playlist_object
         if ($this->_update_item('name', $new_name)) {
             $this->name = $new_name;
         }
-    } // update_name
+    }
 
     /**
      * update_last_update
@@ -575,7 +575,7 @@ class Playlist extends playlist_object
             $this->last_update = $last_update;
         }
         $this->set_last($this->get_total_duration(), 'last_duration');
-    } // update_last_update
+    }
 
     /**
      * _update_item
@@ -593,7 +593,7 @@ class Playlist extends playlist_object
         $sql = "UPDATE `playlist` SET `$field` = ? WHERE `id` = ?";
 
         return Dba::write($sql, array($value, $this->id));
-    } // update_item
+    }
 
     /**
      * update_track_number
@@ -605,7 +605,7 @@ class Playlist extends playlist_object
     {
         $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
         Dba::write($sql, array($index, $track_id));
-    } // update_track_number
+    }
 
     /**
      * Regenerate track numbers to fill gaps.
@@ -638,7 +638,7 @@ class Playlist extends playlist_object
         }
         $this->add_medias($medias);
         Catalog::update_mapping('playlist');
-    } // add_songs
+    }
 
     /**
      * add_medias
@@ -706,7 +706,7 @@ class Playlist extends playlist_object
         }
 
         return 0;
-    } // check
+    }
 
     /**
      * create
@@ -747,7 +747,7 @@ class Playlist extends playlist_object
         Catalog::count_table('playlist');
 
         return (int)$insert_id;
-    } // create
+    }
 
     /**
      * set_items
@@ -756,7 +756,7 @@ class Playlist extends playlist_object
     public function set_items()
     {
         $this->items = $this->get_items();
-    } // set_items
+    }
 
     /**
      * set_last
@@ -786,7 +786,7 @@ class Playlist extends playlist_object
         $this->update_last_update();
 
         return true;
-    } // delete_all
+    }
 
     /**
      * delete_song
@@ -802,7 +802,7 @@ class Playlist extends playlist_object
         $this->update_last_update();
 
         return true;
-    } // delete_track
+    }
 
     /**
      * delete_track
@@ -818,7 +818,7 @@ class Playlist extends playlist_object
         $this->update_last_update();
 
         return true;
-    } // delete_track
+    }
 
     /**
      * delete_track_number
@@ -833,7 +833,7 @@ class Playlist extends playlist_object
         $this->update_last_update();
 
         return true;
-    } // delete_track_number
+    }
 
     /**
      * set_by_track_number
@@ -850,7 +850,7 @@ class Playlist extends playlist_object
         $this->update_last_update();
 
         return true;
-    } // delete_track_number
+    }
 
     /**
      * has_item
@@ -877,7 +877,7 @@ class Playlist extends playlist_object
         }
 
         return false;
-    } // has_item
+    }
 
     /**
      * has_search
@@ -905,7 +905,7 @@ class Playlist extends playlist_object
         }
 
         return 0;
-    } // has_search
+    }
 
     /**
      * delete
@@ -924,7 +924,7 @@ class Playlist extends playlist_object
         Catalog::count_table('playlist');
 
         return true;
-    } // delete
+    }
 
     /**
      * Sort the tracks and save the new position
@@ -961,7 +961,7 @@ class Playlist extends playlist_object
         $this->update_last_update();
 
         return true;
-    } // sort_tracks
+    }
 
     /**
      * Migrate an object associate stats to a new object

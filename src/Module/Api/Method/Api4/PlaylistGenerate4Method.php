@@ -181,5 +181,5 @@ final class PlaylistGenerate4Method
                         echo Xml4_Data::songs($results, $user);
                 }
         }
-    } // playlist_generate
+    }
 }

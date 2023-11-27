@@ -75,7 +75,7 @@ final class LiveStreamDeleteMethod
         Api::message('Deleted live_stream: ' . $object_id, $input['api_format']);
 
         return true;
-    } // live_stream_delete
+    }
 
     private static function getLiveStreamRepository(): LiveStreamRepositoryInterface
     {

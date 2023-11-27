@@ -169,7 +169,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
         $this->type        = strtolower((string)pathinfo($this->file, PATHINFO_EXTENSION));
         $this->total_count = (int)$this->total_count;
-    } // Constructor
+    }
 
     public function getId(): int
     {
@@ -217,7 +217,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         return true;
-    } // build_cache
+    }
 
     /**
      * format
@@ -266,7 +266,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         if ($this->release_date) {
             $this->f_release_date = get_datetime((int) $this->release_date, 'short', 'none');
         }
-    } // format
+    }
 
     /**
      * does the item have art?
@@ -699,7 +699,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         $this->title = $title;
 
         return $this->id;
-    } // update
+    }
 
     /**
      * @param int $video_id
@@ -790,7 +790,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         Video::update_played(true, $this->id);
 
         return true;
-    } // set_played
+    }
 
     /**
      * @param int $user
@@ -1094,7 +1094,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         self::_update_item('update_time', $time, $video_id, 75);
-    } // update_utime
+    }
 
     /**
      * update_played
@@ -1105,7 +1105,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public static function update_played($new_played, $song_id): void
     {
         self::_update_item('played', ($new_played ? 1 : 0), $song_id, '25');
-    } // update_played
+    }
 
     /**
      * _update_item
@@ -1134,7 +1134,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         Dba::write($sql, array($value, $video_id));
 
         return true;
-    } // _update_item
+    }
 
     /**
      * get_deleted
@@ -1151,7 +1151,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         return $deleted;
-    } // get_deleted
+    }
 
     /**
      * compare_video_information
@@ -1171,7 +1171,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         $skip_array   = array('id', 'tag_id', 'mime', 'total_count', 'disabledMetadataFields');
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
-    } // compare_video_information
+    }
 
     /**
      * @deprecated

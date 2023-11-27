@@ -55,7 +55,7 @@ class AlbumSongs3Method
 
         ob_end_clean();
         echo Xml3_Data::songs($results, $user);
-    } // album_songs
+    }
 
     /**
      * @deprecated Inject by constructor

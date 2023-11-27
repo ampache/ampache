@@ -142,5 +142,5 @@ final class Democratic4Method
         } // switch on method
 
         return true;
-    } // democratic
+    }
 }

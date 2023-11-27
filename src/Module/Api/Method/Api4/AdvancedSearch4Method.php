@@ -128,5 +128,5 @@ final class AdvancedSearch4Method
                         break;
                 }
         }
-    } // advanced_search
+    }
 }

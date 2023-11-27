@@ -45,5 +45,5 @@ final class Tag3Method
         $uid = scrub_in((string) $input['filter']);
         ob_end_clean();
         echo Xml3_Data::tags(array($uid));
-    } // tag
+    }
 }

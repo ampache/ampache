@@ -70,7 +70,7 @@ class Ampachelistenbrainz implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -79,7 +79,7 @@ class Ampachelistenbrainz implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return Preference::delete('listenbrainz_token');
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -96,7 +96,7 @@ class Ampachelistenbrainz implements AmpachePluginInterface
         }
 
         return true;
-    } // upgrade
+    }
 
     /**
      * save_mediaplay
@@ -164,7 +164,7 @@ class Ampachelistenbrainz implements AmpachePluginInterface
         debug_event('listenbrainz.plugin', "Submission Successful", 5);
 
         return true;
-    } // submit
+    }
 
     /**
      * post_json_url
@@ -191,7 +191,7 @@ class Ampachelistenbrainz implements AmpachePluginInterface
         $target  = $this->scheme . '://' . $this->api_host . $url;
 
         return file_get_contents($target, false, $context);
-    } // call_url
+    }
 
     /**
      * set_flag
@@ -201,7 +201,7 @@ class Ampachelistenbrainz implements AmpachePluginInterface
      */
     public function set_flag($song, $flagged): void
     {
-    } // set_flag
+    }
 
     /**
      * load
@@ -223,5 +223,5 @@ class Ampachelistenbrainz implements AmpachePluginInterface
         $this->api_host = $data['listenbrainz_api_url'] ?? 'api.listenbrainz.org';
 
         return true;
-    } // load
+    }
 }

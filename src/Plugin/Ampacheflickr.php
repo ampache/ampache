@@ -61,7 +61,7 @@ class Ampacheflickr implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -70,7 +70,7 @@ class Ampacheflickr implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return Preference::delete('flickr_api_key');
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -79,7 +79,7 @@ class Ampacheflickr implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * @param string $search
@@ -164,5 +164,5 @@ class Ampacheflickr implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 }

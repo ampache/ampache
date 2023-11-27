@@ -249,7 +249,7 @@ class mpd
             $this->connected = false;
             $this->_error('construct', 'Password required to access server');
         }
-    } // constructor
+    }
 
     /**
      * Connect
@@ -296,7 +296,7 @@ class mpd
         $this->_error('Connect', "Connection not available");
 
         return false;
-    } // connect
+    }
 
     /**
      * SendCommand
@@ -696,7 +696,7 @@ class mpd
         $this->_debug('PLRemove', "return: $response", 5);
 
         return $response;
-    } // PLRemove
+    }
 
     /**
      * SetRepeat

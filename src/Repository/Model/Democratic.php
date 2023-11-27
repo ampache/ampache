@@ -73,7 +73,7 @@ class Democratic extends Tmp_Playlist
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -101,7 +101,7 @@ class Democratic extends Tmp_Playlist
         }
 
         return true;
-    } // build_vote_cache
+    }
 
     /**
      * is_enabled
@@ -115,7 +115,7 @@ class Democratic extends Tmp_Playlist
         }
 
         return false;
-    } // is_enabled
+    }
 
     /**
      * set_parent
@@ -129,7 +129,7 @@ class Democratic extends Tmp_Playlist
         if (!empty($row)) {
             $this->tmp_playlist = $row['id'] ?? null;
         }
-    } // set_parent
+    }
 
     /**
      * format
@@ -140,7 +140,7 @@ class Democratic extends Tmp_Playlist
         $this->f_cooldown = $this->cooldown . ' ' . T_('minutes');
         $this->f_primary  = $this->primary ? T_('Primary') : '';
         $this->f_level    = User::access_level_to_name((string)$this->level);
-    } // format
+    }
 
     /**
      * get_playlists
@@ -158,7 +158,7 @@ class Democratic extends Tmp_Playlist
         }
 
         return $results;
-    } // get_playlists
+    }
 
     /**
      * get_current_playlist
@@ -181,7 +181,7 @@ class Democratic extends Tmp_Playlist
         }
 
         return new Democratic($democratic_id);
-    } // get_current_playlist
+    }
 
     /**
      * get_items
@@ -217,7 +217,7 @@ class Democratic extends Tmp_Playlist
         }
 
         return $results;
-    } // get_items
+    }
 
     /**
      * play_url
@@ -232,7 +232,7 @@ class Democratic extends Tmp_Playlist
         $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out((string)$user->id) . '&demo_id=' . scrub_out((string)$this->id);
 
         return Stream_Url::format($link);
-    } // play_url
+    }
 
     /**
      * get_next_object
@@ -274,7 +274,7 @@ class Democratic extends Tmp_Playlist
 
             return $results['id'];
         }
-    } // get_next_object
+    }
 
     /**
      * get_uid_from_object_id
@@ -296,7 +296,7 @@ class Democratic extends Tmp_Playlist
         }
 
         return (int)$row['id'];
-    } // get_uid_from_object_id
+    }
 
     /**
      * get_cool_songs
@@ -309,7 +309,7 @@ class Democratic extends Tmp_Playlist
         $cool_time = time() - ($this->cooldown * 60);
 
         return Stats::get_object_history(Core::get_global('user')->id, $cool_time);
-    } // get_cool_songs
+    }
 
     /**
      * vote
@@ -329,7 +329,7 @@ class Democratic extends Tmp_Playlist
                 $this->_add_vote($object_id, $type);
             }
         } // end foreach
-    } // vote
+    }
 
     /**
      * has_vote
@@ -358,7 +358,7 @@ class Democratic extends Tmp_Playlist
         }
 
         return false;
-    } // has_vote
+    }
 
     /**
      * _add_vote
@@ -420,7 +420,7 @@ class Democratic extends Tmp_Playlist
         self::prune_tracks();
 
         return true;
-    } // remove_vote
+    }
 
     /**
      * delete_votes
@@ -436,7 +436,7 @@ class Democratic extends Tmp_Playlist
         Dba::write($sql, array($row_id));
 
         return true;
-    } // delete_votes
+    }
 
     /**
      * delete_from_oid
@@ -455,7 +455,7 @@ class Democratic extends Tmp_Playlist
         }
 
         return true;
-    } // delete_from_oid
+    }
 
     /**
      * delete
@@ -473,7 +473,7 @@ class Democratic extends Tmp_Playlist
         self::prune_tracks();
 
         return true;
-    } // delete
+    }
 
     /**
      * update
@@ -497,7 +497,7 @@ class Democratic extends Tmp_Playlist
         Dba::write($sql, array($name, $base, $cool, $default, $level, $demo_id));
 
         return $this->id;
-    } // update
+    }
 
     /**
      * create
@@ -535,7 +535,7 @@ class Democratic extends Tmp_Playlist
         }
 
         return null;
-    } // create
+    }
 
     /**
      * prune_tracks
@@ -547,7 +547,7 @@ class Democratic extends Tmp_Playlist
         // This deletes data without votes, if it's a voting democratic playlist
         $sql = "DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `user_vote` ON `tmp_playlist_data`.`id`=`user_vote`.`object_id` LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id`=`tmp_playlist_data`.`tmp_playlist` WHERE `user_vote`.`object_id` IS NULL AND `tmp_playlist`.`type` = 'vote'";
         Dba::write($sql);
-    } // prune_tracks
+    }
 
     /**
      * clear
@@ -570,7 +570,7 @@ class Democratic extends Tmp_Playlist
         $this->clear_votes();
 
         return true;
-    } // clear_playlist
+    }
 
     /**
      * clean_votes
@@ -582,7 +582,7 @@ class Democratic extends Tmp_Playlist
         Dba::write($sql);
 
         return true;
-    } // clear_votes
+    }
 
     /**
      * get_vote
@@ -602,7 +602,7 @@ class Democratic extends Tmp_Playlist
         parent::add_to_cache('democratic_vote', $object_id, array($results['count']));
 
         return (int)$results['count'];
-    } // get_vote
+    }
 
     /**
      * show_playlist_select
@@ -637,5 +637,5 @@ class Democratic extends Tmp_Playlist
         $string .= "</select>\n";
 
         return $string;
-    } // show_playlist_select
+    }
 }

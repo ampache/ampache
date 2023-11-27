@@ -81,5 +81,5 @@ final class PodcastCreate4Method
         }
 
         return true;
-    } // podcast_create
+    }
 }

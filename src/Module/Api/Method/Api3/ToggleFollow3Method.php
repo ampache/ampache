@@ -61,7 +61,7 @@ final class ToggleFollow3Method
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    } // toggle_follow
+    }
 
     private static function getUserFollowToggler(): UserFollowTogglerInterface
     {

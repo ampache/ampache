@@ -98,5 +98,5 @@ final class Stream4Method
         Api4::message('error', 'failed to create: ' . $url, '400', $input['api_format']);
 
         return true;
-    } // stream
+    }
 }

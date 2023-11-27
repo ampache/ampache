@@ -48,5 +48,5 @@ final class Tags4Method
     public static function tags(array $input, User $user): void
     {
         Genres4Method::genres($input, $user);
-    } // tags
+    }
 }

@@ -69,7 +69,7 @@ class Rating extends database_object
     {
         $this->id   = (int)$rating_id;
         $this->type = $type;
-    } // Constructor
+    }
 
     public function getId(): int
     {
@@ -180,7 +180,7 @@ class Rating extends database_object
         }
 
         return true;
-    } // build_cache
+    }
 
     /**
      * get_user_rating
@@ -213,7 +213,7 @@ class Rating extends database_object
         parent::add_to_cache($key, $this->id, array($rating));
 
         return $rating;
-    } // get_user_rating
+    }
 
     /**
      * get_average_rating
@@ -237,7 +237,7 @@ class Rating extends database_object
         parent::add_to_cache($key, $this->id, array($rating));
 
         return $rating;
-    } // get_average_rating
+    }
 
     /**
      * get_highest_sql
@@ -343,7 +343,7 @@ class Rating extends database_object
         self::save_rating($this->id, $this->type, (int)$rating, (int)$user_id);
 
         return true;
-    } // set_rating
+    }
 
     /**
      * save_rating
@@ -446,7 +446,7 @@ class Rating extends database_object
             $global_rating,
             Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id . '_' . $rating->type, '', 'star0')
         );
-    } // show
+    }
 
     /**
      * Migrate an object associate stats to a new object

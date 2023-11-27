@@ -56,7 +56,7 @@ class Clip extends Video
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // Constructor
+    }
 
     public function getId(): int
     {
@@ -94,7 +94,7 @@ class Clip extends Video
         }
 
         return Artist::check($data['artist'], $artist_mbid);
-    } // _get_artist_id
+    }
 
     /**
      * create
@@ -119,7 +119,7 @@ class Clip extends Video
         }
 
         return (int)$data['id'];
-    } // create
+    }
 
     /**
      * update
@@ -136,7 +136,7 @@ class Clip extends Video
         Dba::write($sql, array($artist_id, $song_id, $this->id));
 
         return $this->id;
-    } // update
+    }
 
     /**
      * format
@@ -162,7 +162,7 @@ class Clip extends Video
                 $this->f_song = $song->get_f_link();
             }
         }
-    } // format
+    }
 
     /**
      * Get item keywords for metadata searches.

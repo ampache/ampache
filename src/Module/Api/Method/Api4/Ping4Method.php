@@ -122,5 +122,5 @@ final class Ping4Method
             default:
                 echo Xml4_Data::keyed_array($results);
         }
-    } // ping
+    }
 }

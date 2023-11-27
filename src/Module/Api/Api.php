@@ -203,7 +203,7 @@ class Api
             default:
                 echo Xml_Data::success($message, $return_data);
         }
-    } // message
+    }
 
     /**
      * error
@@ -223,7 +223,7 @@ class Api
             default:
                 echo Xml_Data::error($error_code, $message, $method, $error_type);
         }
-    } // error
+    }
 
     /**
      * empty
@@ -240,7 +240,7 @@ class Api
             default:
                 echo Xml_Data::empty();
         }
-    } // empty
+    }
 
     /**
      * set_filter
@@ -297,7 +297,7 @@ class Api
         } // end filter
 
         return true;
-    } // set_filter
+    }
 
     /**
      * check_parameter
@@ -326,7 +326,7 @@ class Api
         }
 
         return true;
-    } // check_parameter
+    }
 
     /**
      * check_access
@@ -351,7 +351,7 @@ class Api
         }
 
         return true;
-    } // check_access
+    }
 
     /**
      * server_details
@@ -407,7 +407,7 @@ class Api
         );
 
         return array_merge($autharray, $outarray);
-    } // server_details
+    }
 
     /**
      * @deprecated inject by constructor

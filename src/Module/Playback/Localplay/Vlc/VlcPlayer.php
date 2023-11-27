@@ -50,7 +50,7 @@ class VlcPlayer
         $this->host     = $host;
         $this->port     = $port;
         $this->password = $password;
-    } // VlcPlayer
+    }
 
     /**
      * add
@@ -73,7 +73,7 @@ class VlcPlayer
         }
 
         return true;
-    } // add
+    }
 
     /**
      * version
@@ -85,7 +85,7 @@ class VlcPlayer
         $results = $this->sendCommand('status.xml', $args);
 
         return ($results !== null);
-    } // version
+    }
 
     /**
      * clear
@@ -101,7 +101,7 @@ class VlcPlayer
         }
 
         return true;
-    } // clear
+    }
 
     /**
      * next
@@ -116,7 +116,7 @@ class VlcPlayer
         }
 
         return true;
-    } // next
+    }
 
     /**
      * prev
@@ -131,7 +131,7 @@ class VlcPlayer
         }
 
         return true;
-    } // prev
+    }
 
     /**
      * skip
@@ -150,7 +150,7 @@ class VlcPlayer
         // Works but if user clicks next afterwards player goes to first song our last song played before
 
         return true;
-    } // skip
+    }
 
     /**
      * play
@@ -165,7 +165,7 @@ class VlcPlayer
         }
 
         return true;
-    } // play
+    }
 
     /**
      * pause
@@ -180,7 +180,7 @@ class VlcPlayer
         }
 
         return true;
-    } // pause
+    }
 
     /**
      * stop
@@ -195,7 +195,7 @@ class VlcPlayer
         }
 
         return true;
-    } // stop
+    }
 
     /**
      * repeat
@@ -212,7 +212,7 @@ class VlcPlayer
         }
 
         return true;
-    } // repeat
+    }
 
     /**
      * random
@@ -228,7 +228,7 @@ class VlcPlayer
         }
 
         return true;
-    } // random
+    }
 
     /**
      * delete_pos
@@ -244,7 +244,7 @@ class VlcPlayer
         }
 
         return true;
-    } // delete_pos
+    }
 
     /**
      * state
@@ -269,7 +269,7 @@ class VlcPlayer
         }
 
         return $state;
-    } // state
+    }
 
     /**
      * extract the full state from the xml file and send to status in vlccontroller for further parsing.
@@ -284,7 +284,7 @@ class VlcPlayer
         }
 
         return $results;
-    } // fullstate
+    }
 
     /**
      * volume_up
@@ -299,7 +299,7 @@ class VlcPlayer
         }
 
         return true;
-    } // volume_up
+    }
 
     /**
      * volume_down
@@ -314,7 +314,7 @@ class VlcPlayer
         }
 
         return true;
-    } // volume_down
+    }
 
     /**
      * set_volume
@@ -332,7 +332,7 @@ class VlcPlayer
         }
 
         return true;
-    } // set_volume
+    }
 
     /**
      * clear_playlist
@@ -347,7 +347,7 @@ class VlcPlayer
         }
 
         return true;
-    } // clear_playlist
+    }
 
     /**
      * get_tracks
@@ -365,7 +365,7 @@ class VlcPlayer
         }
 
         return $results;
-    } // get_tracks
+    }
 
     /**
      * sendCommand
@@ -421,7 +421,7 @@ class VlcPlayer
 
         // send to xml parser and make an array
         return $this->xmltoarray($data);
-    } // sendCommand
+    }
 
     /**
      * xmltoarray

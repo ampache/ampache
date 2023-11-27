@@ -75,7 +75,7 @@ final class User4Method
         }
 
         return true;
-    } // user
+    }
 
     /**
      * @deprecated inject dependency

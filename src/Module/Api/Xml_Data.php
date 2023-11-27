@@ -82,7 +82,7 @@ class Xml_Data
     public static function set_offset($offset): void
     {
         self::$offset = (int)$offset;
-    } // set_offset
+    }
 
     /**
      * set_limit
@@ -100,7 +100,7 @@ class Xml_Data
         self::$limit = (strtolower((string)$limit) == "none") ? null : (int)$limit;
 
         return true;
-    } // set_limit
+    }
 
     /**
      * set_type
@@ -118,7 +118,7 @@ class Xml_Data
         self::$type = $type;
 
         return true;
-    } // set_type
+    }
 
     /**
      * error
@@ -136,7 +136,7 @@ class Xml_Data
         $xml_string = "\t<error errorCode=\"$code\">\n\t\t<errorAction><![CDATA[" . $action . "]]></errorAction>\n\t\t<errorType><![CDATA[" . $type . "]]></errorType>\n\t\t<errorMessage><![CDATA[" . $string . "]]></errorMessage>\n\t</error>";
 
         return self::output_xml($xml_string);
-    } // error
+    }
 
     /**
      * success
@@ -155,7 +155,7 @@ class Xml_Data
         }
 
         return self::output_xml($xml_string);
-    } // success
+    }
 
     /**
      * empty
@@ -165,7 +165,7 @@ class Xml_Data
     public static function empty(): string
     {
         return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n</root>\n";
-    } // empty
+    }
 
     /**
      * header
@@ -178,7 +178,7 @@ class Xml_Data
     public static function header($title = null): string
     {
         return self::_header($title);
-    } // header
+    }
 
     /**
      * footer
@@ -190,7 +190,7 @@ class Xml_Data
     public static function footer(): string
     {
         return self::_footer();
-    } // footer
+    }
 
     /**
      * genre_string
@@ -221,7 +221,7 @@ class Xml_Data
         }
 
         return $string;
-    } // genre_string
+    }
 
     /**
      * output_xml_from_array
@@ -303,7 +303,7 @@ class Xml_Data
 
                 return Ui::clean_utf8($string);
         }
-    } // output_from_array
+    }
 
     /**
      * keyed_array
@@ -340,7 +340,7 @@ class Xml_Data
         }
 
         return $string;
-    } // keyed_array
+    }
 
     /**
      * object_array
@@ -370,7 +370,7 @@ class Xml_Data
         $string .= ($object_type == '') ? '' : "</$object_type>";
 
         return self::output_xml($string);
-    } // object_array
+    }
 
     /**
      * indexes
@@ -499,7 +499,7 @@ class Xml_Data
         } // end foreach objects
 
         return self::output_xml($string, $full_xml);
-    } // indexes
+    }
 
     /**
      * lists
@@ -527,7 +527,7 @@ class Xml_Data
         } // end foreach objects
 
         return self::output_xml($string);
-    } // lists
+    }
 
     /**
      * browses
@@ -563,7 +563,7 @@ class Xml_Data
         } // end foreach objects
 
         return self::output_xml($string);
-    } // browses
+    }
 
     /**
      * licenses
@@ -586,7 +586,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // licenses
+    }
 
     /**
      * labels
@@ -611,7 +611,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // labels
+    }
 
     /**
      * live_streams
@@ -635,7 +635,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // live_streams
+    }
 
     /**
      * genres
@@ -659,7 +659,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // genres
+    }
 
     /**
      * artists
@@ -704,7 +704,7 @@ class Xml_Data
         } // end foreach artists
 
         return self::output_xml($string, $full_xml);
-    } // artists
+    }
 
     /**
      * albums
@@ -761,7 +761,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string, $full_xml);
-    } // albums
+    }
 
     /**
      * playlists
@@ -820,7 +820,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // playlists
+    }
 
     /**
      * shares
@@ -843,7 +843,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // shares
+    }
 
     /**
      * bookmarks
@@ -877,7 +877,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // bookmarks
+    }
 
     /**
      * catalogs
@@ -905,7 +905,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // catalogs
+    }
 
     /**
      * podcasts
@@ -941,7 +941,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // podcasts
+    }
 
     /**
      * podcast_episodes
@@ -970,7 +970,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string, $full_xml);
-    } // podcast_episodes
+    }
 
     /**
      * songs
@@ -1047,7 +1047,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string, $full_xml);
-    } // songs
+    }
 
     /**
      * videos
@@ -1077,7 +1077,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // videos
+    }
 
     /**
      * democratic
@@ -1120,7 +1120,7 @@ class Xml_Data
         } // end foreach
 
         return self::output_xml($string);
-    } // democratic
+    }
 
     /**
      * user
@@ -1144,7 +1144,7 @@ class Xml_Data
         $string .= "</user>\n";
 
         return self::output_xml($string);
-    } // user
+    }
 
     /**
      * users
@@ -1162,7 +1162,7 @@ class Xml_Data
         }
 
         return self::output_xml($string);
-    } // users
+    }
 
     /**
      * shouts
@@ -1184,7 +1184,7 @@ class Xml_Data
         }
 
         return self::output_xml($string);
-    } // shouts
+    }
 
     /**
      * @param string $string
@@ -1237,7 +1237,7 @@ class Xml_Data
         }
 
         return self::_header() . $string . self::_footer();
-    } // timeline
+    }
 
     /**
      * rss_feed
@@ -1262,7 +1262,7 @@ class Xml_Data
         }
 
         return self::_header() . $string . self::_footer();
-    } // rss_feed
+    }
 
     /**
      * deleted
@@ -1298,7 +1298,7 @@ class Xml_Data
         } // end foreach objects
 
         return self::output_xml($string);
-    } // deleted
+    }
 
     /**
      * _header
@@ -1326,7 +1326,7 @@ class Xml_Data
         } // end switch
 
         return $header;
-    } // _header
+    }
 
     /**
      * _footer
@@ -1351,7 +1351,7 @@ class Xml_Data
         } // end switch on type
 
         return $footer;
-    } // _footer
+    }
 
     /**
      * podcast

@@ -173,7 +173,7 @@ final class Stats4Method
         }
 
         return true;
-    } // stats
+    }
 
     /**
      * @deprecated Inject by constructor

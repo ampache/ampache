@@ -82,5 +82,5 @@ final class Artists4Method
                 Xml4_Data::set_limit($input['limit'] ?? 0);
                 echo Xml4_Data::artists($results, $include, $user);
         }
-    } // artists
+    }
 }

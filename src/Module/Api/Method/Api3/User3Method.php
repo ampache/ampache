@@ -54,5 +54,5 @@ final class User3Method
         } else {
             debug_event(self::class, 'Username required on user function call.', 1);
         }
-    } // user
+    }
 }

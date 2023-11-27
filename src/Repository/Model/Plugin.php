@@ -50,7 +50,7 @@ class Plugin
             return;
         }
         $this->has_info($name);
-    } // Constructor
+    }
 
     /**
      * has_info
@@ -113,7 +113,7 @@ class Plugin
         ksort($plugins_list[$type]);
 
         return $plugins_list[$type];
-    } // get_plugins
+    }
 
     /**
      * is_valid
@@ -166,7 +166,7 @@ class Plugin
         }
 
         return true;
-    } // is_valid
+    }
 
     /**
      * is_installed
@@ -178,7 +178,7 @@ class Plugin
     {
         /* All we do is check the version */
         return self::get_plugin_version($plugin_name);
-    } // is_installed
+    }
 
     /**
      * install
@@ -194,7 +194,7 @@ class Plugin
         }
 
         return false;
-    } // install
+    }
 
     /**
      * uninstall
@@ -212,7 +212,7 @@ class Plugin
         }
 
         return false;
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -230,7 +230,7 @@ class Plugin
         }
 
         return false;
-    } // upgrade
+    }
 
     /**
      * load
@@ -263,7 +263,7 @@ class Plugin
         }
 
         return 0;
-    } // get_plugin_version
+    }
 
     /**
      * Check if an update is available.
@@ -313,7 +313,7 @@ class Plugin
         $results    = Dba::fetch_assoc($db_results);
 
         return (string)$results['value'];
-    } // get_ampache_db_version
+    }
 
     /**
      * set_plugin_version
@@ -330,7 +330,7 @@ class Plugin
 
         $sql = "REPLACE INTO `update_info` SET `key` = ?, `value`= ?";
         Dba::write($sql, array($name, $version));
-    } // set_plugin_version
+    }
 
     /**
      * remove_plugin_version
@@ -344,7 +344,7 @@ class Plugin
         $name = Dba::escape('Plugin_' . $this->_plugin->name);
         $sql  = "DELETE FROM `update_info` WHERE `key`='$name'";
         Dba::write($sql);
-    } // remove_plugin_version
+    }
 
     /**
      * Display Plugin Update information and update links.

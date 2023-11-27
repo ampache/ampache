@@ -91,5 +91,5 @@ final class PlaylistSongs4Method
         }
 
         return true;
-    } // playlist_songs
+    }
 }

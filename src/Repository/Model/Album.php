@@ -154,7 +154,7 @@ class Album extends database_object implements library_item
 
         // finally; set up your formatted name
         $this->f_name = $this->get_fullname();
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -202,7 +202,7 @@ class Album extends database_object implements library_item
         }
 
         return true;
-    } // build_cache
+    }
 
     /**
      * _get_extra_info
@@ -237,7 +237,7 @@ class Album extends database_object implements library_item
         parent::add_to_cache('album_extra', $this->id, $results);
 
         return $results;
-    } // _get_extra_info
+    }
 
     /**
      * check
@@ -444,7 +444,7 @@ class Album extends database_object implements library_item
             $year              = $this->year;
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }
-    } // format
+    }
 
     /**
      * does the item have art?
@@ -1014,7 +1014,7 @@ class Album extends database_object implements library_item
         }
 
         return $current_id;
-    } // update
+    }
 
     /**
      * Update an album field.

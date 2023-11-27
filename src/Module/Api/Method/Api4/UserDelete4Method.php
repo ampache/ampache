@@ -63,5 +63,5 @@ final class UserDelete4Method
         Api4::message('error', 'failed to delete: ' . $username, '400', $input['api_format']);
 
         return false;
-    } // user_delete
+    }
 }

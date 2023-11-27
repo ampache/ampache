@@ -493,7 +493,7 @@ class Query
         $this->set_start(0);
 
         return true;
-    } // set_filter
+    }
 
     /**
      * reset
@@ -512,7 +512,7 @@ class Query
         $this->set_is_simple(false);
         $this->set_start(0);
         $this->set_offset(AmpConfig::get('offset_limit', 50));
-    } // reset
+    }
 
     /**
      * reset_base
@@ -521,7 +521,7 @@ class Query
     public function reset_base(): void
     {
         $this->_state['base'] = null;
-    } // reset_base
+    }
 
     /**
      * reset_select
@@ -530,7 +530,7 @@ class Query
     public function reset_select(): void
     {
         $this->_state['select'] = array();
-    } // reset_select
+    }
 
     /**
      * reset_having
@@ -539,7 +539,7 @@ class Query
     public function reset_having(): void
     {
         $this->_state['having'] = '';
-    } // reset_having
+    }
 
     /**
      * reset_join
@@ -548,7 +548,7 @@ class Query
     public function reset_join(): void
     {
         $this->_state['join'] = array();
-    } // reset_join
+    }
 
     /**
      * reset_filter
@@ -557,7 +557,7 @@ class Query
     public function reset_filters(): void
     {
         $this->_state['filter'] = array();
-    } // reset_filters
+    }
 
     /**
      * reset_total
@@ -566,7 +566,7 @@ class Query
     public function reset_total(): void
     {
         $this->_state['total'] = null;
-    } // reset_total
+    }
 
     /**
      * get_filter
@@ -575,7 +575,7 @@ class Query
     public function get_filter(string $key): ?string
     {
         return (isset($this->_state['filter'][$key])) ? $this->_state['filter'][$key] : null;
-    } // get_filter
+    }
 
     /**
      * get_start
@@ -584,7 +584,7 @@ class Query
     public function get_start(): int
     {
         return $this->_state['start'];
-    } // get_start
+    }
 
     /**
      * get_offset
@@ -593,7 +593,7 @@ class Query
     public function get_offset(): int
     {
         return $this->_state['offset'] ?? 0;
-    } // get_offset
+    }
 
     /**
      * set_total
@@ -630,7 +630,7 @@ class Query
         $this->_state['total'] = $num_rows;
 
         return $num_rows;
-    } // get_total
+    }
 
     /**
      * get_allowed_filters
@@ -807,7 +807,7 @@ class Query
         }
 
         return self::$allowed_filters[$type] ?? [];
-    } // get_allowed_filters
+    }
 
     /**
      * set_type
@@ -857,7 +857,7 @@ class Query
                 $this->set_base_sql(true, $custom_base);
                 break;
         } // end type whitelist
-    } // set_type
+    }
 
     /**
      * get_type
@@ -866,7 +866,7 @@ class Query
     public function get_type(): string
     {
         return $this->_state['type'];
-    } // get_type
+    }
 
     /**
      * set_sort
@@ -905,7 +905,7 @@ class Query
         $this->resort_objects();
 
         return true;
-    } // set_sort
+    }
 
     /**
      * set_offset
@@ -915,7 +915,7 @@ class Query
     public function set_offset($offset): void
     {
         $this->_state['offset'] = abs($offset);
-    } // set_offset
+    }
 
     /**
      * set_catalog
@@ -936,7 +936,7 @@ class Query
     public function set_select($field): void
     {
         $this->_state['select'][] = $field;
-    } // set_select
+    }
 
     /**
      * set_join
@@ -950,7 +950,7 @@ class Query
     public function set_join($type, $table, $source, $dest, $priority): void
     {
         $this->_state['join'][$priority][$table] = "$type JOIN $table ON $source = $dest";
-    } // set_join
+    }
 
     /**
      * set_join_and
@@ -966,7 +966,7 @@ class Query
     public function set_join_and($type, $table, $source1, $dest1, $source2, $dest2, $priority): void
     {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON $source1 = $dest1 AND $source2 = $dest2";
-    } // set_join_and
+    }
 
     /**
      * set_join_and_and
@@ -984,7 +984,7 @@ class Query
     public function set_join_and_and($type, $table, $source1, $dest1, $source2, $dest2, $source3, $dest3, $priority): void
     {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON $source1 = $dest1 AND $source2 = $dest2 AND $source3 = $dest3";
-    } // set_join_and
+    }
 
     /**
      * set_having
@@ -994,7 +994,7 @@ class Query
     public function set_having($condition): void
     {
         $this->_state['having'] = $condition;
-    } // set_having
+    }
 
     /**
      * set_start
@@ -1006,7 +1006,7 @@ class Query
     public function set_start(int $start): void
     {
         $this->_state['start'] = $start;
-    } // set_start
+    }
 
     /**
      * set_is_simple
@@ -1017,7 +1017,7 @@ class Query
     public function set_is_simple($value): void
     {
         $this->_state['simple'] = make_bool($value);
-    } // set_is_simple
+    }
 
     /**
      * set_static_content
@@ -1029,7 +1029,7 @@ class Query
     public function set_static_content($value): void
     {
         $this->_state['static'] = make_bool($value);
-    } // set_static_content
+    }
 
     /**
      * is_static_content
@@ -1046,7 +1046,7 @@ class Query
     public function is_simple(): bool
     {
         return $this->_state['simple'];
-    } // is_simple
+    }
 
     /**
      * get_saved
@@ -1074,7 +1074,7 @@ class Query
         }
 
         return $this->get_objects();
-    } // get_saved
+    }
 
     /**
      * get_objects
@@ -1107,7 +1107,7 @@ class Query
         $this->save_objects($filtered);
 
         return $filtered;
-    } // get_objects
+    }
 
     /**
      * set_base_sql
@@ -1252,7 +1252,7 @@ class Query
         $this->_state['base'] = $sql;
 
         return true;
-    } // set_base_sql
+    }
 
     /**
      * get_select
@@ -1262,7 +1262,7 @@ class Query
     private function get_select(): string
     {
         return implode(", ", $this->_state['select'] ?? array());
-    } // get_select
+    }
 
     /**
      * get_base_sql
@@ -1272,7 +1272,7 @@ class Query
     private function get_base_sql(): string
     {
         return str_replace("%%SELECT%%", $this->get_select(), ($this->_state['base'] ?? ''));
-    } // get_base_sql
+    }
 
     /**
      * get_filter_sql
@@ -1331,7 +1331,7 @@ class Query
         $sql = rtrim((string)$sql, "WHERE ") . " ";
 
         return $sql;
-    } // get_filter_sql
+    }
 
     /**
      * get_sort_sql
@@ -1353,7 +1353,7 @@ class Query
         $sql = rtrim((string)$sql, ', ');
 
         return $sql;
-    } // get_sort_sql
+    }
 
     /**
      * get_limit_sql
@@ -1368,7 +1368,7 @@ class Query
         }
 
         return ' LIMIT ' . (string)($this->get_start()) . ', ' . (string)($offset);
-    } // get_limit_sql
+    }
 
     /**
      * get_join_sql
@@ -1389,7 +1389,7 @@ class Query
         } // end foreach of this level of joins
 
         return $sql;
-    } // get_join_sql
+    }
 
     /**
      * get_having_sql
@@ -1398,7 +1398,7 @@ class Query
     public function get_having_sql(): string
     {
         return $this->_state['having'];
-    } // get_having_sql
+    }
 
     /**
      * get_sql
@@ -1430,7 +1430,7 @@ class Query
         //debug_event(self::class, "get_sql: " . $final_sql, 5);
 
         return $final_sql;
-    } // get_sql
+    }
 
     /**
      * post_process
@@ -1462,7 +1462,7 @@ class Query
         } // end foreach
 
         return $results;
-    } // post_process
+    }
 
     /**
      * sql_filter
@@ -2131,7 +2131,7 @@ class Query
         } // end switch on type
 
         return $filter_sql;
-    } // sql_filter
+    }
 
     /**
      * logic_filter
@@ -2146,7 +2146,7 @@ class Query
     private function logic_filter($object_id): bool
     {
         return true; // TODO, this must be old so probably not needed
-    } // logic_filter
+    }
 
     /**
      * sql_sort
@@ -2557,7 +2557,7 @@ class Query
         }
 
         return "";
-    } // sql_sort
+    }
 
     /**
      *
@@ -2656,7 +2656,7 @@ class Query
         $this->save_objects($results);
 
         return true;
-    } // resort_objects
+    }
 
     /**
      * store
@@ -2699,7 +2699,7 @@ class Query
         }
 
         return true;
-    } // save_objects
+    }
 
     /**
      * get_state
@@ -2708,7 +2708,7 @@ class Query
     public function get_state(): array
     {
         return $this->_state;
-    } // get_state
+    }
 
     /**
      * Get content div name

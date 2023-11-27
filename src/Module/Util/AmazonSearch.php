@@ -106,7 +106,7 @@ class AmazonSearch
             'MediumImage',
             'LargeImage'
         );
-    } // AmazonSearch
+    }
 
     /**
      * setProxy
@@ -133,7 +133,7 @@ class AmazonSearch
         if ($pass) {
             $this->_proxy_pass = $pass;
         }
-    } // setProxy
+    }
 
     /**
      * Create the XML parser to process the response.
@@ -149,7 +149,7 @@ class AmazonSearch
         xml_set_element_handler($this->_parser, 'startElement', 'endElement');
 
         xml_set_character_data_handler($this->_parser, 'cdata');
-    } // createParser
+    }
 
     /**
      * Run a search.
@@ -175,7 +175,7 @@ class AmazonSearch
         }
 
         xml_parser_free($this->_parser);
-    } // runSearch
+    }
 
     /**
      * getProxyConfig
@@ -197,7 +197,7 @@ class AmazonSearch
         }
 
         return $options;
-    } // getProxyConfig
+    }
 
     /**
      * Create an XML search string.
@@ -244,7 +244,7 @@ class AmazonSearch
         unset($this->results['ASIN']);
 
         return $this->results;
-    } // search
+    }
 
     /**
      * signString
@@ -260,7 +260,7 @@ class AmazonSearch
         $signature = str_replace("%7E", "~", rawurlencode($signature));
 
         return $signature;
-    } // signString
+    }
 
     /**
      * Lookup the selected item by the 'Amazon Standard Identification Number'
@@ -283,7 +283,7 @@ class AmazonSearch
         unset($this->results['ASIN']);
 
         return $this->results;
-    } // lookup
+    }
 
     /**
      * Query the AWS for information about the selected item by ASIN and parse the results.
@@ -334,7 +334,7 @@ class AmazonSearch
         }
 
         xml_parser_free($this->_parser);
-    } // runSearchAsin
+    }
 
     /**
      * Start XML Element.
@@ -361,7 +361,7 @@ class AmazonSearch
                 $this->_currentTag = $tag;
             }
         }
-    } // startElement
+    }
 
     /**
      * CDATA handler.
@@ -391,7 +391,7 @@ class AmazonSearch
                 }
                 break;
         } // end switch
-    } // cdata
+    }
 
     /**
      * End XML Element
@@ -402,5 +402,5 @@ class AmazonSearch
     {
         // zero the tag
         $this->_currentTag = '';
-    } // endElement
+    }
 }

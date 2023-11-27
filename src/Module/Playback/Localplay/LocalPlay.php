@@ -54,7 +54,7 @@ class LocalPlay
         $this->type = $type;
 
         $this->_load_player();
-    } // Localplay
+    }
 
     /**
      * player_loaded
@@ -68,7 +68,7 @@ class LocalPlay
         } else {
             return false;
         }
-    } // player_loaded
+    }
 
     /**
      * format
@@ -82,7 +82,7 @@ class LocalPlay
             $this->f_description = $this->_player->get_description();
             $this->f_version     = $this->_player->get_version();
         }
-    } // format
+    }
 
     /**
      * _load_player
@@ -114,7 +114,7 @@ class LocalPlay
         }
 
         return true;
-    } // _load_player
+    }
 
     /**
      * format_name
@@ -127,7 +127,7 @@ class LocalPlay
     public function format_name($name, $object_id): string
     {
         return Ajax::text('?page=localplay&action=command&command=skip&id=' . $object_id, scrub_out($name), 'localplay_skip_' . $object_id);
-    } // format_name
+    }
 
     /**
      * is_enabled
@@ -145,7 +145,7 @@ class LocalPlay
         }
 
         return $localplay->_player->is_installed();
-    } // is_enabled
+    }
 
     /**
      * install
@@ -156,7 +156,7 @@ class LocalPlay
     {
         // Run the player's installer
         return $this->_player->install();
-    } // install
+    }
 
     /**
      * uninstall
@@ -174,7 +174,7 @@ class LocalPlay
         }
 
         return true;
-    } // uninstall
+    }
 
     /**
      * connect
@@ -190,7 +190,7 @@ class LocalPlay
         }
 
         return true;
-    } // connect
+    }
 
     /**
      * play
@@ -206,7 +206,7 @@ class LocalPlay
         }
 
         return true;
-    } // play
+    }
 
     /**
      * stop
@@ -222,7 +222,7 @@ class LocalPlay
         }
 
         return true;
-    } // stop
+    }
 
     /**
      * add
@@ -233,7 +233,7 @@ class LocalPlay
         debug_event(self::class, 'Deprecated add method called: ' . json_encode($object), 5);
 
         return false;
-    } // add
+    }
 
     /**
      * add_url
@@ -248,7 +248,7 @@ class LocalPlay
         }
 
         return true;
-    } // add_url
+    }
 
     /**
      * repeat
@@ -265,7 +265,7 @@ class LocalPlay
         }
 
         return $data;
-    } // repeat
+    }
 
     /**
      * random
@@ -282,7 +282,7 @@ class LocalPlay
         }
 
         return $data;
-    } // random
+    }
 
     /**
      * status
@@ -300,7 +300,7 @@ class LocalPlay
         }
 
         return $data;
-    } // status
+    }
 
     /**
      * get
@@ -319,7 +319,7 @@ class LocalPlay
         }
 
         return $data;
-    } // get
+    }
 
     /**
      * volume_set
@@ -345,7 +345,7 @@ class LocalPlay
         }
 
         return true;
-    } // volume_set
+    }
 
     /**
      * volume_up
@@ -361,7 +361,7 @@ class LocalPlay
         }
 
         return true;
-    } // volume_up
+    }
 
     /**
      * volume_down
@@ -377,7 +377,7 @@ class LocalPlay
         }
 
         return true;
-    } // volume_down
+    }
 
     /**
      * volume_mute
@@ -393,7 +393,7 @@ class LocalPlay
         }
 
         return true;
-    } // volume_mute
+    }
 
     /**
      * skip
@@ -409,7 +409,7 @@ class LocalPlay
         }
 
         return true;
-    } // skip
+    }
 
     /**
      * next
@@ -425,7 +425,7 @@ class LocalPlay
         }
 
         return true;
-    } // next
+    }
 
     /**
      * prev
@@ -441,7 +441,7 @@ class LocalPlay
         }
 
         return true;
-    } // prev
+    }
 
     /**
      * pause
@@ -457,7 +457,7 @@ class LocalPlay
         }
 
         return true;
-    } // pause
+    }
 
     /**
      * get_instances
@@ -466,7 +466,7 @@ class LocalPlay
     public function get_instances()
     {
         return $this->_player->get_instances();
-    } // get_instances
+    }
 
     /**
      * current_instance
@@ -480,7 +480,7 @@ class LocalPlay
         }
 
         return false;
-    } // current_instance
+    }
 
     /**
      * get_instance
@@ -491,7 +491,7 @@ class LocalPlay
     public function get_instance($uid)
     {
         return $this->_player->get_instance($uid);
-    } // get_instance
+    }
 
     /**
      * update_instance
@@ -502,7 +502,7 @@ class LocalPlay
     public function update_instance($uid, $data): bool
     {
         return $this->_player->update_instance($uid, $data);
-    } // update_instance
+    }
 
     /**
      * add_instance
@@ -512,7 +512,7 @@ class LocalPlay
     public function add_instance($data)
     {
         $this->_player->add_instance($data);
-    } // add_instance
+    }
 
     /**
      * delete_instance
@@ -522,7 +522,7 @@ class LocalPlay
     public function delete_instance($instance_uid)
     {
         $this->_player->delete_instance($instance_uid);
-    } // delete_instance
+    }
 
     /**
      * set_active_instance
@@ -532,7 +532,7 @@ class LocalPlay
     public function set_active_instance($instance_id)
     {
         $this->_player->set_active_instance($instance_id);
-    } // set_active_instance
+    }
 
     /**
      * delete_track
@@ -549,7 +549,7 @@ class LocalPlay
         }
 
         return true;
-    } // delete
+    }
 
     /**
      * delete_all
@@ -565,7 +565,7 @@ class LocalPlay
         }
 
         return true;
-    } // delete_all
+    }
 
     /**
      * get_instance_fields
@@ -575,7 +575,7 @@ class LocalPlay
     public function get_instance_fields(): array
     {
         return $this->_player->instance_fields();
-    } // get_instance_fields
+    }
 
     /**
      * get_user_state
@@ -595,7 +595,7 @@ class LocalPlay
             default:
                 return T_('Unknown');
         } // switch on state
-    } // get_user_state
+    }
 
     /**
      * get_user_playing
@@ -615,5 +615,5 @@ class LocalPlay
         $track_name = "[" . $status['track'] . "] - " . $track_name;
 
         return $track_name;
-    } // get_user_playing
+    }
 }

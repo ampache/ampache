@@ -71,7 +71,7 @@ class Catalog_local extends Catalog
     public function get_description(): string
     {
         return $this->description;
-    } // get_description
+    }
 
     /**
      * get_version
@@ -80,7 +80,7 @@ class Catalog_local extends Catalog
     public function get_version(): string
     {
         return $this->version;
-    } // get_version
+    }
 
     /**
      * get_path
@@ -89,7 +89,7 @@ class Catalog_local extends Catalog
     public function get_path(): string
     {
         return $this->path;
-    } // get_path
+    }
 
     /**
      * get_type
@@ -98,7 +98,7 @@ class Catalog_local extends Catalog
     public function get_type(): string
     {
         return $this->type;
-    } // get_type
+    }
 
     /**
      * get_create_help
@@ -107,7 +107,7 @@ class Catalog_local extends Catalog
     public function get_create_help(): string
     {
         return "";
-    } // get_create_help
+    }
 
     /**
      * is_installed
@@ -119,7 +119,7 @@ class Catalog_local extends Catalog
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } // is_installed
+    }
 
     /**
      * install
@@ -135,7 +135,7 @@ class Catalog_local extends Catalog
         Dba::query($sql);
 
         return true;
-    } // install
+    }
 
     /**
      * @return array
@@ -321,7 +321,7 @@ class Catalog_local extends Catalog
         closedir($handle);
 
         return $songsadded;
-    } // add_files
+    }
 
     /**
      * add_file
@@ -585,7 +585,7 @@ class Catalog_local extends Catalog
         }
 
         return $this->count;
-    } // add_to_catalog
+    }
 
     /**
      * verify_catalog_proc
@@ -633,7 +633,7 @@ class Catalog_local extends Catalog
         $this->update_last_update();
 
         return $total_updated;
-    } // verify_catalog_proc
+    }
 
     /**
      * _verify_chunk
@@ -701,7 +701,7 @@ class Catalog_local extends Catalog
         Ui::update_text('verify_count_' . $this->catalog_id, $count);
 
         return $changed;
-    } // _verify_chunk
+    }
 
     /**
      * clean catalog procedure
@@ -800,7 +800,7 @@ class Catalog_local extends Catalog
         }
 
         return $dead;
-    } //_clean_chunk
+    }
 
     /**
      * _check_chunk
@@ -831,7 +831,7 @@ class Catalog_local extends Catalog
         }
 
         return $missing;
-    } //_check_chunk
+    }
 
     /**
      * clean_file
@@ -874,7 +874,7 @@ class Catalog_local extends Catalog
         }
 
         return false;
-    } // clean_file
+    }
 
     /**
      * insert_local_song
@@ -1067,7 +1067,7 @@ class Catalog_local extends Catalog
         $this->_filecache[strtolower($file)] = 'v_' . $video_id;
 
         return $video_id;
-    } // insert_local_video
+    }
 
     private function sync_podcasts()
     {
@@ -1145,7 +1145,7 @@ class Catalog_local extends Catalog
         }
 
         return true;
-    } // check_path
+    }
 
     /**
      * @return array
@@ -1206,7 +1206,7 @@ class Catalog_local extends Catalog
         Dba::write($sql, $params);
 
         return true;
-    } // move_catalog_proc
+    }
 
     /**
      * cache_catalog_proc

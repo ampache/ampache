@@ -54,7 +54,7 @@ class Ampachechartlyrics implements AmpachePluginInterface
     public function install(): bool
     {
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -63,7 +63,7 @@ class Ampachechartlyrics implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return true;
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -85,7 +85,7 @@ class Ampachechartlyrics implements AmpachePluginInterface
         $user->set_preferences();
 
         return true;
-    } // load
+    }
 
     /**
      * get_lyrics
@@ -111,5 +111,5 @@ class Ampachechartlyrics implements AmpachePluginInterface
         }
 
         return false;
-    } // get_lyrics
+    }
 }

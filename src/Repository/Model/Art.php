@@ -112,7 +112,7 @@ class Art extends database_object
             $this->uid  = (int)($uid);
             $this->kind = $kind;
         }
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -156,7 +156,7 @@ class Art extends database_object
         }
 
         return true;
-    } // build_cache
+    }
 
     /**
      * extension
@@ -176,7 +176,7 @@ class Art extends database_object
         }
 
         return (string)$extension;
-    } // extension
+    }
 
     /**
      * test_image
@@ -223,7 +223,7 @@ class Art extends database_object
         }
 
         return $test;
-    } // test_image
+    }
 
     /**
      * get
@@ -246,7 +246,7 @@ class Art extends database_object
         } else {
             return $this->thumb;
         }
-    } // get
+    }
 
     /**
      * has_db_info
@@ -309,7 +309,7 @@ class Art extends database_object
         } // if no thumb, but art and we want to resize
 
         return true;
-    } // has_db_info
+    }
 
     /**
      * This check if an object has an associated image in db.
@@ -470,7 +470,7 @@ class Art extends database_object
         Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
 
         return true;
-    } // insert
+    }
 
     /**
      * check_for_duplicate
@@ -569,7 +569,7 @@ class Art extends database_object
     {
         $sql = "UPDATE `image` SET `image` = NULL WHERE `id` = ?";
         Dba::write($sql, array($image_id));
-    } // clear_image
+    }
 
     /**
      * get_dir_on_disk
@@ -755,7 +755,7 @@ class Art extends database_object
         }
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
         Dba::write($sql, array($this->uid, $this->type, $this->kind));
-    } // reset
+    }
 
     /**
      * save_thumb
@@ -787,7 +787,7 @@ class Art extends database_object
         Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
 
         return true;
-    } // save_thumb
+    }
 
     /**
      * get_thumb
@@ -835,7 +835,7 @@ class Art extends database_object
         }
 
         return $results;
-    } // get_thumb
+    }
 
     /**
      * generate_thumb
@@ -979,7 +979,7 @@ class Art extends database_object
             'thumb' => $data,
             'thumb_mime' => $mime_type
         );
-    } // generate_thumb
+    }
 
     /**
      * get_from_source
@@ -1054,7 +1054,7 @@ class Art extends database_object
         } // if data song
 
         return '';
-    } // get_from_source
+    }
 
     /**
      * url
@@ -1132,7 +1132,7 @@ class Art extends database_object
         }
 
         return $url;
-    } // url
+    }
 
     /**
      * garbage_collection

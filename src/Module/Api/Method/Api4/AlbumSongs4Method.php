@@ -78,7 +78,7 @@ class AlbumSongs4Method
         }
 
         return true;
-    } // album_songs
+    }
 
     /**
      * @deprecated

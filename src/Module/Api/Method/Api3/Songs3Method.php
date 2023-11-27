@@ -62,5 +62,5 @@ final class Songs3Method
 
         ob_end_clean();
         echo Xml3_Data::songs($results, $user);
-    } // songs
+    }
 }

@@ -142,7 +142,7 @@ class User extends database_object
         if (strlen((string)$this->fullname) < 1) {
             $this->fullname = $this->username;
         }
-    } // Constructor
+    }
 
     public function getId(): int
     {
@@ -181,7 +181,7 @@ class User extends database_object
         User::add_to_cache('user', $user_id, $data);
 
         return $data;
-    } // has_info
+    }
 
     /**
      * load_playlist
@@ -194,7 +194,7 @@ class User extends database_object
         $session_id = session_id();
 
         $this->playlist = Tmp_Playlist::get_from_session($session_id);
-    } // load_playlist
+    }
 
     /**
      * get_playlists
@@ -226,7 +226,7 @@ class User extends database_object
     public static function get_from_username($username): ?User
     {
         return static::getUserRepository()->findByUsername($username);
-    } // get_from_username
+    }
 
     /**
      * get_user_catalogs
@@ -246,7 +246,7 @@ class User extends database_object
         parent::add_to_cache('user_catalog' . $filter, $user_id, $catalogs);
 
         return $catalogs;
-    } // get_catalogs
+    }
 
     /**
      * get_catalogs
@@ -260,7 +260,7 @@ class User extends database_object
         }
 
         return $this->catalogs[$filter];
-    } // get_catalogs
+    }
 
     /**
      * get_preferences
@@ -313,7 +313,7 @@ class User extends database_object
         } // end while
 
         return $results;
-    } // get_preferences
+    }
 
     /**
      * set_preferences
@@ -329,7 +329,7 @@ class User extends database_object
             $key               = $row['name'];
             $this->prefs[$key] = $row['value'];
         }
-    } // set_preferences
+    }
 
     /**
      * get_favorites
@@ -356,7 +356,7 @@ class User extends database_object
         } // end foreach
 
         return $items;
-    } // get_favorites
+    }
 
     /**
      * is_logged_in
@@ -374,7 +374,7 @@ class User extends database_object
         }
 
         return false;
-    } // is_logged_in
+    }
 
     /**
      * has_access
@@ -393,7 +393,7 @@ class User extends database_object
         }
 
         return false;
-    } // has_access
+    }
 
     /**
      * is_registered
@@ -425,7 +425,7 @@ class User extends database_object
     public static function set_user_data(int $user_id, string $key, $value)
     {
         Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, $key, $value));
-    } // set_user_data
+    }
 
     /**
      * get_user_data
@@ -450,7 +450,7 @@ class User extends database_object
         }
 
         return $results;
-    } // get_user_data
+    }
 
     /**
      * get_play_size
@@ -478,7 +478,7 @@ class User extends database_object
         }
 
         return $total;
-    } // get_play_size
+    }
 
     /**
      * update_catalog_filter_group
@@ -492,7 +492,7 @@ class User extends database_object
         debug_event(self::class, 'Updating catalog access group', 4);
 
         Dba::write($sql, array($new_filter, $this->id));
-    } // update_catalog_filter_group
+    }
 
     /**
      * update_username
@@ -507,7 +507,7 @@ class User extends database_object
         debug_event(self::class, 'Updating username', 4);
 
         Dba::write($sql, array($new_username, $this->id));
-    } // update_username
+    }
 
     /**
      * update_validation
@@ -524,7 +524,7 @@ class User extends database_object
         $this->validation = $new_validation;
 
         return $db_results;
-    } // update_validation
+    }
 
     /**
      * update_fullname
@@ -538,7 +538,7 @@ class User extends database_object
         debug_event(self::class, 'Updating fullname', 4);
 
         Dba::write($sql, array($new_fullname, $this->id));
-    } // update_fullname
+    }
 
     /**
      * update_fullname_public
@@ -552,7 +552,7 @@ class User extends database_object
         debug_event(self::class, 'Updating fullname public', 4);
 
         Dba::write($sql, array($new_fullname_public ? '1' : '0', $this->id));
-    } // update_fullname_public
+    }
 
     /**
      * update_email
@@ -566,7 +566,7 @@ class User extends database_object
         debug_event(self::class, 'Updating email', 4);
 
         Dba::write($sql, array($new_email, $this->id));
-    } // update_email
+    }
 
     /**
      * update_website
@@ -581,7 +581,7 @@ class User extends database_object
         debug_event(self::class, 'Updating website', 4);
 
         Dba::write($sql, array($new_website, $this->id));
-    } // update_website
+    }
 
     /**
      * update_state
@@ -595,7 +595,7 @@ class User extends database_object
         debug_event(self::class, 'Updating state', 4);
 
         Dba::write($sql, array($new_state, $this->id));
-    } // update_state
+    }
 
     /**
      * update_city
@@ -609,7 +609,7 @@ class User extends database_object
         debug_event(self::class, 'Updating city', 4);
 
         Dba::write($sql, array($new_city, $this->id));
-    } // update_city
+    }
 
     /**
      * update_counts for individual users
@@ -684,7 +684,7 @@ class User extends database_object
             $row        = Dba::fetch_row($db_results);
             self::set_user_data($user_id, 'album_disk', (int)($row[0] ?? 0));
         }
-    } // update_counts
+    }
 
     /**
      * disable
@@ -708,7 +708,7 @@ class User extends database_object
         Dba::write($sql);
 
         return true;
-    } // disable
+    }
 
     /**
      * update_access
@@ -734,7 +734,7 @@ class User extends database_object
         Dba::write($sql, array($new_access, $this->id));
 
         return true;
-    } // update_access
+    }
 
     /**
      * save_mediaplay
@@ -849,7 +849,7 @@ class User extends database_object
         Catalog::count_table('user');
 
         return (int)$insert_id;
-    } // create
+    }
 
     /**
      * update_password
@@ -872,7 +872,7 @@ class User extends database_object
         if ($db_results) {
             unset($_SESSION['userdata']['password']);
         }
-    } // update_password
+    }
 
     /**
      * format
@@ -926,7 +926,7 @@ class User extends database_object
         if (!empty($avatar['url_medium'])) {
             $this->f_avatar_medium = '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" style="width: 64px; height: 64px;" />';
         }
-    } // format_user
+    }
 
     /**
      * access_name_to_level
@@ -948,7 +948,7 @@ class User extends database_object
             default:
                 return AccessLevelEnum::LEVEL_DEFAULT;
         }
-    } // access_name_to_level
+    }
 
     /**
      * access_level_to_name
@@ -971,7 +971,7 @@ class User extends database_object
             default:
                 return T_('Unknown');
         }
-    } // access_level_to_name
+    }
 
     /**
      * fix_preferences
@@ -1055,7 +1055,7 @@ class User extends database_object
                 Dba::write($sql, array($user_id, $key, $row['value']));
             }
         } // while preferences
-    } // fix_preferences
+    }
 
     /**
      * delete
@@ -1088,7 +1088,7 @@ class User extends database_object
         static::getUserRepository()->collectGarbage();
 
         return true;
-    } // delete
+    }
 
     /**
      * is_online
@@ -1100,7 +1100,7 @@ class User extends database_object
     public function is_online($delay = 1200): bool
     {
         return time() - $this->last_seen <= $delay;
-    } // is_online
+    }
 
     /**
      * get_recently_played
@@ -1126,7 +1126,7 @@ class User extends database_object
         }
 
         return $results;
-    } // get_recently_played
+    }
 
     /**
      * Get item fullname.
@@ -1225,7 +1225,7 @@ class User extends database_object
         }
 
         return $avatar;
-    } // get_avatar
+    }
 
     /**
      * @param string $data
@@ -1313,7 +1313,7 @@ class User extends database_object
         }
         // Fix the system user preferences
         self::fix_preferences(-1);
-    } // rebuild_all_preferences
+    }
 
     /**
      * stream_control

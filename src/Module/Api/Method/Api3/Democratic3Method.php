@@ -101,5 +101,5 @@ final class Democratic3Method
                 echo Xml3_Data::error('405', T_('Invalid Request'));
                 break;
         } // switch on method
-    } // democratic
+    }
 }

@@ -59,7 +59,7 @@ class AmpacheMpd extends localplay_controller
     public function get_description(): string
     {
         return $this->description;
-    } // get_description
+    }
 
     /**
      * get_version
@@ -68,7 +68,7 @@ class AmpacheMpd extends localplay_controller
     public function get_version(): string
     {
         return $this->version;
-    } // get_version
+    }
 
     /**
      * is_installed
@@ -80,7 +80,7 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::read($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } // is_installed
+    }
 
     /**
      * install
@@ -99,7 +99,7 @@ class AmpacheMpd extends localplay_controller
         Preference::insert('mpd_active', T_('MPD Active Instance'), 0, 25, 'integer', 'internal', 'mpd');
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -113,7 +113,7 @@ class AmpacheMpd extends localplay_controller
         Preference::delete('mpd_active');
 
         return true;
-    } // uninstall
+    }
 
     /**
      * add_instance
@@ -129,7 +129,7 @@ class AmpacheMpd extends localplay_controller
             : -1;
 
         return Dba::write($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id));
-    } // add_instance
+    }
 
     /**
      * delete_instance
@@ -143,7 +143,7 @@ class AmpacheMpd extends localplay_controller
         Dba::write($sql);
 
         return true;
-    } // delete_instance
+    }
 
     /**
      * get_instances
@@ -161,7 +161,7 @@ class AmpacheMpd extends localplay_controller
         }
 
         return $results;
-    } // get_instances
+    }
 
     /**
      * get_instance
@@ -177,7 +177,7 @@ class AmpacheMpd extends localplay_controller
         $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
-    } // get_instance
+    }
 
     /**
      * update_instance
@@ -196,7 +196,7 @@ class AmpacheMpd extends localplay_controller
         Dba::write($sql);
 
         return true;
-    } // update_instance
+    }
 
     /**
      * instance_fields
@@ -212,7 +212,7 @@ class AmpacheMpd extends localplay_controller
         $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
 
         return $fields;
-    } // instance_fields
+    }
 
     /**
      * set_active_instance
@@ -230,7 +230,7 @@ class AmpacheMpd extends localplay_controller
         debug_event('mdp.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
-    } // set_active_instance
+    }
 
     /**
      * get_active_instance
@@ -239,7 +239,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_active_instance()
     {
-    } // get_active_instance
+    }
 
     /**
      * add_url
@@ -278,7 +278,7 @@ class AmpacheMpd extends localplay_controller
     public function delete_track($object_id)
     {
         return $this->_mpd->PLRemove($object_id);
-    } // delete_track
+    }
 
     /**
      * clear_playlist
@@ -287,7 +287,7 @@ class AmpacheMpd extends localplay_controller
     public function clear_playlist()
     {
         return $this->_mpd->PLClear();
-    } // clear_playlist
+    }
 
     /**
      * play
@@ -297,7 +297,7 @@ class AmpacheMpd extends localplay_controller
     public function play()
     {
         return $this->_mpd->Play();
-    } // play
+    }
 
     /**
      * stop
@@ -307,7 +307,7 @@ class AmpacheMpd extends localplay_controller
     public function stop()
     {
         return $this->_mpd->Stop();
-    } // stop
+    }
 
     /**
      * skip
@@ -325,7 +325,7 @@ class AmpacheMpd extends localplay_controller
         $this->play();
 
         return true;
-    } // skip
+    }
 
     /**
      * This tells MPD to increase the volume by 5
@@ -333,7 +333,7 @@ class AmpacheMpd extends localplay_controller
     public function volume_up()
     {
         return $this->_mpd->AdjustVolume('5');
-    } // volume_up
+    }
 
     /**
      * This tells MPD to decrease the volume by 5
@@ -341,7 +341,7 @@ class AmpacheMpd extends localplay_controller
     public function volume_down()
     {
         return $this->_mpd->AdjustVolume('-5');
-    } // volume_down
+    }
 
     /**
      * next
@@ -350,7 +350,7 @@ class AmpacheMpd extends localplay_controller
     public function next()
     {
         return $this->_mpd->Next();
-    } // next
+    }
 
     /**
      * prev
@@ -359,7 +359,7 @@ class AmpacheMpd extends localplay_controller
     public function prev()
     {
         return $this->_mpd->Previous();
-    } // prev
+    }
 
     /**
      * pause
@@ -368,7 +368,7 @@ class AmpacheMpd extends localplay_controller
     public function pause()
     {
         return $this->_mpd->Pause();
-    } // pause
+    }
 
     /**
      * volume
@@ -379,7 +379,7 @@ class AmpacheMpd extends localplay_controller
     public function volume($volume)
     {
         return $this->_mpd->SetVolume($volume);
-    } // volume
+    }
 
     /**
      * repeat
@@ -391,7 +391,7 @@ class AmpacheMpd extends localplay_controller
     public function repeat($state)
     {
         return $this->_mpd->SetRepeat($state);
-    } // repeat
+    }
 
     /**
      * random
@@ -403,7 +403,7 @@ class AmpacheMpd extends localplay_controller
     public function random($onoff)
     {
         return $this->_mpd->SetRandom($onoff);
-    } // random
+    }
 
     /**
      * move
@@ -415,7 +415,7 @@ class AmpacheMpd extends localplay_controller
     public function move($source, $destination)
     {
         return $this->_mpd->PLMoveTrack($source, $destination);
-    } // move
+    }
 
     /**
      * get_songs
@@ -510,7 +510,7 @@ class AmpacheMpd extends localplay_controller
         } // foreach playlist items
 
         return $results;
-    } // get
+    }
 
     /**
      * get_status
@@ -567,7 +567,7 @@ class AmpacheMpd extends localplay_controller
         }
 
         return $array;
-    } // get_status
+    }
 
     /**
      * connect
@@ -585,5 +585,5 @@ class AmpacheMpd extends localplay_controller
         $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? '', 'debug_event');
 
         return $this->_mpd->connected;
-    } // connect
+    }
 }

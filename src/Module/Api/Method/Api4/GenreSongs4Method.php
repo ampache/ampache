@@ -71,5 +71,5 @@ final class GenreSongs4Method
         }
 
         return true;
-    } // genre_songs
+    }
 }

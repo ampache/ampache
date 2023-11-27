@@ -161,5 +161,5 @@ class Catalog_beetsremote extends Catalog
     public function get_path(): string
     {
         return $this->uri;
-    } // get_path
+    }
 }

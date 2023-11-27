@@ -100,7 +100,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -119,7 +119,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
             Preference::delete('ratingmatch_flag_rule') &&
             Preference::delete('ratingmatch_write_tags')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -147,7 +147,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         }
 
         return true;
-    } // upgrade
+    }
 
     /**
      * save_rating
@@ -229,7 +229,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
                 }
             }
         }
-    } // set_flag
+    }
 
     /**
      * save_mediaplay
@@ -298,7 +298,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         }
 
         return true;
-    } // save_mediaplay
+    }
 
     /**
      * rule_process
@@ -336,7 +336,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         }
 
         return false;
-    } // rule_process
+    }
 
     /**
      * load
@@ -359,5 +359,5 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         $this->write_tags  = ($data['ratingmatch_write_tags'] == '1');
 
         return true;
-    } // load
+    }
 }

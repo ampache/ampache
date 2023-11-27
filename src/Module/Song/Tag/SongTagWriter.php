@@ -226,7 +226,7 @@ final class SongTagWriter implements SongTagWriterInterface
             }
             $vainfo->write_id3($ndata);
         } // catalog type = local
-    } //write
+    }
 
     /**
      * Write the song rating to the file and include existing tags
@@ -373,7 +373,7 @@ final class SongTagWriter implements SongTagWriterInterface
             }
             $vainfo->write_id3($ndata);
         } // catalog type = local
-    } //writeRating
+    }
 
     private function search_txxx($description, $ndata): ?int
     {

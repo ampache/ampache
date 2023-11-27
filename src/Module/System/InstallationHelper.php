@@ -113,7 +113,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
             return false;
         }
-    } // install_check_status
+    }
 
     /**
      * install_check_server_apache
@@ -431,7 +431,7 @@ final class InstallationHelper implements InstallationHelperInterface
         User::fix_preferences('-1');
 
         return true;
-    } // install_create_account
+    }
 
     /**
      * @param string $command
@@ -482,7 +482,7 @@ final class InstallationHelper implements InstallationHelperInterface
         }
 
         return $modes;
-    } // install_get_transcode_modes
+    }
 
     /**
      * @param $mode

@@ -77,7 +77,7 @@ abstract class playlist_object extends database_object implements library_item
             : scrub_out($this->name . " (" . $this->username . ")");
         $this->get_f_type();
         $this->get_f_link();
-    } // format
+    }
 
     /**
      * does the item have art?
@@ -113,7 +113,7 @@ abstract class playlist_object extends database_object implements library_item
         }
 
         return false;
-    } // has_access
+    }
 
     /**
      * @param string $filter_type

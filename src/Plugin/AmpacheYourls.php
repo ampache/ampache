@@ -70,7 +70,7 @@ class AmpacheYourls implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -83,7 +83,7 @@ class AmpacheYourls implements AmpachePluginInterface
             Preference::delete('yourls_use_idn') &&
             Preference::delete('yourls_api_key')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -92,7 +92,7 @@ class AmpacheYourls implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * @param string $url
@@ -163,5 +163,5 @@ class AmpacheYourls implements AmpachePluginInterface
         $this->yourls_use_idn = ((int)($data['yourls_use_idn']) == 1);
 
         return true;
-    } // load
+    }
 }

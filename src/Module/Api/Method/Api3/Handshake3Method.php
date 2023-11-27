@@ -198,7 +198,7 @@ final class Handshake3Method
         echo Xml3_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;
-    } // handshake
+    }
 
     /**
      * @deprecated inject by constructor

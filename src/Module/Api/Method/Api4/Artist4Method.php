@@ -65,5 +65,5 @@ final class Artist4Method
         }
 
         return true;
-    } // artist
+    }
 }

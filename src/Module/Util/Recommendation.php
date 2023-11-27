@@ -345,7 +345,7 @@ class Recommendation
         }
 
         return $results;
-    } // get_artists_like
+    }
 
     /**
      * get_artist_info_by_name
@@ -372,7 +372,7 @@ class Recommendation
         $results['yearformed']  = (string)$xml->artist->bio->yearformed;
 
         return $results;
-    } // get_artist_info_by_name
+    }
 
     /**
      * get_artist_info
@@ -431,7 +431,7 @@ class Recommendation
         }
 
         return $results;
-    } // get_artist_info
+    }
 
     /**
      * get_album_info
@@ -474,7 +474,7 @@ class Recommendation
         }
 
         return $results;
-    } // get_album_info
+    }
 
     /**
      * Migrate an object associate stats to a new object

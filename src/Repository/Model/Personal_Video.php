@@ -54,7 +54,7 @@ class Personal_Video extends Video
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // Constructor
+    }
 
     public function getId(): int
     {
@@ -84,7 +84,7 @@ class Personal_Video extends Video
         Dba::write($sql, array($data['id'], $data['location'], $data['summary']));
 
         return (int)$data['id'];
-    } // create
+    }
 
     /**
      * update
@@ -99,7 +99,7 @@ class Personal_Video extends Video
         Dba::write($sql, array($data['location'], $data['summary'], $this->id));
 
         return $this->id;
-    } // update
+    }
 
     /**
      * format
@@ -113,7 +113,7 @@ class Personal_Video extends Video
         parent::format($details);
 
         $this->f_location = $this->location;
-    } // format
+    }
 
     /**
      * remove

@@ -69,7 +69,7 @@ final class ToggleFollow4Method
         }
 
         return true;
-    } // toggle_follow
+    }
 
     private static function getUserFollowToggler(): UserFollowTogglerInterface
     {

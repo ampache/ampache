@@ -52,5 +52,5 @@ final class TagSongs4Method
         }
 
         return GenreSongs4Method::genre_songs($input, $user);
-    } // tag_songs
+    }
 }

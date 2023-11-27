@@ -83,7 +83,7 @@ class Update
         }
         // now it's really got problems
         throw new EnvironmentNotSuitableException();
-    } // get_version
+    }
 
     /**
      * check_tables
@@ -1009,7 +1009,7 @@ class Update
         debug_event(self::class, 'run_update: Upgrade complete', 4);
 
         return true;
-    } // run_update
+    }
 
     /**
      * _write
@@ -3099,7 +3099,7 @@ class Update
         $sql = "ALTER TABLE `artist` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
 
         return (self::_write($interactor, $sql) !== false);
-    } //
+    }
 
     /**
      * _update_400015

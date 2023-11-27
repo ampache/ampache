@@ -65,5 +65,5 @@ final class Album4Method
         }
 
         return true;
-    } // album
+    }
 }

@@ -78,5 +78,5 @@ final class PodcastEpisodes4Method
         }
 
         return true;
-    } // podcast_episodes
+    }
 }

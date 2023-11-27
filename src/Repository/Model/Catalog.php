@@ -328,7 +328,7 @@ abstract class Catalog extends database_object
 
         $sql = "DROP TABLE `catalog_" . $this->get_type() . "`";
         Dba::query($sql);
-    } // uninstall
+    }
 
     /**
      * Create a catalog from its id.
@@ -878,7 +878,7 @@ abstract class Catalog extends database_object
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)($results['value'] ?? 0);
-    } // get_update_info
+    }
 
     /**
      * set_update_info
@@ -890,7 +890,7 @@ abstract class Catalog extends database_object
     public static function set_update_info($key, $value)
     {
         Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", array($key, $value));
-    } // set_update_info
+    }
 
     /**
      * update_enabled
@@ -906,7 +906,7 @@ abstract class Catalog extends database_object
         }
 
         return self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id);
-    } // update_enabled
+    }
 
     /**
      * _update_item
@@ -928,7 +928,7 @@ abstract class Catalog extends database_object
         $sql = "UPDATE `catalog` SET `$field` = ? WHERE `id` = ?";
 
         return Dba::write($sql, array($value, $catalog_id));
-    } // _update_item
+    }
 
     /**
      * format
@@ -1198,7 +1198,7 @@ abstract class Catalog extends database_object
         }
 
         return false;
-    } // has_access
+    }
 
     /**
      * get_server_counts
@@ -1223,7 +1223,7 @@ abstract class Catalog extends database_object
         }
 
         return $results;
-    } // get_server_counts
+    }
 
     /**
      * count_table
@@ -1247,7 +1247,7 @@ abstract class Catalog extends database_object
         }
 
         return (int)$row[0];
-    } // count_table
+    }
 
     /**
      * count_catalog
@@ -1281,7 +1281,7 @@ abstract class Catalog extends database_object
         }
 
         return $results;
-    } // count_catalog
+    }
 
     /**
      * get_uploads_sql
@@ -1312,7 +1312,7 @@ abstract class Catalog extends database_object
         //debug_event(self::class, 'get_uploads_sql ' . $sql, 5);
 
         return $sql;
-    } // get_uploads_sql
+    }
 
     /**
      * get_album_ids
@@ -2212,7 +2212,7 @@ abstract class Catalog extends database_object
     {
         $date = time();
         self::_update_item('last_update', $date, $this->id);
-    } // update_last_update
+    }
 
     /**
      * update_last_add
@@ -2222,7 +2222,7 @@ abstract class Catalog extends database_object
     {
         $date = time();
         self::_update_item('last_add', $date, $this->id);
-    } // update_last_add
+    }
 
     /**
      * update_last_clean
@@ -2232,7 +2232,7 @@ abstract class Catalog extends database_object
     {
         $date = time();
         self::_update_item('last_clean', $date, $this->id);
-    } // update_last_clean
+    }
 
     /**
      * update_settings
@@ -2246,7 +2246,7 @@ abstract class Catalog extends database_object
         Dba::write($sql, $params);
 
         return true;
-    } // update_settings
+    }
 
     /**
      * update_single_item
@@ -2378,7 +2378,7 @@ abstract class Catalog extends database_object
             'object_id' => $return_id,
             'change' => ($album || $artist || $maps || $tags)
         );
-    } // update_single_item
+    }
 
     /**
      * update_media_from_tags
@@ -2451,7 +2451,7 @@ abstract class Catalog extends database_object
         }
 
         return $update;
-    } // update_media_from_tags
+    }
 
     /**
      * update_song_from_tags
@@ -2856,7 +2856,7 @@ abstract class Catalog extends database_object
         }
 
         return $info;
-    } // update_song_from_tags
+    }
 
     /**
      * @param $results
@@ -3338,7 +3338,7 @@ abstract class Catalog extends database_object
         $this->update_last_clean();
 
         return $dead_total;
-    } // clean_catalog
+    }
 
     /**
      * verify_catalog
@@ -3366,7 +3366,7 @@ abstract class Catalog extends database_object
         }
 
         return true;
-    } // verify_catalog
+    }
 
     /**
      * trim_prefix
@@ -3389,7 +3389,7 @@ abstract class Catalog extends database_object
             'string' => $string,
             'prefix' => $prefix
         );
-    } // trim_prefix
+    }
 
     /**
      * @param $year
@@ -3429,7 +3429,7 @@ abstract class Catalog extends database_object
         }
 
         return $items;
-    } // trim_slashed_list
+    }
 
     /**
      * trim_featuring
@@ -3440,7 +3440,7 @@ abstract class Catalog extends database_object
     public static function trim_featuring($string)
     {
         return array_map('trim', preg_split("/ feat\. /i", $string));
-    } // trim_featuring
+    }
 
     /**
      * check_title
@@ -3457,7 +3457,7 @@ abstract class Catalog extends database_object
         }
 
         return $title;
-    } // check_title
+    }
 
     /**
      * check_length
@@ -3674,7 +3674,7 @@ abstract class Catalog extends database_object
         }
 
         return $files;
-    } // parse_m3u
+    }
 
     /**
      * parse_pls
@@ -3698,7 +3698,7 @@ abstract class Catalog extends database_object
         }
 
         return $files;
-    } // parse_pls
+    }
 
     /**
      * parse_asx
@@ -3721,7 +3721,7 @@ abstract class Catalog extends database_object
         }
 
         return $files;
-    } // parse_asx
+    }
 
     /**
      * parse_xspf
@@ -3743,7 +3743,7 @@ abstract class Catalog extends database_object
         }
 
         return $files;
-    } // parse_xspf
+    }
 
     /**
      * delete
@@ -3800,7 +3800,7 @@ abstract class Catalog extends database_object
         static::getCatalogGarbageCollector()->collect();
 
         return true;
-    } // delete
+    }
 
     /**
      * exports the catalog
@@ -3856,7 +3856,7 @@ abstract class Catalog extends database_object
                 }
                 break;
         } // end switch
-    } // export
+    }
 
     /**
      * Update the catalog mapping for various types
@@ -4409,7 +4409,7 @@ abstract class Catalog extends database_object
             default:
                 return '';
         }
-    } // xml_get_footer
+    }
 
     /**
      * xml_get_header
@@ -4438,7 +4438,7 @@ abstract class Catalog extends database_object
             default:
                 return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         }
-    } // xml_get_header
+    }
 
     /**
      * @deprecated

@@ -52,5 +52,5 @@ final class TagAlbums4Method
         }
 
         return GenreAlbums4Method::genre_albums($input, $user);
-    } // tag_albums
+    }
 }

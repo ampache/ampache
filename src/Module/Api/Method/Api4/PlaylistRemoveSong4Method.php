@@ -88,5 +88,5 @@ final class PlaylistRemoveSong4Method
         }
 
         return true;
-    } // playlist_remove_song
+    }
 }

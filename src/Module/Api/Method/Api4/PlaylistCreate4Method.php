@@ -70,5 +70,5 @@ final class PlaylistCreate4Method
         }
 
         return true;
-    } // playlist_create
+    }
 }

@@ -67,5 +67,5 @@ final class ShareDelete4Method
         }
 
         return true;
-    } // share_delete
+    }
 }

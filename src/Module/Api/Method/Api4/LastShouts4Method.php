@@ -82,7 +82,7 @@ final class LastShouts4Method
         }
 
         return true;
-    } // last_shouts
+    }
 
     /**
      * @todo inject by constructor

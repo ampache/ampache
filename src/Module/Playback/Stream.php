@@ -54,7 +54,7 @@ class Stream
         if (!empty($sid)) {
             self::$session = $sid;
         }
-    } // set_session
+    }
 
     /**
      * get_session
@@ -654,7 +654,7 @@ class Stream
         } // end while
 
         return $results;
-    } // get_now_playing
+    }
 
     /**
      * check_lock_media
@@ -711,7 +711,7 @@ class Stream
         echo "</script>";
 
         return true;
-    } // run_playlist_method
+    }
 
     /**
      * get_base_url
@@ -755,5 +755,5 @@ class Stream
         }
 
         return $web_path . $base_url;
-    } // get_base_url
+    }
 }

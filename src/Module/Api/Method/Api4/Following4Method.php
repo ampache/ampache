@@ -85,7 +85,7 @@ final class Following4Method
         }
 
         return true;
-    } // following
+    }
 
     /**
      * @deprecated Inject by constructor

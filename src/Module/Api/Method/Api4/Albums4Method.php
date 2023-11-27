@@ -80,5 +80,5 @@ final class Albums4Method
                 Xml4_Data::set_limit($input['limit'] ?? 0);
                 echo Xml4_Data::albums($results, $include, $user);
         }
-    } // albums
+    }
 }

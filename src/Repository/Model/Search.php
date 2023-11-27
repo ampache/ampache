@@ -199,7 +199,7 @@ class Search extends playlist_object
                 $this->order_by   = '`video`.`file`';
                 break;
         } // end switch on objectType
-    } // end constructor
+    }
 
     public function getId(): int
     {
@@ -808,7 +808,7 @@ class Search extends playlist_object
         $this->_add_type_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
         $this->_add_type_text('mbid_album', T_('MusicBrainz ID (Album)'), $t_musicbrainz);
         $this->_add_type_text('mbid_song', T_('MusicBrainz ID (Song)'), $t_musicbrainz);
-    } // artisttypes
+    }
 
     /**
      * _set_types_album
@@ -895,7 +895,7 @@ class Search extends playlist_object
         $this->_add_type_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
         $this->_add_type_text('mbid_artist', T_('MusicBrainz ID (Artist)'), $t_musicbrainz);
         $this->_add_type_text('mbid_song', T_('MusicBrainz ID (Song)'), $t_musicbrainz);
-    } // albumtypes
+    }
 
     /**
      * _set_types_video
@@ -1104,7 +1104,7 @@ class Search extends playlist_object
         }
 
         return $request;
-    } // end _filter_request
+    }
 
     /**
      * get_searches
@@ -1180,7 +1180,7 @@ class Search extends playlist_object
         parent::add_to_cache($key, $user_id, $results);
 
         return $results;
-    } // get_smartlist_array
+    }
 
     /**
      * run
@@ -1425,7 +1425,7 @@ class Search extends playlist_object
         $row        = Dba::fetch_row($db_results);
 
         return (int)($row[0] ?? 0);
-    } // get_total_duration
+    }
 
     /**
      * _get_rule_name

@@ -120,7 +120,7 @@ final class UserUpdate4Method
         Api4::message('error', 'failed to update: ' . $username, '400', $input['api_format']);
 
         return false;
-    } // user_update
+    }
 
     /**
      * @deprecated Inject by constructor

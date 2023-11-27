@@ -366,7 +366,7 @@ class Upnp_Api
         } // end while
 
         return $retArr;
-    } // end function
+    }
 
     /**
      * @param $filterValue

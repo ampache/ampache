@@ -84,5 +84,5 @@ final class Podcasts4Method
         }
 
         return true;
-    } // podcasts
+    }
 }

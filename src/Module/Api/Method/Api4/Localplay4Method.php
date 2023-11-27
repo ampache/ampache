@@ -140,5 +140,5 @@ final class Localplay4Method
         }
 
         return true;
-    } // localplay
+    }
 }

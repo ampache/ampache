@@ -75,5 +75,5 @@ final class Ping3Method
 
         ob_end_clean();
         echo Xml3_Data::keyed_array($results);
-    } // ping
+    }
 }

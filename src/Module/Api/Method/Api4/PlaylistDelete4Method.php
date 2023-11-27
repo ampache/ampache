@@ -59,5 +59,5 @@ final class PlaylistDelete4Method
         }
 
         return true;
-    } // playlist_delete
+    }
 }

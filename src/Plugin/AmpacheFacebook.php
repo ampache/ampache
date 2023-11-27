@@ -51,7 +51,7 @@ class AmpacheFacebook implements AmpachePluginInterface
     public function install(): bool
     {
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -60,7 +60,7 @@ class AmpacheFacebook implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return true;
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -69,7 +69,7 @@ class AmpacheFacebook implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * @param string $url
@@ -94,5 +94,5 @@ class AmpacheFacebook implements AmpachePluginInterface
         $user->set_preferences();
 
         return true;
-    } // load
+    }
 }

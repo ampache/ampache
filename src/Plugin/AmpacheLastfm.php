@@ -73,7 +73,7 @@ class AmpacheLastfm implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -91,7 +91,7 @@ class AmpacheLastfm implements AmpachePluginInterface
             Preference::delete('lastfm_host') &&
             Preference::delete('lastfm_port')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -116,7 +116,7 @@ class AmpacheLastfm implements AmpachePluginInterface
         }
 
         return true;
-    } // upgrade
+    }
 
     /**
      * save_mediaplay
@@ -160,7 +160,7 @@ class AmpacheLastfm implements AmpachePluginInterface
         debug_event('lastfm.plugin', 'Submission Successful', 5);
 
         return true;
-    } // submit
+    }
 
     /**
      * set_flag
@@ -184,7 +184,7 @@ class AmpacheLastfm implements AmpachePluginInterface
             return;
         }
         debug_event('lastfm.plugin', 'Sent Love Successfully', 5);
-    } // set_flag
+    }
 
     /**
      * get_session
@@ -208,7 +208,7 @@ class AmpacheLastfm implements AmpachePluginInterface
         debug_event('lastfm.plugin', 'getSession Successful', 3);
 
         return true;
-    } // get_session
+    }
 
     /**
      * load
@@ -232,5 +232,5 @@ class AmpacheLastfm implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 }

@@ -51,5 +51,5 @@ final class PlaylistDelete3Method
             $playlist->delete();
             echo Xml3_Data::single_string('success');
         }
-    } // playlist_delete
+    }
 }

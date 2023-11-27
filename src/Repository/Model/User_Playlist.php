@@ -85,7 +85,7 @@ class User_Playlist extends database_object
         }
 
         return $items;
-    } // get_current_object
+    }
 
     /**
      * set_current_object
@@ -102,7 +102,7 @@ class User_Playlist extends database_object
         // set the new one
         $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `object_id` = ? AND `user` = ? LIMIT 1";
         Dba::write($sql, array($position, $object_type, $object_id, $this->user));
-    } // set_current_object
+    }
 
     /**
      * set_current_id
@@ -119,7 +119,7 @@ class User_Playlist extends database_object
         // set the new one
         $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `track` = ? AND `user` = ? LIMIT 1";
         Dba::write($sql, array($position, $object_type, $track, $this->user));
-    } // set_current_object
+    }
 
     /**
      * get_count
@@ -132,7 +132,7 @@ class User_Playlist extends database_object
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['count'];
-    } // get_count
+    }
 
     /**
      * get_time
@@ -148,7 +148,7 @@ class User_Playlist extends database_object
         }
 
         return (int)$results['time'];
-    } // get_count
+    }
 
     /**
      * get_latest
@@ -161,7 +161,7 @@ class User_Playlist extends database_object
         $results    = Dba::fetch_assoc($db_results);
 
         return $results['playqueue_client'] ?? '';
-    } // get_count
+    }
 
     /**
      * clear
@@ -171,7 +171,7 @@ class User_Playlist extends database_object
     {
         $sql = "DELETE FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
         Dba::write($sql, array($this->user, $this->client));
-    } // clear
+    }
 
     /**
      * add_items
@@ -194,7 +194,7 @@ class User_Playlist extends database_object
         $sql = substr($sql, 0, -1) . ';';
 
         return Dba::write($sql, $values);
-    } // add_item
+    }
 
     /**
      * set_items
@@ -218,7 +218,7 @@ class User_Playlist extends database_object
             User::set_user_data($this->user, 'playqueue_time', $time);
             User::set_user_data($this->user, 'playqueue_client', $this->client);
         }
-    } // set_items
+    }
 
     /**
      * get_items
@@ -244,5 +244,5 @@ class User_Playlist extends database_object
         }
 
         return $items;
-    } // get_items
+    }
 }

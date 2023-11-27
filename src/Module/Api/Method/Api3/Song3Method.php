@@ -45,5 +45,5 @@ final class Song3Method
 
         ob_end_clean();
         echo Xml3_Data::songs(array((int)$uid), $user);
-    } // song
+    }
 }

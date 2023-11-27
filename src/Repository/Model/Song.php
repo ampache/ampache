@@ -216,7 +216,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->type        = strtolower(pathinfo((string)$this->file, PATHINFO_EXTENSION));
         $this->mime        = self::type_to_mime($this->type);
         $this->total_count = (int)$this->total_count;
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -538,7 +538,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return true;
-    } // build_cache
+    }
 
     /**
      * has_info
@@ -650,7 +650,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         parent::add_to_cache('song_data', $song_id, $results);
 
         return $results;
-    } // _get_ext_info
+    }
 
     /**
      * fill_ext_info
@@ -668,7 +668,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $this->$key = $value;
             }
         } // end foreach
-    } // fill_ext_info
+    }
 
     /**
      * type_to_mime
@@ -816,7 +816,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->f_album_full = $album->get_fullname($simple);
 
         return $this->f_album_full;
-    } // get_album_fullname
+    }
 
     /**
      * get_album_disk_fullname
@@ -827,7 +827,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $albumDisk = new AlbumDisk((int)$this->get_album_disk());
 
         return $albumDisk->get_fullname();
-    } // get_album_disk_fullname
+    }
 
     /**
      * get_album_catalog_number
@@ -842,7 +842,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $album = new Album($album_id);
 
         return $album->catalog_number;
-    } // get_album_catalog_number
+    }
 
     /**
      * get_album_original_year
@@ -857,7 +857,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $album = new Album($album_id);
 
         return $album->original_year;
-    } // get_album_original_year
+    }
 
     /**
      * get_album_barcode
@@ -872,7 +872,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $album = new Album($album_id);
 
         return $album->barcode;
-    } // get_album_barcode
+    }
 
     /**
      * get_artist_fullname
@@ -889,7 +889,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return $this->f_artist_full;
-    } // get_artist_fullname
+    }
 
     /**
      * get_album_artist_fullname
@@ -909,7 +909,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return self::get_artist_fullname($this->albumartist);
-    } // get_album_artist_fullname
+    }
 
     /**
      * get_album_disk
@@ -930,7 +930,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->album_disk = (int)$results['id'];
 
         return $this->album_disk;
-    } // get_album_artist_fullname
+    }
 
     /**
      * set_played
@@ -966,7 +966,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return true;
-    } // set_played
+    }
 
     /**
      * check_play_history
@@ -1013,7 +1013,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         );
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
-    } // compare_song_information
+    }
 
     /**
      * compare_media_information
@@ -1184,7 +1184,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         );
 
         return $this->id;
-    } // update
+    }
 
     /**
      * update_song
@@ -1202,7 +1202,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
         Dba::write($sql, array($new_song->label, $new_song->lyrics, $new_song->language, $new_song->disksubtitle, $new_song->comment, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id));
-    } // update_song
+    }
 
     /**
      * update_year
@@ -1213,7 +1213,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_year($new_year, $song_id)
     {
         self::_update_item('year', $new_year, $song_id, 50, true);
-    } // update_year
+    }
 
     /**
      * update_label
@@ -1224,7 +1224,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_label($new_value, $song_id)
     {
         self::_update_ext_item('label', $new_value, $song_id, 50, true);
-    } // update_label
+    }
 
     /**
      * update_language
@@ -1235,7 +1235,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_language($new_lang, $song_id)
     {
         self::_update_ext_item('language', $new_lang, $song_id, 50, true);
-    } // update_language
+    }
 
     /**
      * update_comment
@@ -1246,7 +1246,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_comment($new_comment, $song_id)
     {
         self::_update_ext_item('comment', $new_comment, $song_id, 50, true);
-    } // update_comment
+    }
 
     /**
      * update_lyrics
@@ -1257,7 +1257,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_lyrics($new_lyrics, $song_id)
     {
         self::_update_ext_item('lyrics', $new_lyrics, $song_id, 50, true);
-    } // update_lyrics
+    }
 
     /**
      * update_title
@@ -1268,7 +1268,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_title($new_title, $song_id)
     {
         self::_update_item('title', $new_title, $song_id, 50, true);
-    } // update_title
+    }
 
     /**
      * update_composer
@@ -1279,7 +1279,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_composer($new_composer, $song_id)
     {
         self::_update_item('composer', $new_composer, $song_id, 50, true);
-    } // update_composer
+    }
 
     /**
      * update_publisher
@@ -1290,7 +1290,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_publisher($new_publisher, $song_id)
     {
         self::_update_item('publisher', $new_publisher, $song_id, 50, true);
-    } // update_publisher
+    }
 
     /**
      * update_bitrate
@@ -1301,7 +1301,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_bitrate($new_bitrate, $song_id)
     {
         self::_update_item('bitrate', $new_bitrate, $song_id, 50, true);
-    } // update_bitrate
+    }
 
     /**
      * update_rate
@@ -1312,7 +1312,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_rate($new_rate, $song_id)
     {
         self::_update_item('rate', $new_rate, $song_id, 50, true);
-    } // update_rate
+    }
 
     /**
      * update_mode
@@ -1323,7 +1323,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_mode($new_mode, $song_id)
     {
         self::_update_item('mode', $new_mode, $song_id, 50, true);
-    } // update_mode
+    }
 
     /**
      * update_size
@@ -1334,7 +1334,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_size($new_size, $song_id)
     {
         self::_update_item('size', $new_size, $song_id, 50);
-    } // update_size
+    }
 
     /**
      * update_time
@@ -1345,7 +1345,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_time($new_time, $song_id)
     {
         self::_update_item('time', $new_time, $song_id, 50, true);
-    } // update_time
+    }
 
     /**
      * update_track
@@ -1356,7 +1356,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_track($new_track, $song_id)
     {
         self::_update_item('track', $new_track, $song_id, 50, true);
-    } // update_track
+    }
 
     /**
      * update_mbid
@@ -1367,7 +1367,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_mbid($new_mbid, $song_id)
     {
         self::_update_item('mbid', $new_mbid, $song_id, 50);
-    } // update_mbid
+    }
 
     /**
      * update_license
@@ -1378,7 +1378,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_license($new_license, $song_id)
     {
         self::_update_item('license', $new_license, $song_id, 50, true);
-    } // update_license
+    }
 
     /**
      * update_artist
@@ -1402,7 +1402,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return false;
-    } // update_artist
+    }
 
     /**
      * update_album
@@ -1426,7 +1426,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return false;
-    } // update_album
+    }
 
     /**
      * update_utime
@@ -1441,7 +1441,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         self::_update_item('update_time', $time, $song_id, 75, true);
-    } // update_utime
+    }
 
     /**
      * update_played
@@ -1452,7 +1452,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_played($new_played, $song_id)
     {
         self::_update_item('played', ($new_played ? 1 : 0), $song_id, 25);
-    } // update_played
+    }
 
     /**
      * update_enabled
@@ -1463,7 +1463,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function update_enabled($new_enabled, $song_id)
     {
         self::_update_item('enabled', ($new_enabled ? 1 : 0), $song_id, 75, true);
-    } // update_enabled
+    }
 
     /**
      * _update_item
@@ -1499,7 +1499,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
 
         return Dba::write($sql, array($value, $song_id));
-    } // _update_item
+    }
 
     /**
      * _update_ext_item
@@ -1529,7 +1529,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $sql = "UPDATE `song_data` SET `$field` = ? WHERE `song_id` = ?";
 
         return Dba::write($sql, array($value, $song_id));
-    } // _update_ext_item
+    }
 
     /**
      * format
@@ -1614,7 +1614,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
             $this->f_license = $license->getLinkFormatted();
         }
-    } // format
+    }
 
     /**
      * does the item have art?
@@ -1956,7 +1956,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // $fields['recently Played'] = true;
 
         return $fields;
-    } // get_fields
+    }
 
     /**
      * play_url
@@ -2169,7 +2169,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return $deleted;
-    } // get_deleted
+    }
 
     /**
      * Migrate an artist data to a new object

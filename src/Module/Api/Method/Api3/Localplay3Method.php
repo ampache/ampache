@@ -82,5 +82,5 @@ final class Localplay3Method
         echo Xml3_Data::keyed_array($results);
 
         return true;
-    } // localplay
+    }
 }

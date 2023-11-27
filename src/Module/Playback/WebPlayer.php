@@ -118,7 +118,7 @@ class WebPlayer
         }
 
         return $types;
-    } // get_types
+    }
 
     /**
      * Check if the playlist is a video playlist.
@@ -137,7 +137,7 @@ class WebPlayer
         }
 
         return null;
-    } // get_media_object
+    }
 
     /**
      * Check if the playlist is a video playlist.
@@ -177,7 +177,7 @@ class WebPlayer
         }
 
         return $types;
-    } // get_media_types
+    }
 
     /**
      * Check if we can transcode this file type

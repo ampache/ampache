@@ -50,5 +50,5 @@ final class Tag4Method
         }
 
         return Genre4Method::genre($input, $user);
-    } // tag
+    }
 }

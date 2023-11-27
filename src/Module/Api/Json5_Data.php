@@ -79,7 +79,7 @@ class Json5_Data
     public static function set_offset($offset): void
     {
         self::$offset = (int)$offset;
-    } // set_offset
+    }
 
     /**
      * set_limit
@@ -97,7 +97,7 @@ class Json5_Data
         self::$limit = (strtolower((string) $limit) == "none") ? null : (int)$limit;
 
         return true;
-    } // set_limit
+    }
 
     /**
      * error
@@ -115,7 +115,7 @@ class Json5_Data
         $message = array("error" => array("errorCode" => (string) $code, "errorAction" => $action, "errorType" => $type, "errorMessage" => $string));
 
         return json_encode($message, JSON_PRETTY_PRINT);
-    } // error
+    }
 
     /**
      * success
@@ -134,7 +134,7 @@ class Json5_Data
         }
 
         return json_encode($message, JSON_PRETTY_PRINT);
-    } // success
+    }
 
     /**
      * empty
@@ -147,7 +147,7 @@ class Json5_Data
     public static function empty($type): string
     {
         return json_encode(array($type => array()), JSON_PRETTY_PRINT);
-    } // empty
+    }
 
     /**
      * genre_array
@@ -181,7 +181,7 @@ class Json5_Data
         }
 
         return $JSON;
-    } // genre_array
+    }
 
     /**
      * indexes
@@ -224,7 +224,7 @@ class Json5_Data
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
         }
-    } // indexes
+    }
 
     /**
      * live_streams
@@ -256,7 +256,7 @@ class Json5_Data
         $output = ($object) ? array("live_stream" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // live_streams
+    }
 
     /**
      * licenses
@@ -285,7 +285,7 @@ class Json5_Data
         $output = ($object) ? array("license" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // licenses
+    }
 
     /**
      * labels
@@ -321,7 +321,7 @@ class Json5_Data
         $output = ($object) ? array("label" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // labels
+    }
 
     /**
      * genres
@@ -355,7 +355,7 @@ class Json5_Data
         $output = ($object) ? array("genre" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // genres
+    }
 
     /**
      * artists
@@ -429,7 +429,7 @@ class Json5_Data
         }
 
         return $JSON;
-    } // artists
+    }
 
     /**
      * albums
@@ -509,7 +509,7 @@ class Json5_Data
         }
 
         return $JSON;
-    } // albums
+    }
 
     /**
      * playlists
@@ -593,7 +593,7 @@ class Json5_Data
         $output = ($object) ? array("playlist" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // playlists
+    }
 
     /**
      * shares
@@ -648,7 +648,7 @@ class Json5_Data
         $output = ($object) ? array("share" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // shares
+    }
 
     /**
      * bookmarks
@@ -689,7 +689,7 @@ class Json5_Data
         $output = ($object) ? array("bookmark" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // bookmarks
+    }
 
     /**
      * catalogs
@@ -741,7 +741,7 @@ class Json5_Data
         $output = ($object) ? array("catalog" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // catalogs
+    }
 
     /**
      * podcasts
@@ -806,7 +806,7 @@ class Json5_Data
         $output = ($object) ? array("podcast" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // podcasts
+    }
 
     /**
      * podcast_episodes
@@ -867,7 +867,7 @@ class Json5_Data
         $output = ($object) ? array("podcast_episode" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // podcast_episodes
+    }
 
     /**
      * songs
@@ -981,7 +981,7 @@ class Json5_Data
         }
 
         return $JSON;
-    } // songs
+    }
 
     /**
      * videos
@@ -1026,7 +1026,7 @@ class Json5_Data
         $output = ($object) ? array("video" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // videos
+    }
 
     /**
      * democratic
@@ -1080,7 +1080,7 @@ class Json5_Data
         $output = ($object) ? array("song" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // democratic
+    }
 
     /**
      * user
@@ -1128,7 +1128,7 @@ class Json5_Data
         $output = ($object) ? array("user" => $JSON) : $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // user
+    }
 
     /**
      * users
@@ -1151,7 +1151,7 @@ class Json5_Data
         $output = ($object) ? array("user" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // users
+    }
 
     /**
      * shouts
@@ -1181,7 +1181,7 @@ class Json5_Data
         $output = ($object) ? array("shout" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // shouts
+    }
 
     /**
      * timeline
@@ -1213,7 +1213,7 @@ class Json5_Data
         $output = ($object) ? array("activity" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // timeline
+    }
 
     /**
      * deleted
@@ -1278,7 +1278,7 @@ class Json5_Data
         $output = array("deleted_" . $object_type => $JSON);
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // deleted
+    }
 
     /**
      * @deprecated Inject by constructor

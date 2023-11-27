@@ -273,7 +273,7 @@ class Stats
         debug_event(self::class, 'Unable to insert statistics for ' . $user_id . ':' . $object_id, 3);
 
         return false;
-    } // insert
+    }
 
     /**
      * is_already_inserted
@@ -308,7 +308,7 @@ class Stats
         }
 
         return false;
-    } // is_already_inserted
+    }
 
     /**
      * get_object_count
@@ -338,7 +338,7 @@ class Stats
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['total_count'];
-    } // get_object_count
+    }
 
     /**
      * get_object_total
@@ -368,7 +368,7 @@ class Stats
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['total_count'];
-    } // get_object_count
+    }
 
     /**
      * get_cached_place_name
@@ -432,7 +432,7 @@ class Stats
         $db_results = Dba::read($sql, $params);
 
         return Dba::fetch_assoc($db_results);
-    } // get_last_play
+    }
 
     /**
      * shift_last_play
@@ -452,7 +452,7 @@ class Stats
         // update the user_activity table
         $sql = "UPDATE `user_activity` SET `user_activity`.`activity_date` = ? WHERE `user_activity`.`user` = ? AND `user_activity`.`activity_date` = ?";
         Dba::write($sql, array($new_date, $user_id, $original_date));
-    } // shift_last_play
+    }
 
     /**
      * get_time
@@ -472,7 +472,7 @@ class Stats
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)($results['time'] ?? 0);
-    } // get_time
+    }
 
     /**
      * skip_last_play
@@ -511,7 +511,7 @@ class Stats
         $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `date` = ? AND `agent` = ? AND `user` = ? ";
 
         return Dba::write($sql, array($date, $agent, $user_id));
-    } // skip_last_play
+    }
 
     /**
      * has_played_history
@@ -562,7 +562,7 @@ class Stats
         }
 
         return true;
-    } // has_played_history
+    }
 
     private static function getUseractivityRepository(): UserActivityRepositoryInterface
     {
@@ -601,7 +601,7 @@ class Stats
         }
 
         return $results;
-    } // get_object_history
+    }
 
     /**
      * get_top_sql
@@ -750,7 +750,7 @@ class Stats
         }
 
         return $results;
-    } // get_top
+    }
 
     /**
      * get_recent_sql
@@ -839,7 +839,7 @@ class Stats
         }
 
         return $results;
-    } // get_recent
+    }
 
     /**
      * get_recently_played
@@ -884,7 +884,7 @@ class Stats
         }
 
         return $results;
-    } // get_recently_played
+    }
 
     /**
      * get_user
@@ -915,7 +915,7 @@ class Stats
         }
 
         return $results;
-    } // get_user
+    }
 
     /**
      * validate_type
@@ -949,7 +949,7 @@ class Stats
             default:
                 return 'song';
         } // end switch
-    } // validate_type
+    }
 
     /**
      * get_newest_sql
@@ -1070,7 +1070,7 @@ class Stats
         } // end while results
 
         return $results;
-    } // get_newest
+    }
 
     /**
      * @deprecated inject dependency

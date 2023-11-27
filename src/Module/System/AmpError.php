@@ -46,7 +46,7 @@ class AmpError
         foreach (self::$errors as $key => $error) {
             $_SESSION['errors'][$key] = $error;
         }
-    } // __destruct
+    }
 
     /**
      * add
@@ -81,7 +81,7 @@ class AmpError
             ob_flush();
             flush();
         }
-    } // add
+    }
 
     /**
      * occurred
@@ -94,7 +94,7 @@ class AmpError
         }
 
         return false;
-    } // occurred
+    }
 
     /**
      * get
@@ -108,7 +108,7 @@ class AmpError
         }
 
         return AmpError::$errors[$name];
-    } // get
+    }
 
     /**
      * display
@@ -124,7 +124,7 @@ class AmpError
         }
 
         return '';
-    } // display
+    }
 
     public static function getErrorsFormatted(string $name): string
     {

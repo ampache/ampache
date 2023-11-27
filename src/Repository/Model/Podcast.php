@@ -79,7 +79,7 @@ class Podcast extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -132,7 +132,7 @@ class Podcast extends database_object implements library_item
         }
 
         return $results;
-    } // get_episodes
+    }
 
     /**
      * format

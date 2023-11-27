@@ -86,7 +86,7 @@ final class Timeline4Method
         }
 
         return true;
-    } // timeline
+    }
 
     private static function getUseractivityRepository(): UserActivityRepositoryInterface
     {

@@ -62,5 +62,5 @@ final class Song4Method
         }
 
         return true;
-    } // song
+    }
 }

@@ -137,7 +137,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $this->song_count       = (int)$this->song_count;
         $this->catalog_id       = (int)$catalog_init;
         $this->get_fullname();
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -167,7 +167,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $artist->_fake = true;
 
         return $artist;
-    } // construct_from_array
+    }
 
     /**
      * garbage_collection
@@ -220,7 +220,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         } // end if extra
 
         return true;
-    } // build_cache
+    }
 
     /**
      * get_from_name
@@ -237,7 +237,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         return false;
-    } // get_from_name
+    }
 
     /**
      * get_id_arrays
@@ -341,7 +341,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 $this->f_labels = Label::get_display($this->labels, true);
             }
         }
-    } // format
+    }
 
     /**
      * does the item have art?
@@ -465,7 +465,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         return rtrim($results, ', ');
-    } // get_display
+    }
 
     /**
      * Get item link.
@@ -932,7 +932,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         return $current_id;
-    } // update
+    }
 
     /**
      * Update artist information.

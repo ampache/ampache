@@ -76,7 +76,7 @@ class Xml4_Data
     private function __construct()
     {
         // Rien a faire
-    } // constructor
+    }
 
     /**
      * set_offset
@@ -88,7 +88,7 @@ class Xml4_Data
     public static function set_offset($offset): void
     {
         self::$offset = (int)$offset;
-    } // set_offset
+    }
 
     /**
      * set_limit
@@ -106,7 +106,7 @@ class Xml4_Data
         self::$limit = (strtolower((string)$limit) == "none") ? null : (int)$limit;
 
         return true;
-    } // set_limit
+    }
 
     /**
      * set_type
@@ -124,7 +124,7 @@ class Xml4_Data
         self::$type = $type;
 
         return true;
-    } // set_type
+    }
 
     /**
      * error
@@ -139,7 +139,7 @@ class Xml4_Data
         $xml_string = "\t<error code=\"$code\"><![CDATA[" . $string . "]]></error>";
 
         return Xml_Data::output_xml($xml_string);
-    } // error
+    }
 
     /**
      * success
@@ -153,7 +153,7 @@ class Xml4_Data
         $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
 
         return Xml_Data::output_xml($xml_string);
-    } // success
+    }
 
     /**
      * header
@@ -166,7 +166,7 @@ class Xml4_Data
     public static function header($title = null): string
     {
         return self::_header($title);
-    } // header
+    }
 
     /**
      * footer
@@ -178,7 +178,7 @@ class Xml4_Data
     public static function footer(): string
     {
         return self::_footer();
-    } // footer
+    }
 
     /**
      * tags_string
@@ -210,7 +210,7 @@ class Xml4_Data
         }
 
         return $string;
-    } // tags_string
+    }
 
     /**
      * output_xml_from_array
@@ -291,7 +291,7 @@ class Xml4_Data
 
                 return UI::clean_utf8($string);
         }
-    } // output_from_array
+    }
 
     /**
      * keyed_array
@@ -328,7 +328,7 @@ class Xml4_Data
         }
 
         return $string;
-    } // keyed_array
+    }
 
     /**
      * indexes
@@ -441,7 +441,7 @@ class Xml4_Data
         } // end foreach objects
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // indexes
+    }
 
     /**
      * licenses
@@ -463,7 +463,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // licenses
+    }
 
     /**
      * tags
@@ -486,7 +486,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // tags
+    }
 
     /**
      * artists
@@ -539,7 +539,7 @@ class Xml4_Data
         } // end foreach artists
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // artists
+    }
 
     /**
      * albums
@@ -597,7 +597,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // albums
+    }
 
     /**
      * playlists
@@ -653,7 +653,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // playlists
+    }
 
     /**
      * shares
@@ -675,7 +675,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // shares
+    }
 
     /**
      * catalogs
@@ -702,7 +702,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // catalogs
+    }
 
     /**
      * podcasts
@@ -738,7 +738,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // podcasts
+    }
 
     /**
      * podcast_episodes
@@ -767,7 +767,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // podcast_episodes
+    }
 
     /**
      * songs
@@ -827,7 +827,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // songs
+    }
 
     /**
      * videos
@@ -856,7 +856,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // videos
+    }
 
     /**
      * democratic
@@ -893,7 +893,7 @@ class Xml4_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // democratic
+    }
 
     /**
      * user
@@ -917,7 +917,7 @@ class Xml4_Data
         $string .= "</user>\n";
 
         return Xml_Data::output_xml($string);
-    } // user
+    }
 
     /**
      * users
@@ -936,7 +936,7 @@ class Xml4_Data
         $string .= "</users>\n";
 
         return Xml_Data::output_xml($string);
-    } // users
+    }
 
     /**
      * shouts
@@ -960,7 +960,7 @@ class Xml4_Data
         $string .= "</shouts>\n";
 
         return Xml_Data::output_xml($string);
-    } // shouts
+    }
 
     /**
      * timeline
@@ -984,7 +984,7 @@ class Xml4_Data
         $string .= "</timeline>";
 
         return self::_header() . $string . self::_footer();
-    } // timeline
+    }
 
     /**
      * _header
@@ -1012,7 +1012,7 @@ class Xml4_Data
         } // end switch
 
         return $header;
-    } // _header
+    }
 
     /**
      * _footer
@@ -1037,7 +1037,7 @@ class Xml4_Data
         } // end switch on type
 
         return $footer;
-    } // _footer
+    }
 
     /**
      * @deprecated

@@ -73,7 +73,7 @@ final class ArtistSongs4Method
         }
 
         return true;
-    } // artist_songs
+    }
 
     private static function getSongRepository(): SongRepositoryInterface
     {

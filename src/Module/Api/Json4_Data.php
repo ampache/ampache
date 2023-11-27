@@ -73,7 +73,7 @@ class Json4_Data
     private function __construct()
     {
         // Rien a faire
-    } // constructor
+    }
 
     /**
      * set_offset
@@ -85,7 +85,7 @@ class Json4_Data
     public static function set_offset($offset): void
     {
         self::$offset = (int)$offset;
-    } // set_offset
+    }
 
     /**
      * set_limit
@@ -103,7 +103,7 @@ class Json4_Data
         self::$limit = (strtolower((string) $limit) == "none") ? null : (int)$limit;
 
         return true;
-    } // set_limit
+    }
 
     /**
      * error
@@ -117,7 +117,7 @@ class Json4_Data
     public static function error($code, $string): string
     {
         return json_encode(array("error" => array("code" => $code, "message" => $string)), JSON_PRETTY_PRINT);
-    } // error
+    }
 
     /**
      * success
@@ -130,7 +130,7 @@ class Json4_Data
     public static function success($string): string
     {
         return json_encode(array("success" => $string), JSON_PRETTY_PRINT);
-    } // success
+    }
 
     /**
      * tags_array
@@ -172,7 +172,7 @@ class Json4_Data
         }
 
         return $JSON;
-    } // tags_array
+    }
 
     /**
      * indexes
@@ -212,7 +212,7 @@ class Json4_Data
             default:
                 return self::error('401', T_('Wrong object type ' . $object_type));
         }
-    } // indexes
+    }
 
     /**
      * licenses
@@ -239,7 +239,7 @@ class Json4_Data
         } // end foreach
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // licenses
+    }
 
     /**
      * tags
@@ -278,7 +278,7 @@ class Json4_Data
         );
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // tags
+    }
 
     /**
      * artists
@@ -354,7 +354,7 @@ class Json4_Data
         }
 
         return $JSON;
-    } // artists
+    }
 
     /**
      * albums
@@ -428,7 +428,7 @@ class Json4_Data
         }
 
         return $JSON;
-    } // albums
+    }
 
     /**
      * playlists
@@ -509,7 +509,7 @@ class Json4_Data
         } // end foreach
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // playlists
+    }
 
     /**
      * shares
@@ -562,7 +562,7 @@ class Json4_Data
         } // end foreach
 
         return json_encode($allShares, JSON_PRETTY_PRINT);
-    } // shares
+    }
 
     /**
      * catalogs
@@ -612,7 +612,7 @@ class Json4_Data
         } // end foreach
 
         return json_encode($allCatalogs, JSON_PRETTY_PRINT);
-    } // catalogs
+    }
 
     /**
      * podcasts
@@ -675,7 +675,7 @@ class Json4_Data
         } // end foreach
 
         return json_encode($allPodcasts, JSON_PRETTY_PRINT);
-    } // podcasts
+    }
 
     /**
      * podcast_episodes
@@ -732,7 +732,7 @@ class Json4_Data
         $output = ($object) ? array("podcast_episode" => $JSON) : $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // podcast_episodes
+    }
 
     /**
      * songs
@@ -842,7 +842,7 @@ class Json4_Data
         }
 
         return $JSON;
-    } // songs
+    }
 
     /**
      * videos
@@ -884,7 +884,7 @@ class Json4_Data
         } // end foreach
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // videos
+    }
 
     /**
      * democratic
@@ -936,7 +936,7 @@ class Json4_Data
         } // end foreach
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // democratic
+    }
 
     /**
      * user
@@ -983,7 +983,7 @@ class Json4_Data
         }
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // user
+    }
 
     /**
      * users
@@ -1010,7 +1010,7 @@ class Json4_Data
         );
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // users
+    }
 
     /**
      * shouts
@@ -1040,7 +1040,7 @@ class Json4_Data
         }
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // shouts
+    }
 
     /**
      * timeline
@@ -1074,7 +1074,7 @@ class Json4_Data
         }
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // timeline
+    }
 
     /**
      * @deprecated

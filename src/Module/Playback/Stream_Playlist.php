@@ -484,7 +484,7 @@ class Stream_Playlist
         foreach ($this->urls as $url) {
             echo $url->url . "\n";
         }
-    } // simple_m3u
+    }
 
     /**
      * get_m3u_string
@@ -503,7 +503,7 @@ class Stream_Playlist
         }
 
         return $ret;
-    } // get_m3u_string
+    }
 
     public function create_m3u()
     {
@@ -528,7 +528,7 @@ class Stream_Playlist
         $ret .= "Version=2\n";
 
         return $ret;
-    } // get_pls_string
+    }
 
     public function create_pls()
     {
@@ -561,7 +561,7 @@ class Stream_Playlist
         $ret .= "</ASX>\n";
 
         return $ret;
-    } // get_asx_string
+    }
 
     public function create_asx()
     {
@@ -612,7 +612,7 @@ class Stream_Playlist
         $ret .= Xml_Data::footer();
 
         return $ret;
-    } // get_xspf_string
+    }
 
     public function create_xspf()
     {
@@ -729,7 +729,7 @@ class Stream_Playlist
             }
             $localplay->play();
         }
-    } // create_localplay
+    }
 
     /**
      * create_democratic
@@ -770,7 +770,7 @@ class Stream_Playlist
         header('Location: ' . $url);
 
         return false;
-    } // create_download
+    }
 
     /**
      * create_ram
@@ -781,5 +781,5 @@ class Stream_Playlist
         foreach ($this->urls as $url) {
             echo $url->url . "\n";
         }
-    } // create_ram
+    }
 }

@@ -69,5 +69,5 @@ final class AdvancedSearch3Method
                 echo Xml3_Data::songs($results, $user);
                 break;
         }
-    } // advanced_search
+    }
 }

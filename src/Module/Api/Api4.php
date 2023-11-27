@@ -135,7 +135,7 @@ class Api4
     private function __construct()
     {
         // Rien a faire
-    } // constructor
+    }
 
     /**
      * message
@@ -165,7 +165,7 @@ class Api4
                     echo Xml4_Data::success($message);
             }
         }
-    } // message
+    }
 
     /**
      * check_parameter
@@ -192,7 +192,7 @@ class Api4
         }
 
         return true;
-    } // check_parameter
+    }
 
     /**
      * check_access
@@ -216,5 +216,5 @@ class Api4
         }
 
         return true;
-    } // check_access
+    }
 } // end api.class

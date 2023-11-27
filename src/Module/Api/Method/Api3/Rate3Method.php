@@ -64,5 +64,5 @@ final class Rate3Method
                 echo Xml3_Data::single_string('success');
             }
         }
-    } // rate
+    }
 }

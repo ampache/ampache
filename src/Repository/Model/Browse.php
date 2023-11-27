@@ -112,7 +112,7 @@ class Browse extends Query
     public function set_simple_browse(bool $value): void
     {
         $this->set_is_simple($value);
-    } // set_simple_browse
+    }
 
     /**
      * is_valid_type
@@ -121,7 +121,7 @@ class Browse extends Query
     public function is_valid_type(string $type): bool
     {
         return in_array($type, self::BROWSE_TYPES);
-    } // set_simple_browse
+    }
 
     /**
      * add_supplemental_object
@@ -132,7 +132,7 @@ class Browse extends Query
         $_SESSION['browse']['supplemental'][$this->id][$class] = $uid;
 
         return true;
-    } // add_supplemental_object
+    }
 
     /**
      * get_supplemental_objects
@@ -148,7 +148,7 @@ class Browse extends Query
         }
 
         return $objects;
-    } // get_supplemental_objects
+    }
 
     /**
      * update_browse_from_session
@@ -446,7 +446,7 @@ class Browse extends Query
             $this->show_next_link($argument);
         }
         Ajax::end_container();
-    } // show_object
+    }
 
     /**
      * @param $argument

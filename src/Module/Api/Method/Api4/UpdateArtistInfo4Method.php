@@ -71,5 +71,5 @@ final class UpdateArtistInfo4Method
         Api4::message('error', T_('Failed to update_artist_info or recommendations for ' . (string) $object), '400', $input['api_format']);
 
         return true;
-    } // update_artist_info
+    }
 }

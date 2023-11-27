@@ -59,7 +59,7 @@ class Catalog_subsonic extends Catalog
     public function get_description(): string
     {
         return $this->description;
-    } // get_description
+    }
 
     /**
      * get_version
@@ -68,7 +68,7 @@ class Catalog_subsonic extends Catalog
     public function get_version(): string
     {
         return $this->version;
-    } // get_version
+    }
 
     /**
      * get_path
@@ -77,7 +77,7 @@ class Catalog_subsonic extends Catalog
     public function get_path(): string
     {
         return $this->uri;
-    } // get_path
+    }
 
     /**
      * get_type
@@ -86,7 +86,7 @@ class Catalog_subsonic extends Catalog
     public function get_type(): string
     {
         return $this->type;
-    } // get_type
+    }
 
     /**
      * get_create_help
@@ -95,7 +95,7 @@ class Catalog_subsonic extends Catalog
     public function get_create_help(): string
     {
         return "";
-    } // get_create_help
+    }
 
     /**
      * is_installed
@@ -107,7 +107,7 @@ class Catalog_subsonic extends Catalog
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } // is_installed
+    }
 
     /**
      * install
@@ -123,7 +123,7 @@ class Catalog_subsonic extends Catalog
         Dba::query($sql);
 
         return true;
-    } // install
+    }
 
     /**
      * @return array
@@ -221,7 +221,7 @@ class Catalog_subsonic extends Catalog
         }
 
         return $songsadded;
-    } // add_to_catalog
+    }
 
     /**
      * createClient

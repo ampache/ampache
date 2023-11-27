@@ -69,7 +69,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -78,7 +78,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return true;
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -121,7 +121,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         $this->overwrite_name = (bool)$data['mb_overwrite_name'];
 
         return true;
-    } // load
+    }
 
     /**
      * get_metadata
@@ -169,7 +169,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         }
 
         return $results;
-    } // get_metadata
+    }
 
     /**
      * get_external_metadata
@@ -267,7 +267,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         }
 
         return false;
-    } // get_external_metadata
+    }
 
     /**
      * get_artist
@@ -301,5 +301,5 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         }
 
         return $data;
-    } // get_artist
+    }
 }

@@ -61,7 +61,7 @@ class AmpacheXbmc extends localplay_controller
     public function get_description(): string
     {
         return $this->description;
-    } // get_description
+    }
 
     /**
      * get_version
@@ -70,7 +70,7 @@ class AmpacheXbmc extends localplay_controller
     public function get_version(): string
     {
         return $this->version;
-    } // get_version
+    }
 
     /**
      * is_installed
@@ -82,7 +82,7 @@ class AmpacheXbmc extends localplay_controller
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } // is_installed
+    }
 
     /**
      * install
@@ -101,7 +101,7 @@ class AmpacheXbmc extends localplay_controller
         Preference::insert('xbmc_active', T_('XBMC Active Instance'), 0, 25, 'integer', 'internal', 'xbmc');
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -116,7 +116,7 @@ class AmpacheXbmc extends localplay_controller
         Preference::delete('xbmc_active');
 
         return true;
-    } // uninstall
+    }
 
     /**
      * add_instance
@@ -132,7 +132,7 @@ class AmpacheXbmc extends localplay_controller
             : -1;
 
         return Dba::query($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['user'] ?? null, $data['pass'] ?? null, $user_id));
-    } // add_instance
+    }
 
     /**
      * delete_instance
@@ -145,7 +145,7 @@ class AmpacheXbmc extends localplay_controller
         Dba::query($sql, array($uid));
 
         return true;
-    } // delete_instance
+    }
 
     /**
      * get_instances
@@ -163,7 +163,7 @@ class AmpacheXbmc extends localplay_controller
         }
 
         return $results;
-    } // get_instances
+    }
 
     /**
      * update_instance
@@ -177,7 +177,7 @@ class AmpacheXbmc extends localplay_controller
         Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid));
 
         return true;
-    } // update_instance
+    }
 
     /**
      * instance_fields
@@ -194,7 +194,7 @@ class AmpacheXbmc extends localplay_controller
         $fields['pass'] = array('description' => T_('Password'), 'type' => 'password');
 
         return $fields;
-    } // instance_fields
+    }
 
     /**
      * get_instance
@@ -209,7 +209,7 @@ class AmpacheXbmc extends localplay_controller
         $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
-    } // get_instance
+    }
 
     /**
      * set_active_instance
@@ -227,7 +227,7 @@ class AmpacheXbmc extends localplay_controller
         debug_event('xbmc.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
-    } // set_active_instance
+    }
 
     /**
      * get_active_instance
@@ -236,7 +236,7 @@ class AmpacheXbmc extends localplay_controller
      */
     public function get_active_instance()
     {
-    } // get_active_instance
+    }
 
     /**
      * @param Stream_Url $url
@@ -284,7 +284,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // delete_track
+    }
 
     /**
      * clear_playlist
@@ -308,7 +308,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // clear_playlist
+    }
 
     /**
      * play
@@ -342,7 +342,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // play
+    }
 
     /**
      * pause
@@ -366,7 +366,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // pause
+    }
 
     /**
      * stop
@@ -390,7 +390,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // stop
+    }
 
     /**
      * skip
@@ -415,7 +415,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // skip
+    }
 
     /**
      * This tells XBMC to increase the volume
@@ -437,7 +437,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // volume_up
+    }
 
     /**
      * This tells XBMC to decrease the volume
@@ -459,7 +459,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // volume_down
+    }
 
     /**
      * next
@@ -483,7 +483,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // next
+    }
 
     /**
      * prev
@@ -507,7 +507,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // prev
+    }
 
     /**
      * volume
@@ -531,7 +531,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // volume
+    }
 
     /**
      * repeat
@@ -556,7 +556,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // repeat
+    }
 
     /**
      * random
@@ -581,7 +581,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // random
+    }
 
     /**
      * get
@@ -629,7 +629,7 @@ class AmpacheXbmc extends localplay_controller
         }
 
         return $results;
-    } // get
+    }
 
     /**
      * status
@@ -695,7 +695,7 @@ class AmpacheXbmc extends localplay_controller
         }
 
         return $array;
-    } // status
+    }
 
     /**
      * connect
@@ -717,5 +717,5 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // connect
+    }
 }

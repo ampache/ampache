@@ -66,7 +66,7 @@ class AmpacheBitly implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -78,7 +78,7 @@ class AmpacheBitly implements AmpachePluginInterface
             Preference::delete('bitly_username') &&
             Preference::delete('bitly_api_key')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -87,7 +87,7 @@ class AmpacheBitly implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * @param string $url
@@ -146,5 +146,5 @@ class AmpacheBitly implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 }

@@ -52,5 +52,5 @@ final class PlaylistRemoveSong3Method
             $playlist->delete_track_number($track);
             echo Xml3_Data::single_string('success');
         }
-    } // playlist_remove_song
+    }
 }

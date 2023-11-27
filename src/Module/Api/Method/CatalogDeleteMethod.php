@@ -72,5 +72,5 @@ final class CatalogDeleteMethod
         Api::message('Deleted Catalog: ' . $catalog_id, $input['api_format']);
 
         return true;
-    } // catalog_delete
+    }
 }

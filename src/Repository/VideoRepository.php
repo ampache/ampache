@@ -65,5 +65,5 @@ final class VideoRepository implements VideoRepositoryInterface
         }
 
         return 0;
-    } // get_item_count
+    }
 }

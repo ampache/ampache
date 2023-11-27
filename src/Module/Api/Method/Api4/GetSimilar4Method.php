@@ -90,5 +90,5 @@ final class GetSimilar4Method
         }
 
         return true;
-    } // get_similar
+    }
 }

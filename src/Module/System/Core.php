@@ -178,7 +178,7 @@ class Core
         } // end switch on type
 
         return $string;
-    } // form_register
+    }
 
     /**
      * form_verify
@@ -235,7 +235,7 @@ class Core
         debug_event(self::class, "$type form $sid failed consistency check, rejecting request", 2);
 
         return false;
-    } // form_verify
+    }
 
     /**
      * gen_secure_token
@@ -302,7 +302,7 @@ class Core
             'width' => $width,
             'height' => $height
         );
-    } // image_dimensions
+    }
 
     /**
      * is_readable

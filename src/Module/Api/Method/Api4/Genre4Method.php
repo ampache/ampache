@@ -62,5 +62,5 @@ final class Genre4Method
         }
 
         return true;
-    } // genre
+    }
 }

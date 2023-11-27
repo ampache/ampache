@@ -67,7 +67,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -104,7 +104,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         }
 
         return $results;
-    } // get_episodes
+    }
 
     /**
      * _get_extra info
@@ -129,7 +129,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         $this->catalog_id = $row['catalog_id'];
 
         return $row;
-    } // _get_extra_info
+    }
 
     /**
      * format
@@ -397,7 +397,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         Dba::write($sql, array($data['season_number'], $data['tvshow'], $this->id));
 
         return $this->id;
-    } // update
+    }
 
     /**
      * remove

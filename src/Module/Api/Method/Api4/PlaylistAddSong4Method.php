@@ -70,5 +70,5 @@ final class PlaylistAddSong4Method
         Api4::message('success', 'song added to playlist', null, $input['api_format']);
 
         return true;
-    } // playlist_add_song
+    }
 }

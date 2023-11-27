@@ -82,5 +82,5 @@ final class UpdateArt4Method
         Api4::message('error', T_('Failed to update_art for ' . (string) $object_id), '400', $input['api_format']);
 
         return true;
-    } // update_art
+    }
 }

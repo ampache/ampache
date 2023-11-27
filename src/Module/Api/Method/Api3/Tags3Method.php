@@ -58,5 +58,5 @@ final class Tags3Method
 
         ob_end_clean();
         echo Xml3_Data::tags($results);
-    } // tags
+    }
 }

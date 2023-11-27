@@ -68,7 +68,7 @@ final class LicenseSongs4Method
         }
 
         return true;
-    } // license_songs
+    }
 
     private static function getSongRepository(): SongRepositoryInterface
     {

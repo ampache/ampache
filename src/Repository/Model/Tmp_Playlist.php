@@ -92,7 +92,7 @@ class Tmp_Playlist extends database_object
         }
 
         return true;
-    } // has_info
+    }
 
     /**
      * get_from_session
@@ -116,7 +116,7 @@ class Tmp_Playlist extends database_object
         }
 
         return new Tmp_Playlist((int)$row[0]);
-    } // get_from_session
+    }
 
     /**
      * get_from_username
@@ -135,7 +135,7 @@ class Tmp_Playlist extends database_object
         }
 
         return $results['id'];
-    } // get_from_username
+    }
 
     /**
      * get_items
@@ -170,7 +170,7 @@ class Tmp_Playlist extends database_object
         }
 
         return $items;
-    } // get_items
+    }
 
     /**
      * get_next_object
@@ -183,7 +183,7 @@ class Tmp_Playlist extends database_object
         $results    = Dba::fetch_assoc($db_results);
 
         return $results['object_id'];
-    } // get_next_object
+    }
 
     /**
      * count_items
@@ -197,7 +197,7 @@ class Tmp_Playlist extends database_object
         $row        = Dba::fetch_row($db_results);
 
         return $row[0] ?? 0;
-    } // count_items
+    }
 
     /**
      * clear
@@ -209,7 +209,7 @@ class Tmp_Playlist extends database_object
         Dba::write($sql, array($this->id));
 
         return true;
-    } // clear
+    }
 
     /**
      * create
@@ -232,7 +232,7 @@ class Tmp_Playlist extends database_object
         self::session_clean($data['session_id'], $tmp_id);
 
         return $tmp_id;
-    } // create
+    }
 
     /**
      * session_clean
@@ -248,7 +248,7 @@ class Tmp_Playlist extends database_object
 
         /* Remove associated tracks */
         self::prune_tracks();
-    } // session_clean
+    }
 
     /**
      * garbage_collection
@@ -272,7 +272,7 @@ class Tmp_Playlist extends database_object
         Dba::write($sql);
 
         return true;
-    } // prune_playlists
+    }
 
     /**
      * prune_tracks
@@ -283,7 +283,7 @@ class Tmp_Playlist extends database_object
         // This prune is always run and clears data for playlists that don't exist anymore
         $sql = "DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `tmp_playlist` ON `tmp_playlist_data`.`tmp_playlist`=`tmp_playlist`.`id` WHERE `tmp_playlist`.`id` IS NULL";
         Dba::write($sql);
-    } // prune_tracks
+    }
 
     /**
      * add_object
@@ -298,7 +298,7 @@ class Tmp_Playlist extends database_object
         Dba::write($sql, array($object_id, $this->id, $object_type));
 
         return true;
-    } // add_object
+    }
 
     /**
      * @param $medias
@@ -322,5 +322,5 @@ class Tmp_Playlist extends database_object
         Dba::write($sql, array($object_id));
 
         return true;
-    } // delete_track
+    }
 }

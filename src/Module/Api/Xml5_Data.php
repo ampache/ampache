@@ -80,7 +80,7 @@ class Xml5_Data
     public static function set_offset($offset): void
     {
         self::$offset = (int)$offset;
-    } // set_offset
+    }
 
     /**
      * set_limit
@@ -98,7 +98,7 @@ class Xml5_Data
         self::$limit = (strtolower((string)$limit) == "none") ? null : (int)$limit;
 
         return true;
-    } // set_limit
+    }
 
     /**
      * set_type
@@ -116,7 +116,7 @@ class Xml5_Data
         self::$type = $type;
 
         return true;
-    } // set_type
+    }
 
     /**
      * error
@@ -134,7 +134,7 @@ class Xml5_Data
         $xml_string = "\t<error errorCode=\"$code\">\n\t\t<errorAction><![CDATA[" . $action . "]]></errorAction>\n\t\t<errorType><![CDATA[" . $type . "]]></errorType>\n\t\t<errorMessage><![CDATA[" . $string . "]]></errorMessage>\n\t</error>";
 
         return Xml_Data::output_xml($xml_string);
-    } // error
+    }
 
     /**
      * success
@@ -153,7 +153,7 @@ class Xml5_Data
         }
 
         return Xml_Data::output_xml($xml_string);
-    } // success
+    }
 
     /**
      * empty
@@ -163,7 +163,7 @@ class Xml5_Data
     public static function empty(): string
     {
         return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n</root>\n";
-    } // empty
+    }
 
     /**
      * header
@@ -176,7 +176,7 @@ class Xml5_Data
     public static function header($title = null): string
     {
         return self::_header($title);
-    } // header
+    }
 
     /**
      * footer
@@ -188,7 +188,7 @@ class Xml5_Data
     public static function footer(): string
     {
         return self::_footer();
-    } // footer
+    }
 
     /**
      * genre_string
@@ -219,7 +219,7 @@ class Xml5_Data
         }
 
         return $string;
-    } // genre_string
+    }
 
     /**
      * output_xml_from_array
@@ -301,7 +301,7 @@ class Xml5_Data
 
                 return Ui::clean_utf8($string);
         }
-    } // output_from_array
+    }
 
     /**
      * keyed_array
@@ -338,7 +338,7 @@ class Xml5_Data
         }
 
         return $string;
-    } // keyed_array
+    }
 
     /**
      * object_array
@@ -368,7 +368,7 @@ class Xml5_Data
         $string .= ($object_type == '') ? '' : "</$object_type>";
 
         return Xml_Data::output_xml($string);
-    } // object_array
+    }
 
     /**
      * indexes
@@ -487,7 +487,7 @@ class Xml5_Data
         } // end foreach objects
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // indexes
+    }
 
     /**
      * licenses
@@ -510,7 +510,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // licenses
+    }
 
     /**
      * labels
@@ -535,7 +535,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // labels
+    }
 
     /**
      * live_streams
@@ -560,7 +560,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // live_streams
+    }
 
     /**
      * genres
@@ -584,7 +584,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // genres
+    }
 
     /**
      * artists
@@ -633,7 +633,7 @@ class Xml5_Data
         } // end foreach artists
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // artists
+    }
 
     /**
      * albums
@@ -689,7 +689,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // albums
+    }
 
     /**
      * playlists
@@ -748,7 +748,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // playlists
+    }
 
     /**
      * shares
@@ -771,7 +771,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // shares
+    }
 
     /**
      * bookmarks
@@ -789,7 +789,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // bookmarks
+    }
 
     /**
      * catalogs
@@ -817,7 +817,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // catalogs
+    }
 
     /**
      * podcasts
@@ -853,7 +853,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // podcasts
+    }
 
     /**
      * podcast_episodes
@@ -882,7 +882,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // podcast_episodes
+    }
 
     /**
      * songs
@@ -948,7 +948,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string, $full_xml);
-    } // songs
+    }
 
     /**
      * videos
@@ -977,7 +977,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // videos
+    }
 
     /**
      * democratic
@@ -1015,7 +1015,7 @@ class Xml5_Data
         } // end foreach
 
         return Xml_Data::output_xml($string);
-    } // democratic
+    }
 
     /**
      * user
@@ -1039,7 +1039,7 @@ class Xml5_Data
         $string .= "</user>\n";
 
         return Xml_Data::output_xml($string);
-    } // user
+    }
 
     /**
      * users
@@ -1057,7 +1057,7 @@ class Xml5_Data
         }
 
         return Xml_Data::output_xml($string);
-    } // users
+    }
 
     /**
      * shouts
@@ -1080,7 +1080,7 @@ class Xml5_Data
         }
 
         return Xml_Data::output_xml($string);
-    } // shouts
+    }
 
     /**
      * timeline
@@ -1103,7 +1103,7 @@ class Xml5_Data
         }
 
         return self::_header() . $string . self::_footer();
-    } // timeline
+    }
 
     /**
      * rss_feed
@@ -1128,7 +1128,7 @@ class Xml5_Data
         }
 
         return self::_header() . $string . self::_footer();
-    } // rss_feed
+    }
 
     /**
      * deleted
@@ -1164,7 +1164,7 @@ class Xml5_Data
         } // end foreach objects
 
         return Xml_Data::output_xml($string);
-    } // deleted
+    }
 
     /**
      * _header
@@ -1192,7 +1192,7 @@ class Xml5_Data
         } // end switch
 
         return $header;
-    } // _header
+    }
 
     /**
      * _footer
@@ -1217,7 +1217,7 @@ class Xml5_Data
         } // end switch on type
 
         return $footer;
-    } // _footer
+    }
 
     /**
      * @deprecated

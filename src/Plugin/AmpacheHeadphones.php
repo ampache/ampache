@@ -66,7 +66,7 @@ class AmpacheHeadphones implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -78,7 +78,7 @@ class AmpacheHeadphones implements AmpachePluginInterface
             Preference::delete('headphones_api_url') &&
             Preference::delete('headphones_api_key')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -87,7 +87,7 @@ class AmpacheHeadphones implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * process_wanted
@@ -108,7 +108,7 @@ class AmpacheHeadphones implements AmpachePluginInterface
         }
 
         return ($this->headphones_call('queueAlbum', array('id' => $wanted->mbid)) == 'OK');
-    } // process_wanted
+    }
 
     /**
      * @param string $command
@@ -174,5 +174,5 @@ class AmpacheHeadphones implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 }

@@ -69,7 +69,7 @@ class Catalog_Seafile extends Catalog
     public function get_description(): string
     {
         return self::$description;
-    } // get_description
+    }
 
     /**
      * get_version
@@ -78,7 +78,7 @@ class Catalog_Seafile extends Catalog
     public function get_version(): string
     {
         return self::$version;
-    } // get_version
+    }
 
     /**
      * get_path
@@ -87,7 +87,7 @@ class Catalog_Seafile extends Catalog
     public function get_path(): string
     {
         return $this->server_uri;
-    } // get_path
+    }
 
     /**
      * get_type
@@ -96,7 +96,7 @@ class Catalog_Seafile extends Catalog
     public function get_type(): string
     {
         return self::$type;
-    } // get_type
+    }
 
     /**
      * get_create_help
@@ -109,7 +109,7 @@ class Catalog_Seafile extends Catalog
         return sprintf($help, "<a target='_blank' href='https://www.seafile.com/'>https://www.seafile.com/</a>",
             "<a href='https://forum.syncwerk.com/t/too-many-requests-when-using-web-api-status-code-429/2330'>",
             "</a>");
-    } // get_create_help
+    }
 
     /**
      * is_installed
@@ -121,7 +121,7 @@ class Catalog_Seafile extends Catalog
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } // is_installed
+    }
 
     /**
      * install
@@ -516,7 +516,7 @@ class Catalog_Seafile extends Catalog
         if ($tempfilename !== null && file_exists($tempfilename)) {
             unlink($tempfilename);
         }
-    } // clean_file
+    }
 
     /**
      * clean_catalog_proc

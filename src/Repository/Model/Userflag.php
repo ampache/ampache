@@ -56,7 +56,7 @@ class Userflag extends database_object
     {
         $this->id   = (int)($object_id);
         $this->type = $type;
-    } // Constructor
+    }
 
     public function getId(): int
     {
@@ -102,7 +102,7 @@ class Userflag extends database_object
         }
 
         return true;
-    } // build_cache
+    }
 
     /**
      * garbage_collection
@@ -229,7 +229,7 @@ class Userflag extends database_object
         }
 
         return true;
-    } // set_flag
+    }
 
     /**
      * save_flag
@@ -324,7 +324,7 @@ class Userflag extends database_object
         }
 
         return $results;
-    } // get_latest
+    }
 
     /**
      * show
@@ -365,7 +365,7 @@ class Userflag extends database_object
         }
 
         return sprintf('<span class="userflag">%s</span>', $text);
-    } // show
+    }
 
     /**
      * Migrate an object associate stats to a new object

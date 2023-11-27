@@ -91,7 +91,7 @@ class Wanted extends database_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -185,7 +185,7 @@ class Wanted extends database_object
         }
 
         return $results;
-    } // get_missing_albums
+    }
 
     /**
      * Get missing artist data.

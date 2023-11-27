@@ -67,7 +67,7 @@ final class FriendsTimeline4Method
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    } // friends_timeline
+    }
 
     private static function getUseractivityRepository(): UserActivityRepositoryInterface
     {

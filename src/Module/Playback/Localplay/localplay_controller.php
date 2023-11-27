@@ -118,7 +118,7 @@ abstract class localplay_controller
         $class = get_class($object);
 
         return call_user_func(array($class, 'play_url'), $object->id);
-    } // get_url
+    }
 
     /**
      * get_file
@@ -130,7 +130,7 @@ abstract class localplay_controller
      */
     public function get_file($object)
     {
-    } // get_file
+    }
 
     /**
      * parse_url
@@ -184,5 +184,5 @@ abstract class localplay_controller
         }
 
         return $data;
-    } // parse_url
+    }
 } // end localplay_controller.abstract

@@ -120,5 +120,5 @@ final class GetArt4Method
         http_response_code(404);
 
         return false;
-    } // get_art
+    }
 }

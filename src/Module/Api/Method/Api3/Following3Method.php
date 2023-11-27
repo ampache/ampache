@@ -61,7 +61,7 @@ final class Following3Method
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    } // following
+    }
 
     /**
      * @deprecated Inject by constructor

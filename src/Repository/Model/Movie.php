@@ -59,7 +59,7 @@ class Movie extends Video
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // Constructor
+    }
 
     public function getId(): int
     {
@@ -94,7 +94,7 @@ class Movie extends Video
         Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
 
         return (int)$data['id'];
-    } // create
+    }
 
     /**
      * update
@@ -125,7 +125,7 @@ class Movie extends Video
         $this->year          = $year;
 
         return $this->id;
-    } // update
+    }
 
     /**
      * format
@@ -142,7 +142,7 @@ class Movie extends Video
         $this->f_name          = ($this->f_original_name ?? $this->get_fullname());
         $this->f_full_title    = $this->f_name;
         $this->f_link          = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
-    } // format
+    }
 
     /**
      * Get item keywords for metadata searches.

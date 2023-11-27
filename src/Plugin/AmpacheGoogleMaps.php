@@ -62,7 +62,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -71,7 +71,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return Preference::delete('gmaps_api_key');
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -80,7 +80,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * @param float $latitude
@@ -176,5 +176,5 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 }

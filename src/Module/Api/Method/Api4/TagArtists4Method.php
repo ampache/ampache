@@ -52,5 +52,5 @@ final class TagArtists4Method
         }
 
         return GenreArtists4Method::genre_artists($input, $user);
-    } // tag_artists
+    }
 }

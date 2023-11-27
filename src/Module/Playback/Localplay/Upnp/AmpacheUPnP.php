@@ -219,7 +219,7 @@ class AmpacheUPnP extends localplay_controller
         debug_event('upnp.controller', 'set_active_instance userid: ' . $user->id, 5);
 
         return true;
-    } // set_active_instance
+    }
 
     /**
      * get_active_instance

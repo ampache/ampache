@@ -84,5 +84,5 @@ final class ShareEdit4Method
         }
 
         return true;
-    } // share_edit
+    }
 }

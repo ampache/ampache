@@ -70,5 +70,5 @@ final class GenreAlbums4Method
         }
 
         return true;
-    } // genre_albums
+    }
 }

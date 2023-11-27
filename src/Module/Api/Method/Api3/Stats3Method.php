@@ -91,7 +91,7 @@ final class Stats3Method
             ob_end_clean();
             echo Xml3_Data::albums($results, array(), $user);
         }
-    } // stats
+    }
 
     /**
      * @deprecated Inject by constructor

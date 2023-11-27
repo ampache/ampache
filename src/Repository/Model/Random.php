@@ -66,7 +66,7 @@ class Random
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['id'];
-    } // artist
+    }
 
     /**
      * playlist
@@ -81,7 +81,7 @@ class Random
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['id'];
-    } // playlist
+    }
 
     /**
      * get_single_song
@@ -109,7 +109,7 @@ class Random
         //debug_event(__CLASS__, "get_single_song:" . $song, 5);
 
         return (int)$song;
-    } // get_single_song
+    }
 
     /**
      * get_default
@@ -146,7 +146,7 @@ class Random
         }
 
         return $results;
-    } // get_default
+    }
 
     /**
      * get_artist
@@ -184,7 +184,7 @@ class Random
         }
 
         return $results;
-    } // get_artist
+    }
 
     /**
      * get_playlist
@@ -204,7 +204,7 @@ class Random
         }
 
         return $results;
-    } // get_playlist
+    }
 
     /**
      * get_search
@@ -227,7 +227,7 @@ class Random
         debug_event(__CLASS__, $user->id . " doesn't have access to search:" . $search_id, 5);
 
         return $results;
-    } // get_search
+    }
 
     /**
      * advanced
@@ -276,7 +276,7 @@ class Random
             default:
                 return array();
         }
-    } // advanced
+    }
 
     /**
      * advanced_results
@@ -429,7 +429,7 @@ class Random
         $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out($user->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out($object_id);
 
         return Stream_Url::format($link);
-    } // get_play_url
+    }
 
     /**
      * @deprecated

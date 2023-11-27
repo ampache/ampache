@@ -63,7 +63,7 @@ final class LastShouts3Method
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    } // last_shouts
+    }
 
     /**
      * @todo inject by constructor

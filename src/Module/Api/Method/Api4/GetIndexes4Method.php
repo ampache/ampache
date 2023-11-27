@@ -125,5 +125,5 @@ final class GetIndexes4Method
         }
 
         return true;
-    } // get_indexes
+    }
 }

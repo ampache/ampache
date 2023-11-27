@@ -89,7 +89,7 @@ class Live_Stream extends database_object implements Media, library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -110,7 +110,7 @@ class Live_Stream extends database_object implements Media, library_item
         $this->f_name_link     = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->get_fullname() . "</a>";
         $this->f_url_link      = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
         $this->f_site_url_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->site_url . "</a>";
-    } // format
+    }
 
     /**
      * Get item keywords for metadata searches.
@@ -318,7 +318,7 @@ class Live_Stream extends database_object implements Media, library_item
         );
 
         return $this->id;
-    } // update
+    }
 
     /**
      * create
@@ -371,7 +371,7 @@ class Live_Stream extends database_object implements Media, library_item
         Catalog::count_table('live_stream');
 
         return $insert_id;
-    } // create
+    }
 
     /**
      * get_stream_types
@@ -382,7 +382,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function get_stream_types($player = null)
     {
         return array('native');
-    } // native_stream
+    }
 
     /**
      * play_url
@@ -396,7 +396,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function play_url($additional_params = '', $player = '', $local = false, $sid = '', $force_http = ''): string
     {
         return $this->url . $additional_params;
-    } // play_url
+    }
 
     /**
      * get_stream_name

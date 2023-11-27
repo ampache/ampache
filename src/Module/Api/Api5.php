@@ -174,7 +174,7 @@ class Api5
             default:
                 echo Xml5_Data::success($message, $return_data);
         }
-    } // message
+    }
 
     /**
      * error
@@ -194,7 +194,7 @@ class Api5
             default:
                 echo Xml5_Data::error($error_code, $message, $method, $error_type);
         }
-    } // error
+    }
 
     /**
      * empty
@@ -211,7 +211,7 @@ class Api5
             default:
                 echo Xml5_Data::empty();
         }
-    } // empty
+    }
 
     /**
      * set_filter
@@ -268,7 +268,7 @@ class Api5
         } // end filter
 
         return true;
-    } // set_filter
+    }
 
     /**
      * check_parameter
@@ -297,7 +297,7 @@ class Api5
         }
 
         return true;
-    } // check_parameter
+    }
 
     /**
      * check_access
@@ -322,7 +322,7 @@ class Api5
         }
 
         return true;
-    } // check_access
+    }
 
     /**
      * server_details
@@ -377,7 +377,7 @@ class Api5
         );
 
         return array_merge($autharray, $outarray);
-    } // server_details
+    }
 
     /**
      * @deprecated inject by constructor

@@ -74,7 +74,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -86,7 +86,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
             Preference::delete('tadb_api_key') &&
             Preference::delete('tadb_overwrite_name')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -131,7 +131,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
         $this->overwrite_name = (bool)$data['tadb_overwrite_name'];
 
         return true;
-    } // load
+    }
 
     /**
      * get_metadata
@@ -202,7 +202,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
         }
 
         return $results;
-    } // get_metadata
+    }
 
     /**
      * get_external_metadata
@@ -306,7 +306,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
         }
 
         return true;
-    } // get_external_metadata
+    }
 
     /**
      * @param string $type

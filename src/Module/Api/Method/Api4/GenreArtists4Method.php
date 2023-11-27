@@ -70,5 +70,5 @@ final class GenreArtists4Method
         }
 
         return true;
-    } // genre_artists
+    }
 }

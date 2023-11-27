@@ -110,7 +110,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
         }
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -471,7 +471,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         return true;
-    } // set_played
+    }
 
     /**
      * @param int $user
@@ -490,7 +490,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     private static function update_played(bool $new_played, int $id): void
     {
         self::_update_item('played', ($new_played ? 1 : 0), $id);
-    } // update_played
+    }
 
     /**
      * update_file
@@ -499,7 +499,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     private static function update_file(string $path, int $id): void
     {
         self::_update_item('file', $path, $id);
-    } // update_file
+    }
 
     /**
      * _update_item
@@ -525,7 +525,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
         $sql = "UPDATE `podcast_episode` SET `$field` = ? WHERE `id` = ?";
         Dba::write($sql, array($value, $episode_id));
-    } // _update_item
+    }
 
     /**
      * Get stream name.
@@ -718,5 +718,5 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         return $deleted;
-    } // get_deleted
+    }
 }

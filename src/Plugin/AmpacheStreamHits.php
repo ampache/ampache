@@ -66,7 +66,7 @@ class AmpacheStreamHits implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -78,7 +78,7 @@ class AmpacheStreamHits implements AmpachePluginInterface
             Preference::delete('stream_control_hits_max') &&
             Preference::delete('stream_control_hits_days')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -87,7 +87,7 @@ class AmpacheStreamHits implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * Check stream control
@@ -140,5 +140,5 @@ class AmpacheStreamHits implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 }

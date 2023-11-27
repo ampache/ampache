@@ -52,7 +52,7 @@ class AmpacheLibravatar implements AmpachePluginInterface
     public function install(): bool
     {
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -61,7 +61,7 @@ class AmpacheLibravatar implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return true;
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -70,7 +70,7 @@ class AmpacheLibravatar implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * @param User $user
@@ -105,5 +105,5 @@ class AmpacheLibravatar implements AmpachePluginInterface
         $user->set_preferences();
 
         return true;
-    } // load
+    }
 }

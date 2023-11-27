@@ -56,5 +56,5 @@ final class SearchSongs3Method
         $results = Search::run($data, $user);
 
         echo Xml3_Data::songs($results, $user);
-    } // search_songs
+    }
 }

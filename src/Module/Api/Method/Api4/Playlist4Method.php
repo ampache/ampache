@@ -76,5 +76,5 @@ final class Playlist4Method
         }
 
         return true;
-    } // playlist
+    }
 }

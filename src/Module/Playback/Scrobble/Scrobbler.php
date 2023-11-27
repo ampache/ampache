@@ -56,7 +56,7 @@ class Scrobbler
         $this->api_key       = $api_key;
         $this->secret        = $secret;
         $this->queued_tracks = array();
-    } // scrobbler
+    }
 
     /**
      * get_api_sig
@@ -75,7 +75,7 @@ class Scrobbler
         $sig = md5($sig);
 
         return $sig;
-    } // get_api_sig
+    }
 
     /**
      * call_url
@@ -125,7 +125,7 @@ class Scrobbler
         fclose($filepath);
 
         return $buffer;
-    } // call_url
+    }
 
     /**
      * get_error_msg
@@ -133,7 +133,7 @@ class Scrobbler
     public function get_error_msg(): string
     {
         return $this->error_msg;
-    } // get_error_msg
+    }
 
     /**
      * get_queue_count
@@ -141,7 +141,7 @@ class Scrobbler
     public function get_queue_count(): ?int
     {
         return count($this->queued_tracks);
-    } // get_queue_count
+    }
 
     /**
      * get_session_key
@@ -188,7 +188,7 @@ class Scrobbler
         $this->error_msg = 'Need a token to call getSession';
 
         return false;
-    } // get_session_key
+    }
 
     /**
      * queue_track
@@ -221,7 +221,7 @@ class Scrobbler
         $this->queued_tracks[$timestamp] = $newtrack;
 
         return true;
-    } // queue_track
+    }
 
     /**
      * submit_tracks
@@ -279,7 +279,7 @@ class Scrobbler
 
             return false;
         }
-    } // submit_tracks
+    }
 
     /**
      * love
@@ -320,5 +320,5 @@ class Scrobbler
 
             return false;
         }
-    } // love
+    }
 }

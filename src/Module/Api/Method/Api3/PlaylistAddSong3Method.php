@@ -52,5 +52,5 @@ final class PlaylistAddSong3Method
             $playlist->add_songs(array($song));
             echo Xml3_Data::single_string('success');
         }
-    } // playlist_add_song
+    }
 }

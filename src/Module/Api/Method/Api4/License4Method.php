@@ -68,5 +68,5 @@ final class License4Method
         }
 
         return true;
-    } // license
+    }
 }

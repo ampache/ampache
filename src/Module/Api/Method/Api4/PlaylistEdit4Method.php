@@ -107,5 +107,5 @@ final class PlaylistEdit4Method
         Api4::message('success', 'playlist changes saved', null, $input['api_format']);
 
         return true;
-    } // playlist_edit
+    }
 }

@@ -150,7 +150,7 @@ final class AmpacheRss implements AmpacheRssInterface
         );
 
         return AmpConfig::get('site_title') . ' - ' . $titles[$type];
-    } // get_title
+    }
 
     /**
      * get_description
@@ -159,7 +159,7 @@ final class AmpacheRss implements AmpacheRssInterface
     public function get_description(): string
     {
         return T_('Ampache RSS Feeds');
-    } // get_description
+    }
 
     /**
      * validate_type
@@ -172,7 +172,7 @@ final class AmpacheRss implements AmpacheRssInterface
         }
 
         return $rsstype;
-    } // validate_type
+    }
 
     /**
      * get_display
@@ -210,7 +210,7 @@ final class AmpacheRss implements AmpacheRssInterface
         $string .= '</a>';
 
         return $string;
-    } // get_display
+    }
 
     // type specific functions below, these are called semi-dynamically based on the current type //
 

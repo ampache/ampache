@@ -67,7 +67,7 @@ class AmpacheStreamTime implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -79,7 +79,7 @@ class AmpacheStreamTime implements AmpachePluginInterface
             Preference::delete('stream_control_time_max') &&
             Preference::delete('stream_control_time_days')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -88,7 +88,7 @@ class AmpacheStreamTime implements AmpachePluginInterface
     public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * Check stream control
@@ -149,5 +149,5 @@ class AmpacheStreamTime implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 }

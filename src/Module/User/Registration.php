@@ -89,7 +89,7 @@ class Registration
         }
 
         return true;
-    } // send_confirmation
+    }
 
     /**
      * show_agreement
@@ -116,5 +116,5 @@ class Registration
         echo $data;
 
         return true;
-    } // show_agreement
+    }
 } // end registration.class

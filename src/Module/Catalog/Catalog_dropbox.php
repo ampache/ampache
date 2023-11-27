@@ -70,7 +70,7 @@ class Catalog_dropbox extends Catalog
     public function get_description(): string
     {
         return $this->description;
-    } // get_description
+    }
 
     /**
      * get_version
@@ -79,7 +79,7 @@ class Catalog_dropbox extends Catalog
     public function get_version(): string
     {
         return $this->version;
-    } // get_version
+    }
 
     /**
      * get_path
@@ -88,7 +88,7 @@ class Catalog_dropbox extends Catalog
     public function get_path(): string
     {
         return $this->path;
-    } // get_path
+    }
 
     /**
      * get_type
@@ -97,7 +97,7 @@ class Catalog_dropbox extends Catalog
     public function get_type(): string
     {
         return $this->type;
-    } // get_type
+    }
 
     /**
      * get_create_help
@@ -106,7 +106,7 @@ class Catalog_dropbox extends Catalog
     public function get_create_help(): string
     {
         return "<ul><li>" . T_("Go to https://www.dropbox.com/developers/apps/create") . "</li><li>" . T_("Select 'Dropbox API app'") . "</li><li>" . T_("Select 'Full Dropbox'") . "</li><li>" . T_("Give a name to your application and create it") . "</li><li>" . T_("Click the 'Generate' button to create an Access Token") . "</li><li>" . T_("Copy your App key and App secret and Access Token into the following fields.") . "</li></ul>";
-    } // get_create_help
+    }
 
     /**
      * is_installed
@@ -118,7 +118,7 @@ class Catalog_dropbox extends Catalog
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } // is_installed
+    }
 
     /**
      * install
@@ -134,7 +134,7 @@ class Catalog_dropbox extends Catalog
         Dba::query($sql);
 
         return true;
-    } // install
+    }
 
     /**
      * @return array
@@ -273,7 +273,7 @@ class Catalog_dropbox extends Catalog
         }
 
         return $songsadded;
-    } // add_to_catalog
+    }
 
     /**
      * update_remote_catalog

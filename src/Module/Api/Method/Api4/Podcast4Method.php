@@ -76,5 +76,5 @@ final class Podcast4Method
         }
 
         return true;
-    } // podcast
+    }
 }

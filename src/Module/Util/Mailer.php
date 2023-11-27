@@ -92,7 +92,7 @@ final class Mailer implements MailerInterface
 
         $this->sender      = $user . '@' . $domain;
         $this->sender_name = $fromname;
-    } // set_default_sender
+    }
 
     /**
      * get_users
@@ -133,7 +133,7 @@ final class Mailer implements MailerInterface
         }
 
         return $results;
-    } // get_users
+    }
 
     /**
      * send
@@ -209,7 +209,7 @@ final class Mailer implements MailerInterface
 
             return false;
         }
-    } // send
+    }
 
     /**
      * @param $group_name

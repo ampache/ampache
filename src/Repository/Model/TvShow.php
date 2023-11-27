@@ -70,7 +70,7 @@ class TvShow extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -102,7 +102,7 @@ class TvShow extends database_object implements library_item
         }
 
         return $results;
-    } // get_seasons
+    }
 
     /**
      * get_episodes
@@ -122,7 +122,7 @@ class TvShow extends database_object implements library_item
         }
 
         return $results;
-    } // get_episodes
+    }
 
     /**
      * _get_extra info
@@ -153,7 +153,7 @@ class TvShow extends database_object implements library_item
         $this->catalog_id = $row['catalog_id'];
 
         return $row;
-    } // _get_extra_info
+    }
 
     /**
      * format
@@ -451,7 +451,7 @@ class TvShow extends database_object implements library_item
         }
 
         return $current_id;
-    } // update
+    }
 
     /**
      * update_tags

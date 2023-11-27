@@ -78,7 +78,7 @@ class Json_Data
     public static function set_offset($offset): void
     {
         self::$offset = (int)$offset;
-    } // set_offset
+    }
 
     /**
      * set_limit
@@ -96,7 +96,7 @@ class Json_Data
         self::$limit = (strtolower((string)$limit) == "none") ? null : (int)$limit;
 
         return true;
-    } // set_limit
+    }
 
     /**
      * error
@@ -121,7 +121,7 @@ class Json_Data
         );
 
         return json_encode($message, JSON_PRETTY_PRINT);
-    } // error
+    }
 
     /**
      * success
@@ -142,7 +142,7 @@ class Json_Data
         }
 
         return json_encode($message, JSON_PRETTY_PRINT);
-    } // success
+    }
 
     /**
      * empty
@@ -158,7 +158,7 @@ class Json_Data
             "total_count" => 0,
             $type => array()
         ), JSON_PRETTY_PRINT);
-    } // empty
+    }
 
     /**
      * genre_array
@@ -192,7 +192,7 @@ class Json_Data
         }
 
         return $JSON;
-    } // genre_array
+    }
 
     /**
      * indexes
@@ -249,7 +249,7 @@ class Json_Data
         }
 
         return $results;
-    } // indexes
+    }
 
     /**
      * lists
@@ -283,7 +283,7 @@ class Json_Data
         $output["list"] = $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // lists
+    }
 
     /**
      * browses
@@ -325,7 +325,7 @@ class Json_Data
         $output["browse"] = $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // lists
+    }
 
     /**
      * live_streams
@@ -364,7 +364,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // live_streams
+    }
 
     /**
      * licenses
@@ -400,7 +400,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // licenses
+    }
 
     /**
      * labels
@@ -443,7 +443,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // labels
+    }
 
     /**
      * genres
@@ -484,7 +484,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // genres
+    }
 
     /**
      * artists
@@ -565,7 +565,7 @@ class Json_Data
         }
 
         return $JSON;
-    } // artists
+    }
 
     /**
      * albums
@@ -658,7 +658,7 @@ class Json_Data
         }
 
         return $JSON;
-    } // albums
+    }
 
     /**
      * playlists
@@ -747,7 +747,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // playlists
+    }
 
     /**
      * shares
@@ -809,7 +809,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // shares
+    }
 
     /**
      * bookmarks
@@ -874,7 +874,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // bookmarks
+    }
 
     /**
      * catalogs
@@ -933,7 +933,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // catalogs
+    }
 
     /**
      * podcasts
@@ -1004,7 +1004,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // podcasts
+    }
 
     /**
      * podcast_episodes
@@ -1081,7 +1081,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // podcast_episodes
+    }
 
     /**
      * songs
@@ -1221,7 +1221,7 @@ class Json_Data
         }
 
         return $JSON;
-    } // songs
+    }
 
     /**
      * videos
@@ -1276,7 +1276,7 @@ class Json_Data
         }
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // videos
+    }
 
     /**
      * democratic
@@ -1345,7 +1345,7 @@ class Json_Data
         $output = ($object) ? array("song" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // democratic
+    }
 
     /**
      * user
@@ -1394,7 +1394,7 @@ class Json_Data
         $output = ($object) ? array("user" => $JSON) : $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // user
+    }
 
     /**
      * users
@@ -1417,7 +1417,7 @@ class Json_Data
         $output = ($object) ? array("user" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // users
+    }
 
     /**
      * shouts
@@ -1446,7 +1446,7 @@ class Json_Data
         $output = ($object) ? array("shout" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // shouts
+    }
 
     /**
      * timeline
@@ -1478,7 +1478,7 @@ class Json_Data
         $output = ($object) ? array("activity" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // timeline
+    }
 
     /**
      * deleted
@@ -1547,7 +1547,7 @@ class Json_Data
         $output["deleted_" . $object_type] = $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // deleted
+    }
 
     /**
      * @deprecated Inject by constructor

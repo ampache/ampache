@@ -87,7 +87,7 @@ class Song_Preview extends database_object implements Media, playable_item
                 : 'mp3';
             $this->mime = Song::type_to_mime($this->type);
         }
-    } // constructor
+    }
 
     public function getId(): int
     {
@@ -169,7 +169,7 @@ class Song_Preview extends database_object implements Media, playable_item
         Artist::build_cache($artists);
 
         return true;
-    } // build_cache
+    }
 
     /**
      * has_info
@@ -218,7 +218,7 @@ class Song_Preview extends database_object implements Media, playable_item
         $artist = new Artist($artist_id);
 
         return $artist->get_fullname();
-    } // get_album_name
+    }
 
     /**
      * format
@@ -250,7 +250,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
         // Format the track (there isn't really anything to do here)
         $this->f_track = $this->track;
-    } // format
+    }
 
     /**
      * Get item fullname.
@@ -367,7 +367,7 @@ class Song_Preview extends database_object implements Media, playable_item
         $url       = Stream::get_base_url($local) . "type=song_preview&oid=" . $this->id . "&uid=" . $user_id . "&name=" . $song_name;
 
         return Stream_Url::format($url . $additional_params);
-    } // play_url
+    }
 
     /**
      * stream

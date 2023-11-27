@@ -115,7 +115,7 @@ final class BookmarkDeleteMethod
         Api::message('Deleted Bookmark: ' . $object_id, $input['api_format']);
 
         return true;
-    } // bookmark_delete
+    }
 
     private static function getBookmarkRepository(): BookmarkRepositoryInterface
     {

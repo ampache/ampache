@@ -91,5 +91,5 @@ final class Rate4Method
         }
 
         return true;
-    } // rate
+    }
 }

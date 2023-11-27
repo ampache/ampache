@@ -103,5 +103,5 @@ final class CatalogAction4Method
         }
 
         return true;
-    } // catalog_action
+    }
 }

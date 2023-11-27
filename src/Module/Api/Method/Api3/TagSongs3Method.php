@@ -49,5 +49,5 @@ final class TagSongs3Method
 
         ob_end_clean();
         echo Xml3_Data::songs($results, $user);
-    } // tag_songs
+    }
 }

@@ -63,7 +63,7 @@ class AmpacheTvdb implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -72,7 +72,7 @@ class AmpacheTvdb implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return Preference::delete('tvdb_api_key');
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -108,7 +108,7 @@ class AmpacheTvdb implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 
     /**
      * get_metadata
@@ -202,7 +202,7 @@ class AmpacheTvdb implements AmpachePluginInterface
         }
 
         return $results;
-    } // get_metadata
+    }
 
     /**
      * @param $type

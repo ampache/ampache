@@ -64,5 +64,5 @@ final class UserUpdateMethod
         }
 
         return UserEditMethod::user_edit($input, $user);
-    } // tag_albums
+    }
 }

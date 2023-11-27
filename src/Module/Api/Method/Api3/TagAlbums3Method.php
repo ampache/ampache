@@ -50,5 +50,5 @@ final class TagAlbums3Method
             ob_end_clean();
             echo Xml3_Data::albums($results, array(), $user);
         }
-    } // tag_albums
+    }
 }

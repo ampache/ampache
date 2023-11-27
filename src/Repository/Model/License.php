@@ -48,7 +48,7 @@ class License
             return;
         }
         $this->has_info($license_id);
-    } // Constructor
+    }
 
     public function getId(): int
     {
@@ -73,7 +73,7 @@ class License
         }
 
         return true;
-    } // has_info
+    }
 
     public function getLinkFormatted(): string
     {

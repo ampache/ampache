@@ -47,5 +47,5 @@ final class Album3Method
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
         echo Xml3_Data::albums(array($uid), $include, $user);
-    } // album
+    }
 }

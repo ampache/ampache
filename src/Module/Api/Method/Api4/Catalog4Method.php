@@ -63,5 +63,5 @@ final class Catalog4Method
         }
 
         return true;
-    } // catalog
+    }
 }

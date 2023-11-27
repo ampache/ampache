@@ -56,7 +56,7 @@ class Useractivity extends database_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // Constructor
+    }
 
     public function getId(): int
     {

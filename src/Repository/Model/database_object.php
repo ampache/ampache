@@ -79,7 +79,7 @@ abstract class database_object
         self::add_to_cache($table, $object_id, $row);
 
         return $row;
-    } // get_info
+    }
 
     /**
      * getTableName
@@ -119,7 +119,7 @@ abstract class database_object
         }
 
         return array_key_exists($object_id, self::$object_cache[$index]);
-    } // is_cached
+    }
 
     /**
      * get_from_cache
@@ -138,7 +138,7 @@ abstract class database_object
         }
 
         return array();
-    } // get_from_cache
+    }
 
     /**
      * add_to_cache
@@ -167,7 +167,7 @@ abstract class database_object
         self::$object_cache[$index][$object_id] = $value;
 
         return true;
-    } // add_to_cache
+    }
 
     /**
      * remove_from_cache
@@ -187,5 +187,5 @@ abstract class database_object
                 unset(self::$object_cache[$index][$object_id]);
             }
         }
-    } // remove_from_cache
+    }
 }

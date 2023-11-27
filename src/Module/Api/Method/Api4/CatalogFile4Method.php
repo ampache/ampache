@@ -139,7 +139,7 @@ final class CatalogFile4Method
         }
 
         return true;
-    } // catalog_file
+    }
 
     /**
      * @deprecated

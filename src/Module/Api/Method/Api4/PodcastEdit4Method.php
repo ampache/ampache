@@ -93,5 +93,5 @@ final class PodcastEdit4Method
         }
 
         return true;
-    } // podcast_edit
+    }
 }

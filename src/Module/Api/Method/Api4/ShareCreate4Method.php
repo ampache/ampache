@@ -125,5 +125,5 @@ final class ShareCreate4Method
         }
 
         return true;
-    } // share_create
+    }
 }

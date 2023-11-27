@@ -1602,7 +1602,7 @@ class Subsonic_Xml_Data
         }
 
         return null;
-    } // getAmpacheObject
+    }
 
     /**
      * _getAmpacheId

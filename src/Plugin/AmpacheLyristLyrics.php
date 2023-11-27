@@ -62,7 +62,7 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -71,7 +71,7 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return true;
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -102,7 +102,7 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 
     /**
      * get_lyrics
@@ -127,5 +127,5 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
         }
 
         return false;
-    } // get_lyrics
+    }
 }

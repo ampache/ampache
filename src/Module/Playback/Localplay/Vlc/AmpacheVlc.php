@@ -55,7 +55,7 @@ class AmpacheVlc extends localplay_controller
     public function get_description(): string
     {
         return $this->description;
-    } // get_description
+    }
 
     /**
      * get_version
@@ -64,7 +64,7 @@ class AmpacheVlc extends localplay_controller
     public function get_version(): string
     {
         return $this->version;
-    } // get_version
+    }
 
     /**
      * is_installed
@@ -76,7 +76,7 @@ class AmpacheVlc extends localplay_controller
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } // is_installed
+    }
 
     /**
      * install
@@ -95,7 +95,7 @@ class AmpacheVlc extends localplay_controller
         Preference::insert('vlc_active', T_('VLC Active Instance'), 0, 25, 'integer', 'internal', 'vlc');
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -110,7 +110,7 @@ class AmpacheVlc extends localplay_controller
         Preference::delete('vlc_active');
 
         return true;
-    } // uninstall
+    }
 
     /**
      * add_instance
@@ -126,7 +126,7 @@ class AmpacheVlc extends localplay_controller
             : -1;
 
         return Dba::query($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id));
-    } // add_instance
+    }
 
     /**
      * delete_instance
@@ -139,7 +139,7 @@ class AmpacheVlc extends localplay_controller
         Dba::query($sql, array($uid));
 
         return true;
-    } // delete_instance
+    }
 
     /**
      * get_instances
@@ -157,7 +157,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return $results;
-    } // get_instances
+    }
 
     /**
      * update_instance
@@ -171,7 +171,7 @@ class AmpacheVlc extends localplay_controller
         Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['password'], $uid));
 
         return true;
-    } // update_instance
+    }
 
     /**
      * instance_fields
@@ -187,7 +187,7 @@ class AmpacheVlc extends localplay_controller
         $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
 
         return $fields;
-    } // instance_fields
+    }
 
     /**
      * get_instance
@@ -202,7 +202,7 @@ class AmpacheVlc extends localplay_controller
         $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
-    } // get_instance
+    }
 
     /**
      * set_active_instance
@@ -220,7 +220,7 @@ class AmpacheVlc extends localplay_controller
         debug_event('vlc.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
-    } // set_active_instance
+    }
 
     /**
      * get_active_instance
@@ -229,7 +229,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function get_active_instance()
     {
-    } // get_active_instance
+    }
 
     /**
      * @param Stream_Url $url
@@ -260,7 +260,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return true;
-    } // delete_track
+    }
 
     /**
      * clear_playlist
@@ -276,7 +276,7 @@ class AmpacheVlc extends localplay_controller
         $this->stop();
 
         return true;
-    } // clear_playlist
+    }
 
     /**
      * play
@@ -297,7 +297,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return true;
-    } // play
+    }
 
     /**
      * stop
@@ -311,7 +311,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return true;
-    } // stop
+    }
 
     /**
      * skip
@@ -325,7 +325,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return true;
-    } // skip
+    }
 
     /**
      * This tells VLC to increase the volume by in vlcplayerclass set amount
@@ -333,7 +333,7 @@ class AmpacheVlc extends localplay_controller
     public function volume_up()
     {
         return $this->_vlc->volume_up();
-    } // volume_up
+    }
 
     /**
      * This tells VLC to decrease the volume by vlcplayerclass set amount
@@ -341,7 +341,7 @@ class AmpacheVlc extends localplay_controller
     public function volume_down()
     {
         return $this->_vlc->volume_down();
-    } // volume_down
+    }
 
     /**
      * next
@@ -355,7 +355,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return true;
-    } // next
+    }
 
     /**
      * prev
@@ -368,7 +368,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return true;
-    } // prev
+    }
 
     /**
      * pause
@@ -381,7 +381,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return true;
-    } // pause
+    }
 
     /**
      * volume
@@ -392,7 +392,7 @@ class AmpacheVlc extends localplay_controller
     public function volume($volume): bool
     {
         return $this->_vlc->set_volume($volume);
-    } // volume
+    }
 
     /**
      * repeat
@@ -406,7 +406,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return true;
-    } // repeat
+    }
 
     /**
      * random
@@ -420,7 +420,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return true;
-    } // random
+    }
 
     /**
      * get
@@ -523,7 +523,7 @@ class AmpacheVlc extends localplay_controller
         } // foreach playlist items
 
         return $results;
-    } // get
+    }
 
     /**
      * status
@@ -568,7 +568,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         return $array;
-    } // status
+    }
 
     /**
      * connect
@@ -584,5 +584,5 @@ class AmpacheVlc extends localplay_controller
         // Not yet working all values returned are true for beta testing purpose
 
         return ($this->_vlc->version() !== false);
-    } // connect
+    }
 }

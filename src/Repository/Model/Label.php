@@ -421,7 +421,7 @@ class Label extends database_object implements library_item
         $results = rtrim((string)$results, ', ');
 
         return $results;
-    } // get_display
+    }
 
     /**
      * Migrate an object associate stats to a new object

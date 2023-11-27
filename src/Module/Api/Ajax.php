@@ -49,7 +49,7 @@ class Ajax
     public function __construct()
     {
         // Rien a faire
-    } // constructor
+    }
 
     /**
      * observe
@@ -85,7 +85,7 @@ class Ajax
         $observe .= "</script>";
 
         return $observe;
-    } // observe
+    }
 
     /**
      * url
@@ -126,7 +126,7 @@ class Ajax
         }
 
         return $ajax_string;
-    } // action
+    }
 
     /**
      * button
@@ -160,7 +160,7 @@ class Ajax
         $string .= self::observe($source, 'click', $ajax_string, $confirm);
 
         return $string;
-    } // button
+    }
 
     /**
      * button_with_text
@@ -191,7 +191,7 @@ class Ajax
         $string .= self::observe($source, 'click', $ajax_string, $confirm);
 
         return $string;
-    } // button
+    }
 
     /**
      * text
@@ -226,7 +226,7 @@ class Ajax
         }
 
         return $string;
-    } // text
+    }
 
     /**
      * run
@@ -238,7 +238,7 @@ class Ajax
         echo "<script><!--\n";
         echo "$action";
         echo "\n--></script>";
-    } // run
+    }
 
     /**
      * set_include_override
@@ -249,7 +249,7 @@ class Ajax
     public static function set_include_override($value): void
     {
         self::$include_override = make_bool($value);
-    } // set_include_override
+    }
 
     /**
      * start_container
@@ -271,7 +271,7 @@ class Ajax
         }
 
         return false;
-    } // start_container
+    }
 
     /**
      * end_container
@@ -287,5 +287,5 @@ class Ajax
         }
 
         return false;
-    } // end_container
+    }
 } // end ajax.class

@@ -115,7 +115,7 @@ final class Scrobble4Method
         }
 
         return true;
-    } // scrobble
+    }
 
     /**
      * @deprecated inject dependency

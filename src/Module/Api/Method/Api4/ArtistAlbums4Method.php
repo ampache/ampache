@@ -71,7 +71,7 @@ final class ArtistAlbums4Method
         }
 
         return true;
-    } // artist_albums
+    }
 
     /**
      * @deprecated Inject by constructor

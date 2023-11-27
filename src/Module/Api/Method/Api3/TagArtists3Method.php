@@ -50,5 +50,5 @@ final class TagArtists3Method
             ob_end_clean();
             echo Xml3_Data::artists($results, array(), $user);
         }
-    } // tag_artists
+    }
 }

@@ -79,7 +79,7 @@ class Share extends database_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    } // constructor
+    }
 
     public function getId(): int
     {

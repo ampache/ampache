@@ -360,7 +360,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         $this->_get_plugin_tags();
-    } // get_info
+    }
 
     /**
      * check_time
@@ -377,7 +377,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         return false;
-    } // check_time
+    }
 
     /**
      * write_id3
@@ -459,7 +459,7 @@ final class VaInfo implements VaInfoInterface
                 );
             }
         }
-    } // write_id3
+    }
 
     /**
      * prepare_metadata_for_writing
@@ -484,7 +484,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $ndata;
-    } // prepare_id3_frames
+    }
 
     /**
      * read_id3
@@ -507,7 +507,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         return array();
-    } // read_id3
+    }
 
     /**
      * get_tag_type
@@ -2030,7 +2030,7 @@ final class VaInfo implements VaInfoInterface
         $broken[$key]['artist'] = 'Unknown (Broken)';
 
         return $broken;
-    } // set_broken
+    }
 
     /**
      *
@@ -2112,7 +2112,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $data;
-    } // splitSlashedlist
+    }
 
     /**
      * @deprecated inject by constructor

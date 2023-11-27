@@ -67,7 +67,7 @@ class AmpacheDiscogs implements AmpachePluginInterface
         }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
@@ -79,7 +79,7 @@ class AmpacheDiscogs implements AmpachePluginInterface
             Preference::delete('discogs_api_key') &&
             Preference::delete('discogs_secret_api_key')
         );
-    } // uninstall
+    }
 
     /**
      * upgrade
@@ -123,7 +123,7 @@ class AmpacheDiscogs implements AmpachePluginInterface
         }
 
         return true;
-    } // load
+    }
 
     /**
      * @param $query
@@ -229,7 +229,7 @@ class AmpacheDiscogs implements AmpachePluginInterface
         }
 
         return $results;
-    } // get_metadata
+    }
 
     /**
      * @param string $type

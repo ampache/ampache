@@ -70,7 +70,7 @@ class HttpQPlayer
         $this->host     = $host;
         $this->port     = $port;
         $this->password = $password;
-    } // HttpQPlayer
+    }
 
     /**
      * add
@@ -95,7 +95,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // add
+    }
 
     /**
      * version
@@ -108,7 +108,7 @@ class HttpQPlayer
         $results = $this->sendCommand('getversion', $args);
 
         return ($results !== '0'); // a return of 0 is a bad value
-    } // version
+    }
 
     /**
      * clear
@@ -124,7 +124,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // clear
+    }
 
     /**
      * next
@@ -140,7 +140,7 @@ class HttpQPlayer
         }
 
         return true;
-    } // next
+    }
 
     /**
      * prev
@@ -156,7 +156,7 @@ class HttpQPlayer
         }
 
         return true;
-    } // prev
+    }
 
     /**
      * skip
@@ -178,7 +178,7 @@ class HttpQPlayer
         $this->play();
 
         return true;
-    } // skip
+    }
 
     /**
      * play
@@ -194,7 +194,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // play
+    }
 
     /**
      * pause
@@ -210,7 +210,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // pause
+    }
 
     /**
      * stop
@@ -226,7 +226,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // stop
+    }
 
     /**
      * repeat
@@ -244,7 +244,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // repeat
+    }
 
     /**
      * random
@@ -262,7 +262,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // random
+    }
 
     /**
      * delete_pos
@@ -280,7 +280,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // delete_pos
+    }
 
     /**
      * state
@@ -303,7 +303,7 @@ class HttpQPlayer
         }
 
         return $state;
-    } // state
+    }
 
     /**
      * get_volume
@@ -319,7 +319,7 @@ class HttpQPlayer
         }
 
         return round((($results / 255) * 100), 2);
-    } // get_volume
+    }
 
     /**
      * volume_up
@@ -335,7 +335,7 @@ class HttpQPlayer
         }
 
         return true;
-    } // volume_up
+    }
 
     /**
      * volume_down
@@ -351,7 +351,7 @@ class HttpQPlayer
         }
 
         return true;
-    } // volume_down
+    }
 
     /**
      * set_volume
@@ -371,7 +371,7 @@ class HttpQPlayer
         }
 
         return true;
-    } // set_volume
+    }
 
     /**
      * clear_playlist
@@ -387,7 +387,7 @@ class HttpQPlayer
         }
 
         return true;
-    } // clear_playlist
+    }
 
     /**
      * get_repeat
@@ -398,7 +398,7 @@ class HttpQPlayer
         $args = array();
 
         return $this->sendCommand('repeat_status', $args);
-    } // get_repeat
+    }
 
     /**
      * get_random
@@ -409,7 +409,7 @@ class HttpQPlayer
         $args = array();
 
         return $this->sendCommand('shuffle_status', $args);
-    } // get_random
+    }
 
     /**
      * get_now_playing
@@ -423,7 +423,7 @@ class HttpQPlayer
 
         // Now get the filename
         return $this->sendCommand('getplaylistfile', array('index' => $pos));
-    } // get_now_playing
+    }
 
     /**
      * get_tracks
@@ -440,7 +440,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // get_tracks
+    }
 
     /**
      * sendCommand
@@ -481,5 +481,5 @@ class HttpQPlayer
         $data = explode("\n", $data);
 
         return $data['4'];
-    } // sendCommand
+    }
 } // End HttpQPlayer Class

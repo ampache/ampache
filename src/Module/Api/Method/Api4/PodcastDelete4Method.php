@@ -71,5 +71,5 @@ final class PodcastDelete4Method
         }
 
         return true;
-    } // podcast_delete
+    }
 }

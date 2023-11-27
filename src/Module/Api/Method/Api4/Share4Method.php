@@ -69,5 +69,5 @@ final class Share4Method
         }
 
         return true;
-    } // share
+    }
 }

@@ -75,5 +75,5 @@ final class SearchSongs4Method
         }
 
         return true;
-    } // search_songs
+    }
 }

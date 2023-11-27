@@ -59,5 +59,5 @@ final class Video4Method
         }
 
         return true;
-    } // video
+    }
 }

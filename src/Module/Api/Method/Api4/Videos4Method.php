@@ -69,5 +69,5 @@ final class Videos4Method
                 Xml4_Data::set_limit($input['limit'] ?? 0);
                 echo Xml4_Data::videos($results, $user);
         }
-    } // videos
+    }
 }
