@@ -38,14 +38,10 @@ final class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterf
 
     private UserActivityRepositoryInterface $userActivityRepository;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UserActivityRepositoryInterface $userActivityRepository,
-        ModelFactoryInterface $modelFactory
+        UserActivityRepositoryInterface $userActivityRepository
     ) {
         $this->userActivityRepository = $userActivityRepository;
-        $this->modelFactory           = $modelFactory;
     }
 
     /**
@@ -57,8 +53,7 @@ final class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterf
         $mapperClass = static::MAP[$object_type] ?? GenericActivityTypeHandler::class;
 
         return new $mapperClass(
-            $this->userActivityRepository,
-            $this->modelFactory
+            $this->userActivityRepository
         );
     }
 }
