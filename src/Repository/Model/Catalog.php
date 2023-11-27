@@ -2124,7 +2124,7 @@ abstract class Catalog extends database_object
             if (in_array($plugin_name, $plugin_list)) {
                 // only load metadata plugins you enable
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load($user) && $overwrites) {
+                if ($plugin->_plugin !== null && $plugin->load($user) && $overwrites) {
                     debug_event(__CLASS__, "get_external_metadata with: " . $plugin_name, 3);
                     // Run through items and refresh info
                     switch ($object_type) {

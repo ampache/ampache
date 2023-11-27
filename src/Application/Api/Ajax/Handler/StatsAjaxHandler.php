@@ -68,7 +68,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                             if (empty($name)) {
                                 foreach (Plugin::get_plugins('get_location_name') as $plugin_name) {
                                     $plugin = new Plugin($plugin_name);
-                                    if ($plugin->load($user)) {
+                                    if ($plugin->_plugin !== null && $plugin->load($user)) {
                                         $name = $plugin->_plugin->get_location_name($latitude, $longitude);
                                         if (!empty($name)) {
                                             break;

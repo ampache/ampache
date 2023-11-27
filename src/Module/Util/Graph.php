@@ -802,7 +802,7 @@ class Graph
 
         foreach (Plugin::get_plugins('display_map') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                 if ($plugin->_plugin->display_map($pts)) {
                     break;
                 }

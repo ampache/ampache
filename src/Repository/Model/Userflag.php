@@ -243,7 +243,7 @@ class Userflag extends database_object
         foreach (Plugin::get_plugins('set_flag') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load($user)) {
+                if ($plugin->_plugin !== null && $plugin->load($user)) {
                     debug_event(self::class, 'save_flag...' . $plugin->_plugin->name, 5);
                     $plugin->_plugin->set_flag($song, $flagged);
                 }

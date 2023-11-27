@@ -2061,7 +2061,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         foreach (Plugin::get_plugins('get_lyrics') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                 $lyrics = $plugin->_plugin->get_lyrics($this);
                 if ($lyrics) {
                     // save the lyrics if not set before

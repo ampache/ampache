@@ -288,7 +288,7 @@ class Wanted extends database_object
 
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load(Core::get_global('user'))) {
+                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                     debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin_name, 5);
                     $plugin->_plugin->process_wanted($this);
                 }
@@ -395,7 +395,7 @@ class Wanted extends database_object
                                 $song['file'] = null;
                                 foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
                                     $plugin = new Plugin($plugin_name);
-                                    if ($plugin->load(Core::get_global('user'))) {
+                                    if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                                         $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
                                         if ($song['file'] != null) {
                                             break;

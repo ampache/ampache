@@ -376,7 +376,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                 if ($plugin->_plugin->stream_song_preview($this->file)) {
                     break;
                 }

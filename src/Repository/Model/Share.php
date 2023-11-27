@@ -203,7 +203,7 @@ class Share extends database_object
         foreach (Plugin::get_plugins('shortener') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load(Core::get_global('user'))) {
+                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                     /** @var string|false $short_url */
                     $short_url = $plugin->_plugin->shortener($url);
                     if (!empty($short_url)) {

@@ -746,7 +746,7 @@ class User extends database_object
         foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load($user)) {
+                if ($plugin->_plugin !== null && $plugin->load($user)) {
                     debug_event(self::class, 'save_mediaplay... ' . $plugin->_plugin->name, 5);
                     $plugin->_plugin->save_mediaplay($media);
                 }
@@ -1206,7 +1206,7 @@ class User extends database_object
         } else {
             foreach (Plugin::get_plugins('get_avatar_url') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load(Core::get_global('user'))) {
+                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                     $avatar['url'] = $plugin->_plugin->get_avatar_url($this);
                     if (!empty($avatar['url'])) {
                         $avatar['url_mini']   = $plugin->_plugin->get_avatar_url($this, 32);
@@ -1332,7 +1332,7 @@ class User extends database_object
 
         foreach (Plugin::get_plugins('stream_control') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($user)) {
+            if ($plugin->_plugin !== null && $plugin->load($user)) {
                 if (!$plugin->_plugin->stream_control($media_ids)) {
                     return false;
                 }

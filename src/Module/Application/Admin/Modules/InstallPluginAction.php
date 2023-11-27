@@ -87,7 +87,7 @@ final class InstallPluginAction implements ApplicationActionInterface
             return null;
         }
         $plugin = new Plugin($plugin_name);
-        if (!$plugin->install()) {
+        if ($plugin->_plugin === null || !$plugin->install()) {
             $this->logger->error(
                 sprintf('Error: Plugin Install Failed, %s', $plugin_name),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

@@ -61,7 +61,7 @@ final class Slideshow implements SlideshowInterface
 
         foreach (Plugin::get_plugins('get_photos') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                 $images += $plugin->_plugin->get_photos($song->f_artist);
             }
         }

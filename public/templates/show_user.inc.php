@@ -71,7 +71,7 @@ if (AmpConfig::get('sociable')) {
     <ul id="plugins_user_field">
 <?php foreach ($plugins as $plugin_name) {
     $plugin = new Plugin($plugin_name);
-    if ($plugin->load($client)) { ?>
+    if ($plugin->_plugin !== null && $plugin->load($client)) { ?>
         <li><?php $plugin->_plugin->display_user_field(); ?> </li>
 <?php } ?>
 <?php

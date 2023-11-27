@@ -59,24 +59,27 @@ final class UpdateFromMusicBrainzAction implements ApplicationActionInterface
         $user     = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
-        // load up musicbrainz or cause an error
-        $plugin = new Plugin('musicbrainz');
-        if (!$plugin->load($user)) {
-            throw new AccessDeniedException('Unable to load musicbrainz plugin');
-        }
-        if (!$plugin->_plugin->overwrite_name) {
-            throw new AccessDeniedException(T_('Enable') . ': ' . T_('Overwrite Artist names that match an mbid'));
-        }
-        $artist = new Artist($artistId);
-        $plugin->_plugin->get_external_metadata($artist, 'artist');
 
         $this->ui->showHeader();
 
-        $this->ui->showContinue(
-            T_('No Problem'),
-            T_('Artist information updated using MusicBrainz'),
-            $this->configContainer->get('web_path') . "/artists.php?action=show&artist=" . $artistId
-        );
+        // load up musicbrainz or cause an error
+        $plugin = new Plugin('musicbrainz');
+        if ($plugin->_plugin !== null) {
+            if (!$plugin->load($user)) {
+                throw new AccessDeniedException('Unable to load musicbrainz plugin');
+            }
+            if (!$plugin->_plugin->overwrite_name) {
+                throw new AccessDeniedException(T_('Enable') . ': ' . T_('Overwrite Artist names that match an mbid'));
+            }
+            $artist = new Artist($artistId);
+            $plugin->_plugin->get_external_metadata($artist, 'artist');
+
+            $this->ui->showContinue(
+                T_('No Problem'),
+                T_('Artist information updated using MusicBrainz'),
+                $this->configContainer->get('web_path') . "/artists.php?action=show&artist=" . $artistId
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

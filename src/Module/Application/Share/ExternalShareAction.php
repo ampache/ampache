@@ -82,7 +82,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         }
 
         $plugin = new Plugin(Core::get_get('plugin'));
-        if (!$plugin) {
+        if ($plugin->_plugin === null) {
             throw new AccessDeniedException('Access Denied - Unknown external share plugin');
         }
         $plugin->load(Core::get_global('user'));
