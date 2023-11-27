@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
 use Generator;
+use PDOStatement;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -235,5 +236,16 @@ final class ShoutRepository implements ShoutRepositoryInterface
                 (int) $shoutId
             );
         }
+    }
+
+    /**
+     * Migrates an object associate shouts to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        $this->connection->query(
+            'UPDATE `user_shout` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            [$newObjectId, $objectType, $oldObjectId]
+        );
     }
 }

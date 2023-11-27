@@ -309,4 +309,20 @@ class ShoutRepositoryTest extends TestCase
             iterator_to_array($this->subject->getTop($limit, $userName))
         );
     }
+
+    public function testMigrateMigrates(): void
+    {
+        $objectType = 'some-object';
+        $oldId      = 666;
+        $newId      = 42;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `user_shout` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+                [$newId, $objectType, $oldId]
+            );
+
+        $this->subject->migrate($objectType, $oldId, $newId);
+    }
 }

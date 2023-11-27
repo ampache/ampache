@@ -27,8 +27,10 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\ShoutRepositoryInterface;
 
@@ -38,12 +40,16 @@ final class SongAjaxHandler implements AjaxHandlerInterface
 
     private ShoutRepositoryInterface $shoutRepository;
 
+    private ShoutRendererInterface $shoutRenderer;
+
     public function __construct(
         RequestParserInterface $requestParser,
-        ShoutRepositoryInterface $shoutRepository
+        ShoutRepositoryInterface $shoutRepository,
+        ShoutRendererInterface $shoutRenderer
     ) {
         $this->requestParser   = $requestParser;
         $this->shoutRepository = $shoutRepository;
+        $this->shoutRenderer   = $shoutRenderer;
     }
 
     public function handle(): void
@@ -86,11 +92,13 @@ final class SongAjaxHandler implements AjaxHandlerInterface
                     $shouts = $this->shoutRepository->getBy($type, $songid);
                     echo "<script>\r\n";
                     echo "shouts = {};\r\n";
+
+                    /** @var Shoutbox $shout */
                     foreach ($shouts as $shout) {
                         $key  = (int)$shout->data;
                         $time = (int)$media->time;
                         echo "if (typeof shouts['" . $key . "'] === 'undefined') { shouts['" . $key . "'] = new Array(); }\r\n";
-                        echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";
+                        echo "shouts['" . $key . "'].push('" . addslashes($this->shoutRenderer->render($shout, false)) . "');\r\n";
                         echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($key / $time) * 400) - 1) . "px;\' />');\r\n";
                     }
                     echo "</script>\r\n";

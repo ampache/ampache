@@ -39,6 +39,7 @@ use Ampache\Repository\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\ShoutRepositoryInterface;
 use PDOStatement;
 
 class Song extends database_object implements Media, library_item, GarbageCollectibleInterface
@@ -2182,7 +2183,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             Useractivity::migrate('artist', $old_artist, $new_artist);
             Recommendation::migrate('artist', $old_artist);
             Share::migrate('artist', $old_artist, $new_artist);
-            Shoutbox::migrate('artist', $old_artist, $new_artist);
+            self::getShoutRepository()->migrate('artist', $old_artist, $new_artist);
             Tag::migrate('artist', $old_artist, $new_artist);
             Userflag::migrate('artist', $old_artist, $new_artist);
             Rating::migrate('artist', $old_artist, $new_artist);
@@ -2227,7 +2228,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Useractivity::migrate('album', $old_album, $new_album);
         //Recommendation::migrate('album', $old_album);
         Share::migrate('album', $old_album, $new_album);
-        Shoutbox::migrate('album', $old_album, $new_album);
+        self::getShoutRepository()->migrate('album', $old_album, $new_album);
         Tag::migrate('album', $old_album, $new_album);
         Userflag::migrate('album', $old_album, $new_album);
         Rating::migrate('album', $old_album, $new_album);
@@ -2318,5 +2319,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         global $dic;
 
         return $dic->get(UserActivityPosterInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
     }
 }

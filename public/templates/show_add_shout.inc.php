@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Shoutbox;
@@ -33,6 +34,7 @@ use Ampache\Repository\Model\Shoutbox;
 /** @var Ampache\Repository\Model\library_item $object */
 /** @var string $object_type */
 /** @var Traversable<Shoutbox> $shouts */
+/** @var ShoutRendererInterface $shoutRenderer */
 ?>
 <div>
 <?php if (Access::check('interface', 25)) { ?>
@@ -76,7 +78,7 @@ Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <?php
 $shouts = iterator_to_array($shouts);
 
-if (count($shouts) !== []) {
+if ($shouts !== []) {
     require_once Ui::find_template('show_shoutbox.inc.php');
 } ?>
 <?php Ui::show_box_bottom(); ?>

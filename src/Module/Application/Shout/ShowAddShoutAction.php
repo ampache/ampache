@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Shout;
 
+use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
@@ -47,14 +48,18 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
     private ShoutRepositoryInterface $shoutRepository;
 
+    private ShoutRendererInterface $shoutRenderer;
+
     public function __construct(
         RequestParserInterface $requestParser,
         UiInterface $ui,
-        ShoutRepositoryInterface $shoutRepository
+        ShoutRepositoryInterface $shoutRepository,
+        ShoutRendererInterface $shoutRenderer
     ) {
         $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->shoutRepository = $shoutRepository;
+        $this->shoutRenderer   = $shoutRenderer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -91,7 +96,8 @@ final class ShowAddShoutAction implements ApplicationActionInterface
                 'data' => $data,
                 'object' => $object,
                 'object_type' => $object_type,
-                'shouts' => $shouts
+                'shouts' => $shouts,
+                'shoutRenderer' => $this->shoutRenderer,
             ]
         );
 

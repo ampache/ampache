@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -20,26 +20,16 @@ declare(strict_types=0);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-use Ampache\Module\Shout\ShoutRendererInterface;
-use Ampache\Module\Util\Ui;
+namespace Ampache\Module\Shout;
+
 use Ampache\Repository\Model\Shoutbox;
 
-/** @var list<Shoutbox> $shouts */
-/** @var ShoutRendererInterface $shoutRenderer */
-
-Ui::show_box_top(T_('Shoutbox')); ?>
-<div id="shoutbox">
-<?php
-  foreach ($shouts as $shout) {?>
-<div id="shout<?php echo $shout->getId(); ?>" class="shout">
-    <?php
-    echo $shoutRenderer->render($shout, true, true);
-      ?>
-</div>
-<?php
-  } ?>
-</div>
-<?php Ui::show_box_bottom(); ?>
+interface ShoutRendererInterface
+{
+    /**
+     * Renders the shout and returns the rendered output
+     */
+    public function render(Shoutbox $shout, bool $details = true, bool $jsbuttons = false): string;
+}
