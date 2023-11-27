@@ -72,8 +72,6 @@ class AlbumDisk extends database_object implements library_item
     public $artist_name;
     /** @var array $tags */
     public $tags;
-    /** @var bool $has_art */
-    public $has_art;
     /** @var null|string $f_artist_name */
     public $f_artist_name;
     /** @var null|string $f_artist_link */
@@ -94,11 +92,11 @@ class AlbumDisk extends database_object implements library_item
     public $total_duration;
     /** @var int $catalog_id */
     public $catalog_id;
-
-    private Album $album;
-
     /** @var null|string $f_year_link */
     public $f_year_link;
+
+    private ?bool $has_art = null;
+    private Album $album;
 
     /**
      * __construct
@@ -231,7 +229,7 @@ class AlbumDisk extends database_object implements library_item
      */
     public function has_art(): bool
     {
-        if (!isset($this->has_art)) {
+        if ($this->has_art === null) {
             $this->has_art = Art::has_db($this->album_id, 'album');
         }
 

@@ -50,7 +50,7 @@ class Podcast extends database_object implements library_item
     public int $total_skip;
     public int $episodes;
 
-    public ?bool $has_art = null;
+    public ?string $link = null;
     public $f_name;
     public $f_website;
     public $f_description;
@@ -59,11 +59,10 @@ class Podcast extends database_object implements library_item
     public $f_generator;
     public $f_lastbuilddate;
     public $f_lastsync;
-
-    public ?string $link = null;
-
     public $f_link;
     public $f_website_link;
+
+    private ?bool $has_art = null;
 
     /**
      * Podcast

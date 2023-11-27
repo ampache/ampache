@@ -67,6 +67,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public int $total_count;
     public int $total_skip;
 
+    public ?string $link = null;
     /**
      * @var string $type
      */
@@ -75,10 +76,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @var array $tags
      */
     public $tags;
-    /**
-     * @var bool $has_art
-     */
-    public $has_art;
     /**
      * @var null|string $f_name
      */
@@ -103,9 +100,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @var null|string $f_size
      */
     public $f_size;
-
-    public ?string $link = null;
-
     /**
      * @var null|string $f_link
      */
@@ -150,6 +144,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @var null|string $f_release_date
      */
     public $f_release_date;
+
+    private ?bool $has_art = null;
 
     /**
      * Constructor
@@ -277,7 +273,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function has_art(): bool
     {
-        if (!isset($this->has_art)) {
+        if ($this->has_art === null) {
             $this->has_art = Art::has_db($this->id, 'video');
         }
 

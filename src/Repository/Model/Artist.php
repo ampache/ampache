@@ -57,6 +57,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public int $album_disk_count;
     public int $total_count;
 
+    public ?string $link = null;
     /**
      * @var int $catalog_id
      */
@@ -74,10 +75,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public $tags;
     /**
-     * @var bool $has_art
-     */
-    public $has_art;
-    /**
      * @var null|string $f_tags
      */
     public $f_tags;
@@ -93,9 +90,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @var null|string $f_name // Prefix + Name, generated
      */
     public $f_name;
-
-    public ?string $link = null;
-
     /**
      * @var null|string $f_link
      */
@@ -104,12 +98,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @var null|string $f_time
      */
     public $f_time;
-
-    // Constructed vars
     /**
      * @var bool $_fake
      */
     public $_fake = false; // Set if construct_from_array() used
+
+    private ?bool $has_art = null;
     /**
      * @var array $_mapcache
      */
@@ -355,7 +349,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function has_art(): bool
     {
-        if (!isset($this->has_art)) {
+        if ($this->has_art === null) {
             $this->has_art = Art::has_db($this->id, 'artist');
         }
 

@@ -63,9 +63,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public ?int $channels;
     public ?string $waveform;
 
+    public ?string $link = null;
     public $type;
     public $mime;
-    public $has_art;
     public $f_name;
     public $f_file;
     public $f_size;
@@ -79,12 +79,11 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $f_website;
     public $f_pubdate;
     public $f_state;
-
-    public ?string $link = null;
-
     public $f_link;
     public $f_podcast;
     public $f_podcast_link;
+
+    private ?bool $has_art = null;
 
     /**
      * Constructor
@@ -204,7 +203,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function has_art(): bool
     {
-        if (!isset($this->has_art)) {
+        if ($this->has_art === null) {
             $this->has_art = Art::has_db($this->podcast, 'podcast');
         }
 

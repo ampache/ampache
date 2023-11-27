@@ -45,10 +45,6 @@ abstract class playlist_object extends database_object implements library_item
 
     public ?string $link = null;
     /**
-     * @var bool $has_art
-     */
-    public $has_art;
-    /**
      * @var null|string $f_link
      */
     public $f_link;
@@ -60,6 +56,8 @@ abstract class playlist_object extends database_object implements library_item
      * @var null|string $f_name
      */
     public $f_name;
+
+    private ?bool $has_art = null;
 
     /**
      * @return array
@@ -86,7 +84,7 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function has_art(): bool
     {
-        if (!isset($this->has_art)) {
+        if ($this->has_art === null) {
             $this->has_art = ($this instanceof Search)
                 ? Art::has_db($this->id, 'search')
                 : Art::has_db($this->id, 'playlist');

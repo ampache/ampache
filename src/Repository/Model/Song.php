@@ -109,8 +109,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public $album_disk;
     /** @var array $tags */
     public $tags;
-    /** @var bool $has_art */
-    public $has_art;
     /** @var null|string $f_name */
     public $f_name;
     /** @var null|string $f_artist */
@@ -167,6 +165,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public $f_license;
     /** @var int $tag_id */
     public $tag_id;
+
+    private ?bool $has_art = null;
 
     /* Setting Variables */
     /**
@@ -1620,7 +1620,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function has_art(): bool
     {
-        if (!isset($this->has_art)) {
+        if ($this->has_art === null) {
             $this->has_art = (AmpConfig::get('show_song_art', false) && Art::has_db($this->id, 'song') || Art::has_db($this->album, 'album'));
         }
 

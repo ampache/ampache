@@ -77,8 +77,6 @@ class Album extends database_object implements library_item
     public $artist_name;
     /** @var array $tags */
     public $tags;
-    /** @var bool $has_art */
-    public $has_art;
     /** @var null|string $f_artist_name */
     public $f_artist_name;
     /** @var null|string $f_artist_link */
@@ -111,6 +109,8 @@ class Album extends database_object implements library_item
      * @var array $_songs
      */
     public $_songs = array();
+
+    private ?bool $has_art = null;
     /**
      * @var array $_mapcache
      */
@@ -448,7 +448,7 @@ class Album extends database_object implements library_item
      */
     public function has_art(): bool
     {
-        if (!isset($this->has_art)) {
+        if ($this->has_art === null) {
             $this->has_art = Art::has_db($this->id, 'album');
         }
 
