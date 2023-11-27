@@ -40,6 +40,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
     public string $name        = 'RatingMatch';
     public string $categories  = 'scrobbling';
     public string $description = 'Raise the album and artist rating to match the highest song rating';
+    public string $url         = '';
     public string $version     = '000004';
     public string $min_ampache = '360003';
     public string $max_ampache = '999999';
