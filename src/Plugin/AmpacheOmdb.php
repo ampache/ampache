@@ -115,7 +115,7 @@ class AmpacheOmdb implements AmpachePluginInterface
         $rtime = explode(' ', $runtime, 2);
         if (count($rtime) == 2) {
             if ($rtime[1] == 'min') {
-                $time = (int)($rtime[0]) * 60;
+                $time = ((int)$rtime[0]) * 60;
             }
         }
 

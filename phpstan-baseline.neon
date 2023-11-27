@@ -326,11 +326,6 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Function invert_bool\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function is_rtl\\(\\) has parameter \\$locale with no type specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
@@ -402,11 +397,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, array\\<int, string\\>\\|string given\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
@@ -504,11 +494,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
 			count: 1
 			path: src/Module/Album/Export/Writer/WindowsMetadataWriter.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function make_bool expects string, bool given\\.$#"
-			count: 1
-			path: src/Module/Api/Ajax.php
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Api\\\\Ajax\\:\\:\\$counter has no type specified\\.$#"
@@ -6261,11 +6246,6 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function make_bool expects string, bool given\\.$#"
-			count: 3
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, float\\|int\\<0, 2048\\> given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
@@ -6378,11 +6358,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$object_id of method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:delete_from_oid\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function make_bool expects string, bool given\\.$#"
-			count: 3
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
@@ -6979,11 +6954,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Openid\\:\\:get_policies\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Openid.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authorization\\\\Access\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authorization/Access.php
 
 		-
 			message: "#^Parameter \\#1 \\$inAddrStart of method Ampache\\\\Repository\\\\AccessRepositoryInterface\\:\\:exists\\(\\) expects string, string\\|false given\\.$#"
@@ -10761,16 +10731,6 @@ parameters:
 			path: src/Module/Playlist/PlaylistExporter.php
 
 		-
-			message: "#^Binary operation \"\\*\" between array\\<string\\>\\|bool\\|int\\|string\\|null and 60 results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumDiskSearch.php
-
-		-
-			message: "#^Binary operation \"\\.\" between '`rating_album_' and array\\<string\\>\\|bool\\|int\\|string\\|null results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumDiskSearch.php
-
-		-
 			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album_map\\?\\: true, image\\?\\: true, song\\: bool, catalog\\: bool, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/AlbumDiskSearch.php
@@ -10781,24 +10741,9 @@ parameters:
 			path: src/Module/Playlist/Search/AlbumDiskSearch.php
 
 		-
-			message: "#^Part \\$other_userid \\(array\\<string\\>\\|bool\\|int\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
-			count: 11
-			path: src/Module/Playlist/Search/AlbumDiskSearch.php
-
-		-
 			message: "#^Ternary operator condition is always true\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/AlbumDiskSearch.php
-
-		-
-			message: "#^Binary operation \"\\*\" between array\\<string\\>\\|bool\\|int\\|string\\|null and 60 results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumSearch.php
-
-		-
-			message: "#^Binary operation \"\\.\" between '`rating_album_' and array\\<string\\>\\|bool\\|int\\|string\\|null results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumSearch.php
 
 		-
 			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album_map\\?\\: true, image\\?\\: true, song\\: bool, catalog\\: bool, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
@@ -10811,29 +10756,9 @@ parameters:
 			path: src/Module/Playlist/Search/AlbumSearch.php
 
 		-
-			message: "#^Parameter \\#1 \\$search_id of class Ampache\\\\Repository\\\\Model\\\\Search constructor expects int, array\\<string\\>\\|bool\\|int\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumSearch.php
-
-		-
-			message: "#^Part \\$other_userid \\(array\\<string\\>\\|bool\\|int\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
-			count: 11
-			path: src/Module/Playlist/Search/AlbumSearch.php
-
-		-
 			message: "#^Ternary operator condition is always true\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/AlbumSearch.php
-
-		-
-			message: "#^Binary operation \"\\*\" between array\\<string\\>\\|bool\\|int\\|string\\|null and 60 results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/ArtistSearch.php
-
-		-
-			message: "#^Binary operation \"\\.\" between '`rating_artist_' and array\\<string\\>\\|bool\\|int\\|string\\|null results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/ArtistSearch.php
 
 		-
 			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album\\?\\: true, catalog\\: bool, image\\?\\: true, song\\?\\: true, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
@@ -10843,11 +10768,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\ArtistSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Playlist/Search/ArtistSearch.php
-
-		-
-			message: "#^Part \\$other_userid \\(array\\<string\\>\\|bool\\|int\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
-			count: 11
 			path: src/Module/Playlist/Search/ArtistSearch.php
 
 		-
@@ -10876,43 +10796,13 @@ parameters:
 			path: src/Module/Playlist/Search/PlaylistSearch.php
 
 		-
-			message: "#^Binary operation \"\\*\" between array\\<string\\>\\|bool\\|int\\|string\\|null and 60 results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/PodcastEpisodeSearch.php
-
-		-
-			message: "#^Cannot cast array\\<string\\>\\|bool\\|int\\|string\\|null to string\\.$#"
-			count: 2
-			path: src/Module/Playlist/Search/PodcastEpisodeSearch.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\PodcastEpisodeSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/PodcastEpisodeSearch.php
 
 		-
-			message: "#^Part \\$input \\(array\\<string\\>\\|bool\\|int\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
-			count: 3
-			path: src/Module/Playlist/Search/PodcastEpisodeSearch.php
-
-		-
-			message: "#^Binary operation \"\\*\" between array\\<string\\>\\|bool\\|int\\|string\\|null and 60 results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/PodcastSearch.php
-
-		-
-			message: "#^Cannot cast array\\<string\\>\\|bool\\|int\\|string\\|null to string\\.$#"
-			count: 2
-			path: src/Module/Playlist/Search/PodcastSearch.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\PodcastSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Playlist/Search/PodcastSearch.php
-
-		-
-			message: "#^Part \\$input \\(array\\<string\\>\\|bool\\|int\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
-			count: 3
 			path: src/Module/Playlist/Search/PodcastSearch.php
 
 		-
@@ -10921,53 +10811,8 @@ parameters:
 			path: src/Module/Playlist/Search/SearchInterface.php
 
 		-
-			message: "#^Binary operation \"\\*\" between array\\<string\\>\\|bool\\|int\\|string\\|null and 1000 results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/SongSearch.php
-
-		-
-			message: "#^Binary operation \"\\*\" between array\\<string\\>\\|bool\\|int\\|string\\|null and 60 results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/SongSearch.php
-
-		-
-			message: "#^Binary operation \"\\.\" between '\"' and array\\<string\\>\\|bool\\|string\\|null results in an error\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/SongSearch.php
-
-		-
-			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and array\\<string\\>\\|bool\\|int\\|string\\|null results in an error\\.$#"
-			count: 14
-			path: src/Module/Playlist/Search/SongSearch.php
-
-		-
-			message: "#^Cannot cast array\\<string\\>\\|bool\\|int\\|string\\|null to string\\.$#"
-			count: 2
-			path: src/Module/Playlist/Search/SongSearch.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\SongSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Playlist/Search/SongSearch.php
-
-		-
-			message: "#^Parameter \\#1 \\$search_id of class Ampache\\\\Repository\\\\Model\\\\Search constructor expects int, array\\<string\\>\\|bool\\|int\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/SongSearch.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, array\\<string\\>\\|bool\\|int\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/SongSearch.php
-
-		-
-			message: "#^Part \\$input \\(array\\<string\\>\\|bool\\|int\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
-			count: 3
-			path: src/Module/Playlist/Search/SongSearch.php
-
-		-
-			message: "#^Part \\$other_userid \\(array\\<string\\>\\|bool\\|int\\|string\\|null\\) of encapsed string cannot be cast to string\\.$#"
-			count: 5
 			path: src/Module/Playlist/Search/SongSearch.php
 
 		-
@@ -15476,11 +15321,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -15527,11 +15367,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$album_artists type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -15907,11 +15742,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$_mapcache type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
 
@@ -17436,11 +17266,6 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$has_art has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$mime has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -17528,11 +17353,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:save_objects\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function make_bool expects string, bool given\\.$#"
-			count: 2
 			path: src/Repository/Model/Query.php
 
 		-
@@ -17726,11 +17546,6 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:filter_data\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:filter_data\\(\\) has parameter \\$operator with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
@@ -17812,11 +17627,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:year_search\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function make_bool expects string, array\\|string\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
@@ -18282,11 +18092,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$disabledMetadataFields type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -18762,11 +18567,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_next_object\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
 
@@ -19306,11 +19106,6 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
@@ -19502,11 +19297,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:\\$has_art \\(bool\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
 

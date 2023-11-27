@@ -62,7 +62,7 @@ final class PodcastEpisodeSearch implements SearchInterface
                     break;
                 }
             }
-            $input        = $search->filter_data($rule[2], $type, $operator);
+            $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
@@ -76,7 +76,7 @@ final class PodcastEpisodeSearch implements SearchInterface
                     $join['podcast'] = true;
                     break;
                 case 'time':
-                    $input        = $input * 60;
+                    $input        = ((int)$input) * 60;
                     $where[]      = "`podcast_episode`.`time` $operator_sql ?";
                     $parameters[] = $input;
                     break;

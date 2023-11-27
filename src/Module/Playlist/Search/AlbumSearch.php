@@ -63,7 +63,7 @@ final class AlbumSearch implements SearchInterface
                     break;
                 }
             }
-            $input        = $search->filter_data($rule[2], $type, $operator);
+            $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
             $group[]      = "`album`.`id`";
             switch ($rule[0]) {
@@ -86,7 +86,7 @@ final class AlbumSearch implements SearchInterface
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
                 case 'time':
-                    $input        = $input * 60;
+                    $input        = ((int)$input) * 60;
                     $where[]      = "`album`.`time` $operator_sql ?";
                     $parameters[] = $input;
                     break;
@@ -298,7 +298,7 @@ final class AlbumSearch implements SearchInterface
                     break;
                 case 'smartplaylist':
                     //debug_event(self::class, '_get_sql_song: SUBSEARCH ' . $input, 5);
-                    $subsearch = new Search($input, 'song', $search->search_user);
+                    $subsearch = new Search((int)$input, 'song', $search->search_user);
                     $results   = $subsearch->get_subsearch('song');
                     if (!empty($results)) {
                         $subsearch_count++;

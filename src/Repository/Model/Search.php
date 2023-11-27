@@ -1749,12 +1749,12 @@ class Search extends playlist_object
      * Private convenience function.  Mangles the input according to a set
      * of predefined rules so that we don't have to include this logic in
      * _get_sql_foo.
-     * @param array|string $data
-     * @param string|false $type
+     * @param string $data
+     * @param string $type
      * @param array $operator
-     * @return array|bool|int|string|string[]|null
+     * @return bool|int|null|string
      */
-    public function filter_data($data, $type, $operator)
+    public function filter_data(string $data, string $type, array $operator)
     {
         if (array_key_exists('preg_match', $operator)) {
             $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);

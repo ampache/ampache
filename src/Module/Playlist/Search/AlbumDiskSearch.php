@@ -62,7 +62,7 @@ final class AlbumDiskSearch implements SearchInterface
                     break;
                 }
             }
-            $input        = $search->filter_data($rule[2], $type, $operator);
+            $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
             $group[]      = "`album_disk`.`id`";
             $group[]      = "`album`.`name`";
@@ -86,7 +86,7 @@ final class AlbumDiskSearch implements SearchInterface
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
                 case 'time':
-                    $input        = $input * 60;
+                    $input        = ((int)$input) * 60;
                     $where[]      = "`album_disk`.`time` $operator_sql ?";
                     $parameters[] = $input;
                     break;
