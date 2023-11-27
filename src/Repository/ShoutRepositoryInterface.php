@@ -78,4 +78,9 @@ interface ShoutRepositoryInterface
      * @return Traversable<Shoutbox>
      */
     public function getTop(int $limit, ?string $username = null): Traversable;
+
+    /**
+     * Migrates an object associate shouts to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 }

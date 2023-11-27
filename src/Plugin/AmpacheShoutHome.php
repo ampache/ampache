@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
@@ -94,6 +95,7 @@ class AmpacheShoutHome implements AmpachePluginInterface
             $shouts = iterator_to_array(
                 self::getShoutRepository()->getTop((int) $this->maxitems)
             );
+            $shoutRenderer = $this->getShoutRenderer();
 
             if (count($shouts) > 0) {
                 require_once Ui::find_template('show_shoutbox.inc.php');
@@ -128,5 +130,15 @@ class AmpacheShoutHome implements AmpachePluginInterface
         global $dic;
 
         return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @todo find a better solution...
+     */
+    private function getShoutRenderer(): ShoutRendererInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRendererInterface::class);
     }
 }

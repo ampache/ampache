@@ -29,4 +29,5 @@ use function DI\autowire;
 
 return [
     ShoutCreatorInterface::class => autowire(ShoutCreator::class),
+    ShoutRendererInterface::class => autowire(ShoutRenderer::class),
 ];

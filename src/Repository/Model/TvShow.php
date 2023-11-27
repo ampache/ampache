@@ -413,7 +413,7 @@ class TvShow extends database_object implements library_item
                 Useractivity::migrate('tvshow', $this->id, $current_id);
                 //Recommendation::migrate('tvshow', $this->id);
                 Share::migrate('tvshow', $this->id, $current_id);
-                Shoutbox::migrate('tvshow', $this->id, $current_id);
+                $this->getShoutRepository()->migrate('tvshow', $this->id, $current_id);
                 Tag::migrate('tvshow', $this->id, $current_id);
                 Userflag::migrate('tvshow', $this->id, $current_id);
                 Rating::migrate('tvshow', $this->id, $current_id);
