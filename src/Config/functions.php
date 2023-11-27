@@ -115,10 +115,13 @@ function unhtmlentities($string): string
  * This takes a value and returns what we consider to be the correct boolean
  * value. We need a special function because PHP considers "false" to be true.
  *
- * @param string $string
+ * @param bool|null|string $string
  */
 function make_bool($string): bool
 {
+    if (is_bool($string)) {
+        return $string;
+    }
     if ($string === null) {
         return false;
     }
@@ -132,7 +135,7 @@ function make_bool($string): bool
 /**
  * invert_bool
  * This returns the opposite of what you've got
- * @param $value
+ * @param bool|string $value
  */
 function invert_bool($value): bool
 {
