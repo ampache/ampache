@@ -544,7 +544,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param int $song_id
      * @return array
      */
-    private function has_info($song_id)
+    private function has_info($song_id): array
     {
         if (parent::is_cached('song', $song_id) && !empty(parent::get_from_cache('song', $song_id)['disk'])) {
             return parent::get_from_cache('song', $song_id);

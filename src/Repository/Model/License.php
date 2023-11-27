@@ -61,9 +61,10 @@ class License
     {
         $sql        = "SELECT * FROM `license` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($license_id));
-
-        $data = Dba::fetch_assoc($db_results);
-
+        $data       = Dba::fetch_assoc($db_results);
+        if (empty($data)) {
+            return false;
+        }
         foreach ($data as $key => $value) {
             $this->$key = $value;
         }

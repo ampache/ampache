@@ -173,7 +173,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param int|null $preview_id
      * @return array
      */
-    private function has_info($preview_id)
+    private function has_info($preview_id): array
     {
         if ($preview_id === null) {
             return array();

@@ -95,11 +95,8 @@ class Access
             return;
         }
         $info = $this->has_info($access_id);
-        if (empty($info)) {
+        if (!$info) {
             return;
-        }
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
         }
         $this->id = (int)$access_id;
     }
@@ -109,14 +106,20 @@ class Access
      *
      * Gets the vars for $this out of the database.
      * @param int $access_id
-     * @return array
      */
-    private function has_info($access_id)
+    private function has_info($access_id): bool
     {
         $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($access_id));
+        $data       = Dba::fetch_assoc($db_results);
+        if (empty($data)) {
+            return false;
+        }
+        foreach ($data as $key => $value) {
+            $this->$key = $value;
+        }
 
-        return Dba::fetch_assoc($db_results);
+        return true;
     }
 
     /**

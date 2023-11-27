@@ -72,9 +72,10 @@ class Shoutbox
     {
         $sql        = "SELECT * FROM `user_shout` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($shout_id));
-
-        $data = Dba::fetch_assoc($db_results);
-
+        $data       = Dba::fetch_assoc($db_results);
+        if (empty($data)) {
+            return false;
+        }
         foreach ($data as $key => $value) {
             $this->$key = $value;
         }
