@@ -356,7 +356,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public function has_art(): bool
     {
         if (!isset($this->has_art)) {
-            $this->has_art = Art::has_db($this->id, 'album');
+            $this->has_art = Art::has_db($this->id, 'artist');
         }
 
         return $this->has_art;
