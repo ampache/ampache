@@ -640,7 +640,7 @@ class Stream
             $className = ObjectTypeToClassNameMapper::map($row['object_type']);
             /** @var library_item $media */
             $media     = new $className($row['object_id']);
-            if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->catalog, (int)$row['user'])) {
+            if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access(($media->catalog ?? null), (int)$row['user'])) {
                 $client = new User($row['user']);
                 $media->format();
                 $client->format();

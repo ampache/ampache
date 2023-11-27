@@ -212,7 +212,6 @@ class Plugin
         }
 
         return false;
-
     } // uninstall
 
     /**

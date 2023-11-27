@@ -2098,7 +2098,7 @@ final class VaInfo implements VaInfoInterface
     public function splitSlashedlist($data, $doTrim = true)
     {
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
-        if (isset($data) && isset($delimiters)) {
+        if (!empty($data) && !empty($delimiters)) {
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
             $items   = preg_split($pattern, $data);
             $items   = array_map('trim', $items);
@@ -2107,7 +2107,7 @@ final class VaInfo implements VaInfoInterface
             }
             $data = $items;
         }
-        if ((isset($data) && isset($data[0])) && $doTrim) {
+        if (isset($data[0]) && $doTrim) {
             return $data[0];
         }
 

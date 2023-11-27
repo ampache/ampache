@@ -157,7 +157,6 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 // Wait in case we just deleted what we were playing
                 sleep(3);
                 $objects = $localplay->get();
-                $status  = $localplay->status();
 
                 ob_start();
                 $browse_id = (int)($_REQUEST['browse_id'] ?? 0);

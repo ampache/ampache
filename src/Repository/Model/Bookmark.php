@@ -84,8 +84,6 @@ class Bookmark extends database_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return;
     }
 
     public function getId(): int

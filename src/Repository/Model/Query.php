@@ -368,7 +368,7 @@ class Query
 
             $db_results = Dba::read($sql, array($query_id, $sid));
             if ($results = Dba::fetch_assoc($db_results)) {
-                $this->id     = $query_id;
+                $this->id     = (int)$query_id;
                 $this->_state = (array)self::_unserialize($results['data']);
 
                 return;

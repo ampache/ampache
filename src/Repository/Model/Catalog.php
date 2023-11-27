@@ -1173,12 +1173,12 @@ abstract class Catalog extends database_object
      * has_access
      *
      * When filtering catalogs you shouldn't be able to play the files
-     * @param int $catalog_id
+     * @param int|null $catalog_id
      * @param int $user_id
      */
     public static function has_access($catalog_id, $user_id): bool
     {
-        if (!AmpConfig::get('catalog_filter')) {
+        if ($catalog_id === null || !AmpConfig::get('catalog_filter')) {
             return true;
         }
         if ($user_id == -1) {
@@ -3423,7 +3423,7 @@ abstract class Catalog extends database_object
         $items      = preg_split($pattern, $string);
         $items      = array_map('trim', $items);
 
-        if ((isset($items) && isset($items[0])) && $doTrim) {
+        if (isset($items[0]) && $doTrim) {
             return $items[0];
         }
 

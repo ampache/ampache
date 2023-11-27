@@ -131,7 +131,7 @@ abstract class database_object
     public static function get_from_cache($index, $object_id)
     {
         // Check if the object is set
-        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$object_id])) {
+        if (isset(self::$object_cache[$index][$object_id])) {
             self::$cache_hit++;
 
             return self::$object_cache[$index][$object_id];
