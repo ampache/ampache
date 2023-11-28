@@ -30,11 +30,24 @@ use Ampache\Module\System\Core;
 final class RequestParser implements RequestParserInterface
 {
     /**
-     * Return a $REQUEST variable instead of calling directly
+     * Return a $_REQUEST variable instead of calling directly
      */
     public function getFromRequest(string $variable): string
     {
         $variable = (string) ($_REQUEST[$variable] ?? '');
+        if ($variable === '') {
+            return '';
+        }
+
+        return scrub_in($variable);
+    }
+
+    /**
+     * Return a $_POST variable instead of calling directly
+     */
+    public function getFromPost(string $variable): string
+    {
+        $variable = (string) ($_POST[$variable] ?? '');
         if ($variable === '') {
             return '';
         }

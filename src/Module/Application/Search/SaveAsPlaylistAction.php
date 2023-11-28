@@ -74,11 +74,11 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
 
         // Make sure we have a unique name
         $playlist_name = (isset($_POST['browse_name']))
-            ? (string) $this->requestParser->getFromRequest('browse_name')
+            ? $this->requestParser->getFromPost('browse_name')
             : Core::get_global('user')->username . ' - ' . get_datetime(time());
         // keep the same public/private type as the search
         $playlist_type = (isset($_POST['browse_type']))
-            ? (string) $this->requestParser->getFromRequest('browse_type')
+            ? $this->requestParser->getFromPost('browse_type')
             : 'public';
 
         if (!empty($objects)) {

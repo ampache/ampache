@@ -9126,17 +9126,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:PLLoad\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:PLLoad\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:PLMoveTrack\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -9156,17 +9146,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:PLSave\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:PLSave\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:PLShuffle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -16731,16 +16711,6 @@ parameters:
 			path: src/Repository/Model/Playlist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:\\$f_date has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:\\$f_last_update has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:\\$genre has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
@@ -17407,11 +17377,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$basetypes has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$date has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
