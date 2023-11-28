@@ -5,9 +5,15 @@
 ### Fixed
 
 * SQL generation for browse sorting with comma and space in the text
+* Updating null artist times
 * Genre browse page HTML div name using bad names
 * Fix a lot of code Runtime Errors
 * Null artist time's not updating
+* Unable to disable a catalog module
+* Refresing playlist after deleting an item
+* Refresing the localplay playlist after deleting an item
+* Extra HTML tag in the user details page
+* Updating a playlist from the "Save Changes" button
 
 ## API 5.6.4
 
@@ -20,6 +26,7 @@
 * API5
   * Fix lots of Runtime Error's on missing optional data
   * genre_artists, genre_albums, genre_songs: Parameter `filter` runtime errors
+  * bookmark_edit, bookmark_create: Missing user in the object data
 
 ## Ampache 5.6.3-release
 
