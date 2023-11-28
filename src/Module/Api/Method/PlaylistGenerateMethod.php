@@ -75,6 +75,8 @@ final class PlaylistGenerateMethod
 
             return false;
         }
+        $offset = (int)($input['offset'] ?? 0);
+        $limit  = (int)($input['limit'] ?? 0);
         $user   = User::get_from_username(Session::username($input['auth']));
         $array  = array();
 
@@ -138,12 +140,12 @@ final class PlaylistGenerateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
-                Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_offset($offset);
+                Json_Data::set_limit($limit);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
-                Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_offset($offset);
+                Xml_Data::set_limit($limit);
         }
 
         // get db data
@@ -151,8 +153,8 @@ final class PlaylistGenerateMethod
         shuffle($song_ids);
 
         //slice the array if there is a limit
-        if ((int) $input['limit'] > 0) {
-            $song_ids = array_slice($song_ids, 0, (int) $input['limit']);
+        if ($limit > 0) {
+            $song_ids = array_slice($song_ids, 0, $limit);
         }
         if (empty($song_ids)) {
             Api::empty($format, $input['api_format']);

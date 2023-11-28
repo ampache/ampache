@@ -909,7 +909,7 @@ class Json_Data
         }
 
         Song::build_cache($songs);
-        Stream::set_session($_REQUEST['auth']);
+        Stream::set_session($_REQUEST['auth'] ?? '');
 
         $JSON           = [];
         $playlist_track = 0;
@@ -926,7 +926,7 @@ class Json_Data
             $rating      = new Rating($song_id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($song_id, 'song');
-            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? null);
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id);
@@ -1077,7 +1077,7 @@ class Json_Data
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? null);
             $songMime    = $song->mime;
             $play_url    = $song->play_url('', 'api', false, $user->id);
 

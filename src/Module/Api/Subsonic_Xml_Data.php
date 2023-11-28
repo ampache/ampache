@@ -1196,8 +1196,7 @@ class Subsonic_Xml_Data
      */
     public static function addArtistInfo2($xml, $info, $similars)
     {
-        $artist = new Artist((int) $info['id']);
-
+        $artist  = new Artist((int) $info['id']);
         $xartist = $xml->addChild(htmlspecialchars('artistInfo2'));
         $xartist->addChild('biography', htmlspecialchars(trim((string)$info['summary'])));
         $xartist->addChild('musicBrainzId', $artist->mbid);

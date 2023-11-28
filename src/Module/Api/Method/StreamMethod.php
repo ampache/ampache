@@ -68,10 +68,10 @@ final class StreamMethod
         $user      = User::get_from_username(Session::username($input['auth']));
 
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
-        $format        = $input['format']; // mp3, flv or raw
+        $format        = $input['format'] ?? null; // mp3, flv or raw
         $original      = $format && $format != 'raw';
-        $timeOffset    = $input['offset'];
-        $contentLength = (int) $input['length']; // Force content-length guessing if transcode
+        $timeOffset    = $input['offset'] ?? null;
+        $contentLength = (int)($input['length'] ?? 0); // Force content-length guessing if transcode
 
         $params = '&client=api';
         if ($contentLength == 1) {
@@ -97,7 +97,7 @@ final class StreamMethod
             $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }
         if ($type == 'search' || $type == 'playlist') {
-            $song_id = Random::get_single_song($type, $user, (int)$_REQUEST['random_id']);
+            $song_id = Random::get_single_song($type, $user, $object_id);
             $media   = new Song($song_id);
             $url     = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }

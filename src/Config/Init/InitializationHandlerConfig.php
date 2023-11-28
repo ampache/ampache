@@ -32,7 +32,7 @@ use Ampache\Module\Util\EnvironmentInterface;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '5.6.3-release'; // AMPACHE_VERSION
+    private const VERSION        = '5.6.4-release'; // AMPACHE_VERSION
     private const CONFIG_VERSION = '62';
     private const STRUCTURE      = 'public';  // Project release is using either the public html folder or squashed structure
 
