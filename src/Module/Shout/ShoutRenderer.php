@@ -62,7 +62,10 @@ final class ShoutRenderer implements ShoutRendererInterface
      */
     public function render(Shoutbox $shout, bool $details = true, bool $jsbuttons = false): string
     {
-        $object = $this->shoutObjectLoader->loadByShout($shout);
+        $object          = $this->shoutObjectLoader->loadByShout($shout);
+        $shoutObjectId   = $shout->getObjectId();
+        $shoutObjectType = (string) $shout->getObjectType();
+
         if ($object === null) {
             return '';
         }
@@ -73,16 +76,16 @@ final class ShoutRenderer implements ShoutRendererInterface
         $html .= "<div class='shoutbox-data'>";
         if (
             $details
-            && Art::has_db($shout->object_id, (string)$shout->object_type)
+            && Art::has_db($shoutObjectId, $shoutObjectType)
         ) {
-            $html .= "<div class='shoutbox-img'><img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . $webPath . "/image.php?object_id=" . $shout->object_id . "&object_type=" . $shout->object_type . "&thumb=1\" /></div>";
+            $html .= "<div class='shoutbox-img'><img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . $webPath . "/image.php?object_id=" . $shoutObjectId . "&object_type=" . $shoutObjectType . "&thumb=1\" /></div>";
         }
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
             $html .= "<div class='shoutbox-object'>" . $object->get_f_link() . "</div>";
-            $html .= "<div class='shoutbox-date'>" . get_datetime($shout->date) . "</div>";
+            $html .= "<div class='shoutbox-date'>" . get_datetime($shout->getDate()) . "</div>";
         }
-        $html .= "<div class='shoutbox-text'>" . $shout->getTextFormatted() . "</div>";
+        $html .= "<div class='shoutbox-text'>" . preg_replace('/(\r\n|\n|\r)/', '<br />', $shout->getText()) . "</div>";
         $html .= "</div>";
         $html .= "</div>";
         $html .= "<div class='shoutbox-footer'>";
@@ -90,27 +93,27 @@ final class ShoutRenderer implements ShoutRendererInterface
             $html .= "<div class='shoutbox-actions'>";
             if ($jsbuttons) {
                 $html .= Ajax::button(
-                    '?page=stream&action=directplay&playtype=' . $shout->object_type . '&' . $shout->object_type . '_id=' . $shout->object_id,
+                    '?page=stream&action=directplay&playtype=' . $shoutObjectType . '&' . $shoutObjectType . '_id=' . $shoutObjectId,
                     'play',
                     T_('Play'),
-                    'play_' . $shout->object_type . '_' . $shout->object_id
+                    'play_' . $shoutObjectType . '_' . $shoutObjectId
                 );
                 $html .= Ajax::button(
-                    '?action=basket&type=' . $shout->object_type . '&id=' . $shout->object_id,
+                    '?action=basket&type=' . $shoutObjectType . '&id=' . $shoutObjectId,
                     'add',
                     T_('Add'),
-                    'add_' . $shout->object_type . '_' . $shout->object_id
+                    'add_' . $shoutObjectType . '_' . $shoutObjectId
                 );
             }
             if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)) {
-                $html .= "<a href=\"" . $webPath . "/shout.php?action=show_add_shout&type=" . $shout->object_type . "&id=" . $shout->object_id . "\">" . Ui::get_icon('comment', T_('Post Shout')) . "</a>";
+                $html .= "<a href=\"" . $webPath . "/shout.php?action=show_add_shout&type=" . $shoutObjectType . "&id=" . $shoutObjectId . "\">" . Ui::get_icon('comment', T_('Post Shout')) . "</a>";
             }
             $html .= "</div>";
         }
         $html .= "<div class='shoutbox-user'>" . T_('by') . " ";
 
-        if ($shout->user > 0) {
-            $user = $this->modelFactory->createUser($shout->user);
+        if ($shout->getUserId() > 0) {
+            $user = $this->modelFactory->createUser($shout->getUserId());
             if ($details) {
                 $html .= $user->get_f_link();
             } else {

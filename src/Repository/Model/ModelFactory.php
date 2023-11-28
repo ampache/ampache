@@ -160,12 +160,6 @@ final class ModelFactory implements ModelFactoryInterface
         return new Search((int) $searchId, $searchType, $user);
     }
 
-    public function createShoutbox(
-        int $shoutboxId
-    ): Shoutbox {
-        return new Shoutbox($shoutboxId);
-    }
-
     public function createLicense(
         int $licenseId
     ): License {

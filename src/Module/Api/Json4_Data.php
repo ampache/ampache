@@ -1024,19 +1024,17 @@ class Json4_Data
         $JSON = [];
         /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
-            $user         = new User($shout->user);
-            $user_array   = [];
-            $user_array[] = array(
-                "id" => (string)$user->getId(),
-                "username" => $user->username
-            );
-            $objArray = array(
-                "id" => (string) $shout->getId(),
-                "date" => $shout->date,
-                "text" => $shout->text,
-                "user" => $user_array
-            );
-            $JSON[] = $objArray;
+            $user = new User($shout->getUserId());
+
+            $JSON[] = [
+                'id' => (string) $shout->getId(),
+                'date' => $shout->getDate()->getTimestamp(),
+                'text' => $shout->getText(),
+                'user' => [
+                    'id' => (string)$user->getId(),
+                    'username' => $user->getUsername()
+                ]
+            ];
         }
 
         return json_encode($JSON, JSON_PRETTY_PRINT);

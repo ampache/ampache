@@ -32,6 +32,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 /**
  * Browse Class
@@ -335,10 +336,18 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_catalogs.inc.php');
                 break;
             case 'shoutbox':
-                global $dic;
-                $shoutObjectLoader = $dic->get(ShoutObjectLoaderInterface::class);
+                $shoutObjectLoader = $this->getShoutObjectLoader();
+                $shoutRepository   = $this->getShoutRepository();
                 $box_title         = $this->get_title(T_('Shoutbox Records'));
-                $box_req           = Ui::find_template('show_manage_shoutbox.inc.php');
+                $shouts            = [];
+                foreach ($object_ids as $shoutId) {
+                    $shout = $shoutRepository->findById($shoutId);
+                    if ($shout !== null) {
+                        // used within the template
+                        $shouts[] = $shout;
+                    }
+                }
+                $box_req   = Ui::find_template('show_manage_shoutbox.inc.php');
                 break;
             case 'tag':
                 Tag::build_cache($object_ids);
@@ -772,5 +781,25 @@ class Browse extends Query
         }
 
         return $css;
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private function getShoutObjectLoader(): ShoutObjectLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutObjectLoaderInterface::class);
     }
 }

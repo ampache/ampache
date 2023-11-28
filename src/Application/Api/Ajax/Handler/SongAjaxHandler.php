@@ -95,7 +95,7 @@ final class SongAjaxHandler implements AjaxHandlerInterface
 
                     /** @var Shoutbox $shout */
                     foreach ($shouts as $shout) {
-                        $key  = (int)$shout->data;
+                        $key  = $shout->getOffset();
                         $time = (int)$media->time;
                         echo "if (typeof shouts['" . $key . "'] === 'undefined') { shouts['" . $key . "'] = new Array(); }\r\n";
                         echo "shouts['" . $key . "'].push('" . addslashes($this->shoutRenderer->render($shout, false)) . "');\r\n";

@@ -26,7 +26,6 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
-use Generator;
 use Traversable;
 
 interface ShoutRepositoryInterface
@@ -42,6 +41,11 @@ interface ShoutRepositoryInterface
     ): Traversable;
 
     /**
+     * Retrieve a single shout-item by its id
+     */
+    public function findById(int $shoutId): ?Shoutbox;
+
+    /**
      * Cleans out orphaned shout-box items
      */
     public function collectGarbage(?string $objectType = null, ?int $objectId = null): void;
@@ -49,30 +53,10 @@ interface ShoutRepositoryInterface
     /**
      * this function deletes the shout-box entry
      */
-    public function delete(int $shoutBoxId): void;
+    public function delete(Shoutbox $shout): void;
 
     /**
-     * Updates the ShoutBox item with the provided data
-     *
-     * @param array{comment: string, sticky: bool} $data
-     */
-    public function update(Shoutbox $shout, array $data): void;
-
-    /**
-     * Creates a new shout entry and returns the id of the created shout item
-     */
-    public function create(
-        User $user,
-        DateTimeInterface $date,
-        string $text,
-        bool $isSticky,
-        library_item $libItem,
-        string $objectType,
-        int $offset
-    ): int;
-
-    /**
-     * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
+     * This returns the top user_shouts, shout-box objects are always shown regardless and count against the total
      * number of objects shown
      *
      * @return Traversable<Shoutbox>
@@ -80,7 +64,21 @@ interface ShoutRepositoryInterface
     public function getTop(int $limit, ?string $username = null): Traversable;
 
     /**
+     * Persists the shout-item in the database
+     *
+     * If the item is new, it will be created. Otherwise, an update will happen
+     *
+     * @return null|non-negative-int
+     */
+    public function persist(Shoutbox $shout): ?int;
+
+    /**
      * Migrates an object associate shouts to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+
+    /**
+     * Returns a new shout-item
+     */
+    public function prototype(): Shoutbox;
 }

@@ -437,18 +437,19 @@ final class AmpacheRss implements AmpacheRssInterface
 
         foreach ($shouts as $shout) {
             $object = $this->shoutObjectLoader->loadByShout($shout);
+
             if ($object !== null) {
                 $object->format();
-                $user = new User($shout->user);
+                $user = new User($shout->getUserId());
                 $user->format();
 
                 $xml_array = array(
-                    'title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
+                    'title' => $user->getUsername() . ' ' . T_('on') . ' ' . $object->get_fullname(),
                     'link' => $object->get_link(),
-                    'description' => $shout->text,
-                    'image' => (string)Art::url($shout->object_id, (string)$shout->object_type, null, 2),
+                    'description' => $shout->getText(),
+                    'image' => (string)Art::url($shout->getObjectId(), (string)$shout->getObjectType(), null, 2),
                     'comments' => '',
-                    'pubDate' => date("c", (int)$shout->date)
+                    'pubDate' => $shout->getDate()->format(DATE_ATOM)
                 );
                 $results[] = $xml_array;
             }

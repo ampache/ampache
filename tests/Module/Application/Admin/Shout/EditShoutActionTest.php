@@ -26,10 +26,10 @@ namespace Ampache\Module\Application\Admin\Shout;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Mockery\MockInterface;
@@ -40,8 +40,6 @@ class EditShoutActionTest extends MockeryTestCase
 {
     private MockInterface&UiInterface $ui;
 
-    private MockInterface&ModelFactoryInterface $modelFactory;
-
     private MockObject&ShoutRepositoryInterface $shoutRepository;
 
     private EditShoutAction $subject;
@@ -49,12 +47,10 @@ class EditShoutActionTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);
 
         $this->subject = new EditShoutAction(
             $this->ui,
-            $this->modelFactory,
             $this->shoutRepository
         );
     }
@@ -74,39 +70,64 @@ class EditShoutActionTest extends MockeryTestCase
         $this->subject->run($request, $gatekeeper);
     }
 
-    public function testRunUpdatesEntry(): void
+    public function testRunUpdatesErrorsIfShoutWasNotFound(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $shoutbox   = $this->mock(Shoutbox::class);
 
         $shoutId = 666;
-        $comment = 'some-comment \'<:>#$>#$^%%$&4';
+
+        static::expectException(ObjectNotFoundException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ->once()
             ->andReturnTrue();
 
-        $this->modelFactory->shouldReceive('createShoutbox')
+        $this->shoutRepository->expects(static::once())
+            ->method('findById')
             ->with($shoutId)
-            ->once()
-            ->andReturn($shoutbox);
+            ->willReturn(null);
 
-        $shoutbox->shouldReceive('isNew')
+        $request->shouldReceive('getParsedBody')
             ->withNoArgs()
             ->once()
-            ->andReturn(false);
+            ->andReturn([
+                'shout_id' => (string)$shoutId,
+            ]);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunUpdatesEntry(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $shout      = $this->createMock(Shoutbox::class);
+
+        $shoutId = 666;
+        $comment = 'some-comment';
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
 
         $this->shoutRepository->expects(static::once())
-            ->method('update')
-            ->with(
-                $shoutbox,
-                [
-                    'comment' => htmlspecialchars($comment),
-                    'sticky' => true,
-                ]
-            );
+            ->method('findById')
+            ->with($shoutId)
+            ->willReturn($shout);
+
+        $shout->expects(static::once())
+            ->method('setText')
+            ->with($comment)
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('setSticky')
+            ->with(true)
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('save');
 
         $request->shouldReceive('getParsedBody')
             ->withNoArgs()

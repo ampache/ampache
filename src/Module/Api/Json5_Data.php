@@ -1167,19 +1167,20 @@ class Json5_Data
     public static function shouts(Traversable $shouts, $object = true): string
     {
         $JSON = [];
+
         /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
-            $user     = new User($shout->user);
-            $objArray = array(
-                "id" => (string)$shout->getId(),
-                "date" => $shout->date,
-                "text" => $shout->text,
+            $user = new User($shout->getUserId());
+
+            $JSON[] = [
+                "id" => (string) $shout->getId(),
+                "date" => $shout->getDate()->getTimestamp(),
+                "text" => $shout->getText(),
                 "user" => array(
-                    "id" => (string) $shout->user,
-                    "username" => $user->username
+                    "id" => (string) $user->getId(),
+                    "username" => $user->getUsername()
                 )
-            );
-            $JSON[] = $objArray;
+            ];
         }
         $output = ($object) ? array("shout" => $JSON) : $JSON[0] ?? array();
 

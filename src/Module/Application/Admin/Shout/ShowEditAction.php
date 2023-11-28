@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,19 +23,17 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Shout;
 
-use Ampache\Module\Application\Exception\ObjectNotFoundException;
-use Ampache\Module\Shout\ShoutObjectLoaderInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,17 +43,22 @@ final class ShowEditAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ShoutRepositoryInterface $shoutRepository;
+
     private ModelFactoryInterface $modelFactory;
+
     private ShoutObjectLoaderInterface $shoutObjectLoader;
 
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ShoutObjectLoaderInterface $shoutObjectLoader
+        ShoutObjectLoaderInterface $shoutObjectLoader,
+        ShoutRepositoryInterface $shoutRepository
     ) {
         $this->ui                = $ui;
         $this->modelFactory      = $modelFactory;
         $this->shoutObjectLoader = $shoutObjectLoader;
+        $this->shoutRepository   = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,16 +67,22 @@ final class ShowEditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $shoutId = (int)($request->getQueryParams()['shout_id'] ?? 0);
+        $shout   = $this->shoutRepository->findById($shoutId);
+        if ($shout === null) {
+            throw new ObjectNotFoundException($shoutId);
+        }
+
         $this->ui->showHeader();
 
-        $shout  = $this->modelFactory->createShoutbox((int)($request->getQueryParams()['shout_id'] ?? 0));
         $object = $this->shoutObjectLoader->loadByShout($shout);
-        if ($object !== null) {
-            $object->format();
+        if ($object === null) {
+            throw new ObjectNotFoundException($shout->getObjectId());
         }
-        $client = $this->modelFactory->createUser($shout->user);
+
+        $client = $this->modelFactory->createUser($shout->getUserId());
         if ($client->isNew()) {
-            throw new ObjectNotFoundException($shout->user);
+            throw new ObjectNotFoundException($shout->getUserId());
         }
 
         $this->ui->show(
@@ -79,7 +90,7 @@ final class ShowEditAction implements ApplicationActionInterface
             [
                 'shout' => $shout,
                 'object' => $object,
-                'client' => $client
+                'client' => $client,
             ]
         );
 
