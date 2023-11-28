@@ -10,8 +10,8 @@
 * Fix a lot of code Runtime Errors
 * Null artist time's not updating
 * Unable to disable a catalog module
-* Refresing playlist after deleting an item
-* Refresing the localplay playlist after deleting an item
+* Refreshing playlist after deleting an item
+* Refreshing the localplay playlist after deleting an item
 * Extra HTML tag in the user details page
 * Updating a playlist from the "Save Changes" button
 
