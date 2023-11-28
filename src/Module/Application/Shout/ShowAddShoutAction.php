@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Shout;
 
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Shoutbox;
@@ -49,29 +50,33 @@ final class ShowAddShoutAction implements ApplicationActionInterface
     private ShoutRepositoryInterface $shoutRepository;
 
     private ShoutRendererInterface $shoutRenderer;
+    private ShoutObjectLoaderInterface $shoutObjectLoader;
 
     public function __construct(
         RequestParserInterface $requestParser,
         UiInterface $ui,
         ShoutRepositoryInterface $shoutRepository,
-        ShoutRendererInterface $shoutRenderer
+        ShoutRendererInterface $shoutRenderer,
+        ShoutObjectLoaderInterface $shoutObjectLoader
     ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->shoutRepository = $shoutRepository;
-        $this->shoutRenderer   = $shoutRenderer;
+        $this->requestParser     = $requestParser;
+        $this->ui                = $ui;
+        $this->shoutRepository   = $shoutRepository;
+        $this->shoutRenderer     = $shoutRenderer;
+        $this->shoutObjectLoader = $shoutObjectLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $object_type = $this->requestParser->getFromRequest('type');
         $object_id   = (int)$this->requestParser->getFromRequest('id');
+
         // Get our object first
-        $object = Shoutbox::get_object($object_type, $object_id);
+        $object = $this->shoutObjectLoader->loadByObjectType($object_type, $object_id);
 
         $this->ui->showHeader();
 
-        if (!$object || !$object->getId()) {
+        if ($object === null || !$object->getId()) {
             AmpError::add('general', T_('Invalid object selected'));
             echo AmpError::display('general');
 

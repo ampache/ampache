@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutCreatorInterface;
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -53,17 +54,20 @@ final class AddShoutAction implements ApplicationActionInterface
     private ShoutCreatorInterface $shoutCreator;
 
     private RequestParserInterface $requestParser;
+    private ShoutObjectLoaderInterface $shoutObjectLoader;
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer,
         ShoutCreatorInterface $shoutCreator,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
+        ShoutObjectLoaderInterface $shoutObjectLoader
     ) {
-        $this->responseFactory = $responseFactory;
-        $this->configContainer = $configContainer;
-        $this->shoutCreator    = $shoutCreator;
-        $this->requestParser   = $requestParser;
+        $this->responseFactory   = $responseFactory;
+        $this->configContainer   = $configContainer;
+        $this->shoutCreator      = $shoutCreator;
+        $this->requestParser     = $requestParser;
+        $this->shoutObjectLoader = $shoutObjectLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -88,7 +92,7 @@ final class AddShoutAction implements ApplicationActionInterface
         // `data` is only used to mark a song offset (by clicking on the waveform)
         $songOffset = (int) ($body['data'] ?? 0);
 
-        $libitem = Shoutbox::get_object($objectType, $objectId);
+        $libitem = $this->shoutObjectLoader->loadByObjectType($objectType, $objectId);
         if ($libitem === null) {
             throw new ObjectNotFoundException($objectId);
         }

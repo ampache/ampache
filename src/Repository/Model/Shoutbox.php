@@ -26,8 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 class Shoutbox
 {
@@ -79,36 +77,6 @@ class Shoutbox
         }
 
         return true;
-    }
-
-    /**
-     * get_object
-     * This takes a type and an ID and returns a created object
-     * @param string $type
-     * @param int $object_id
-     * @return library_item|null
-     */
-    public static function get_object($type, $object_id)
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return null;
-        }
-
-        $className = ObjectTypeToClassNameMapper::map($type);
-        /** @var library_item $object */
-        $object = new $className($object_id);
-
-        if ($object->getId() > 0) {
-            if ($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) {
-                if (!$object->enabled) {
-                    $object = null;
-                }
-            }
-        } else {
-            $object = null;
-        }
-
-        return $object;
     }
 
     public function getStickyFormatted(): string

@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Shout;
 
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -43,13 +44,16 @@ final class ShowEditAction implements ApplicationActionInterface
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
+    private ShoutObjectLoaderInterface $shoutObjectLoader;
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ShoutObjectLoaderInterface $shoutObjectLoader
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui                = $ui;
+        $this->modelFactory      = $modelFactory;
+        $this->shoutObjectLoader = $shoutObjectLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,8 +65,8 @@ final class ShowEditAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $shout  = $this->modelFactory->createShoutbox((int)($request->getQueryParams()['shout_id'] ?? 0));
-        $object = Shoutbox::get_object((string)$shout->object_type, $shout->object_id);
-        if ($object) {
+        $object = $this->shoutObjectLoader->loadByShout($shout);
+        if ($object !== null) {
             $object->format();
         }
         $client = $this->modelFactory->createUser($shout->user);

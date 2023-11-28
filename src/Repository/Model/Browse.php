@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -334,8 +335,10 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_catalogs.inc.php');
                 break;
             case 'shoutbox':
-                $box_title = $this->get_title(T_('Shoutbox Records'));
-                $box_req   = Ui::find_template('show_manage_shoutbox.inc.php');
+                global $dic;
+                $shoutObjectLoader = $dic->get(ShoutObjectLoaderInterface::class);
+                $box_title         = $this->get_title(T_('Shoutbox Records'));
+                $box_req           = Ui::find_template('show_manage_shoutbox.inc.php');
                 break;
             case 'tag':
                 Tag::build_cache($object_ids);

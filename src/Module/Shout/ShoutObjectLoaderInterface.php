@@ -20,15 +20,23 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Module\Shout;
 
-use function DI\autowire;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Shoutbox;
 
-return [
-    ShoutCreatorInterface::class => autowire(ShoutCreator::class),
-    ShoutRendererInterface::class => autowire(ShoutRenderer::class),
-    ShoutObjectLoaderInterface::class => autowire(ShoutObjectLoader::class),
-];
+interface ShoutObjectLoaderInterface
+{
+    /**
+     * get_object
+     * This takes a type and an ID and returns a created object
+     */
+    public function loadByObjectType(string $type, int $object_id): ?library_item;
+
+    /**
+     * Loads the object the shout is linked to
+     */
+    public function loadByShout(Shoutbox $shout): ?library_item;
+}
