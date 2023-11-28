@@ -1599,13 +1599,15 @@ class Search extends playlist_object
      */
     public function set_rules($data)
     {
-        $data        = self::_filter_request($data);
-        $this->rules = array();
-        $user_rules  = array();
-        $this->name  = (isset($data['playlist_name'])) ? (string)$data['playlist_name'] : '';
+        $this->name  = (isset($data['playlist_name'])) ? (string)$data['playlist_name'] : $this->name;
+        $this->type  = (isset($data['playlist_type'])) ? (string)$data['playlist_type'] : $this->type;
         // check that a limit or random flag and operator have been sent
         $this->random         = (isset($data['random'])) ? (int)$data['random'] : $this->random;
         $this->limit          = (isset($data['limit'])) ? (int) $data['limit'] : $this->limit;
+        // the rules array needs to be filtered to just have rules
+        $data        = self::_filter_request($data);
+        $this->rules = array();
+        $user_rules  = array();
         $this->logic_operator = $data['operator'] ?? 'AND';
         // match the numeric rules you send (e.g. rule_1, rule_6000)
         foreach ($data as $rule => $value) {
