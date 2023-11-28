@@ -231,31 +231,6 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Function ampache_error_handler\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function ampache_error_handler\\(\\) has parameter \\$errfile with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function ampache_error_handler\\(\\) has parameter \\$errline with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function ampache_error_handler\\(\\) has parameter \\$errno with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function ampache_error_handler\\(\\) has parameter \\$errstr with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function apache_request_headers\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/functions.php
@@ -4141,11 +4116,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Binary operation \"/\" between string\\|false and 1000 results in an error\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Cannot access offset '' on array\\<string\\>\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -4696,22 +4666,12 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Parameter \\#1 \\$source of method DOMDocument\\:\\:loadXML\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, array\\<int, string\\>\\|string given\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
 			message: "#^Parameter \\#3 \\$count of static method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tag_objects\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4947,11 +4907,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addSearchResult3\\(\\) has parameter \\$songs with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addShare\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -5331,11 +5286,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:discovery_request\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:discovery_request\\(\\) has parameter \\$address with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -5372,11 +5322,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:isinFilter\\(\\) has parameter \\$keytoCheck with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:notify_request\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
 
@@ -5426,16 +5371,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:sddpSend\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:sendResponse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:sendResponse\\(\\) has parameter \\$actst with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -5447,11 +5382,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:sendResponse\\(\\) has parameter \\$delaytime with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:udpSend\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
 
@@ -6811,11 +6741,6 @@ parameters:
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:bind\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:bind\\(\\) has parameter \\$link with no type specified\\.$#"
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
@@ -6857,11 +6782,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:search\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:unbind\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
@@ -6971,17 +6891,7 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:addMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:addMetadata\\(\\) has parameter \\$metadata with no type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:addSong\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -6997,11 +6907,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:check_catalog_proc\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:deleteSongs\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -7041,17 +6946,7 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:removeFromDeleteList\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:removeFromDeleteList\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:updateMetadata\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -7066,17 +6961,7 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:updateUi\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:updateUi\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:verifySong\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -7092,11 +6977,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\CliHandler\\:\\:getFields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/CliHandler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\CliHandler\\:\\:iterateItems\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/CliHandler.php
 
@@ -7146,16 +7026,6 @@ parameters:
 			path: src/Module/Beets/Handler.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Handler\\:\\:setHandler\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Handler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Handler\\:\\:start\\(\\) has parameter \\$command with no type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Handler.php
-
-		-
 			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{mixed, mixed\\} given\\.$#"
 			count: 1
 			path: src/Module/Beets/Handler.php
@@ -7177,11 +7047,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:createFileUrl\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/JsonHandler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:iterateItems\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/JsonHandler.php
 
@@ -7221,87 +7086,7 @@ parameters:
 			path: src/Module/Broadcast/Broadcast_Server.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:authSid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:broadcastMessage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:echo_message\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:getListeners\\(\\) should return array\\<Ratchet\\\\ConnectionInterface\\> but returns Ratchet\\\\ConnectionInterface\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:notifyEnded\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:notifyNbListeners\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:notifyPlayerPlay\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:notifySong\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:notifySongPosition\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:onClose\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:onError\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:onMessage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:onOpen\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:registerBroadcast\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:registerListener\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:unregisterBroadcast\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:unregisterListener\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Broadcast/Broadcast_Server.php
 
@@ -7651,11 +7436,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Comparison operation \"\\>\" between 0 and 0 is always false\\.$#"
-			count: 2
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:_check_chunk\\(\\) has parameter \\$chunk with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
@@ -7761,11 +7541,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:sync_podcasts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
@@ -7817,11 +7592,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:\\$videos_to_gather has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
 
@@ -10291,16 +10061,6 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:insert_now_playing\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:kill_process\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:kill_process\\(\\) has parameter \\$transcoder with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
@@ -10311,17 +10071,7 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:set_output_cache\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:set_output_cache\\(\\) has parameter \\$output with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:set_session\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -17041,11 +16791,6 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:name_from_id\\(\\) has parameter \\$pref_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php
@@ -17981,11 +17726,6 @@ parameters:
 			path: src/Repository/Model/TVShow_Episode.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Episode.php
@@ -18691,11 +18431,6 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
@@ -18861,27 +18596,12 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:accept\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_albums\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:load_all\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:show_action_buttons\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
 
@@ -19031,17 +18751,7 @@ parameters:
 			path: src/Repository/Repository.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:assembleQuery\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:deleteRecord\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Repository.php
 
@@ -19102,21 +18812,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:resolveObjects\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:setPrivateProperty\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:update\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:updateRecord\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Repository.php
 

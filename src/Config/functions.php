@@ -605,7 +605,7 @@ function debug_result($status = false, $value = null, $comment = ''): string
  * @param $errfile
  * @param $errline
  */
-function ampache_error_handler($errno, $errstr, $errfile, $errline)
+function ampache_error_handler(int $errno, string $errstr, string $errfile, int $errline): bool
 {
     $level = 1;
 
@@ -672,6 +672,8 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
 
     $log_line = "[$error_name] $errstr in file $errfile($errline)";
     debug_event('log.lib', $log_line, $level, 'ampache');
+
+    return false;
 }
 
 /**
