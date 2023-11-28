@@ -24,11 +24,14 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
+/** @var ShoutObjectLoaderInterface $shoutObjectLoader */
+
 $web_path = (string)AmpConfig::get('web_path', ''); ?>
 <table class="tabledata striped-rows">
     <thead>
@@ -46,7 +49,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
         foreach ($object_ids as $shout_id) {
             $libitem = new Shoutbox($shout_id);
 
-            $object = Shoutbox::get_object($libitem->object_type, $libitem->object_id);
+            $object = $shoutObjectLoader->loadByShout($libitem);
             $client = new User($libitem->user);
 
             require Ui::find_template('show_shout_row.inc.php'); ?>

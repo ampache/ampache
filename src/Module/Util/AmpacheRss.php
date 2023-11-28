@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
@@ -47,13 +48,16 @@ final class AmpacheRss implements AmpacheRssInterface
     private UserRepositoryInterface $userRepository;
 
     private ShoutRepositoryInterface $shoutRepository;
+    private ShoutObjectLoaderInterface $shoutObjectLoader;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
-        ShoutRepositoryInterface $shoutRepository
+        ShoutRepositoryInterface $shoutRepository,
+        ShoutObjectLoaderInterface $shoutObjectLoader
     ) {
-        $this->userRepository  = $userRepository;
-        $this->shoutRepository = $shoutRepository;
+        $this->userRepository    = $userRepository;
+        $this->shoutRepository   = $shoutRepository;
+        $this->shoutObjectLoader = $shoutObjectLoader;
     }
 
     /** @var list<string> */
@@ -432,7 +436,7 @@ final class AmpacheRss implements AmpacheRssInterface
         $results = array();
 
         foreach ($shouts as $shout) {
-            $object = Shoutbox::get_object((string)$shout->object_type, $shout->object_id);
+            $object = $this->shoutObjectLoader->loadByShout($shout);
             if ($object !== null) {
                 $object->format();
                 $user = new User($shout->user);

@@ -43,15 +43,18 @@ final class ShoutRenderer implements ShoutRendererInterface
     private ConfigContainerInterface $configContainer;
 
     private ModelFactoryInterface $modelFactory;
+    private ShoutObjectLoaderInterface $shoutObjectLoader;
 
     public function __construct(
         PrivilegeCheckerInterface $privilegeChecker,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ShoutObjectLoaderInterface $shoutObjectLoader
     ) {
-        $this->privilegeChecker = $privilegeChecker;
-        $this->configContainer  = $configContainer;
-        $this->modelFactory     = $modelFactory;
+        $this->privilegeChecker  = $privilegeChecker;
+        $this->configContainer   = $configContainer;
+        $this->modelFactory      = $modelFactory;
+        $this->shoutObjectLoader = $shoutObjectLoader;
     }
 
     /**
@@ -59,7 +62,7 @@ final class ShoutRenderer implements ShoutRendererInterface
      */
     public function render(Shoutbox $shout, bool $details = true, bool $jsbuttons = false): string
     {
-        $object = Shoutbox::get_object((string)$shout->object_type, $shout->object_id);
+        $object = $this->shoutObjectLoader->loadByShout($shout);
         if ($object === null) {
             return '';
         }
