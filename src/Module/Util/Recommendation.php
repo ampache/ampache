@@ -367,8 +367,7 @@ class Recommendation
             return $results;
         }
 
-        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
-            (string)$xml->artist->bio->summary));
+        $results['summary']     = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string)$xml->artist->bio->summary));
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (string)$xml->artist->bio->placeformed;
         $results['yearformed']  = (string)$xml->artist->bio->yearformed;
@@ -410,9 +409,8 @@ class Recommendation
             return [];
         }
 
-        $results            = array();
-        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
-            ($xml->artist->bio->summary ?? '')));
+        $results                = array();
+        $results['summary']     = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", ($xml->artist->bio->summary ?? '')));
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = ($xml->artist->bio->placeformed ?? '');
         $results['yearformed']  = ($xml->artist->bio->yearformed ?? '');
