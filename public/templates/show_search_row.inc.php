@@ -57,7 +57,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
         </a>
     </span>
 </td>
-<td class="cel_last_update" <?php echo $libitem->f_last_update; ?></td>
+<td class="cel_last_update"><?php echo $libitem->f_last_update; ?></td>
 <td class="cel_type"><?php echo $libitem->get_f_type(); ?></td>
 <td class="cel_type"><?php echo $libitem->get_f_type(); ?></td>
 <td class="cel_random"><?php echo($libitem->random ? T_('Yes') : T_('No')); ?></td>
