@@ -101,6 +101,7 @@ class Query
     private static $sort_state = [
         'year' => 'ASC',
         'original_year' => 'ASC',
+        'last_update' => 'ASC',
         'rating' => 'ASC',
         'song_count' => 'ASC',
         'total_count' => 'ASC',
