@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
 <tr id="flagged_<?php echo $libitem->getId(); ?>">
     <td class="cel_object"><?php echo $object->get_f_link(); ?></td>
     <td class="cel_username"><?php echo $client->get_f_link(); ?></td>
-    <td class="cel_sticky"><?php echo $libitem->isSticky() ? 'Yes' : 'No'; ?></td>
+    <td class="cel_sticky"><?php echo $libitem->isSticky() ? T_('Yes') : T_('No'); ?></td>
     <td class="cel_comment"><?php echo scrub_out($libitem->getText()); ?></td>
     <td class="cel_date"><?php echo get_datetime($libitem->getDate()); ?></td>
     <td class="cel_action">
