@@ -1599,8 +1599,12 @@ class Search extends playlist_object
      */
     public function set_rules($data)
     {
-        $this->name  = (isset($data['playlist_name'])) ? (string)$data['playlist_name'] : $this->name;
-        $this->type  = (isset($data['playlist_type'])) ? (string)$data['playlist_type'] : $this->type;
+        if (isset($data['playlist_name'])) {
+            $this->name = (string)$data['playlist_name'];
+        }
+        if (isset($data['playlist_type'])) {
+            $this->type = (string)$data['playlist_type'];
+        }
         // check that a limit or random flag and operator have been sent
         $this->random         = (isset($data['random'])) ? (int)$data['random'] : $this->random;
         $this->limit          = (isset($data['limit'])) ? (int) $data['limit'] : $this->limit;
