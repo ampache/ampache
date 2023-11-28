@@ -52,7 +52,7 @@ interface Media
      * @param string $player
      * @param bool $local
      */
-    public function play_url($additional_params = '', $player = '', $local = false);
+    public function play_url($additional_params = '', $player = '', $local = false): string;
 
     /**
      * get_transcode_settings
