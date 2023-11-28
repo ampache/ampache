@@ -43,19 +43,15 @@ abstract class playlist_object extends database_object implements library_item
     public ?string $username;
     public ?string $type;
 
-    public ?string $link = null;
-    /**
-     * @var null|string $f_link
-     */
-    public $f_link;
-    /**
-     * @var null|string $f_type
-     */
-    public $f_type;
-    /**
-     * @var null|string $f_name
-     */
-    public $f_name;
+    public ?string $link       = null;
+    public int $date           = 0;
+    public ?int $last_duration = 0;
+    public ?int $last_update   = 0;
+    public ?string $f_date;
+    public ?string $f_last_update;
+    public ?string $f_link;
+    public ?string $f_type;
+    public ?string $f_name;
 
     private ?bool $has_art = null;
 
@@ -77,6 +73,8 @@ abstract class playlist_object extends database_object implements library_item
             : scrub_out($this->name . " (" . $this->username . ")");
         $this->get_f_type();
         $this->get_f_link();
+        $this->f_date        = $this->date ? get_datetime((int)$this->date) : T_('Unknown');
+        $this->f_last_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Unknown');
     }
 
     /**

@@ -74,13 +74,11 @@ class Search extends playlist_object
     public ?int $random            = 0;
     public int $limit              = 0;
     public ?int $last_count        = 0;
-    public ?int $last_duration     = 0;
 
     public $objectType; // the type of object you want to return (self::VALID_TYPES)
     public $search_user; // user running the search
     public $types     = array(); // rules that are available to the objectType (title, year, rating, etc)
     public $basetypes = array(); // rule operator subtypes (numeric, text, boolean, etc)
-    public $date      = 0;
 
     private $searchType; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
     private $stars;
@@ -125,7 +123,6 @@ class Search extends playlist_object
                 $this->search_user = new User($this->user);
             }
         }
-        $this->date  = time();
         $this->stars = array(
             T_('0 Stars'),
             T_('1 Star'),
@@ -1656,8 +1653,9 @@ class Search extends playlist_object
         if (Dba::num_rows($db_results)) {
             $this->name .= uniqid('', true);
         }
+        $time = time();
 
-        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `username`, `rules`, `logic_operator`, `random`, `limit`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `username`, `rules`, `logic_operator`, `random`, `limit`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array(
             $this->name,
             $this->type,
@@ -1666,7 +1664,9 @@ class Search extends playlist_object
             json_encode($this->rules),
             $this->logic_operator,
             ($this->random > 0) ? 1 : 0,
-            $this->limit
+            $this->limit,
+            $time,
+            $time
         ));
         $insert_id = Dba::insert_id();
         if (!$insert_id) {
@@ -1725,7 +1725,7 @@ class Search extends playlist_object
             return 0;
         }
 
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ? WHERE `id` = ?";
         Dba::write($sql, array(
             $this->name,
             $this->type,
@@ -1735,6 +1735,7 @@ class Search extends playlist_object
             $this->logic_operator,
             (int)$this->random,
             $this->limit,
+            time(),
             $this->id
         ));
         // reformat after an update

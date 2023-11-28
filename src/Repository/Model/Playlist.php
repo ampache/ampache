@@ -38,16 +38,8 @@ class Playlist extends playlist_object
 {
     protected const DB_TABLENAME = 'playlist';
 
-    /* Variables from the database */
-    public int $date;
-    public int $last_update;
-    public int $last_duration;
-
-    public $genre;
-    public $f_date;
-    public $f_last_update;
-
     /* Generated Elements */
+    public $genre;
     public $items = array();
 
     /**
@@ -299,8 +291,6 @@ class Playlist extends playlist_object
     public function format($details = true): void
     {
         parent::format($details);
-        $this->f_date        = $this->date ? get_datetime((int)$this->date) : T_('Unknown');
-        $this->f_last_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Unknown');
     }
 
     /**

@@ -52,6 +52,7 @@ use Ampache\Module\Util\Ui;
             <th class="cel_play essential"></th>
             <th class="cel_playlist essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
+            <th class="cel_last_update optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=last_update', T_('Last Update'), 'playlist_sort_last_update'); ?></th>
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_random optional"><?php echo T_('Random'); ?></th>
             <th class="cel_limit optional"><?php echo T_('Item Limit'); ?></th>
@@ -80,6 +81,7 @@ use Ampache\Module\Util\Ui;
             <th class="cel_play"></th>
             <th class="cel_playlist"></th>
             <th class="cel_add"></th>
+            <th class="cel_last_update"></th>
             <th class="cel_type"></th>
             <th class="cel_random"></th>
             <th class="cel_limit"></th>

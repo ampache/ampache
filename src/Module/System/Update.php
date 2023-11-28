@@ -915,6 +915,9 @@ class Update
         $update_string = "* Add system preference `perpetual_api_session`, API sessions do not expire";
         $version[]     = array('version' => '600044', 'description' => $update_string);
 
+        $update_string = "* Add column `last_update` and `date`to search table";
+        $version[]     = array('version' => '600045', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5129,5 +5132,23 @@ class Update
     private static function _update_600044(Interactor $interactor = null): bool
     {
         return self::_write_preference($interactor, 'perpetual_api_session', 'API sessions do not expire', '0', 100, 'boolean', 'system', 'backend');
+    }
+
+    /** _update_600045
+     *
+     * Add column `last_update` and `date`to search table
+     */
+    private static function _update_600045(Interactor $interactor = null): bool
+    {
+        $sql = "ALTER TABLE `search` DROP COLUMN `last_update`;";
+        Dba::write($sql);
+        $sql = "ALTER TABLE `search` ADD COLUMN `last_update` int(11) unsigned NOT NULL DEFAULT 0 AFTER `type`;";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+        $sql = "ALTER TABLE `search` DROP COLUMN `date`;";
+        Dba::write($sql);
+
+        return (self::_write($interactor, "ALTER TABLE `search` ADD COLUMN `date` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `type`;") !== false);
     }
 }

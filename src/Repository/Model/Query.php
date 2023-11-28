@@ -181,6 +181,7 @@ class Query
             'time'
         ),
         'playlist' => array(
+            'date',
             'last_update',
             'name',
             'type',
@@ -189,6 +190,8 @@ class Query
             'rating'
         ),
         'smartplaylist' => array(
+            'date',
+            'last_update',
             'name',
             'user',
             'username'
@@ -2339,6 +2342,7 @@ class Query
                 break;
             case 'playlist':
                 switch ($field) {
+                    case 'date':
                     case 'last_update':
                     case 'name':
                     case 'type':
@@ -2354,6 +2358,8 @@ class Query
                 break;
             case 'smartplaylist':
                 switch ($field) {
+                    case 'date':
+                    case 'last_update':
                     case 'type':
                     case 'name':
                     case 'user':
