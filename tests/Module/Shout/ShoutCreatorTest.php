@@ -27,6 +27,7 @@ namespace Ampache\Module\Shout;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use DateTimeInterface;
@@ -60,23 +61,54 @@ class ShoutCreatorTest extends TestCase
     {
         $user    = $this->createMock(User::class);
         $libItem = $this->createMock(library_item::class);
+        $shout   = $this->createMock(Shoutbox::class);
 
         $objectType = 'some-type';
         $text       = '<div>some-text</div>';
         $isSticky   = false;
         $offset     = 666;
+        $objectId   = 42;
+
+        $libItem->expects(static::once())
+            ->method('getId')
+            ->willReturn($objectId);
 
         $this->shoutRepository->expects(static::once())
-            ->method('create')
-            ->with(
-                $user,
-                self::callback(fn (DateTimeInterface $value): bool => true),
-                strip_tags($text),
-                $isSticky,
-                $libItem,
-                $objectType,
-                $offset
-            )
+            ->method('prototype')
+            ->willReturn($shout);
+
+        $shout->expects(static::once())
+            ->method('setDate')
+            ->with(self::callback(fn (DateTimeInterface $value): bool => true))
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('setUser')
+            ->with($user)
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('setText')
+            ->with($text)
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('setSticky')
+            ->with($isSticky)
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('setObjectId')
+            ->with($objectId)
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('setObjectType')
+            ->with($objectType)
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('setOffset')
+            ->with($offset)
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('save');
+        $shout->expects(static::once())
+            ->method('getId')
             ->willReturn(0);
 
         $this->subject->create(

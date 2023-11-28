@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Edit Existing Shoutbox Post')); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/shout.php?action=edit_shout">
-<input type="hidden" name="shout_id" value="<?php echo $shout->id; ?>" />
+<input type="hidden" name="shout_id" value="<?php echo $shout->getId(); ?>" />
 <table class="tabledata">
 <tr>
     <td><strong><?php /* HINT: %1 Client link, %2 Object link */ printf(T_('Created by: %1$s for %2$s'), $client->get_f_link(), $object->get_f_link()); ?></strong>
@@ -41,10 +41,10 @@ Ui::show_box_top(T_('Edit Existing Shoutbox Post')); ?>
     <td><strong><?php echo T_('Comment:'); ?></strong>
 </tr>
 <tr>
-    <td><textarea rows="5" cols="70" maxlength="2000" name="comment" autofocus><?php echo $shout->text; ?></textarea></td>
+    <td><textarea rows="5" cols="70" maxlength="2000" name="comment" autofocus><?php echo $shout->getText(); ?></textarea></td>
 </tr>
 <tr>
-    <td><input type="checkbox" name="sticky" <?php if ($shout->sticky == "1") {
+    <td><input type="checkbox" name="sticky" <?php if ($shout->isSticky()) {
         echo "checked";
     } ?>/> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>

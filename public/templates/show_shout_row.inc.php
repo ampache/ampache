@@ -23,25 +23,27 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
 /** @var Shoutbox $libitem */
-/** @var Ampache\Repository\Model\library_item $object */
-/** @var Ampache\Repository\Model\User $client */
+/** @var library_item $object */
+/** @var User $client */
 /** @var string $web_path */
 ?>
-<tr id="flagged_<?php echo $libitem->id; ?>">
+<tr id="flagged_<?php echo $libitem->getId(); ?>">
     <td class="cel_object"><?php echo $object->get_f_link(); ?></td>
     <td class="cel_username"><?php echo $client->get_f_link(); ?></td>
-    <td class="cel_sticky"><?php echo $libitem->getStickyFormatted(); ?></td>
-    <td class="cel_comment"><?php echo scrub_out($libitem->text); ?></td>
-    <td class="cel_date"><?php echo $libitem->getDateFormatted(); ?></td>
+    <td class="cel_sticky"><?php echo $libitem->isSticky() ? T_('Yes') : T_('No'); ?></td>
+    <td class="cel_comment"><?php echo scrub_out($libitem->getText()); ?></td>
+    <td class="cel_date"><?php echo get_datetime($libitem->getDate()); ?></td>
     <td class="cel_action">
-        <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $libitem->id; ?>">
+        <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $libitem->getId(); ?>">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
-        <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $libitem->id; ?>">
+        <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $libitem->getId(); ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
     </td>

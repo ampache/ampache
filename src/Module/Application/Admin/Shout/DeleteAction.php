@@ -26,9 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Shout;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -44,19 +44,15 @@ final class DeleteAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private ModelFactoryInterface $modelFactory;
-
     private ShoutRepositoryInterface $shoutRepository;
 
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
         ShoutRepositoryInterface $shoutRepository
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
         $this->shoutRepository = $shoutRepository;
     }
 
@@ -66,11 +62,14 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $shout = $this->modelFactory->createShoutbox((int)($request->getQueryParams()['shout_id'] ?? 0));
+        $shoutId = (int)($request->getQueryParams()['shout_id'] ?? 0);
 
-        $this->shoutRepository->delete(
-            $shout->getId()
-        );
+        $shout = $this->shoutRepository->findById($shoutId);
+        if ($shout === null) {
+            throw new ObjectNotFoundException($shoutId);
+        }
+
+        $this->shoutRepository->delete($shout);
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(

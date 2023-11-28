@@ -1433,18 +1433,19 @@ class Json_Data
     public static function shouts(array $shouts, bool $object = true): string
     {
         $JSON = [];
+
         foreach ($shouts as $shout) {
-            $user     = new User($shout->user);
-            $objArray = array(
-                "id" => (string)$shout->getId(),
-                "date" => $shout->date,
-                "text" => $shout->text,
-                "user" => array(
-                    "id" => (string)$shout->user,
-                    "username" => $user->username
+            $user = new User($shout->getUserId());
+
+            $JSON[] = [
+                'id' => (string) $shout->getId(),
+                'date' => $shout->getDate()->getTimestamp(),
+                'text' => $shout->getText(),
+                'user' => array(
+                    'id' => (string) $user->getId(),
+                    'username' => $user->getUsername()
                 )
-            );
-            $JSON[] = $objArray;
+            ];
         }
         $output = ($object) ? array("shout" => $JSON) : $JSON[0] ?? array();
 

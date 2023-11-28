@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -20,19 +22,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
 use Generator;
-use PDOStatement;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -46,16 +44,12 @@ final class ShoutRepository implements ShoutRepositoryInterface
 
     private LoggerInterface $logger;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
         DatabaseConnectionInterface $connection,
-        LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory
+        LoggerInterface $logger
     ) {
         $this->connection   = $connection;
         $this->logger       = $logger;
-        $this->modelFactory = $modelFactory;
     }
 
     /**
@@ -68,13 +62,33 @@ final class ShoutRepository implements ShoutRepositoryInterface
         int $objectId
     ): Generator {
         $result = $this->connection->query(
-            'SELECT `id` FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
+            'SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
             [$objectType, $objectId]
         );
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, [$this]);
 
-        while ($row = $result->fetchColumn()) {
-            yield $this->modelFactory->createShoutbox((int) $row);
+        while ($shout = $result->fetch()) {
+            yield $shout;
         }
+    }
+
+    /**
+     * Retrieve a single shout-item by its id
+     */
+    public function findById(int $shoutId): ?Shoutbox
+    {
+        $result = $this->connection->query(
+            'SELECT * FROM `user_shout` WHERE `id` = ?',
+            [$shoutId]
+        );
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, [$this]);
+
+        $shout = $result->fetch();
+        if ($shout === false) {
+            return null;
+        }
+
+        return $shout;
     }
 
     /**
@@ -126,57 +140,57 @@ final class ShoutRepository implements ShoutRepositoryInterface
     /**
      * this function deletes the shout-box entry
      */
-    public function delete(int $shoutBoxId): void
+    public function delete(Shoutbox $shout): void
     {
         $this->connection->query(
             'DELETE FROM `user_shout` WHERE `id` = ?',
-            [$shoutBoxId]
+            [$shout->getId()]
         );
     }
 
     /**
-     * Updates the ShoutBox item with the provided data
+     * Persists the shout-item in the database
      *
-     * @param array{comment: string, sticky: bool} $data
+     * If the item is new, it will be created. Otherwise, an update will happen
+     *
+     * @return null|non-negative-int
      */
-    public function update(Shoutbox $shout, array $data): void
+    public function persist(Shoutbox $shout): ?int
     {
-        $this->connection->query(
-            'UPDATE `user_shout` SET `text` = ?, `sticky` = ? WHERE `id` = ?',
-            [
-                $data['comment'],
-                (int) $data['sticky'],
-                $shout->getId()
-            ]
-        );
-    }
+        $result = null;
 
-    /**
-     * Creates a new shout entry and returns the id of the created shout item
-     */
-    public function create(
-        User $user,
-        DateTimeInterface $date,
-        string $text,
-        bool $isSticky,
-        library_item $libItem,
-        string $objectType,
-        int $offset
-    ): int {
-        $this->connection->query(
-            'INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [
-                $user->getId(),
-                $date->getTimestamp(),
-                $text,
-                (int) $isSticky,
-                $libItem->getId(),
-                $objectType,
-                $offset
-            ]
-        );
+        if ($shout->isNew()) {
+            $this->connection->query(
+                'INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [
+                    $shout->getUserId(),
+                    $shout->getDate()->getTimestamp(),
+                    $shout->getText(),
+                    (int) $shout->isSticky(),
+                    $shout->getObjectId(),
+                    $shout->getObjectType(),
+                    $shout->getOffset()
+                ]
+            );
 
-        return $this->connection->getLastInsertedId();
+            $result = $this->connection->getLastInsertedId();
+        } else {
+            $this->connection->query(
+                'UPDATE `user_shout` SET user = ?, date = ?, text = ?, sticky = ?, object_id = ?, object_type = ?, data = ? WHERE id = ?',
+                [
+                    $shout->getUserId(),
+                    $shout->getDate()->getTimestamp(),
+                    $shout->getText(),
+                    (int) $shout->isSticky(),
+                    $shout->getObjectId(),
+                    $shout->getObjectType(),
+                    $shout->getOffset(),
+                    $shout->getId()
+                ]
+            );
+        }
+
+        return $result;
     }
 
     /**
@@ -187,10 +201,13 @@ final class ShoutRepository implements ShoutRepositoryInterface
      */
     public function getTop(int $limit, ?string $username = null): Generator
     {
-        $result = $this->connection->query('SELECT id FROM `user_shout` WHERE `sticky` = 1 ORDER BY `date` DESC');
+        $result = $this->connection->query('SELECT * FROM `user_shout` WHERE `sticky` = 1 ORDER BY `date` DESC');
 
-        while ($shoutId = $result->fetchColumn()) {
-            yield $this->modelFactory->createShoutbox((int) $shoutId);
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class);
+
+        while ($shout = $result->fetch()) {
+            /** @var Shoutbox $shout */
+            yield $shout;
 
             $limit--;
 
@@ -203,7 +220,7 @@ final class ShoutRepository implements ShoutRepositoryInterface
         $userSql = '';
         $sql     = <<<SQL
         SELECT
-            `user_shout`.`id` AS `id`
+            `user_shout`.*
         FROM
             `user_shout`
         LEFT JOIN
@@ -231,10 +248,11 @@ final class ShoutRepository implements ShoutRepositoryInterface
             $params
         );
 
-        while ($shoutId = $result->fetchColumn()) {
-            yield $this->modelFactory->createShoutbox(
-                (int) $shoutId
-            );
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class);
+
+        while ($shout = $result->fetch()) {
+            /** @var Shoutbox $shout */
+            yield $shout;
         }
     }
 
@@ -247,5 +265,13 @@ final class ShoutRepository implements ShoutRepositoryInterface
             'UPDATE `user_shout` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
             [$newObjectId, $objectType, $oldObjectId]
         );
+    }
+
+    /**
+     * Returns a new shout-item
+     */
+    public function prototype(): Shoutbox
+    {
+        return new Shoutbox($this);
     }
 }

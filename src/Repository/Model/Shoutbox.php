@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=0);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,77 +23,50 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
+use Ampache\Repository\ShoutRepository;
+use Ampache\Repository\ShoutRepositoryInterface;
+use DateTime;
+use DateTimeInterface;
 
+/**
+ * Shoutbox item
+ *
+ * @see ShoutRepository
+ */
 class Shoutbox
 {
-    protected const DB_TABLENAME = 'user_shout';
+    /** @var int Primary key*/
+    private int $id = 0;
 
-    public int $id = 0;
-    public int $user;
-    public string $text;
-    public int $date;
-    public bool $sticky;
-    public int $object_id;
-    public ?string $object_type;
-    public ?string $data;
+    /** @var int User-id */
+    private int $user = 0;
 
-    /**
-     * Constructor
-     * This pulls the shoutbox information from the database and returns
-     * a constructed object, uses user_shout table
-     * @param int|null $shout_id
-     */
-    public function __construct($shout_id = 0)
-    {
-        if (!$shout_id) {
-            return;
-        }
-        $this->has_info($shout_id);
-    }
+    /** @var string Comment */
+    private string $text = '';
 
-    public function getId(): int
-    {
-        return (int)($this->id ?? 0);
-    }
+    /** @var int Date */
+    private int $date = 0;
 
-    /**
-     * has_info
-     * does the db call, reads from the user_shout table
-     * @param int $shout_id
-     */
-    private function has_info($shout_id): bool
-    {
-        $sql        = "SELECT * FROM `user_shout` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($shout_id));
-        $data       = Dba::fetch_assoc($db_results);
-        if (empty($data)) {
-            return false;
-        }
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
+    /** @var bool True if a sticky shout */
+    private bool $sticky = false;
 
-        return true;
-    }
+    /** @var int Linked object-id */
+    private int $object_id = 0;
 
-    public function getStickyFormatted(): string
-    {
-        return $this->sticky == '0' ? 'No' : 'Yes';
-    }
+    /** @var string|null Linked object-type */
+    private ?string $object_type = null;
 
-    public function getTextFormatted(): string
-    {
-        return preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text) ?? '';
-    }
+    /** @var string|null Offset position in songs */
+    private ?string $data = null;
 
-    public function getDateFormatted(): string
-    {
-        return get_datetime((int)$this->date);
+    private ShoutRepositoryInterface $shoutRepository;
+
+    public function __construct(
+        ShoutRepositoryInterface $shoutRepository
+    ) {
+        $this->shoutRepository = $shoutRepository;
     }
 
     /**
@@ -99,6 +74,161 @@ class Shoutbox
      */
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->id === 0;
+    }
+
+    /**
+     * Returns the id of the object
+     *
+     * Will return `0` if the object is not persisted yet
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * Relates the shout to a certain position in a song
+     *
+     * @param int $offset Position value in seconds
+     */
+    public function setOffset(int $offset): Shoutbox
+    {
+        $this->data = (string) $offset;
+
+        return $this;
+    }
+
+    /**
+     * Returns the related position within a song
+     *
+     * @return int Position value in seconds
+     */
+    public function getOffset(): int
+    {
+        return (int) $this->data;
+    }
+
+    /**
+     * Sets the related object-type
+     */
+    public function setObjectType(string $object_type): Shoutbox
+    {
+        $this->object_type = $object_type;
+
+        return $this;
+    }
+
+    /**
+     * Returns the related object-type
+     */
+    public function getObjectType(): string
+    {
+        return (string) $this->object_type;
+    }
+
+    /**
+     * Sets the related object-id
+     */
+    public function setObjectId(int $object_id): Shoutbox
+    {
+        $this->object_id = $object_id;
+
+        return $this;
+    }
+
+    /**
+     * Returns the related object-id
+     */
+    public function getObjectId(): int
+    {
+        return $this->object_id;
+    }
+
+    /**
+     * Set the importance of the shout
+     */
+    public function setSticky(bool $sticky): Shoutbox
+    {
+        $this->sticky = $sticky;
+
+        return $this;
+    }
+
+    /**
+     * Returns `true` if the shout is important (`sticky`)
+     */
+    public function isSticky(): bool
+    {
+        return $this->sticky;
+    }
+
+    /**
+     * Returns the creation-date
+     */
+    public function getDate(): DateTimeInterface
+    {
+        return new DateTime('@' . $this->date);
+    }
+
+    /**
+     * Sets the creation-date
+     */
+    public function setDate(DateTimeInterface $date): Shoutbox
+    {
+        $this->date = $date->getTimestamp();
+
+        return $this;
+    }
+
+    /**
+     * Returns the shout text
+     */
+    public function getText(): string
+    {
+        return $this->text;
+    }
+
+    /**
+     * Sets the shout text
+     */
+    public function setText(string $text): Shoutbox
+    {
+        $this->text = strip_tags(htmlspecialchars($text));
+
+        return $this;
+    }
+
+    /**
+     * Returns the user-id of the shout-creator
+     */
+    public function getUserId(): int
+    {
+        return $this->user;
+    }
+
+    /**
+     * Sets the shout-creator user
+     */
+    public function setUser(User $user): Shoutbox
+    {
+        $this->user = $user->getId();
+
+        return $this;
+    }
+
+    /**
+     * Persists the object
+     */
+    public function save(): void
+    {
+        $result = $this->shoutRepository->persist($this);
+
+        if (
+            $result !== null
+            && $this->isNew()
+        ) {
+            $this->id = $result;
+        }
     }
 }

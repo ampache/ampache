@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\Shout;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -44,17 +45,13 @@ final class EditShoutAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     private ShoutRepositoryInterface $shoutRepository;
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
         ShoutRepositoryInterface $shoutRepository
     ) {
         $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
         $this->shoutRepository = $shoutRepository;
     }
 
@@ -65,19 +62,16 @@ final class EditShoutAction implements ApplicationActionInterface
         }
 
         $requestData = $request->getParsedBody();
-        $shout       = $this->modelFactory->createShoutbox(
-            (int) ($requestData['shout_id'] ?? 0)
-        );
+        $shoutId     = (int) ($requestData['shout_id'] ?? 0);
 
-        if ($shout->isNew() === false) {
-            $this->shoutRepository->update(
-                $shout,
-                [
-                    'comment' => htmlspecialchars($requestData['comment'] ?? ''),
-                    'sticky' => (bool) ($requestData['sticky'] ?? '')
-                ]
-            );
+        $shout = $this->shoutRepository->findById($shoutId);
+        if ($shout === null) {
+            throw new ObjectNotFoundException($shoutId);
         }
+
+        $shout->setText($requestData['comment'] ?? '');
+        $shout->setSticky((bool) ($requestData['sticky'] ?? ''));
+        $shout->save();
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(

@@ -71,6 +71,6 @@ final class ShoutObjectLoader implements ShoutObjectLoaderInterface
      */
     public function loadByShout(Shoutbox $shout): ?library_item
     {
-        return $this->loadByObjectType((string) $shout->object_type, $shout->object_id);
+        return $this->loadByObjectType((string) $shout->getObjectType(), $shout->getObjectId());
     }
 }

@@ -950,10 +950,10 @@ class Xml4_Data
         $string = "<shouts>\n";
         /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
-            $user  = new User($shout->user);
-            $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->date . "</date>\n\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
-            if ($user->id) {
-                $string .= "\t\t<user id=\"" . (string) $user->id . "\">\n\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n\t\t</user>\n";
+            $user  = new User($shout->getUserId());
+            $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->getDate()->getTimestamp() . "</date>\n\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n";
+            if ($user->isNew() === false) {
+                $string .= "\t\t<user id=\"" . $user->getId() . "\">\n\t\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>\n\t\t</user>\n";
             }
             $string .= "\t</shout>\n";
         }

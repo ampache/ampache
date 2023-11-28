@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database;
 
+use Ampache\Module\Database\Exception\InsertIdInvalidException;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Module\System\Dba;
 use PDOStatement;
@@ -73,10 +74,18 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
 
     /**
      * Returns the most recent inserted id
+     *
+     * @return non-negative-int
      */
     public function getLastInsertedId(): int
     {
         // we assume insertion succeed (errors would throw exceptions), so simply cast it
-        return (int) Dba::insert_id();
+        $result = (int) Dba::insert_id();
+
+        if ($result <= 0) {
+            throw new InsertIdInvalidException();
+        }
+
+        return $result;
     }
 }

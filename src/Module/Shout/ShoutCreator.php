@@ -70,25 +70,28 @@ final class ShoutCreator implements ShoutCreatorInterface
         bool $isSticky,
         int $offset
     ): void {
-        $date    = new DateTime();
-        $comment = strip_tags($text);
+        $date     = new DateTime();
+        $objectId = $libItem->getId();
 
-        $insertId = $this->shoutRepository->create(
-            $user,
-            $date,
-            $comment,
-            $isSticky,
-            $libItem,
-            $objectType,
-            $offset
-        );
+        $shout = $this->shoutRepository->prototype()
+            ->setDate($date)
+            ->setUser($user)
+            ->setText($text)
+            ->setSticky($isSticky)
+            ->setObjectType($objectType)
+            ->setObjectId($objectId)
+            ->setOffset($offset);
+
+        $shout->save();
+
+        $insertId = $shout->getId();
 
         if ($insertId !== 0) {
             $this->userActivityPoster->post(
                 $user->getId(),
                 'shout',
                 $objectType,
-                $libItem->getId(),
+                $objectId,
                 $date->getTimestamp()
             );
 
@@ -113,7 +116,7 @@ final class ShoutCreator implements ShoutCreatorInterface
                             $libItem->get_fullname()
                         );
                         $mailer->message .= "\n\n----------------------\n\n";
-                        $mailer->message .= $comment;
+                        $mailer->message .= $shout->getText();
                         $mailer->message .= "\n\n----------------------\n\n";
                         $mailer->message .= sprintf(
                             '%s/shout.php?action=show_add_shout&type=%s&id=%d#shout%d',
