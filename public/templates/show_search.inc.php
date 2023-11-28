@@ -87,6 +87,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('search')
         <input class="button" type="submit" value="<?php echo T_('Save as Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
         <input type="hidden" id="hiddenaction" name="action" value="search" />
         <input type="hidden" name="browse_id" value="<?php echo $browse->id; ?>" />
+        <input type="hidden" name="playlist_id" value="<?php echo $playlist->id; ?>" />
         <input type="hidden" name="playlist_type" value="<?php echo $playlist->type; ?>" />
         <input type="hidden" name="playlist_name" value="<?php echo $playlist->name; ?>" />
     </div>
