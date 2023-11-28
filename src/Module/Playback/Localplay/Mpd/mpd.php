@@ -1201,4 +1201,4 @@ class mpd
             call_user_func($this->_debug_callback, 'MPD', "$source / $message", $level);
         }
     }
-}   // end class mpd
+}

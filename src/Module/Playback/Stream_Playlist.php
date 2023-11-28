@@ -686,7 +686,7 @@ class Stream_Playlist
         } else {
             require Ui::find_template('create_web_player.inc.php');
         }
-    }  // create_web_player
+    }
 
     /**
      * show_web_player
@@ -699,7 +699,7 @@ class Stream_Playlist
         if (AmpConfig::get("ajax_load")) {
             require Ui::find_template('show_web_player_embedded.inc.php');
         }
-    }  // show_web_player
+    }
 
     /**
      * create_localplay

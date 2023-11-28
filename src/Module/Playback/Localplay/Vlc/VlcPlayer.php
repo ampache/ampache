@@ -581,5 +581,5 @@ class VlcPlayer
         }
 
         return ($bigxml_array);
-    }   // xml parser
+    }
 }

@@ -250,6 +250,7 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
 
     /* static */
     /**
+     * patch contributed from Fedora downstream by Patrick Monnerat
      * @param $url
      * @return string
      */
@@ -286,5 +287,5 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
         $path = $abspath . implode('/', $path);
 
         return empty($path) ? '.' : $path;
-    }  //patch contributed from Fedora downstream by Patrick Monnerat
+    }
 }
