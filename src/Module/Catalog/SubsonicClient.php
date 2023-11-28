@@ -154,10 +154,10 @@ class SubsonicClient
     }
 
     /**
-     * @param $server
-     * @param $port
+     * @param string $server
+     * @param string $port
      */
-    public function setServer($server, $port = null)
+    public function setServer($server, $port = null): void
     {
         $protocol = "";
         if (preg_match("/^https\:\/\//", $server)) {

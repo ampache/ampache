@@ -7406,22 +7406,7 @@ parameters:
 			path: src/Module/Catalog/Catalog_dropbox.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:\\$getchunk has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_dropbox.php
 
@@ -7571,22 +7556,7 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:\\$songs_to_gather has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
 
@@ -7637,21 +7607,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_remote.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_remote.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_remote.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_remote.php
 
@@ -7742,21 +7697,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$to of function rename expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_subsonic.php
 
@@ -7957,21 +7897,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:querySubsonic\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:setServer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:setServer\\(\\) has parameter \\$port with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:setServer\\(\\) has parameter \\$server with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/SubsonicClient.php
 
@@ -16247,11 +16172,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_transcode_settings\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Media.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:play_url\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Media.php
 

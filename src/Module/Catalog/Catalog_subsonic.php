@@ -42,9 +42,9 @@ use Exception;
  */
 class Catalog_subsonic extends Catalog
 {
-    private $version     = '000002';
-    private $type        = 'subsonic';
-    private $description = 'Subsonic Remote Catalog';
+    private string $version     = '000002';
+    private string $type        = 'subsonic';
+    private string $description = 'Subsonic Remote Catalog';
 
     private int $catalog_id;
 

@@ -48,10 +48,10 @@ use ReflectionException;
  */
 class Catalog_dropbox extends Catalog
 {
-    private $version     = '000002';
-    private $type        = 'dropbox';
-    private $description = 'Dropbox Remote Catalog';
-    private int $count   = 0;
+    private string $version     = '000002';
+    private string $type        = 'dropbox';
+    private string $description = 'Dropbox Remote Catalog';
+    private int $count          = 0;
 
     private int $catalog_id;
     private string $apikey = '';

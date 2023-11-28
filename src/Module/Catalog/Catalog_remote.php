@@ -41,9 +41,9 @@ use Exception;
  */
 class Catalog_remote extends Catalog
 {
-    private $version     = '000001';
-    private $type        = 'remote';
-    private $description = 'Ampache Remote Catalog';
+    private string $version     = '000001';
+    private string $type        = 'remote';
+    private string $description = 'Ampache Remote Catalog';
 
     private int $catalog_id;
 

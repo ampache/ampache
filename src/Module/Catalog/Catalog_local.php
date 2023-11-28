@@ -53,9 +53,9 @@ use Exception;
  */
 class Catalog_local extends Catalog
 {
-    private $version     = '000001';
-    private $type        = 'local';
-    private $description = 'Local Catalog';
+    private string $version     = '000001';
+    private string $type        = 'local';
+    private string $description = 'Local Catalog';
 
     private int $catalog_id;
     private $count;
