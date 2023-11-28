@@ -97,4 +97,4 @@ interface playable_item
      * @return list<int>
      */
     public function get_catalogs();
-} // end playable_item.interface
+}

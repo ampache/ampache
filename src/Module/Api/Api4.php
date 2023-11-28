@@ -217,4 +217,4 @@ class Api4
 
         return true;
     }
-} // end api.class
+}

@@ -117,4 +117,4 @@ class Registration
 
         return true;
     }
-} // end registration.class
+}

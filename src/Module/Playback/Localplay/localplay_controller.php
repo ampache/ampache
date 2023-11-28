@@ -185,4 +185,4 @@ abstract class localplay_controller
 
         return $data;
     }
-} // end localplay_controller.abstract
+}

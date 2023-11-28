@@ -106,7 +106,7 @@ if ($browse->is_show_header()) {
     <?php } ?>
 </tr>
 <?php
-    } // end foreach?>
+    } ?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">

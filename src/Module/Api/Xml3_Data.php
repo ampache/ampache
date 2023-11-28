@@ -721,4 +721,4 @@ class Xml3_Data
 
         return $dic->get(AlbumRepositoryInterface::class);
     }
-} // Xml3_Data
+}

@@ -44,7 +44,7 @@ foreach ($languages as $lang => $name) {
     $selected  = ($var_name == $lang_name) ? "selected=\"selected\"" : '';
 
     echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
-} // end foreach
+}
 echo "</select>\n"; ?>
             </div>
             <button type="submit" class="btn btn-warning"><?php echo T_('Start Configuration'); ?></button>

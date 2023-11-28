@@ -57,7 +57,7 @@ function set_memory_limit($new_limit): void
     if ($current_limit < $new_limit) {
         ini_set('memory_limit', $new_limit);
     }
-} // set_memory_limit
+}
 
 /**
  * scrub_in
@@ -80,7 +80,7 @@ function scrub_in($input)
 
         return $results;
     }
-} // scrub_in
+}
 
 /**
  * scrub_out
@@ -98,7 +98,7 @@ function scrub_out($string): string
     }
 
     return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
-} // scrub_out
+}
 
 /**
  * unhtmlentities
@@ -108,7 +108,7 @@ function scrub_out($string): string
 function unhtmlentities($string): string
 {
     return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
-} // unhtmlentities
+}
 
 /**
  * make_bool
@@ -130,7 +130,7 @@ function make_bool($string): bool
     }
 
     return (bool) $string;
-} // make_bool
+}
 
 /**
  * invert_bool
@@ -140,7 +140,7 @@ function make_bool($string): bool
 function invert_bool($value): bool
 {
     return make_bool($value) ? false : true;
-} // invert_bool
+}
 
 /**
  * get_languages
@@ -343,7 +343,7 @@ function get_languages()
     $results = array("en_US" => "English (US)") + $results;
 
     return $results;
-} // get_languages
+}
 
 /**
  * is_rtl
@@ -389,7 +389,7 @@ function translate_pattern_code($code)
     }
 
     return false;
-} // translate_pattern_code
+}
 
 // Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
 if (!function_exists('apache_request_headers')) {
@@ -522,7 +522,7 @@ function check_config_values($conf): bool
     }
 
     return true;
-} // check_config_values
+}
 
 /**
  * @param string $val
@@ -708,7 +708,7 @@ function debug_event($type, $message, $level, $username = ''): bool
     }
 
     return true;
-} // debug_event
+}
 
 /**
  * @param $action
@@ -760,7 +760,7 @@ function return_referer(): string
     }
 
     return $file;
-} // return_referer
+}
 
 /**
  * show_album_select
@@ -821,7 +821,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
     if ($count === 0) {
         echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
     }
-} // show_album_select
+}
 
 /**
  * show_artist_select
@@ -878,7 +878,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
     if ($count === 0) {
         echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
     }
-} // show_artist_select
+}
 
 /**
  * show_tvshow_select
@@ -924,7 +924,7 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
     }
 
     echo "</select>\n";
-} // show_tvshow_select
+}
 
 /**
  * @param string $name
@@ -1021,7 +1021,7 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     } // end while
 
     echo "</select>\n";
-} // show_catalog_select
+}
 
 /**
  * show_album_select
@@ -1066,7 +1066,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0): void
 
     echo "</select>\n";
     echo "<a href=\"javascript:show_selected_license_link('" . $key . "');\">" . T_('View License') . "</a>";
-} // show_license_select
+}
 
 /**
  * show_user_select
@@ -1096,7 +1096,7 @@ function show_user_select($name, $selected = '', $style = ''): void
     } // end while users
 
     echo "</select>\n";
-} // show_user_select
+}
 
 function xoutput_headers(): void
 {
@@ -1144,7 +1144,7 @@ function toggle_visible($element): void
     echo '<script>';
     echo "toggleVisible('$element');";
     echo "</script>\n";
-} // toggle_visible
+}
 
 /**
  * display_notification
@@ -1174,7 +1174,7 @@ function print_bool($value): string
     }
 
     return $string;
-} // print_bool
+}
 
 /**
  * show_now_playing
@@ -1189,7 +1189,7 @@ function show_now_playing(): void
     $web_path = AmpConfig::get('web_path');
     $results  = Stream::get_now_playing();
     require_once Ui::find_template('show_now_playing.inc.php');
-} // show_now_playing
+}
 
 /**
  * @param bool $render
@@ -1226,7 +1226,7 @@ function load_gettext(): bool
     $gettext->register();
 
     return true;
-} // load_gettext
+}
 
 /**
  * T_
@@ -1288,7 +1288,7 @@ function get_themes()
     ksort($results);
 
     return $results;
-} // get_themes
+}
 
 /**
  * get_theme
@@ -1326,7 +1326,7 @@ function get_theme($name)
     $_mapcache[$name] = $results;
 
     return $results;
-} // get_theme
+}
 
 /**
  * Used in graph class also format string

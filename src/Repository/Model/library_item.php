@@ -64,4 +64,4 @@ interface library_item extends playable_item
      * @return int|false
      */
     public function update(array $data);
-} // end library_item.interface
+}

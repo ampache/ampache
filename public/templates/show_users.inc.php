@@ -83,8 +83,7 @@ foreach ($object_ids as $user_id) {
 <tr id="admin_user_<?php echo $libitem->id; ?>">
     <?php require Ui::find_template('show_user_row.inc.php'); ?>
 </tr>
-<?php
-} //end foreach users?>
+<?php } ?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">

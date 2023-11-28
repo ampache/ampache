@@ -116,7 +116,7 @@ foreach ($preferences['prefs'] as $pref) {
                 } ?>
         </tr>
     <?php
-} // End foreach ($preferences['prefs'] as $pref)?>
+} ?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">

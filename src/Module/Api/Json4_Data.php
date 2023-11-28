@@ -1095,4 +1095,4 @@ class Json4_Data
 
         return $dic->get(AlbumRepositoryInterface::class);
     }
-} // end json_data.class
+}

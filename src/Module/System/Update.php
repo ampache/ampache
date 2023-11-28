@@ -5130,4 +5130,4 @@ class Update
     {
         return self::_write_preference($interactor, 'perpetual_api_session', 'API sessions do not expire', '0', 100, 'boolean', 'system', 'backend');
     }
-} // end update.class
+}

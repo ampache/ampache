@@ -1058,4 +1058,4 @@ class Xml4_Data
 
         return $dic->get(AlbumRepositoryInterface::class);
     }
-} // end Xml_Data.class
+}

@@ -314,4 +314,4 @@ abstract class playlist_object extends database_object implements library_item
     {
         return array();
     }
-} // end playlist_object.class
+}

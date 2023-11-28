@@ -79,6 +79,6 @@ while ($count <= $rows) {
         echo "</tr>";
     }
     $count++;
-} // end while?>
+} ?>
 </table>
 <?php Ui::show_box_bottom(); ?>

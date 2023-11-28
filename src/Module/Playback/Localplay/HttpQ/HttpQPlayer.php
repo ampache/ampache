@@ -482,4 +482,4 @@ class HttpQPlayer
 
         return $data['4'];
     }
-} // End HttpQPlayer Class
+}

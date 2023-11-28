@@ -93,7 +93,7 @@ foreach ($object_ids as $playlist_id) {
         </tr>
         <?php
     }
-} // end foreach ($playlists as $playlist)?>
+} ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="10"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>

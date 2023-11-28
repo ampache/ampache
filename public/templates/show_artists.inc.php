@@ -114,8 +114,8 @@ foreach ($object_ids as $artist_id) {
             <?php require Ui::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php
-} // end foreach ($artists as $artist)?>
-        <?php if (!count($object_ids)) { ?>
+}
+if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Artist found'); ?></span></td>
         </tr>

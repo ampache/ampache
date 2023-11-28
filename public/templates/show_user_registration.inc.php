@@ -82,7 +82,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                             </div>
                         </div>
                     <?php
-            } // end if user_agreement?>
+            } ?>
 
                     <div class="registerInformation">
                         <p><span class="require">* </span><?php echo T_('Required fields'); ?></p>

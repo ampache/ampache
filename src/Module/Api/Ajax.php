@@ -288,4 +288,4 @@ class Ajax
 
         return false;
     }
-} // end ajax.class
+}
