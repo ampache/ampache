@@ -95,7 +95,7 @@ class Upnp_Api
      * @param string $host
      * @param int $port
      */
-    private static function udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900)
+    private static function udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900): void
     {
         usleep($delay * 1000); // we are supposed to delay before sending
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
@@ -116,7 +116,7 @@ class Upnp_Api
      * @param string $prefix
      * @param bool $alive
      */
-    public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT", $alive = true)
+    public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT", $alive = true): void
     {
         $strHeader = 'NOTIFY * HTTP/1.1' . "\r\n";
         $strHeader .= 'HOST: ' . $host . ':' . $port . "\r\n";
@@ -164,7 +164,7 @@ class Upnp_Api
      * @param $address
      * @throws Exception
      */
-    public static function sendResponse($delaytime, $actst, $address)
+    public static function sendResponse($delaytime, $actst, $address): void
     {
         $response  = 'HTTP/1.1 200 OK' . "\r\n";
         $response .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
@@ -200,7 +200,7 @@ class Upnp_Api
      * @param $unpacked
      * @param $remote
      */
-    public static function notify_request($unpacked, $remote)
+    public static function notify_request($unpacked, $remote): void
     {
         $headers = self::get_headers($unpacked);
         $str     = 'Notify ' . $remote . ' ' . $headers['nts'] . ' for ' . $headers['nt'];
@@ -241,7 +241,7 @@ class Upnp_Api
      * @param $address
      * @throws Exception
      */
-    public static function discovery_request($data, $address)
+    public static function discovery_request($data, $address): void
     {
         // Process a discovery request.  The response must be sent to the address specified by $remote
         $headers = self::get_headers($data);

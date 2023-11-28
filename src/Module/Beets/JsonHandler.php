@@ -73,9 +73,8 @@ class JsonHandler extends Handler
 
     /**
      * Starts a command
-     * @param string $command
      */
-    public function start($command)
+    public function start(string $command): void
     {
         $handle = fopen($this->assembleUri($command), 'r');
         if ($handle) {
@@ -87,7 +86,7 @@ class JsonHandler extends Handler
      * Iterate over the input and create a song if one is found
      * @param resource $handle
      */
-    public function iterateItems($handle)
+    public function iterateItems($handle): void
     {
         $item = '';
         while (!feof($handle)) {

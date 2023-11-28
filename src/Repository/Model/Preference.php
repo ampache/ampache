@@ -280,10 +280,13 @@ class Preference extends database_object
         // First prepare
         if (!is_numeric($preference)) {
             $pref_id = self::id_from_name($preference);
-            $name    = $preference;
+            $name    = (string)$preference;
         } else {
-            $pref_id = $preference;
+            $pref_id = (int)$preference;
             $name    = self::name_from_id($preference);
+        }
+        if (empty($pref_id) || empty($name)) {
+            return false;
         }
         if (is_array($value)) {
             $value = implode(',', $value);
@@ -406,9 +409,8 @@ class Preference extends database_object
      * id_from_name
      * This takes a name and returns the id
      * @param string $name
-     * @return int|false
      */
-    public static function id_from_name($name)
+    public static function id_from_name($name): ?int
     {
         if (parent::is_cached('id_from_name', $name)) {
             return (int)(parent::get_from_cache('id_from_name', $name))[0];
@@ -423,26 +425,26 @@ class Preference extends database_object
             return (int)$results['id'];
         }
 
-        return false;
+        return null;
     }
 
     /**
      * name_from_id
      * This returns the name from an id, it's the exact opposite
      * of the function above it, amazing!
-     * @param $pref_id
-     * @return mixed
+     * @param int|string $pref_id
      */
-    public static function name_from_id($pref_id)
+    public static function name_from_id($pref_id): ?string
     {
-        $pref_id = Dba::escape($pref_id);
+        $pref_id    = Dba::escape($pref_id);
+        $sql        = "SELECT `name` FROM `preference` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($pref_id));
+        $results    = Dba::fetch_assoc($db_results);
+        if (empty($results)) {
+            return null;
+        }
 
-        $sql        = "SELECT `name` FROM `preference` WHERE `id`='$pref_id'";
-        $db_results = Dba::read($sql);
-
-        $row = Dba::fetch_assoc($db_results);
-
-        return $row['name'];
+        return (string)$results['name'];
     }
 
     /**

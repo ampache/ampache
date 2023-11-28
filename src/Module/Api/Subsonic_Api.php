@@ -285,13 +285,18 @@ class Subsonic_Api
 
             return;
         }
+        $output = false;
         $xmlstr = $xml->asXml();
-        // clean illegal XML characters.
-        $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
-        $dom       = new DOMDocument();
-        $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
-        $dom->formatOutput = true;
-        $output            = $dom->saveXML();
+        if (is_string($xmlstr)) {
+            // clean illegal XML characters.
+            $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
+            if (is_string($clean_xml)) {
+                $dom = new DOMDocument();
+                $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
+                $dom->formatOutput = true;
+                $output            = $dom->saveXML();
+            }
+        }
         // saving xml can fail
         if (!$output) {
             $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . Api::$version . "\"" . ">" .
@@ -538,7 +543,7 @@ class Subsonic_Api
             if ($clastmodified > $lastmodified) {
                 $lastmodified = $clastmodified;
             }
-            if (!empty($ifModifiedSince) && $clastmodified > ($ifModifiedSince / 1000)) {
+            if (!empty($ifModifiedSince) && $clastmodified > (((int)$ifModifiedSince) / 1000)) {
                 $fcatalogs[] = $catalogid;
             }
         }
@@ -1787,7 +1792,7 @@ class Subsonic_Api
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
             foreach ($object_ids as $subsonic_id) {
-                $time      = isset($input['time']) ? (int) $input['time'] / 1000 : time();
+                $time      = isset($input['time']) ? ((int)$input['time']) / 1000 : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?? 0;
                 $prev_date = $previous['date'] ?? 0;
@@ -1850,7 +1855,7 @@ class Subsonic_Api
         if (AmpConfig::get('share')) {
             $share_expire = AmpConfig::get('share_expire', 7);
             $expire_days  = (isset($input['expires']))
-                ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000)
+                ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
                 : $share_expire;
             $object_type = null;
             if (is_array($object_id) && Subsonic_Xml_Data::_isSong($object_id[0])) {
@@ -1917,7 +1922,7 @@ class Subsonic_Api
             $share = new Share(Subsonic_Xml_Data::_getAmpacheId($share_id));
             if ($share->id > 0) {
                 $expires = (isset($input['expires']))
-                    ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000)
+                    ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
                     : $share->expire_days;
                 $data = array(
                     'max_counter' => $share->max_counter,
@@ -2789,7 +2794,7 @@ class Subsonic_Api
         if ($media->id) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
             $position = (array_key_exists('position', $input))
-                ? (int)((int)$input['position'] / 1000)
+                ? (int)(((int)$input['position']) / 1000)
                 : 0;
             $client         = scrub_in((string) ($input['c'] ?? 'Subsonic'));
             $user_id        = $user->id;

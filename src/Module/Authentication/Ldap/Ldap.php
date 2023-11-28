@@ -124,7 +124,7 @@ class Ldap
      * @param string $password
      * @throws LdapException
      */
-    private static function bind($link, $username = null, $password = null)
+    private static function bind($link, $username = null, $password = null): void
     {
         if ($username === null && $password === null) {
             $username = AmpConfig::get('ldap_username', '');
@@ -141,7 +141,7 @@ class Ldap
      * Unbinds from the LDAP
      * @param $link
      */
-    private static function unbind($link)
+    private static function unbind($link): void
     {
         ldap_unbind($link);
     }

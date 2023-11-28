@@ -123,18 +123,17 @@ class Tmp_Playlist extends database_object
      * This returns a tmp playlist object based on a userid passed
      * this is used for the user profiles page
      * @param string $username
-     * @return mixed
      */
-    public static function get_from_username($username)
+    public static function get_from_username($username): ?int
     {
         $sql        = "SELECT `tmp_playlist`.`id` FROM `tmp_playlist` LEFT JOIN `session` ON `session`.`id`=`tmp_playlist`.`session` WHERE `session`.`username` = ? ORDER BY `session`.`expire` DESC";
         $db_results = Dba::read($sql, array($username));
         $results    = Dba::fetch_assoc($db_results);
         if (empty($results)) {
-            return false;
+            return null;
         }
 
-        return $results['id'];
+        return (int)$results['id'];
     }
 
     /**

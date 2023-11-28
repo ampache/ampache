@@ -79,7 +79,7 @@ class Broadcast_Server implements MessageComponentInterface
      *
      * @param ConnectionInterface $conn
      */
-    public function onOpen(ConnectionInterface $conn)
+    public function onOpen(ConnectionInterface $conn): void
     {
         $this->clients[$conn->resourceId] = $conn;
     }
@@ -89,7 +89,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param ConnectionInterface $from
      * @param string $msg
      */
-    public function onMessage(ConnectionInterface $from, $msg)
+    public function onMessage(ConnectionInterface $from, $msg): void
     {
         $commands = explode(';', (string)$msg);
         foreach ($commands as $command) {
@@ -159,7 +159,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param ConnectionInterface $from
      * @param int $song_id
      */
-    protected function notifySong(ConnectionInterface $from, $song_id)
+    protected function notifySong(ConnectionInterface $from, $song_id): void
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
@@ -184,7 +184,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param ConnectionInterface $from
      * @param int $song_position
      */
-    protected function notifySongPosition(ConnectionInterface $from, $song_position)
+    protected function notifySongPosition(ConnectionInterface $from, $song_position): void
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
@@ -209,7 +209,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param ConnectionInterface $from
      * @param bool $play
      */
-    protected function notifyPlayerPlay(ConnectionInterface $from, $play)
+    protected function notifyPlayerPlay(ConnectionInterface $from, $play): void
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
@@ -229,7 +229,7 @@ class Broadcast_Server implements MessageComponentInterface
      *
      * @param ConnectionInterface $from
      */
-    protected function notifyEnded(ConnectionInterface $from)
+    protected function notifyEnded(ConnectionInterface $from): void
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
@@ -250,7 +250,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param ConnectionInterface $from
      * @param string $broadcast_key
      */
-    protected function registerBroadcast(ConnectionInterface $from, $broadcast_key)
+    protected function registerBroadcast(ConnectionInterface $from, $broadcast_key): void
     {
         $broadcast = Broadcast::get_broadcast($broadcast_key);
         if ($broadcast) {
@@ -265,7 +265,7 @@ class Broadcast_Server implements MessageComponentInterface
      *
      * @param ConnectionInterface $conn
      */
-    protected function unregisterBroadcast(ConnectionInterface $conn)
+    protected function unregisterBroadcast(ConnectionInterface $conn): void
     {
         $broadcast = $this->broadcasters[$conn->resourceId];
         $clients   = $this->getListeners($broadcast);
@@ -304,7 +304,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param ConnectionInterface $from
      * @param int $broadcast_id
      */
-    protected function registerListener(ConnectionInterface $from, $broadcast_id)
+    protected function registerListener(ConnectionInterface $from, $broadcast_id): void
     {
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
@@ -331,7 +331,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param ConnectionInterface $conn
      * @param string $sid
      */
-    protected function authSid(ConnectionInterface $conn, $sid)
+    protected function authSid(ConnectionInterface $conn, $sid): void
     {
         if (Session::exists('stream', $sid)) {
             $this->sids[$conn->resourceId] = $sid;
@@ -344,7 +344,7 @@ class Broadcast_Server implements MessageComponentInterface
      *
      * @param ConnectionInterface $conn
      */
-    protected function unregisterListener(ConnectionInterface $conn)
+    protected function unregisterListener(ConnectionInterface $conn): void
     {
         foreach ($this->listeners as $broadcast_id => $brlisteners) {
             $lindex = array_search($conn, $brlisteners);
@@ -368,7 +368,7 @@ class Broadcast_Server implements MessageComponentInterface
      *
      * @param Broadcast $broadcast
      */
-    protected function notifyNbListeners(Broadcast $broadcast)
+    protected function notifyNbListeners(Broadcast $broadcast): void
     {
         $broadcaster_id = array_search($broadcast, $this->broadcasters);
         if ($broadcaster_id) {
@@ -404,7 +404,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param string $cmd
      * @param string $value
      */
-    protected function broadcastMessage($clients, $cmd, $value = '')
+    protected function broadcastMessage($clients, $cmd, $value = ''): void
     {
         $msg = $cmd . ':' . $value . ';';
         foreach ($clients as $client) {
@@ -420,7 +420,7 @@ class Broadcast_Server implements MessageComponentInterface
      *
      * @param ConnectionInterface $conn
      */
-    public function onClose(ConnectionInterface $conn)
+    public function onClose(ConnectionInterface $conn): void
     {
         if ($this->isBroadcaster($conn)) {
             $this->unregisterBroadcast($conn);
@@ -438,7 +438,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param Exception $error
      * @noinspection PhpParameterNameChangedDuringInheritanceInspection
      */
-    public function onError(ConnectionInterface $conn, Exception $error)
+    public function onError(ConnectionInterface $conn, Exception $error): void
     {
         debug_event(self::class, 'Broadcast error: ' . $error->getMessage(), 1);
         $conn->close();
@@ -462,7 +462,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param bool $verbose
      * @param string $message
      */
-    private static function echo_message($verbose, $message)
+    private static function echo_message($verbose, $message): void
     {
         if ($verbose) {
             echo $message;

@@ -108,7 +108,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * @param array $song Song array
      * @param bool $ignoreTicker ignoring the ticker for the last update
      */
-    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false)
+    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false): void
     {
         if (!defined('SSE_OUTPUT') && !defined('API')) {
             return;
@@ -158,7 +158,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Add $song to ampache if it isn't already
      * @param array $song
      */
-    public function addSong($song)
+    public function addSong($song): void
     {
         $song['catalog'] = $this->id;
 
@@ -180,7 +180,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * @param library_item $libraryItem
      * @param $metadata
      */
-    public function addMetadata(library_item $libraryItem, $metadata)
+    public function addMetadata(library_item $libraryItem, $metadata): void
     {
         $tags = $this->getCleanMetadata($libraryItem, $metadata);
 
@@ -253,7 +253,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Verify and update a song
      * @param array $beetsSong
      */
-    public function verifySong($beetsSong)
+    public function verifySong($beetsSong): void
     {
         $song                  = new Song($this->getIdFromPath($beetsSong['file']));
         $beetsSong['album_id'] = $song->album;
@@ -323,7 +323,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Remove a song from the "to be deleted"-list if it was found.
      * @param array $song
      */
-    public function removeFromDeleteList($song)
+    public function removeFromDeleteList($song): void
     {
         $key = array_search($song['file'], $this->songs, true);
         $this->updateUi('clean', ++$this->cleanCounter, $song);
@@ -336,7 +336,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Delete Song from DB
      * @param array $songs
      */
-    protected function deleteSongs($songs)
+    protected function deleteSongs($songs): void
     {
         $ids = implode(',', array_keys($songs));
         $sql = "DELETE FROM `song` WHERE `id` IN ($ids)";
@@ -439,7 +439,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * @param $song
      * @param $tags
      */
-    public function updateMetadata($song, $tags)
+    public function updateMetadata($song, $tags): void
     {
         foreach ($tags as $tag => $value) {
             $field = $song->getField($tag);

@@ -136,7 +136,7 @@ class Repository
      * @param DatabaseObject $object
      * @throws ReflectionException
      */
-    public function add(DatabaseObject $object)
+    public function add(DatabaseObject $object): void
     {
         $properties = $object->getDirtyProperties();
         $this->setPrivateProperty(
@@ -149,7 +149,7 @@ class Repository
     /**
      * @param DatabaseObject $object
      */
-    public function update(DatabaseObject $object)
+    public function update(DatabaseObject $object): void
     {
         if ($object->isDirty()) {
             $properties = $object->getDirtyProperties();
@@ -184,7 +184,7 @@ class Repository
      * @param int $object_id
      * @param $properties
      */
-    protected function updateRecord($object_id, $properties)
+    protected function updateRecord($object_id, $properties): void
     {
         $sql = 'UPDATE ' . $this->getTableName() .
             ' SET ' . implode(',', $this->getKeyValuePairs($properties)) .
@@ -199,7 +199,7 @@ class Repository
     /**
      * @param int $object_id
      */
-    protected function deleteRecord($object_id)
+    protected function deleteRecord($object_id): void
     {
         $sql = 'DELETE FROM `' . $this->getTableName() . '` WHERE id = ?';
         Dba::write($sql, array($object_id));
@@ -227,7 +227,7 @@ class Repository
      * @param string|false $value
      * @throws ReflectionException
      */
-    protected function setPrivateProperty(Model $object, $property, $value)
+    protected function setPrivateProperty(Model $object, $property, $value): void
     {
         $reflectionClass    = new ReflectionClass(get_class($object));
         $ReflectionProperty = $reflectionClass->getProperty($property);

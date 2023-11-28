@@ -523,8 +523,7 @@ class Catalog_local extends Catalog
             $this->sync_podcasts();
         } else {
             /* Get the songs and then insert them into the db */
-            $this->add_files($this->path, $options);
-
+            $this->count += $this->add_files($this->path, $options);
             if ($options['parse_playlist'] && count($this->_playlists)) {
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
@@ -548,7 +547,7 @@ class Catalog_local extends Catalog
                 } // end foreach playlist files
             }
             // only gather art if you've added new stuff
-            if ($this->count > 0 && $options['gather_art']) {
+            if (($this->count) > 0 && $options['gather_art']) {
                 debug_event(__CLASS__, 'gather_art after adding', 4);
                 $catalog_id = $this->catalog_id;
                 if (!defined('SSE_OUTPUT') && !defined('API')) {
@@ -1071,7 +1070,7 @@ class Catalog_local extends Catalog
         return $video_id;
     }
 
-    private function sync_podcasts()
+    private function sync_podcasts(): void
     {
         $podcasts = self::get_podcasts();
         foreach ($podcasts as $podcast) {

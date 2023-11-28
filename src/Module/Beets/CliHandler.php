@@ -110,9 +110,8 @@ class CliHandler extends Handler
 
     /**
      * Starts a command
-     * @param string $command
      */
-    public function start($command)
+    public function start(string $command): void
     {
         $handle = popen($this->assembleCommand($command), 'r');
         if ($handle) {
@@ -123,7 +122,7 @@ class CliHandler extends Handler
     /**
      * @param $handle
      */
-    public function iterateItems($handle)
+    public function iterateItems($handle): void
     {
         $item = '';
         while (!feof($handle)) {

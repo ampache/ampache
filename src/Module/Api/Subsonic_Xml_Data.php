@@ -1087,7 +1087,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param Share $share
      */
-    private static function addShare($xml, $share)
+    private static function addShare($xml, $share): void
     {
         $xshare = $xml->addChild('share');
         $xshare->addAttribute('id', (string)$share->id);

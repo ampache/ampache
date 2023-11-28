@@ -279,7 +279,7 @@ class Wanted extends database_object
     /**
      * Accept a wanted request.
      */
-    public function accept()
+    public function accept(): void
     {
         if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
@@ -323,7 +323,7 @@ class Wanted extends database_object
     /**
      * Show action buttons.
      */
-    public function show_action_buttons()
+    public function show_action_buttons(): void
     {
         if ($this->id) {
             if (!$this->accepted) {
@@ -355,7 +355,7 @@ class Wanted extends database_object
      * Load wanted release data.
      * @param bool $track_details
      */
-    public function load_all($track_details = true)
+    public function load_all($track_details = true): void
     {
         $mbrainz     = new MusicBrainz(new RequestsHttpAdapter());
         $this->songs = array();

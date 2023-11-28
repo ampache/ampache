@@ -39,16 +39,15 @@ abstract class Handler
     private $handlerCommand;
 
     /**
-     * @param $command
-     * @return mixed
+     * Starts a command
      */
-    abstract public function start($command);
+    abstract public function start(string $command): void;
 
     /**
      * @param Catalog $handler
      * @param string $command
      */
-    public function setHandler(Catalog $handler, $command)
+    public function setHandler(Catalog $handler, $command): void
     {
         $this->handler        = $handler;
         $this->handlerCommand = $command;

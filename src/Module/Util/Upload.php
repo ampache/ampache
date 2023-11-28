@@ -227,9 +227,8 @@ class Upload
      * check_artist
      * @param string $artist_name
      * @param int $user_id
-     * @return int|null
      */
-    public static function check_artist($artist_name, $user_id)
+    public static function check_artist($artist_name, $user_id): ?int
     {
         debug_event(self::class, 'check_artist: looking for ' . $artist_name, 5);
         if ($artist_name !== '') {
@@ -257,9 +256,8 @@ class Upload
      * check_album
      * @param string $album_name
      * @param int|null $artist_id
-     * @return int|false
      */
-    public static function check_album($album_name, $artist_id)
+    public static function check_album($album_name, $artist_id): ?int
     {
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
@@ -267,21 +265,20 @@ class Upload
             if ((int)$album_id === 0) {
                 debug_event(self::class, 'Album information required, uploaded song skipped.', 3);
 
-                return false;
+                return null;
             }
 
             return (int)$album_id;
         }
 
-        return false;
+        return null;
     }
 
     /**
      * check_target_path
      * @param string $targetfile
-     * @return string|null
      */
-    public static function check_target_path($targetfile)
+    public static function check_target_path($targetfile): ?string
     {
         debug_event(self::class, 'Target File `' . $targetfile, 4);
         if (Core::is_readable($targetfile)) {
@@ -301,9 +298,8 @@ class Upload
     /**
      * check_target_dir
      * @param string $catalog_dir
-     * @return string|null
      */
-    public static function check_target_dir($catalog_dir)
+    public static function check_target_dir($catalog_dir): ?string
     {
         $targetdir = $catalog_dir;
         $folder    = (Core::get_post('folder') == '..') ? '' : Core::get_post('folder');

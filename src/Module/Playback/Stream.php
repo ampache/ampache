@@ -49,7 +49,7 @@ class Stream
      * This overrides the normal session value, without adding another session into the database, should be called with care
      * @param int|string $sid
      */
-    public static function set_session($sid)
+    public static function set_session($sid): void
     {
         if (!empty($sid)) {
             self::$session = $sid;
@@ -318,7 +318,7 @@ class Stream
      * @param string $player
      * @param string $media_type
      */
-    public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song')
+    public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song'): void
     {
         if (Core::get_global('transcode') == '') {
             $GLOBALS['transcode'] = array();
@@ -528,7 +528,7 @@ class Stream
      * kill_process
      * @param $transcoder
      */
-    public static function kill_process($transcoder)
+    public static function kill_process($transcoder): void
     {
         $status = proc_get_status($transcoder['process']);
         if ($status['running']) {
@@ -578,7 +578,7 @@ class Stream
      * @param string $type
      * @param int $previous
      */
-    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null)
+    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null): void
     {
         if (!$previous) {
             $previous = time();
@@ -614,7 +614,7 @@ class Stream
      *  expire: int
      * }>
      */
-    public static function get_now_playing($user_id = 0)
+    public static function get_now_playing($user_id = 0): array
     {
         $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
 
