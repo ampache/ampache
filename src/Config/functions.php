@@ -673,7 +673,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
     $log_line = "[$error_name] $errstr in file $errfile($errline)";
     debug_event('log.lib', $log_line, $level, 'ampache');
 
-    return false;
+    return true;
 }
 
 /**
