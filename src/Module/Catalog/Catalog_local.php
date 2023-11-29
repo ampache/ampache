@@ -25,6 +25,7 @@ namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
@@ -1073,8 +1074,11 @@ class Catalog_local extends Catalog
     private function sync_podcasts(): void
     {
         $podcasts = self::get_podcasts();
+
+        $podcastSyncer = $this->getPodcastSyncer();
+
         foreach ($podcasts as $podcast) {
-            $podcast->sync_episodes();
+            $podcastSyncer->sync($podcast);
             $episodes = $podcast->get_episodes('pending');
             foreach ($episodes as $episode_id) {
                 $episode = new Podcast_Episode($episode_id);
@@ -1348,5 +1352,15 @@ class Catalog_local extends Catalog
         global $dic;
 
         return $dic->get(UtilityFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
     }
 }

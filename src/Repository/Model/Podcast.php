@@ -24,11 +24,11 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use SimpleXMLElement;
 
 class Podcast extends database_object implements library_item
 {
@@ -471,7 +471,7 @@ class Podcast extends database_object implements library_item
             Catalog::update_map($catalog_id, 'podcast', (int)$podcast_id);
             Catalog::count_table('user');
             if ($episodes) {
-                $podcast->add_episodes($episodes);
+                self::getPodcastSyncer()->addEpisodes($podcast, $episodes);
             }
             if ($return_id) {
                 return (int)$podcast_id;
@@ -481,199 +481,6 @@ class Podcast extends database_object implements library_item
         }
 
         return false;
-    }
-
-    /**
-     * add_episodes
-     */
-    public function add_episodes(SimpleXMLElement $episodes, int $lastSync = 0, bool $gather = false): void
-    {
-        foreach ($episodes as $episode) {
-            $this->add_episode($episode, $lastSync);
-        }
-        $change = 0;
-        $time   = time();
-        $params = array($this->id);
-
-        // Select episodes to download
-        $dlnb = (int)AmpConfig::get('podcast_new_download');
-        if ($dlnb <> 0) {
-            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` = ? AND (`podcast_episode`.`addition_time` > `podcast`.`lastsync` OR `podcast_episode`.`state` = 'pending') ORDER BY `podcast_episode`.`pubdate` DESC";
-            if ($dlnb > 0) {
-                $sql .= " LIMIT " . (string)$dlnb;
-            }
-            $db_results = Dba::read($sql, $params);
-            while ($row = Dba::fetch_row($db_results)) {
-                $episode = new Podcast_Episode($row[0]);
-                $episode->change_state('pending');
-                if ($gather) {
-                    $episode->gather();
-                    $change++;
-                }
-            }
-        }
-        if ($change > 0) {
-            // Remove items outside limit
-            $keepnb = AmpConfig::get('podcast_keep');
-            if ($keepnb > 0) {
-                $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
-                $db_results = Dba::read($sql, $params);
-                while ($row = Dba::fetch_row($db_results)) {
-                    $episode = new Podcast_Episode($row[0]);
-                    $episode->remove();
-                }
-            }
-            // update the episode count after adding / removing episodes
-            $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
-            Dba::write($sql, $params);
-            Catalog::update_mapping('podcast');
-            Catalog::update_mapping('podcast_episode');
-            Catalog::count_table('podcast_episode');
-        }
-        $this->update_lastsync($time);
-    }
-
-    /**
-     * add_episode
-     */
-    private function add_episode(SimpleXMLElement $episode, int $lastSync = 0): void
-    {
-        $title       = html_entity_decode((string)$episode->title);
-        $website     = (string)$episode->link;
-        $guid        = (string)$episode->guid;
-        $description = html_entity_decode(Dba::check_length((string)$episode->description, 4096));
-        $author      = html_entity_decode(Dba::check_length((string)$episode->author, 64));
-        $category    = html_entity_decode((string)$episode->category);
-        $source      = '';
-        $time        = 0;
-        if ($episode->enclosure) {
-            $source = (string)$episode->enclosure['url'];
-        }
-        $itunes   = $episode->children('itunes', true);
-        $duration = (string) $itunes->duration;
-        // time is missing hour e.g. "15:23"
-        if (preg_grep("/^[0-9][0-9]\:[0-9][0-9]$/", array($duration))) {
-            $duration = '00:' . $duration;
-        }
-        // process a time string "03:23:01"
-        $ptime = (preg_grep("/[0-9]?[0-9]\:[0-9][0-9]\:[0-9][0-9]/", array($duration)))
-            ? date_parse((string)$duration)
-            : $duration;
-        // process "HH:MM:SS" time OR fall back to a seconds duration string e.g "24325"
-        $time = (is_array($ptime))
-            ? (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second']
-            : (int) $ptime;
-
-        $pubdate    = 0;
-        $pubdatestr = (string)$episode->pubDate;
-        if ($pubdatestr) {
-            $pubdate = strtotime($pubdatestr);
-        }
-        if ($pubdate < 1) {
-            debug_event(self::class, 'Invalid episode publication date, skipped', 3);
-
-            return;
-        }
-        if (empty($source)) {
-            debug_event(self::class, 'Episode source URL not found, skipped', 3);
-
-            return;
-        }
-        // don't keep adding the same episodes
-        if (self::get_id_from_guid($guid) > 0) {
-            debug_event(self::class, 'Episode guid already exists, skipped', 3);
-
-            return;
-        }
-        // don't keep adding urls
-        if (self::get_id_from_source($source) > 0) {
-            debug_event(self::class, 'Episode source URL already exists, skipped', 3);
-
-            return;
-        }
-        // podcast urls can change over time so check these
-        if (self::get_id_from_title($this->id, $title, $time) > 0) {
-            debug_event(self::class, 'Episode title already exists, skipped', 3);
-
-            return;
-        }
-        // podcast pubdate can be used to skip duplicate/fixed episodes when you already have them
-        if (self::get_id_from_pubdate($this->id, $pubdate) > 0) {
-            debug_event(self::class, 'Episode with the same publication date already exists, skipped', 3);
-
-            return;
-        }
-
-        // by default you want to download all the episodes
-        $state = 'pending';
-        // if you're syncing an old podcast, check the pubdate and skip it if published to the feed before your last sync
-        if ($lastSync > 0 && $pubdate < $lastSync) {
-            $state = 'skipped';
-        }
-
-        debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
-        $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        Dba::write($sql, array(
-            $title,
-            $guid,
-            $this->id,
-            $state,
-            $source,
-            $website,
-            $description,
-            $author,
-            $category,
-            $time,
-            $pubdate,
-            time(),
-            $this->catalog
-        ));
-    }
-
-    /**
-     * update_lastsync
-     */
-    private function update_lastsync(int $time): void
-    {
-        Dba::write(
-            'UPDATE `podcast` SET `lastsync` = ? WHERE `id` = ?',
-            [
-                $time,
-                $this->id,
-            ],
-        );
-    }
-
-    /**
-     * sync_episodes
-     */
-    public function sync_episodes(bool $gather = false): bool
-    {
-        debug_event(self::class, 'Syncing feed ' . $this->feed . ' ...', 4);
-        if ($this->feed === null) {
-            return false;
-        }
-        $xmlstr = file_get_contents($this->feed, false, stream_context_create(Core::requests_options()));
-        if ($xmlstr === false) {
-            debug_event(self::class, 'Cannot access feed ' . $this->feed, 1);
-
-            return false;
-        }
-        $xml = simplexml_load_string($xmlstr);
-        if ($xml === false) {
-            // I've seems some &'s in feeds that screw up
-            $xml = simplexml_load_string(str_replace('&', '&amp;', $xmlstr));
-        }
-        if ($xml === false) {
-            debug_event(self::class, 'Cannot read feed ' . $this->feed, 1);
-
-            return false;
-        }
-
-        $this->add_episodes($xml->channel->item, $this->lastsync, $gather);
-
-        return true;
     }
 
     /**
@@ -698,74 +505,6 @@ class Podcast extends database_object implements library_item
         }
 
         return false;
-    }
-
-    /**
-     * get_id_from_source
-     *
-     * Get episode id from the source url.
-     */
-    private static function get_id_from_source(string $url): int
-    {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
-        $db_results = Dba::read($sql, array($url));
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * get_id_from_guid
-     *
-     * Get episode id from the guid.
-     */
-    private static function get_id_from_guid(string $url): int
-    {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `guid` = ?";
-        $db_results = Dba::read($sql, array($url));
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * get_id_from_title
-     *
-     * Get episode id from the source url.
-     */
-    private static function get_id_from_title(int $podcast_id, string $title, int $time): int
-    {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND title = ? AND `time` = ?";
-        $db_results = Dba::read($sql, array($podcast_id, $title, $time));
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * get_id_from_pubdate
-     *
-     * Get episode id from the source url.
-     */
-    private static function get_id_from_pubdate(int $podcast_id, int $pubdate): int
-    {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND pubdate = ?";
-        $db_results = Dba::read($sql, array($podcast_id, $pubdate));
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
-        }
-
-        return 0;
     }
 
     /**
@@ -805,5 +544,15 @@ class Podcast extends database_object implements library_item
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
     }
 }

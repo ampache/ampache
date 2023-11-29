@@ -32,6 +32,7 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
@@ -2037,8 +2038,11 @@ class Subsonic_Api
     {
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $podcasts = Catalog::get_podcasts(User::get_user_catalogs($user->id));
+
+            $podcastSyncer = self::getPodcastSyncer();
+
             foreach ($podcasts as $podcast) {
-                $podcast->sync_episodes(true);
+                $podcastSyncer->sync($podcast, true);
             }
             $response = Subsonic_Xml_Data::addSubsonicResponse('refreshpodcasts');
         } else {
@@ -3097,5 +3101,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PrivateMessageRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
     }
 }

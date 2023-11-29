@@ -78,7 +78,7 @@ final class PrintTagsCommand extends Command
             $dir_pattern,
             $file_pattern
         );
-        if (isset($dir_pattern) || isset($file_pattern)) {
+        if ($dir_pattern !== '' || $file_pattern !== '') {
             /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
             $interactor->info(
                 sprintf(T_('Using: %1$s AND %2$s for file pattern matching'), $dir_pattern, $file_pattern),
