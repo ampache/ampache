@@ -25,10 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
-use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
-use Ampache\Repository\Model\User;
-use DateTimeInterface;
 use Generator;
 use PDO;
 use Psr\Log\LoggerInterface;
