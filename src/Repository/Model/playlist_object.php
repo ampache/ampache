@@ -175,7 +175,7 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * Get item link.
      */
-    public function get_f_link(): ?string
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
