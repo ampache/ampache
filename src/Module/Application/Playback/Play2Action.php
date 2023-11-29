@@ -1001,7 +1001,7 @@ final class Play2Action implements ApplicationActionInterface
             }
         }
 
-        if ($demo_id) {
+        if ($random || $demo_id) {
             header('Accept-Ranges: none');
         } else {
             header('Accept-Ranges: bytes');

@@ -990,7 +990,7 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
 
-        if ($transcode || $demo_id) {
+        if ($random || $demo_id) {
             header('Accept-Ranges: none');
         } else {
             header('Accept-Ranges: bytes');
