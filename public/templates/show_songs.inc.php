@@ -134,6 +134,9 @@ $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper(
 
 foreach ($object_ids as $song_id) {
     $libitem = new Song($song_id);
+    if ($libitem->isNew()) {
+        continue;
+    }
     $libitem->format(); ?>
             <tr id="song_<?php echo $libitem->id; ?>">
                 <?php if ($libitem->enabled || Access::check('interface', 50)) {

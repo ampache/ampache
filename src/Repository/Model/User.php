@@ -149,6 +149,11 @@ class User extends database_object
         return (int)($this->id ?: 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * has_info
      * This function returns the information for this object
@@ -1348,14 +1353,6 @@ class User extends database_object
     public function getUsername(): string
     {
         return $this->username ?? '';
-    }
-
-    /**
-     * Returns `true` if the user does not exist
-     */
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
     }
 
     /**

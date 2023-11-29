@@ -113,12 +113,15 @@ $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 if (AmpConfig::get('ratings')) {
-    Rating::build_cache('album', $object_ids);
-    Userflag::build_cache('album', $object_ids);
+    Rating::build_cache('album_disk', $object_ids);
+    Userflag::build_cache('album_disk', $object_ids);
 }
-/* Foreach through the albums */
+/* Foreach through the album_disks */
 foreach ($object_ids as $album_disk_id) {
     $libitem = new AlbumDisk($album_disk_id);
+    if ($libitem->isNew()) {
+        continue;
+    }
     $libitem->format(true, $limit_threshold);
     if ($directplay_limit > 0) {
         $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);

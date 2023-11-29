@@ -74,6 +74,11 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * garbage_collection
      *

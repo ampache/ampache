@@ -63,6 +63,11 @@ class Clip extends Video
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * garbage_collection
      *
