@@ -503,11 +503,11 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return bool|null
+     * @param Song|Podcast_Episode|Video $media
+     * @return null
      * @throws Exception
      */
-    public function prepare_media($media): ?bool
+    public function prepare_media($media)
     {
         $remote_handle = $this->connect();
 
@@ -515,7 +515,7 @@ class Catalog_remote extends Catalog
         if (!$remote_handle) {
             debug_event('remote.catalog', 'Connection to remote server failed', 1);
 
-            return false;
+            return null;
         }
 
         $handshake = $remote_handle->info();

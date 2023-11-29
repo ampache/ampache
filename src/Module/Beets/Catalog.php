@@ -33,7 +33,10 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\Video;
 
 /**
  * Catalog parent for local and remote beets catalog
@@ -91,12 +94,11 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      *
-     * @param Media $media
-     * @return Media
+     * @param Song|Podcast_Episode|Video $media
+     * @return Song|Podcast_Episode|Video
      */
     public function prepare_media($media)
     {
-        /** @var Song $media */
         debug_event(self::class, 'Play: Started remote stream - ' . $media->file, 5);
 
         return $media;

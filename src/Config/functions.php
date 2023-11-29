@@ -600,10 +600,6 @@ function debug_result($status = false, $value = null, $comment = ''): string
  *
  * An error handler for ampache that traps as many errors as it can and logs
  * them.
- * @param $errno
- * @param $errstr
- * @param $errfile
- * @param $errline
  */
 function ampache_error_handler(int $errno, string $errstr, string $errfile, int $errline): bool
 {

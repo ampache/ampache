@@ -710,8 +710,8 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return Media|Podcast_Episode|Song|Song_Preview|Video|null
+     * @param Song|Podcast_Episode|Video $media
+     * @return Song|Podcast_Episode|Video
      */
     public function prepare_media($media)
     {
@@ -719,8 +719,7 @@ class Catalog_dropbox extends Catalog
         $dropbox = new Dropbox($app);
         try {
             set_time_limit(0);
-            $meta = $dropbox->getMetadata((string)$media->file);
-
+            $meta    = $dropbox->getMetadata((string)$media->file);
             $outfile = sys_get_temp_dir() . '/' . $meta->getName();
 
             // Download File

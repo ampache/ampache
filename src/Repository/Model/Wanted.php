@@ -127,7 +127,7 @@ class Wanted extends database_object
         }
 
         $wartist = array();
-        if (!$artist) {
+        if ($artist === null) {
             $wartist['mbid'] = $lookupId;
             $wartist['name'] = $martist->{'name'};
             parent::add_to_cache('missing_artist', $lookupId, $wartist);
@@ -146,14 +146,17 @@ class Wanted extends database_object
                     }
 
                     if ($add) {
-                        if (empty(static::getAlbumRepository()->getByMbidGroup(($group->id))) && (!empty($artist) && $artist->id && empty(static::getAlbumRepository()->getByName($group->title, $artist->id)))) {
+                        if (
+                            empty(static::getAlbumRepository()->getByMbidGroup(($group->id))) ||
+                            ($artist !== null && $artist->id && empty(static::getAlbumRepository()->getByName($group->title, $artist->id)))
+                        ) {
                             $wantedid = self::get_wanted($group->id);
                             $wanted   = new Wanted($wantedid);
                             if ($wanted->id) {
                                 $wanted->format();
                             } else {
                                 $wanted->mbid = $group->id;
-                                if ($artist) {
+                                if ($artist !== null) {
                                     $wanted->artist = $artist->id;
                                 } else {
                                     $wanted->artist_mbid = $lookupId;
@@ -168,14 +171,16 @@ class Wanted extends database_object
                                 }
                                 $wanted->accepted = false;
                                 $wanted->link     = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group->id;
-                                if ($artist) {
+                                if ($artist !== null) {
                                     $wanted->link .= "&artist=" . $wanted->artist;
                                 } else {
                                     $wanted->link .= "&artist_mbid=" . $lookupId;
                                 }
-                                $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
-                                $wanted->f_artist_link = $artist->get_f_link() ?? $wartist['link'];
                                 $wanted->f_user        = Core::get_global('user')->f_name;
+                                $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
+                                $wanted->f_artist_link = ($artist !== null)
+                                    ? $artist->get_f_link()
+                                    : $wartist['link'];
                             }
                             $results[] = $wanted;
                         }
@@ -192,7 +197,7 @@ class Wanted extends database_object
      * @param string $mbid
      * @return array
      */
-    public static function get_missing_artist($mbid)
+    public static function get_missing_artist($mbid): array
     {
         $wartist = array();
         if (empty($mbid)) {

@@ -646,8 +646,8 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return Media|Podcast_Episode|Song|Song_Preview|Video|null
+     * @param Song|Podcast_Episode|Video $media
+     * @return Song|Podcast_Episode|Video
      */
     public function prepare_media($media)
     {

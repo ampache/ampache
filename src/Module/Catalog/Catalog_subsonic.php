@@ -534,8 +534,8 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return Media|null
+     * @param Song|Podcast_Episode|Video $media
+     * @return null
      */
     public function prepare_media($media)
     {

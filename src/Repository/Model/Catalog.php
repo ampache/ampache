@@ -283,8 +283,8 @@ abstract class Catalog extends database_object
     abstract public function get_rel_path($file_path): string;
 
     /**
-     * @param Song|Podcast_Episode|Song_Preview|Video $media
-     * @return Media|null
+     * @param Song|Podcast_Episode|Video $media
+     * @return Song|Podcast_Episode|Video|null
      */
     abstract public function prepare_media($media);
 
@@ -2405,7 +2405,7 @@ abstract class Catalog extends database_object
             return $array;
         }
 
-        //retrieve the file if needed
+        // retrieve the file if needed
         $media = $catalog->prepare_media($media);
 
         /** @var Song|Podcast_Episode|Video $media */
