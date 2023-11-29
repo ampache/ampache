@@ -9771,11 +9771,6 @@ parameters:
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
 		-
-			message: "#^Binary operation \"\\.\" between 'Final command is ' and array\\<int, string\\>\\|string results in an error\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_max_bitrate\\(\\) has parameter \\$transcode_settings with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
@@ -9842,11 +9837,6 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Parameter \\#1 \\$command of function shell_exec expects string, array\\<int, string\\>\\|string given\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -12109,11 +12099,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$Format of method CpChart\\\\Data\\:\\:setAxisDisplay\\(\\) expects array\\|null, string given\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:getDownloadHeaders\\(\\) should return array\\<string\\> but returns array\\<string, int\\|string\\>\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:match\\(\\) has no return type specified\\.$#"

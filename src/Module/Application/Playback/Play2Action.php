@@ -605,10 +605,7 @@ final class Play2Action implements ApplicationActionInterface
 
         $transcode     = false;
         $transcode_cfg = AmpConfig::get('transcode');
-        $cache_path    = (string)AmpConfig::get('cache_path', '');
-        $cache_target  = (string)AmpConfig::get('cache_target', '');
-        $cache_file    = false;
-        $file_target   = false;
+        $cache_file   = false;
         $mediaOwnerId  = ($media instanceof Song_Preview)
             ? null
             : $media->get_user_owner();
@@ -616,6 +613,8 @@ final class Play2Action implements ApplicationActionInterface
             ? null
             : $media->catalog;
         if ($mediaCatalogId) {
+            $cache_path   = (string)AmpConfig::get('cache_path', '');
+            $cache_target = (string)AmpConfig::get('cache_target', '');
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
             if (!Catalog::has_access($mediaCatalogId, $user->id) && ($mediaOwnerId && (int)$mediaOwnerId !== $user->id)) {
@@ -659,7 +658,7 @@ final class Play2Action implements ApplicationActionInterface
         } else {
             // No catalog, must be song preview or something like that => just redirect to file
             if ($type == "song_preview" && $media instanceof Song_Preview) {
-                $media->stream();
+                $media->stream(); // header redirect using preview plugin ($plugin->_plugin->stream_song_preview())
             } else {
                 header('Location: ' . $media->file, true, 303);
             }
@@ -1085,7 +1084,7 @@ final class Play2Action implements ApplicationActionInterface
         }
 
         if ($transcode && connection_status() == 0) {
-            $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, strlen($buf_all));
+            $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, (string)strlen($buf_all));
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
             }
