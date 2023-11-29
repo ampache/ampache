@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=0);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
@@ -32,18 +32,62 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * This class handles the Mail
- *
- * @todo create setters for all properties
  */
 final class Mailer implements MailerInterface
 {
-    // The message, recipient and from
-    public $message;
-    public $subject;
-    public $recipient;
-    public $recipient_name;
-    public $sender;
-    public $sender_name;
+    private ?string $message = null;
+
+    private ?string $subject = null;
+
+    private ?string $recipient = null;
+
+    private ?string $recipient_name = null;
+
+    private ?string $sender = null;
+
+    private ?string $sender_name = null;
+
+    /**
+     * Set the actual mail body/message
+     */
+    public function setMessage(string $message): MailerInterface
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
+     * Set the mail subject
+     */
+    public function setSubject(string $subject): MailerInterface
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    /**
+     * Set recipient email and -name
+     */
+    public function setRecipient(string $recipientEmail, string $recipientName = ''): MailerInterface
+    {
+        $this->recipient      = $recipientEmail;
+        $this->recipient_name = $recipientName;
+
+        return $this;
+    }
+
+    /**
+     * Set sender email and -name
+     */
+    public function setSender(string $senderEmail, string $senderName = ''): MailerInterface
+    {
+        $this->sender      = $senderEmail;
+        $this->sender_name = $senderName;
+
+        return $this;
+    }
 
     /**
      * is_mail_enabled
@@ -84,7 +128,7 @@ final class Mailer implements MailerInterface
      * Does the config magic to figure out the "system" email sender and
      * sets it as the sender.
      */
-    public function set_default_sender()
+    public function set_default_sender(): MailerInterface
     {
         $user     = AmpConfig::get('mail_user', 'info');
         $domain   = AmpConfig::get('mail_domain', 'example.com');
@@ -92,6 +136,8 @@ final class Mailer implements MailerInterface
 
         $this->sender      = $user . '@' . $domain;
         $this->sender_name = $fromname;
+
+        return $this;
     }
 
     /**
@@ -149,26 +195,26 @@ final class Mailer implements MailerInterface
         if ($phpmailer == null) {
             $mail = new PHPMailer();
 
-            $recipient_name = $this->recipient_name;
+            $recipient_name = (string) $this->recipient_name;
             if (function_exists('mb_encode_mimeheader')) {
                 $recipient_name = mb_encode_mimeheader($recipient_name);
             }
-            $mail->AddAddress($this->recipient, $recipient_name);
+            $mail->AddAddress((string) $this->recipient, $recipient_name);
         } else {
             $mail = $phpmailer;
         }
 
         $mail->CharSet  = AmpConfig::get('site_charset');
         $mail->Encoding = 'base64';
-        $mail->From     = $this->sender;
-        $mail->Sender   = $this->sender;
-        $mail->FromName = $this->sender_name;
-        $mail->Subject  = $this->subject;
+        $mail->From     = (string) $this->sender;
+        $mail->Sender   = (string) $this->sender;
+        $mail->FromName = (string) $this->sender_name;
+        $mail->Subject  = (string) $this->subject;
 
         if (function_exists('mb_eregi_replace')) {
-            $this->message = mb_eregi_replace("\r\n", "\n", $this->message);
+            $this->message = (string) mb_eregi_replace("\r\n", "\n", (string) $this->message);
         }
-        $mail->Body = $this->message;
+        $mail->Body = (string) $this->message;
 
         $sendmail = AmpConfig::get('sendmail_path', '/usr/sbin/sendmail');
         $mailhost = AmpConfig::get('mail_host', 'localhost');

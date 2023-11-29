@@ -60,17 +60,18 @@ class Registration
         $mailer->set_default_sender();
 
         /* HINT: Ampache site_title */
-        $mailer->subject = sprintf(T_("New User Registration at %s"), AmpConfig::get('site_title'));
+        $mailer->setSubject(sprintf(T_("New User Registration at %s"), AmpConfig::get('site_title')));
 
-        $mailer->message = T_('Thank you for registering') . "\n";
-        $mailer->message .= T_('Please keep this e-mail for your records. Your account information is as follows:') . "\n";
-        $mailer->message .= "----------------------\n";
-        $mailer->message .= T_('Username') . ": $username" . "\n";
-        $mailer->message .= "----------------------\n";
-        $mailer->message .= T_('To begin using your account, you must verify your e-mail address by vising the following link:') . "\n\n";
-        $mailer->message .= AmpConfig::get('web_path') . "/register.php?action=validate&username=" . urlencode($username) . "&auth=$validation";
-        $mailer->recipient      = $email;
-        $mailer->recipient_name = $fullname;
+        $message = T_('Thank you for registering') . "\n";
+        $message .= T_('Please keep this e-mail for your records. Your account information is as follows:') . "\n";
+        $message .= "----------------------\n";
+        $message .= T_('Username') . ": $username" . "\n";
+        $message .= "----------------------\n";
+        $message .= T_('To begin using your account, you must verify your e-mail address by vising the following link:') . "\n\n";
+        $message .= AmpConfig::get('web_path') . "/register.php?action=validate&username=" . urlencode($username) . "&auth=$validation";
+
+        $mailer->setRecipient($email, $fullname);
+        $mailer->setMessage($message);
 
         if (!AmpConfig::get('admin_enable_required')) {
             $mailer->send();
@@ -78,13 +79,20 @@ class Registration
 
         // Check to see if the admin should be notified
         if (AmpConfig::get('admin_notify_reg')) {
-            $mailer->message = T_("A new user has registered, the following values were entered:") . "\n\n";
-            $mailer->message .= T_("Username") . ": $username\n";
-            $mailer->message .= T_("Fullname") . ": $fullname\n";
-            $mailer->message .= T_("E-mail") . ": $email\n";
+            $mailer = new Mailer();
+
+            // We are the system
+            $mailer->set_default_sender();
+            $mailer->setSubject(sprintf(T_("New User Registration at %s"), AmpConfig::get('site_title')));
+
+            $message = T_("A new user has registered, the following values were entered:") . "\n\n";
+            $message .= T_("Username") . ": $username\n";
+            $message .= T_("Fullname") . ": $fullname\n";
+            $message .= T_("E-mail") . ": $email\n";
             if (!empty($website)) {
-                $mailer->message .= T_("Website") . ": $website\n";
+                $message .= T_("Website") . ": $website\n";
             }
+            $mailer->setMessage($message);
             $mailer->send_to_group('admins');
         }
 
