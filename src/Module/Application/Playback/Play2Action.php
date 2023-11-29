@@ -132,8 +132,8 @@ final class Play2Action implements ApplicationActionInterface
                 }
             }
             $_REQUEST     = $new_request;
-            $action       = (string)$new_request['action'] ?? '';
-            $stream_name  = (string)$new_request['name'] ?? '';
+            $action       = (string)($new_request['action'] ?? '');
+            $stream_name  = (string)($new_request['name'] ?? '');
             $object_id    = (int)scrub_in((string) ($new_request['oid'] ?? 0));
             $user_id      = (int)scrub_in((string) ($new_request['uid'] ?? 0));
             $session_id   = scrub_in((string) ($new_request['ssid'] ?? ''));
@@ -662,9 +662,9 @@ final class Play2Action implements ApplicationActionInterface
                 $media->stream();
             } else {
                 header('Location: ' . $media->file, true, 303);
-
-                return null;
             }
+
+            return null;
         }
         // load the cache file or the local file
         $stream_file = ($cache_file && $file_target)
@@ -709,7 +709,7 @@ final class Play2Action implements ApplicationActionInterface
             );
             // STUPID IE
             $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
-            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, $media->size);
+            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, (string)$media->size);
 
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
@@ -901,16 +901,16 @@ final class Play2Action implements ApplicationActionInterface
                 ? $media->bitrate / 1024
                 : Stream::get_max_bitrate($media, $transcode_settings);
             if ($media->time > 0 && $maxbitrate > 0) {
-                $stream_size = ($media->time * $maxbitrate * 1024) / 8;
+                $stream_size = (int)(($media->time * $maxbitrate * 1024) / 8);
             } else {
                 $this->logger->debug(
                     'Bad media duration / Max bitrate. Content-length calculation skipped.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                $stream_size = null;
+                $stream_size = 0;
             }
         } else {
-            $stream_size = $media->size;
+            $stream_size = (int)$media->size;
         }
 
         if (!is_resource($filepointer)) {
@@ -926,7 +926,6 @@ final class Play2Action implements ApplicationActionInterface
             header('ETag: ' . $media->id);
         }
         // Handle Content-Range
-
         $start        = 0;
         $end          = 0;
         $range_values = sscanf(Core::get_server('HTTP_RANGE'), "bytes=%d-%d", $start, $end);
@@ -934,13 +933,13 @@ final class Play2Action implements ApplicationActionInterface
         if ($range_values > 0 && ($start > 0 || $end > 0)) {
             // Calculate stream size from byte range
             if ($range_values >= 2) {
-                $end = min($end, $media->size - 1);
+                $end = (int)min($end, $media->size - 1);
             } else {
                 $end = $media->size - 1;
             }
-            $stream_size = ($end - $start) + 1;
+            $stream_size = (int)($end - ((int)$start)) + 1;
 
-            if ($stream_size == null) {
+            if ($stream_size === 0) {
                 $this->logger->error(
                     'Content-Range header received, which we cannot fulfill due to unknown final length (transcoding?)',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -950,7 +949,7 @@ final class Play2Action implements ApplicationActionInterface
                     'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                fseek($filepointer, $start);
+                fseek($filepointer, (int)$start);
 
                 $range = $start . '-' . $end . '/' . $media->size;
                 header('HTTP/1.1 206 Partial Content');
@@ -965,7 +964,7 @@ final class Play2Action implements ApplicationActionInterface
 
             // Stats registering must be done before play. Do not move it.
             // It can be slow because of scrobbler plugins (lastfm, ...)
-            if ($start > 0) {
+            if ((int)$start > 0) {
                 $this->logger->debug(
                     'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -1003,17 +1002,16 @@ final class Play2Action implements ApplicationActionInterface
             }
         }
 
-        if ($transcode || $demo_id) {
+        if ($demo_id) {
             header('Accept-Ranges: none');
         } else {
             header('Accept-Ranges: bytes');
         }
 
-        $mime = $media->mime;
         if ($transcode && isset($transcoder)) {
-            $mime = ($type == 'video')
-                ? Video::type_to_mime($transcoder['format'])
-                : Song::type_to_mime($transcoder['format']);
+            $mime = ($type === 'video')
+                ? Video::type_to_mime($transcoder['format'] ?? '')
+                : Song::type_to_mime($transcoder['format'] ?? '');
             // Non-blocking stream doesn't work in Windows (php bug since 2005 and still here in 2020...)
             // We don't want to wait indefinitely for a potential error so we just ignore it.
             // https://bugs.php.net/bug.php?id=47918
@@ -1028,6 +1026,11 @@ final class Play2Action implements ApplicationActionInterface
                 }
                 fclose($transcoder['stderr']);
             }
+        } else {
+            // output file might not be the same type
+            $mime = ($type === 'video')
+                ? Video::type_to_mime($media->type)
+                : Song::type_to_mime($media->type);
         }
 
         // Close sql connection
@@ -1039,7 +1042,7 @@ final class Play2Action implements ApplicationActionInterface
 
         // Actually do the streaming
         if (!$transcode) {
-            $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
+            $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, (string)$stream_size);
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
             }
@@ -1063,22 +1066,22 @@ final class Play2Action implements ApplicationActionInterface
             return null;
         } elseif ($status > 0) {
             do {
-                $read_size = $transcode ? 2048 : min(2048, max(0, $stream_size - $bytes_streamed));
+                $read_size = $transcode
+                    ? 2048
+                    : min(2048, max(0, $stream_size - $bytes_streamed));
+
                 if ($buf = fread($filepointer, $read_size)) {
                     if ($transcode) {
                         $buf_all .= $buf;
-                    } elseif (!empty($buf)) {
-                        print($buf);
-                        if (ob_get_length()) {
-                            ob_flush();
-                            flush();
-                            ob_end_flush();
-                        }
-                        ob_start();
+                    } else {
+                        echo $buf;
+                        ob_flush();
+                        flush();
                     }
+
                     $bytes_streamed += strlen($buf);
                 }
-            } while (!feof($filepointer) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+            } while (!feof($filepointer) && (connection_status() == 0 && ($transcode || $bytes_streamed < $stream_size)));
         }
 
         if ($transcode && connection_status() == 0) {
@@ -1086,10 +1089,13 @@ final class Play2Action implements ApplicationActionInterface
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
             }
-            print($buf_all);
+            echo $buf_all;
             ob_flush();
             flush();
         }
+        // end output buffering
+        ob_end_flush();
+
         // Need to make sure enough bytes were sent.
         if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
             // This stop's a client requesting the same content-range repeatedly

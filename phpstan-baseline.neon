@@ -6026,72 +6026,7 @@ parameters:
 			path: src/Module/Application/Login/DefaultAction.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$bitrate\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$f_artist_full\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$f_file\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$file\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$id\\.$#"
-			count: 7
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$mime\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$size\\.$#"
-			count: 6
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$time\\.$#"
-			count: 3
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$title\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$type\\.$#"
-			count: 5
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Binary operation \"\\-\" between float\\|int\\|string\\|null and float\\|int\\|string\\|null results in an error\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Cannot access offset 'format' on array\\|false\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Cannot access offset 'stderr' on array\\|false\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 2
 			path: src/Module/Application/Playback/Play2Action.php
 
@@ -6101,22 +6036,7 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Parameter \\#1 \\$media of static method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_max_bitrate\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video, Ampache\\\\Repository\\\\Model\\\\Media given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Parameter \\#1 \\$media of static method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_transcode\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video, Ampache\\\\Repository\\\\Model\\\\Media given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Parameter \\#1 \\$object_id of method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:delete_from_oid\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, float\\|int\\<0, 2048\\> given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
 
@@ -6126,87 +6046,7 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Parameter \\#2 \\$offset of function fseek expects int, float\\|int\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Parameter \\#4 \\$cLength of method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:getDownloadHeaders\\(\\) expects string\\|null, int\\<0, max\\> given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Variable \\$buf in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$bitrate\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$f_artist_full\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$f_file\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$file\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$id\\.$#"
-			count: 7
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$mime\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$size\\.$#"
-			count: 6
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$time\\.$#"
-			count: 3
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$title\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$type\\.$#"
-			count: 7
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Binary operation \"\\-\" between float\\|int\\|string\\|null and float\\|int\\|string\\|null results in an error\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Cannot access offset 'format' on array\\|false\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
 			message: "#^Cannot access offset 'stderr' on array\\|false\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 2
 			path: src/Module/Application/Playback/PlayAction.php
 
@@ -6216,37 +6056,12 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$media of static method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_max_bitrate\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video, Ampache\\\\Repository\\\\Model\\\\Media given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$media of static method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_transcode\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video, Ampache\\\\Repository\\\\Model\\\\Media given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$object_id of method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:delete_from_oid\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, float\\|int\\<0, 2048\\> given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Parameter \\#2 \\$offset of function fseek expects int, float\\|int\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Variable \\$buf in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
@@ -7136,11 +6951,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Song_Preview\\|Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$size\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
@@ -7917,11 +7727,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:\\$_serverUrl has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Ternary operator condition is always false\\.$#"
 			count: 1
 			path: src/Module/Catalog/SubsonicClient.php
 
@@ -18508,11 +18313,6 @@ parameters:
 		-
 			message: "#^Cannot access property \\$title on array\\.$#"
 			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 2
 			path: src/Repository/Model/Wanted.php
 
 		-

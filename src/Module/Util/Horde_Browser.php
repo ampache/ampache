@@ -790,15 +790,14 @@ class Horde_Browser
             }
         }
 
-        /* Content-Length Header. Only send if we are not compressing
-         * output. */
-        if ($cLength !== null && !in_array('ob_gzhandler', ob_list_handlers())) {
+        /* Content-Length Header. Only send if we are not compressing output. */
+        if (!empty($cLength) && !in_array('ob_gzhandler', ob_list_handlers())) {
             $headers['Content-Length'] = $cLength;
         }
 
         /* Overwrite Pragma: and other caching headers for IE. */
         if ($this->hasQuirk('cache_ssl_downloads')) {
-            $headers['Expires']       = 0;
+            $headers['Expires']       = '0';
             $headers['Cache-Control'] = 'must-revalidate';
             $headers['Pragma']        = 'public';
         }
