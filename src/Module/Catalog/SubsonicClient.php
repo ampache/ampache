@@ -171,15 +171,15 @@ class SubsonicClient
         }
         preg_match("/\:\d{1,6}$/", $server, $matches);
         if (count($matches)) {
-            // If theres a port on the url, remove it and save it for later use.
+            // If there's a port on the url, remove it and save it for later use.
             $server = str_replace($matches[0], "", $server);
             $_port  = str_replace(":", "", $matches[0]);
         }
-        if ($port == null && isset($_port)) {
+        if (empty($port) && isset($_port)) {
             // If port parameter not set but there was one on the url, use the one from the url.
             $port = $_port;
-        } elseif ($port == null) {
-            $port = ($protocol == "https") ? '443' : '80';
+        } elseif (empty($port)) {
+            $port = ($protocol === "https://") ? '443' : '80';
         }
         $this->_serverUrl  = $server;
         $this->_serverPort = $port;
