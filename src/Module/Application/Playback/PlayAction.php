@@ -581,10 +581,7 @@ final class PlayAction implements ApplicationActionInterface
 
         $transcode      = false;
         $transcode_cfg  = AmpConfig::get('transcode');
-        $cache_path     = (string)AmpConfig::get('cache_path', '');
-        $cache_target   = AmpConfig::get('cache_target', '');
         $cache_file     = false;
-        $file_target    = false;
         $mediaOwnerId   = ($media instanceof Song_Preview) ? null : $media->get_user_owner();
         $mediaCatalogId = ($media instanceof Song_Preview) ? null : $media->catalog;
         if ($mediaCatalogId) {
@@ -604,7 +601,9 @@ final class PlayAction implements ApplicationActionInterface
                     return null;
                 }
             }
-            $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
+            $cache_path   = (string)AmpConfig::get('cache_path', '');
+            $cache_target = AmpConfig::get('cache_target', '');
+            $file_target  = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
             if ($transcode_cfg != 'never' && !$is_download && ($file_target && is_file($file_target))) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
@@ -1067,7 +1066,7 @@ final class PlayAction implements ApplicationActionInterface
                     }
                     $bytes_streamed += strlen($buf);
                 }
-            } while (!feof($filepointer) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+            } while (!feof($filepointer) && (connection_status() == 0 && ($transcode || $bytes_streamed < $stream_size)));
         }
 
         if ($send_all_in_once && connection_status() == 0) {

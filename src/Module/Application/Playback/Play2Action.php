@@ -605,7 +605,7 @@ final class Play2Action implements ApplicationActionInterface
 
         $transcode     = false;
         $transcode_cfg = AmpConfig::get('transcode');
-        $cache_file   = false;
+        $cache_file    = false;
         $mediaOwnerId  = ($media instanceof Song_Preview)
             ? null
             : $media->get_user_owner();
@@ -613,8 +613,6 @@ final class Play2Action implements ApplicationActionInterface
             ? null
             : $media->catalog;
         if ($mediaCatalogId) {
-            $cache_path   = (string)AmpConfig::get('cache_path', '');
-            $cache_target = (string)AmpConfig::get('cache_target', '');
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
             if (!Catalog::has_access($mediaCatalogId, $user->id) && ($mediaOwnerId && (int)$mediaOwnerId !== $user->id)) {
@@ -631,7 +629,9 @@ final class Play2Action implements ApplicationActionInterface
                     return null;
                 }
             }
-            $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
+            $cache_path   = (string)AmpConfig::get('cache_path', '');
+            $cache_target = (string)AmpConfig::get('cache_target', '');
+            $file_target  = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
             if ($transcode_cfg != 'never' && !$is_download && ($file_target && is_file($file_target))) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
