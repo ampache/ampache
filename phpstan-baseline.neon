@@ -5821,11 +5821,6 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_id of method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:delete_from_oid\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
@@ -5837,11 +5832,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:delete_from_oid\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 

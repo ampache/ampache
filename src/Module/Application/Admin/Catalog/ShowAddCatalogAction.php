@@ -51,9 +51,7 @@ final class ShowAddCatalogAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        require Ui::find_template('show_add_catalog.inc.php');
-
+        $this->ui->show('show_add_catalog.inc.php');
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

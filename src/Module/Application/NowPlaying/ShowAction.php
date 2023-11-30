@@ -33,6 +33,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -47,14 +48,18 @@ final class ShowAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
+    private UiInterface $ui;
+
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UiInterface $ui
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -124,8 +129,10 @@ final class ShowAction implements ApplicationActionInterface
         $user_id = (int)$this->requestParser->getFromRequest('user_id');
         $results = Stream::get_now_playing($user_id);
 
-        require Ui::find_template('show_now_playing.inc.php');
-
+        $this->ui->show(
+            'show_now_playing.inc.php',
+            ['results' => $results]
+        );
         print('</body></html>');
 
         return null;

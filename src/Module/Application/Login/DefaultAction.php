@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -64,6 +65,8 @@ final class DefaultAction implements ApplicationActionInterface
 
     private NetworkCheckerInterface $networkChecker;
 
+    private UiInterface $ui;
+
     private UserTrackerInterface $userTracker;
 
     public function __construct(
@@ -73,6 +76,7 @@ final class DefaultAction implements ApplicationActionInterface
         ResponseFactoryInterface $responseFactory,
         LoggerInterface $logger,
         NetworkCheckerInterface $networkChecker,
+        UiInterface $ui,
         UserTrackerInterface $userTracker
     ) {
         $this->requestParser         = $requestParser;
@@ -81,6 +85,7 @@ final class DefaultAction implements ApplicationActionInterface
         $this->responseFactory       = $responseFactory;
         $this->logger                = $logger;
         $this->networkChecker        = $networkChecker;
+        $this->ui                    = $ui;
         $this->userTracker           = $userTracker;
     }
 
@@ -359,7 +364,7 @@ final class DefaultAction implements ApplicationActionInterface
                 );
         } // auth success
 
-        require Ui::find_template('show_login_form.inc.php');
+        $this->ui->show('show_login_form.inc.php');
 
         return null;
     }

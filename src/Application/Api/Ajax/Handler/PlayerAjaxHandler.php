@@ -27,6 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -37,12 +38,16 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
 
     private AjaxUriRetrieverInterface $ajaxUriRetriever;
 
+    private UiInterface $ui;
+
     public function __construct(
         RequestParserInterface $requestParser,
-        AjaxUriRetrieverInterface $ajaxUriRetriever
+        AjaxUriRetrieverInterface $ajaxUriRetriever,
+        UiInterface $ui
     ) {
         $this->requestParser    = $requestParser;
         $this->ajaxUriRetriever = $ajaxUriRetriever;
+        $this->ui               = $ui;
     }
 
     public function handle(): void
@@ -55,7 +60,10 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
             case 'show_broadcasts':
                 ob_start();
                 $ajaxUri = $this->ajaxUriRetriever->getAjaxUri();
-                require Ui::find_template('show_broadcasts_dialog.inc.php');
+                $this->ui->show(
+                    'show_broadcasts_dialog.inc.php',
+                    ['ajaxUri' => $ajaxUri]
+                );
                 $results = ob_get_contents();
                 ob_end_clean();
                 echo $results;

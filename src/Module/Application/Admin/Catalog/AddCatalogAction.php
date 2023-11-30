@@ -86,7 +86,7 @@ final class AddCatalogAction extends AbstractCatalogAction
             $users      = static::getUserRepository()->getValidArray();
 
             if (!$catalog_id) {
-                require Ui::find_template('show_add_catalog.inc.php');
+                $this->ui->show('show_add_catalog.inc.php');
 
                 return null;
             }
@@ -106,7 +106,7 @@ final class AddCatalogAction extends AbstractCatalogAction
                 false
             );
         } else {
-            require Ui::find_template('show_add_catalog.inc.php');
+            $this->ui->show('show_add_catalog.inc.php');
         }
 
         return null;

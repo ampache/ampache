@@ -84,7 +84,10 @@ final class ShowAction implements ApplicationActionInterface
             echo T_('You have requested an object that does not exist');
         } else {
             $radio->format();
-            require Ui::find_template('show_live_stream.inc.php');
+            $this->ui->show(
+                'show_live_stream.inc.php',
+                ['radio' => $radio]
+            );
         }
         $this->ui->showQueryStats();
         $this->ui->showFooter();

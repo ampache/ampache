@@ -628,8 +628,16 @@ class Ui implements UiInterface
         } else {
             $path = sprintf('%s/%s', $webPath, $next_url);
         }
-
-        require Ui::find_template('show_confirmation.inc.php');
+        $this->show(
+            'show_confirmation.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'path' => $path,
+                'form_name' => $form_name,
+                'cancel' => $cancel
+            ]
+        );
     }
 
     /**
@@ -648,7 +656,14 @@ class Ui implements UiInterface
             $path = sprintf('%s/%s', $webPath, $next_url);
         }
 
-        require Ui::find_template('show_continue.inc.php');
+        $this->show(
+            'show_continue.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'path' => $path
+            ]
+        );
     }
 
     /**

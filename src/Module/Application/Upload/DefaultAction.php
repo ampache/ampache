@@ -99,7 +99,13 @@ final class DefaultAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         if ($this->configContainer->get(ConfigurationKeyEnum::UPLOAD_CATALOG) > 0) {
-            require Ui::find_template('show_add_upload.inc.php');
+            $this->ui->show(
+                'show_add_upload.inc.php',
+                [
+                    'upload_max' => $upload_max,
+                    'ajaxfs' => $ajaxfs
+                ]
+            );
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '&nbsp' . "<a href=\"https://github.com/ampache/ampache/wiki/upload-catalogs\" target=\"_blank\">" . T_('Help') . "</a>";

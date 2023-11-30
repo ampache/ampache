@@ -54,7 +54,10 @@ final class ShowMissingAction implements ApplicationActionInterface
         $mbid    = VaInfo::parse_mbid($_REQUEST['mbid'] ?? '');
         $wartist = Wanted::get_missing_artist($mbid);
 
-        require Ui::find_template('show_missing_artist.inc.php');
+        $this->ui->show(
+            'show_missing_artist.inc.php',
+            ['wartist' => $wartist]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Batch\DefaultAction;
 use Ampache\Module\Application\Stream\DownloadAction;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -54,16 +55,20 @@ final class ConsumeAction implements ApplicationActionInterface
 
     private ContainerInterface $dic;
 
+    private UiInterface $ui;
+
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
-        ContainerInterface $dic
+        ContainerInterface $dic,
+        UiInterface $ui
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->networkChecker  = $networkChecker;
         $this->dic             = $dic;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -94,8 +99,7 @@ final class ConsumeAction implements ApplicationActionInterface
 
         $share_id = (int)$this->requestParser->getFromRequest('id');
         $secret   = $this->requestParser->getFromRequest('secret');
-
-        $share = new Share($share_id);
+        $share    = new Share($share_id);
         if (empty($action) && $share->id) {
             if ($share->allow_stream) {
                 $action = 'stream';
@@ -123,7 +127,10 @@ final class ConsumeAction implements ApplicationActionInterface
                 return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
             }
         } elseif ($action == 'stream') {
-            require Ui::find_template('show_share.inc.php');
+            $this->ui->show(
+                'show_share.inc.php',
+                ['share' => $share]
+            );
         } else {
             throw new AccessDeniedException('Access Denied: unknown action.');
         }

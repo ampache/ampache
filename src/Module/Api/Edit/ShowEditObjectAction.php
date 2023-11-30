@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
@@ -44,15 +45,19 @@ final class ShowEditObjectAction extends AbstractEditAction
 
     private StreamFactoryInterface $streamFactory;
 
+    private UiInterface $ui;
+
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UiInterface $ui
     ) {
         parent::__construct($configContainer, $logger);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
+        $this->ui              = $ui;
     }
 
     protected function handle(
@@ -66,7 +71,10 @@ final class ShowEditObjectAction extends AbstractEditAction
         $users     = static::getUserRepository()->getValidArray();
         $users[-1] = T_('System');
 
-        require Ui::find_template('show_edit_' . $object_type . '.inc.php');
+        $this->ui->show(
+            'show_edit_' . $object_type . '.inc.php',
+            ['libitem' => $libitem]
+        );
 
         $results = ob_get_contents();
 

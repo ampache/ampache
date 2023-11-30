@@ -70,7 +70,10 @@ final class ShowDisabledAction implements ApplicationActionInterface
 
         $songs = Song::get_disabled();
         if (count($songs)) {
-            require Ui::find_template('show_disabled_songs.inc.php');
+            $this->ui->show(
+                'show_disabled_songs.inc.php',
+                ['$ongs' => $songs]
+            );
         } else {
             echo '<div class="error show-disabled">' . T_('No disabled Songs found') . '</div>';
         }
