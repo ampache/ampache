@@ -63,7 +63,7 @@ class Share extends database_object
 
     public $f_name;
     public $f_user;
-
+    /** @var Song|Artist|Album|playlist_object|null $object */
     private $object;
 
     /**
@@ -287,27 +287,39 @@ class Share extends database_object
         }
     }
 
+    public function hasObject(): bool
+    {
+        return $this->getObject() !== null;
+    }
     /**
-     * @return Song|Artist|Album|playlist_object
+     * @return Song|Artist|Album|playlist_object|null
      */
     private function getObject()
     {
         if ($this->object === null) {
             $className    = ObjectTypeToClassNameMapper::map((string)$this->object_type);
-            $this->object = new $className($this->object_id);
+            /** @var Song|Artist|Album|playlist_object $libitem */
+            $libitem      = new $className($this->object_id);
+            if ($libitem->isNew() === false) {
+                $this->object = $libitem;
+            }
         }
 
-        return $this->object;
+        return $this->object ?? null;
     }
 
     public function getObjectUrl(): string
     {
-        return (string)$this->getObject()->get_f_link();
+        return ($this->getObject())
+            ? (string)$this->getObject()->get_f_link()
+            : '';
     }
 
     public function getObjectName(): string
     {
-        return (string)$this->getObject()->get_fullname();
+        return ($this->getObject())
+            ? (string)$this->getObject()->get_fullname()
+            : '';
     }
 
     public function getUserName(): string

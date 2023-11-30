@@ -149,6 +149,11 @@ class User extends database_object
         return (int)($this->id ?: 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * has_info
      * This function returns the information for this object
@@ -1351,14 +1356,6 @@ class User extends database_object
     }
 
     /**
-     * Returns `true` if the user does not exist
-     */
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
-    /**
      * Returns a concatenated version of several names
      *
      * In some cases (e.g. admin backend), we want to be as verbose as possible,
@@ -1367,6 +1364,16 @@ class User extends database_object
     public function getFullDisplayName(): string
     {
         return sprintf('%s (%s)', $this->username, $this->fullname);
+    }
+
+    /**
+     * Returns the value of a certain user-preference
+     *
+     * @return int|string
+     */
+    public function getPreferenceValue(string $preferenceName)
+    {
+        return Preference::get_by_user($this->getId(), $preferenceName);
     }
 
     /**

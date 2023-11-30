@@ -81,7 +81,11 @@ class ShowSongActionTest extends MockeryTestCase
         $request = $this->mock(ServerRequestInterface::class);
         $song    = $this->mock(Song::class);
 
-        $song_id = 666;
+        $song_id = 0;
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -93,9 +97,11 @@ class ShowSongActionTest extends MockeryTestCase
             ->once()
             ->andReturn($song);
 
-        $this->ui->shouldReceive('showHeader')
+        $song->shouldReceive('isNew')
             ->withNoArgs()
-            ->once();
+            ->once()
+            ->andReturn(true);
+
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -135,6 +141,9 @@ class ShowSongActionTest extends MockeryTestCase
         $song->id     = $song_id;
         $song->f_name = $title;
 
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
@@ -145,9 +154,18 @@ class ShowSongActionTest extends MockeryTestCase
             ->once()
             ->andReturn($song);
 
-        $this->ui->shouldReceive('showHeader')
+        $song->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(false);
+
+        $song->shouldReceive('format')
             ->withNoArgs()
             ->once();
+        $song->shouldReceive('fill_ext_info')
+            ->withNoArgs()
+            ->once();
+
         $this->ui->shouldReceive('showBoxTop')
             ->with(
                 $title,
@@ -161,13 +179,6 @@ class ShowSongActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
         $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $song->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $song->shouldReceive('fill_ext_info')
             ->withNoArgs()
             ->once();
 

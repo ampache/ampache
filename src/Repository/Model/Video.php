@@ -176,6 +176,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * Create a video strongly typed object from its id.
      * @param int $video_id

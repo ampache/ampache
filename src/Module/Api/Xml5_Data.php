@@ -1000,6 +1000,9 @@ class Xml5_Data
             $className = ObjectTypeToClassNameMapper::map($data['object_type']);
             /** @var Song $song */
             $song = new $className($data['object_id']);
+            if ($song->isNew()) {
+                continue;
+            }
             $song->format();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved

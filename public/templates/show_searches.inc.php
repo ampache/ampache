@@ -61,20 +61,21 @@ use Ampache\Module\Util\Ui;
         </tr>
     </thead>
     <tbody>
-        <?php
-        foreach ($object_ids as $playlist_id) {
-            $libitem = new Search($playlist_id, 'song');
-            $libitem->format(); ?>
+<?php foreach ($object_ids as $playlist_id) {
+    $libitem = new Search($playlist_id, 'song');
+    if ($libitem->isNew()) {
+        continue;
+    }
+    $libitem->format(); ?>
         <tr id="smartplaylist_row_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_search_row.inc.php'); ?>
         </tr>
-        <?php
-        } ?>
-        <?php if (!count($object_ids)) { ?>
+<?php } ?>
+<?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No smart playlist found'); ?></span></td>
         </tr>
-        <?php } ?>
+<?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

@@ -39,7 +39,10 @@ use Ampache\Repository\Model\Song_Preview;
     </thead>
     <tbody>
         <?php
-        foreach ($object_ids as $libitem) { ?>
+        foreach ($object_ids as $libitem) {
+            if ($libitem->isNew()) {
+                continue;
+            } ?>
         <tr id="song_preview_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_song_preview_row.inc.php'); ?>
         </tr>

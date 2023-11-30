@@ -85,6 +85,9 @@ if ($browse->is_show_header()) {
         $className = ObjectTypeToClassNameMapper::map($item['object_type']);
         /** @var \Ampache\Repository\Model\Song $media */
         $media = new $className($item['object_id']);
+        if ($media->isNew()) {
+            continue;
+        }
         $media->format(); ?>
 <tr>
     <td class="cel_action">

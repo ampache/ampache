@@ -1799,6 +1799,9 @@ class Subsonic_Api
                 $prev_date = $previous['date'] ?? 0;
                 $type      = Subsonic_Xml_Data::_getAmpacheType((string)$subsonic_id);
                 $media     = Subsonic_Xml_Data::_getAmpacheObject((int)$subsonic_id);
+                if ($media === null || $media->isNew()) {
+                    continue;
+                }
                 $media->format();
 
                 // long pauses might cause your now_playing to hide
@@ -2795,7 +2798,9 @@ class Subsonic_Api
     {
         $current = (string)($input['current'] ?? '0');
         $media   = Subsonic_Xml_Data::_getAmpacheObject((int)$current);
-        if ($media->id) {
+        if ($media === null || $media->isNew()) {
+            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'saveplayqueue');
+        } else {
             $response = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
             $position = (array_key_exists('position', $input))
                 ? (int)(((int)$input['position']) / 1000)
@@ -2831,8 +2836,6 @@ class Subsonic_Api
                 $playlist = Subsonic_Xml_Data::_getAmpacheIdArrays($sub_ids);
                 $playQueue->set_items($playlist, $type, $media->id, $position, $time);
             }
-        } else {
-            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'saveplayqueue');
         }
 
         self::_apiOutput($input, $response);

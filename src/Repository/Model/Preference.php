@@ -242,6 +242,8 @@ class Preference extends database_object
      * @param int $user_id
      * @param string $pref_name
      * @return int|string
+     *
+     * @see User::getPreferenceValue()
      */
     public static function get_by_user($user_id, $pref_name)
     {

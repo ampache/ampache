@@ -75,20 +75,20 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         </tr>
     </thead>
     <tbody>
-        <?php
-                if (AmpConfig::get('ratings')) {
-                    Rating::build_cache('podcast_episode', $object_ids);
-                    Userflag::build_cache('podcast_episode', $object_ids);
-                }
-
-                foreach ($object_ids as $episode_id) {
-                    $libitem = new Podcast_Episode($episode_id);
-                    $libitem->format(); ?>
+        <?php if (AmpConfig::get('ratings')) {
+            Rating::build_cache('podcast_episode', $object_ids);
+            Userflag::build_cache('podcast_episode', $object_ids);
+        }
+        foreach ($object_ids as $episode_id) {
+            $libitem = new Podcast_Episode($episode_id);
+            if ($libitem->isNew()) {
+                continue;
+            }
+            $libitem->format(); ?>
         <tr id="podcast_episode_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_podcast_episode_row.inc.php'); ?>
         </tr>
-        <?php
-                } ?>
+        <?php } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast episode found'); ?></span></td>
