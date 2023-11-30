@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -58,7 +59,7 @@ final class UpdatePodcast5Method
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
-            if ($podcast->sync_episodes(true)) {
+            if (static::getPodcastSyncer()->sync($podcast, true)) {
                 Api5::message('Synced episodes for podcast: ' . (string) $object_id, $input['api_format']);
                 Session::extend($input['auth'], 'api');
             } else {
@@ -70,5 +71,15 @@ final class UpdatePodcast5Method
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
     }
 }
