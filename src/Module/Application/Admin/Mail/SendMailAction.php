@@ -82,14 +82,13 @@ final class SendMailAction implements ApplicationActionInterface
             $mailer = new Mailer();
 
             // Set the vars on the object
-            $mailer->subject = $this->requestParser->getFromRequest('subject');
-            $mailer->message = $this->requestParser->getFromRequest('message');
+            $mailer->setSubject($this->requestParser->getFromRequest('subject'));
+            $mailer->setMessage($this->requestParser->getFromRequest('message'));
 
             if ($this->requestParser->getFromRequest('from') == 'system') {
                 $mailer->set_default_sender();
             } else {
-                $mailer->sender      = Core::get_global('user')->email;
-                $mailer->sender_name = Core::get_global('user')->fullname;
+                $mailer->setSender(Core::get_global('user')->email, Core::get_global('user')->fullname);
             }
 
             if ($mailer->send_to_group($this->requestParser->getFromRequest('to'))) {

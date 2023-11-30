@@ -1367,6 +1367,16 @@ class User extends database_object
     }
 
     /**
+     * Returns the value of a certain user-preference
+     *
+     * @return int|string
+     */
+    public function getPreferenceValue(string $preferenceName)
+    {
+        return Preference::get_by_user($this->getId(), $preferenceName);
+    }
+
+    /**
      * @deprecated inject dependency
      */
     private function getIpHistoryRepository(): IpHistoryRepositoryInterface

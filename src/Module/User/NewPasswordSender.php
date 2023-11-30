@@ -70,11 +70,6 @@ final class NewPasswordSender implements NewPasswordSenderInterface
         $reset_limit = ($time - 3600) > (User::get_user_data($client->id, 'password_reset')['password_reset'] ?? $time); // don't let a user spam resets
         if ($client->email == $email && Mailer::is_mail_enabled() && $reset_limit) {
             $newpassword = $this->passwordGenerator->generate();
-            $mailer      = new Mailer();
-            $mailer->set_default_sender();
-            $mailer->subject        = T_('Lost Password');
-            $mailer->recipient_name = $client->fullname;
-            $mailer->recipient      = $client->email;
 
             $message = sprintf(
                 /* HINT: %1 IP Address, %2 Username */
@@ -84,7 +79,12 @@ final class NewPasswordSender implements NewPasswordSenderInterface
             );
             $message .= "\n";
             $message .= sprintf(T_("The password has been set to: %s"), $newpassword);
-            $mailer->message = $message;
+
+            $mailer = new Mailer();
+            $mailer->set_default_sender();
+            $mailer->setSubject(T_('Lost Password'));
+            $mailer->setRecipient((string) $client->email, (string) $client->fullname);
+            $mailer->setMessage($message);
 
             if ($mailer->send()) {
                 // only update the password when the email was sent
