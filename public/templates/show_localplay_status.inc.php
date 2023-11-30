@@ -49,13 +49,13 @@ if (!empty($status)) {
         <?php echo T_('Volume'); ?>: <?php echo $status['volume']; ?>%
         </li>
         <li>
-            <?php echo print_bool($status['repeat']); ?> |
-            <?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), print_bool(invert_bool($status['repeat'])), 'localplay_repeat'); ?>
+            <?php echo Ui::printBool($status['repeat']); ?> |
+            <?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), Ui::printBool(invert_bool($status['repeat'])), 'localplay_repeat'); ?>
             <?php echo T_('Repeat'); ?>
         </li>
         <li>
-            <?php echo print_bool($status['random']); ?> |
-            <?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), print_bool(invert_bool($status['random'])), 'localplay_random'); ?>
+            <?php echo Ui::printBool($status['random']); ?> |
+            <?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), Ui::printBool(invert_bool($status['random'])), 'localplay_random'); ?>
             <?php echo T_('Random'); ?>
         </li>
         <li>

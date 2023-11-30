@@ -355,42 +355,6 @@ function is_rtl($locale): bool
     return in_array($locale, array("he_IL", "fa_IR", "ar_SA"));
 }
 
-/**
- * translate_pattern_code
- * This just contains a keyed array which it checks against to give you the
- * 'tag' name that said pattern code corresponds to. It returns false if nothing
- * is found.
- * @param $code
- * @return string|false
- */
-function translate_pattern_code($code)
-{
-    $code_array = array(
-        '%a' => 'artist',
-        '%A' => 'album',
-        '%b' => 'barcode',
-        '%c' => 'comment',
-        '%C' => 'catalog_number',
-        '%d' => 'disk',
-        '%g' => 'genre',
-        '%l' => 'label',
-        '%t' => 'title',
-        '%T' => 'track',
-        '%r' => 'release_type',
-        '%R' => 'release_status',
-        '%s' => 'subtitle',
-        '%y' => 'year',
-        '%Y' => 'original_year',
-        '%o' => 'zz_other'
-    );
-
-    if (isset($code_array[$code])) {
-        return $code_array[$code];
-    }
-
-    return false;
-}
-
 // Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
 if (!function_exists('apache_request_headers')) {
     /**
@@ -720,20 +684,13 @@ function catalog_worker($action, $catalogs = null, $options = null): void
         if ($options) {
             $sse_url .= "&options=" . urlencode(json_encode($_POST));
         }
-        sse_worker($sse_url);
+
+        echo '<script>';
+        echo "sse_worker('$sse_url');";
+        echo "</script>\n";
     } else {
         Catalog::process_action($action, $catalogs, $options);
     }
-}
-
-/**
- * @param string $url
- */
-function sse_worker($url): void
-{
-    echo '<script>';
-    echo "sse_worker('$url');";
-    echo "</script>\n";
 }
 
 /**
@@ -1133,18 +1090,6 @@ function xoutput_from_array($array, $callback = false, $type = '')
 }
 
 /**
- * toggle_visible
- * This is identical to the javascript command that it actually calls
- * @param $element
- */
-function toggle_visible($element): void
-{
-    echo '<script>';
-    echo "toggleVisible('$element');";
-    echo "</script>\n";
-}
-
-/**
  * display_notification
  * Show a javascript notification to the user
  * @param string $message
@@ -1155,23 +1100,6 @@ function display_notification($message, $timeout = 5000): void
     echo "<script>";
     echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE)) . "', " . $timeout . ");";
     echo "</script>\n";
-}
-
-/**
- * print_bool
- * This function takes a boolean value and then prints out a friendly text
- * message.
- * @param $value
- */
-function print_bool($value): string
-{
-    if ($value) {
-        $string = '<span class="item_on">' . T_('On') . '</span>';
-    } else {
-        $string = '<span class="item_off">' . T_('Off') . '</span>';
-    }
-
-    return $string;
 }
 
 /**
@@ -1336,22 +1264,6 @@ function get_theme($name)
 function pGraph_Yformat_bytes($value): string
 {
     return Ui::format_bytes($value);
-}
-
-function get_mime_from_image($data): string
-{
-    switch ($data) {
-        case substr($data, 0, 4) == 'ffd8':
-            return "image/jpeg";
-        case '89504E47':
-            return "image/png";
-        case '47494638':
-            return "image/gif";
-        case substr($data, 0, 4) == '424d':
-            return 'image/bmp';
-        default:
-            return 'image/jpeg';
-    }
 }
 
 /**

@@ -1215,4 +1215,20 @@ class Ui implements UiInterface
             ]
         );
     }
+
+
+    /**
+     * This function takes a boolean value and then prints out a friendly text
+     * message.
+     */
+    public static function printBool(bool $value): string
+    {
+        if ($value) {
+            $string = '<span class="item_on">' . T_('On') . '</span>';
+        } else {
+            $string = '<span class="item_off">' . T_('Off') . '</span>';
+        }
+
+        return $string;
+    }
 }
