@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\User;
 
@@ -61,20 +61,21 @@ final class UserStateToggler implements UserStateTogglerInterface
             $mailer->set_default_sender();
 
             /* HINT: Ampache site_title */
-            $mailer->subject = sprintf(
+            $mailer->setSubject(sprintf(
                 T_('Account enabled at %s'),
                 $this->configContainer->get(ConfigurationKeyEnum::SITE_TITLE)
-            );
+            ));
 
             /* HINT: Username */
-            $mailer->message = sprintf(T_('A new user has been enabled. %s'), $user->username) .
+            $mailer->setMessage(
+                sprintf(T_('A new user has been enabled. %s'), $user->getUsername()) .
                 /* HINT: Ampache Login Page */"\n\n" .
                 sprintf(
                     T_('You can log in at the following address %s'),
                     $this->configContainer->getWebPath()
-                );
-            $mailer->recipient      = $user->email;
-            $mailer->recipient_name = $user->fullname;
+                )
+            );
+            $mailer->setRecipient((string) $user->email, (string) $user->get_fullname());
 
             $mailer->send();
         }

@@ -77,6 +77,11 @@ class TvShow extends database_object implements library_item
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * garbage_collection
      *

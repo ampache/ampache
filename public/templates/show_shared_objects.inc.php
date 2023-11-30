@@ -48,14 +48,14 @@ use Ampache\Module\Util\Ui;
         </tr>
     </thead>
     <tbody>
-    <?php
-    foreach ($object_ids as $share_id) {
-        $libitem = new Share($share_id); ?>
-    <tr id="share_<?php echo $libitem->id; ?>">
+<?php foreach ($object_ids as $share_id) {
+    $libitem = new Share($share_id);
+    if ($libitem->hasObject()) { ?>
+        <tr id="share_<?php echo $libitem->id; ?>">
         <?php require Ui::find_template('show_share_row.inc.php'); ?>
-    </tr>
-    <?php
-    } ?>
+        </tr>
+    <?php } ?>
+<?php } ?>
     </tbody>
 </table>
 <?php Ui::show_box_bottom(); ?>

@@ -25,9 +25,12 @@ declare(strict_types=1);
 namespace Ampache\Module\Shout;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Mailer;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -44,15 +47,21 @@ final class ShoutCreator implements ShoutCreatorInterface
     private ConfigContainerInterface $configContainer;
 
     private ShoutRepositoryInterface $shoutRepository;
+    private UtilityFactoryInterface $utilityFactory;
+    private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         UserActivityPosterInterface $userActivityPoster,
         ConfigContainerInterface $configContainer,
-        ShoutRepositoryInterface $shoutRepository
+        ShoutRepositoryInterface $shoutRepository,
+        UtilityFactoryInterface $utilityFactory,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->userActivityPoster = $userActivityPoster;
         $this->configContainer    = $configContainer;
         $this->shoutRepository    = $shoutRepository;
+        $this->utilityFactory     = $utilityFactory;
+        $this->modelFactory       = $modelFactory;
     }
 
     /**
@@ -84,49 +93,45 @@ final class ShoutCreator implements ShoutCreatorInterface
 
         $shout->save();
 
-        $insertId = $shout->getId();
+        $this->userActivityPoster->post(
+            $user->getId(),
+            'shout',
+            $objectType,
+            $objectId,
+            $date->getTimestamp()
+        );
 
-        if ($insertId !== 0) {
-            $this->userActivityPoster->post(
-                $user->getId(),
-                'shout',
-                $objectType,
-                $objectId,
-                $date->getTimestamp()
-            );
+        // send email to the item owner
+        $item_owner_id = $libItem->get_user_owner();
+        if ($item_owner_id) {
+            $item_owner = $this->modelFactory->createUser($item_owner_id);
+            if ($item_owner->getPreferenceValue(ConfigurationKeyEnum::NOTIFY_EMAIL)) {
+                $emailAddress = $item_owner->email;
 
-            // send email to the item owner
-            $item_owner_id = $libItem->get_user_owner();
-            if ($item_owner_id) {
-                if (Preference::get_by_user($item_owner_id, 'notify_email')) {
-                    $item_owner = new User($item_owner_id);
-                    if (!empty($item_owner->email) && Mailer::is_mail_enabled()) {
-                        if (method_exists($libItem, 'format')) {
-                            $libItem->format();
-                        }
-                        $mailer = new Mailer();
-                        $mailer->set_default_sender();
-                        $mailer->recipient      = $item_owner->email;
-                        $mailer->recipient_name = $item_owner->fullname;
-                        $mailer->subject        = T_('New shout on your content');
-                        /* HINT: %1 username %2 item name being commented on */
-                        $mailer->message = sprintf(
-                            T_('You just received a new shout from %1$s on your content %2$s'),
-                            $user->fullname,
-                            $libItem->get_fullname()
-                        );
-                        $mailer->message .= "\n\n----------------------\n\n";
-                        $mailer->message .= $shout->getText();
-                        $mailer->message .= "\n\n----------------------\n\n";
-                        $mailer->message .= sprintf(
-                            '%s/shout.php?action=show_add_shout&type=%s&id=%d#shout%d',
-                            $this->configContainer->getWebPath(),
-                            $objectType,
-                            $libItem->getId(),
-                            $insertId
-                        );
-                        $mailer->send();
-                    }
+                if (!empty($emailAddress) && Mailer::is_mail_enabled()) {
+                    /* HINT: %1 username %2 item name being commented on */
+                    $message = sprintf(
+                        T_('You just received a new shout from %1$s on your content %2$s'),
+                        $user->get_fullname(),
+                        $libItem->get_fullname()
+                    );
+                    $message .= "\n\n----------------------\n\n";
+                    $message .= $shout->getText();
+                    $message .= "\n\n----------------------\n\n";
+                    $message .= sprintf(
+                        '%s/shout.php?action=show_add_shout&type=%s&id=%d#shout%d',
+                        $this->configContainer->getWebPath(),
+                        $objectType,
+                        $libItem->getId(),
+                        $shout->getId()
+                    );
+
+                    $this->utilityFactory->createMailer()
+                        ->set_default_sender()
+                        ->setRecipient($emailAddress, (string) $item_owner->get_fullname())
+                        ->setSubject(T_('New shout on your content'))
+                        ->setMessage($message)
+                        ->send();
                 }
             }
         }

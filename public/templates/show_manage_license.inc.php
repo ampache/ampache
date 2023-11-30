@@ -49,9 +49,10 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
         <?php
         foreach ($object_ids as $license_id) {
             $libitem = new License($license_id);
-
-            require Ui::find_template('show_license_row.inc.php'); ?>
-        <?php
+            if ($libitem->isNew()) {
+                continue;
+            }
+            require Ui::find_template('show_license_row.inc.php');
         } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>

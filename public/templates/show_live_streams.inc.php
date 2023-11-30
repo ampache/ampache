@@ -68,12 +68,14 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
         <?php
         foreach ($object_ids as $radio_id) {
             $libitem = new Live_Stream($radio_id);
+            if ($libitem->isNew()) {
+                continue;
+            }
             $libitem->format(); ?>
         <tr id="live_stream_<?php echo $libitem->id; ?>">
-            <?php require Ui::find_template('show_live_stream_row.inc.php'); ?>
+                <?php require Ui::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>

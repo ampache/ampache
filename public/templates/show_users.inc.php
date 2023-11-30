@@ -77,6 +77,9 @@ $userFollowStateRenderer = $dic->get(UserFollowStateRendererInterface::class);
 
 foreach ($object_ids as $user_id) {
     $libitem = new User($user_id);
+    if ($libitem->isNew()) {
+        continue;
+    }
     $libitem->format();
     $last_seen   = $libitem->last_seen ? get_datetime($libitem->last_seen) : T_('Never');
     $create_date = $libitem->create_date ? get_datetime($libitem->create_date) : T_('Unknown'); ?>

@@ -26,7 +26,9 @@ namespace Ampache\Module\Shout;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -42,6 +44,10 @@ class ShoutCreatorTest extends TestCase
 
     private ShoutRepositoryInterface&MockObject $shoutRepository;
 
+    private UtilityFactoryInterface&MockObject $utilityFactory;
+
+    private ModelFactoryInterface&MockObject $modelFactory;
+
     private ShoutCreator $subject;
 
     protected function setUp(): void
@@ -49,11 +55,15 @@ class ShoutCreatorTest extends TestCase
         $this->userActivityPoster = $this->createMock(UserActivityPosterInterface::class);
         $this->configContainer    = $this->createMock(ConfigContainerInterface::class);
         $this->shoutRepository    = $this->createMock(ShoutRepositoryInterface::class);
+        $this->utilityFactory     = $this->createMock(UtilityFactoryInterface::class);
+        $this->modelFactory       = $this->createMock(ModelFactoryInterface::class);
 
         $this->subject = new ShoutCreator(
             $this->userActivityPoster,
             $this->configContainer,
-            $this->shoutRepository
+            $this->shoutRepository,
+            $this->utilityFactory,
+            $this->modelFactory
         );
     }
 
@@ -68,6 +78,7 @@ class ShoutCreatorTest extends TestCase
         $isSticky   = false;
         $offset     = 666;
         $objectId   = 42;
+        $userId     = 33;
 
         $libItem->expects(static::once())
             ->method('getId')
@@ -107,9 +118,22 @@ class ShoutCreatorTest extends TestCase
             ->willReturnSelf();
         $shout->expects(static::once())
             ->method('save');
-        $shout->expects(static::once())
+
+        $user->expects(static::once())
             ->method('getId')
-            ->willReturn(0);
+            ->willReturn($userId);
+
+        $this->userActivityPoster->expects(static::once())
+            ->method('post')
+            ->with(
+                $userId,
+                'shout',
+                $objectType,
+                $objectId,
+                self::callback(function (int $value): bool {
+                    return $value <= time();
+                })
+            );
 
         $this->subject->create(
             $user,

@@ -32,6 +32,26 @@ use PHPMailer\PHPMailer\PHPMailer;
 interface MailerInterface
 {
     /**
+     * Set the actual mail body/message
+     */
+    public function setMessage(string $message): MailerInterface;
+
+    /**
+     * Set the mail subject
+     */
+    public function setSubject(string $subject): MailerInterface;
+
+    /**
+     * Set recipient email and -name
+     */
+    public function setRecipient(string $recipientEmail, string $recipientName = ''): MailerInterface;
+
+    /**
+     * Set sender email and -name
+     */
+    public function setSender(string $senderEmail, string $senderName = ''): MailerInterface;
+
+    /**
      * Check that the mail feature is enabled
      */
     public function isMailEnabled(): bool;
@@ -42,7 +62,7 @@ interface MailerInterface
      * Does the config magic to figure out the "system" email sender and
      * sets it as the sender.
      */
-    public function set_default_sender();
+    public function set_default_sender(): MailerInterface;
 
     /**
      * send

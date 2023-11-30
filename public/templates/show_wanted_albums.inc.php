@@ -43,6 +43,9 @@ use Ampache\Module\Util\Ui;
         <?php
         foreach ($object_ids as $wanted_id) {
             $libitem = new Wanted($wanted_id);
+            if ($libitem->isNew()) {
+                continue;
+            }
             $libitem->format(); ?>
         <tr id="walbum_<?php echo $libitem->mbid; ?>">
             <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>

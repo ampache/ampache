@@ -36,16 +36,13 @@ use Mockery\MockInterface;
 
 class UserStateTogglerTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
+    private MockInterface&ConfigContainerInterface $configContainer;
 
-    /** @var MockInterface|UtilityFactoryInterface|null */
-    private MockInterface $utilityFactory;
+    private MockInterface&UtilityFactoryInterface $utilityFactory;
 
-    /** @var MockInterface|UserRepositoryInterface|null */
-    private MockInterface $userRepository;
+    private MockInterface&UserRepositoryInterface $userRepository;
 
-    private ?UserStateToggler $subject;
+    private UserStateToggler $subject;
 
     public function setUp(): void
     {
@@ -65,8 +62,8 @@ class UserStateTogglerTest extends MockeryTestCase
         $user = $this->mock(User::class);
 
         $userId         = 666;
-        $user->email    = "example@email.com";
-        $user->fullname = "name";
+        $user->email    = 'example@email.com';
+        $user->fullname = 'name';
 
         $this->userRepository->shouldReceive('enable')
             ->with($userId)
@@ -97,8 +94,16 @@ class UserStateTogglerTest extends MockeryTestCase
 
         $userName       = 'some-name';
         $userId         = 666;
-        $user->email    = "example@email.com";
-        $user->fullname = "name";
+        $email          = 'example@email.com';
+        $fullName       = 'some-fullname';
+        $siteTitle      = 'some-title';
+        $webPath        = 'some-path';
+        $message        = sprintf('A new user has been enabled. %s', $userName) .
+            "\n\n" .
+            sprintf(
+                'You can log in at the following address %s',
+                $webPath
+            );
 
         $this->userRepository->shouldReceive('enable')
             ->with($userId)
@@ -108,8 +113,15 @@ class UserStateTogglerTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($userId);
-
-        $user->username = $userName;
+        $user->shouldReceive('getUsername')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userName);
+        $user->shouldReceive('get_fullname')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($fullName);
+        $user->email = $email;
 
         $this->utilityFactory->shouldReceive('createMailer')
             ->withNoArgs()
@@ -123,15 +135,31 @@ class UserStateTogglerTest extends MockeryTestCase
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
-            ->andReturn('some-path');
+            ->andReturn($webPath);
         $this->configContainer->shouldReceive('get')
             ->with(ConfigurationKeyEnum::SITE_TITLE)
             ->once()
-            ->andReturn('some-title');
+            ->andReturn($siteTitle);
 
         $mailer->shouldReceive('set_default_sender')
             ->withNoArgs()
-            ->once();
+            ->once()
+            ->andReturnSelf();
+        $mailer->shouldReceive('setSubject')
+            ->with(sprintf(
+                'Account enabled at %s',
+                $siteTitle
+            ))
+            ->once()
+            ->andReturnSelf();
+        $mailer->shouldReceive('setMessage')
+            ->with($message)
+            ->once()
+            ->andReturnSelf();
+        $mailer->shouldReceive('setRecipient')
+            ->with($email, $fullName)
+            ->once()
+            ->andReturnSelf();
         $mailer->shouldReceive('send')
             ->withNoArgs()
             ->once();

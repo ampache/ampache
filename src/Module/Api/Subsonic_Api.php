@@ -32,6 +32,7 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
@@ -1798,6 +1799,9 @@ class Subsonic_Api
                 $prev_date = $previous['date'] ?? 0;
                 $type      = Subsonic_Xml_Data::_getAmpacheType((string)$subsonic_id);
                 $media     = Subsonic_Xml_Data::_getAmpacheObject((int)$subsonic_id);
+                if ($media === null || $media->isNew()) {
+                    continue;
+                }
                 $media->format();
 
                 // long pauses might cause your now_playing to hide
@@ -2037,8 +2041,11 @@ class Subsonic_Api
     {
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $podcasts = Catalog::get_podcasts(User::get_user_catalogs($user->id));
+
+            $podcastSyncer = self::getPodcastSyncer();
+
             foreach ($podcasts as $podcast) {
-                $podcast->sync_episodes(true);
+                $podcastSyncer->sync($podcast, true);
             }
             $response = Subsonic_Xml_Data::addSubsonicResponse('refreshpodcasts');
         } else {
@@ -2791,7 +2798,9 @@ class Subsonic_Api
     {
         $current = (string)($input['current'] ?? '0');
         $media   = Subsonic_Xml_Data::_getAmpacheObject((int)$current);
-        if ($media->id) {
+        if ($media === null || $media->isNew()) {
+            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'saveplayqueue');
+        } else {
             $response = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
             $position = (array_key_exists('position', $input))
                 ? (int)(((int)$input['position']) / 1000)
@@ -2827,8 +2836,6 @@ class Subsonic_Api
                 $playlist = Subsonic_Xml_Data::_getAmpacheIdArrays($sub_ids);
                 $playQueue->set_items($playlist, $type, $media->id, $position, $time);
             }
-        } else {
-            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'saveplayqueue');
         }
 
         self::_apiOutput($input, $response);
@@ -3097,5 +3104,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PrivateMessageRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
     }
 }

@@ -10786,49 +10786,9 @@ parameters:
 			path: src/Module/User/PasswordGenerator.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:\\$message\\.$#"
-			count: 1
-			path: src/Module/User/PrivateMessage/PrivateMessageCreator.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:\\$recipient\\.$#"
-			count: 1
-			path: src/Module/User/PrivateMessage/PrivateMessageCreator.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:\\$recipient_name\\.$#"
-			count: 1
-			path: src/Module/User/PrivateMessage/PrivateMessageCreator.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:\\$subject\\.$#"
-			count: 1
-			path: src/Module/User/PrivateMessage/PrivateMessageCreator.php
-
-		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/User/Registration.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:\\$message\\.$#"
-			count: 1
-			path: src/Module/User/UserStateToggler.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:\\$recipient\\.$#"
-			count: 1
-			path: src/Module/User/UserStateToggler.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:\\$recipient_name\\.$#"
-			count: 1
-			path: src/Module/User/UserStateToggler.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:\\$subject\\.$#"
-			count: 1
-			path: src/Module/User/UserStateToggler.php
 
 		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
@@ -12191,47 +12151,7 @@ parameters:
 			path: src/Module/Util/Mailer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:set_default_sender\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:\\$message has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:\\$recipient has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:\\$recipient_name has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:\\$sender has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:\\$sender_name has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:\\$subject has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:send_to_group\\(\\) has parameter \\$group_name with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/MailerInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:set_default_sender\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/MailerInterface.php
 

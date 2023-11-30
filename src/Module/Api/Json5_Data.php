@@ -1053,6 +1053,9 @@ class Json5_Data
             $className = ObjectTypeToClassNameMapper::map($data['object_type']);
             /** @var Song $song */
             $song = new $className($data['object_id']);
+            if ($song->isNew()) {
+                continue;
+            }
             $song->format();
 
             $rating      = new Rating($song->id, 'song');

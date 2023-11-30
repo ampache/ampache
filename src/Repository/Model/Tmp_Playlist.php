@@ -73,6 +73,11 @@ class Tmp_Playlist extends database_object
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * has_info
      * This is an internal (private) function that gathers the information

@@ -94,6 +94,11 @@ class Song_Preview extends database_object implements Media, playable_item
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * insert
      *

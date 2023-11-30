@@ -117,7 +117,7 @@ class AlbumDisk extends database_object implements library_item
         }
         // make sure the album is valid before going further
         $this->album = new Album($info['album_id']);
-        if (!($this->album)) {
+        if ($this->album->isNew()) {
             return;
         }
         foreach ($info as $key => $value) {
@@ -155,14 +155,14 @@ class AlbumDisk extends database_object implements library_item
         return (int)($this->id ?? 0);
     }
 
-    public function getAlbumId(): int
-    {
-        return (int)$this->album_id;
-    }
-
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function getAlbumId(): int
+    {
+        return (int)$this->album_id;
     }
 
     /**

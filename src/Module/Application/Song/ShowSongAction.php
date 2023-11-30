@@ -32,6 +32,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Song;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -72,7 +73,7 @@ final class ShowSongAction implements ApplicationActionInterface
 
         $song = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
 
-        if (!$song->id) {
+        if ($song->isNew()) {
             $this->logger->warning(
                 'Requested a song that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

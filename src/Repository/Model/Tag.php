@@ -75,6 +75,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * construct_from_name
      * This attempts to construct the tag from a name, rather then the ID
