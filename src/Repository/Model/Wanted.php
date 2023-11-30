@@ -43,7 +43,7 @@ class Wanted extends database_object
     /* Variables from DB */
     public int $id = 0;
     public ?int $user;
-    public ?int $artist;
+    public ?int $artist = null;
     public ?string $artist_mbid;
     public ?string $mbid;
     public ?string $name;
