@@ -280,7 +280,7 @@ class Ui implements UiInterface
         if ($icontype == 'svg') {
             // load svg file
             $svgicon = simplexml_load_file($icon_url);
-            if ($svgicon) {
+            if ($svgicon !== false) {
                 if (empty($svgicon->title)) {
                     $svgicon->addChild('title', $title);
                 } else {
@@ -300,7 +300,7 @@ class Ui implements UiInterface
                 }
                 $svgicon->addAttribute('class', $class_attrib);
 
-                $tag = explode("\n", ($svgicon->asXML() ?: ''), 2)[1];
+                $tag = explode("\n", (string)$svgicon->asXML(), 2)[1];
             }
         } else {
             // fall back to png
@@ -361,7 +361,7 @@ class Ui implements UiInterface
         if ($imagetype == 'svg') {
             // load svg file
             $svgimage = simplexml_load_file($image_url);
-            if ($svgimage) {
+            if ($svgimage !== false) {
                 $svgimage->addAttribute('class', 'image');
 
                 if (empty($svgimage->title)) {
@@ -382,7 +382,7 @@ class Ui implements UiInterface
                 $class_attrib = ($class_attrib) ?? 'image image-' . $name;
                 $svgimage->addAttribute('class', $class_attrib);
 
-                $tag = explode("\n", ($svgimage->asXML() ?: ''), 2)[1];
+                $tag = explode("\n", (string)$svgimage->asXML(), 2)[1];
             }
         } else {
             // fall back to png

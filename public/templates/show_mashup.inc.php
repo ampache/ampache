@@ -37,7 +37,9 @@ $user_id        = ($catalog_filter && !empty(Core::get_global('user')))
     : null;
 
 require_once Ui::find_template('show_form_mashup.inc.php');
-echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=newest_" . $object_type . "\">" . Ui::show_box_top(T_('Newest')) . "</a>";
+echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=newest_" . $object_type . "\">";
+Ui::show_box_top(T_('Newest'));
+echo "</a>";
 $object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user_id);
 $browse     = new Browse();
 $browse->set_type($object_type);
@@ -67,7 +69,9 @@ Ui::show_box_bottom();
 if ($object_type == 'podcast_episode') {
     Ui::show_box_top(T_('Popular'));
 } else {
-    echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=popular\">" . Ui::show_box_top(T_('Popular')) . "</a>";
+    echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=popular\">";
+    Ui::show_box_top(T_('Popular'));
+    echo "</a>";
 }
 $object_ids = Stats::get_top($object_type, 100, $threshold, 0, $user_id);
 shuffle($object_ids);

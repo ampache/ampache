@@ -78,7 +78,9 @@ final class PodcastSyncer implements PodcastSyncerInterface
         bool $gather = false
     ): void {
         foreach ($episodes as $episode) {
-            $this->add_episode($podcast, $episode, $lastSync);
+            if ($episode) {
+                $this->add_episode($podcast, $episode, $lastSync);
+            }
         }
         $change = 0;
         $time   = time();
@@ -134,7 +136,6 @@ final class PodcastSyncer implements PodcastSyncerInterface
         $author      = html_entity_decode(Dba::check_length((string)$episode->author, 64));
         $category    = html_entity_decode((string)$episode->category);
         $source      = '';
-        $time        = 0;
         if ($episode->enclosure) {
             $source = (string)$episode->enclosure['url'];
         }
