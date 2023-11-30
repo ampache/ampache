@@ -98,10 +98,10 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         $medias = $object->get_medias();
                         $user   = Core::get_global('user');
                         if ($user instanceof User) {
-                            if (!$user->playlist instanceof Tmp_Playlist) {
-                                $user->load_playlist();
+                            $user->load_playlist();
+                            if ($user->playlist !== null) {
+                                $user->playlist->add_medias($medias);
                             }
-                            $user->playlist->add_medias($medias);
                         }
                     }
                 } else {

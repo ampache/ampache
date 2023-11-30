@@ -499,7 +499,7 @@ final class Play2Action implements ApplicationActionInterface
             $media = new Song($object_id);
             if ($media->id > 0) {
                 // Always remove the play from the list
-                $democratic->delete_from_oid($object_id, $type);
+                $democratic->delete_from_oid($media->id, $type);
 
                 // If the media is disabled
                 if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file((string)$media->file))) {
@@ -590,6 +590,15 @@ final class Play2Action implements ApplicationActionInterface
         } else {
             // default to song
             $media = new Song((int) $object_id);
+        }
+        if ($media->isNew()) {
+            $this->logger->error(
+                "Media " . $object_id . " not found",
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            header('HTTP/1.1 404 Invalid media, file not found or file unreadable');
+
+            return null;
         }
         $media->format();
 

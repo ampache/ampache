@@ -76,7 +76,7 @@ class User extends database_object
      */
     public $prefs = array();
     /**
-     * @var Tmp_Playlist $playlist
+     * @var Tmp_Playlist|null $playlist
      */
     public $playlist;
     /**
@@ -196,9 +196,9 @@ class User extends database_object
      */
     public function load_playlist(): void
     {
-        $session_id = session_id();
-
-        $this->playlist = Tmp_Playlist::get_from_session($session_id);
+        if ($this->playlist === null) {
+            $this->playlist = Tmp_Playlist::get_from_session(session_id());
+        }
     }
 
     /**
