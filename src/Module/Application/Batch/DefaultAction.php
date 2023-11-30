@@ -107,26 +107,21 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         if (InterfaceImplementationChecker::is_playable_item($object_type)) {
-            $object_id = $this->requestParser->getFromRequest('id') ?? array();
-            if (!is_array($object_id)) {
-                $object_id = [$object_id];
-            }
-            foreach ($object_id as $item) {
-                $this->logger->debug(
-                    'Requested item ' . $item,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
+            $object_id = (int)$this->requestParser->getFromRequest('id');
+            $this->logger->debug(
+                'Requested item ' . $object_id,
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
-                $className = ObjectTypeToClassNameMapper::map($object_type);
-                /** @var class-string<library_item> $className */
-                $libitem = new $className($item);
-                if ($libitem->id) {
-                    if (method_exists($libitem, 'format')) {
-                        $libitem->format();
-                    }
-                    $name      = (string)$libitem->get_fullname();
-                    $media_ids = array_merge($media_ids, $libitem->get_medias());
+            $className = ObjectTypeToClassNameMapper::map($object_type);
+            /** @var class-string<library_item> $className */
+            $libitem = new $className($object_id);
+            if ($libitem->isNew() === false) {
+                if (method_exists($libitem, 'format')) {
+                    $libitem->format();
                 }
+                $name      = (string)$libitem->get_fullname();
+                $media_ids = array_merge($media_ids, $libitem->get_medias());
             }
         } else {
             // Switch on the actions

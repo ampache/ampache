@@ -50,7 +50,7 @@ final class Stats3Method
         $limit    = $input['limit'];
         $username = $input['username'];
         // override your user if you're looking at others
-        if (array_key_exists('username', $input)) {
+        if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
             $user = User::get_from_username($input['username']);
         }
         $results = null;
@@ -65,10 +65,10 @@ final class Stats3Method
                 } else {
                     if ($type == "recent") {
                         if (!empty($username)) {
-                            if ($user instanceof User) {
-                                $results = $user->get_recently_played('album', $limit);
-                            } else {
+                            if ($user->isNew()) {
                                 debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+                            } else {
+                                $results = $user->get_recently_played('album', $limit);
                             }
                         } else {
                             $results = Stats::get_recent('album', $limit, $offset);

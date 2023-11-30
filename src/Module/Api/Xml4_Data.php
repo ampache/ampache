@@ -546,20 +546,13 @@ class Xml4_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param int[] $albums (description here...)
-     * @param array $include Array of other items to include
+     * @param int[] $albums
+     * @param array|false $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
      */
     public static function albums($albums, $include, $user, $full_xml = true): string
     {
-        if ($include == null || $include == '') {
-            $include = array();
-        }
-        if (is_string($include)) {
-            $include = explode(',', $include);
-        }
-
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
@@ -587,7 +580,7 @@ class Xml4_Data
                 $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->f_artist_name . "]]></artist>\n";
             }
             // Handle includes
-            if (in_array("songs", $include) && isset($album->id)) {
+            if ($include && in_array("songs", $include) && isset($album->id)) {
                 $songs = self::songs(static::getAlbumRepository()->getSongs($album->id), $user, false);
             } else {
                 $songs = $album->song_count;

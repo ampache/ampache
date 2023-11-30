@@ -92,20 +92,24 @@ final class StatsMethod
 
             return false;
         }
-
+        $user_id = $user->id;
         // override your user if you're looking at others
-        if (array_key_exists('username', $input)) {
-            $user = User::get_from_username($input['username']);
+        if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
+            $user    = User::get_from_username($input['username']);
+            $user_id = $user->id;
         } elseif (array_key_exists('user_id', $input)) {
-            $user = new User((int)$input['user_id']);
+            $userTwo = new User((int)$input['user_id']);
+            if (!$userTwo->isNew()) {
+                $user_id = (int)$input['user_id'];
+                $user    = new User($user_id);
+            }
         }
-        if (!$user instanceof User || $user->id < 1) {
+        if (!$user instanceof User || $user->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), 'user'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
-        $user_id = $user->id;
         $results = array();
         $filter  = $input['filter'] ?? '';
         switch ($filter) {

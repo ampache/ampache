@@ -622,10 +622,8 @@ class Catalog_local extends Catalog
         if ($total > 1000) {
             $chunks = floor($total / 1000) + 1;
         }
+        $media_class::clear_cache();
         while ($chunk < $chunks) {
-            if (isset($media_class) && $chunk > 0) {
-                $media_class::clear_cache();
-            }
             debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
             $total_updated += $this->_verify_chunk($media_type, $chunk, 1000);
             $chunk++;

@@ -6,11 +6,6 @@ parameters:
 			path: src/Application/Api/Ajax/AjaxApplication.php
 
 		-
-			message: "#^Call to function is_array\\(\\) with int will always evaluate to false\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$artist of method Ampache\\\\Repository\\\\SongRepositoryInterface\\:\\:getRandomByArtist\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Artist, object given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
@@ -36,16 +31,6 @@ parameters:
 			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
 
 		-
-			message: "#^Variable \\$request_id on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Variable \\$request_type on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$artist_id of class Ampache\\\\Repository\\\\Model\\\\Artist constructor expects int\\|null, string given\\.$#"
 			count: 3
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
@@ -62,11 +47,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#5 \\$year of static method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:add_wanted\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
-
-		-
-			message: "#^Variable \\$media_id in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
 
@@ -356,11 +336,6 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Variable \\$render in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Method Ampache\\\\Gui\\\\GuiFactory\\:\\:createCatalogStats\\(\\) has parameter \\$stats with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Gui/GuiFactory.php
@@ -461,11 +436,6 @@ parameters:
 			path: src/Module/Api/Ajax.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Api.php
@@ -499,11 +469,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:error\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Api4.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Api5.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -1626,22 +1591,12 @@ parameters:
 			path: src/Module/Api/Method/Api3/Songs3Method.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Stats3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Stats3Method\\:\\:stats\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Stats3Method.php
 
 		-
 			message: "#^Parameter \\#3 \\$threshold of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_top\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Stats3Method.php
-
-		-
-			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:albums\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Stats3Method.php
 
@@ -2141,16 +2096,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/Songs4Method.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 2
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
-			message: "#^Cannot call method get_recently_played\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Stats4Method\\:\\:stats\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Stats4Method.php
@@ -2163,36 +2108,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 3
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:songs\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:songs\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
-			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
-			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:artists\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
-			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:albums\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
-			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:artists\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
 			path: src/Module/Api/Method/Api4/Stats4Method.php
 
 		-
@@ -2946,16 +2861,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/Songs5Method.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 2
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Cannot call method get_recently_played\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Stats5Method\\:\\:stats\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Stats5Method.php
@@ -2968,76 +2873,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 4
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:playlists\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:podcast_episodes\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:podcasts\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:songs\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:videos\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:playlists\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:podcast_episodes\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:podcasts\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:songs\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:videos\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:albums\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:artists\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:albums\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:artists\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
 			path: src/Module/Api/Method/Api5/Stats5Method.php
 
 		-
@@ -4121,33 +3956,13 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
-			count: 7
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
 			count: 7
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Cannot access property \\$time on Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
-			count: 3
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Cannot call method delete\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
 			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot call method set_played\\(\\) on Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
-			count: 2
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
@@ -4642,11 +4457,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:updateuser\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$object of function get_class expects object, Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5531,11 +5341,6 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Call to function is_string\\(\\) with array will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
@@ -5617,11 +5422,6 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Call to function is_int\\(\\) with string\\|null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
 
@@ -5946,22 +5746,7 @@ parameters:
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$size\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
 
@@ -6811,11 +6596,6 @@ parameters:
 			path: src/Module/Beets/CliHandler.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Beets\\\\CliHandler\\:\\:\\$fieldFormat \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Module/Beets/CliHandler.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Beets\\\\CliHandler\\:\\:\\$fieldMapping type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/CliHandler.php
@@ -7372,11 +7152,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:\\$videos_to_gather has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Variable \\$media_class in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
 
@@ -14046,16 +13821,6 @@ parameters:
 			path: src/Plugin/AmpachePiwik.php
 
 		-
-			message: "#^Cannot access property \\$channel on SimpleXMLElement\\|false\\.$#"
-			count: 3
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of function simplexml_load_string expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$feed_url has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheRSSView.php
@@ -14552,11 +14317,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -16812,11 +16572,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$f_user has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$object has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Share.php
 

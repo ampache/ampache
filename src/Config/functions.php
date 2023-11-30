@@ -1200,7 +1200,7 @@ function show_table_render($render = false, $force = false): void
         if (!defined('TABLE_RENDERED')) {
             define('TABLE_RENDERED', 1);
         } ?>
-        <?php if (isset($render) && $render) { ?>
+        <?php if ($render) { ?>
             <script>sortPlaylistRender();</script>
             <?php
         }

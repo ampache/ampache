@@ -67,12 +67,15 @@ final class Stats4Method
         }
         $user_id = $user->id;
         // override your user if you're looking at others
-        if ($input['username']) {
+        if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
             $user    = User::get_from_username($input['username']);
             $user_id = $user->id;
-        } elseif ($input['user_id']) {
-            $user_id = (int) $input['user_id'];
-            $user    = new User($user_id);
+        } elseif (array_key_exists('user_id', $input)) {
+            $userTwo = new User($user_id);
+            if (!$userTwo->isNew()) {
+                $user_id = (int)$input['user_id'];
+                $user    = new User($user_id);
+            }
         }
         // moved type to filter and allowed multiple type selection
         $type   = $input['type'];

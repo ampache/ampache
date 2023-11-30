@@ -340,7 +340,7 @@ class Api5
 
         // Now we need to quickly get the totals
         $client    = static::getUserRepository()->findByApiKey(trim($token));
-        $counts    = Catalog::get_server_counts($client->id);
+        $counts    = Catalog::get_server_counts($client->id ?? 0);
         $playlists = (AmpConfig::get('hide_search', false))
             ? ($counts['playlist'])
             : ($counts['playlist'] + $counts['search']);

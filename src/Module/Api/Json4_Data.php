@@ -362,7 +362,7 @@ class Json4_Data
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
      * @param array $albums (description here...)
-     * @param array $include
+     * @param array|false $include
      * @param User $user
      * @param bool $encode
      * @return array|string
@@ -400,7 +400,7 @@ class Json4_Data
             }
 
             // Handle includes
-            if (in_array("songs", $include) && isset($album->id)) {
+            if ($include && in_array("songs", $include) && isset($album->id)) {
                 $songs = self::songs(static::getAlbumRepository()->getSongs($album->id), $user, false);
             } else {
                 $songs = $album->song_count;

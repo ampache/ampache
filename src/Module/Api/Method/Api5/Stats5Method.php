@@ -95,12 +95,15 @@ final class Stats5Method
 
         $user_id = $user->id;
         // override your user if you're looking at others
-        if (array_key_exists('username', $input)) {
+        if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
             $user    = User::get_from_username($input['username']);
             $user_id = $user->id;
         } elseif (array_key_exists('user_id', $input)) {
-            $user_id = (int) $input['user_id'];
-            $user    = new User($user_id);
+            $userTwo = new User($user_id);
+            if (!$userTwo->isNew()) {
+                $user_id = (int)$input['user_id'];
+                $user    = new User($user_id);
+            }
         }
 
         $results = array();

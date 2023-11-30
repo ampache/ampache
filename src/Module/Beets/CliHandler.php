@@ -189,7 +189,7 @@ class CliHandler extends Handler
      */
     protected function getFieldFormat(): string
     {
-        if (!isset($this->fieldFormat)) {
+        if (!empty($this->fieldFormat)) {
             $this->fields      = $this->getFields();
             $this->fieldFormat = '$' . implode($this->seperator . '$', $this->fields) . $this->itemEnd;
         }

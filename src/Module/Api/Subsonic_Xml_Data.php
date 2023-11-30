@@ -1425,7 +1425,7 @@ class Subsonic_Xml_Data
      */
     public static function addScanStatus($xml, $user): void
     {
-        $counts = Catalog::get_server_counts($user->id);
+        $counts = Catalog::get_server_counts($user->id ?? 0);
         $count  = $counts['artist'] + $counts['album'] + $counts['song'] + $counts['podcast_episode'];
         $xscan  = $xml->addChild(htmlspecialchars('scanStatus'));
         $xscan->addAttribute('scanning', "false");

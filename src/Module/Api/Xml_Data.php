@@ -712,16 +712,12 @@ class Xml_Data
      * This echos out a standard albums XML document, it pays attention to the limit
      *
      * @param int[] $albums Album id's to include
-     * @param array $include Array of other items to include.
+     * @param array|false $include Array of other items to include.
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
     public static function albums($albums, $include, $user, $full_xml = true): string
     {
-        if ($include == null || $include == '') {
-            $include = array();
-        }
-
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
@@ -753,7 +749,7 @@ class Xml_Data
                 }
             }
             // Handle includes
-            $songs = (in_array("songs", $include)) ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false) : '';
+            $songs = ($include && in_array("songs", $include)) ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false) : '';
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album';

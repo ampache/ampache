@@ -437,7 +437,7 @@ class Json5_Data
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
      * @param int[] $albums Album id's to include
-     * @param array $include
+     * @param array|false $include
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
@@ -481,7 +481,7 @@ class Json5_Data
             }
 
             // Handle includes
-            $songs = (in_array("songs", $include))
+            $songs = ($include && in_array("songs", $include))
                 ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false)
                 : array();
 

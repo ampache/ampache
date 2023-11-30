@@ -218,7 +218,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'similar_now_playing':
                 $media_id = (int)$this->requestParser->getFromRequest('media_id');
-                if (AmpConfig::get('show_similar') && isset($media_id) && array_key_exists('media_artist', $_REQUEST)) {
+                if (AmpConfig::get('show_similar') && $media_id > 0 && array_key_exists('media_artist', $_REQUEST)) {
                     $artists = Recommendation::get_artists_like($this->requestParser->getFromRequest('media_artist'), 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
                     ob_start();

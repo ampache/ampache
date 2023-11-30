@@ -95,8 +95,10 @@ class AmpacheRSSView implements AmpachePluginInterface
     public function display_home(): void
     {
         $xmlstr = file_get_contents($this->feed_url, false, stream_context_create(Core::requests_options()));
-        $xml    = simplexml_load_string($xmlstr);
-        if ($xml->channel) {
+        $xml    = ($xmlstr)
+            ? simplexml_load_string($xmlstr)
+            : false;
+        if ($xml && $xml->channel) {
             Ui::show_box_top($xml->channel->title);
             $count = 0;
             echo '<div class="home_plugin"><table class="tabledata striped-rows">';

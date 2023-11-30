@@ -354,15 +354,12 @@ class Xml3_Data
      * This echos out a standard albums XML document, it pays attention to the limit
      *
      * @param array $albums
-     * @param array $include    Array of other items to include
+     * @param array|false $include Array of other items to include
      * @param User $user
      * @param bool $full_xml  whether to return a full XML document or just the node
      */
     public static function albums($albums, $include, $user, $full_xml = true): string
     {
-        if (null == $include) {
-            $include = array();
-        }
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
         if (count($albums) > self::$limit || self::$offset > 0) {
@@ -392,7 +389,7 @@ class Xml3_Data
             }
 
             // Handle includes
-            if (in_array("songs", $include)) {
+            if ($include && in_array("songs", $include)) {
                 $songs = self::songs(static::getSongRepository()->getByAlbum($album->id), $user, '', false);
             } else {
                 $songs = $album->song_count;

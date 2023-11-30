@@ -84,16 +84,17 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'basket':
                 // Handle the users basketcases...
-                $object_type = $request_type ?? $this->requestParser->getFromRequest('object_type');
+                $object_type = (empty($request_type))
+                    ? $this->requestParser->getFromRequest('object_type')
+                    : $request_type;
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
-                    $object_id = $request_id ?? $this->requestParser->getFromRequest('object_id');
-                    if (!is_array($object_id)) {
-                        $object_id = array($object_id);
-                    }
-                    foreach ($object_id as $item) {
+                    $object_id = ($request_id === 0)
+                        ? (int)$this->requestParser->getFromRequest('object_id')
+                        : $request_id;
+                    if ($object_id > 0) {
                         $className = ObjectTypeToClassNameMapper::map($object_type);
                         /** @var playable_item $object */
-                        $object = new $className($item);
+                        $object = new $className($object_id);
                         $medias = $object->get_medias();
                         /** @var User|string $user */
                         $user = Core::get_global('user');
