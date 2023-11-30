@@ -55,6 +55,11 @@ class License
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * has_info
      * does the db call, reads from the license table

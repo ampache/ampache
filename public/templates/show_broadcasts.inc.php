@@ -47,6 +47,9 @@ if ($browse->is_show_header()) {
     <tbody>
         <?php foreach ($object_ids as $broadcast_id) {
             $libitem = new Broadcast($broadcast_id);
+            if ($libitem->isNew()) {
+                continue;
+            }
             $libitem->format(); ?>
         <tr id="broadcast_row_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_broadcast_row.inc.php'); ?>

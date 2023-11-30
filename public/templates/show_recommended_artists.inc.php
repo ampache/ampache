@@ -85,6 +85,9 @@ $directplay_limit                     = AmpConfig::get('direct_play_limit');
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) {
     $libitem = new Artist($artist_id, $_SESSION['catalog']);
+    if ($libitem->isNew()) {
+        continue;
+    }
     $libitem->format(true, $limit_threshold);
     $show_direct_play  = $show_direct_play_cfg;
     $show_playlist_add = Access::check('interface', 25);

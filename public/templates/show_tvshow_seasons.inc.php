@@ -65,6 +65,9 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 }
 foreach ($object_ids as $season_id) {
     $libitem = new TVShow_season($season_id);
+    if ($libitem->isNew()) {
+        continue;
+    }
     $libitem->format(); ?>
         <tr id="tvshow_season_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_tvshow_season_row.inc.php'); ?>

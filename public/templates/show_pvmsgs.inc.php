@@ -68,7 +68,10 @@ $thcount = 5; ?>
         <?php
         /* Foreach through every label that has been passed to us */
         foreach ($object_ids as $pvmg_id) {
-            $libitem = new PrivateMsg($pvmg_id); ?>
+            $libitem = new PrivateMsg($pvmg_id);
+            if ($libitem->isNew()) {
+                continue;
+            } ?>
         <tr id="label_<?php echo $libitem->getId(); ?>" class="<?php echo (!$libitem->isRead()) ? "unread" : ""; ?>">
             <?php require Ui::find_template('show_pvmsg_row.inc.php'); ?>
         </tr>

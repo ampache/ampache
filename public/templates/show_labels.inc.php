@@ -68,12 +68,14 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
         /* Foreach through every label that has been passed to us */
         foreach ($object_ids as $label_id) {
             $libitem = new Label($label_id);
+            if ($libitem->isNew()) {
+                continue;
+            }
             $libitem->format(); ?>
         <tr id="label_<?php echo $libitem->id; ?>">
-            <?php require Ui::find_template('show_label_row.inc.php'); ?>
+                <?php require Ui::find_template('show_label_row.inc.php'); ?>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No label found'); ?></span></td>

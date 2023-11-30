@@ -77,6 +77,9 @@ if ($browse->is_show_header()) {
         /* Foreach through every tv show that has been passed to us */
         foreach ($object_ids as $tvshow_id) {
             $libitem = new TVShow($tvshow_id);
+            if ($libitem->isNew()) {
+                continue;
+            }
             $libitem->format(); ?>
         <tr id="tvshow_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_tvshow_row.inc.php'); ?>

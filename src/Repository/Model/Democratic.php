@@ -80,6 +80,11 @@ class Democratic extends Tmp_Playlist
         return (int)($this->id ?: 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * build_vote_cache
      * This builds a vote cache of the objects we've got in the playlist

@@ -48,7 +48,7 @@ if ($browse->is_show_header()) {
             foreach ($object_ids as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
                 if (!$catalog instanceof Catalog) {
-                    break;
+                    continue;
                 }
                 $catalog->format(); ?>
         <tr id="catalog_<?php echo $catalog->id; ?>">

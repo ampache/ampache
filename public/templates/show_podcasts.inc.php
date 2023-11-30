@@ -90,6 +90,9 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 
                 foreach ($object_ids as $podcast_id) {
                     $libitem = new Podcast($podcast_id);
+                    if ($libitem->isNew()) {
+                        continue;
+                    }
                     $libitem->format(); ?>
         <tr id="podcast_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
