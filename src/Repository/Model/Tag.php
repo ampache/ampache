@@ -973,7 +973,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * Get item f_link.
      */
-    public function get_f_link(): ?string
+    public function get_f_link(): string
     {
         return '';
     }

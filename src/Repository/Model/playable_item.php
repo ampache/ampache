@@ -58,7 +58,7 @@ interface playable_item
     /**
      * Get item f_link.
      */
-    public function get_f_link(): ?string;
+    public function get_f_link(): string;
 
     /**
      * get_parent
