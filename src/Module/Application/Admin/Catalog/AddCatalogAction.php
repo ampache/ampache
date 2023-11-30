@@ -110,14 +110,4 @@ final class AddCatalogAction extends AbstractCatalogAction
 
         return null;
     }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
-    }
 }
