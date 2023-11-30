@@ -83,7 +83,6 @@ final class AddCatalogAction extends AbstractCatalogAction
         // If an error hasn't occurred
         if (!AmpError::occurred()) {
             $catalog_id = Catalog::create($_POST);
-            $users      = static::getUserRepository()->getValidArray();
 
             if (!$catalog_id) {
                 $this->ui->show('show_add_catalog.inc.php');

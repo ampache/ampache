@@ -67,13 +67,11 @@ final class SendAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        /* Check for posted email */
-        $result = false;
         if (isset($_POST['email']) && Core::get_post('email')) {
             /* Get the email address and the current ip*/
             $email      = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
             $current_ip = Core::get_user_ip();
-            $result     = $this->newPasswordSender->send($email, $current_ip);
+            $this->newPasswordSender->send($email, $current_ip);
         }
         // Do not acknowledge a password has been sent or failed and go back to login
         $this->ui->show('show_login_form.inc.php');
