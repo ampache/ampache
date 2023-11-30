@@ -37,6 +37,9 @@ use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Displays the shouts edit-view
+ */
 final class ShowEditAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_edit';
@@ -69,28 +72,32 @@ final class ShowEditAction implements ApplicationActionInterface
 
         $shoutId = (int)($request->getQueryParams()['shout_id'] ?? 0);
         $shout   = $this->shoutRepository->findById($shoutId);
+
         if ($shout === null) {
             throw new ObjectNotFoundException($shoutId);
         }
 
-        $this->ui->showHeader();
-
+        // load the object the shout is referring to
         $object = $this->shoutObjectLoader->loadByShout($shout);
         if ($object === null) {
             throw new ObjectNotFoundException($shout->getObjectId());
         }
 
-        $client = $this->modelFactory->createUser($shout->getUserId());
-        if ($client->isNew()) {
-            throw new ObjectNotFoundException($shout->getUserId());
+        // load the used who created the shout
+        $shoutUserId = $shout->getUserId();
+
+        $user = $this->modelFactory->createUser($shoutUserId);
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($shoutUserId);
         }
 
+        $this->ui->showHeader();
         $this->ui->show(
             'show_edit_shout.inc.php',
             [
                 'shout' => $shout,
                 'object' => $object,
-                'client' => $client,
+                'client' => $user,
             ]
         );
 
