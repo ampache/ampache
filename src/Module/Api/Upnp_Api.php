@@ -120,7 +120,7 @@ class Upnp_Api
     {
         $strHeader = 'NOTIFY * HTTP/1.1' . "\r\n";
         $strHeader .= 'HOST: ' . $host . ':' . $port . "\r\n";
-        $strHeader .= 'LOCATION: http://' . gethostbyname(AmpConfig::get('http_host')) . ':' . AmpConfig::get('http_port') . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
+        $strHeader .= 'LOCATION: http://' . gethostbyname(AmpConfig::get('http_host')) . ':' . AmpConfig::get('http_port', 80) . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
         $strHeader .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/' . AmpConfig::get('version') . "\r\n";
         $strHeader .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
         //$strHeader .= 'NTS: ssdp:alive' . "\r\n";
@@ -173,7 +173,7 @@ class Upnp_Api
         $response .= 'EXT:' . "\r\n";
         // Note that quite a few devices are unable to resolve a URL into an IP address. Therefore we have to use a
         // local IP address - resolve http_host into IP address
-        $response .= 'LOCATION: http://' . gethostbyname(AmpConfig::get('http_host')) . ':' . AmpConfig::get('http_port') . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
+        $response .= 'LOCATION: http://' . gethostbyname(AmpConfig::get('http_host')) . ':' . AmpConfig::get('http_port', 80) . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
         $response .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/' . AmpConfig::get('version') . "\r\n";
         $response .= 'ST: ' . $actst . "\r\n";
         $response .= 'USN: ' . 'uuid:' . self::get_uuidStr() . '::' . $actst . "\r\n";
