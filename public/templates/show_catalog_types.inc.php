@@ -41,12 +41,11 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
     </thead>
     <tbody>
         <?php
-        foreach ($catalog_types as $type) {
-            $catalog = Catalog::create_catalog_type($type);
-            if (!$catalog instanceof Catalog) {
+        foreach ($catalog_types as $key => $type) {
+            $catalog = Catalog::create_catalog_type($key);
+            if (!$catalog instanceof $type) {
                 continue;
             }
-            $catalog->format();
             if ($catalog->is_installed()) {
                 $action     = 'confirm_uninstall_catalog_type';
                 $action_txt = T_('Disable');
