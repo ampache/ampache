@@ -12541,47 +12541,7 @@ parameters:
 			path: src/Module/Util/SlideshowInterface.php
 
 		-
-			message: "#^Binary operation \"\\*\\=\" between float\\|int\\|string and 1024 results in an error\\.$#"
-			count: 2
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Binary operation \"\\*\\=\" between string and 1024 results in an error\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
 			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
-			count: 2
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Cannot call method addAttribute\\(\\) on SimpleXMLElement\\|false\\.$#"
-			count: 5
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Cannot call method addChild\\(\\) on SimpleXMLElement\\|false\\.$#"
-			count: 4
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Cannot call method asXML\\(\\) on SimpleXMLElement\\|false\\.$#"
-			count: 2
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:ajax_include\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:createPreferenceInput\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
 
@@ -12611,32 +12571,7 @@ parameters:
 			path: src/Module/Util/Ui.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:show_box_bottom\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:show_box_top\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:show_custom_style\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:show_footer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:unformat_bytes\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:update_text\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
 
@@ -12648,11 +12583,6 @@ parameters:
 		-
 			message: "#^PHPDoc tag @var above a method has no effect\\.$#"
 			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|false given\\.$#"
-			count: 2
 			path: src/Module/Util/Ui.php
 
 		-
@@ -12676,33 +12606,8 @@ parameters:
 			path: src/Module/Util/Ui.php
 
 		-
-			message: "#^Result of && is always false\\.$#"
-			count: 2
-			path: src/Module/Util/Ui.php
-
-		-
 			message: "#^Static property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_classes is unused\\.$#"
 			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Undefined variable\\: \\$hover_name$#"
-			count: 2
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Undefined variable\\: \\$hover_url$#"
-			count: 2
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Variable \\$hover_name in isset\\(\\) is never defined\\.$#"
-			count: 4
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Variable \\$hover_url in isset\\(\\) is never defined\\.$#"
-			count: 2
 			path: src/Module/Util/Ui.php
 
 		-

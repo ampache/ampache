@@ -114,16 +114,15 @@ class Ui implements UiInterface
      *
      * Does some trickery with the output buffer to return the output of a
      * template.
-     * @param string $template
      */
-    public static function ajax_include($template): string
+    public static function ajax_include(string $template): string
     {
         ob_start();
         require self::find_template('') . $template;
         $output = ob_get_contents();
         ob_end_clean();
 
-        return $output;
+        return $output ?: '';
     }
 
     /**
@@ -240,7 +239,7 @@ class Ui implements UiInterface
     public static function unformat_bytes($value): string
     {
         if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', (string)$value, $matches)) {
-            $value = $matches[1];
+            $value = (int)$matches[1];
             $unit  = strtolower(substr($matches[2], 0, 1));
         } else {
             return (string)$value;
@@ -271,47 +270,38 @@ class Ui implements UiInterface
      * get_icon
      *
      * Returns an <img> or <svg> tag for the specified icon
-     * @param string $name
-     * @param string $title
-     * @param string $id_attrib
-     * @param string $class_attrib
      */
-    public static function get_icon($name, $title = null, $id_attrib = null, $class_attrib = null): string
+    public static function get_icon(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
-        if (is_array($name)) {
-            $hover_name = $name[1];
-            $name       = $name[0];
-        }
-
         $title    = $title ?? T_(ucfirst($name));
         $icon_url = self::_find_icon($name);
         $icontype = pathinfo($icon_url, PATHINFO_EXTENSION);
-        if (isset($hover_name)) {
-            $hover_url = self::_find_icon($hover_name);
-        }
+        $tag      = '';
         if ($icontype == 'svg') {
             // load svg file
             $svgicon = simplexml_load_file($icon_url);
+            if ($svgicon) {
+                if (empty($svgicon->title)) {
+                    $svgicon->addChild('title', $title);
+                } else {
+                    $svgicon->title = $title;
+                }
+                if (empty($svgicon->desc)) {
+                    $svgicon->addChild('desc', $title);
+                } else {
+                    $svgicon->desc = $title;
+                }
 
-            if (empty($svgicon->title)) {
-                $svgicon->addChild('title', $title);
-            } else {
-                $svgicon->title = $title;
+                if (!empty($id_attrib)) {
+                    $svgicon->addAttribute('id', $id_attrib);
+                }
+                if (empty($class_attrib)) {
+                    $class_attrib = 'icon icon-' . $name;
+                }
+                $svgicon->addAttribute('class', $class_attrib);
+
+                $tag = explode("\n", ($svgicon->asXML() ?: ''), 2)[1];
             }
-            if (empty($svgicon->desc)) {
-                $svgicon->addChild('desc', $title);
-            } else {
-                $svgicon->desc = $title;
-            }
-
-            if (!empty($id_attrib)) {
-                $svgicon->addAttribute('id', $id_attrib);
-            }
-
-            $class_attrib = ($class_attrib) ?? 'icon icon-' . $name;
-            $svgicon->addAttribute('class', $class_attrib);
-
-            $tag = explode("\n", $svgicon->asXML(), 2)[1];
         } else {
             // fall back to png
             $tag = '<img src="' . $icon_url . '" ';
@@ -322,10 +312,6 @@ class Ui implements UiInterface
             }
             if ($class_attrib !== null) {
                 $tag .= 'class="' . $class_attrib . '" ';
-            }
-            if (isset($hover_name) && isset($hover_url)) {
-                $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
-                $tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
             }
             $tag .= '/>';
         }
@@ -365,50 +351,39 @@ class Ui implements UiInterface
      * get_image
      *
      * Returns an <img> or <svg> tag for the specified image
-     * @param string $name
-     * @param string $title
-     * @param string $id_attrib
-     * @param string $class_attrib
      */
-    public static function get_image($name, $title = null, $id_attrib = null, $class_attrib = null): string
+    public static function get_image(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
-        if (is_array($name)) {
-            $hover_name = $name[1];
-            $name       = $name[0];
-        }
-
-        $title = $title ?? ucfirst($name);
-
+        $title     = $title ?? ucfirst($name);
         $image_url = self::_find_image($name);
         $imagetype = pathinfo($image_url, PATHINFO_EXTENSION);
-        if (isset($hover_name)) {
-            $hover_url = self::_find_image($hover_name);
-        }
+        $tag       = '';
         if ($imagetype == 'svg') {
             // load svg file
             $svgimage = simplexml_load_file($image_url);
+            if ($svgimage) {
+                $svgimage->addAttribute('class', 'image');
 
-            $svgimage->addAttribute('class', 'image');
+                if (empty($svgimage->title)) {
+                    $svgimage->addChild('title', $title);
+                } else {
+                    $svgimage->title = $title;
+                }
+                if (empty($svgimage->desc)) {
+                    $svgimage->addChild('desc', $title);
+                } else {
+                    $svgimage->desc = $title;
+                }
 
-            if (empty($svgimage->title)) {
-                $svgimage->addChild('title', $title);
-            } else {
-                $svgimage->title = $title;
+                if (!empty($id_attrib)) {
+                    $svgimage->addAttribute('id', $id_attrib);
+                }
+
+                $class_attrib = ($class_attrib) ?? 'image image-' . $name;
+                $svgimage->addAttribute('class', $class_attrib);
+
+                $tag = explode("\n", ($svgimage->asXML() ?: ''), 2)[1];
             }
-            if (empty($svgimage->desc)) {
-                $svgimage->addChild('desc', $title);
-            } else {
-                $svgimage->desc = $title;
-            }
-
-            if (!empty($id_attrib)) {
-                $svgimage->addAttribute('id', $id_attrib);
-            }
-
-            $class_attrib = ($class_attrib) ?? 'image image-' . $name;
-            $svgimage->addAttribute('class', $class_attrib);
-
-            $tag = explode("\n", $svgimage->asXML(), 2)[1];
         } else {
             // fall back to png
             $tag = '<img src="' . $image_url . '" ';
@@ -419,10 +394,6 @@ class Ui implements UiInterface
             }
             if ($class_attrib !== null) {
                 $tag .= 'class="' . $class_attrib . '" ';
-            }
-            if (isset($hover_name) && isset($hover_url)) {
-                $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
-                $tag .= 'onmouseout="this.src=\'' . $image_url . '\'; return true;" ';
             }
             $tag .= '/>';
         }
@@ -485,7 +456,7 @@ class Ui implements UiInterface
      *
      * @deprecated use non-static version
      */
-    public static function show_footer()
+    public static function show_footer(): void
     {
         if (!defined("TABLE_RENDERED")) {
             show_table_render();
@@ -524,7 +495,7 @@ class Ui implements UiInterface
      *
      * @deprecated Use non-static version
      */
-    public static function show_box_top($title = '', $class = '')
+    public static function show_box_top($title = '', $class = ''): void
     {
         require self::find_template('show_box_top.inc.php');
     }
@@ -536,7 +507,7 @@ class Ui implements UiInterface
      *
      * @deprecated Use non-static version
      */
-    public static function show_box_bottom()
+    public static function show_box_bottom(): void
     {
         require self::find_template('show_box_bottom.inc.php');
     }
@@ -549,7 +520,7 @@ class Ui implements UiInterface
         require self::find_template('show_query_stats.inc.php');
     }
 
-    public static function show_custom_style()
+    public static function show_custom_style(): void
     {
         if (AmpConfig::get('custom_login_background', false)) {
             echo "<style> body { background-position: center; background-size: cover; background-image: url('" . AmpConfig::get('custom_login_background') . "') !important; }</style>";
@@ -571,7 +542,7 @@ class Ui implements UiInterface
      * @param string $field
      * @param $value
      */
-    public static function update_text($field, $value)
+    public static function update_text($field, $value): void
     {
         if (defined('API')) {
             return;
@@ -700,7 +671,7 @@ class Ui implements UiInterface
     public function createPreferenceInput(
         string $name,
         $value
-    ) {
+    ): void {
         if (!Preference::has_access($name)) {
             if ($value == '1') {
                 echo T_("Enabled");
