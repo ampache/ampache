@@ -50,7 +50,7 @@ $radio        = null;
 $isShare      = isset($isShare) && $isShare;
 $iframed      = isset($iframed) && $iframed;
 $embed        = isset($embed) && $embed;
-if ($isShare) {
+if (!$isShare) {
     $stream_id = $_REQUEST['playlist_id'] ?? null;
     if (is_string($stream_id) || is_integer($stream_id)) {
         $playlist = new Stream_Playlist($stream_id);
