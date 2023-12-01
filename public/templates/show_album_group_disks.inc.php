@@ -47,10 +47,10 @@ use Ampache\Module\Util\ZipHandlerInterface;
 
 $web_path = (string)AmpConfig::get('web_path', '');
 // Title for this album
-$f_album_name = $album->get_artist_fullname();
-$f_name       = $album->get_fullname(false, true);
+$f_album_name = (string)$album->get_artist_fullname();
+$f_name       = (string)$album->get_fullname(false, true);
 $title        = ($album->album_artist > 0)
-    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->get_f_artist_link()) ?? '')
+    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . ((string)$album->get_f_artist_link())
     : scrub_out($f_name);
 
 $current_user         = Core::get_global('user');

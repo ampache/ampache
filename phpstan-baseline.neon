@@ -31,11 +31,6 @@ parameters:
 			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$artist_id of class Ampache\\\\Repository\\\\Model\\\\Artist constructor expects int\\|null, string given\\.$#"
-			count: 3
-			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$artist_id of static method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:get_artists_like\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
@@ -12811,16 +12806,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:forceSize\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:forceSize\\(\\) has parameter \\$size with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:gather_tags\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -12927,11 +12912,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:trimAscii\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:write_id3\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -13081,11 +13061,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Variable \\$returned_keys in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:clean_tag_info\\(\\) has parameter \\$keys with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
@@ -13097,16 +13072,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:clean_tag_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfoInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:forceSize\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfoInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:forceSize\\(\\) has parameter \\$size with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
 
@@ -13147,11 +13112,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:set_broken\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfoInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:write_id3\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
 

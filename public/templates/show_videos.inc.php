@@ -24,6 +24,11 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Clip;
+use Ampache\Repository\Model\Movie;
+use Ampache\Repository\Model\Personal_Video;
+use Ampache\Repository\Model\TVShow_Episode;
+use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Ajax;
@@ -74,6 +79,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <?php foreach ($object_ids as $video_id) {
             if (isset($video_type)) {
                 $className = ObjectTypeToClassNameMapper::map($video_type);
+                /** @var Movie|Clip|Personal_Video|TVShow_Episode|TVShow_Season|Video $libitem */
                 $libitem   = new $className($video_id);
             } else {
                 $libitem = new Video($video_id);

@@ -63,7 +63,7 @@ if ($directplay_limit > 0) {
     }
 }
 $current_user = Core::get_global('user');
-$f_name       = $artist->get_fullname();
+$f_name       = (string)$artist->get_fullname();
 $title        = scrub_out($f_name);
 Ui::show_box_top($title, 'info-box'); ?>
 <div class="item_right_info">
@@ -263,7 +263,7 @@ if ($use_label) { ?>
     </div>
     <div id="tabs_content">
         <div id="albums" class="tab_content" style="display: block;">
-<?php if (!isset($multi_object_ids) || $multi_object_ids === null) {
+<?php if (empty($multi_object_ids)) {
     $multi_object_ids = array('' => $object_ids);
 }
 
@@ -281,7 +281,7 @@ if ($use_label) { ?>
         </div>
         <?php echo Ajax::observe('top_tracks_link', 'click', Ajax::action('?page=index&action=top_tracks&artist=' . $artist->id, 'top_tracks')); ?>
         <div id="top_tracks" class="tab_content">
-            <?php Ui::show_box_top(null, 'info-box');
+            <?php Ui::show_box_top('', 'info-box');
 echo T_('Loading...');
 Ui::show_box_bottom(); ?>
         </div>
@@ -303,7 +303,7 @@ if ($show_similar) {
         </div>
         <?php echo Ajax::observe('similar_songs_link', 'click', Ajax::action('?page=index&action=similar_songs&artist=' . $artist->id, 'similar_songs')); ?>
         <div id="similar_songs" class="tab_content">
-            <?php Ui::show_box_top(null, 'info-box');
+            <?php Ui::show_box_top('', 'info-box');
     echo T_('Loading...');
     Ui::show_box_bottom(); ?>
         </div>

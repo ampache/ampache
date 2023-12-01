@@ -414,7 +414,7 @@ class Catalog_Seafile extends Catalog
             $rename_pattern
         );
         if (!$is_cached) {
-            $vainfo->forceSize($file->size);
+            $vainfo->forceSize((int)$file->size);
         }
         $vainfo->gather_tags();
         $key = VaInfo::get_tag_type($vainfo->tags);

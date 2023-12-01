@@ -41,12 +41,13 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Psr\Container\ContainerInterface;
 
 /** @var Album $album */
 /** @var bool $isAlbumEditable */
-
 /** @var ContainerInterface $dic */
 global $dic;
+
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 $batch_dl   = Access::check_function('batch_download');
 $zip_album  = $batch_dl && $zipHandler->isZipable('album');

@@ -55,7 +55,7 @@ $create_date  = $client->create_date ? get_datetime((int) $client->create_date) 
 $web_path     = (string)AmpConfig::get('web_path', '');
 $allow_upload = Upload::can_upload($current_user);
 $client->format();
-Ui::show_box_top($client->get_fullname()); ?>
+Ui::show_box_top((string)$client->get_fullname()); ?>
 <?php if ($client->id > 0) { ?>
 <div class="user_avatar">
 <?php if ($client->f_avatar) {
@@ -141,7 +141,7 @@ if (AmpConfig::get('sociable')) {
     </div>
     <div id="tabs_content">
         <div id="recently_played" class="tab_content" style="display: block;">
-        <?php $current_list = Tmp_Playlist::get_from_username($client->username);
+        <?php $current_list = Tmp_Playlist::get_from_username((string)$client->username);
 if ($current_list) {
     $tmp_playlist = new Tmp_Playlist($current_list);
     $object_ids   = $tmp_playlist->get_items();

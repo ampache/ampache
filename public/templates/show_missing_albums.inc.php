@@ -48,8 +48,7 @@ $thcount = 5; ?>
         </tr>
         <?php
             }
-        } ?>
-        <?php if (!$walbums || !count($walbums)) { ?>
+        } else { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing albums found'); ?></span></td>
         </tr>

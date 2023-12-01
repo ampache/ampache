@@ -124,7 +124,7 @@ if (!empty($episode->file)) {
     $songprops[T_('File')]     = $episode->file;
     $songprops[T_('Size')]     = $episode->f_size;
     $songprops[T_('Bitrate')]  = scrub_out($episode->f_bitrate);
-    $songprops[T_('Channels')] = scrub_out($episode->channels);
+    $songprops[T_('Channels')] = scrub_out((string)$episode->channels);
 }
 
 foreach ($songprops as $key => $value) {

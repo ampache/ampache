@@ -23,6 +23,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -69,22 +70,8 @@ if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_
         <label id="show_allplLabel" for="showallplCB"><?php echo T_('All Playlists'); ?></label><br />
         <?php echo Ajax::observe('show_allplCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=playlist_type&value=1', ''));
     }
-    if (in_array('object_type', $browse_filters)) {
-        $string    = 'otype_' . $browse->get_filter('object_type');
-        ${$string} = 'selected="selected"'; ?>
-        <input id="typeSongRadio" type="radio" name="object_type" value="1" <?php echo $otype_song; ?>/>
-        <label id="typeSongLabel" for="typeSongRadio"><?php echo T_('Song Title'); ?></label><br />
-        <?php echo Ajax::observe('typeSongRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=song', '')); ?>
-        <input id="typeAlbumRadio" type="radio" name="object_type" value="1" />
-        <label id="typeAlbumLabel" for="typeAlbumRadio"><?php echo T_('Albums'); ?></label><br />
-        <?php echo Ajax::observe('typeAlbumRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=album', '')); ?>
-        <input id="typeArtistRadio" type="radio" name="object_type" value="1" />
-        <label id="typeArtistLabel" for="typeArtistRadio"><?php echo T_('Artist'); ?></label><br />
-        <?php echo Ajax::observe('typeArtistRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=artist', ''));
-    }
     if (in_array('catalog', $browse_filters)) { ?>
         <form method="post" id="catalog_choice" action="javascript.void(0);">
-            <?php //TODO: FIX THIS <input type="hidden" name="hide" value="cel_you" /> each type needs a hide value if the object_type has hidden columns?>
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>

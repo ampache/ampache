@@ -983,8 +983,8 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
  * This displays a select of every album that we've got in Ampache (which can be hella long).
  * It's used by the Edit page and takes a $name and an $album_id
  * @param string $name
- * @param int $license_id
- * @param int $song_id
+ * @param int|null $license_id
+ * @param int|null $song_id
  */
 function show_license_select($name, $license_id = 0, $song_id = 0): void
 {

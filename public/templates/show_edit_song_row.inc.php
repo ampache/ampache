@@ -69,7 +69,7 @@ use Ampache\Module\Api\Ajax;
                 <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track'); ?></td>
-                <td><input type="text" name="track" value="<?php echo scrub_out($libitem->track); ?>" /></td>
+                <td><input type="text" name="track" value="<?php echo scrub_out((string)$libitem->track); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
@@ -97,7 +97,7 @@ use Ampache\Module\Api\Ajax;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
-                <td><input type="text" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
+                <td><input type="text" name="year" value="<?php echo scrub_out((string)$libitem->year); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
@@ -108,7 +108,7 @@ use Ampache\Module\Api\Ajax;
                     <tr>
                         <td class="edit_dialog_content_header"><?php echo T_('Music License'); ?></td>
                         <td>
-                            <?php show_license_select('license', $libitem->license, $libitem->id); ?>
+                            <?php show_license_select('license', (int)$libitem->license, $libitem->id); ?>
                             <div id="album_select_license_<?php echo $libitem->license; ?>">
                                 <?php echo Ajax::observe('license_select_' . $libitem->license, 'change', 'check_inline_song_edit("license", ' . $libitem->id . ')'); ?>
                             </div>

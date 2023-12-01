@@ -36,5 +36,5 @@ use Ampache\Repository\Model\Movie;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
-                <td><input type="number" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
+                <td><input type="number" name="year" value="<?php echo scrub_out((string)$libitem->year); ?>" /></td>
             </tr>

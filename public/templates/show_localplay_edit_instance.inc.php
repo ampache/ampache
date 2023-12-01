@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 /** @var array $fields */
 
 Ui::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance'); ?>
-<form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=update_instance&amp;instance=<?php echo (int) scrub_in(filter_input(INPUT_GET, 'instance', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">
+<form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=update_instance&amp;instance=<?php echo (int) scrub_in((string)filter_input(INPUT_GET, 'instance', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">
 <table class="tabledata">
 <?php foreach ($fields as $key => $field) { ?>
 <tr>

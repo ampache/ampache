@@ -357,8 +357,8 @@ class Podcast extends database_object implements library_item
     /**
      * create
      * @param array{
-     *  feed: string,
-     *  catalog: int
+     *  catalog_id: int,
+     *  feed: string
      * } $data
      * @return bool|int
      */
@@ -370,7 +370,7 @@ class Podcast extends database_object implements library_item
             AmpError::add('feed', T_('Feed URL is invalid'));
         }
 
-        $catalog_id = (int)($data['catalog']);
+        $catalog_id = (int)($data['catalog_id']);
         if ($catalog_id < 1) {
             AmpError::add('catalog', T_('Target Catalog is required'));
         } else {

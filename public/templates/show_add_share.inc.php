@@ -46,7 +46,7 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Share'); ?></td>
-    <td><?php echo $object->get_f_link() ?? ''; ?></td>
+    <td><?php echo $object->get_f_link(); ?></td>
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>

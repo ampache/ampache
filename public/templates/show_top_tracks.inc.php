@@ -111,7 +111,7 @@ foreach ($object_ids as $song_id) {
                 ->setContext('ARGUMENT_PARAM', '')
                 ->setContext('IS_TABLE_VIEW', $is_table)
                 ->setContext('IS_ALBUM_GROUP', $is_group)
-                ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
+                ->setContext('IS_SHOW_TRACK', !empty($argument))
                 ->setContext('IS_SHOW_LICENSE', $show_license)
                 ->setContext('IS_HIDE_GENRE', $hide_genres)
                 ->setContext('IS_HIDE_ARTIST', $hide_artist)

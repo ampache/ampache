@@ -60,9 +60,17 @@ final class ShowCreateAction implements ApplicationActionInterface
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
             throw new AccessDeniedException();
         }
-
         $this->ui->showHeader();
-        $this->ui->show('show_add_podcast.inc.php');
+
+        $data = $request->getParsedBody();
+
+        $this->ui->show(
+            'show_add_podcast.inc.php',
+            [
+                'catalog_id' => (int)($data['catalog'] ?? 0),
+                'feed' => ($data['feed'] ?? '')
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

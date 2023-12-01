@@ -564,7 +564,7 @@ class Catalog_dropbox extends Catalog
                         $this->sort_pattern,
                         $this->rename_pattern
                     );
-                    $vainfo->forceSize($filesize);
+                    $vainfo->forceSize((int)$filesize);
                     $vainfo->gather_tags();
 
                     $key     = VaInfo::get_tag_type($vainfo->tags);

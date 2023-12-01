@@ -59,9 +59,9 @@ use Ampache\Module\Util\Ui;
 </td>
 <?php
 if ($is_mashup) {
-    $name = scrub_out($libitem->get_fullname()); ?>
+    $name = scrub_out((string)$libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
-        <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
+        <?php $thumb = ($browse->is_grid_view()) ? 1 : 11;
     Art::display('podcast_episode', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $libitem->id); ?>
     </td>
 <?php

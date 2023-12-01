@@ -31,6 +31,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 /** @var Live_Stream $libitem */
+/** @var Ampache\Repository\Model\Browse $browse */
 /** @var string $cel_cover */
 ?>
 <td class="cel_play">
@@ -48,7 +49,7 @@ use Ampache\Module\Util\Ui;
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
+    <?php $thumb = ($browse->is_grid_view()) ? 1 : 11;
 $libitem->display_art($thumb); ?>
 </td>
 <td class="cel_streamname"><?php echo $libitem->get_f_link(); ?></td>

@@ -65,7 +65,8 @@ class AdvancedActionTest extends MockeryTestCase
             ->with(
                 'show_random.inc.php',
                 [
-                    'videoRepository' => $this->videoRepository
+                    'videoRepository' => $this->videoRepository,
+                    'object_ids' => array()
                 ]
             )
             ->once();

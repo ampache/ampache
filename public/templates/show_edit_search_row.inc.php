@@ -53,7 +53,7 @@ use Ampache\Repository\Model\Search;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)'); ?></td>
-                <td><input type="text" name="limit" value="<?php echo scrub_out($libitem->limit); ?>" /></td>
+                <td><input type="text" name="limit" value="<?php echo scrub_out((string)$libitem->limit); ?>" /></td>
             </tr>
             <tr>
                 <td>

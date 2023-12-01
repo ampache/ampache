@@ -40,5 +40,5 @@ use Ampache\Repository\Model\TVShow_Episode;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Episode Number'); ?></td>
-                <td><input type="number" name="tvshow_episode" value="<?php echo scrub_out($libitem->episode_number); ?>" /></td>
+                <td><input type="number" name="tvshow_episode" value="<?php echo scrub_out((string)$libitem->episode_number); ?>" /></td>
             </tr>

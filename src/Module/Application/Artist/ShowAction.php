@@ -110,10 +110,10 @@ final class ShowAction implements ApplicationActionInterface
             $this->ui->show(
                 'show_artist.inc.php',
                 [
-                    'multi_object_ids' => $multi_object_ids,
-                    'object_ids' => $object_ids,
-                    'object_type' => $objectType,
                     'artist' => $artist,
+                    'object_type' => $objectType,
+                    'object_ids' => $object_ids,
+                    'multi_object_ids' => $multi_object_ids,
                     'gatekeeper' => $gatekeeper,
                 ]
             );

@@ -61,7 +61,7 @@ $boxtitle = T_('Post to Shoutbox');
 <tr>
     <td>
         <?php echo Core::form_register('add_shout'); ?>
-        <input type="hidden" name="object_id" value="<?php echo $object->id; ?>" />
+        <input type="hidden" name="object_id" value="<?php echo $object->getId(); ?>" />
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="data" value="<?php echo $data; ?>" />
         <input type="submit" value="<?php echo T_('Create'); ?>" /></td>

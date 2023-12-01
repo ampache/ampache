@@ -263,9 +263,9 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * @param $size
+     * forceSize
      */
-    public function forceSize($size)
+    public function forceSize(int $size): void
     {
         $this->_forcedSize = $size;
     }
@@ -385,7 +385,7 @@ final class VaInfo implements VaInfoInterface
      * @param $tagData
      * @throws Exception
      */
-    public function write_id3($tagData)
+    public function write_id3($tagData): void
     {
         $TaggingFormat = 'UTF-8';
         $tagWriter     = new getid3_writetags();
@@ -539,7 +539,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         // If we didn't find anything then default to everything.
-        if (!isset($returned_keys)) {
+        if (!empty($returned_keys)) {
             $returned_keys = array_keys($results);
             sort($returned_keys);
         }

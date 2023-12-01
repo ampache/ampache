@@ -37,11 +37,11 @@ use Ampache\Module\Authorization\Access;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Max Counter'); ?></td>
-                <td><input type="text" name="max_counter" value="<?php echo scrub_out($libitem->max_counter); ?>" /></td>
+                <td><input type="text" name="max_counter" value="<?php echo scrub_out((string)$libitem->max_counter); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Expiry Days'); ?></td>
-                <td><input type="text" name="expire" value="<?php echo scrub_out($libitem->expire_days); ?>" /></td>
+                <td><input type="text" name="expire" value="<?php echo scrub_out((string)$libitem->expire_days); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>

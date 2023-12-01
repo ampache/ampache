@@ -58,7 +58,7 @@ ${$name}                    = 'checked="checked"'; ?>
         <tr>
             <td><?php echo T_('User') . ':'; ?></td>
             <td colspan="3">
-                <?php show_user_select('user', $access->getUserId()); ?>
+                <?php show_user_select('user', (string)$access->getUserId()); ?>
             </td>
         </tr>
         <tr>

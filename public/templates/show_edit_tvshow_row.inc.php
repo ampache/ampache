@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Tag;
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->get_fullname()); ?>" autofocus /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out((string)$libitem->get_fullname()); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Summary'); ?></td>
@@ -40,7 +40,7 @@ use Ampache\Repository\Model\Tag;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
-                <td><input type="number" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
+                <td><input type="number" name="year" value="<?php echo scrub_out((string)$libitem->year); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>

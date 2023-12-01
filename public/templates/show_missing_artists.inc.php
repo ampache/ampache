@@ -47,8 +47,7 @@ Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
         </tr>
         <?php
             }
-        }
-        if (empty($wartists) || !count($wartists)) { ?>
+        } else { ?>
         <tr>
             <td colspan="<?php echo 5; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
         </tr>

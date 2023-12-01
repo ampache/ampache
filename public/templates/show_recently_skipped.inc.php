@@ -136,7 +136,7 @@ foreach ($data as $row) {
                 <td class="cel_year"><?php echo $song->year; ?></td>
                 <?php if ($user_id > 0) { ?>
                     <td class="cel_username">
-                        <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
+                        <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out((string)$row_user->id); ?>">
                             <?php echo scrub_out($row_user->fullname); ?>
                         </a>
                     </td>

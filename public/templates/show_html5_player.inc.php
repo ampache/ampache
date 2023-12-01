@@ -10,9 +10,11 @@ use Ampache\Module\Util\Ui;
 
 /** @var bool $isVideo  */
 /** @var bool $isRadio */
-/** @var bool $isShare */
 /** @var bool $isDemocratic */
 /** @var bool $isRandom */
+/** @var bool $isShare */
+/** @var bool $iframed */
+/** @var bool $embed */
 /** @var Ampache\Module\Playback\Stream_Playlist $playlist */
 
 // TODO remove me
@@ -24,8 +26,6 @@ $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     : "expires: 7, path: '/', samesite: 'Strict'";
 
 $autoplay     = true;
-$iframed      = $iframed ?? false;
-$isShare      = $isShare ?? false;
 $embed        = $embed ?? false;
 $loop         = ($isRandom || $isDemocratic);
 $jp_volume    = (float)AmpConfig::get('jp_volume', 0.80);
@@ -227,13 +227,14 @@ echo implode(',', $solutions); ?>",
                             }
                             echo "actionsobj += '<div id=\'action_buttons\'></div>';";
                             if (AmpConfig::get('waveform')) {
+                                $shoutLink = AmpConfig::get('sociable') && Access::check('interface', 25);
                                 echo "var waveformobj = '';";
-                                if (AmpConfig::get('sociable') && Access::check('interface', 25)) {
+                                if ($shoutLink) {
                                     echo "waveformobj += '<a href=\"#\" title=\"" . addslashes(T_('Double click to post a new shout')) . "\" onClick=\"javascript:WaveformClick(' + currentjpitem.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
                                 }
                                 echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
                                 echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . $web_path . "/waveform.php?' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\" onLoad=\"ShowWaveform();\">';";
-                                if (AmpConfig::get('waveform')) {
+                                if ($shoutLink) {
                                     echo "waveformobj += '</a>';";
                                 }
                             }
@@ -243,7 +244,12 @@ echo implode(',', $solutions); ?>",
                         } ?>
                     $('.playing_title').html(titleobj);
                     $('.playing_artist').html(artistobj);
-                    <?php if ($iframed && !$isRadio && !$isRandom && !$isDemocratic) { ?>
+                    <?php if (
+                        $iframed &&
+                        !$isRadio &&
+                        !$isRandom &&
+                        !$isDemocratic
+                    ) { ?>
                     $('.playing_actions').html(actionsobj);
                     <?php if (AmpConfig::get('show_lyrics')) { ?>
                     $('.playing_lyrics').html(lyricsobj);

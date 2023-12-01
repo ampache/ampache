@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Live_Stream;
 /** @var Live_Stream $radio */
 ?>
 
-<?php Ui::show_box_top($radio->get_fullname(), 'box box_live_stream_details'); ?>
+<?php Ui::show_box_top((string)$radio->get_fullname(), 'box box_live_stream_details'); ?>
 <div class="item_right_info">
     <?php $thumb = Ui::is_grid_view('live_stream') ? 2 : 11;
 Art::display('live_stream', $radio->id, (string)$radio->get_fullname(), $thumb); ?>
@@ -52,7 +52,7 @@ Art::display('live_stream', $radio->id, (string)$radio->get_fullname(), $thumb);
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'add', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id); ?>
     </dd>
-<?php $itemprops[T_('Name')] = $radio->get_fullname();
+<?php $itemprops[T_('Name')] = (string)$radio->get_fullname();
 $itemprops[T_('Website')]    = scrub_out($radio->site_url);
 $itemprops[T_('Stream')]     = $radio->f_url_link;
 $itemprops[T_('Codec')]      = scrub_out($radio->codec);

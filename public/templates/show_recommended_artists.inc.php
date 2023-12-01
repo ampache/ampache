@@ -109,12 +109,12 @@ foreach ($missing_objects as $missing) { ?>
             <td></td>
             <td colspan="<?php echo($thcount - 1); ?>"><a class="missing_album" href="<?php echo $web_path; ?>/artists.php?action=show_missing&mbid=<?php echo $missing['mbid']; ?>" title="<?php echo scrub_out($missing['name']); ?>"><?php echo scrub_out($missing['name']); ?></a></td>
         </tr>
-        <?php } ?>
-        <?php if ((!$object_ids || !count($object_ids)) && (!$missing_objects || !count($missing_objects))) { ?>
+<?php } ?>
+<?php if (empty($object_ids) && empty($missing_objects)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No similar artist found'); ?></span></td>
         </tr>
-        <?php } ?>
+<?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -125,12 +125,12 @@ foreach ($missing_objects as $missing) { ?>
             <th class="cel_songs"> <?php echo T_('Songs'); ?> </th>
             <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
             <th class="<?php echo $cel_time; ?>"> <?php echo T_('Time'); ?> </th>
-            <?php if (!$hide_genres) { ?>
+<?php if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
-            <?php } ?>
-            <?php if ($show_ratings) { ?>
+<?php } ?>
+<?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-            <?php } ?>
+<?php } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
         </tr>
     </tfoot>

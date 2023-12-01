@@ -2071,9 +2071,9 @@ class Subsonic_Api
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $catalogs = $user->get_catalogs('podcast');
             if (count($catalogs) > 0) {
-                $data            = array();
-                $data['feed']    = $url;
-                $data['catalog'] = $catalogs[0];
+                $data               = array();
+                $data['catalog_id'] = $catalogs[0];
+                $data['feed']       = $url;
                 if (Podcast::create($data)) {
                     $response = Subsonic_Xml_Data::addSubsonicResponse('createpodcastchannel');
                 } else {

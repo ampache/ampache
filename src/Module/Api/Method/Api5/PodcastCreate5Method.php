@@ -63,10 +63,10 @@ final class PodcastCreate5Method
         if (!Api5::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
             return false;
         }
-        $data            = array();
-        $data['feed']    = urldecode($input['url']);
-        $data['catalog'] = $input['catalog'];
-        $podcast         = Podcast::create($data, true);
+        $data               = array();
+        $data['catalog_id'] = $input['catalog'];
+        $data['feed']       = urldecode($input['url']);
+        $podcast            = Podcast::create($data, true);
 
         if (!$podcast) {
             Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);

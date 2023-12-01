@@ -727,6 +727,7 @@ class Query
                     'alpha_match',
                     'exact_match',
                     'hidden',
+                    'object_type',
                     'regex_match',
                     'regex_not_match',
                     'tag'
@@ -2754,10 +2755,10 @@ class Query
     /**
      * Set an additional content div key.
      * This is used to keep div names unique in the html
-     * @param string $key
+     * @param string|int $key
      */
     public function set_content_div_ak($key): void
     {
-        $this->_state['extended_key_name'] = str_replace(", ", "_", $key);
+        $this->_state['extended_key_name'] = str_replace(", ", "_", (string)$key);
     }
 }

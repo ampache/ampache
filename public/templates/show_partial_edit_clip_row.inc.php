@@ -28,5 +28,5 @@ use Ampache\Repository\Model\Clip;
 /** @var Clip $libitem */ ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
-                <td><?php show_artist_select('artist', $libitem->artist); ?></td>
+                <td><?php show_artist_select('artist', (int)$libitem->artist); ?></td>
             </tr>

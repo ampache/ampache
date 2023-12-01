@@ -39,7 +39,7 @@ $streamaccess = T_('Stream Access');
 $all          = T_('All');
 $current_ip   = !filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
     ? ''
-    : filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP); ?>
+    : (string)filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP); ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
     <table class="tabledata">
         <tr>

@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Label $libitem */
 /** @var string $cel_cover */
 
-$name = scrub_out($libitem->get_fullname()); ?>
+$name = scrub_out((string)$libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php Art::display('label', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->id); ?>
 </td>

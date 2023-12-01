@@ -43,7 +43,7 @@ use Ampache\Repository\Model\User;
 /** @var string $t_upload */
 /** @var string $t_logout */
 /** @var bool $access25 */
-/** @var bool $allow_upload */
+/** @var bool|null $allow_upload */
 
 $current_user = $current_user ?? Core::get_global('user');
 $is_session   = (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0);

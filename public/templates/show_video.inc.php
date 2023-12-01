@@ -41,17 +41,17 @@ use Ampache\Module\Util\Ui;
 /** @var Video $video */
 
 $web_path = (string)AmpConfig::get('web_path', '');
-
-Ui::show_box_top($video->get_fullname(), 'box box_video_details'); ?>
+$fullname = $video->get_fullname() ?? '';
+Ui::show_box_top($fullname, 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
 $gart = false;
 // The release type is not the video itself, we probably want preview
 if (get_class($video) != Movie::class) {
-    $gart = Art::display('video', $video->id, $video->f_name, 8, null, false, 'preview');
+    $gart = Art::display('video', $video->id, $fullname, 8, null, false, 'preview');
 }
 if (!$gart) {
-    $gart = Art::display('video', $video->id, $video->f_name, 7);
+    $gart = Art::display('video', $video->id, $fullname, 7);
 } ?>
 <?php if (AmpConfig::get('encode_srt')) { ?>
 <div class="subtitles">
@@ -128,7 +128,7 @@ if (!$gart) {
         <?php } ?>
     </dd>
 <?php
-$videoprops[T_('Title')]  = scrub_out($video->f_name);
+$videoprops[T_('Title')]  = scrub_out($fullname);
 $videoprops[T_('Length')] = scrub_out($video->f_time);
 if (get_class($video) != Video::class) {
     require Ui::find_template('show_partial_' . ObjectTypeToClassNameMapper::reverseMap(get_class($video)) . '.inc.php');
@@ -140,11 +140,13 @@ $videoprops[T_('Display')]       = scrub_out($video->f_display);
 $videoprops[T_('Audio Bitrate')] = scrub_out($video->f_bitrate);
 $videoprops[T_('Video Bitrate')] = scrub_out($video->f_video_bitrate);
 $videoprops[T_('Frame Rate')]    = scrub_out($video->f_frame_rate);
-$videoprops[T_('Channels')]      = scrub_out($video->channels);
+$videoprops[T_('Channels')]      = scrub_out((string)$video->channels);
 if (Access::check('interface', 75)) {
     $data                       = pathinfo($video->file);
-    $videoprops[T_('Path')]     = scrub_out((string)$data['dirname'] ?? '');
-    $videoprops[T_('Filename')] = scrub_out((string)($data['filename'] . "." . $data['extension']) ?? '');
+    $videoprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));
+    $videoprops[T_('Filename')] = (isset($data['extension']))
+        ? scrub_out($data['filename'] . "." . $data['extension'])
+        : '';
     $videoprops[T_('Size')]     = $video->f_size;
 }
 if ($video->update_time) {
@@ -152,7 +154,7 @@ if ($video->update_time) {
 }
 $videoprops[T_('Added')] = get_datetime((int) $video->addition_time);
 if (AmpConfig::get('show_played_times')) {
-    $videoprops[T_('Played')] = scrub_out($video->total_count);
+    $videoprops[T_('Played')] = scrub_out((string)$video->total_count);
 }
 
 foreach ($videoprops as $key => $value) {

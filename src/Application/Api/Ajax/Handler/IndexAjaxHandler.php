@@ -107,7 +107,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $user->id,
                     $moment
                 );
-                if (count($albums) && is_array($albums)) {
+                if (count($albums)) {
                     ob_start();
                     require_once Ui::find_template('show_random_albums.inc.php');
                     $results['random_selection'] = ob_get_clean();
@@ -128,7 +128,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $user->id,
                     $moment
                 );
-                if (count($albumDisks) && is_array($albumDisks)) {
+                if (count($albumDisks)) {
                     ob_start();
                     require_once Ui::find_template('show_random_album_disks.inc.php');
                     $results['random_selection'] = ob_get_clean();
@@ -149,7 +149,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $user->id,
                     $moment
                 );
-                if (count($videos) && is_array($videos)) {
+                if (count($videos)) {
                     ob_start();
                     require_once Ui::find_template('show_random_videos.inc.php');
                     $results['random_video_selection'] = ob_get_clean();
@@ -160,8 +160,10 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'artist_info':
                 if (AmpConfig::get('lastfm_api_key') && (array_key_exists('artist', $_REQUEST) || array_key_exists('fullname', $_REQUEST))) {
                     if (array_key_exists('artist', $_REQUEST)) {
-                        $artist = new Artist($this->requestParser->getFromRequest('artist'));
-                        $artist->format();
+                        $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
+                        if ($artist->isNew() === false) {
+                            $artist->format();
+                        }
                         $biography = Recommendation::get_artist_info($artist->id);
                     } else {
                         $fullname  = $this->requestParser->getFromRequest('fullname');
@@ -175,7 +177,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'similar_artist':
                 if (AmpConfig::get('show_similar') && array_key_exists('artist', $_REQUEST)) {
-                    $artist = new Artist($this->requestParser->getFromRequest('artist'));
+                    $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
                     $artist->format();
                     $limit_threshold = AmpConfig::get('stats_threshold', 7);
                     $object_ids      = array();
@@ -195,7 +197,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'similar_songs':
-                $artist     = new Artist($this->requestParser->getFromRequest('artist'));
+                $artist     = new Artist((int)$this->requestParser->getFromRequest('artist'));
                 $similars   = Recommendation::get_artists_like($artist->id);
                 $object_ids = array();
                 if (!empty($similars)) {

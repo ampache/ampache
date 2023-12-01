@@ -30,9 +30,11 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 
-/** @var array $items */ ?>
+?>
 <ul class="subnavside">
 <?php
+/** @var array $items */
+if (!(empty($items))) {
     foreach ($items as $item) {
         $li_class = '';
         if ($item['url'] == $item['active']) {
@@ -42,5 +44,6 @@ use Ampache\Config\AmpConfig;
         <li <?php echo $li_class;
         echo $li_id; ?>><a href="<?php echo AmpConfig::get('web_path') . '/' . $item['url']; ?>"><?php echo $item['title']; ?></a></li>
     <?php unset($li_id);
-    } ?>
+    }
+}?>
 </ul>

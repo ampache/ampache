@@ -29,9 +29,9 @@ namespace Ampache\Module\Util;
 interface VaInfoInterface
 {
     /**
-     * @param $size
+     * forceSize
      */
-    public function forceSize($size);
+    public function forceSize(int $size): void;
 
     /**
      * get_info
@@ -53,7 +53,7 @@ interface VaInfoInterface
      * @param $tagData
      * @throws \Exception
      */
-    public function write_id3($tagData);
+    public function write_id3($tagData): void;
 
     /**
      * prepare_metadata_for_writing

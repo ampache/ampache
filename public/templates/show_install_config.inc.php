@@ -259,7 +259,7 @@ foreach ($modes as $mode) { ?>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
                 <div class="col-sm-8"><?php echo debug_result(is_readable($configfile)); ?></div>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
-                <div class="col-sm-8"><?php $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
+                <div class="col-sm-8"><?php $results = (is_readable($configfile) && parse_ini_file($configfile)) ? parse_ini_file($configfile) : array();
 echo debug_result(check_config_values($results)); ?></div>
                 &nbsp;
 

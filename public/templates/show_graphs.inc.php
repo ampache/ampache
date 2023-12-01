@@ -37,7 +37,6 @@ use Ampache\Module\Util\Ui;
 /** @var string $zoom */
 /** @var array $gtypes */
 /** @var string $blink */
-/** @var string $type */
 
 $boxtitle = T_('Statistical Graphs');
 if ($blink) {

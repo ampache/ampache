@@ -45,7 +45,7 @@ $access50 = ($access75 || Access::check('interface', 50));
 $browse   = new Browse();
 $browse->set_type($object_type);
 
-Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
+Ui::show_box_top((string)$podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
     <?php
     $thumb = Ui::is_grid_view('podcast') ? 32 : 11;

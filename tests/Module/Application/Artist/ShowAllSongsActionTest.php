@@ -92,6 +92,7 @@ class ShowAllSongsActionTest extends MockeryTestCase
                     'artist' => $artist,
                     'object_type' => 'song',
                     'object_ids' => $songList,
+                    'multi_object_ids' => array(),
                     'gatekeeper' => $gatekeeper,
                 ]
             )

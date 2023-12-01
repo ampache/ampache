@@ -62,10 +62,10 @@ final class PodcastCreate4Method
         if (!Api4::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
             return false;
         }
-        $data            = array();
-        $data['feed']    = $input['url'];
-        $data['catalog'] = $input['catalog'];
-        $podcast         = Podcast::create($data, true);
+        $data               = array();
+        $data['catalog_id'] = $input['catalog'];
+        $data['feed']       = $input['url'];
+        $podcast            = Podcast::create($data, true);
         if ($podcast) {
             Catalog::count_table('podcast');
             ob_end_clean();

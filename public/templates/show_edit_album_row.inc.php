@@ -43,7 +43,7 @@ use Ampache\Module\Api\Ajax;
                 <td>
                     <?php
                         if (Access::check('interface', 50)) {
-                            show_artist_select('album_artist', $libitem->album_artist, true, $libitem->id, true); ?>
+                            show_artist_select('album_artist', (int)$libitem->album_artist, true, $libitem->id, true); ?>
                     <div id="album_artist_select_album_<?php echo $libitem->id; ?>">
                         <?php echo Ajax::observe('album_artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("album_artist", ' . $libitem->id . ')'); ?>
                     </div>
@@ -53,7 +53,7 @@ use Ampache\Module\Api\Ajax;
                         } ?>
                 </td>
             </tr>
-            <?php if (count($libitem->album_artists) > 1) { ?>
+            <?php if (!empty($libitem->album_artists) && count($libitem->album_artists) > 1) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
                 <td><?php echo Artist::get_display(array_diff($libitem->album_artists, array($libitem->album_artist))); ?></td>
@@ -61,7 +61,7 @@ use Ampache\Module\Api\Ajax;
             <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
-                <td><input type="text" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
+                <td><input type="text" name="year" value="<?php echo scrub_out((string)$libitem->year); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>

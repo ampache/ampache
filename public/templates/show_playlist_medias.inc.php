@@ -38,7 +38,6 @@ use Ampache\Module\Util\Ui;
 
 // playlists and searches come from the same 'playlist_media' browse but you can't reorder a search
 $playlist_id  = $playlist->id ?? '';
-$argument     = $argument ?? false;
 $web_path     = (string)AmpConfig::get('web_path', '');
 $seconds      = $browse->duration;
 $duration     = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
@@ -77,7 +76,7 @@ $count     = 1; ?>
                 $object_type = $object['object_type'];
                 if (InterfaceImplementationChecker::is_library_item($object_type)) {
                     $className = ObjectTypeToClassNameMapper::map($object_type);
-                    /** @var Ampache\Repository\Model\playable_item $libitem */
+                    /** @var Ampache\Repository\Model\library_item $libitem */
                     $libitem = new $className($object['object_id']);
                     if (method_exists($libitem, 'format')) {
                         $libitem->format();

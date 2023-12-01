@@ -127,17 +127,17 @@ foreach (array(64, 128, 256, 512, 1024) as $i) {
         </td>
 </tr>
 </table>
+<?php $currentType = $browse_type;
+require Ui::find_template('show_rules.inc.php'); ?>
 
-<?php require Ui::find_template('show_rules.inc.php'); ?>
-
-<div class="formValidation">
+    <div class="formValidation">
         <input type="submit" value="<?php echo T_('Enqueue'); ?>" />
-</div>
+    </div>
 </form>
 <?php Ui::show_box_bottom(); ?>
 <div id="browse">
 <?php
-    if (isset($object_ids) && is_array($object_ids)) {
+    if (!empty($object_ids)) {
         $browse = new Browse();
         $browse->set_type($browse_type);
         $browse->save_objects($object_ids);

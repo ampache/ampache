@@ -37,6 +37,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /** @var Video $libitem */
+/** @var Ampache\Repository\Model\Browse $browse */
 /** @var bool $hide_genres */
 /** @var bool $show_ratings */
 /** @var string $cel_cover */
@@ -69,7 +70,7 @@ if ($libitem->get_default_art_kind() == 'preview') {
     $art_showed = Art::display('video', $libitem->id, (string)$libitem->get_fullname(), 9, $libitem->get_link(), false, 'preview');
 }
 if (!$art_showed) {
-    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 7 : 6;
+    $thumb = ($browse->is_grid_view()) ? 6 : 7;
     Art::display('video', $libitem->id, (string)$libitem->get_fullname(), $thumb, $libitem->get_link());
 } ?>
 </td>

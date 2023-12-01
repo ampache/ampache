@@ -33,14 +33,17 @@ use Ampache\Module\Util\Ui;
 $currentType = (isset($currentType))
     ? $currentType
     : Core::get_request('type');
+if (empty($currentType)) {
+    $currentType = 'song';
+}
 if (isset($playlist)) {
     $logic_operator = $playlist->logic_operator;
 } else {
     $logic_operator = Core::get_request('operator');
 }
-$logic_operator = strtolower($logic_operator); ?>
+$logic_operator = strtolower((string)$logic_operator); ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $currentType ?? 'song'; ?>"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $currentType; ?>"></script>
 
 <?php Ui::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata">

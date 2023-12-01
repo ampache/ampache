@@ -505,7 +505,7 @@ if ($is_session) {
                         <?php } ?>
                         </span>
                     <?php } ?>
-                    <?php if ($site_ajax && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
+                    <?php if ($site_ajax) { ?>
                         <div id="rightbar-minimize">
                             <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_icon('minimize', T_('Show/Hide Playlist')); ?></a>
                         </div>
@@ -615,7 +615,7 @@ $isCollapsed                    = (($sidebarLight && (!isset($_COOKIE['sidebar_s
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
-            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo((isset($count_temp_playlist) || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild');
+            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (!$count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild';
 echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if ($access100) {
