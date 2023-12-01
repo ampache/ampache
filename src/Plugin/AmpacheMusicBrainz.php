@@ -47,7 +47,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $overwrite_name;
+    public $overwrite_name;
 
     /**
      * Constructor
