@@ -1972,7 +1972,7 @@ final class VaInfo implements VaInfoInterface
 
             // Iterate over what we found
             foreach ($matches as $key => $value) {
-                $new_key = translate_pattern_code($elements['0'][$key]);
+                $new_key = self::translate_pattern_code($elements['0'][$key]);
                 if ($new_key !== false) {
                     $results[$new_key] = $value;
                 }
@@ -2122,6 +2122,41 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $data;
+    }
+
+    /**
+     * translate_pattern_code
+     * This just contains a keyed array which it checks against to give you the
+     * 'tag' name that said pattern code corresponds to. It returns false if nothing
+     * is found.
+     * @return string|false
+     */
+    private static function translate_pattern_code(string $code)
+    {
+        $code_array = array(
+            '%a' => 'artist',
+            '%A' => 'album',
+            '%b' => 'barcode',
+            '%c' => 'comment',
+            '%C' => 'catalog_number',
+            '%d' => 'disk',
+            '%g' => 'genre',
+            '%l' => 'label',
+            '%t' => 'title',
+            '%T' => 'track',
+            '%r' => 'release_type',
+            '%R' => 'release_status',
+            '%s' => 'subtitle',
+            '%y' => 'year',
+            '%Y' => 'original_year',
+            '%o' => 'zz_other'
+        );
+
+        if (isset($code_array[$code])) {
+            return $code_array[$code];
+        }
+
+        return false;
     }
 
     /**

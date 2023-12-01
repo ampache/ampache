@@ -123,23 +123,23 @@ echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Zlib Support'); ?></td>
-            <td><?php echo print_bool(function_exists('gzcompress')); ?></td>
+            <td><?php echo Ui::printBool(function_exists('gzcompress')); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('GD Support'); ?></td>
-            <td><?php echo print_bool(function_exists('imagecreatefromstring')); ?></td>
+            <td><?php echo Ui::printBool(function_exists('imagecreatefromstring')); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Iconv Support'); ?></td>
-            <td><?php echo print_bool(function_exists('iconv')); ?></td>
+            <td><?php echo Ui::printBool(function_exists('iconv')); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Gettext Support'); ?></td>
-            <td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
+            <td><?php echo Ui::printBool(function_exists('bindtextdomain')); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('PHP intl extension'); ?></td>
-            <td><?php echo print_bool($environment->check_php_intl()); ?></td>
+            <td><?php echo Ui::printBool($environment->check_php_intl()); ?></td>
         </tr>
         </tbody>
     </table>
@@ -172,7 +172,7 @@ echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
         $value = $string;
     }
     if (Preference::is_boolean($key)) {
-        $value = print_bool($value);
+        $value = Ui::printBool($value);
     }
 
     // Be sure to print only scalar values

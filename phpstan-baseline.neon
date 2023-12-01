@@ -246,11 +246,6 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Function get_mime_from_image\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function get_themes\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/functions.php
@@ -286,27 +281,12 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Function print_bool\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function set_memory_limit\\(\\) has parameter \\$new_limit with no type specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
 		-
 			message: "#^Function show_tvshow_season_select\\(\\) has parameter \\$season_id with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function toggle_visible\\(\\) has parameter \\$element with no type specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function translate_pattern_code\\(\\) has parameter \\$code with no type specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
