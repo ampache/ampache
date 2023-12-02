@@ -28,7 +28,6 @@ namespace Ampache\Module\Api;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
@@ -57,7 +56,6 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
-use SimpleXMLElement;
 
 /**
  * Xml_Data Class
@@ -1351,80 +1349,6 @@ class Xml_Data
         } // end switch on type
 
         return $footer;
-    }
-
-    /**
-     * podcast
-     * @param Album|Artist|Podcast $libitem
-     * @param User $user
-     * @return string|false
-     */
-    public static function podcast(library_item $libitem, $user)
-    {
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><rss />');
-        $xml->addAttribute("xmlns:xmlns:atom", "http://www.w3.org/2005/Atom");
-        $xml->addAttribute("xmlns:xmlns:itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
-        $xml->addAttribute("version", "2.0");
-        $xchannel = $xml->addChild("channel");
-        $xchannel->addChild("title", htmlspecialchars($libitem->get_fullname() . " Podcast"));
-        //$xlink = $xchannel->addChild("atom:link", htmlspecialchars($libitem->get_link()));
-        $libitem_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem));
-        if (Art::has_db($libitem->id, $libitem_type)) {
-            $ximg = $xchannel->addChild("xmlns:itunes:image");
-            $ximg->addAttribute("href", (string)Art::url($libitem->id, $libitem_type));
-        }
-        $summary = $libitem->get_description();
-        if (!empty($summary)) {
-            $summary = htmlspecialchars($summary);
-            $xchannel->addChild("description", $summary);
-            $xchannel->addChild("xmlns:itunes:summary", $summary);
-        }
-        $xchannel->addChild("generator", "ampache");
-        $xchannel->addChild("xmlns:itunes:category", "Music");
-        $owner = $libitem->get_user_owner();
-        if ($owner) {
-            $user_owner = new User($owner);
-            $user_owner->format();
-            $xowner = $xchannel->addChild("xmlns:itunes:owner");
-            $xowner->addChild("xmlns:itunes:name", $user_owner->get_fullname());
-        }
-
-        $medias = $libitem->get_medias();
-        foreach ($medias as $media_info) {
-            $className = ObjectTypeToClassNameMapper::map($media_info['object_type']);
-            /** @var Song|Podcast_Episode $media */
-            $media      = new $className($media_info['object_id']);
-            $media->format();
-            $xitem = $xchannel->addChild("item");
-            $xitem->addChild("title", htmlspecialchars((string)$media->get_fullname()));
-            if ($media->f_artist_full) {
-                $xitem->addChild("xmlns:itunes:author", htmlspecialchars($media->f_artist_full));
-            }
-            //$xmlink = $xitem->addChild("link", htmlspecialchars($media->get_link()));
-            $xitem->addChild("guid", htmlspecialchars((string)$media->get_link()));
-            if ($media->addition_time) {
-                $xitem->addChild("pubDate", date("r", (int)$media->addition_time));
-            }
-            $xitem->addChild("xmlns:itunes:duration", $media->f_time);
-            if ($media->mime) {
-                $surl  = $media->play_url('', 'api', false, $user->getId(), $user->streamtoken);
-                $xencl = $xitem->addChild("enclosure");
-                $xencl->addAttribute("type", (string)$media->mime);
-                $xencl->addAttribute("length", (string)$media->size);
-                $xencl->addAttribute("url", $surl);
-            }
-        }
-
-        $xmlstr = $xml->asXml();
-        // Format xml output
-        $dom = new DOMDocument();
-        if ($dom->loadXML($xmlstr, LIBXML_PARSEHUGE) !== false) {
-            $dom->formatOutput = true;
-
-            return $dom->saveXML();
-        } else {
-            return $xmlstr;
-        }
     }
 
     /**
