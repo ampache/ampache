@@ -35,7 +35,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Artist $libitem */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Repository\Model\Browse|null $browse */
 /** @var bool $show_direct_play */
 /** @var bool $show_playlist_add */
 /** @var bool $hide_genres */
@@ -65,7 +65,7 @@ $web_path   = (string)AmpConfig::get('web_path', ''); ?>
 </td>
 <?php $name = scrub_out((string)$libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php $thumb = ($browse->is_grid_view()) ? 1 : 11;
+    <?php $thumb = (isset($browse) && $browse->is_grid_view()) ? 1 : 11;
 Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
 <td class="<?php echo $cel_artist; ?>"><?php echo $libitem->get_f_link(); ?></td>
