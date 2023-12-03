@@ -66,7 +66,8 @@ final class NewPasswordSender implements NewPasswordSenderInterface
         }
 
         $time        = time();
-        $reset_limit = ($time - 3600) > (User::get_user_data($client->id, 'password_reset')['password_reset'] ?? $time); // don't let a user spam resets
+        $wait_between_reset = 3600; // in seconds
+        $reset_limit = ($time - $wait_between_reset) > (User::get_user_data($client->id, 'password_reset')['password_reset'] ?? ($time - ($wait_between_reset + 100))); // don't let a user spam resets
         if ($client->email == $email && Mailer::is_mail_enabled() && $reset_limit) {
             $newpassword = $this->passwordGenerator->generate();
             $mailer      = new Mailer();
