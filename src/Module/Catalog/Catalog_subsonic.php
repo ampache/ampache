@@ -539,12 +539,18 @@ class Catalog_subsonic extends Catalog
      */
     public function prepare_media($media)
     {
-        $subsonic = $this->createClient();
-        $url      = $subsonic->parameterize($media->file . '&');
-
-        header('Location: ' . $url);
-        debug_event('subsonic.catalog', 'Started remote stream - ' . $url, 5);
-
         return null;
+    }
+
+    /**
+     * Returns the remote streaming-url if supported
+     *
+     * @param Song|Podcast_Episode|Video $media
+     */
+    public function getRemoteStreamingUrl($media): ?string
+    {
+        $subsonic = $this->createClient();
+
+        return $subsonic->parameterize($media->file . '&');
     }
 }

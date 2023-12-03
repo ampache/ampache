@@ -4447,6 +4447,19 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * Returns the remote streaming-url if supported
+     *
+     * Some catalogs build their own streaming urls and therefor need special
+     * handling when it comes to streaming (e.g. SubSonic and remote catalogs)
+     *
+     * @param Song|Podcast_Episode|Video $media
+     */
+    public function getRemoteStreamingUrl($media): ?string
+    {
+        return null;
+    }
+
+    /**
      * @deprecated
      */
     private static function getSongRepository(): SongRepositoryInterface

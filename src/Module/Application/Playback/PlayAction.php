@@ -630,8 +630,24 @@ final class PlayAction implements ApplicationActionInterface
                 if (!$catalog instanceof Catalog) {
                     return null;
                 }
+
+                // Some catalogs redirect you to the remote url so stop here
+                $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media);
+                if ($remoteStreamingUrl !== null) {
+                    $this->logger->debug(
+                        'Started remote stream - ' . $remoteStreamingUrl,
+                        [
+                            LegacyLogger::CONTEXT_TYPE => __CLASS__,
+                            'catalog_type' => $catalog->get_type()
+                        ]
+                    );
+
+                    header('Location: ' . $remoteStreamingUrl);
+
+                    return null;
+                }
+
                 $media = $catalog->prepare_media($media);
-                // Subsonic and remote catalogs redirect you to the remote url so stop here
                 if ($media == null) {
                     return null;
                 }
