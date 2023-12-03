@@ -68,9 +68,9 @@ final class ArtSizeCalculationCommand extends Command
 
             $art_id     = $row['id'];
             $dimensions = Core::image_dimensions($source);
-            if (!empty($dimensions) && ((int) $dimensions['width'] > 0 && (int) $dimensions['height'] > 0)) {
-                $width  = (int) $dimensions['width'];
-                $height = (int) $dimensions['height'];
+            if ($dimensions['width'] > 0 && $dimensions['height'] > 0) {
+                $width  = $dimensions['width'];
+                $height = $dimensions['height'];
                 $sql    = "UPDATE `image` SET `width`=" . $width . ", `height`=" . $height . " WHERE `id`='" . $art_id . "'";
                 Dba::write($sql);
             }

@@ -117,7 +117,9 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 
-        return Art::display_without_return('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
+        Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
+
+        return '';
     }
 
     public function canAutoplayNext(): bool

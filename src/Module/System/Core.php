@@ -269,7 +269,7 @@ class Core
      * false on error
      *
      * @param string $image_data
-     * @return array
+     * @return array{width: int, height: int}
      */
     public static function image_dimensions($image_data)
     {

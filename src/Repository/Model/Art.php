@@ -185,7 +185,7 @@ class Art extends database_object
      * @return bool
      * @throws RuntimeException
      */
-    public static function test_image($source): bool
+    private static function test_image($source): bool
     {
         if (strlen((string) $source) < 10) {
             debug_event(self::class, 'Invalid image passed', 1);
@@ -253,6 +253,8 @@ class Art extends database_object
      * This pulls the information out from the database, depending
      * on if we want to resize and if there is not a thumbnail go
      * ahead and try to resize
+     *
+     * @param bool $fallback
      */
     public function has_db_info($fallback = false): bool
     {
@@ -333,7 +335,7 @@ class Art extends database_object
      * This insert art from url.
      * @param string $url
      */
-    public function insert_url($url)
+    public function insert_url($url): void
     {
         debug_event(self::class, 'Insert art from url ' . $url, 4);
         $image = self::get_from_source(array('url' => $url), $this->type);
@@ -499,29 +501,8 @@ class Art extends database_object
     }
 
     /**
-     * Prepares images to be written to file tag.
-     * @param array $pics
-     * @return array
-     */
-    public static function prepare_pics($pics)
-    {
-        $ndata = array();
-        $i     = 0;
-        foreach ($pics as $pic) {
-            $ndata['attached_picture'][$i]['description']   = $pic['description'];
-            $ndata['attached_picture'][$i]['data']          = $pic['data'];
-            $ndata['attached_picture'][$i]['picturetypeid'] = $pic['picturetypeid'];
-            $ndata['attached_picture'][$i]['mime']          = $pic['mime'];
-
-            $i++;
-        }
-
-        return $ndata;
-    }
-
-    /**
      * check_dimensions
-     * @param array $dimensions
+     * @param array{width: int, height: int} $dimensions
      */
     public static function check_dimensions($dimensions): bool
     {
@@ -564,6 +545,8 @@ class Art extends database_object
     /**
      * clear_image
      * Clear the image column (if you have the image on disk)
+     *
+     * @param int $image_id
      */
     public static function clear_image($image_id): void
     {
@@ -675,11 +658,11 @@ class Art extends database_object
 
     /**
      * read_from_dir
-     * @param $sizetext
+     * @param string $sizetext
      * @param string $type
      * @param int $uid
      * @param string $kind
-     * @param $mime
+     * @param string $mime
      */
     private static function read_from_dir($sizetext, $type, $uid, $kind, $mime): ?string
     {
@@ -748,7 +731,7 @@ class Art extends database_object
      * reset
      * This resets the art in the database
      */
-    public function reset()
+    public function reset(): void
     {
         if (AmpConfig::get('album_art_store_disk')) {
             self::delete_from_dir($this->type, $this->uid, $this->kind);
@@ -793,8 +776,8 @@ class Art extends database_object
      * get_thumb
      * Returns the specified resized image.  If the requested size doesn't
      * already exist, create and cache it.
-     * @param array $size
-     * @return array
+     * @param array{width: int, height: int} $size
+     * @return array{thumb?: string, thumb_mime?: string}
      */
     public function get_thumb($size)
     {
@@ -845,7 +828,7 @@ class Art extends database_object
      * @param string $image
      * @param array $size
      * @param string $mime
-     * @return array
+     * @return array{thumb?: string, thumb_mime?: string}
      */
     public function generate_thumb($image, $size, $mime)
     {
@@ -964,12 +947,12 @@ class Art extends database_object
             return array();
         }
 
-        $data = ob_get_contents();
+        $data = (string) ob_get_contents();
         ob_end_clean();
 
         imagedestroy($thumbnail);
 
-        if (!strlen((string) $data)) {
+        if ($data === '') {
             debug_event(self::class, 'Unknown Error resizing art', 1);
 
             return array();
@@ -1240,9 +1223,13 @@ class Art extends database_object
      * @param $plugin
      * @param string $type
      * @param array $options
-     * @return array
+     * @return list<array{
+     *  url: string,
+     *  mime: string,
+     *  title: string
+     * }>
      */
-    public static function gather_metadata_plugin($plugin, $type, $options)
+    public static function gather_metadata_plugin($plugin, $type, $options): array
     {
         $gtypes     = array();
         $media_info = array();
@@ -1306,10 +1293,9 @@ class Art extends database_object
 
     /**
      * Get thumb size from thumb type.
-     * @param int $thumb
-     * @return array
+     * @return array{width: int, height: int}
      */
-    public static function get_thumb_size($thumb)
+    public static function get_thumb_size(int $thumb): array
     {
         $size = array();
 
@@ -1506,51 +1492,23 @@ class Art extends database_object
     }
 
     /**
-     * Display an item art, bypassing the return value.
-     * @deprecated Temporary as legacy Art::display outputs boolean when used with return
-     * @param string $object_type
-     * @param int $object_id
-     * @param string $name
-     * @param int $thumb
-     * @param string $link
-     * @param bool $show_default
-     * @param string $kind
-     * @return string
-     */
-    public static function display_without_return(
-        $object_type,
-        $object_id,
-        $name,
-        $thumb,
-        $link = null,
-        $show_default = true,
-        $kind = 'default'
-    ): string {
-        self::display(
-            $object_type,
-            $object_id,
-            $name,
-            $thumb,
-            $link,
-            $show_default,
-            $kind
-        );
-
-        return '';
-    }
-
-    /**
      * Get the object details for the art table
-     * @return array
+     * @return list<array{id: int, object_id: int, object_type: string, size: string, mime: string}>
      */
-    public static function get_art_array()
+    public static function get_art_array(): array
     {
         $results    = array();
         $sql        = "SELECT `id`, `object_id`, `object_type`, `size`, `mime` FROM `image` WHERE `image` IS NOT NULL;";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row;
+            $results[] = [
+                'id' => (int) $row['id'],
+                'object_id' => (int) $row['object_id'],
+                'object_type' => $row['object_type'],
+                'size' => (string) $row['size'],
+                'mime' => (string) $row['mime'],
+            ];
         }
 
         return $results;
