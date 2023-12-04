@@ -67,7 +67,7 @@ if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_
     }
     if (in_array('playlist_type', $browse_filters)) { ?>
         <input id="show_allplCB" type="checkbox" <?php echo $string = ($browse->get_filter('playlist_type')) ? '' : 'checked="checked"'; ?>/>
-        <label id="show_allplLabel" for="showallplCB"><?php echo T_('All Playlists'); ?></label><br />
+        <label id="show_allplLabel" for="show_allplCB"><?php echo T_('All Playlists'); ?></label><br />
         <?php echo Ajax::observe('show_allplCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=playlist_type&value=1', ''));
     }
     if (in_array('catalog', $browse_filters)) { ?>
