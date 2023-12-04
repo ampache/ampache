@@ -4352,6 +4352,11 @@ abstract class Catalog extends database_object
         return false;
     }
 
+    public function supportsType(string $type): bool
+    {
+        return $this->gather_types === $type;
+    }
+
     /**
      * @deprecated
      */

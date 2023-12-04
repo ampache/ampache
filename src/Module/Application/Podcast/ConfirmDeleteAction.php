@@ -27,21 +27,21 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Actually deletes a podcast object
+ */
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'confirm_delete';
-
-    private RequestParserInterface $requestParser;
 
     private ConfigContainerInterface $configContainer;
 
@@ -50,12 +50,10 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
@@ -74,10 +72,11 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
+        $podcast = $this->modelFactory->createPodcast(
+            (int) ($request->getQueryParams()['podcast_id'] ?? 0)
+        );
 
-        $podcast_id = (int)$this->requestParser->getFromRequest('podcast_id');
-        $podcast    = $this->modelFactory->createPodcast($podcast_id);
+        $this->ui->showHeader();
         if ($podcast->remove()) {
             $this->ui->showConfirmation(
                 T_('No Problem'),

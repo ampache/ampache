@@ -75,8 +75,8 @@ final class ShoutRenderer implements ShoutRendererInterface
         $html   = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
         if (
-            $details
-            && Art::has_db($shoutObjectId, $shoutObjectType)
+            $details &&
+            Art::has_db($shoutObjectId, $shoutObjectType)
         ) {
             $html .= "<div class='shoutbox-img'><img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . $webPath . "/image.php?object_id=" . $shoutObjectId . "&object_type=" . $shoutObjectType . "&thumb=1\" /></div>";
         }

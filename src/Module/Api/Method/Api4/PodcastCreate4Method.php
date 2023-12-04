@@ -26,12 +26,13 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Podcast\Exception\PodcastCreationException;
+use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
 
 /**
  * Class PodcastCreate4Method
@@ -62,24 +63,46 @@ final class PodcastCreate4Method
         if (!Api4::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
             return false;
         }
-        $data               = array();
-        $data['catalog_id'] = $input['catalog'];
-        $data['feed']       = $input['url'];
-        $podcast            = Podcast::create($data, true);
-        if ($podcast) {
-            Catalog::count_table('podcast');
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    echo Json4_Data::podcasts(array($podcast), $user);
-                    break;
-                default:
-                    echo Xml4_Data::podcasts(array($podcast), $user);
-            }
-        } else {
+
+        $catalog = Catalog::create_from_id((int) ($input['catalog'] ?? 0));
+
+        if ($catalog === null) {
+            Api4::message('error', T_('Failed: Catalog not found'), '401', $input['api_format']);
+
+            return false;
+        }
+
+        try {
+            $podcast = self::getPodcastCreator()->create(
+                $input['url'],
+                $catalog
+            );
+        } catch (PodcastCreationException $e) {
             Api4::message('error', T_('Failed: podcast was not created.'), '401', $input['api_format']);
+
+            return false;
+        }
+
+        Catalog::count_table('podcast');
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                echo Json4_Data::podcasts(array($podcast->getId()), $user);
+                break;
+            default:
+                echo Xml4_Data::podcasts(array($podcast->getId()), $user);
         }
 
         return true;
+    } // podcast_create
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastCreator(): PodcastCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastCreatorInterface::class);
     }
 }

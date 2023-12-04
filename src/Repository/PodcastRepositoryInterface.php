@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -23,15 +23,34 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Podcast;
+namespace Ampache\Repository;
 
-use Ampache\Module\Podcast\Feed\FeedLoader;
-use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Podcast;
 
-use function DI\autowire;
+interface PodcastRepositoryInterface
+{
+    /**
+     * Searches for an existing podcast object by the feed url
+     */
+    public function findByFeedUrl(string $feedUrl): ?Podcast;
 
-return [
-    PodcastSyncerInterface::class => autowire(PodcastSyncer::class),
-    PodcastCreatorInterface::class => autowire(PodcastCreator::class),
-    FeedLoaderInterface::class => autowire(FeedLoader::class),
-];
+    /**
+     * Creates a new podcast database item
+     *
+     * @param array{
+     *   title: string,
+     *   website: string,
+     *   description: string,
+     *   language: string,
+     *   copyright: string,
+     *   generator: string,
+     *   lastBuildDate: null|int
+     *  } $data
+     */
+    public function create(
+        Catalog $catalog,
+        string $feedUrl,
+        array $data
+    ): Podcast;
+}

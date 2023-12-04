@@ -2606,16 +2606,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/PodcastCreate5Method.php
 
 		-
-			message: "#^Parameter \\#1 \\$podcasts of static method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:podcasts\\(\\) expects array\\<int\\>, array\\<int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/PodcastCreate5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$podcasts of static method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:podcasts\\(\\) expects array\\<int\\>, array\\<int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/PodcastCreate5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\PodcastDelete5Method\\:\\:podcast_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/PodcastDelete5Method.php
@@ -3417,16 +3407,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastCreateMethod\\:\\:podcast_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastCreateMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$objects of static method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcasts\\(\\) expects array\\<int\\>, array\\<int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastCreateMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\$podcasts of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:podcasts\\(\\) expects array\\<int\\>, array\\<int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true\\> given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PodcastCreateMethod.php
 
@@ -5587,11 +5567,6 @@ parameters:
 
 		-
 			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
-			count: 1
-			path: src/Module/Application/Image/ShowAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$thumb of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:get_thumb_size\\(\\) expects int, string\\|false\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/Image/ShowAction.php
 
@@ -15404,11 +15379,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:\\$_plugin has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:display_art\\(\\) has no return type specified\\.$#"

@@ -40,8 +40,10 @@ foreach ($theme_css_base as $css_base) { ?>
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css'; ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/print.css'; ?>" type="text/css" media="print" />
 <?php
-if (is_rtl(AmpConfig::get('lang'))
-    && is_file(__DIR__ . '/../../public/' . $theme_path . '/rtl.css')) { ?>
+if (
+    is_rtl(AmpConfig::get('lang')) &&
+    is_file(__DIR__ . '/../../public/' . $theme_path . '/rtl.css')
+) { ?>
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen" />
 <?php } ?>
 <link rel="stylesheet" href="<?php echo $web_path . '/lib/modules/prettyphoto/css/prettyPhoto.min.css'; ?>" type="text/css" media="screen" />

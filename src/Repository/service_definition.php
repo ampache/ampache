@@ -46,4 +46,5 @@ return [
     VideoRepositoryInterface::class => autowire(VideoRepository::class),
     Model\ModelFactoryInterface::class => autowire(Model\ModelFactory::class),
     PreferenceRepositoryInterface::class => autowire(PreferenceRepository::class),
+    PodcastRepositoryInterface::class => autowire(PodcastRepository::class),
 ];

@@ -76,9 +76,9 @@ final class AddShoutAction implements ApplicationActionInterface
 
         // Must be at least a user to do this
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
-            || !$this->requestParser->verifyForm('add_shout')
-            || $user === null
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
+            !$this->requestParser->verifyForm('add_shout') ||
+            $user === null
         ) {
             throw new AccessDeniedException();
         }

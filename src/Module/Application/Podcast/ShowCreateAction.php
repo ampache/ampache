@@ -35,6 +35,9 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders the podcast creation dialogue
+ */
 final class ShowCreateAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_create';
@@ -60,10 +63,10 @@ final class ShowCreateAction implements ApplicationActionInterface
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
             throw new AccessDeniedException();
         }
-        $this->ui->showHeader();
 
         $data = $request->getParsedBody();
 
+        $this->ui->showHeader();
         $this->ui->show(
             'show_add_podcast.inc.php',
             [

@@ -33,6 +33,8 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
+use Ampache\Module\Podcast\Exception\PodcastCreationException;
+use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
@@ -2071,12 +2073,14 @@ class Subsonic_Api
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $catalogs = $user->get_catalogs('podcast');
             if (count($catalogs) > 0) {
-                $data               = array();
-                $data['catalog_id'] = $catalogs[0];
-                $data['feed']       = $url;
-                if (Podcast::create($data)) {
+                /** @var Catalog $catalog */
+                $catalog = Catalog::create_from_id($catalogs[0]);
+
+                try {
+                    self::getPodcastCreator()->create($url, $catalog);
+
                     $response = Subsonic_Xml_Data::addSubsonicResponse('createpodcastchannel');
-                } else {
+                } catch (PodcastCreationException $e) {
                     $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'createpodcastchannel');
                 }
             } else {
@@ -3114,5 +3118,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PodcastSyncerInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastCreator(): PodcastCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastCreatorInterface::class);
     }
 }
