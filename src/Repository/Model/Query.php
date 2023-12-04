@@ -1821,11 +1821,11 @@ class Query
                     case 'playlist_type':
                         $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
                             ? Core::get_global('user')->id
-                            : $value;
-                        if ((int)$value == 1) {
-                            $filter_sql = " (`playlist`.`type` = 'public' AND `playlist`.`user`='$user_id') AND ";
-                        } else {
+                            : -1;
+                        if ((int)$value == 0) {
                             $filter_sql = " (`playlist`.`user`='$user_id') AND ";
+                        } else {
+                            $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
                         }
                         break;
                 } // end filter
@@ -1854,11 +1854,11 @@ class Query
                     case 'playlist_type':
                         $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
                             ? Core::get_global('user')->id
-                            : $value;
-                        if ((int)$value == 1) {
-                            $filter_sql = " (`search`.`type` = 'public' AND `search`.`user`='$user_id') AND ";
-                        } else {
+                            : -1;
+                        if ((int)$value == 0) {
                             $filter_sql = " (`playlist`.`user`='$user_id') AND ";
+                        } else {
+                            $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
                         }
                         break;
                 } // end switch on $filter

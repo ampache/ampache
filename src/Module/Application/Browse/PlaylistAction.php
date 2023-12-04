@@ -63,7 +63,7 @@ final class PlaylistAction implements ApplicationActionInterface
 
         $browse->set_sort('name', 'ASC');
         $browse->set_sort('last_update', 'DESC');
-        $browse->set_filter('playlist_type', '1');
+        $browse->set_filter('playlist_type', 1);
         $browse->update_browse_from_session();
         $browse->show_objects();
 

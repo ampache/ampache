@@ -42,7 +42,6 @@ final class Playlists3Method
      */
     public static function playlists(array $input, User $user): void
     {
-        unset($user);
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('playlist');
@@ -50,7 +49,7 @@ final class Playlists3Method
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
-        $browse->set_filter('playlist_type', '1');
+        $browse->set_filter('playlist_type', 1);
 
         $results = $browse->get_objects();
         Xml3_Data::set_offset($input['offset'] ?? 0);

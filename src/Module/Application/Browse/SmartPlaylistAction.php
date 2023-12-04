@@ -62,7 +62,7 @@ final class SmartPlaylistAction implements ApplicationActionInterface
         $browse->set_update_session(true);
 
         $browse->set_sort('name', 'ASC');
-        $browse->set_filter('playlist_type', '1');
+        $browse->set_filter('playlist_type', 1);
         $browse->update_browse_from_session();
         $browse->show_objects();
 
