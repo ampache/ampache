@@ -4146,7 +4146,16 @@ abstract class Catalog extends database_object
                 break;
             case 'update_from':
                 $catalog_id = 0;
-                // First see if we need to do an add
+                // update_from_tags
+                if ($options['update_path'] != '/' && strlen((string)$options['update_path'])) {
+                    if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
+                        $songs = self::get_ids_from_folder($options['update_path'], 'song');
+                        foreach ($songs as $song_id) {
+                            self::update_single_item('song', $song_id);
+                        }
+                    }
+                }
+                // add new files
                 if ($options['add_path'] != '/' && strlen((string)$options['add_path'])) {
                     $catalog_id = (int)Catalog_local::get_from_path($options['add_path']);
                     if ($catalog_id > 0) {
@@ -4155,17 +4164,7 @@ abstract class Catalog extends database_object
                             self::update_catalog_map($catalog->gather_types);
                         }
                     }
-                } // end if add
-
-                // Now check for an update
-                if ($options['update_path'] != '/' && strlen((string)$options['update_path'])) {
-                    if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
-                        $songs = self::get_ids_from_folder($options['update_path'], 'song');
-                        foreach ($songs as $song_id) {
-                            self::update_single_item('song', $song_id);
-                        }
-                    }
-                } // end if update
+                }
 
                 if ($catalog_id < 1) {
                     AmpError::add(
