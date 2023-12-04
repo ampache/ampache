@@ -61,12 +61,12 @@ if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_
         <?php echo Ajax::observe('ratedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=rated&value=1', ''));
     }
     if (in_array('unplayed', $browse_filters)) { ?>
-        <input id="unplayedCB" type="checkbox" <?php echo $string = ($browse->get_filter('unplayed')) ? 'checked="checked"' : ''; ?>/>
+        <input id="unplayedCB" type="checkbox" <?php echo ($browse->get_filter('unplayed')) ? 'checked="checked"' : ''; ?>/>
         <label id="unplayedLabel" for="unplayedCB"><?php echo T_('Unplayed'); ?></label><br />
         <?php echo Ajax::observe('unplayedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=unplayed&value=1', ''));
     }
     if (in_array('playlist_type', $browse_filters)) { ?>
-        <input id="show_allplCB" type="checkbox" <?php echo $string = ($browse->get_filter('playlist_type')) ? '' : 'checked="checked"'; ?>/>
+        <input id="show_allplCB" type="checkbox" value="1" <?php echo (bool)($browse->get_filter('playlist_type') ?? true) ? 'checked="checked"' : ''; ?>/>
         <label id="show_allplLabel" for="show_allplCB"><?php echo T_('All Playlists'); ?></label><br />
         <?php echo Ajax::observe('show_allplCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=playlist_type&value=1', ''));
     }

@@ -107,7 +107,7 @@ final class ListMethod
 
         $name_type = $type;
         if ($type == 'playlist') {
-            $browse->set_filter('playlist_type', $user->id);
+            $browse->set_filter('playlist_type', 1);
             if (!$hide) {
                 $name_type = 'playlist_search';
                 $objects   = array(

@@ -101,7 +101,7 @@ final class GetIndexes4Method
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
         if ($type == 'playlist') {
-            $browse->set_filter('playlist_type', $user->id);
+            $browse->set_filter('playlist_type', 1);
             if (!$hide) {
                 $results = array_merge($browse->get_objects(), Playlist::get_smartlists($user->id));
             } else {

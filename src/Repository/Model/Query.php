@@ -1819,11 +1819,13 @@ class Query
                         $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'playlist_type':
+                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                            ? Core::get_global('user')->id
+                            : $value;
                         if ((int)$value == 1) {
-                            $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
-                                ? Core::get_global('user')->id
-                                : $value;
-                            $filter_sql = " (`playlist`.`type` = 'private' AND `playlist`.`user`='$user_id') AND ";
+                            $filter_sql = " (`playlist`.`type` = 'public' AND `playlist`.`user`='$user_id') AND ";
+                        } else {
+                            $filter_sql = " (`playlist`.`user`='$user_id') AND ";
                         }
                         break;
                 } // end filter
@@ -1850,11 +1852,13 @@ class Query
                         $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'playlist_type':
+                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                            ? Core::get_global('user')->id
+                            : $value;
                         if ((int)$value == 1) {
-                            $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
-                                ? Core::get_global('user')->id
-                                : $value;
-                            $filter_sql = " (`search`.`type` = 'private' AND `search`.`user`='$user_id') AND ";
+                            $filter_sql = " (`search`.`type` = 'public' AND `search`.`user`='$user_id') AND ";
+                        } else {
+                            $filter_sql = " (`playlist`.`user`='$user_id') AND ";
                         }
                         break;
                 } // end switch on $filter
