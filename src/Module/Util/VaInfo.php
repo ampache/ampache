@@ -807,10 +807,6 @@ final class VaInfo implements VaInfoInterface
                         //$this->logger->debug('Cleaning vorbis', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
                         break;
-                    case 'id3v1':
-                        //$this->logger->debug('Cleaning id3v1', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-                        $parsed = $this->_cleanup_id3v1($tag_array);
-                        break;
                     case 'id3v2':
                         //$this->logger->debug('Cleaning id3v2', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_id3v2($tag_array);
@@ -839,6 +835,10 @@ final class VaInfo implements VaInfoInterface
                     case 'lyrics3':
                         //$this->logger->debug('Cleaning lyrics3', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_lyrics($tag_array);
+                        break;
+                    case 'id3v1':
+                        //$this->logger->debug('Cleaning id3v1', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        $parsed = $this->_cleanup_id3v1($tag_array);
                         break;
                     case 'ape':
                     case 'avi':
