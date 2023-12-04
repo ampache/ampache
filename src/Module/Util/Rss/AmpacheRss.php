@@ -23,22 +23,26 @@ declare(strict_types=0);
  *
  */
 
-namespace Ampache\Module\Util;
+namespace Ampache\Module\Util\Rss;
 
-use Ampache\Module\Shout\ShoutObjectLoaderInterface;
-use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
+use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Core;
+use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
+use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\Rss\Surrogate\PlayableItemRssItemAdapter;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
-use Ampache\Module\Statistics\Stats;
-use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -48,16 +52,25 @@ final class AmpacheRss implements AmpacheRssInterface
     private UserRepositoryInterface $userRepository;
 
     private ShoutRepositoryInterface $shoutRepository;
+
     private ShoutObjectLoaderInterface $shoutObjectLoader;
+
+    private RssPodcastBuilderInterface $rssPodcastBuilder;
+
+    private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
         ShoutRepositoryInterface $shoutRepository,
-        ShoutObjectLoaderInterface $shoutObjectLoader
+        ShoutObjectLoaderInterface $shoutObjectLoader,
+        RssPodcastBuilderInterface $rssPodcastBuilder,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->userRepository    = $userRepository;
         $this->shoutRepository   = $shoutRepository;
         $this->shoutObjectLoader = $shoutObjectLoader;
+        $this->rssPodcastBuilder = $rssPodcastBuilder;
+        $this->modelFactory      = $modelFactory;
     }
 
     /** @var list<string> */
@@ -100,7 +113,14 @@ final class AmpacheRss implements AmpacheRssInterface
                     if ($libitem->id) {
                         $libitem->format();
 
-                        return Xml_Data::podcast($libitem, $user);
+                        return $this->rssPodcastBuilder->build(
+                            new PlayableItemRssItemAdapter(
+                                $this->modelFactory,
+                                $libitem,
+                                $user
+                            ),
+                            $user
+                        );
                     }
                 }
             }
@@ -184,7 +204,7 @@ final class AmpacheRss implements AmpacheRssInterface
      * @param string $type
      * @param int $user_id
      * @param string $title
-     * @param array|null $params
+     * @param array<string, string>|null $params
      */
     public static function get_display($type = 'now_playing', $user_id = -1, $title = '', $params = null): string
     {

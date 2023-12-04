@@ -30,10 +30,10 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\Util\AmpacheRss;
-use Ampache\Module\Util\Ui;
 
 /** @var array $results */
 
