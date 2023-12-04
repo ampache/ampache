@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -23,15 +23,29 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Podcast;
+namespace Ampache\Module\Podcast\Feed;
 
-use Ampache\Module\Podcast\Feed\FeedLoader;
-use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
+use Ampache\Module\Podcast\Feed\Exception\FeedLoadingException;
+use SimpleXMLElement;
 
-use function DI\autowire;
-
-return [
-    PodcastSyncerInterface::class => autowire(PodcastSyncer::class),
-    PodcastCreatorInterface::class => autowire(PodcastCreator::class),
-    FeedLoaderInterface::class => autowire(FeedLoader::class),
-];
+interface FeedLoaderInterface
+{
+    /**
+     * Load the podcast content by its feed-url
+     *
+     * @return array{
+     *  title: string,
+     *  website: string,
+     *  description: string,
+     *  language: string,
+     *  copyright: string,
+     *  generator: string,
+     *  episodes: SimpleXMLElement,
+     *  artUrl: null|string,
+     *  lastBuildDate: null|int
+     * }
+     *
+     * @throws FeedLoadingException
+     */
+    public function load(string $feedUrl): array;
+}

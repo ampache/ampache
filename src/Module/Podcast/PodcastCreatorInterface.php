@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -25,13 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
-use Ampache\Module\Podcast\Feed\FeedLoader;
-use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
+use Ampache\Module\Podcast\Exception\PodcastCreationException;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Podcast;
 
-use function DI\autowire;
-
-return [
-    PodcastSyncerInterface::class => autowire(PodcastSyncer::class),
-    PodcastCreatorInterface::class => autowire(PodcastCreator::class),
-    FeedLoaderInterface::class => autowire(FeedLoader::class),
-];
+interface PodcastCreatorInterface
+{
+    /**
+     * Creates a new podcast object
+     *
+     * Loads the feed-url, creates and returns a new podcast object
+     *
+     * @throws PodcastCreationException
+     */
+    public function create(string $feedUrl, Catalog $catalog): Podcast;
+}

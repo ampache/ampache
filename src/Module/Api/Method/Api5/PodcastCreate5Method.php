@@ -26,13 +26,14 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Podcast\Exception\PodcastCreationException;
+use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
 
 /**
  * Class PodcastCreate5Method
@@ -63,13 +64,22 @@ final class PodcastCreate5Method
         if (!Api5::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
             return false;
         }
-        $data               = array();
-        $data['catalog_id'] = $input['catalog'];
-        $data['feed']       = urldecode($input['url']);
-        $podcast            = Podcast::create($data, true);
 
-        if (!$podcast) {
+        $catalog = Catalog::create_from_id((int) ($input['catalog'] ?? 0));
+
+        if ($catalog === null) {
             Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
+        try {
+            $podcast = self::getPodcastCreator()->create(
+                urldecode($input['url']),
+                $catalog
+            );
+        } catch (PodcastCreationException $e) {
+            Api5::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -78,12 +88,22 @@ final class PodcastCreate5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::podcasts(array($podcast), $user, false, false);
+                echo Json5_Data::podcasts(array($podcast->getId()), $user, false, false);
                 break;
             default:
-                echo Xml5_Data::podcasts(array($podcast), $user);
+                echo Xml5_Data::podcasts(array($podcast->getId()), $user);
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastCreator(): PodcastCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastCreatorInterface::class);
     }
 }
