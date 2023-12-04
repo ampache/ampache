@@ -437,9 +437,10 @@ class User extends database_object
      * This updates some background data for user specific function
      * @param int $user_id
      * @param string $key
+     * @param string|int|null $default
      * @return array
      */
-    public static function get_user_data($user_id, $key = null)
+    public static function get_user_data($user_id, $key = null, $default = null)
     {
         $sql    = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?";
         $params = array($user_id);
@@ -449,7 +450,9 @@ class User extends database_object
         }
 
         $db_results = Dba::read($sql, $params);
-        $results    = array();
+        $results    = ($key && $default !== null)
+            ? array('key' => $default)
+            : array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['key']] = $row['value'];
         }

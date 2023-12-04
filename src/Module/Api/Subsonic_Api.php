@@ -1788,7 +1788,7 @@ class Subsonic_Api
             $rid[]      = $object_ids;
             $object_ids = $rid;
         }
-        $playqueue_time = (int)(User::get_user_data($user->id, 'playqueue_time')['playqueue_time'] ?? 0);
+        $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
         $now_time       = time();
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
@@ -2807,7 +2807,7 @@ class Subsonic_Api
                 : 0;
             $client         = scrub_in((string) ($input['c'] ?? 'Subsonic'));
             $user_id        = $user->id;
-            $playqueue_time = (int)(User::get_user_data($user->id, 'playqueue_time')['playqueue_time'] ?? 0);
+            $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
             $time           = time();
             // wait a few seconds before smashing out play times
             if ($playqueue_time < ($time - 2)) {
