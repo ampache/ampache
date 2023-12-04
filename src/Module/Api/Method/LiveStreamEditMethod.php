@@ -70,11 +70,26 @@ final class LiveStreamEditMethod
 
             return false;
         }
-        $name       = (isset($input['name'])) ? filter_var(urldecode($input['name']), FILTER_SANITIZE_SPECIAL_CHARS) : $item->name;
-        $url        = (isset($input['url'])) ? filter_var(urldecode($input['url']), FILTER_VALIDATE_URL) ?? '' : $item->url;
-        $codec      = (isset($input['codec'])) ? preg_replace("/[^a-z]/", "", strtolower($input['codec'])) ?? '' : $item->codec;
-        $site_url   = (isset($input['site_url'])) ? filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL) ?? '' : $item->site_url;
-        $catalog_id = (isset($input['catalog'])) ? (int)filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT) : $item->catalog;
+        $name = $item->name;
+        if (isset($input['name']) && filter_var(urldecode($input['name']), FILTER_SANITIZE_SPECIAL_CHARS)) {
+            $name = (string)filter_var(urldecode($input['name']), FILTER_SANITIZE_SPECIAL_CHARS);
+        }
+        $url = $item->url;
+        if (isset($input['url']) && filter_var(urldecode($input['url']), FILTER_VALIDATE_URL)) {
+            $url = (string)filter_var(urldecode($input['url']), FILTER_VALIDATE_URL);
+        }
+        $codec = $item->codec;
+        if (isset($input['codec']) && preg_replace("/[^a-z]/", "", strtolower($input['codec']))) {
+            $codec = (string)preg_replace("/[^a-z]/", "", strtolower($input['codec']));
+        }
+        $site_url = $item->site_url;
+        if (isset($input['site_url']) && filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL)) {
+            $site_url = (string)filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL);
+        }
+        $catalog_id = $item->catalog;
+        if (isset($input['catalog']) && filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT)) {
+            $catalog_id = (int)filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
+        }
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($catalog_id);

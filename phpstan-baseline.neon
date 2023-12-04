@@ -326,22 +326,7 @@ parameters:
 			path: src/Gui/Playlist/NewPlaylistDialogAdapterInterface.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 2
-			path: src/Gui/Song/SongViewAdapter.php
-
-		-
 			message: "#^Method Ampache\\\\Gui\\\\Song\\\\SongViewAdapter\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Gui/Song/SongViewAdapter.php
-
-		-
-			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 1
-			path: src/Gui/Song/SongViewAdapter.php
-
-		-
-			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 1
 			path: src/Gui/Song/SongViewAdapter.php
 
@@ -1186,11 +1171,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:empty\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:error\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
@@ -1436,11 +1416,6 @@ parameters:
 			path: src/Module/Api/Method/Api3/Democratic3Method.php
 
 		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:error\\(\\) expects int, string given\\.$#"
-			count: 3
-			path: src/Module/Api/Method/Api3/Democratic3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Followers3Method\\:\\:followers\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Followers3Method.php
@@ -1466,11 +1441,6 @@ parameters:
 			path: src/Module/Api/Method/Api3/Handshake3Method.php
 
 		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:error\\(\\) expects int, string given\\.$#"
-			count: 3
-			path: src/Module/Api/Method/Api3/Handshake3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\LastShouts3Method\\:\\:last_shouts\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/LastShouts3Method.php
@@ -1478,11 +1448,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Localplay3Method\\:\\:localplay\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Method/Api3/Localplay3Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:error\\(\\) expects int, string given\\.$#"
-			count: 2
 			path: src/Module/Api/Method/Api3/Localplay3Method.php
 
 		-
@@ -1501,11 +1466,6 @@ parameters:
 			path: src/Module/Api/Method/Api3/PlaylistAddSong3Method.php
 
 		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:error\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/PlaylistAddSong3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistCreate3Method\\:\\:playlist_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/PlaylistCreate3Method.php
@@ -1516,17 +1476,7 @@ parameters:
 			path: src/Module/Api/Method/Api3/PlaylistDelete3Method.php
 
 		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:error\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/PlaylistDelete3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\PlaylistRemoveSong3Method\\:\\:playlist_remove_song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/PlaylistRemoveSong3Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:error\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/PlaylistRemoveSong3Method.php
 
@@ -1543,11 +1493,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Rate3Method\\:\\:rate\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Method/Api3/Rate3Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:error\\(\\) expects int, string given\\.$#"
-			count: 2
 			path: src/Module/Api/Method/Api3/Rate3Method.php
 
 		-
@@ -1991,19 +1936,9 @@ parameters:
 			path: src/Module/Api/Method/Api4/Podcasts4Method.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Rate4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Rate4Method\\:\\:rate\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Rate4Method.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/RecordPlay4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\RecordPlay4Method\\:\\:record_play\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2359,16 +2294,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\BookmarkDelete5Method\\:\\:bookmark_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/BookmarkDelete5Method.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/BookmarkEdit5Method.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/BookmarkEdit5Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\BookmarkEdit5Method\\:\\:bookmark_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2756,19 +2681,9 @@ parameters:
 			path: src/Module/Api/Method/Api5/Rate5Method.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/RecordPlay5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\RecordPlay5Method\\:\\:record_play\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/RecordPlay5Method.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Scrobble5Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Scrobble5Method\\:\\:scrobble\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3116,16 +3031,6 @@ parameters:
 			path: src/Module/Api/Method/BookmarkDeleteMethod.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/BookmarkEditMethod.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/BookmarkEditMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\BookmarkEditMethod\\:\\:bookmark_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/BookmarkEditMethod.php
@@ -3396,11 +3301,6 @@ parameters:
 			path: src/Module/Api/Method/ListMethod.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamCreateMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LiveStreamCreateMethod\\:\\:live_stream_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/LiveStreamCreateMethod.php
@@ -3414,11 +3314,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LiveStreamDeleteMethod\\:\\:live_stream_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/LiveStreamDeleteMethod.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 2
-			path: src/Module/Api/Method/LiveStreamEditMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LiveStreamEditMethod\\:\\:live_stream_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3606,11 +3501,6 @@ parameters:
 			path: src/Module/Api/Method/RateMethod.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/RecordPlayMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\RecordPlayMethod\\:\\:record_play\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/RecordPlayMethod.php
@@ -3619,11 +3509,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\RegisterMethod\\:\\:register\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/RegisterMethod.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ScrobbleMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\ScrobbleMethod\\:\\:scrobble\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3952,11 +3837,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method update_password\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 2
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -5673,27 +5553,7 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$type of method Ampache\\\\Repository\\\\Model\\\\ModelFactoryInterface\\:\\:createArt\\(\\) expects string, string\\|false\\|null given\\.$#"
 			count: 1
-			path: src/Module/Application/Art/FindArtAction.php
-
-		-
-			message: "#^Parameter \\#2 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:get_from_source\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Art/FindArtAction.php
-
-		-
-			message: "#^Parameter \\#2 \\$type of method Ampache\\\\Repository\\\\Model\\\\ModelFactoryInterface\\:\\:createArt\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
 			path: src/Module/Application/Art/SelectArtAction.php
-
-		-
-			message: "#^Parameter \\#2 \\$type of method Ampache\\\\Repository\\\\Model\\\\ModelFactoryInterface\\:\\:createArt\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Art/UploadArtAction.php
-
-		-
-			message: "#^Parameter \\#2 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:get_from_source\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Art/UploadArtAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$mbid of static method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_artist\\(\\) expects string, string\\|null given\\.$#"
@@ -5756,21 +5616,6 @@ parameters:
 			path: src/Module/Application/Installation/DefaultAction.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Application/LocalPlay/AbstractLocalPlayAction.php
-
-		-
-			message: "#^Cannot call method is_logged_in\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Login/DefaultAction.php
-
-		-
-			message: "#^Offset 'success' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Login/DefaultAction.php
-
-		-
 			message: "#^Variable \\$auth in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: src/Module/Application/Login/DefaultAction.php
@@ -5831,11 +5676,6 @@ parameters:
 			path: src/Module/Application/SearchData/ShowAction.php
 
 		-
-			message: "#^Parameter \\#3 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:create_share\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Share/ExternalShareAction.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with non\\-falsy\\-string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Application/Share/ShowCreateAction.php
@@ -5864,11 +5704,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Stream\\\\AbstractStreamAction\\:\\:stream\\(\\) has parameter \\$urls with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Application/Stream/AbstractStreamAction.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Application/Stream/PlayFavoriteAction.php
 
 		-
 			message: "#^Call to an undefined method object\\:\\:get_medias\\(\\)\\.$#"
@@ -9766,11 +9601,6 @@ parameters:
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_js_param\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Playback/WebPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_object\\(\\) has parameter \\$urlinfo with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
@@ -10071,17 +9901,7 @@ parameters:
 			path: src/Module/System/Core.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:conv_lc_file\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:get_filesize\\(\\) has parameter \\$filename with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:get_user_ip\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/System/Core.php
 
@@ -10394,11 +10214,6 @@ parameters:
 			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and array\\<int, string\\>\\|string results in an error\\.$#"
 			count: 1
 			path: src/Module/System/LegacyLogger.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/System/PreferencesFromRequestUpdater.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -11841,16 +11656,6 @@ parameters:
 			path: src/Module/Util/Horde_Browser.php
 
 		-
-			message: "#^Cannot access offset 'ErrorInfo' on PHPMailer\\\\PHPMailer\\\\PHPMailer\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:get_users\\(\\) has parameter \\$filter with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Mailer.php
@@ -12622,11 +12427,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 1 on array\\<int, string\\>\\|false\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -14306,16 +14106,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Variable \\$mime on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Variable \\$type in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:add_artist_map\\(\\) has parameter \\$artist_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -15251,11 +15041,6 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$artists \\(array\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$artists type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -15896,11 +15681,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_serialize\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_allowed_filters\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -15947,21 +15727,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Query\\:\\:\\$_state type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Query\\:\\:\\$allowed_filters type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Query\\:\\:\\$allowed_sorts type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Query\\:\\:\\$sort_state type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 
@@ -17234,26 +16999,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$tags has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$count\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_link\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_name\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) has parameter \\$catalog_filter_group with no type specified\\.$#"

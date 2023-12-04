@@ -107,7 +107,7 @@ final class Handshake3Method
                 ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login Failed: timestamp out of range'));
-                    echo Xml3_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    echo Xml3_Data::error(401, T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
 
                     return false;
                 }
@@ -118,7 +118,7 @@ final class Handshake3Method
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Invalid Username/Password'));
-                    echo Xml3_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    echo Xml3_Data::error(401, T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
                     return false;
                 }
@@ -195,7 +195,7 @@ final class Handshake3Method
         } // end while
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
-        echo Xml3_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        echo Xml3_Data::error(401, T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;
     }

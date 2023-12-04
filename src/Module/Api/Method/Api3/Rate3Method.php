@@ -51,13 +51,13 @@ final class Rate3Method
         $rating    = (string) $input['rating'];
 
         if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
-            echo Xml3_Data::error('401', T_('Wrong library item type.'));
+            echo Xml3_Data::error(401, T_('Wrong library item type.'));
         } else {
             $className = ObjectTypeToClassNameMapper::map($type);
             /** @var library_item $item */
             $item = new $className($object_id);
             if ($item->getId() === 0) {
-                echo Xml3_Data::error('404', T_('Library item not found.'));
+                echo Xml3_Data::error(404, T_('Library item not found.'));
             } else {
                 $rate = new Rating($object_id, $type);
                 $rate->set_rating($rating, $user->id);

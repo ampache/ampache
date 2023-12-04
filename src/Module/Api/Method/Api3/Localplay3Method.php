@@ -47,7 +47,7 @@ final class Localplay3Method
         // Load their localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         if (empty($localplay->type) || !$localplay->connect()) {
-            echo Xml3_Data::error('405', T_('Invalid Request'));
+            echo Xml3_Data::error(405, T_('Invalid Request'));
 
             return false;
         }
@@ -67,7 +67,7 @@ final class Localplay3Method
                 break;
             default:
                 // They are doing it wrong
-                echo Xml3_Data::error('405', T_('Invalid Request'));
+                echo Xml3_Data::error(405, T_('Invalid Request'));
 
                 return false;
         } // end switch on command

@@ -765,9 +765,8 @@ final class VaInfo implements VaInfoInterface
      * _get_type
      *
      * This function takes the raw information and figures out what type of file we are dealing with.
-     * @return string|false
      */
-    private function _get_type()
+    private function _get_type(): ?string
     {
         // There are a few places that the file type can come from, in the end we trust the encoding type.
         if (array_key_exists('video', $this->_raw) && array_key_exists('dataformat', $this->_raw['video'])) {
@@ -785,7 +784,7 @@ final class VaInfo implements VaInfoInterface
             return $this->_clean_type($this->_raw['fileformat']);
         }
 
-        return false;
+        return null;
     }
 
     /**

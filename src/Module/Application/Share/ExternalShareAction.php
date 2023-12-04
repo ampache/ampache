@@ -96,7 +96,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         $share_id = Share::create_share(
             Core::get_global('user')->id,
             $type,
-            $share_id,
+            (int)$share_id,
             true,
             $allow_download,
             AmpConfig::get('share_expire', 7),

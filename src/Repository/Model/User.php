@@ -286,7 +286,7 @@ class User extends database_object
             $user_id    = $this->id;
             $user_limit = "AND preference.catagory != 'system'";
         } else {
-            $user_id =  -1;
+            $user_id = -1;
             if ($type != '0') {
                 $user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
             }
@@ -349,12 +349,15 @@ class User extends database_object
         $results = Stats::get_user($count, $type, $this->id, 1);
         foreach ($results as $row) {
             $className = ObjectTypeToClassNameMapper::map($type);
-            $data      = new $className($row['object_id']);
+            /** @var Song|Album|Artist $data */
+            $data = new $className($row['object_id']);
+            $data->format();
             if ($type == 'song') {
+                /** @var Song $data */
                 $data->count = $row['count'];
             }
-            $data->format();
             if ($type == 'artist') {
+                /** @var Artist $data */
                 $data->f_name = $data->f_link;
             }
             $items[] = $data;

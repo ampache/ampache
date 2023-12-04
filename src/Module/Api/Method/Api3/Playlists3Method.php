@@ -42,6 +42,7 @@ final class Playlists3Method
      */
     public static function playlists(array $input, User $user): void
     {
+        unset($user);
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('playlist');

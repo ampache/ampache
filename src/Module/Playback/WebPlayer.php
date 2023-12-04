@@ -335,11 +335,11 @@ class WebPlayer
                     $types['player'] = 'mp3';
                     break;
                 case 'random':
-                    $regex           =  "/random_id=([0-9]*)/";
+                    $regex           = "/random_id=([0-9]*)/";
                     $types['player'] = 'mp3';
                     break;
                 default:
-                    $regex =  "/" . $item->type . "=([0-9]*)/";
+                    $regex = "/" . $item->type . "=([0-9]*)/";
                     break;
             }
             if (!empty($item->info_url)) {
@@ -360,6 +360,6 @@ class WebPlayer
         }
         //debug_event(__class__, "get_media_js_param: " . print_r($json, true), 3);
 
-        return json_encode($json);
+        return json_encode($json) ?: '';
     }
 }

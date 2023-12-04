@@ -46,7 +46,7 @@ final class PlaylistDelete3Method
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access()) {
-            echo Xml3_Data::error('401', T_('Access denied to this playlist.'));
+            echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
         } else {
             $playlist->delete();
             echo Xml3_Data::single_string('success');

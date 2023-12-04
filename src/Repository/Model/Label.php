@@ -68,7 +68,7 @@ class Label extends database_object implements library_item
     /**
      * @var array $artists
      */
-    public $artists;
+    public $artists = array();
     /**
      * @var int $artists
      */
@@ -376,7 +376,7 @@ class Label extends database_object implements library_item
      */
     public function get_artists()
     {
-        if (!isset($this->artists)) {
+        if (empty($this->artists)) {
             $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
             $db_results = Dba::read($sql, array($this->id));
             $results    = array();

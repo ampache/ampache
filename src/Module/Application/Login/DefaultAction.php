@@ -193,14 +193,14 @@ final class DefaultAction implements ApplicationActionInterface
             /**
              * postAuth may return null, so this has to be considered in here
              */
-            if ($auth['success']) {
+            if (isset($auth['success']) && $auth['success']) {
                 $username = $auth['username'];
             } else {
                 $this->logger->error(
                     'Second step authentication failed',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                AmpError::add('general', $auth['error']);
+                AmpError::add('general', $auth['error'] ?? '');
             }
         }
 
@@ -218,7 +218,7 @@ final class DefaultAction implements ApplicationActionInterface
                 );
             } elseif (AmpConfig::get('prevent_multiple_logins')) {
                 // if logged in multiple times
-                $session_ip = $user->is_logged_in();
+                $session_ip = ($user instanceof User) ? $user->is_logged_in() : false;
                 $current_ip = Core::get_user_ip();
                 if ($current_ip && ($current_ip != $session_ip)) {
                     $auth['success'] = false;

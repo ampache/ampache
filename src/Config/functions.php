@@ -1073,7 +1073,7 @@ function xoutput_headers(): void
  * @param array $array
  * @param bool $callback
  * @param string $type
- * @return false|mixed|string
+ * @return mixed|string
  */
 function xoutput_from_array($array, $callback = false, $type = '')
 {
@@ -1085,7 +1085,7 @@ function xoutput_from_array($array, $callback = false, $type = '')
 
         return $array[$outputnode];
     } else {
-        return json_encode($array);
+        return json_encode($array) ?: '';
     }
 }
 

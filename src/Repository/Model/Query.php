@@ -561,7 +561,7 @@ class Query
      */
     private static function _serialize($data): string
     {
-        return json_encode($data);
+        return json_encode($data) ?: '';
     }
 
     /**

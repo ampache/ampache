@@ -59,7 +59,7 @@ final class RecordPlayMethod
         }
         $play_user = $user;
         if (isset($input['user'])) {
-            $play_user =  ((int)$input['user'] > 0)
+            $play_user = ((int)$input['user'] > 0)
                 ? new User((int)$input['user'])
                 : User::get_from_username((string)$input['user']);
         }
@@ -80,7 +80,7 @@ final class RecordPlayMethod
         $date      = (array_key_exists('date', $input) && is_numeric(scrub_in((string) $input['date']))) ? (int) scrub_in((string) $input['date']) : time(); //optional
 
         // validate client string or fall back to 'api'
-        $agent = scrub_in((string) ($input['client']) ?? 'api');
+        $agent = scrub_in((string)($input['client'] ?? 'api'));
 
         $media = new Song($object_id);
         if (!$media->id) {

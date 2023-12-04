@@ -2317,7 +2317,7 @@ class Subsonic_Api
         if (!$name) {
             return;
         }
-        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?? '';
+        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?: '';
         $catalogs = User::get_user_catalogs($user->id, 'music');
         if (AmpConfig::get('live_stream') && $user->access >= 75) {
             $data = array(
@@ -2363,7 +2363,7 @@ class Subsonic_Api
         if (!$name) {
             return;
         }
-        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?? '';
+        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?: '';
 
         if (AmpConfig::get('live_stream') && $user->access >= 75) {
             $internetradiostation = new Live_Stream(Subsonic_Xml_Data::_getAmpacheId($internetradiostation_id));

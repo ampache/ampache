@@ -83,7 +83,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                     $value = (string) Stream::validate_bitrate($value);
                     break;
                 case 'custom_timezone':
-                    $listIdentifiers = DateTimeZone::listIdentifiers() ?? array();
+                    $listIdentifiers = DateTimeZone::listIdentifiers() ?: array();
                     if (!in_array($value, $listIdentifiers)) {
                         $value = '';
                     }

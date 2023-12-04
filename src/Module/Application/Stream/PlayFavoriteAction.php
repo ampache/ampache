@@ -63,7 +63,7 @@ final class PlayFavoriteAction extends AbstractStreamAction
 
         /** @var \Ampache\Repository\Model\User $user */
         $user = Core::get_global('user');
-        $data = $user->get_favorites($inputType) ?? array();
+        $data = $user->get_favorites($inputType);
 
         switch ($inputType) {
             case 'artist':

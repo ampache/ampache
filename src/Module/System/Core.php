@@ -142,7 +142,7 @@ class Core
             return filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
         }
 
-        return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
+        return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?: '';
     }
 
     /**
@@ -393,7 +393,7 @@ class Core
             }
         }
 
-        return $lc_filename;
+        return $lc_filename ?: $filename;
     }
 
     /**

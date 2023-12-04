@@ -614,7 +614,7 @@ final class Session implements SessionInterface
             $db_results = Dba::read($sql, array($sid));
             $row        = Dba::fetch_assoc($db_results);
             if (!empty($row)) {
-                $api_version =  (int)$row['value'];
+                $api_version = (int)$row['value'];
             }
         }
 
@@ -760,7 +760,7 @@ final class Session implements SessionInterface
             if ($user instanceof User && $user->id > 0) {
                 $GLOBALS['user'] = $user;
             } elseif (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
-                $GLOBALS['user'] =  User::get_from_username($_SESSION['userdata']['username']);
+                $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
             }
         }
     }

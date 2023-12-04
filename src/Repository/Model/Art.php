@@ -375,7 +375,7 @@ class Art extends database_object
         }
 
         // Default to image/jpeg if they don't pass anything
-        $mime = $mime ?? 'image/jpeg';
+        $mime = empty($mime) ? $mime : 'image/jpeg';
         // Blow it away!
         $this->reset();
         $picturetypeid = ($this->type == 'album') ? 3 : 8;
@@ -977,9 +977,6 @@ class Art extends database_object
      */
     public static function get_from_source($data, $type): string
     {
-        if (!isset($type)) {
-            $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
-        }
         if (empty($data) || !is_array($data)) {
             return '';
         }
@@ -991,6 +988,9 @@ class Art extends database_object
 
         // If it came from the database
         if (isset($data['db'])) {
+            if (empty($type)) {
+                $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
+            }
             $sql        = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size`='original'";
             $db_results = Dba::read($sql, array($type, $data['db']));
             $row        = Dba::fetch_assoc($db_results);

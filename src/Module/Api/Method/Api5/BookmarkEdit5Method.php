@@ -28,11 +28,14 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Video;
 
 /**
  * Class BookmarkEdit5Method
@@ -60,7 +63,7 @@ final class BookmarkEdit5Method
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $position  = (int) filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT) ?? 0;
+        $position  = (int)filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT);
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : 'AmpacheAPI';
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         if (!AmpConfig::get('allow_video') && $type == 'video') {
@@ -85,6 +88,7 @@ final class BookmarkEdit5Method
         }
 
         $item = new $className($object_id);
+        /** @var Song|Podcast_Episode|Video $item */
         if (!$item->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
