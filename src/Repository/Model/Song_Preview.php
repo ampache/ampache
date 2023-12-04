@@ -466,6 +466,21 @@ class Song_Preview extends database_object implements Media, playable_item
         return $songs;
     }
 
+    public function has_art(): bool
+    {
+        return false;
+    }
+
+    public function get_user_owner(): ?int
+    {
+        return null;
+    }
+
+    public function get_description(): string
+    {
+        return '';
+    }
+
     /**
      * garbage_collection
      */

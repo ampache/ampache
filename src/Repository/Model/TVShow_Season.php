@@ -320,7 +320,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         $tvshow_id = null;
         $type      = null;
 
-        if (Art::has_db($this->id, 'tvshow_season')) {
+        if ($this->has_art()) {
             $tvshow_id = $this->id;
             $type      = 'tvshow_season';
         } elseif (Art::has_db($this->tvshow, 'tvshow') || $force) {
@@ -331,6 +331,11 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         if ($tvshow_id !== null && $type !== null) {
             Art::display($type, $tvshow_id, (string)$this->get_fullname(), $thumb, $this->get_link());
         }
+    }
+
+    public function has_art(): bool
+    {
+        return Art::has_db($this->id, 'tvshow_season');
     }
 
     /**

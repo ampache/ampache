@@ -22,22 +22,10 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Module\Util;
+namespace Ampache\Module\Catalog\Exception;
 
-interface AmpacheRssInterface
+use Exception;
+
+final class CatalogLoadingException extends Exception
 {
-    /**
-     * get_xml
-     * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
-     * and then uses the xmlDATA class to build the document
-     *
-     * @param null|array{object_type: string, object_id: int} $params
-     */
-    public function get_xml(string $rssToken, string $type, ?array $params = null): string;
-
-    /**
-     * get_description
-     * This returns the standardized description for the rss feed based on this->type
-     */
-    public function get_description(): string;
 }

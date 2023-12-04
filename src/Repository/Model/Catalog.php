@@ -36,6 +36,7 @@ use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_subsonic;
+use Ampache\Module\Catalog\CatalogLoader;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
@@ -953,6 +954,8 @@ abstract class Catalog extends database_object
      * @param int $user_id
      * @param bool $query
      * @return int[]
+     *
+     * @see CatalogLoader
      */
     public static function get_catalogs($filter_type = '', $user_id = null, $query = false)
     {
@@ -3807,62 +3810,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * exports the catalog
-     * it exports all songs in the database to the given export type.
-     * @param string $type
-     * @param int|null $catalog_id
-     */
-    public static function export($type, $catalog_id = 0)
-    {
-        // Select all songs in catalog
-        $params = array();
-        if ($catalog_id) {
-            $sql      = "SELECT `id` FROM `song` WHERE `catalog` = ? ORDER BY `album`, `track`";
-            $params[] = $catalog_id;
-        } else {
-            $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
-        }
-        $db_results = Dba::read($sql, $params);
-
-        switch ($type) {
-            case 'itunes':
-                echo static::xml_get_header('itunes');
-                while ($results = Dba::fetch_assoc($db_results)) {
-                    $song = new Song($results['id']);
-                    $song->format();
-
-                    $xml                         = array();
-                    $xml['key']                  = $results['id'];
-                    $xml['dict']['Track ID']     = (int)($results['id']);
-                    $xml['dict']['Name']         = $song->title;
-                    $xml['dict']['Artist']       = $song->get_artist_fullname();
-                    $xml['dict']['Album']        = $song->get_album_fullname();
-                    $xml['dict']['Total Time']   = (int) ($song->time) * 1000; // iTunes uses milliseconds
-                    $xml['dict']['Track Number'] = (int) ($song->track);
-                    $xml['dict']['Year']         = (int) ($song->year);
-                    $xml['dict']['Date Added']   = get_datetime((int) $song->addition_time, 'short', 'short', "Y-m-d\TH:i:s\Z");
-                    $xml['dict']['Bit Rate']     = (int) ($song->bitrate / 1024);
-                    $xml['dict']['Sample Rate']  = (int) ($song->rate);
-                    $xml['dict']['Play Count']   = (int) ($song->played);
-                    $xml['dict']['Track Type']   = "URL";
-                    $xml['dict']['Location']     = $song->play_url();
-                    echo (string) xoutput_from_array($xml, true, 'itunes');
-                    // flush output buffer
-                } // while result
-                echo static::xml_get_footer('itunes');
-                break;
-            case 'csv':
-                echo "ID,Title,Artist,Album,Length,Track,Year,Date Added,Bitrate,Played,File\n";
-                while ($results = Dba::fetch_assoc($db_results)) {
-                    $song = new Song($results['id']);
-                    $song->format();
-                    echo '"' . $song->id . '","' . $song->title . '","' . $song->get_artist_fullname() . '","' . $song->get_album_fullname() . '","' . $song->f_time . '","' . $song->f_track . '","' . $song->year . '","' . get_datetime((int)$song->addition_time) . '","' . $song->f_bitrate . '","' . $song->played . '","' . $song->file . '"' . "\n";
-                }
-                break;
-        } // end switch
-    }
-
-    /**
      * Update the catalog mapping for various types
      * @param string $table
      */
@@ -4395,68 +4342,6 @@ abstract class Catalog extends database_object
         }
 
         return false;
-    }
-
-    /**
-     * xml_get_footer
-     * This takes the type and returns the correct xml footer
-     * @param string $type
-     */
-    private static function xml_get_footer($type): string
-    {
-        switch ($type) {
-            case 'itunes':
-                return "      </dict>\n" .
-                    "</dict>\n" .
-                    "</plist>\n";
-            case 'xspf':
-                return "      </trackList>\n" .
-                    "</playlist>\n";
-            default:
-                return '';
-        }
-    }
-
-    /**
-     * xml_get_header
-     * This takes the type and returns the correct xml header
-     * @param string $type
-     */
-    private static function xml_get_header($type): string
-    {
-        switch ($type) {
-            case 'itunes':
-                return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
-                    "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
-                    "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
-                    "<plist version=\"1.0\">\n" .
-                    "<dict>\n" .
-                    "       <key>Major Version</key><integer>1</integer>\n" .
-                    "       <key>Minor Version</key><integer>1</integer>\n" .
-                    "       <key>Application Version</key><string>7.0.2</string>\n" .
-                    "       <key>Features</key><integer>1</integer>\n" .
-                    "       <key>Show Content Ratings</key><true/>\n" .
-                    "       <key>Tracks</key>\n" .
-                    "       <dict>\n";
-            case 'xspf':
-                return "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
-                    "<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->";
-            default:
-                return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-        }
-    }
-
-    /**
-     * Returns the remote streaming-url if supported
-     *
-     * Some catalogs build their own streaming urls and therefor need special
-     * handling when it comes to streaming (e.g. SubSonic and remote catalogs)
-     *
-     * @param Song|Podcast_Episode|Video $media
-     */
-    public function getRemoteStreamingUrl($media): ?string
-    {
-        return null;
     }
 
     /**

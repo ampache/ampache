@@ -97,4 +97,12 @@ interface playable_item
      * @return list<int>
      */
     public function get_catalogs();
+
+    public function getId(): int;
+
+    public function has_art(): bool;
+
+    public function get_description(): string;
+
+    public function get_user_owner(): ?int;
 }

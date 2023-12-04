@@ -27,17 +27,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
-$export_itunes = '';
-$export_csv    = '';
-$export_format = (array_key_exists('export_format', $_REQUEST)) ? $_REQUEST['export_format'] : 'csv';
-switch ($export_format) {
-    case 'itunes':
-        $export_itunes = ' selected="selected"';
-        break;
-    case 'csv':
-        $export_csv = ' selected="selected"';
-        break;
-}
+/** @var array<int, Catalog> $catalogs */
+/** @var array<string, string> $exportTypes */
 
 Ui::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
 <form name="export" action="<?php echo AmpConfig::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data">
@@ -48,14 +39,9 @@ Ui::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
                 <select id="export_catalog" name="export_catalog">
                     <option value=""><?php echo T_('All'); ?></option>
                     <?php
-                    $catalogs = Catalog::get_catalogs();
-foreach ($catalogs as $catalog_id) {
-    $catalog = Catalog::create_from_id($catalog_id);
-    if (!$catalog instanceof Catalog) {
-        break;
-    }
-    $current_name = 'catalog_' . $catalog->id; ?>
-                        <option value="<?php echo $catalog->id; ?>" <?php echo $current_name; ?>><?php echo scrub_out($catalog->name); ?></option>
+foreach ($catalogs as $catalog) {
+    $current_name = 'catalog_' . $catalog->getId(); ?>
+                        <option value="<?php echo $catalog->getId(); ?>" <?php echo $current_name; ?>><?php echo scrub_out($catalog->get_fullname()); ?></option>
                     <?php
 } ?>
                 </select>
@@ -65,8 +51,11 @@ foreach ($catalogs as $catalog_id) {
             <td><strong><?php echo T_('Format'); ?>:</strong></td>
             <td>
                 <select id="export_format" name="export_format">
-                    <option value="csv" <?php echo $export_csv; ?>><?php echo T_("CSV"); ?></option>
-                    <option value="itunes" <?php echo $export_itunes; ?>><?php echo T_("iTunes"); ?></option>
+                    <?php
+                    foreach ($exportTypes as $key => $label) {
+                        echo sprintf('<option value="%s">%s</option>', $key, $label);
+                    }
+?>
                 </select>
             </td>
         </tr>

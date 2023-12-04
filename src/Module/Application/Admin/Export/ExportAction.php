@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,27 +23,45 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Export;
 
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\CatalogLoaderInterface;
+use Ampache\Module\Catalog\Exception\CatalogLoadingException;
+use Ampache\Module\Catalog\Export\CatalogExportFactoryInterface;
+use Ampache\Module\Catalog\Export\CatalogExportTypeEnum;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Exports a catalog according to the submitted configuration
+ */
 final class ExportAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'export';
+
+    private CatalogExportFactoryInterface $catalogExportFactory;
+
+    private CatalogLoaderInterface $catalogLoader;
+
+    public function __construct(
+        CatalogExportFactoryInterface $catalogExportFactory,
+        CatalogLoaderInterface $catalogLoader
+    ) {
+        $this->catalogExportFactory = $catalogExportFactory;
+        $this->catalogLoader        = $catalogLoader;
+    }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
             throw new AccessDeniedException();
         }
+
         // This may take a while
         set_time_limit(0);
 
@@ -51,25 +71,20 @@ final class ExportAction implements ApplicationActionInterface
         // This will disable buffering so contents are sent immediately to browser.
         // This is very useful for large catalogs because it will immediately display the download dialog to user,
         // instead of waiting until contents are generated, which could take a long time.
-        ob_implicit_flush(1);
+        ob_implicit_flush();
 
-        header('Content-Transfer-Encoding: binary');
-        header('Cache-control: public');
+        $requestData = $request->getParsedBody();
+        $catalogId   = (int) ($requestData['export_catalog'] ?? 0);
 
-        $date = get_datetime(time(), 'short', 'none', 'y-MM-dd');
+        try {
+            $catalog = $this->catalogLoader->getById($catalogId);
+        } catch (CatalogLoadingException $e) {
+            $catalog = null;
+        }
 
-        switch ($_REQUEST['export_format']) {
-            case 'itunes':
-                header("Content-Type: application/itunes+xml; charset=utf-8");
-                header("Content-Disposition: attachment; filename=\"ampache-itunes-$date.xml\"");
-                Catalog::export('itunes', $_REQUEST['export_catalog']);
-                break;
-            case 'csv':
-                header("Content-Type: application/vnd.ms-excel");
-                header("Content-Disposition: filename=\"ampache-export-$date.csv\"");
-                Catalog::export('csv', $_REQUEST['export_catalog']);
-                break;
-        } // end switch on format
+        $exporter = $this->catalogExportFactory->createFromExportType($requestData['export_format'] ?? CatalogExportTypeEnum::CSV);
+        $exporter->sendHeaders();
+        $exporter->export($catalog);
 
         return null;
     }

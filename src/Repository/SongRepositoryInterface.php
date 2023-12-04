@@ -24,7 +24,10 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
+use Generator;
+use Traversable;
 
 interface SongRepositoryInterface
 {
@@ -98,4 +101,11 @@ interface SongRepositoryInterface
     public function delete(int $songId): bool;
 
     public function collectGarbage(Song $song): void;
+
+    /**
+     * Returns all song ids linked to the provided catalog (or all)
+     *
+     * @return Traversable<int>
+     */
+    public function getByCatalog(?Catalog $catalog = null): Traversable;
 }
