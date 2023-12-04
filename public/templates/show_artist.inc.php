@@ -55,6 +55,7 @@ $show_similar      = AmpConfig::get('show_similar');
 $directplay_limit  = (int)AmpConfig::get('direct_play_limit', 0);
 $use_label         = AmpConfig::get('label');
 $use_wanted        = AmpConfig::get('wanted');
+$is_album_type     = $object_type == 'album' || $object_type == 'album_disk';
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($artist->song_count <= $directplay_limit);
@@ -115,7 +116,30 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
-<?php if ($object_type == 'album' || $object_type == 'album_disk') { ?>
+<?php if ($is_album_type) {
+    $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+    $sort_type     = AmpConfig::get('album_sort');
+    switch ($sort_type) {
+        case 'name_asc':
+            $sort  = 'name';
+            $order = 'ASC';
+            break;
+        case 'name_desc':
+            $sort  = 'name';
+            $order = 'DESC';
+            break;
+        case 'year_asc':
+            $sort  = $original_year;
+            $order = 'ASC';
+            break;
+        case 'year_desc':
+            $sort  = $original_year;
+            $order = 'DESC';
+            break;
+        default:
+            $sort  = 'name_' . $original_year;
+            $order = 'ASC';
+    } ?>
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&amp;artist=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('view', T_('Show Artist Songs')); ?>
@@ -271,6 +295,9 @@ if ($use_label) { ?>
         $title  = (!empty($key)) ? ucwords($key) : '';
         $browse = new Browse();
         $browse->set_type($object_type);
+        if ($is_album_type) {
+            $browse->set_sort($sort, $order);
+        }
         $browse->set_use_alpha(false, false);
         if (!empty($key)) {
             $browse->set_content_div_ak($key);
