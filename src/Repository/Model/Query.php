@@ -40,78 +40,167 @@ use Ampache\Module\System\Dba;
  */
 class Query
 {
-    /**
-     * @var int|string $id
-     */
-    public $id;
-
-    /**
-     * @var int $catalog
-     */
-    public $catalog;
-
-    /**
-     * @var array $_state
-     */
-    protected $_state = array(
-        'album_artist' => false, // Used by $browse->set_type() to filter artists
-        'base' => null,
-        'custom' => false,
-        'extended_key_name' => null,
-        'filter' => array(),
-        'grid_view' => true,
-        'having' => '', // HAVING is not currently used in Query SQL
-        'join' => null,
-        'mashup' => null,
-        'offset' => 0,
-        'song_artist' => null, // Used by $browse->set_type() to filter artists
-        'select' => array(),
-        'simple' => false,
-        'show_header' => true,
-        'sort' => array(),
-        'start' => 0,
-        'static' => false,
-        'threshold' => '',
-        'title' => null,
-        'total' => null,
-        'type' => '',
-        'update_session' => false,
-        'use_alpha' => false,
-        'use_pages' => false
+    private const ALLOWED_FILTERS = array(
+        'song' => array(
+            'add_gt',
+            'add_lt',
+            'album',
+            'album_disk',
+            'alpha_match',
+            'artist',
+            'catalog',
+            'catalog_enabled',
+            'disk',
+            'enabled',
+            'exact_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with',
+            'tag',
+            'unplayed',
+            'update_gt',
+            'update_lt'
+        ),
+        'album' => array(
+            'add_gt',
+            'add_lt',
+            'alpha_match',
+            'artist',
+            'catalog',
+            'catalog_enabled',
+            'exact_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with',
+            'tag',
+            'unplayed',
+            'update_gt',
+            'update_lt'
+        ),
+        'artist' => array(
+            'add_gt',
+            'add_lt',
+            'album_artist',
+            'alpha_match',
+            'catalog',
+            'catalog_enabled',
+            'exact_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with',
+            'tag',
+            'unplayed',
+            'update_gt',
+            'update_lt',
+        ),
+        'live_stream' => array(
+            'alpha_match',
+            'catalog_enabled',
+            'exact_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with'
+        ),
+        'playlist' => array(
+            'alpha_match',
+            'exact_match',
+            'playlist_type',
+            'regex_match',
+            'regex_not_match',
+            'starts_with'
+        ),
+        'smartplaylist' => array(
+            'alpha_match',
+            'exact_match',
+            'playlist_type',
+            'regex_match',
+            'regex_not_match',
+            'starts_with'
+        ),
+        'tag' => array(
+            'alpha_match',
+            'exact_match',
+            'hidden',
+            'object_type',
+            'regex_match',
+            'regex_not_match',
+            'tag'
+        ),
+        'video' => array(
+            'alpha_match',
+            'exact_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with',
+            'tag'
+        ),
+        'license' => array(
+            'alpha_match',
+            'exact_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with'
+        ),
+        'tvshow' => array(
+            'alpha_match',
+            'exact_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with',
+            'year_eq',
+            'year_gt',
+            'year_lt'
+        ),
+        'tvshow_season' => array(
+            'season_eq',
+            'season_gt',
+            'season_lt'
+        ),
+        'catalog' => array(
+            'gather_types'
+        ),
+        'user' => array(
+            'starts_with'
+        ),
+        'label' => array(
+            'alpha_match',
+            'exact_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with'
+        ),
+        'pvmsg' => array(
+            'alpha_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with',
+            'to_user',
+            'user'
+        ),
+        'follower' => array(
+            'to_user',
+            'user'
+        ),
+        'podcast' => array(
+            'alpha_match',
+            'exact_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with',
+            'unplayed'
+        ),
+        'podcast_episode' => array(
+            'podcast',
+            'alpha_match',
+            'exact_match',
+            'regex_match',
+            'regex_not_match',
+            'starts_with',
+            'unplayed'
+        )
     );
 
-    /**
-     * @var array $_cache
-     */
-    protected $_cache;
-
-    /**
-     * @var int $user_id
-     */
-    private $user_id;
-
-    /**
-     * @var array $allowed_filters
-     */
-    private static $allowed_filters;
-
-    /**
-     * @var array $sort_state
-     */
-    private static $sort_state = [
-        'year' => 'ASC',
-        'original_year' => 'ASC',
-        'last_update' => 'ASC',
-        'rating' => 'ASC',
-        'song_count' => 'ASC',
-        'total_count' => 'ASC',
-        'total_skip' => 'ASC',
-        ];
-
-    /**
-     * @var array $allowed_sorts
-     */
-    private static $allowed_sorts = [
+    private const ALLOWED_SORTS = [
         'song' => array(
             'title',
             'year',
@@ -341,6 +430,66 @@ class Query
             'user_flag'
         )
     ];
+
+    private const SORT_STATE = [
+        'year' => 'ASC',
+        'original_year' => 'ASC',
+        'last_update' => 'ASC',
+        'rating' => 'ASC',
+        'song_count' => 'ASC',
+        'total_count' => 'ASC',
+        'total_skip' => 'ASC',
+    ];
+
+    /**
+     * @var int|string $id
+     */
+    public $id;
+
+    /**
+     * @var int $catalog
+     */
+    public $catalog;
+
+    /**
+     * @var array $_state
+     */
+    protected $_state = array(
+        'album_artist' => false, // Used by $browse->set_type() to filter artists
+        'base' => null,
+        'custom' => false,
+        'extended_key_name' => null,
+        'filter' => array(),
+        'grid_view' => true,
+        'having' => '', // HAVING is not currently used in Query SQL
+        'join' => null,
+        'mashup' => null,
+        'offset' => 0,
+        'song_artist' => null, // Used by $browse->set_type() to filter artists
+        'select' => array(),
+        'simple' => false,
+        'show_header' => true,
+        'sort' => array(),
+        'start' => 0,
+        'static' => false,
+        'threshold' => '',
+        'title' => null,
+        'total' => null,
+        'type' => '',
+        'update_session' => false,
+        'use_alpha' => false,
+        'use_pages' => false
+    );
+
+    /**
+     * @var array $_cache
+     */
+    protected $_cache;
+
+    /**
+     * @var int $user_id
+     */
+    private $user_id;
 
     /**
      * constructor
@@ -656,173 +805,7 @@ class Query
      */
     public static function get_allowed_filters($type): array
     {
-        if (empty(self::$allowed_filters)) {
-            self::$allowed_filters = array(
-                'song' => array(
-                    'add_gt',
-                    'add_lt',
-                    'album',
-                    'album_disk',
-                    'alpha_match',
-                    'artist',
-                    'catalog',
-                    'catalog_enabled',
-                    'disk',
-                    'enabled',
-                    'exact_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with',
-                    'tag',
-                    'unplayed',
-                    'update_gt',
-                    'update_lt'
-                ),
-                'album' => array(
-                    'add_gt',
-                    'add_lt',
-                    'alpha_match',
-                    'artist',
-                    'catalog',
-                    'catalog_enabled',
-                    'exact_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with',
-                    'tag',
-                    'unplayed',
-                    'update_gt',
-                    'update_lt'
-                ),
-                'artist' => array(
-                    'add_gt',
-                    'add_lt',
-                    'album_artist',
-                    'alpha_match',
-                    'catalog',
-                    'catalog_enabled',
-                    'exact_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with',
-                    'tag',
-                    'unplayed',
-                    'update_gt',
-                    'update_lt',
-                ),
-                'live_stream' => array(
-                    'alpha_match',
-                    'catalog_enabled',
-                    'exact_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with'
-                ),
-                'playlist' => array(
-                    'alpha_match',
-                    'exact_match',
-                    'playlist_type',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with'
-                ),
-                'smartplaylist' => array(
-                    'alpha_match',
-                    'exact_match',
-                    'playlist_type',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with'
-                ),
-                'tag' => array(
-                    'alpha_match',
-                    'exact_match',
-                    'hidden',
-                    'object_type',
-                    'regex_match',
-                    'regex_not_match',
-                    'tag'
-                ),
-                'video' => array(
-                    'alpha_match',
-                    'exact_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with',
-                    'tag'
-                ),
-                'license' => array(
-                    'alpha_match',
-                    'exact_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with'
-                ),
-                'tvshow' => array(
-                    'alpha_match',
-                    'exact_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with',
-                    'year_eq',
-                    'year_gt',
-                    'year_lt'
-                ),
-                'tvshow_season' => array(
-                    'season_eq',
-                    'season_gt',
-                    'season_lt'
-                ),
-                'catalog' => array(
-                    'gather_types'
-                ),
-                'user' => array(
-                    'starts_with'
-                ),
-                'label' => array(
-                    'alpha_match',
-                    'exact_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with'
-                ),
-                'pvmsg' => array(
-                    'alpha_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with',
-                    'to_user',
-                    'user'
-                ),
-                'follower' => array(
-                    'to_user',
-                    'user'
-                ),
-                'podcast' => array(
-                    'alpha_match',
-                    'exact_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with',
-                    'unplayed'
-                ),
-                'podcast_episode' => array(
-                    'podcast',
-                    'alpha_match',
-                    'exact_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with',
-                    'unplayed'
-                )
-            );
-
-            if (Access::check('interface', 50)) {
-                self::$allowed_filters['playlist'][] = 'playlist_type';
-            }
-        }
-
-        return self::$allowed_filters[$type] ?? [];
+        return self::ALLOWED_FILTERS[$type] ?? [];
     }
 
     /**
@@ -893,7 +876,7 @@ class Query
     public function set_sort($sort, $order = ''): bool
     {
         // If it's not in our list, smeg off!
-        if (!empty($this->get_type()) && !in_array($sort, self::$allowed_sorts[$this->get_type()])) {
+        if (!empty($this->get_type()) && !in_array($sort, self::ALLOWED_SORTS[$this->get_type()])) {
             return false;
         }
 
@@ -909,7 +892,7 @@ class Query
             // if the sort already exists you want the reverse
             $state = (array_key_exists($sort, $this->_state['sort']))
                 ? $this->_state['sort'][$sort]
-                : self::$sort_state[$sort] ?? 'DESC';
+                : self::SORT_STATE[$sort] ?? 'DESC';
             $order = ($state == 'ASC')
                 ? 'DESC'
                 : 'ASC';
