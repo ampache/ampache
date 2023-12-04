@@ -1165,7 +1165,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 Stats::insert('artist', $artist_id, $user_id, $agent, $location, 'stream', $date);
             }
             // running total of the user stream data
-            $play_size = User::get_user_data($user_id, 'play_size')['play_size'] ?? 0;
+            $play_size = User::get_user_data($user_id, 'play_size', 0)['play_size'];
             User::set_user_data($user_id, 'play_size', ($play_size + ($this->size / 1024 / 1024)));
         }
         // If it hasn't been played, set it

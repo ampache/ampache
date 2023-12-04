@@ -498,8 +498,8 @@ final class PlayAction implements ApplicationActionInterface
          * if we are doing random let's pull the random object and redirect to that media files URL
          */
         if ($random === 1) {
-            $last_id   = (int)(User::get_user_data($user_id, 'random_song')['random_song'] ?? 0);
-            $last_time = (int)(User::get_user_data($user_id, 'random_time')['random_time'] ?? 0);
+            $last_id   = (int)User::get_user_data($user_id, 'random_song', 0)['random_song'];
+            $last_time = (int)User::get_user_data($user_id, 'random_time', 0)['random_time'];
             if ($last_id > 0 && $last_time >= $time) {
                 // continue the current object
                 $object_id = $last_id;
