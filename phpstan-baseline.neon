@@ -10086,11 +10086,6 @@ parameters:
 			path: src/Module/System/Core.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:image_dimensions\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Core\\:\\:requests_options\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/System/Core.php
@@ -14166,11 +14161,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:check_dimensions\\(\\) has parameter \\$dimensions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:check_for_duplicate\\(\\) has parameter \\$apics with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
@@ -14186,11 +14176,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:clear_image\\(\\) has parameter \\$image_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:gather_metadata_plugin\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
@@ -14201,22 +14186,7 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:gather_metadata_plugin\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:generate_thumb\\(\\) has parameter \\$size with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:generate_thumb\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:get_art_array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
@@ -14227,56 +14197,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:get_raw_image\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:get_thumb\\(\\) has parameter \\$size with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:get_thumb\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:get_thumb_size\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:has_db_info\\(\\) has parameter \\$fallback with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:insert_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:prepare_pics\\(\\) has parameter \\$pics with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:prepare_pics\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:read_from_dir\\(\\) has parameter \\$mime with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:read_from_dir\\(\\) has parameter \\$sizetext with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:reset\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
