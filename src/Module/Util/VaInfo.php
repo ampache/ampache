@@ -532,16 +532,15 @@ final class VaInfo implements VaInfoInterface
 
         // Iterate through the defined key order adding them to an ordered array.
         $returned_keys = array();
-        foreach ($order as $key) {
-            if (array_key_exists($key, $results)) {
-                $returned_keys[] = $key;
+        foreach ($order as $key => $value) {
+            if (array_key_exists($value, $results)) {
+                $returned_keys[$key] = $value;
             }
         }
 
         // If we didn't find anything then default to everything.
         if (!empty($returned_keys)) {
             $returned_keys = array_keys($results);
-            sort($returned_keys);
         }
 
         // Unless they explicitly set it, add bitrate/mode/mime/etc.
