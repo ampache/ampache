@@ -642,7 +642,7 @@ class Query
                 break;
             case 'playlist_type':
                 if (isset($this->_state['filter']['playlist_type'])) {
-                    unset($this->_state['filter']['playlist_type']);
+                    $this->_state['filter'][$key] = ($this->_state['filter'][$key] == 1) ? 0 : 1;
                 } else {
                     $this->_state['filter'][$key] = 1;
                 }
@@ -1828,7 +1828,7 @@ class Query
                         $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
                             ? Core::get_global('user')->id
                             : -1;
-                        if ((int)$value == 0) {
+                        if ($value == 0) {
                             $filter_sql = " (`playlist`.`user`='$user_id') AND ";
                         } else {
                             $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
@@ -1861,7 +1861,7 @@ class Query
                         $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
                             ? Core::get_global('user')->id
                             : -1;
-                        if ((int)$value == 0) {
+                        if ($value == 0) {
                             $filter_sql = " (`playlist`.`user`='$user_id') AND ";
                         } else {
                             $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
