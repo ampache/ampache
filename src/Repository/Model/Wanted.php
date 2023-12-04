@@ -274,7 +274,7 @@ class Wanted extends database_object
         if (static::getWantedRepository()->getAcceptedCount() > 0) {
             $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
             $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
-            if ($malbum->{'release-group'}) {
+            if ($malbum !== null && $malbum->{'release-group'}) {
                 $userId = (empty(Core::get_global('user')) || Core::get_global('user')->has_access(75))
                     ? null
                     : Core::get_global('user')->id;
