@@ -66,8 +66,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false
-            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
         ) {
             throw new AccessDeniedException();
         }

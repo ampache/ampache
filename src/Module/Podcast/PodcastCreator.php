@@ -76,8 +76,8 @@ final class PodcastCreator implements PodcastCreatorInterface
     ): Podcast {
         // Feed must be http/https
         if (
-            strpos($feedUrl, 'http://') !== 0
-            && strpos($feedUrl, 'https://') !== 0
+            strpos($feedUrl, 'http://') !== 0 &&
+            strpos($feedUrl, 'https://') !== 0
         ) {
             throw new InvalidFeedUrlException();
         }

@@ -225,8 +225,8 @@ class Shoutbox
         $result = $this->shoutRepository->persist($this);
 
         if (
-            $result !== null
-            && $this->isNew()
+            $result !== null &&
+            $this->isNew()
         ) {
             $this->id = $result;
         }
