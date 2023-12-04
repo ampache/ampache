@@ -66,7 +66,7 @@ final class CsvExporter implements CatalogExporterInterface
             ['ID','Title','Artist','Album','Length','Track','Year','Date Added','Bitrate','Played','File']
         );
         foreach ($result as $songId) {
-            $song = $this->modelFactory->createSong($songId);
+            $song = $this->modelFactory->createSong((int)$songId);
             $song->format();
 
             fputcsv(
