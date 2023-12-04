@@ -75,6 +75,7 @@ final class UserflagAlbumAction implements ApplicationActionInterface
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
         $browse->set_type('album');
+        $browse->set_sort('userflag', 'DESC');
         $browse->show_objects($objects);
         $browse->store();
 

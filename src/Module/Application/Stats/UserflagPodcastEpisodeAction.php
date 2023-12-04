@@ -76,6 +76,7 @@ final class UserflagPodcastEpisodeAction implements ApplicationActionInterface
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
         $browse->set_type('podcast_episode');
+        $browse->set_sort('userflag', 'DESC');
         $browse->show_objects($objects);
         $browse->store();
 

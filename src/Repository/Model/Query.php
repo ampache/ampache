@@ -124,7 +124,8 @@ class Query
             'album_disk',
             'artist',
             'random',
-            'rating'
+            'rating',
+            'user_flag'
         ),
         'album' => array(
             'album_artist',
@@ -146,7 +147,8 @@ class Query
             'total_count',
             'version',
             'year',
-            'rating'
+            'rating',
+            'user_flag'
         ),
         'album_disk' => array(
             'album_artist',
@@ -167,7 +169,8 @@ class Query
             'time',
             'total_count',
             'year',
-            'rating'
+            'rating',
+            'user_flag'
         ),
         'artist' => array(
             'name',
@@ -179,7 +182,8 @@ class Query
             'total_count',
             'random',
             'rating',
-            'time'
+            'time',
+            'user_flag'
         ),
         'playlist' => array(
             'date',
@@ -188,14 +192,17 @@ class Query
             'type',
             'user',
             'username',
-            'rating'
+            'rating',
+            'user_flag'
         ),
         'smartplaylist' => array(
             'date',
             'last_update',
             'name',
             'user',
-            'username'
+            'username',
+            'rating',
+            'user_flag'
         ),
         'shoutbox' => array(
             'date',
@@ -225,7 +232,9 @@ class Query
             'resolution',
             'length',
             'codec',
-            'random'
+            'random',
+            'rating',
+            'user_flag'
         ),
         'wanted' => array(
             'user',
@@ -316,7 +325,8 @@ class Query
             'website',
             'episodes',
             'random',
-            'rating'
+            'rating',
+            'user_flag'
         ),
         'podcast_episode' => array(
             'podcast',
@@ -327,7 +337,8 @@ class Query
             'pubdate',
             'state',
             'random',
-            'rating'
+            'rating',
+            'user_flag'
         )
     ];
 
@@ -2205,6 +2216,10 @@ class Query
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`song`.`id`", "`rating`.`object_type`", "'song'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
+                    case 'user_flag':
+                        $sql = "`user_flag`.`date`";
+                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`song`.`id`", "`user_flag`.`object_type`", "'song'", "`user_flag`.`user`", (string)$this->user_id, 100);
+                        break;
                 } // end switch
                 break;
             case 'album':
@@ -2241,6 +2256,10 @@ class Query
                     case 'rating':
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (string)$this->user_id, 100);
+                        break;
+                    case 'user_flag':
+                        $sql = "`user_flag`.`date`";
+                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album`.`id`", "`user_flag`.`object_type`", "'album'", "`user_flag`.`user`", (string)$this->user_id, 100);
                         break;
                     case 'original_year':
                         $sql = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time`";
@@ -2300,6 +2319,10 @@ class Query
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
+                    case 'user_flag':
+                        $sql = "`user_flag`.`date`";
+                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string)$this->user_id, 100);
+                        break;
                     case 'original_year':
                         $sql   = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time` $order, `album`.`name`, `album_disk`.`disk`";
                         $order = '';
@@ -2340,6 +2363,10 @@ class Query
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
+                    case 'user_flag':
+                        $sql = "`user_flag`.`date`";
+                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string)$this->user_id, 100);
+                        break;
                 } // end switch
                 break;
             case 'playlist':
@@ -2356,6 +2383,10 @@ class Query
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`id`", "`rating`.`object_type`", "'playlist'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
+                    case 'user_flag':
+                        $sql = "`user_flag`.`date`";
+                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`id`", "`user_flag`.`object_type`", "'playlist'", "`user_flag`.`user`", (string)$this->user_id, 100);
+                        break;
                 } // end switch
                 break;
             case 'smartplaylist':
@@ -2367,6 +2398,14 @@ class Query
                     case 'user':
                     case 'username':
                         $sql = "`search`.`$field`";
+                        break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`search`.`id`", "`rating`.`object_type`", "'search'", "`rating`.`user`", (string)$this->user_id, 100);
+                        break;
+                    case 'user_flag':
+                        $sql = "`user_flag`.`date`";
+                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`search`.`id`", "`user_flag`.`object_type`", "'search'", "`user_flag`.`user`", (string)$this->user_id, 100);
                         break;
                 } // end switch on $field
                 break;
@@ -2559,6 +2598,10 @@ class Query
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast`.`id`", "`rating`.`object_type`", "'podcast'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
+                    case 'user_flag':
+                        $sql = "`user_flag`.`date`";
+                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast`.`id`", "`user_flag`.`object_type`", "'podcast'", "`user_flag`.`user`", (string)$this->user_id, 100);
+                        break;
                 }
                 break;
             case 'podcast_episode':
@@ -2575,6 +2618,10 @@ class Query
                     case 'rating':
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string)$this->user_id, 100);
+                        break;
+                    case 'user_flag':
+                        $sql = "`user_flag`.`date`";
+                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string)$this->user_id, 100);
                         break;
                 }
                 break;
@@ -2610,6 +2657,14 @@ class Query
                 break;
             case 'release_date':
                 $sql = "`video`.`release_date`";
+                break;
+            case 'rating':
+                $sql = "`rating`.`rating`";
+                $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string)$this->user_id, 100);
+                break;
+            case 'user_flag':
+                $sql = "`user_flag`.`date`";
+                $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string)$this->user_id, 100);
                 break;
         }
 
