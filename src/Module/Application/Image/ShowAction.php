@@ -145,7 +145,7 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         /* Decide what size this image is */
-        $thumb = filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
+        $thumb = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
         $size  = Art::get_thumb_size($thumb);
         $kind  = (array_key_exists('kind', $_GET) && $_GET['kind'] == 'preview')
             ? 'preview'
