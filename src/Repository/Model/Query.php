@@ -622,7 +622,6 @@ class Query
             case 'user':
             case 'to_user':
             case 'enabled':
-            case 'playlist_type':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
             case 'exact_match':
@@ -639,6 +638,13 @@ class Query
                 }
                 if ($key == 'regex_not_match') {
                     unset($this->_state['filter']['regex_match']);
+                }
+                break;
+            case 'playlist_type':
+                if (isset($this->_state['filter']['playlist_type'])) {
+                    unset($this->_state['filter']['playlist_type']);
+                } else {
+                    $this->_state['filter'][$key] = 1;
                 }
                 break;
             default:
