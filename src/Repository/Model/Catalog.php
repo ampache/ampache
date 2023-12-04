@@ -295,6 +295,14 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * @param Song|Podcast_Episode|Video $media
+     */
+    public function getRemoteStreamingUrl($media): ?string
+    {
+        return null;
+    }
+
+    /**
      * Check if the catalog is ready to perform actions (configuration completed, ...)
      */
     public function isReady(): bool
