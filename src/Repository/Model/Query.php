@@ -622,6 +622,7 @@ class Query
             case 'user':
             case 'to_user':
             case 'enabled':
+            case 'playlist_type':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
             case 'exact_match':
@@ -638,14 +639,6 @@ class Query
                 }
                 if ($key == 'regex_not_match') {
                     unset($this->_state['filter']['regex_match']);
-                }
-                break;
-            case 'playlist_type':
-                // Must be a content manager to turn this off
-                if (Access::check('interface', 100)) {
-                    unset($this->_state['filter'][$key]);
-                } else {
-                    $this->_state['filter'][$key] = '1';
                 }
                 break;
             default:
@@ -1826,10 +1819,12 @@ class Query
                         $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'playlist_type':
-                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
-                            ? Core::get_global('user')->id
-                            : $value;
-                        $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
+                        if ((int)$value == 1) {
+                            $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                                ? Core::get_global('user')->id
+                                : $value;
+                            $filter_sql = " (`playlist`.`type` = 'private' AND `playlist`.`user`='$user_id') AND ";
+                        }
                         break;
                 } // end filter
                 break;
@@ -1855,10 +1850,12 @@ class Query
                         $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'playlist_type':
-                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
-                            ? Core::get_global('user')->id
-                            : $value;
-                        $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
+                        if ((int)$value == 1) {
+                            $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                                ? Core::get_global('user')->id
+                                : $value;
+                            $filter_sql = " (`search`.`type` = 'private' AND `search`.`user`='$user_id') AND ";
+                        }
                         break;
                 } // end switch on $filter
                 break;
