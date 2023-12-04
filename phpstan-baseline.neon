@@ -5591,11 +5591,6 @@ parameters:
 			path: src/Module/Application/Admin/Catalog/AddCatalogAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$enable of function ob_implicit_flush expects bool, int given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Export/ExportAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$licenseId of method Ampache\\\\Repository\\\\LicenseRepositoryInterface\\:\\:update\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Application/Admin/License/EditAction.php
@@ -14686,11 +14681,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:export\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:gather_artist_info\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -15107,16 +15097,6 @@ parameters:
 
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getSongTagWriter\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:xml_get_footer\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:xml_get_header\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 

@@ -25,15 +25,25 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Song;
+use Generator;
 
 final class SongRepository implements SongRepositoryInterface
 {
+    private DatabaseConnectionInterface $connection;
+
+    public function __construct(
+        DatabaseConnectionInterface $connection
+    ) {
+        $this->connection = $connection;
+    }
+
     /**
      * gets the songs for an album takes an optional limit
      *
@@ -230,5 +240,28 @@ final class SongRepository implements SongRepositoryInterface
         Dba::write("DELETE FROM `artist_map` WHERE `object_type` = 'album' AND `object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);");
         Dba::write("DELETE FROM `artist_map` WHERE `object_type` = 'album' AND `object_id` NOT IN (SELECT `album` FROM `song`);");
         Dba::write("DELETE FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` NOT IN (SELECT `id` FROM `song`);");
+    }
+
+    /**
+     * Returns all song ids linked to the provided catalog (or all)
+     *
+     * @return Generator<int>
+     */
+    public function getByCatalog(?Catalog $catalog = null): Generator
+    {
+        if ($catalog !== null) {
+            $result = $this->connection->query(
+                'SELECT `id` FROM `song` WHERE `catalog` = ? ORDER BY `album`, `track`',
+                [$catalog->getId()]
+            );
+        } else {
+            $result = $this->connection->query(
+                'SELECT `id` FROM `song` ORDER BY `album`, `track`'
+            );
+        }
+
+        while ($songId = $result->fetchColumn()) {
+            yield (int) $songId;
+        }
     }
 }
