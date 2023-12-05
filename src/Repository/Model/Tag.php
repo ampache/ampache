@@ -792,7 +792,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             if ($ctv['id'] != '') {
                 $ctag = new Tag($ctv['id']);
                 foreach ($editedTags as $tk => $tv) {
-                    debug_event(self::class, 'from_tags {' . $tk . '} = ' . $tv, 5);
+                    //debug_event(self::class, 'from_tags {' . $tk . '} = ' . $tv, 5);
                     if (strtolower((string)$ctag->name) == strtolower($tv)) {
                         $found = true;
                         break;
