@@ -478,6 +478,7 @@ class Query
         'type' => '',
         'update_session' => false,
         'use_alpha' => false,
+        'use_filters' => false,
         'use_pages' => false
     );
 

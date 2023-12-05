@@ -73,6 +73,7 @@ final class PopularPlaylistAction implements ApplicationActionInterface
         $objects = Stats::get_top('playlist', -1, $thresh_value, 0, $user_id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
+        $browse->set_use_filters(false);
         $browse->set_type('playlist');
         $browse->show_objects($objects);
         $browse->store();

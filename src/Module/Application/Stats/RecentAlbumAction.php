@@ -70,6 +70,7 @@ final class RecentAlbumAction implements ApplicationActionInterface
         $objects = Stats::get_recent('album', -1);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
+        $browse->set_use_filters(false);
         $browse->set_type('album');
         $browse->show_objects($objects);
         $browse->store();

@@ -41,11 +41,11 @@ use Ampache\Module\Util\Ui;
 /** @var string $argument_param */
 
 $web_path     = (string)AmpConfig::get('web_path', '');
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
+$show_ratings = User::is_registered() && AmpConfig::get('ratings');
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;
 $is_table     = $browse->is_grid_view();
-$is_group     = (AmpConfig::get('album_group'));
+$is_group     = AmpConfig::get('album_group');
 $albumString  = $is_group
     ? 'album'
     : 'album_disk';

@@ -73,6 +73,7 @@ final class NewestArtistAction implements ApplicationActionInterface
         $objects = Stats::get_newest('artist', -1, 0, 0, $user_id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
+        $browse->set_use_filters(false);
         $browse->set_type('artist');
         $browse->show_objects($objects);
         $browse->store();

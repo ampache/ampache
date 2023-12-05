@@ -451,16 +451,19 @@ class Browse extends Query
             if (isset($box_req)) {
                 Ui::show_box_bottom();
             }
-            echo '<script>';
-            echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
-            echo ';</script>';
-        } else {
+            if ($this->is_use_filters()) {
+                echo '<script>';
+                echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
+                echo ';</script>';
+            }
+        } elseif (!$this->is_use_pages()) {
+            $this->show_next_link($argument);
+        }
+        // hide the filter box on some pages
+        if (!$this->is_use_filters()) {
             echo '<script>';
             echo Ajax::action('?page=browse&action=hide_filters', '');
             echo ';</script>';
-            if (!$this->is_use_pages()) {
-                $this->show_next_link($argument);
-            }
         }
         Ajax::end_container();
     }
@@ -547,6 +550,27 @@ class Browse extends Query
             ];
             setcookie('browse_' . $this->get_type() . '_' . $option, $value, $cookie_options);
         }
+    }
+
+    /**
+     *
+     * @param bool $use_filters
+     */
+    public function set_use_filters($use_filters): void
+    {
+        $this->_state['use_filters'] = $use_filters;
+    }
+
+    /**
+     * is_mashup
+     */
+    public function is_use_filters(): bool
+    {
+        if (array_key_exists('use_filters', $this->_state)) {
+            return make_bool($this->_state['use_filters']);
+        }
+
+        return false;
     }
 
     /**
@@ -694,6 +718,14 @@ class Browse extends Query
 
         return false;
     }
+    /**
+     * Allow the current page to be save into the current session
+     * @param bool $update_session
+     */
+    public function set_update_session($update_session): void
+    {
+        $this->_state['update_session'] = $update_session;
+    }
 
     /**
      *
@@ -702,15 +734,6 @@ class Browse extends Query
     public function set_show_header($show_header): void
     {
         $this->_state['show_header'] = $show_header;
-    }
-
-    /**
-     * Allow the current page to be save into the current session
-     * @param bool $update_session
-     */
-    public function set_update_session($update_session): void
-    {
-        $this->_state['update_session'] = $update_session;
     }
 
     /**
