@@ -2203,7 +2203,7 @@ class Query
                         $this->set_join('LEFT', "`artist`", "`artist`.`id`", "`song`.`artist`", 100);
                         break;
                     case 'rating':
-                        $sql = "`rating`.`rating`";
+                        $sql = "`rating`.`rating` $order, `rating`.`date`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`song`.`id`", "`rating`.`object_type`", "'song'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
                     case 'user_flag':
@@ -2244,7 +2244,7 @@ class Query
                         $this->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
                         break;
                     case 'rating':
-                        $sql = "`rating`.`rating`";
+                        $sql = "`rating`.`rating` $order, `rating`.`date`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
                     case 'user_flag':
@@ -2306,7 +2306,7 @@ class Query
                         $this->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
                         break;
                     case 'rating':
-                        $sql = "`rating`.`rating`";
+                        $sql = "`rating`.`rating` $order, `rating`.`date`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
                     case 'user_flag':
@@ -2350,7 +2350,7 @@ class Query
                         $sql = "`artist`.`$field`";
                         break;
                     case 'rating':
-                        $sql = "`rating`.`rating`";
+                        $sql = "`rating`.`rating` $order, `rating`.`date`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
                     case 'user_flag':
@@ -2370,7 +2370,7 @@ class Query
                         $sql = "`playlist`.`$field`";
                         break;
                     case 'rating':
-                        $sql = "`rating`.`rating`";
+                        $sql = "`rating`.`rating` $order, `rating`.`date`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`id`", "`rating`.`object_type`", "'playlist'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
                     case 'user_flag':
@@ -2390,7 +2390,7 @@ class Query
                         $sql = "`search`.`$field`";
                         break;
                     case 'rating':
-                        $sql = "`rating`.`rating`";
+                        $sql = "`rating`.`rating` $order, `rating`.`date`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`search`.`id`", "`rating`.`object_type`", "'search'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
                     case 'user_flag':
@@ -2585,7 +2585,7 @@ class Query
                         $sql = "`podcast`.`$field`";
                         break;
                     case 'rating':
-                        $sql = "`rating`.`rating`";
+                        $sql = "`rating`.`rating` $order, `rating`.`date`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast`.`id`", "`rating`.`object_type`", "'podcast'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
                     case 'user_flag':
@@ -2606,7 +2606,7 @@ class Query
                         $sql = "`podcast_episode`.`$field`";
                         break;
                     case 'rating':
-                        $sql = "`rating`.`rating`";
+                        $sql = "`rating`.`rating` $order, `rating`.`date`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string)$this->user_id, 100);
                         break;
                     case 'user_flag':
@@ -2649,7 +2649,7 @@ class Query
                 $sql = "`video`.`release_date`";
                 break;
             case 'rating':
-                $sql = "`rating`.`rating`";
+                $sql = "`rating`.`rating` $order, `rating`.`date`";
                 $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string)$this->user_id, 100);
                 break;
             case 'user_flag':
