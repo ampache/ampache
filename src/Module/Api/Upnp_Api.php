@@ -34,6 +34,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
 use DOMDocument;
@@ -958,7 +959,8 @@ class Upnp_Api
                     case 2: // Get podcast episodes list
                         $podcast = new Podcast((int)$pathreq[1]);
                         if ($podcast->id) {
-                            $episodes              = $podcast->get_episodes();
+                            $episodes = self::getPodcastRepository()->getEpisodes($podcast);
+
                             [$maxCount, $episodes] = self::_slice($episodes, $start, $count);
                             foreach ($episodes as $episode_id) {
                                 $episode = new Podcast_Episode($episode_id);
@@ -1969,5 +1971,15 @@ class Upnp_Api
         global $dic;
 
         return $dic->get(LiveStreamRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

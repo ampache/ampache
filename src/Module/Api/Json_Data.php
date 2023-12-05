@@ -53,6 +53,7 @@ use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
@@ -957,6 +958,9 @@ class Json_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+
+        $podcastRepository = self::getPodcastRepository();
+
         $JSON = [];
         foreach ($objects as $podcast_id) {
             $podcast = new Podcast($podcast_id);
@@ -977,7 +981,7 @@ class Json_Data
             $podcast_public_url  = $podcast->get_link();
             $podcast_episodes    = array();
             if ($episodes) {
-                $results          = $podcast->get_episodes();
+                $results          = $podcastRepository->getEpisodes($podcast);
                 $podcast_episodes = self::podcast_episodes($results, $user, false);
             }
             // Build this element
@@ -1573,5 +1577,15 @@ class Json_Data
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

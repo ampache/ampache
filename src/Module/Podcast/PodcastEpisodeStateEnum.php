@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -18,40 +20,20 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Module\Podcast;
 
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Podcast;
-use SimpleXMLElement;
-
-interface PodcastSyncerInterface
+/**
+ * Defines all available podcast-episode states
+ *
+ * @todo transform into php8 enum when available
+ */
+final class PodcastEpisodeStateEnum
 {
-    /**
-     * Update the feed and sync all new episodes
-     */
-    public function sync(Podcast $podcast, bool $gather = false): bool;
+    public const PENDING = 'pending';
 
-    /**
-     * Sync all podcast-item within the given catalogs
-     *
-     * @param iterable<Catalog> $catalogs
-     *
-     * @return int Amount of new episodes
-     */
-    public function syncForCatalogs(
-        iterable $catalogs
-    ): int;
+    public const COMPLETED = 'completed';
 
-    /**
-     * Add podcast episodes
-     */
-    public function addEpisodes(
-        Podcast $podcast,
-        SimpleXMLElement $episodes,
-        int $lastSync = 0,
-        bool $gather = false
-    ): void;
+    public const SKIPPED = 'skipped';
 }

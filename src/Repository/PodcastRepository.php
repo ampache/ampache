@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -33,7 +35,7 @@ use Ampache\Repository\Model\Podcast;
 /**
  * Manages podcast related database access
  *
- * Table: `podcast`
+ * Tables: `podcast`, `podcast_episode`
  */
 final class PodcastRepository implements PodcastRepositoryInterface
 {
@@ -41,12 +43,16 @@ final class PodcastRepository implements PodcastRepositoryInterface
 
     private DatabaseConnectionInterface $connection;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        DatabaseConnectionInterface $connection
+        DatabaseConnectionInterface $connection,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->connection   = $connection;
+        $this->modelFactory    = $modelFactory;
+        $this->connection      = $connection;
+        $this->configContainer = $configContainer;
     }
 
     /**
@@ -121,5 +127,46 @@ final class PodcastRepository implements PodcastRepositoryInterface
         return $this->modelFactory->createPodcast(
             $this->connection->getLastInsertedId()
         );
+    }
+
+    /**
+     * Returns all episode-ids for the given podcast
+     *
+     * @param string $stateFilter Return only items with this state
+     *
+     * @return list<int>
+     */
+    public function getEpisodes(Podcast $podcast, string $stateFilter = ''): array
+    {
+        $skipDisabledCatalogs = $this->configContainer->get(ConfigurationKeyEnum::CATALOG_DISABLE);
+
+        $params = [$podcast->getId()];
+        $sql    = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` ';
+
+        if ($skipDisabledCatalogs) {
+            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` ';
+        }
+
+        $sql .= 'WHERE `podcast_episode`.`podcast`= ? ';
+
+        if (!empty($stateFilter)) {
+            $sql .= 'AND `podcast_episode`.`state` = ? ';
+            $params[] = $stateFilter;
+        }
+
+        if ($skipDisabledCatalogs) {
+            $sql .= 'AND `catalog`.`enabled` = \'1\' ';
+        }
+
+        $sql .= 'ORDER BY `podcast_episode`.`pubdate` DESC';
+
+        $result = $this->connection->query($sql, $params);
+
+        $episodeIds = [];
+        while ($episodeId = $result->fetchColumn()) {
+            $episodeIds[] = (int) $episodeId;
+        }
+
+        return $episodeIds;
     }
 }

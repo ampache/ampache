@@ -25,10 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -38,16 +42,20 @@ class PodcastRepositoryTest extends TestCase
 
     private DatabaseConnectionInterface&MockObject $connection;
 
+    private ConfigContainerInterface&MockObject $configContainer;
+
     private PodcastRepository $subject;
 
     protected function setUp(): void
     {
-        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
-        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
+        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
+        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new PodcastRepository(
             $this->modelFactory,
-            $this->connection
+            $this->connection,
+            $this->configContainer
         );
     }
 
@@ -174,6 +182,77 @@ class PodcastRepositoryTest extends TestCase
                     'lastBuildDate' => $lastBuildDate,
                 ]
             )
+        );
+    }
+
+    public function testGetEpisodesReturnsEpisodesWithoutStateFilterAndDisabledCatalogs(): void
+    {
+        $podcast = $this->createMock(Podcast::class);
+        $result  = $this->createMock(PDOStatement::class);
+
+        $podcastId = 666;
+        $episodeId = 42;
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::CATALOG_DISABLE)
+            ->willReturn('1');
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` WHERE `podcast_episode`.`podcast`= ? AND `catalog`.`enabled` = \'1\' ORDER BY `podcast_episode`.`pubdate` DESC',
+                [$podcastId]
+            )
+            ->willReturn($result);
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $episodeId, false);
+
+        static::assertSame(
+            [$episodeId],
+            $this->subject->getEpisodes($podcast)
+        );
+    }
+
+    public function testGetEpisodesReturnsEpisodesWithStateFilter(): void
+    {
+        $podcast = $this->createMock(Podcast::class);
+        $result  = $this->createMock(PDOStatement::class);
+
+        $stateFilter = PodcastEpisodeStateEnum::COMPLETED;
+        $podcastId   = 666;
+        $episodeId   = 42;
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::CATALOG_DISABLE)
+            ->willReturn('');
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast`= ? AND `podcast_episode`.`state` = ? ORDER BY `podcast_episode`.`pubdate` DESC',
+                [$podcastId, $stateFilter]
+            )
+            ->willReturn($result);
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $episodeId, false);
+
+        static::assertSame(
+            [$episodeId],
+            $this->subject->getEpisodes($podcast, $stateFilter)
         );
     }
 }

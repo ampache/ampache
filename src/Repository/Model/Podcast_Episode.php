@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
@@ -158,13 +159,13 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->f_website     = scrub_out($this->website);
         $this->f_pubdate     = date("c", (int)$this->pubdate);
         switch ($this->state) {
-            case 'skipped':
+            case PodcastEpisodeStateEnum::SKIPPED:
                 $this->f_state = T_('skipped');
                 break;
-            case 'pending':
+            case PodcastEpisodeStateEnum::PENDING:
                 $this->f_state = T_('pending');
                 break;
-            case 'completed':
+            case PodcastEpisodeStateEnum::COMPLETED:
                 $this->f_state = T_('completed');
                 break;
             default:

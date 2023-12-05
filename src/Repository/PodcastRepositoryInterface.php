@@ -53,4 +53,13 @@ interface PodcastRepositoryInterface
         string $feedUrl,
         array $data
     ): Podcast;
+
+    /**
+     * Returns all episode-ids for the given podcast
+     *
+     * @param string $stateFilter Return only items with this state
+     *
+     * @return list<int>
+     */
+    public function getEpisodes(Podcast $podcast, string $stateFilter = ''): array;
 }

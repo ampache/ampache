@@ -31,13 +31,11 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
@@ -521,7 +519,7 @@ class Catalog_local extends Catalog
 
         // If podcast catalog, we don't want to analyze files for now
         if ($this->gather_types == 'podcast') {
-            $this->sync_podcasts();
+            $this->count += $this->getPodcastSyncer()->syncForCatalogs([$this]);
         } else {
             /* Get the songs and then insert them into the db */
             $this->count += $this->add_files($this->path, $options);
@@ -1067,23 +1065,6 @@ class Catalog_local extends Catalog
         $this->_filecache[strtolower($file)] = 'v_' . $video_id;
 
         return $video_id;
-    }
-
-    private function sync_podcasts(): void
-    {
-        $podcasts = self::get_podcasts();
-
-        $podcastSyncer = $this->getPodcastSyncer();
-
-        foreach ($podcasts as $podcast) {
-            $podcastSyncer->sync($podcast);
-            $episodes = $podcast->get_episodes('pending');
-            foreach ($episodes as $episode_id) {
-                $episode = new Podcast_Episode($episode_id);
-                $episode->gather();
-                $this->count++;
-            }
-        }
     }
 
     /**

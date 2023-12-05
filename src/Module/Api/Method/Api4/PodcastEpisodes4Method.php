@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class PodcastEpisodes4Method
@@ -62,7 +63,7 @@ final class PodcastEpisodes4Method
         $podcast_id = (int) scrub_in((string) $input['filter']);
         debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
         $podcast = new Podcast($podcast_id);
-        $results = $podcast->get_episodes();
+        $results = self::getPodcastRepository()->getEpisodes($podcast);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -78,5 +79,15 @@ final class PodcastEpisodes4Method
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

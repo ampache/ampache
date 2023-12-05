@@ -24,8 +24,10 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 class Podcast extends database_object implements library_item
 {
@@ -97,38 +99,6 @@ class Podcast extends database_object implements library_item
     public function get_catalogs()
     {
         return array($this->catalog);
-    }
-
-    /**
-     * get_episodes
-     * gets all episodes for this podcast
-     * @return list<int>
-     */
-    public function get_episodes(string $state_filter = ''): array
-    {
-        $params          = array();
-        $sql             = "SELECT `podcast_episode`.`id` FROM `podcast_episode` ";
-        $catalog_disable = AmpConfig::get('catalog_disable');
-        if ($catalog_disable) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` ";
-        }
-        $sql .= "WHERE `podcast_episode`.`podcast`='" . Dba::escape($this->id) . "' ";
-        if (!empty($state_filter)) {
-            $sql .= "AND `podcast_episode`.`state` = ? ";
-            $params[] = $state_filter;
-        }
-        if ($catalog_disable) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $sql .= "ORDER BY `podcast_episode`.`pubdate` DESC";
-        $db_results = Dba::read($sql, $params);
-
-        $results = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
-
-        return $results;
     }
 
     /**
@@ -231,7 +201,7 @@ class Podcast extends database_object implements library_item
      */
     public function get_childrens()
     {
-        return array('podcast_episode' => $this->get_episodes());
+        return array('podcast_episode' => $this->getPodcastRepository()->getEpisodes($this));
     }
 
     /**
@@ -254,7 +224,7 @@ class Podcast extends database_object implements library_item
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'podcast_episode') {
-            $episodes = $this->get_episodes('completed');
+            $episodes = $this->getPodcastRepository()->getEpisodes($this, PodcastEpisodeStateEnum::COMPLETED);
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
                     'object_type' => 'podcast_episode',
@@ -357,7 +327,7 @@ class Podcast extends database_object implements library_item
      */
     public function remove(): bool
     {
-        $episodes = $this->get_episodes();
+        $episodes = $this->getPodcastRepository()->getEpisodes($this);
         foreach ($episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             $episode->remove();
@@ -412,5 +382,15 @@ class Podcast extends database_object implements library_item
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

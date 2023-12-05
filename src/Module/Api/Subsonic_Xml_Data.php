@@ -52,6 +52,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
 use DateTimeZone;
@@ -1289,6 +1290,8 @@ class Subsonic_Xml_Data
      */
     public static function addPodcasts($xml, $podcasts, $includeEpisodes = true): void
     {
+        $podcastRepository = self::getPodcastRepository();
+
         $xpodcasts = $xml->addChild('podcasts');
         foreach ($podcasts as $podcast) {
             $podcast->format();
@@ -1303,7 +1306,8 @@ class Subsonic_Xml_Data
             }
             $xchannel->addAttribute('status', 'completed');
             if ($includeEpisodes) {
-                $episodes = $podcast->get_episodes();
+                $episodes = $podcastRepository->getEpisodes($podcast);
+
                 foreach ($episodes as $episode_id) {
                     $episode = new Podcast_Episode($episode_id);
                     self::addPodcastEpisode($xchannel, $episode);
@@ -1821,5 +1825,15 @@ class Subsonic_Xml_Data
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

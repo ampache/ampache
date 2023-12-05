@@ -32,6 +32,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class PodcastEpisodesMethod
@@ -69,7 +70,8 @@ final class PodcastEpisodesMethod
 
             return false;
         }
-        $results = $podcast->get_episodes();
+
+        $results = self::getPodcastRepository()->getEpisodes($podcast);
         if (empty($results)) {
             Api::empty('podcast_episode', $input['api_format']);
 
@@ -90,5 +92,15 @@ final class PodcastEpisodesMethod
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

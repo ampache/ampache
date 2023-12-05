@@ -1861,9 +1861,9 @@ abstract class Catalog extends database_object
      *
      * This returns an array of ids of latest podcast episodes in this catalog
      * @param int $count
-     * @return int[]
+     * @return list<int>
      */
-    public function get_newest_podcasts_ids($count)
+    private function get_newest_podcasts_ids(int $count): array
     {
         $results = array();
 
