@@ -374,12 +374,13 @@ class Subsonic_Xml_Data
     public static function addAlbum($xml, $album, $songs = false, $elementName = "album"): void
     {
         $album->format();
-        $sub_id    = (string)self::_getAlbumId($album->id);
-        $subParent = self::_getArtistId($album->album_artist);
-        $xalbum    = $xml->addChild(htmlspecialchars($elementName));
-        $f_name    = (string)self::_checkName($album->get_fullname());
+        $sub_id = (string)self::_getAlbumId($album->id);
+        $xalbum = $xml->addChild(htmlspecialchars($elementName));
         $xalbum->addAttribute('id', $sub_id);
-        $xalbum->addAttribute('parent', (string)$subParent);
+        if ($album->album_artist) {
+            $xalbum->addAttribute('parent', (string)self::_getArtistId($album->album_artist));
+        }
+        $f_name = (string)self::_checkName($album->get_fullname());
         $xalbum->addAttribute('album', $f_name);
         $xalbum->addAttribute('title', $f_name);
         $xalbum->addAttribute('name', $f_name);
@@ -392,7 +393,9 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->total_duration);
         $xalbum->addAttribute('playCount', (string)$album->total_count);
-        $xalbum->addAttribute('artistId', (string)$subParent);
+        if ($album->album_artist) {
+            $xalbum->addAttribute('artistId', (string)self::_getArtistId($album->album_artist));
+        }
         $xalbum->addAttribute('artist', (string) self::_checkName($album->get_artist_fullname()));
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
@@ -479,7 +482,7 @@ class Subsonic_Xml_Data
                 $xsong->addAttribute('year', (string)$song->year);
             }
             $tags = Tag::get_object_tags('song', (int)$song->id);
-            if (count($tags) > 0) {
+            if (is_array($tags) && count($tags) > 0) {
                 $xsong->addAttribute('genre', (string)$tags[0]['name']);
             }
             $xsong->addAttribute('size', (string)$song->size);
@@ -500,7 +503,7 @@ class Subsonic_Xml_Data
 
                 if (!empty($transcode_type) && $song->type !== $transcode_type) {
                     // Return a file path relative to the catalog root path
-                    $xsong->addAttribute('path', preg_replace('"\.' . $song->type . '$"', '.' . $transcode_type, $file_path));
+                    $xsong->addAttribute('path', (string)preg_replace('"\.' . $song->type . '$"', '.' . $transcode_type, $file_path));
                     // Set transcoding information
                     $xsong->addAttribute('transcodedSuffix', $transcode_type);
                     $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
@@ -595,7 +598,7 @@ class Subsonic_Xml_Data
      */
     private static function addDirectory_Catalog($xml, $catalog_id): void
     {
-        $catalog = Catalog::create_from_id($catalog_id);
+        $catalog = Catalog::create_from_id((int)$catalog_id);
         if (!$catalog instanceof Catalog) {
             return;
         }
@@ -663,7 +666,7 @@ class Subsonic_Xml_Data
             $xvideo->addAttribute('year', (string)$video->year);
         }
         $tags = Tag::get_object_tags('video', (int)$video->id);
-        if (count($tags) > 0) {
+        if (is_array($tags) && count($tags) > 0) {
             $xvideo->addAttribute('genre', (string)$tags[0]['name']);
         }
         $xvideo->addAttribute('size', (string)$video->size);
@@ -1031,7 +1034,7 @@ class Subsonic_Xml_Data
         $xusers = $xml->addChild('users');
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            if ($user) {
+            if ($user->isNew() === false) {
                 self::addUser($xusers, $user);
             }
         }
@@ -1230,7 +1233,7 @@ class Subsonic_Xml_Data
 
         foreach ($similars as $similar) {
             $xsimilar = $xartist->addChild('similarArtist');
-            $xsimilar->addAttribute('id', ($similar['id'] !== null ? self::_getArtistId($similar['id']) : "-1"));
+            $xsimilar->addAttribute('id', ($similar['id'] !== null ? (string)self::_getArtistId($similar['id']) : "-1"));
             $xsimilar->addAttribute('name', (string)self::_checkName($similar['name']));
         }
     }
@@ -1495,19 +1498,31 @@ class Subsonic_Xml_Data
         return $response;
     }
 
+    /**
+     * @param int|string $artist_id
+     * @return int
+     */
     private static function _getArtistId($artist_id): int
     {
-        return $artist_id + self::AMPACHEID_ARTIST;
+        return ((int)$artist_id) + self::AMPACHEID_ARTIST;
     }
 
+    /**
+     * @param int|string $album_id
+     * @return int
+     */
     private static function _getAlbumId($album_id): int
     {
-        return $album_id + self::AMPACHEID_ALBUM;
+        return ((int)$album_id) + self::AMPACHEID_ALBUM;
     }
 
+    /**
+     * @param int|string $song_id
+     * @return int
+     */
     private static function _getSongId($song_id): int
     {
-        return $song_id + self::AMPACHEID_SONG;
+        return ((int)$song_id) + self::AMPACHEID_SONG;
     }
 
     /**
@@ -1586,7 +1601,7 @@ class Subsonic_Xml_Data
     /**
      * _getAmpacheObject
      * Return the Ampache media object
-     * @param int $object_id
+     * @param string $object_id
      * @return Song|Video|Podcast_Episode|null
      */
     public static function _getAmpacheObject($object_id)
@@ -1666,7 +1681,9 @@ class Subsonic_Xml_Data
      */
     public static function _isArtist($artist_id): bool
     {
-        return (self::_cleanId($artist_id) >= self::AMPACHEID_ARTIST && $artist_id < self::AMPACHEID_ALBUM);
+        $artist_id = self::_cleanId($artist_id);
+
+        return ($artist_id >= self::AMPACHEID_ARTIST && $artist_id < self::AMPACHEID_ALBUM);
     }
 
     /**
@@ -1674,7 +1691,9 @@ class Subsonic_Xml_Data
      */
     public static function _isAlbum($album_id): bool
     {
-        return (self::_cleanId($album_id) >= self::AMPACHEID_ALBUM && $album_id < self::AMPACHEID_SONG);
+        $album_id = self::_cleanId($album_id);
+
+        return ($album_id >= self::AMPACHEID_ALBUM && $album_id < self::AMPACHEID_SONG);
     }
 
     /**
@@ -1682,7 +1701,9 @@ class Subsonic_Xml_Data
      */
     public static function _isSong($song_id): bool
     {
-        return (self::_cleanId($song_id) >= self::AMPACHEID_SONG && $song_id < self::AMPACHEID_SMARTPL);
+        $song_id = self::_cleanId($song_id);
+
+        return ($song_id >= self::AMPACHEID_SONG && $song_id < self::AMPACHEID_SMARTPL);
     }
 
     /**
@@ -1692,7 +1713,7 @@ class Subsonic_Xml_Data
     {
         $video_id = self::_cleanId($video_id);
 
-        return (self::_cleanId($video_id) >= self::AMPACHEID_VIDEO && $video_id < self::AMPACHEID_PODCAST);
+        return ($video_id >= self::AMPACHEID_VIDEO && $video_id < self::AMPACHEID_PODCAST);
     }
 
     /**
@@ -1700,7 +1721,9 @@ class Subsonic_Xml_Data
      */
     public static function _isPodcast($podcast_id): bool
     {
-        return (self::_cleanId($podcast_id) >= self::AMPACHEID_PODCAST && $podcast_id < self::AMPACHEID_PODCASTEP);
+        $podcast_id = self::_cleanId($podcast_id);
+
+        return ($podcast_id >= self::AMPACHEID_PODCAST && $podcast_id < self::AMPACHEID_PODCASTEP);
     }
 
     /**
@@ -1708,7 +1731,9 @@ class Subsonic_Xml_Data
      */
     public static function _isPodcastEpisode($episode_id): bool
     {
-        return (self::_cleanId($episode_id) >= self::AMPACHEID_PODCASTEP && $episode_id < self::AMPACHEID_PLAYLIST);
+        $episode_id = self::_cleanId($episode_id);
+
+        return ($episode_id >= self::AMPACHEID_PODCASTEP && $episode_id < self::AMPACHEID_PLAYLIST);
     }
 
     /**
@@ -1716,7 +1741,9 @@ class Subsonic_Xml_Data
      */
     public static function _isPlaylist($plist_id): bool
     {
-        return (self::_cleanId($plist_id) >= self::AMPACHEID_PLAYLIST);
+        $plist_id = self::_cleanId($plist_id);
+
+        return ($plist_id >= self::AMPACHEID_PLAYLIST);
     }
 
     /**
@@ -1724,7 +1751,9 @@ class Subsonic_Xml_Data
      */
     public static function _isSmartPlaylist($plist_id): bool
     {
-        return (self::_cleanId($plist_id) >= self::AMPACHEID_SMARTPL && $plist_id < self::AMPACHEID_VIDEO);
+        $plist_id = self::_cleanId($plist_id);
+
+        return ($plist_id >= self::AMPACHEID_SMARTPL && $plist_id < self::AMPACHEID_VIDEO);
     }
 
     /**
@@ -1738,8 +1767,9 @@ class Subsonic_Xml_Data
         if (InterfaceImplementationChecker::is_library_item($objectType)) {
             if (AmpConfig::get('ratings')) {
                 $starred = new Userflag($object_id, $objectType);
-                if ($res = $starred->get_flag(null, true)) {
-                    $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int)$res[1]));
+                $result  = $starred->get_flag(null, true);
+                if (isset($result[1])) {
+                    $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int)$result[1]));
                 }
             }
         }

@@ -122,7 +122,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if ($auth === []) {
             $auth = $this->authenticationManager->login($userName, $password, true);
         }
-        if (!$auth['success']) {
+        $user = User::get_from_username($userName);
+        if ($user === null || !$auth['success']) {
             $this->logger->warning(
                 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -133,7 +134,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             return;
         }
 
-        $user = User::get_from_username($userName);
         Session::createGlobalUser($user);
 
         if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $user->id, AccessLevelEnum::LEVEL_GUEST)) {
@@ -183,7 +183,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $decname        = urldecode($name);
                 $decvalue       = urldecode($value);
             }
-            if (!$decname && !$decvalue) {
+            if (!$decname || !$decvalue) {
                 continue;
             }
 
@@ -191,7 +191,12 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             // see https://github.com/clementine-player/Clementine/issues/6080
             $matches = array();
             if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
-                $calc = (($matches[1] << 24) + ($matches[2] << 16) + ($matches[3] << 8) + $matches[4]);
+                $calc = (
+                    (((int)$matches[1]) << 24) +
+                    (((int)$matches[2]) << 16) +
+                    (((int)$matches[3]) << 8) +
+                    ((int)$matches[4])
+                );
                 if ($calc) {
                     $this->logger->notice(
                         "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc",
@@ -207,7 +212,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             }
 
             if (array_key_exists($decname, $input)) {
-                if (!is_array($input[$decname])) {
+                if (is_array($input[$decname]) === false) {
                     $oldvalue          = $input[$decname];
                     $input[$decname]   = array();
                     $input[$decname][] = $oldvalue;

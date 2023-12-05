@@ -1800,7 +1800,7 @@ class Subsonic_Api
                 $prev_obj  = $previous['object_id'] ?? 0;
                 $prev_date = $previous['date'] ?? 0;
                 $type      = Subsonic_Xml_Data::_getAmpacheType((string)$subsonic_id);
-                $media     = Subsonic_Xml_Data::_getAmpacheObject((int)$subsonic_id);
+                $media     = Subsonic_Xml_Data::_getAmpacheObject((string)$subsonic_id);
                 if ($media === null || $media->isNew()) {
                     continue;
                 }
@@ -2801,7 +2801,7 @@ class Subsonic_Api
     public static function saveplayqueue($input, $user): void
     {
         $current = (string)($input['current'] ?? '0');
-        $media   = Subsonic_Xml_Data::_getAmpacheObject((int)$current);
+        $media   = Subsonic_Xml_Data::_getAmpacheObject((string)$current);
         if ($media === null || $media->isNew()) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'saveplayqueue');
         } else {
