@@ -566,11 +566,7 @@ class Browse extends Query
      */
     public function is_use_filters(): bool
     {
-        if (array_key_exists('use_filters', $this->_state)) {
-            return make_bool($this->_state['use_filters']);
-        }
-
-        return true;
+        return make_bool($this->_state['use_filters'] ?? true);
     }
 
     /**
@@ -591,11 +587,7 @@ class Browse extends Query
      */
     public function is_use_pages(): bool
     {
-        if (array_key_exists('use_pages', $this->_state)) {
-            return make_bool($this->_state['use_pages']);
-        }
-
-        return false;
+        return make_bool($this->_state['use_pages'] ?? false);
     }
 
     /**
@@ -612,11 +604,7 @@ class Browse extends Query
      */
     public function is_mashup(): bool
     {
-        if (array_key_exists('mashup', $this->_state)) {
-            return make_bool($this->_state['mashup']);
-        }
-
-        return false;
+        return make_bool($this->_state['mashup'] ?? false);
     }
 
     /**
@@ -642,11 +630,7 @@ class Browse extends Query
      */
     public function is_album_artist(): bool
     {
-        if (array_key_exists('album_artist', $this->_state)) {
-            return make_bool($this->_state['album_artist']);
-        }
-
-        return false;
+        return make_bool($this->_state['album_artist'] ?? false);
     }
 
     /**
@@ -654,11 +638,7 @@ class Browse extends Query
      */
     public function is_song_artist(): bool
     {
-        if (array_key_exists('song_artist', $this->_state)) {
-            return make_bool($this->_state['song_artist']);
-        }
-
-        return false;
+        return make_bool($this->_state['song_artist'] ?? false);
     }
 
     /**
@@ -679,11 +659,7 @@ class Browse extends Query
      */
     public function is_grid_view(): bool
     {
-        if (array_key_exists('grid_view', $this->_state)) {
-            return make_bool($this->_state['grid_view']);
-        }
-
-        return false;
+        return make_bool($this->_state['grid_view'] ?? false);
     }
 
     /**
@@ -712,11 +688,7 @@ class Browse extends Query
      */
     public function is_use_alpha(): bool
     {
-        if (array_key_exists('use_alpha', $this->_state)) {
-            return make_bool($this->_state['use_alpha']);
-        }
-
-        return false;
+        return make_bool($this->_state['use_alpha'] ?? false);
     }
     /**
      * Allow the current page to be save into the current session
@@ -749,11 +721,7 @@ class Browse extends Query
      */
     public function is_update_session(): bool
     {
-        if (array_key_exists('update_session', $this->_state)) {
-            return make_bool($this->_state['update_session']);
-        }
-
-        return false;
+        return make_bool($this->_state['update_session'] ?? false);
     }
 
     /**
@@ -779,11 +747,7 @@ class Browse extends Query
      */
     public function get_threshold(): string
     {
-        if (array_key_exists('threshold', $this->_state)) {
-            return (string)$this->_state['threshold'];
-        }
-
-        return '';
+        return (string)($this->_state['threshold'] ?? '');
     }
 
     /**
@@ -791,11 +755,7 @@ class Browse extends Query
      */
     public function get_title($default): string
     {
-        if ($this->_state['title'] !== null) {
-            return (string)$this->_state['title'];
-        }
-
-        return $default;
+        return (string)($this->_state['title'] ?? $default);
     }
 
     /**
