@@ -1863,7 +1863,7 @@ class Query
                             ? Core::get_global('user')->id
                             : -1;
                         if ($value == 0) {
-                            $filter_sql = " (`playlist`.`user`='$user_id') AND ";
+                            $filter_sql = " (`search`.`user`='$user_id') AND ";
                         } else {
                             $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
                         }
@@ -2626,12 +2626,9 @@ class Query
     }
 
     /**
-     *
-     * @param string $field
-     * @param string $order
-     * @param string $table
+     * sql_sort_video
      */
-    private function sql_sort_video($field, $order, $table = 'video'): string
+    private function sql_sort_video(string $field, string $order, ?string $table = 'video'): string
     {
         $sql = "";
         switch ($field) {
@@ -2774,15 +2771,6 @@ class Query
         }
 
         return true;
-    }
-
-    /**
-     * get_state
-     * This is a debug only function
-     */
-    public function get_state(): array
-    {
-        return $this->_state;
     }
 
     /**
