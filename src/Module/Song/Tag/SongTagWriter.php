@@ -375,11 +375,16 @@ final class SongTagWriter implements SongTagWriterInterface
         } // catalog type = local
     }
 
+    /**
+     * @param int|string $description
+     * @param $ndata
+     * @return int|null
+     */
     private function search_txxx($description, $ndata): ?int
     {
         $cnt = count($ndata);
         for ($i = 0; $i < $cnt; $i++) {
-            if (strtolower($ndata[$i]['description']) == strtolower($description)) {
+            if (strtolower($ndata[$i]['description']) == strtolower((string)$description)) {
                 return $i;
             }
         }

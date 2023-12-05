@@ -35,7 +35,6 @@ use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;

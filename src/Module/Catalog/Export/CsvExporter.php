@@ -26,7 +26,6 @@ namespace Ampache\Module\Catalog\Export;
 
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\SongRepositoryInterface;
 
 final class CsvExporter implements CatalogExporterInterface

@@ -1360,12 +1360,8 @@ class Json_Data
      * user
      *
      * This handles creating an JSON document for a user
-     *
-     * @param User $user User Object
-     * @param bool $fullinfo
-     * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function user(User $user, $fullinfo, $object = true): string
+    public static function user(User $user, bool $fullinfo, ?bool $object = true): string
     {
         $user->format();
         if ($fullinfo) {

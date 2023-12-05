@@ -238,7 +238,6 @@ class Share extends database_object
 
     /**
      * get_share_list_sql
-     * @param User $user
      */
     public static function get_share_list_sql(User $user): string
     {

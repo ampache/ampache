@@ -167,7 +167,7 @@ if ($show_playlist_add) {
 }
 if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => (string)$album->id)); ?>
         </li>
 <?php }
 if (!AmpConfig::get('use_auth') || $access25) {

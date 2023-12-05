@@ -1023,11 +1023,8 @@ class Xml5_Data
      * user
      *
      * This handles creating an xml document for a user
-     *
-     * @param User $user User Object
-     * @param bool $fullinfo
      */
-    public static function user(User $user, $fullinfo): string
+    public static function user(User $user, bool $fullinfo): string
     {
         $user->format();
         $string = "<user id=\"" . (string)$user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n";

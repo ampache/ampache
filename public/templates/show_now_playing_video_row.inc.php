@@ -34,7 +34,6 @@ use Ampache\Repository\Model\Video;
 /** @var string $web_path */
 /** @var string $agent */
 
-$media = Video::create_from_id($media->id);
 $media->format(); ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">

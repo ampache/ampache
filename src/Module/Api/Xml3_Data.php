@@ -568,8 +568,6 @@ class Xml3_Data
      * user
      *
      * This handles creating an xml document for a user
-     *
-     * @param User $user
      */
     public static function user(User $user): string
     {

@@ -1237,7 +1237,21 @@ class Catalog_local extends Catalog
             return false;
         }
         // need at least one type to transcode
-        if ($m4a && !$flac && !$mpc && !$ogg && !$oga && !$opus && !$wav && !$wma && !$aif && !$aiff && !$ape && !$shn && !$mp3) {
+        if (
+            !$m4a &&
+            !$flac &&
+            !$mpc &&
+            !$ogg &&
+            !$oga &&
+            !$opus &&
+            !$wav &&
+            !$wma &&
+            !$aif &&
+            !$aiff &&
+            !$ape &&
+            !$shn &&
+            !$mp3
+        ) {
             debug_event('local.catalog', 'You need to pick at least 1 file format to cache', 5);
 
             return false;

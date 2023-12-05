@@ -201,7 +201,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => (string)$artist->id)); ?>
         </li>
 <?php } ?>
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>

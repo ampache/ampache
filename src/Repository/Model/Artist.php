@@ -355,7 +355,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         return $this->has_art;
     }
 
-    public static function is_upload($artist_id): bool
+    public static function is_upload(int $artist_id): bool
     {
         $sql        = "SELECT `user` FROM `artist` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($artist_id));

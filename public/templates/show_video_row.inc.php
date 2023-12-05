@@ -43,10 +43,9 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_cover */
 /** @var string $cel_counter */
 /** @var string $cel_tags */
+/** @var string|null $video_type */
 
 if (!isset($video_type)) {
-    $libitem = Video::create_from_id($libitem->id);
-    $libitem->format();
     $video_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem));
 } ?>
 <td class="cel_play">

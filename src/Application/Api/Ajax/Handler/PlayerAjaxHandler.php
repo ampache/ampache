@@ -30,7 +30,6 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 
 final class PlayerAjaxHandler implements AjaxHandlerInterface
 {

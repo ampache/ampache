@@ -945,11 +945,8 @@ class Json4_Data
      * user
      *
      * This handles creating an JSON document for a user
-     *
-     * @param User $user    User
-     * @param bool $fullinfo
      */
-    public static function user(User $user, $fullinfo): string
+    public static function user(User $user, bool $fullinfo): string
     {
         $JSON = array();
         $user->format();

@@ -31,7 +31,6 @@ use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use DateTime;

@@ -23,7 +23,6 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
