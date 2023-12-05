@@ -570,7 +570,7 @@ class Browse extends Query
             return make_bool($this->_state['use_filters']);
         }
 
-        return false;
+        return true;
     }
 
     /**
