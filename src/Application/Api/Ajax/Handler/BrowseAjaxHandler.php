@@ -196,6 +196,11 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 require_once Ui::find_template('browse_filters.inc.php');
                 $results['browse_filters'] = ob_get_clean();
                 break;
+            case 'hide_filters':
+                ob_start();
+                echo '';
+                $results['browse_filters'] = ob_get_clean();
+                break;
             case 'options':
                 $option = $_REQUEST['option'] ?? '';
                 $value  = $_REQUEST['value'] ?? '';

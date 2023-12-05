@@ -454,8 +454,13 @@ class Browse extends Query
             echo '<script>';
             echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
-        } elseif (!$this->is_use_pages()) {
-            $this->show_next_link($argument);
+        } else {
+            echo '<script>';
+            echo Ajax::action('?page=browse&action=hide_filters', '');
+            echo ';</script>';
+            if (!$this->is_use_pages()) {
+                $this->show_next_link($argument);
+            }
         }
         Ajax::end_container();
     }
