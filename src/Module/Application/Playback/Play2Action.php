@@ -648,10 +648,14 @@ final class Play2Action implements ApplicationActionInterface
                 );
                 $cache_file   = true;
                 $original     = true;
-                $media->file  = $file_target;
-                $media->size  = Core::get_filesize($file_target);
-                $media->type  = $cache_target;
                 $transcode_to = null;
+
+                $streamConfiguration = [
+                    'file_path' => $file_target,
+                    'file_name' => $media->f_file,
+                    'file_size' => Core::get_filesize($file_target),
+                    'file_type' => $cache_target,
+                ];
             } else {
                 // Build up the catalog for our current object
                 $catalog = Catalog::create_from_id($mediaCatalogId);
@@ -675,8 +679,8 @@ final class Play2Action implements ApplicationActionInterface
                     return null;
                 }
 
-                $media = $catalog->prepare_media($media);
-                if ($media == null) {
+                $streamConfiguration = $catalog->prepare_media($media);
+                if ($streamConfiguration === null) {
                     return null;
                 }
             }
@@ -693,7 +697,7 @@ final class Play2Action implements ApplicationActionInterface
         // load the cache file or the local file
         $stream_file = ($cache_file && $file_target)
             ? $file_target
-            : $media->file;
+            : $streamConfiguration['file_path'];
 
         /* If we don't have a file, or the file is not readable */
         if (!$stream_file || !Core::is_readable(Core::conv_lc_file((string)$stream_file))) {
@@ -712,10 +716,10 @@ final class Play2Action implements ApplicationActionInterface
         // Format the media name
         $media_name = (!empty($stream_name))
             ? $stream_name
-            : $media->get_stream_name() . "." . $media->type;
+            : $media->get_stream_name() . "." . $streamConfiguration['file_type'];
         $transcode_to = ($transcode_cfg == 'never' || $cache_file || ($is_download && !$transcode_to))
             ? null
-            : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
+            : Stream::get_transcode_format($streamConfiguration['file_type'], $transcode_to, $player, $type);
 
         header('Access-Control-Allow-Origin: *');
 
@@ -732,8 +736,8 @@ final class Play2Action implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             // STUPID IE
-            $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
-            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, (string)$media->size);
+            $media_name = str_replace(array('?', '/', '\\'), "_", $streamConfiguration['file_name']);
+            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, (string) $streamConfiguration['file_size']);
 
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
@@ -790,7 +794,7 @@ final class Play2Action implements ApplicationActionInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
         $this->logger->debug(
-            'Media type {' . $media->type . '}',
+            'Media type {' . $streamConfiguration['file_type'] . '}',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
@@ -801,7 +805,7 @@ final class Play2Action implements ApplicationActionInterface
             );
         }
         // transcode_to should only have an effect if the media is the wrong format
-        $transcode_to = ($transcode_cfg == 'never' || $transcode_to == $media->type)
+        $transcode_to = ($transcode_cfg == 'never' || $transcode_to == $streamConfiguration['file_type'])
             ? null
             : $transcode_to;
 
@@ -855,7 +859,7 @@ final class Play2Action implements ApplicationActionInterface
             } else {
                 if ($transcode_cfg != 'never') {
                     $this->logger->notice(
-                        'Transcoding is not enforced for ' . $media->type,
+                        'Transcoding is not enforced for ' . $streamConfiguration['file_type'],
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 } else {
@@ -934,7 +938,7 @@ final class Play2Action implements ApplicationActionInterface
                 $stream_size = 0;
             }
         } else {
-            $stream_size = (int)$media->size;
+            $stream_size = $streamConfiguration['file_size'];
         }
 
         if (!is_resource($filepointer)) {
@@ -957,9 +961,9 @@ final class Play2Action implements ApplicationActionInterface
         if ($range_values > 0 && ($start > 0 || $end > 0)) {
             // Calculate stream size from byte range
             if ($range_values >= 2) {
-                $end = (int)min($end, $media->size - 1);
+                $end = (int)min($end, $streamConfiguration['file_size'] - 1);
             } else {
-                $end = $media->size - 1;
+                $end = $streamConfiguration['file_size'] - 1;
             }
             $stream_size = (int)($end - ((int)$start)) + 1;
 
@@ -970,12 +974,12 @@ final class Play2Action implements ApplicationActionInterface
                 );
             } elseif (!$transcode) {
                 $this->logger->debug(
-                    'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size,
+                    'Content-Range header received, skipping ' . $start . ' bytes out of ' . $streamConfiguration['file_size'],
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
                 fseek($filepointer, (int)$start);
 
-                $range = $start . '-' . $end . '/' . $media->size;
+                $range = $start . '-' . $end . '/' . $streamConfiguration['file_size'];
                 header('HTTP/1.1 206 Partial Content');
                 header('Content-Range: bytes ' . $range);
             }
@@ -1053,8 +1057,8 @@ final class Play2Action implements ApplicationActionInterface
         } else {
             // output file might not be the same type
             $mime = ($type === 'video')
-                ? Video::type_to_mime($media->type)
-                : Song::type_to_mime($media->type);
+                ? Video::type_to_mime($streamConfiguration['file_type'])
+                : Song::type_to_mime($streamConfiguration['file_type']);
         }
 
         // Close sql connection

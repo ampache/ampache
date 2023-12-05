@@ -711,25 +711,40 @@ class Catalog_dropbox extends Catalog
 
     /**
      * @param Song|Podcast_Episode|Video $media
-     * @return Song|Podcast_Episode|Video
+     *
+     * @return array{
+     *  file_path: string,
+     *  file_name: string,
+     *  file_size: int,
+     *  file_type: string
+     * }
      */
-    public function prepare_media($media)
+    public function prepare_media($media): array
     {
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox = new Dropbox($app);
+
+        $file = (string) $media->file;
+
         try {
             set_time_limit(0);
             $meta    = $dropbox->getMetadata((string)$media->file);
             $outfile = sys_get_temp_dir() . '/' . $meta->getName();
 
             // Download File
-            $this->download($dropbox, $media->file, null, $outfile);
-            $media->file = $outfile;
+            $this->download($dropbox, $file, null, $outfile);
+
+            $file = $outfile;
         } catch (DropboxClientException $e) {
             debug_event('dropbox.catalog', 'File not found on Dropbox: ' . $media->file, 5);
         }
 
-        return $media;
+        return [
+            'file_path' => $file,
+            'file_name' => $media->f_file,
+            'file_size' => $media->size,
+            'file_type' => $media->type
+        ];
     }
 
     /**

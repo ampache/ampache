@@ -1110,11 +1110,21 @@ class Catalog_local extends Catalog
 
     /**
      * @param Song|Podcast_Episode|Video $media
-     * @return Song|Podcast_Episode|Video
+     * @return array{
+     *  file_path: string,
+     *  file_name: string,
+     *  file_size: int,
+     *  file_type: string
+     * }
      */
-    public function prepare_media($media)
+    public function prepare_media($media): array
     {
-        return $media;
+        return [
+            'file_path' => (string) $media->file,
+            'file_name' => $media->f_file,
+            'file_size' => $media->size,
+            'file_type' => $media->type
+        ];
     }
 
     /**

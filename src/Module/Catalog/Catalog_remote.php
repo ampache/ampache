@@ -505,10 +505,14 @@ class Catalog_remote extends Catalog
 
     /**
      * @param Song|Podcast_Episode|Video $media
-     * @return null
-     * @throws Exception
+     * @return null|array{
+     *   file_path: string,
+     *   file_name: string,
+     *   file_size: int,
+     *   file_type: string
+     *  }
      */
-    public function prepare_media($media)
+    public function prepare_media($media): ?array
     {
         return null;
     }

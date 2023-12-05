@@ -647,10 +647,19 @@ class Catalog_Seafile extends Catalog
 
     /**
      * @param Song|Podcast_Episode|Video $media
-     * @return Song|Podcast_Episode|Video
+     * @return array{
+     *    file_path: string,
+     *    file_name: string,
+     *    file_size: int,
+     *    file_type: string
+     * }
      */
-    public function prepare_media($media)
+    public function prepare_media($media): array
     {
+        $stream_path = (string) $media->file;
+        $stream_name = $media->f_file;
+        $size        = $media->size;
+
         if ($this->seafile->prepare()) {
             set_time_limit(0);
 
@@ -660,16 +669,21 @@ class Catalog_Seafile extends Catalog
 
             $tempfile = $this->seafile->download($file);
 
-            $media->file   = $tempfile;
-            $media->f_file = $fileinfo['filename'];
+            $stream_path = $tempfile;
+            $stream_name = $fileinfo['filename'];
 
             // in case this didn't get set for some reason
-            if ($media->size == 0) {
-                $media->size = Core::get_filesize($tempfile);
+            if ($size == 0) {
+                $size = Core::get_filesize($tempfile);
             }
         }
 
-        return $media;
+        return [
+            'file_path' => $stream_path,
+            'file_name' => $stream_name,
+            'file_size' => $size,
+            'file_type' => $media->type
+        ];
     }
 
     /**
