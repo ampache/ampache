@@ -78,7 +78,6 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         $artist = $this->modelFactory->createArtist($artistId);
-
         if ($artist->isNew()) {
             $this->logger->warning(
                 'Requested an artist that does not exist',
@@ -98,12 +97,14 @@ final class ShowAction implements ApplicationActionInterface
                     $catalogId,
                     true
                 );
-                $object_ids = null;
+                $use_filters = false;
+                $object_ids  = null;
             } else {
                 $object_ids = $this->albumRepository->getByArtist(
                     $artistId,
                     $catalogId
                 );
+                $use_filters      = true;
                 $multi_object_ids = null;
             }
 
@@ -115,6 +116,7 @@ final class ShowAction implements ApplicationActionInterface
                     'object_ids' => $object_ids,
                     'multi_object_ids' => $multi_object_ids,
                     'gatekeeper' => $gatekeeper,
+                    'use_filters' => $use_filters
                 ]
             );
         }

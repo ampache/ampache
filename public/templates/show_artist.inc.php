@@ -47,6 +47,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var array $object_ids */
 /** @var string $object_type */
 /** @var GuiGatekeeperInterface $gatekeeper */
+/** @var bool $use_filters */
 
 $web_path          = (string)AmpConfig::get('web_path', '');
 $show_direct_play  = AmpConfig::get('directplay');
@@ -294,6 +295,7 @@ if ($use_label) { ?>
     foreach ($multi_object_ids as $key => $object_ids) {
         $title  = (!empty($key)) ? ucwords($key) : '';
         $browse = new Browse();
+        $browse->set_use_filters($use_filters); // hide filterbox on grouped type albums
         $browse->set_type($object_type);
         if ($is_album_type) {
             $browse->set_sort($sort, $order);

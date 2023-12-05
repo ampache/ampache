@@ -148,6 +148,7 @@ class ShowActionTest extends MockeryTestCase
                     'object_ids' => array(),
                     'multi_object_ids' => $multi_object_ids,
                     'gatekeeper' => $gatekeeper,
+                    'use_filters' => false
                 ]
             )
             ->once();
@@ -222,6 +223,7 @@ class ShowActionTest extends MockeryTestCase
                     'object_ids' => $object_ids,
                     'multi_object_ids' => array(),
                     'gatekeeper' => $gatekeeper,
+                    'use_filters' => true
                 ]
             )
             ->once();

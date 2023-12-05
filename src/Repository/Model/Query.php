@@ -478,7 +478,7 @@ class Query
         'type' => '',
         'update_session' => false,
         'use_alpha' => false,
-        'use_filters' => true,
+        'use_filters' => true, // Used by $browse to hide the filter box in the sidebar
         'use_pages' => false
     );
 
