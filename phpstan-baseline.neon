@@ -3746,42 +3746,7 @@ parameters:
 			path: src/Module/Api/Output/XmlOutput.php
 
 		-
-			message: "#^Binary operation \"\\+\" between \\(float\\|int\\) and string results in an error\\.$#"
-			count: 1
-			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
-			message: "#^Binary operation \"\\<\\<\" between string and 16 results in an error\\.$#"
-			count: 1
-			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
-			message: "#^Binary operation \"\\<\\<\" between string and 24 results in an error\\.$#"
-			count: 1
-			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
-			message: "#^Binary operation \"\\<\\<\" between string and 8 results in an error\\.$#"
-			count: 1
-			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
 			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Subsonic_Api', non\\-falsy\\-string\\} given\\.$#"
-			count: 1
-			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
-			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
-			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/SubsonicApiApplication.php
 
@@ -4361,27 +4326,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Cannot access offset 0 on array\\|bool\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Cannot access offset 1 on non\\-empty\\-array\\|true\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Cannot cast array\\<int, string\\>\\|string\\|null to string\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getAlbumId\\(\\) has parameter \\$album_id with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -4396,17 +4341,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getArtistId\\(\\) has parameter \\$artist_id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getCatalogData\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getSongId\\(\\) has parameter \\$song_id with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -4612,51 +4547,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addUsers\\(\\) has parameter \\$users with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:create_from_id\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$episode_id of static method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_isPodcastEpisode\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of static method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_cleanId\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of static method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getAmpacheId\\(\\) expects string, int given\\.$#"
-			count: 3
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$song_id of static method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_isSong\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|bool given\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$video_id of static method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_isVideo\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method SimpleXMLElement\\:\\:addAttribute\\(\\) expects string, int\\|string given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method SimpleXMLElement\\:\\:addAttribute\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -5211,11 +5101,6 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:output_xml_from_array\\(\\) has parameter \\$array with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:playlists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
@@ -5297,11 +5182,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:output_xml_from_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
 
@@ -9771,11 +9651,6 @@ parameters:
 			path: src/Module/Song/Tag/SongTagWriter.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:search_txxx\\(\\) has parameter \\$description with no type specified\\.$#"
-			count: 1
-			path: src/Module/Song/Tag/SongTagWriter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:search_txxx\\(\\) has parameter \\$ndata with no type specified\\.$#"
 			count: 1
 			path: src/Module/Song/Tag/SongTagWriter.php
@@ -14161,11 +14036,6 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:is_upload\\(\\) has parameter \\$artist_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:migrate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -15662,11 +15532,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_saved\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_state\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 

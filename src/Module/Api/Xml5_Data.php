@@ -35,7 +35,6 @@ use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -219,88 +218,6 @@ class Xml5_Data
         }
 
         return $string;
-    }
-
-    /**
-     * output_xml_from_array
-     * This takes a one dimensional array and creates a XML document from it. For
-     * use primarily by the ajax mojo.
-     * @param array $array
-     * @param bool $callback
-     * @param string $type
-     */
-    public static function output_xml_from_array($array, $callback = false, $type = ''): string
-    {
-        $string = '';
-
-        // If we weren't passed an array then return
-        if (!is_array($array)) {
-            return $string;
-        }
-
-        // The type is used for the different XML docs we pass
-        switch ($type) {
-            case 'itunes':
-                foreach ($array as $key => $value) {
-                    if (is_array($value)) {
-                        $value = xoutput_from_array($value, true, $type);
-                        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-                    } else {
-                        if ($key == "key") {
-                            $string .= "\t\t<$key>$value</$key>\n";
-                        } elseif (is_int($value)) {
-                            $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
-                        } elseif ($key == "Date Added") {
-                            $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
-                        } elseif (is_string($value)) {
-                            /* We need to escape the value */
-                            $string .= "\t\t\t<key>$key</key><string><![CDATA[" . $value . "]]></string>\n";
-                        }
-                    }
-                } // end foreach
-
-                return $string;
-            case 'xspf':
-                foreach ($array as $key => $value) {
-                    if (is_array($value)) {
-                        $value = xoutput_from_array($value, true, $type);
-                        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-                    } else {
-                        if ($key == "key") {
-                            $string .= "\t\t<$key>$value</$key>\n";
-                        } elseif (is_numeric($value)) {
-                            $string .= "\t\t\t<$key>$value</$key>\n";
-                        } elseif (is_string($value)) {
-                            /* We need to escape the value */
-                            $string .= "\t\t\t<$key><![CDATA[" . $value . "]]></$key>\n";
-                        }
-                    }
-                } // end foreach
-
-                return $string;
-            default:
-                foreach ($array as $key => $value) {
-                    // No numeric keys
-                    if (is_numeric($key)) {
-                        $key = 'item';
-                    }
-
-                    if (is_array($value)) {
-                        // Call ourself
-                        $value = xoutput_from_array($value, true);
-                        $string .= "\t<content div=\"$key\">$value</content>\n";
-                    } else {
-                        /* We need to escape the value */
-                        $string .= "\t<content div=\"$key\"><![CDATA[" . $value . "]]></content>\n";
-                    }
-                    // end foreach elements
-                }
-                if (!$callback) {
-                    $string = '<?xml version="1.0" encoding="utf-8" ?>' . "\n<root>\n" . $string . "</root>\n";
-                }
-
-                return Ui::clean_utf8($string);
-        }
     }
 
     /**
