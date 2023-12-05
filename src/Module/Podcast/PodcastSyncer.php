@@ -29,12 +29,29 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\PodcastRepositoryInterface;
 use SimpleXMLElement;
 
+/**
+ * Provides functions for podcast-syncing
+ */
 final class PodcastSyncer implements PodcastSyncerInterface
 {
+    private PodcastRepositoryInterface $podcastRepository;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        PodcastRepositoryInterface $podcastRepository,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->podcastRepository = $podcastRepository;
+        $this->modelFactory      = $modelFactory;
+    }
+
     /**
      * Update the feed and sync all new episodes
      */
@@ -66,6 +83,40 @@ final class PodcastSyncer implements PodcastSyncerInterface
         $this->addEpisodes($podcast, $xml->channel->item, $podcast->lastsync, $gather);
 
         return true;
+    }
+
+    /**
+     * Sync all podcast-item within the given catalogs
+     *
+     * @param iterable<Catalog> $catalogs
+     *
+     * @return int Amount of new episodes
+     */
+    public function syncForCatalogs(
+        iterable $catalogs
+    ): int {
+        $newEpisodeCount = 0;
+
+        foreach ($catalogs as $catalog) {
+            $podcastIds = $catalog->get_podcast_ids();
+
+            foreach ($podcastIds as $podcastId) {
+                $podcast = $this->modelFactory->createPodcast($podcastId);
+
+                $this->sync($podcast);
+
+                $episodes = $this->podcastRepository->getEpisodes($podcast, PodcastEpisodeStateEnum::PENDING);
+
+                foreach ($episodes as $episodeId) {
+                    $episode = $this->modelFactory->createPodcastEpisode($episodeId);
+                    $episode->gather();
+
+                    $newEpisodeCount++;
+                }
+            }
+        }
+
+        return $newEpisodeCount;
     }
 
     /**

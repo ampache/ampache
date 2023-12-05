@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -32,6 +32,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\PodcastRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -51,14 +52,17 @@ class ShowActionTest extends TestCase
 
     private GuiGatekeeperInterface&MockObject $gatekeeper;
 
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
+
     private ShowAction $subject;
 
     protected function setUp(): void
     {
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->logger          = $this->createMock(LoggerInterface::class);
-        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->ui                = $this->createMock(UiInterface::class);
+        $this->logger            = $this->createMock(LoggerInterface::class);
+        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
+        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
 
         $this->request    = $this->createMock(ServerRequestInterface::class);
         $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
@@ -68,6 +72,7 @@ class ShowActionTest extends TestCase
             $this->ui,
             $this->logger,
             $this->modelFactory,
+            $this->podcastRepository,
         );
     }
 
@@ -150,8 +155,10 @@ class ShowActionTest extends TestCase
         $podcast->expects(static::once())
             ->method('get_fullname')
             ->willReturn($name);
-        $podcast->expects(static::once())
-            ->method('get_episodes')
+
+        $this->podcastRepository->expects(static::once())
+            ->method('getEpisodes')
+            ->with($podcast)
             ->willReturn($episodeList);
 
         $this->ui->expects(static::once())
