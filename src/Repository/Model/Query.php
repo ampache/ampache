@@ -2429,7 +2429,7 @@ class Query
                 } // end switch
                 break;
             case 'video':
-                $sql = $this->sql_sort_video($field);
+                $sql = $this->sql_sort_video($field, $order);
                 break;
             case 'wanted':
                 switch ($field) {
@@ -2523,12 +2523,12 @@ class Query
                         $this->set_join('LEFT', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
                         break;
                     default:
-                        $sql = $this->sql_sort_video($field, 'tvshow_episode');
+                        $sql = $this->sql_sort_video($field, $order, 'tvshow_episode');
                         break;
                 }
                 break;
             case 'movie':
-                $sql = $this->sql_sort_video($field, 'movie');
+                $sql = $this->sql_sort_video($field, $order, 'movie');
                 break;
             case 'clip':
                 switch ($field) {
@@ -2536,7 +2536,7 @@ class Query
                         $sql = "`clip`.`artist`";
                         break;
                     default:
-                        $sql = $this->sql_sort_video($field, 'clip');
+                        $sql = $this->sql_sort_video($field, $order, 'clip');
                         break;
                 }
                 break;
@@ -2546,7 +2546,7 @@ class Query
                         $sql = "`personal_video`.`location`";
                         break;
                     default:
-                        $sql = $this->sql_sort_video($field, 'personal_video');
+                        $sql = $this->sql_sort_video($field, $order, 'personal_video');
                         break;
                 }
                 break;
@@ -2628,9 +2628,10 @@ class Query
     /**
      *
      * @param string $field
+     * @param string $order
      * @param string $table
      */
-    private function sql_sort_video($field, $table = 'video'): string
+    private function sql_sort_video($field, $order, $table = 'video'): string
     {
         $sql = "";
         switch ($field) {
@@ -2650,7 +2651,7 @@ class Query
                 $sql = "`video`.`release_date`";
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $sql = "`rating`.`rating` $order, `rating`.`id`";
                 $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string)$this->user_id, 100);
                 break;
             case 'user_flag':
