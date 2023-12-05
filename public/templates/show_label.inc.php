@@ -39,6 +39,7 @@ use Ampache\Module\Util\Ui;
 
 $browse = new Browse();
 $browse->set_type($object_type);
+$browse->set_use_filters(false);
 // these are usually set so not sure why missing
 $limit_threshold = AmpConfig::get('stats_threshold', 7);
 $argument        = false;

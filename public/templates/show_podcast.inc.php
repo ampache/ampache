@@ -44,6 +44,7 @@ $access75 = Access::check('interface', 75);
 $access50 = ($access75 || Access::check('interface', 50));
 $browse   = new Browse();
 $browse->set_type($object_type);
+$browse->set_use_filters(false);
 
 Ui::show_box_top((string)$podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">

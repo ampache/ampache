@@ -194,6 +194,7 @@ $show_all     = (($current_user->id ?? 0) == $client->id || ($current_user->acce
 $playlist_ids = $client->get_playlists($show_all);
 $browse       = new Browse();
 $browse->set_type('playlist');
+$browse->set_use_filters(false);
 $browse->set_simple_browse(false);
 $browse->show_objects($playlist_ids);
 $browse->store(); ?>
@@ -202,6 +203,7 @@ $browse->store(); ?>
         <div id="following" class="tab_content">
     <?php $browse = new Browse();
     $browse->set_type('user');
+    $browse->set_use_filters(false);
     $browse->set_simple_browse(false);
     $browse->show_objects($following);
     $browse->store(); ?>
@@ -209,6 +211,7 @@ $browse->store(); ?>
         <div id="followers" class="tab_content">
     <?php $browse = new Browse();
     $browse->set_type('user');
+    $browse->set_use_filters(false);
     $browse->set_simple_browse(false);
     $browse->show_objects($followers);
     $browse->store(); ?>

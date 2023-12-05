@@ -160,6 +160,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist
 <?php
     $browse = new Browse();
 $browse->set_type('playlist_media');
+$browse->set_use_filters(false);
 $browse->add_supplemental_object('playlist', $playlist->id);
 $browse->set_static_content(true);
 $browse->duration = Search::get_total_duration($object_ids);

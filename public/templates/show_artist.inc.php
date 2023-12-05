@@ -294,8 +294,8 @@ if ($use_label) { ?>
     foreach ($multi_object_ids as $key => $object_ids) {
         $title  = (!empty($key)) ? ucwords($key) : '';
         $browse = new Browse();
-        $browse->set_use_filters(true);
         $browse->set_type($object_type);
+        $browse->set_use_filters(false);
         if ($is_album_type) {
             $browse->set_sort($sort, $order);
         }

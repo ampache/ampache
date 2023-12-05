@@ -43,6 +43,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
 <?php
 $browse = new Browse();
 $browse->set_type($object_type);
+$browse->set_use_filters(false);
 
 Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); ?>
 <div class="item_right_info">

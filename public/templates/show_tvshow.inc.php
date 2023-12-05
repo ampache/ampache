@@ -42,6 +42,7 @@ use Ampache\Module\Util\Ui;
 $web_path = (string)AmpConfig::get('web_path', '');
 $browse   = new Browse();
 $browse->set_type($object_type);
+$browse->set_use_filters(false);
 
 Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
 <div class="item_right_info">

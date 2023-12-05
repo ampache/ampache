@@ -40,6 +40,7 @@ $title    = ob_get_contents();
 $web_path = (string)AmpConfig::get('web_path', '');
 $browse   = new Browse();
 $browse->set_type('playlist_media');
+$browse->set_use_filters(false);
 $browse->add_supplemental_object('search', $playlist->id);
 $browse->set_static_content(false);
 ob_end_clean();

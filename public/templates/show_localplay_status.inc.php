@@ -66,6 +66,7 @@ if (!empty($status)) {
 <?php }
 $browse = new Browse();
 $browse->set_type('playlist_localplay');
+$browse->set_use_filters(false);
 $browse->set_static_content(true);
 $browse->show_objects($objects);
 $browse->store();
