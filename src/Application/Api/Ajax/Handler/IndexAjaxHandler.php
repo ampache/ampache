@@ -96,7 +96,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'top_tracks':
                 $artist       = new Artist((int)$this->requestParser->getFromRequest('artist'));
                 $object_ids   = $this->songRepository->getTopSongsByArtist($artist, (int)AmpConfig::get('popular_threshold', 10));
-                $browse       = new Browse();
                 $hide_columns = array('cel_artist');
                 ob_start();
                 require_once Ui::find_template('show_top_tracks.inc.php');

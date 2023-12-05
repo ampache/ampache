@@ -34,7 +34,6 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 
-/** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 /** @var array $hide_columns */
 /** @var string $argument_param */
