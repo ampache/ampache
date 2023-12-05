@@ -94,7 +94,6 @@ class ShowAllSongsActionTest extends MockeryTestCase
                     'object_ids' => $songList,
                     'multi_object_ids' => array(),
                     'gatekeeper' => $gatekeeper,
-                    'use_filters' => true
                 ]
             )
             ->once();
