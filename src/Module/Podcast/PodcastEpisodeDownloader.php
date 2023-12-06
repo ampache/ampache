@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Podcast\Exception\PodcastFolderException;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
@@ -73,8 +74,12 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
                     return;
                 }
 
-                $pinfo = pathinfo($episode->source);
-                $file  = $path . DIRECTORY_SEPARATOR . $episode->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', (string)$episode->title) . '-' . strtok($pinfo['basename'], '?');
+                $extension = pathinfo($episode->source, PATHINFO_EXTENSION);
+                // match any characters (except ?) before the first occurrence of ?
+                if (preg_match('/^[^?]+(?=\?)/', $extension, $matches)) {
+                    $extension = $matches[0];
+                }
+                $file = $path . DIRECTORY_SEPARATOR . $episode->pubdate . '-' . (string)$episode->id . '.' . $extension;
             }
 
             if (Core::get_filesize(Core::conv_lc_file($file)) == 0) {
@@ -85,22 +90,56 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
-                $handle = fopen($episode->source, 'r');
-                if ($handle && file_put_contents($file, $handle)) {
-                    $this->logger->debug(
-                        'Download completed',
-                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                // try to use curl for feeds that redirect a lot or have other checks
+                $curl       = curl_init($episode->source);
+                $filehandle = fopen($file, 'w');
+                if ($curl && $filehandle) {
+                    $options    = array(
+                        CURLOPT_FILE => $filehandle,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_USERAGENT => 'Ampache/' . AmpConfig::get('version'),
+                        CURLOPT_REFERER => $episode->source,
                     );
+                    curl_setopt_array(
+                        $curl,
+                        $options
+                    );
+
+                    $result = curl_exec($curl);
+                    if ($result === false) {
+                        $this->logger->debug(
+                            'Download error: ' . curl_error($curl),
+                            [LegacyLogger::CONTEXT_TYPE => self::class]
+                        );
+                    } else {
+                        // Download completed successfully
+                        $this->logger->debug(
+                            'Download completed',
+                            [LegacyLogger::CONTEXT_TYPE => self::class]
+                        );
+                    }
+
+                    curl_close($curl);
+                    fclose($filehandle);
+                } else {
+                    // fall back to fopen
+                    $handle = fopen($episode->source, 'r');
+                    if ($handle && file_put_contents($file, $handle)) {
+                        $this->logger->debug(
+                            'Download completed',
+                            [LegacyLogger::CONTEXT_TYPE => self::class]
+                        );
+                    }
                 }
             }
-
+            // the file exists now so get/update file details in the DB
             if ($file !== null && Core::get_filesize(Core::conv_lc_file($file)) > 0) {
-                // the file exists so get/update file details in the DB
                 $this->logger->debug(
                     sprintf('Updating details %s...', $file),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
+                // file is null until it's downloaded
                 if (empty($episode->file)) {
                     $episode->file = $file;
                     Podcast_Episode::update_file($file, $episode->id);
