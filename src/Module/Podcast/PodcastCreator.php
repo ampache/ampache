@@ -29,6 +29,7 @@ use Ampache\Module\Podcast\Exception\FeedNotLoadableException;
 use Ampache\Module\Podcast\Exception\InvalidCatalogException;
 use Ampache\Module\Podcast\Exception\InvalidFeedUrlException;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
+use Ampache\Module\Podcast\Exception\PodcastFolderException;
 use Ampache\Module\Podcast\Feed\Exception\FeedLoadingException;
 use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
 use Ampache\Module\System\LegacyLogger;
@@ -51,16 +52,20 @@ final class PodcastCreator implements PodcastCreatorInterface
 
     private PodcastSyncerInterface $podcastSyncer;
 
+    private PodcastFolderProviderInterface $podcastFolderProvider;
+
     public function __construct(
         FeedLoaderInterface $feedLoader,
         PodcastRepositoryInterface $podcastRepository,
         PodcastSyncerInterface $podcastSyncer,
+        PodcastFolderProviderInterface $podcastFolderProvider,
         LoggerInterface $logger
     ) {
-        $this->feedLoader        = $feedLoader;
-        $this->podcastRepository = $podcastRepository;
-        $this->podcastSyncer     = $podcastSyncer;
-        $this->logger            = $logger;
+        $this->feedLoader            = $feedLoader;
+        $this->podcastRepository     = $podcastRepository;
+        $this->podcastSyncer         = $podcastSyncer;
+        $this->podcastFolderProvider = $podcastFolderProvider;
+        $this->logger                = $logger;
     }
 
     /**
@@ -106,16 +111,15 @@ final class PodcastCreator implements PodcastCreatorInterface
             $feed
         );
 
-        $dirpath = $podcast->get_root_path();
-        if (!is_dir($dirpath)) {
-            if (mkdir($dirpath) === false) {
-                $this->logger->critical(
-                    'Cannot create directory ' . $dirpath,
-                    [
-                        LegacyLogger::CONTEXT_TYPE => self::class
-                    ]
-                );
-            }
+        try {
+            $this->podcastFolderProvider->getBaseFolder($podcast);
+        } catch (PodcastFolderException $e) {
+            $this->logger->critical(
+                $e->getMessage(),
+                [
+                    LegacyLogger::CONTEXT_TYPE => self::class
+                ]
+            );
         }
 
         $artUrl = (string) $feed['artUrl'];

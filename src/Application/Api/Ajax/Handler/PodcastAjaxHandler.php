@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
@@ -38,12 +39,16 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
 
     private PodcastSyncerInterface $podcastSyncer;
 
+    private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader;
+
     public function __construct(
         RequestParserInterface $requestParser,
-        PodcastSyncerInterface $podcastSyncer
+        PodcastSyncerInterface $podcastSyncer,
+        PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader
     ) {
-        $this->requestParser = $requestParser;
-        $this->podcastSyncer = $podcastSyncer;
+        $this->requestParser            = $requestParser;
+        $this->podcastSyncer            = $podcastSyncer;
+        $this->podcastEpisodeDownloader = $podcastEpisodeDownloader;
     }
 
     public function handle(): void
@@ -72,7 +77,7 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
                     if (!isset($episode->id)) {
                         debug_event('podcast.ajax', 'Cannot find podcast episode', 1);
                     } else {
-                        $episode->gather();
+                        $this->podcastEpisodeDownloader->fetch($episode);
                     }
                 }
         }

@@ -20,20 +20,21 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Module\Podcast;
 
-use Ampache\Module\Podcast\Feed\FeedLoader;
-use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
+use Ampache\Module\Podcast\Exception\PodcastFolderException;
+use Ampache\Repository\Model\Podcast;
 
-use function DI\autowire;
-
-return [
-    PodcastSyncerInterface::class => autowire(PodcastSyncer::class),
-    PodcastCreatorInterface::class => autowire(PodcastCreator::class),
-    FeedLoaderInterface::class => autowire(FeedLoader::class),
-    PodcastFolderProviderInterface::class => autowire(PodcastFolderProvider::class),
-    PodcastEpisodeDownloaderInterface::class => autowire(PodcastEpisodeDownloader::class),
-];
+interface PodcastFolderProviderInterface
+{
+    /**
+     * Returns the podcasts base folder
+     *
+     * If the folder does not exist yet, it will be created
+     *
+     * @throws PodcastFolderException
+     */
+    public function getBaseFolder(Podcast $podcast): string;
+}

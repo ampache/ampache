@@ -44,12 +44,16 @@ final class PodcastSyncer implements PodcastSyncerInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader;
+
     public function __construct(
         PodcastRepositoryInterface $podcastRepository,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader
     ) {
-        $this->podcastRepository = $podcastRepository;
-        $this->modelFactory      = $modelFactory;
+        $this->podcastRepository        = $podcastRepository;
+        $this->modelFactory             = $modelFactory;
+        $this->podcastEpisodeDownloader = $podcastEpisodeDownloader;
     }
 
     /**
@@ -108,8 +112,9 @@ final class PodcastSyncer implements PodcastSyncerInterface
                 $episodes = $this->podcastRepository->getEpisodes($podcast, PodcastEpisodeStateEnum::PENDING);
 
                 foreach ($episodes as $episodeId) {
-                    $episode = $this->modelFactory->createPodcastEpisode($episodeId);
-                    $episode->gather();
+                    $this->podcastEpisodeDownloader->fetch(
+                        $this->modelFactory->createPodcastEpisode($episodeId)
+                    );
 
                     $newEpisodeCount++;
                 }
@@ -149,7 +154,8 @@ final class PodcastSyncer implements PodcastSyncerInterface
                 $episode = new Podcast_Episode($row[0]);
                 $episode->change_state('pending');
                 if ($gather) {
-                    $episode->gather();
+                    $this->podcastEpisodeDownloader->fetch($episode);
+
                     $change++;
                 }
             }
