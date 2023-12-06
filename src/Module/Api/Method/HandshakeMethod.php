@@ -80,7 +80,7 @@ final class HandshakeMethod
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int)($version) < Api::$auth_version && $data_version !== 6) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
-            AmpError::add('api', T_('Login failed, API version is too old'));
+            Api::error(T_('Received Invalid Handshake'), ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'version', $input['api_format']);
 
             return false;
         }
