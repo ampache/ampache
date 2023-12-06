@@ -254,16 +254,16 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $time             = $results['time'] ?? 0;
         $track            = Catalog::check_track((string) $results['track']);
         $track_mbid       = $results['mb_trackid'] ?? $results['mbid'] ?? null;
-        $album_mbid       = $results['mb_albumid'];
-        $album_mbid_group = $results['mb_albumid_group'];
-        $artist_mbid      = $results['mb_artistid'];
-        $albumartist_mbid = $results['mb_albumartistid'];
+        $album_mbid       = $results['mb_albumid'] ?? null;
+        $album_mbid_group = $results['mb_albumid_group'] ?? null;
+        $artist_mbid      = $results['mb_artistid'] ?? null;
+        $albumartist_mbid = $results['mb_albumartistid'] ?? null;
         $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $disksubtitle     = $results['disksubtitle'] ?? null;
         $year             = Catalog::normalize_year($results['year'] ?? 0);
         $comment          = $results['comment'];
-        $tags             = $results['genre']; // multiple genre support makes this an array
-        $lyrics           = $results['lyrics'];
+        $tags             = $results['genre'] ?? array(); // multiple genre support makes this an array
+        $lyrics           = $results['lyrics'] ?? null;
         $user_upload      = $results['user_upload'] ?? null;
         $composer         = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
         $label            = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
@@ -300,9 +300,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $r128_track_gain       = $results['r128_track_gain'] ?? null;
         $r128_album_gain       = $results['r128_album_gain'] ?? null;
         $original_year         = Catalog::normalize_year($results['original_year'] ?? 0);
-        $barcode               = Catalog::check_length($results['barcode'], 64);
+        $barcode               = (isset($results['barcode'])) ? Catalog::check_length($results['barcode'], 64) : null;
         $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
-        $version               = Catalog::check_length($results['version'], 64);
+        $version               = (isset($results['version'])) ? Catalog::check_length($results['version'], 64) : null;
 
         if (!in_array($mode, ['vbr', 'cbr', 'abr'])) {
             debug_event(self::class, 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
