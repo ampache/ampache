@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Podcast\Exception\PodcastFolderException;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
@@ -35,14 +35,18 @@ use Psr\Log\LoggerInterface;
 
 final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterface
 {
+    private ConfigContainerInterface $configContainer;
+
     private PodcastFolderProviderInterface $podcastFolderProvider;
 
     private LoggerInterface $logger;
 
     public function __construct(
+        ConfigContainerInterface $configContainer,
         PodcastFolderProviderInterface $podcastFolderProvider,
         LoggerInterface $logger
     ) {
+        $this->configContainer       = $configContainer;
         $this->podcastFolderProvider = $podcastFolderProvider;
         $this->logger                = $logger;
     }
@@ -99,7 +103,7 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
                         array(
                             CURLOPT_FILE => $filehandle,
                             CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_USERAGENT => 'Ampache/' . AmpConfig::get('version'),
+                            CURLOPT_USERAGENT => 'Ampache/' . $this->configContainer->get('version'),
                             CURLOPT_REFERER => $episode->source,
                         )
                     );
