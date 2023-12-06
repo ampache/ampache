@@ -32,6 +32,7 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
@@ -2174,7 +2175,7 @@ class Subsonic_Api
             if (!isset($episode->id)) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'downloadpodcastepisode');
             } else {
-                $episode->gather();
+                self::getPodcastEpisodeDownloader()->fetch($episode);
                 $response = Subsonic_Xml_Data::addSubsonicResponse('downloadpodcastepisode');
             }
         } else {
@@ -3128,5 +3129,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PodcastCreatorInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastEpisodeDownloader(): PodcastEpisodeDownloaderInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeDownloaderInterface::class);
     }
 }

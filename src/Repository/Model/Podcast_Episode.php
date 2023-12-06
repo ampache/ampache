@@ -502,7 +502,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * update_file
      * sets the file path
      */
-    private static function update_file(string $path, int $id): void
+    public static function update_file(string $path, int $id): void
     {
         self::_update_item('file', $path, $id);
     }
@@ -635,55 +635,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $sql = "UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?";
 
         Dba::write($sql, array($state, $this->id));
-    }
-
-    /**
-     * gather
-     * download the podcast episode to your catalog
-     */
-    public function gather(): bool
-    {
-        if (!empty($this->source)) {
-            // existing file (completed)
-            $file = $this->file;
-            if (empty($file)) {
-                // new file (pending)
-                $podcast = new Podcast($this->podcast);
-                $path    = $podcast->get_root_path();
-                if (empty($path)) {
-                    debug_event(self::class, 'get_root_path: Check your catalog directory and permissions', 1);
-
-                    return false;
-                }
-                $pinfo = pathinfo($this->source);
-                $file  = $path . DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', (string)$this->title) . '-' . strtok($pinfo['basename'], '?');
-            }
-            if (Core::get_filesize(Core::conv_lc_file($file)) == 0) {
-                // the file doesn't exist locally so download it
-                debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
-                $handle = fopen($this->source, 'r');
-                if ($handle && file_put_contents($file, $handle)) {
-                    debug_event(self::class, 'Download completed.', 4);
-                }
-            }
-            if ($file !== null && Core::get_filesize(Core::conv_lc_file($file)) > 0) {
-                // the file exists so get/update file details in the DB
-                debug_event(self::class, 'Updating details ' . $file . ' ...', 4);
-                if (empty($this->file)) {
-                    $this->file = $file;
-                    self::update_file($file, $this->id);
-                }
-                Catalog::update_media_from_tags($this);
-
-                return true;
-            }
-            debug_event(self::class, 'Error when downloading podcast episode.', 1);
-
-            return false;
-        }
-        debug_event(self::class, 'Cannot download podcast episode ' . $this->id . ', empty source.', 3);
-
-        return false;
     }
 
     /**

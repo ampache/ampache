@@ -42,6 +42,8 @@ class PodcastCreatorTest extends TestCase
 
     private PodcastSyncerInterface&MockObject $podcastSyncer;
 
+    private PodcastFolderProviderInterface&MockObject $podcastFolderProvider;
+
     private LoggerInterface&MockObject $logger;
 
     private PodcastCreator $subject;
@@ -50,15 +52,17 @@ class PodcastCreatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->feedLoader        = $this->createMock(FeedLoaderInterface::class);
-        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
-        $this->podcastSyncer     = $this->createMock(PodcastSyncerInterface::class);
-        $this->logger            = $this->createMock(LoggerInterface::class);
+        $this->feedLoader            = $this->createMock(FeedLoaderInterface::class);
+        $this->podcastRepository     = $this->createMock(PodcastRepositoryInterface::class);
+        $this->podcastSyncer         = $this->createMock(PodcastSyncerInterface::class);
+        $this->podcastFolderProvider = $this->createMock(PodcastFolderProviderInterface::class);
+        $this->logger                = $this->createMock(LoggerInterface::class);
 
         $this->subject = new PodcastCreator(
             $this->feedLoader,
             $this->podcastRepository,
             $this->podcastSyncer,
+            $this->podcastFolderProvider,
             $this->logger,
         );
 
