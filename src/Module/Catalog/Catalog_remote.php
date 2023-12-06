@@ -24,12 +24,11 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
@@ -231,13 +230,16 @@ class Catalog_remote extends Catalog
     public function connect()
     {
         try {
-            $remote_handle = new AmpacheApi\AmpacheApi(array(
-                'username' => $this->username,
-                'password' => $this->password,
-                'server' => $this->uri,
-                'debug_callback' => 'debug_event',
-                'api_secure' => (substr($this->uri, 0, 8) == 'https://')
-            ));
+            $remote_handle = new AmpacheApi\AmpacheApi(
+                array(
+                    'username' => $this->username,
+                    'password' => $this->password,
+                    'server' => $this->uri,
+                    'debug_callback' => 'debug_event',
+                    'api_secure' => (substr($this->uri, 0, 8) == 'https://'),
+                    'server_version' => Api::DEFAULT_VERSION
+                )
+            );
         } catch (Exception $error) {
             debug_event('remote.catalog', 'Connection error: ' . $error->getMessage(), 1);
             if (defined('SSE_OUTPUT') || defined('API')) {
