@@ -452,15 +452,17 @@ class Catalog_subsonic extends Catalog
                 } else {
                     try {
                         $filehandle = fopen($target_file, 'w');
-                        $options    = array(
-                            CURLOPT_RETURNTRANSFER => 1,
-                            CURLOPT_FILE => $filehandle,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_PIPEWAIT => 1,
-                            CURLOPT_URL => $remote_url,
+                        $curl       = curl_init();
+                        curl_setopt_array(
+                            $curl,
+                            array(
+                                CURLOPT_RETURNTRANSFER => 1,
+                                CURLOPT_FILE => $filehandle,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_PIPEWAIT => 1,
+                                CURLOPT_URL => $remote_url,
+                            )
                         );
-                        $curl = curl_init();
-                        curl_setopt_array($curl, $options);
                         curl_exec($curl);
                         curl_close($curl);
                         fclose($filehandle);

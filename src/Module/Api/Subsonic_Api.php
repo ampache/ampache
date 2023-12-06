@@ -210,20 +210,29 @@ class Subsonic_Api
             debug_event(self::class, 'Stream proxy: ' . $url, 5);
             $curl = curl_init($url);
             if ($curl) {
-                curl_setopt_array($curl, array(
-                    CURLOPT_FAILONERROR => true,
-                    CURLOPT_HTTPHEADER => $reqheaders,
-                    CURLOPT_HEADER => false,
-                    CURLOPT_RETURNTRANSFER => false,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_WRITEFUNCTION => array('Ampache\Module\Api\Subsonic_Api', '_output_body'),
-                    CURLOPT_HEADERFUNCTION => array('Ampache\Module\Api\Subsonic_Api', '_output_header'),
-                    // Ignore invalid certificate
-                    // Default trusted chain is crap anyway and currently no custom CA option
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_SSL_VERIFYHOST => false,
-                    CURLOPT_TIMEOUT => 0
-                ));
+                curl_setopt_array(
+                    $curl,
+                    array(
+                        CURLOPT_FAILONERROR => true,
+                        CURLOPT_HTTPHEADER => $reqheaders,
+                        CURLOPT_HEADER => false,
+                        CURLOPT_RETURNTRANSFER => false,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_WRITEFUNCTION => array(
+                            'Ampache\Module\Api\Subsonic_Api',
+                            '_output_body'
+                        ),
+                        CURLOPT_HEADERFUNCTION => array(
+                            'Ampache\Module\Api\Subsonic_Api',
+                            '_output_header'
+                        ),
+                        // Ignore invalid certificate
+                        // Default trusted chain is crap anyway and currently no custom CA option
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_TIMEOUT => 0
+                    )
+                );
                 if (curl_exec($curl) === false) {
                     debug_event(self::class, 'Stream error: ' . curl_error($curl), 1);
                 }

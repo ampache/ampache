@@ -124,20 +124,20 @@ class SubsonicClient
     {
         // Make sure the command is in the list of commands
         if ($this->isCommand($action)) {
-            $url = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $object);
-
-            $options = array(
-                CURLOPT_URL => $url,
-                CURLOPT_HEADER => 0,
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_CONNECTTIMEOUT => 8,
-                CURLOPT_SSL_VERIFYPEER => 0,
-                CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_PORT => (int)($this->_serverPort)
-            );
-            $curl = curl_init();
+            $url  = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $object);
+            $curl = curl_init($url);
             if ($curl) {
-                curl_setopt_array($curl, $options);
+                curl_setopt_array(
+                    $curl,
+                    array(
+                        CURLOPT_HEADER => 0,
+                        CURLOPT_RETURNTRANSFER => 1,
+                        CURLOPT_CONNECTTIMEOUT => 8,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_PORT => (int)($this->_serverPort)
+                    )
+                );
                 $answer = curl_exec($curl);
                 curl_close($curl);
                 if ($rawAnswer) {

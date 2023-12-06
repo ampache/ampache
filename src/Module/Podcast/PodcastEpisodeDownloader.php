@@ -94,15 +94,14 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
                 $curl       = curl_init($episode->source);
                 $filehandle = fopen($file, 'w');
                 if ($curl && $filehandle) {
-                    $options    = array(
-                        CURLOPT_FILE => $filehandle,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_USERAGENT => 'Ampache/' . AmpConfig::get('version'),
-                        CURLOPT_REFERER => $episode->source,
-                    );
                     curl_setopt_array(
                         $curl,
-                        $options
+                        array(
+                            CURLOPT_FILE => $filehandle,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_USERAGENT => 'Ampache/' . AmpConfig::get('version'),
+                            CURLOPT_REFERER => $episode->source,
+                        )
                     );
 
                     $result = curl_exec($curl);
