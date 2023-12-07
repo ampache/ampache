@@ -3428,12 +3428,15 @@ abstract class Catalog extends database_object
      * Split items by configurable delimiter
      * Return first item as string = default
      * Return all items as array if doTrim = false passed as optional parameter
-     * @param string $string
+     * @param string|null $string
      * @param bool $doTrim
      * @return string|array
      */
     public static function trim_slashed_list($string, $doTrim = true)
     {
+        if ($string === null) {
+            return null;
+        }
         $delimiters = static::getConfigContainer()->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         $pattern    = '~[\s]?(' . $delimiters . ')[\s]?~';
         $items      = preg_split($pattern, $string);
