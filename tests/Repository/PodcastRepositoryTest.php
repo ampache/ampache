@@ -32,6 +32,7 @@ use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -55,7 +56,7 @@ class PodcastRepositoryTest extends TestCase
         $this->subject = new PodcastRepository(
             $this->modelFactory,
             $this->connection,
-            $this->configContainer
+            $this->configContainer,
         );
     }
 
@@ -68,13 +69,13 @@ class PodcastRepositoryTest extends TestCase
             ->with(
                 'SELECT `id` FROM `podcast` WHERE `feed`= ?',
                 [
-                    $feedUrl
-                ]
+                    $feedUrl,
+                ],
             )
             ->willReturn(false);
 
         static::assertNull(
-            $this->subject->findByFeedUrl($feedUrl)
+            $this->subject->findByFeedUrl($feedUrl),
         );
     }
 
@@ -90,8 +91,8 @@ class PodcastRepositoryTest extends TestCase
             ->with(
                 'SELECT `id` FROM `podcast` WHERE `feed`= ?',
                 [
-                    $feedUrl
-                ]
+                    $feedUrl,
+                ],
             )
             ->willReturn((string) $podcastId);
 
@@ -102,7 +103,7 @@ class PodcastRepositoryTest extends TestCase
 
         static::assertSame(
             $podcast,
-            $this->subject->findByFeedUrl($feedUrl)
+            $this->subject->findByFeedUrl($feedUrl),
         );
     }
 
@@ -151,8 +152,8 @@ class PodcastRepositoryTest extends TestCase
                     $language,
                     $copyright,
                     $generator,
-                    $lastBuildDate
-                ]
+                    $lastBuildDate,
+                ],
             );
         $this->connection->expects(static::once())
             ->method('getLastInsertedId')
@@ -180,8 +181,8 @@ class PodcastRepositoryTest extends TestCase
                     'copyright' => $copyright,
                     'generator' => $generator,
                     'lastBuildDate' => $lastBuildDate,
-                ]
-            )
+                ],
+            ),
         );
     }
 
@@ -202,7 +203,7 @@ class PodcastRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` WHERE `podcast_episode`.`podcast`= ? AND `catalog`.`enabled` = \'1\' ORDER BY `podcast_episode`.`pubdate` DESC',
-                [$podcastId]
+                [$podcastId],
             )
             ->willReturn($result);
 
@@ -216,7 +217,7 @@ class PodcastRepositoryTest extends TestCase
 
         static::assertSame(
             [$episodeId],
-            $this->subject->getEpisodes($podcast)
+            $this->subject->getEpisodes($podcast),
         );
     }
 
@@ -238,7 +239,7 @@ class PodcastRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast`= ? AND `podcast_episode`.`state` = ? ORDER BY `podcast_episode`.`pubdate` DESC',
-                [$podcastId, $stateFilter]
+                [$podcastId, $stateFilter],
             )
             ->willReturn($result);
 
@@ -252,7 +253,60 @@ class PodcastRepositoryTest extends TestCase
 
         static::assertSame(
             [$episodeId],
-            $this->subject->getEpisodes($podcast, $stateFilter)
+            $this->subject->getEpisodes($podcast, $stateFilter),
+        );
+    }
+
+    public function testGetDeletedEpisodesReturnsData(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $id           = 666;
+        $additionTime = 123;
+        $deleteTime   = 456;
+        $title        = 'some-title';
+        $file         = 'some-file';
+        $catalog      = 789;
+        $totalCount   = 111;
+        $totalSkip    = 222;
+        $podcast      = 333;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT * FROM `deleted_podcast_episode`')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(
+                [
+                    'id' => (string) $id,
+                    'addition_time' => (string) $additionTime,
+                    'delete_time' => (string) $deleteTime,
+                    'title' => $title,
+                    'file' => $file,
+                    'catalog' => (string) $catalog,
+                    'total_count' => (string) $totalCount,
+                    'total_skip' => (string) $totalSkip,
+                    'podcast' => (string) $podcast,
+                ],
+                false
+            );
+
+        static::assertSame(
+            [[
+                'id' => $id,
+                'addition_time' => $additionTime,
+                'delete_time' => $deleteTime,
+                'title' => $title,
+                'file' => $file,
+                'catalog' => $catalog,
+                'total_count' => $totalCount,
+                'total_skip' => $totalSkip,
+                'podcast' => $podcast,
+            ]],
+            $this->subject->getDeletedEpisodes()
         );
     }
 }
