@@ -261,7 +261,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $disksubtitle     = $results['disksubtitle'] ?? null;
         $year             = Catalog::normalize_year($results['year'] ?? 0);
-        $comment          = $results['comment'];
+        $comment          = $results['comment'] ?? null;
         $tags             = $results['genre'] ?? array(); // multiple genre support makes this an array
         $lyrics           = $results['lyrics'] ?? null;
         $user_upload      = $results['user_upload'] ?? null;
