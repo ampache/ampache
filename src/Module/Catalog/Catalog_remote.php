@@ -513,7 +513,9 @@ class Catalog_remote extends Catalog
     public function check_remote_song($song_url)
     {
         $url = preg_replace('/ssid=.*&/', '', $song_url);
-
+        if (!$url) {
+            return false;
+        }
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, array($url));
 
