@@ -285,9 +285,14 @@ abstract class Catalog extends database_object
 
     /**
      * @param Song|Podcast_Episode|Video $media
-     * @return Song|Podcast_Episode|Video|null
+     * @return null|array{
+     *  file_path: string,
+     *  file_name: string,
+     *  file_size: int,
+     *  file_type: string
+     * }
      */
-    abstract public function prepare_media($media);
+    abstract public function prepare_media($media): ?array;
 
     public function getId(): int
     {
