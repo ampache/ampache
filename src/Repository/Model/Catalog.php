@@ -2422,11 +2422,11 @@ abstract class Catalog extends database_object
         }
 
         // retrieve the file if needed
-        $media = $catalog->prepare_media($media);
+        $streamConfiguration = $catalog->prepare_media($media);
 
         /** @var Song|Podcast_Episode|Video $media */
-        if ($media->file === null || Core::get_filesize(Core::conv_lc_file($media->file)) == 0) {
-            debug_event(__CLASS__, 'update_media_from_tags: Error loading file ' . $media->file, 2);
+        if ($streamConfiguration['file_path'] === null || Core::get_filesize(Core::conv_lc_file($streamConfiguration['file_path'])) == 0) {
+            debug_event(__CLASS__, 'update_media_from_tags: Error loading file ' . $streamConfiguration['file_path'], 2);
             $array['error'] = true;
 
             return $array;
@@ -2446,16 +2446,16 @@ abstract class Catalog extends database_object
         ];
 
         $update = array();
-        if ($media->file !== null) {
+        if ($streamConfiguration['file_path'] !== null) {
             $callable = $functions[$type];
             // try and get the tags from your file
-            debug_event(__CLASS__, 'Reading tags from ' . $media->file, 4);
-            $extension = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
+            debug_event(__CLASS__, 'Reading tags from ' . $streamConfiguration['file_path'], 4);
+            $extension = strtolower(pathinfo($streamConfiguration['file_path'], PATHINFO_EXTENSION));
             $results   = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
             // for files without tags try to update from their file name instead
             if ($media->id && in_array($extension, array('wav', 'shn'))) {
                 // match against your catalog 'Filename Pattern' and 'Folder Pattern'
-                $patres  = VaInfo::parse_pattern($media->file, $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
+                $patres  = VaInfo::parse_pattern($streamConfiguration['file_path'], $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
                 $results = array_merge($results, $patres);
             }
             /** @var array $update */
@@ -2463,7 +2463,7 @@ abstract class Catalog extends database_object
         }
         // remote catalogs should unlink the temp files if needed //TODO add other types of remote catalog
         if ($catalog instanceof Catalog_Seafile) {
-            $catalog->clean_tmp_file($media->file);
+            $catalog->clean_tmp_file($streamConfiguration['file_path']);
         }
 
         return $update;
