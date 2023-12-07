@@ -237,6 +237,7 @@ class Catalog_remote extends Catalog
                     'server' => $this->uri,
                     'debug_callback' => 'debug_event',
                     'api_secure' => (substr($this->uri, 0, 8) == 'https://'),
+                    'api_format' => 'xml',
                     'server_version' => Api::DEFAULT_VERSION
                 )
             );
@@ -277,6 +278,8 @@ class Catalog_remote extends Catalog
 
         $remote_handle = $this->connect();
         if (!$remote_handle) {
+            debug_event('remote.catalog', 'connection error', 1);
+
             return 0;
         }
 
@@ -286,13 +289,13 @@ class Catalog_remote extends Catalog
         Ui::update_text(
             T_("Remote Catalog Updated"),
             /* HINT: count of songs found*/
-            sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']), $remote_catalog_info['songs'])
+            sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info->songs), $remote_catalog_info->songs)
         );
 
         // Hardcoded for now
         $step       = 500;
         $current    = 0;
-        $total      = $remote_catalog_info['songs'];
+        $total      = $remote_catalog_info->songs;
         $songsadded = 0;
 
         while ($total > $current) {
@@ -301,16 +304,52 @@ class Catalog_remote extends Catalog
             try {
                 $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
                 // Iterate over the songs we retrieved and insert them
-                foreach ($songs as $data) {
-                    if ($this->check_remote_song($data['song'])) {
-                        debug_event('remote.catalog', 'Skipping existing song ' . $data['song']['url'], 5);
+                foreach ($songs as $song) {
+                    if (!$song->url) {
+                        continue;
+                    }
+                    if ($this->check_remote_song($song->url)) {
+                        debug_event('remote.catalog', 'Skipping existing song ' . $song->url, 5);
                     } else {
-                        $data['song']['catalog'] = $this->catalog_id;
-                        $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
-                        if (!Song::insert($data['song'])) {
-                            debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
+                        $genres = array();
+                        foreach ($song->genre as $genre) {
+                            $genres[] = $genre->name;
+                        }
+                        $data = array(
+                            'albumartist' => $song->albumartist->name,
+                            'album' => $song->album->name,
+                            'artist' => $song->artist->name,
+                            'artists' => null,
+                            'bitrate' => $song->bitrate ?? null,
+                            'catalog' => $this->catalog_id,
+                            'channels' => $song->channels ?? null,
+                            'composer' => $song->composer ?? null,
+                            'comment' => null,
+                            'disk' => $song->disk ?? null,
+                            'file' => preg_replace('/ssid=.*?&/', '', $song->url),
+                            'genre' => $song->genre,
+                            'mb_trackid' => $song->mbid ?? null,
+                            'mime' => $song->mime ?? null,
+                            'mode' => $song->mode ?? null,
+                            'publisher' => $song->publisher ?? null,
+                            'r128_album_gain' => null,
+                            'r128_track_gain' => null,
+                            'rate' => $song->bitrate ?? null,
+                            'replaygain_album_gain' => null,
+                            'replaygain_album_peak' => null,
+                            'replaygain_track_gain' => null,
+                            'replaygain_track_peak' => null,
+                            'size' => $song->size ?? null,
+                            'time' => $song->time ?? null,
+                            'title' => $song->title ?? null,
+                            'track' => $song->track ?? null,
+                            'year' => $song->year ?? null
+                        );
+                        //debug_event('remote.catalog', 'DATA ' . print_r($data, true), 1);
+                        if (!Song::insert($data)) {
+                            debug_event('remote.catalog', 'Insert failed for ' . $song->url, 1);
                             /* HINT: Song Title */
-                            AmpError::add('general', T_('Unable to insert song - %s'), $data['song']['title']);
+                            AmpError::add('general', T_('Unable to insert song - %s'), $song->title);
                             echo AmpError::display('general');
                             flush();
                         } else {
@@ -432,7 +471,7 @@ class Catalog_remote extends Catalog
         $db_results = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $row['extension'];
-            $remote_url  = $row['file'] . '&ssid=' . $handshake['auth'] . '&format=' . $target . '&bitrate=' . $max_bitrate;
+            $remote_url  = $row['file'] . '&ssid=' . $handshake->auth . '&format=' . $target . '&bitrate=' . $max_bitrate;
             if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
                 debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
                 try {
@@ -468,12 +507,12 @@ class Catalog_remote extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
-     * @param array $song
+     * @param string $song_url
      * @return int|bool
      */
-    public function check_remote_song($song)
+    public function check_remote_song($song_url)
     {
-        $url = preg_replace('/ssid=.*&/', '', $song['url']);
+        $url = preg_replace('/ssid=.*&/', '', $song_url);
 
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, array($url));
@@ -535,6 +574,6 @@ class Catalog_remote extends Catalog
 
         $handshake = $remote_handle->info();
 
-        return $media->file . '&ssid=' . $handshake['auth'];
+        return $media->file . '&ssid=' . $handshake->auth;
     }
 }
