@@ -2425,7 +2425,13 @@ abstract class Catalog extends database_object
         $streamConfiguration = $catalog->prepare_media($media);
 
         /** @var Song|Podcast_Episode|Video $media */
-        if ($streamConfiguration['file_path'] === null || Core::get_filesize(Core::conv_lc_file($streamConfiguration['file_path'])) == 0) {
+        if ($streamConfiguration === null) {
+            $array['error'] = true;
+
+            return $array;
+        }
+        /** @var Song|Podcast_Episode|Video $media */
+        if (empty($streamConfiguration['file_path']) || Core::get_filesize(Core::conv_lc_file($streamConfiguration['file_path'])) == 0) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading file ' . $streamConfiguration['file_path'], 2);
             $array['error'] = true;
 
@@ -2445,22 +2451,19 @@ abstract class Catalog extends database_object
             },
         ];
 
-        $update = array();
-        if ($streamConfiguration['file_path'] !== null) {
-            $callable = $functions[$type];
-            // try and get the tags from your file
-            debug_event(__CLASS__, 'Reading tags from ' . $streamConfiguration['file_path'], 4);
-            $extension = strtolower(pathinfo($streamConfiguration['file_path'], PATHINFO_EXTENSION));
-            $results   = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
-            // for files without tags try to update from their file name instead
-            if ($media->id && in_array($extension, array('wav', 'shn'))) {
-                // match against your catalog 'Filename Pattern' and 'Folder Pattern'
-                $patres  = VaInfo::parse_pattern($streamConfiguration['file_path'], $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
-                $results = array_merge($results, $patres);
-            }
-            /** @var array $update */
-            $update = $callable($results, $media);
+        $callable = $functions[$type];
+        // try and get the tags from your file
+        debug_event(__CLASS__, 'Reading tags from ' . $streamConfiguration['file_path'], 4);
+        $extension = strtolower(pathinfo($streamConfiguration['file_path'], PATHINFO_EXTENSION));
+        $results   = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
+        // for files without tags try to update from their file name instead
+        if ($media->id && in_array($extension, array('wav', 'shn'))) {
+            // match against your catalog 'Filename Pattern' and 'Folder Pattern'
+            $patres  = VaInfo::parse_pattern($streamConfiguration['file_path'], $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
+            $results = array_merge($results, $patres);
         }
+        /** @var array $update */
+        $update = $callable($results, $media);
         // remote catalogs should unlink the temp files if needed //TODO add other types of remote catalog
         if ($catalog instanceof Catalog_Seafile) {
             $catalog->clean_tmp_file($streamConfiguration['file_path']);
@@ -3439,13 +3442,13 @@ abstract class Catalog extends database_object
      */
     public static function trim_slashed_list($string, $doTrim = true)
     {
-        if ($string === null) {
-            return null;
-        }
         $delimiters = static::getConfigContainer()->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         $pattern    = '~[\s]?(' . $delimiters . ')[\s]?~';
-        $items      = preg_split($pattern, $string);
-        $items      = array_map('trim', $items);
+        $items      = preg_split($pattern, (string)$string);
+        if (!$items) {
+            return (string)$string;
+        }
+        $items = array_map('trim', $items);
 
         if (isset($items[0]) && $doTrim) {
             return $items[0];
@@ -3462,7 +3465,11 @@ abstract class Catalog extends database_object
      */
     public static function trim_featuring($string)
     {
-        return array_map('trim', preg_split("/ feat\. /i", $string));
+        $items = preg_split("/ feat\. /i", $string);
+        if (!$items) {
+            return array($string);
+        }
+        return array_map('trim', $items);
     }
 
     /**
