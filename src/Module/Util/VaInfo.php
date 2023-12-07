@@ -528,19 +528,24 @@ final class VaInfo implements VaInfoInterface
             'getid3_tag_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
-        $order = array_map('strtolower', $tagorderMap[$configKey] ?? []);
+
+        $order = array();
+        foreach ($tagorderMap[$configKey] ?? [] as $source) {
+            //debug_event(__CLASS__, "source: " . $source, true, 5);
+            $order[] = strtolower($source);
+        }
 
         // Iterate through the defined key order adding them to an ordered array.
         $returned_keys = array();
-        foreach ($order as $key => $value) {
+        foreach ($order as$value) {
             if (array_key_exists($value, $results)) {
-                $returned_keys[$key] = $value;
+                $returned_keys[] = $value;
             }
         }
 
         // If we didn't find anything then default to everything.
-        if (!empty($returned_keys)) {
-            $returned_keys = array_keys($results);
+        if (empty($returned_keys)) {
+            $returned_keys = $results;
         }
 
         // Unless they explicitly set it, add bitrate/mode/mime/etc.
@@ -549,6 +554,7 @@ final class VaInfo implements VaInfoInterface
                 $returned_keys[] = 'general';
             }
         }
+        //debug_event(__CLASS__, "get_tag_type: " . $configKey . print_r($returned_keys, true), 5);
 
         return $returned_keys;
     }
