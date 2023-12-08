@@ -20,21 +20,24 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Module\Podcast;
 
-use Ampache\Module\Podcast\Feed\FeedLoader;
-use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
 
-use function DI\autowire;
+interface PodcastDeleterInterface
+{
+    /**
+     * Deletes a podcast including its episodes
+     */
+    public function delete(Podcast $podcast): void;
 
-return [
-    PodcastSyncerInterface::class => autowire(PodcastSyncer::class),
-    PodcastCreatorInterface::class => autowire(PodcastCreator::class),
-    FeedLoaderInterface::class => autowire(FeedLoader::class),
-    PodcastFolderProviderInterface::class => autowire(PodcastFolderProvider::class),
-    PodcastEpisodeDownloaderInterface::class => autowire(PodcastEpisodeDownloader::class),
-    PodcastDeleterInterface::class => autowire(PodcastDeleter::class),
-];
+    /**
+     * Delete the provided podcast-episodes
+     *
+     * @param iterable<Podcast_Episode> $episodes
+     */
+    public function deleteEpisode(iterable $episodes): void;
+}

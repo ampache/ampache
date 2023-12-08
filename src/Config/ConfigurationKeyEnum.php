@@ -201,4 +201,6 @@ final class ConfigurationKeyEnum
     public const WAVEFORM                              = 'waveform';
     public const WEB_PATH                              = 'web_path';
     public const WRITE_TAGS                            = 'write_tags';
+
+    public const DELETE_FROM_DISK                      = 'delete_from_disk';
 }

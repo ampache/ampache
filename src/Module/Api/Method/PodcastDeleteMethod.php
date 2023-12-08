@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
@@ -71,14 +72,20 @@ final class PodcastDeleteMethod
             return false;
         }
 
-        if ($podcast->remove()) {
-            Api::message('podcast ' . $object_id . ' deleted', $input['api_format']);
-            Catalog::count_table('podcast');
-        } else {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
-        }
+        self::getPodcastDeleter()->delete($podcast);
+
+        Api::message('podcast ' . $object_id . ' deleted', $input['api_format']);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastDeleter(): PodcastDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastDeleterInterface::class);
     }
 }

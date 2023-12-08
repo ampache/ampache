@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
@@ -473,7 +474,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         if (!$this->played) {
-            self::update_played(true, $this->id);
+            self::_update_item('played', 1, $this->id);
         }
 
         return true;
@@ -487,15 +488,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public function check_play_history($user, $agent, $date): bool
     {
         return Stats::has_played_history('podcast_episode', $this, $user, $agent, $date);
-    }
-
-    /**
-     * update_played
-     * sets the played flag
-     */
-    private static function update_played(bool $new_played, int $id): void
-    {
-        self::_update_item('played', ($new_played ? 1 : 0), $id);
     }
 
     /**
@@ -609,22 +601,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function remove(): bool
     {
-        debug_event(self::class, 'Removing podcast episode ' . $this->id, 5);
+        $this->getPodcastDeleter()->deleteEpisode([$this]);
 
-        if (AmpConfig::get('delete_from_disk') && !empty($this->file)) {
-            if (Core::is_readable($this->file)) {
-                unlink($this->file);
-            }
-        }
-
-        // keep details about deletions
-        $params = array($this->id);
-        $sql    = "REPLACE INTO `deleted_podcast_episode` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast` FROM `podcast_episode` WHERE `id` = ?;";
-        Dba::write($sql, $params);
-
-        $sql = "DELETE FROM `podcast_episode` WHERE `id` = ?";
-
-        return (Dba::write($sql, $params) !== false);
+        return true;
     }
 
     /**
@@ -675,5 +654,15 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         return $deleted;
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private function getPodcastDeleter(): PodcastDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastDeleterInterface::class);
     }
 }

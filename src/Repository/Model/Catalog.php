@@ -3469,6 +3469,7 @@ abstract class Catalog extends database_object
         if (!$items) {
             return array($string);
         }
+
         return array_map('trim', $items);
     }
 

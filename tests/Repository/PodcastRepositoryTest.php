@@ -32,12 +32,16 @@ use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class PodcastRepositoryTest extends TestCase
 {
+    use ConsecutiveParams;
+
     private ModelFactoryInterface&MockObject $modelFactory;
 
     private DatabaseConnectionInterface&MockObject $connection;
@@ -253,6 +257,116 @@ class PodcastRepositoryTest extends TestCase
         static::assertSame(
             [$episodeId],
             $this->subject->getEpisodes($podcast, $stateFilter)
+        );
+    }
+
+    public function testDeleteDeletesPodcast(): void
+    {
+        $podcastId = 666;
+
+        $podcast = $this->createMock(Podcast::class);
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `podcast` WHERE `id` = ?',
+                [$podcastId]
+            );
+
+        $this->subject->delete($podcast);
+    }
+
+    public function testDeleteEpisodeDeletes(): void
+    {
+        $episode = $this->createMock(Podcast_Episode::class);
+
+        $episodeId    = 666;
+        $replaceQuery = <<<SQL
+        REPLACE INTO
+            `deleted_podcast_episode`
+            (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`)
+        SELECT
+            `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`
+        FROM
+            `podcast_episode`
+        WHERE
+            `id` = ?;
+        SQL;
+        $deleteQuery = 'DELETE FROM `podcast_episode` WHERE `id` = ?';
+
+        $episode->expects(static::once())
+            ->method('getId')
+            ->willReturn($episodeId);
+
+        $this->connection->expects(self::exactly(2))
+            ->method('query')
+            ->with(...self::withConsecutive(
+                [$replaceQuery, [$episodeId]],
+                [$deleteQuery, [$episodeId]],
+            ));
+
+        $this->subject->deleteEpisode($episode);
+    }
+
+    public function testGetEpisodeEligibleForDeletionReturnsNothingIfDisabled(): void
+    {
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_KEEP)
+            ->willReturn('');
+
+        static::assertSame(
+            [],
+            iterator_to_array($this->subject->getEpisodesEligibleForDeletion($this->createMock(Podcast::class)))
+        );
+    }
+
+    public function testGetEpisodeEligibleForDeletionYieldsEpisodes(): void
+    {
+        $keepLimit = 666;
+        $episodeId = 42;
+        $podcastId = 21;
+
+        $podcast = $this->createMock(Podcast::class);
+        $result  = $this->createMock(PDOStatement::class);
+        $episode = $this->createMock(Podcast_Episode::class);
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_KEEP)
+            ->willReturn((string) $keepLimit);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                sprintf(
+                    'SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? ORDER BY `pubdate` DESC LIMIT %d,18446744073709551615',
+                    $keepLimit
+                ),
+                [$podcastId]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $episodeId, false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcastEpisode')
+            ->with($episodeId)
+            ->willReturn($episode);
+
+        static::assertSame(
+            [$episode],
+            iterator_to_array($this->subject->getEpisodesEligibleForDeletion($podcast))
         );
     }
 }

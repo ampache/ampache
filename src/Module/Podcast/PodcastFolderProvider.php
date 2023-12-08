@@ -29,6 +29,9 @@ use Ampache\Module\Catalog\Exception\CatalogLoadingException;
 use Ampache\Module\Podcast\Exception\PodcastFolderException;
 use Ampache\Repository\Model\Podcast;
 
+/**
+ * Provides functionality to build the podcasts root folder
+ */
 final class PodcastFolderProvider implements PodcastFolderProviderInterface
 {
     private CatalogLoaderInterface $catalogLoader;
@@ -61,14 +64,12 @@ final class PodcastFolderProvider implements PodcastFolderProviderInterface
             throw new PodcastFolderException(sprintf('Bad catalog type: %s', $catalogType));
         }
 
-        $dirname = $podcast->get_fullname();
-
-        $fullPath = $catalog->get_path() . DIRECTORY_SEPARATOR . $dirname;
+        $fullPath = $catalog->get_path() . DIRECTORY_SEPARATOR . $podcast->get_fullname();
 
         // create path if it doesn't exist
         if (
             !is_dir($fullPath) &&
-            mkdir($fullPath) === false
+            @mkdir($fullPath) === false
         ) {
             throw new PodcastFolderException(sprintf('Cannot create folder: %s', $fullPath));
         }
