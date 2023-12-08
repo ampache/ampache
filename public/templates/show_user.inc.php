@@ -165,9 +165,10 @@ if ($current_list) {
         <?php Ui::show_box_bottom();
     }
 }
-$ajax_page = 'stats';
-$limit     = AmpConfig::get('popular_threshold', 10);
-$data      = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
+$ajax_page  = 'stats';
+$limit      = AmpConfig::get('popular_threshold', 10);
+$data       = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
+$no_refresh = true;
 Song::build_cache(array_keys($data));
 require Ui::find_template('show_recently_played.inc.php'); ?>
         </div>
