@@ -201,4 +201,8 @@ final class ConfigurationKeyEnum
     public const WAVEFORM                              = 'waveform';
     public const WEB_PATH                              = 'web_path';
     public const WRITE_TAGS                            = 'write_tags';
+    public const PROXY_HOST                            = 'proxy_host';
+    public const PROXY_PORT                            = 'proxy_port';
+    public const PROXY_USER                            = 'proxy_user';
+    public const PROXY_PASS                            = 'proxy_pass';
 }

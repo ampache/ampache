@@ -24,144 +24,141 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Podcast\Exception\PodcastFolderException;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Downloads podcast episode-files and update media information
+ */
 final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterface
 {
-    private ConfigContainerInterface $configContainer;
-
     private PodcastFolderProviderInterface $podcastFolderProvider;
+
+    private WebFetcherInterface $webFetcher;
+
+    private ModelFactoryInterface $modelFactory;
 
     private LoggerInterface $logger;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         PodcastFolderProviderInterface $podcastFolderProvider,
+        WebFetcherInterface $webFetcher,
+        ModelFactoryInterface $modelFactory,
         LoggerInterface $logger
     ) {
-        $this->configContainer       = $configContainer;
         $this->podcastFolderProvider = $podcastFolderProvider;
+        $this->webFetcher            = $webFetcher;
+        $this->modelFactory          = $modelFactory;
         $this->logger                = $logger;
     }
 
     /**
-     * gather
-     * download the podcast episode to your catalog
+     * Download the podcast-episodes files and perform media info update
      */
     public function fetch(
         Podcast_Episode $episode
     ): void {
-        if (!empty($episode->source)) {
-            // existing file (completed)
-            $file = $episode->file;
-            if (empty($file)) {
-                // new file (pending)
-                $podcast = new Podcast($episode->podcast);
-                try {
-                    $path = $this->podcastFolderProvider->getBaseFolder($podcast);
-                } catch (PodcastFolderException $e) {
-                    $this->logger->critical(
-                        sprintf(
-                            'Podcast folder error: %s. Check your catalog directory and permissions',
-                            $e->getMessage()
-                        ),
-                        [LegacyLogger::CONTEXT_TYPE => self::class]
-                    );
+        $source    = $episode->getSource();
+        $episodeId = $episode->getId();
 
-                    return;
-                }
-
-                $extension = pathinfo($episode->source, PATHINFO_EXTENSION);
-                // match any characters (except ?) before the first occurrence of ?
-                if (preg_match('/^[^?]+(?=\?)/', $extension, $matches)) {
-                    $extension = $matches[0];
-                }
-                $file = $path . DIRECTORY_SEPARATOR . $episode->pubdate . '-' . (string)$episode->id . '.' . $extension;
-            }
-
-            if (Core::get_filesize(Core::conv_lc_file($file)) == 0) {
-                // the file doesn't exist locally so download it
-
-                $this->logger->debug(
-                    sprintf('Downloading %s to %s ...', $episode->source, $file),
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-
-                // try to use curl for feeds that redirect a lot or have other checks
-                $curl       = curl_init($episode->source);
-                $filehandle = fopen($file, 'w');
-                if ($curl && $filehandle) {
-                    curl_setopt_array(
-                        $curl,
-                        array(
-                            CURLOPT_FILE => $filehandle,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_USERAGENT => 'Ampache/' . $this->configContainer->get('version'),
-                            CURLOPT_REFERER => $episode->source,
-                        )
-                    );
-
-                    $result = curl_exec($curl);
-                    if ($result === false) {
-                        $this->logger->debug(
-                            'Download error: ' . curl_error($curl),
-                            [LegacyLogger::CONTEXT_TYPE => self::class]
-                        );
-                    } else {
-                        // Download completed successfully
-                        $this->logger->debug(
-                            'Download completed',
-                            [LegacyLogger::CONTEXT_TYPE => self::class]
-                        );
-                    }
-
-                    curl_close($curl);
-                    fclose($filehandle);
-                } else {
-                    // fall back to fopen
-                    $handle = fopen($episode->source, 'r');
-                    if ($handle && file_put_contents($file, $handle)) {
-                        $this->logger->debug(
-                            'Download completed',
-                            [LegacyLogger::CONTEXT_TYPE => self::class]
-                        );
-                    }
-                }
-            }
-            // the file exists now so get/update file details in the DB
-            if ($file !== null && Core::get_filesize(Core::conv_lc_file($file)) > 0) {
-                $this->logger->debug(
-                    sprintf('Updating details %s...', $file),
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-
-                // file is null until it's downloaded
-                if (empty($episode->file)) {
-                    $episode->file = $file;
-                    Podcast_Episode::update_file($file, $episode->id);
-                }
-                Catalog::update_media_from_tags($episode);
-
-                return;
-            }
-
-            $this->logger->critical(
-                'Error when downloading podcast episode.',
+        if ($source === '') {
+            $this->logger->warning(
+                sprintf('Cannot download podcast episode %d, empty source.', $episodeId),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return;
         }
 
-        $this->logger->warning(
-            sprintf('Cannot download podcast episode %d, empty source.', $episode->id),
+        // existing file (completed)
+        $destinationFilePath = $episode->getFile();
+        if ($destinationFilePath === '') {
+            // new file (pending)
+            $podcast = $this->modelFactory->createPodcast($episode->getPodcastId());
+            try {
+                $path = $this->podcastFolderProvider->getBaseFolder($podcast);
+            } catch (PodcastFolderException $e) {
+                $this->logger->error(
+                    sprintf(
+                        'Podcast folder error: %s. Check your catalog directory and permissions',
+                        $e->getMessage()
+                    ),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+
+                return;
+            }
+
+            $extension = pathinfo($source, PATHINFO_EXTENSION);
+
+            // match any characters (except ?) before the first occurrence of ?
+            if (preg_match('/^[^?]+(?=\?)/', $extension, $matches)) {
+                $extension = $matches[0];
+            }
+
+            $destinationFilePath = sprintf(
+                '%s%s%s-%s.%s',
+                $path,
+                DIRECTORY_SEPARATOR,
+                $episode->pubdate,
+                $episodeId,
+                $extension
+            );
+        }
+
+        if (Core::get_filesize(Core::conv_lc_file($destinationFilePath)) === 0) {
+            // the file doesn't exist locally so download it
+
+            $this->logger->debug(
+                sprintf('Downloading %s to %s ...', $source, $destinationFilePath),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            try {
+                $this->webFetcher->fetchToFile($source, $destinationFilePath);
+            } catch (FetchFailedException $e) {
+                $this->logError($e->getMessage());
+
+                return;
+            }
+        }
+
+        // the file exists now so get/update file details in the DB
+        if (Core::get_filesize(Core::conv_lc_file($destinationFilePath)) > 0) {
+            $this->logger->debug(
+                sprintf('Updating details %s...', $destinationFilePath),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            // file is null until it's downloaded
+            if (empty($episode->file)) {
+                $episode->file = $destinationFilePath;
+                Podcast_Episode::update_file($destinationFilePath, $episodeId);
+            }
+            Catalog::update_media_from_tags($episode);
+
+            return;
+        }
+
+        $this->logError();
+    }
+
+    private function logError(?string $previousError = null): void
+    {
+        $errorMessage = 'Error when downloading podcast episode.';
+        if ($previousError !== null) {
+            $errorMessage .= sprintf(' %s', $previousError);
+        }
+
+        $this->logger->critical(
+            $errorMessage,
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
     }

@@ -269,6 +269,18 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
+    public function testGetVersionReturnsVersion(): void
+    {
+        $value = 'some-value';
+
+        $this->assertSame(
+            $value,
+            $this->createSubject([
+                ConfigurationKeyEnum::VERSION => $value
+            ])->getVersion()
+        );
+    }
+
     private function createSubject(array $configuration = []): ConfigContainerInterface
     {
         return new ConfigContainer($configuration);

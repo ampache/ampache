@@ -29,8 +29,9 @@ use Ampache\Module\Util\FileSystem\FileNameConverter;
 use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
 use Ampache\Module\Util\Rss\AmpacheRss;
 use Ampache\Module\Util\Rss\AmpacheRssInterface;
-
 use Ampache\Module\Util\Rss\RssPodcastBuilder;
+use Ampache\Module\Util\WebFetcher\WebFetcher;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 
 use function DI\autowire;
 
@@ -50,4 +51,5 @@ return [
             'rssPodcastBuilder',
             autowire(RssPodcastBuilder::class)
         ),
+    WebFetcherInterface::class => autowire(WebFetcher::class),
 ];

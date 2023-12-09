@@ -403,6 +403,21 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         return $this->f_description;
     }
 
+    public function getSource(): string
+    {
+        return (string) $this->source;
+    }
+
+    public function getFile(): string
+    {
+        return (string) $this->file;
+    }
+
+    public function getPodcastId(): int
+    {
+        return $this->podcast;
+    }
+
     /**
      * display_art
      * @param int $thumb

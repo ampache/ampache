@@ -27,6 +27,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Curl\Curl;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -76,5 +77,13 @@ final class UtilityFactory implements UtilityFactoryInterface
             $filePattern,
             $isLocal
         );
+    }
+
+    /**
+     * Returns a new Curl instance
+     */
+    public function createCurl(): Curl
+    {
+        return new Curl();
     }
 }

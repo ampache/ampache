@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,29 +20,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Util;
+namespace Ampache\Module\Util\WebFetcher;
 
-use Curl\Curl;
+use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 
-interface UtilityFactoryInterface
+interface WebFetcherInterface
 {
-    public function createMailer(): MailerInterface;
-
-    public function createVaInfo(
-        string $file,
-        array $gatherTypes = [],
-        ?string $encoding = null,
-        ?string $encodingId3v1 = null,
-        string $dirPattern = '',
-        string $filePattern = '',
-        bool $isLocal = true
-    ): VaInfoInterface;
+    /**
+     * Fetches and returns the uris content
+     *
+     * @throws FetchFailedException
+     */
+    public function fetch(string $uri): string;
 
     /**
-     * Returns a new Curl instance
+     * Fetches the uris content and saves it directly to a file
+     *
+     * @throws FetchFailedException
      */
-    public function createCurl(): Curl;
+    public function fetchToFile(string $uri, string $destinationFilePath): void;
 }

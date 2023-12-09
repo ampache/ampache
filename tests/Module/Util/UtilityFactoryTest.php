@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,28 +23,24 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\UserRepositoryInterface;
+use Curl\Curl;
 use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;
 
 class UtilityFactoryTest extends MockeryTestCase
 {
-    /** @var UserRepositoryInterface|MockInterface */
-    private MockInterface $userRepository;
+    private MockInterface&UserRepositoryInterface $userRepository;
 
-    /** @var ConfigContainerInterface|MockInterface */
-    private MockInterface $configContainer;
+    private MockInterface&ConfigContainerInterface $configContainer;
 
-    /** @var LoggerInterface|MockInterface */
-    private MockInterface $logger;
+    private MockInterface&LoggerInterface $logger;
 
-    private ?UtilityFactory $subject;
+    private UtilityFactory $subject;
 
     public function setUp(): void
     {
@@ -62,6 +60,14 @@ class UtilityFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(
             Mailer::class,
             $this->subject->createMailer()
+        );
+    }
+
+    public function testCreateCurlReturnsNewInstance(): void
+    {
+        static::assertInstanceOf(
+            Curl::class,
+            $this->subject->createCurl()
         );
     }
 }

@@ -97,6 +97,11 @@ interface ConfigContainerInterface
     public function isDemoMode(): bool;
 
     /**
+     * Returns the current Ampache version
+     */
+    public function getVersion(): string;
+
+    /**
      * Returns the path to the ampache config file
      */
     public function getConfigFilePath(): string;
