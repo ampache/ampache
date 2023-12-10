@@ -32,6 +32,7 @@ use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class DeletedPodcastEpisodes5Method
@@ -57,7 +58,8 @@ final class DeletedPodcastEpisodes5Method
 
             return false;
         }
-        $items = Podcast_Episode::get_deleted();
+
+        $items = self::getPodcastRepository()->getDeletedEpisodes();
         if (empty($items)) {
             Api5::empty('deleted_podcast_episodes', $input['api_format']);
 
@@ -78,5 +80,15 @@ final class DeletedPodcastEpisodes5Method
         }
 
         return true;
+    }
+
+    /**
+     * @todo inject dependency
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }
