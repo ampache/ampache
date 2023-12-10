@@ -94,6 +94,7 @@ final class ConfigurationKeyEnum
     public const DAAP_BACKEND                          = 'daap_backend';
     public const DAAP_PASS                             = 'daap_pass';
     public const DEBUG_MODE                            = 'debug';
+    public const DELETE_FROM_DISK                      = 'delete_from_disk';
     public const DEMO_CLEAR_SESSIONS                   = 'demo_clear_sessions';
     public const DEMO_USE_SEARCH                       = 'demo_use_search';
     public const DEMO_MODE                             = 'demo_mode';
@@ -201,6 +202,4 @@ final class ConfigurationKeyEnum
     public const WAVEFORM                              = 'waveform';
     public const WEB_PATH                              = 'web_path';
     public const WRITE_TAGS                            = 'write_tags';
-
-    public const DELETE_FROM_DISK                      = 'delete_from_disk';
 }
