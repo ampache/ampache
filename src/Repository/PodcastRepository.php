@@ -224,7 +224,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
      */
     public function getEpisodesEligibleForDeletion(Podcast $podcast): Generator
     {
-        $keepLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_KEEP);
+        $keepLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_KEEP);
 
         if ($keepLimit !== 0) {
             $result = $this->connection->query(
@@ -236,9 +236,10 @@ final class PodcastRepository implements PodcastRepositoryInterface
             );
 
             while ($episodeId = $result->fetchColumn()) {
-                yield $this->modelFactory->createPodcastEpisode((int) $episodeId);
+                yield $this->modelFactory->createPodcastEpisode((int)$episodeId);
             }
         }
+    }
 
     /**
      * Returns all deleted podcast episodes
