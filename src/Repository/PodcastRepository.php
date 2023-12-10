@@ -34,6 +34,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Generator;
+use PDO;
 
 /**
  * Manages podcast related database access
@@ -238,5 +239,41 @@ final class PodcastRepository implements PodcastRepositoryInterface
                 yield $this->modelFactory->createPodcastEpisode((int) $episodeId);
             }
         }
+
+    /**
+     * Returns all deleted podcast episodes
+     *
+     * @return list<array{
+     *  id: int,
+     *  addition_time: int,
+     *  delete_time: int,
+     *  title: string,
+     *  file: string,
+     *  catalog: int,
+     *  total_count: int,
+     *  total_skip: int,
+     *  podcast: int
+     * }>
+     */
+    public function getDeletedEpisodes(): array
+    {
+        $episodes = [];
+
+        $result = $this->connection->query('SELECT * FROM `deleted_podcast_episode`');
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $episodes[] = [
+                'id' => (int) $row['id'],
+                'addition_time' => (int) $row['addition_time'],
+                'delete_time' => (int) $row['delete_time'],
+                'title' => (string) $row['title'],
+                'file' => (string) $row['file'],
+                'catalog' => (int) $row['catalog'],
+                'total_count' => (int) $row['total_count'],
+                'total_skip' => (int) $row['total_skip'],
+                'podcast' => (int) $row['podcast'],
+            ];
+        }
+
+        return $episodes;
     }
 }

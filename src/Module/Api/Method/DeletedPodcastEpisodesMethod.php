@@ -30,8 +30,8 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class DeletedPodcastEpisodesMethod
@@ -58,7 +58,8 @@ final class DeletedPodcastEpisodesMethod
 
             return false;
         }
-        $items = Podcast_Episode::get_deleted();
+
+        $items = self::getPodcastRepository()->getDeletedEpisodes();
         if (empty($items)) {
             Api::empty('deleted_podcast_episodes', $input['api_format']);
 
@@ -79,5 +80,15 @@ final class DeletedPodcastEpisodesMethod
         }
 
         return true;
+    }
+
+    /**
+     * @todo inject dependency
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }
