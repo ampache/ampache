@@ -67,8 +67,8 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * session
   * json (included in php8+)
   * intl
-  * simplexml (optional)
-  * curl (optional)
+  * simplexml
+  * curl
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml
