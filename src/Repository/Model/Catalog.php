@@ -2345,6 +2345,9 @@ abstract class Catalog extends database_object
         if (!$api) {
             echo "</tbody></table>\n";
         }
+
+        $albumRepository = self::getAlbumRepository();
+
         // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
             $genres = self::getSongTags('album', $libitem->id);
@@ -2352,13 +2355,13 @@ abstract class Catalog extends database_object
             if ($artist || $album || $tags || $maps) {
                 $artists = array();
                 // update the album artists
-                foreach (Album::get_artist_map('album', $libitem->id) as $albumArtist_id) {
+                foreach ($albumRepository->getArtistMap($libitem, 'album') as $albumArtist_id) {
                     $artists[] = $albumArtist_id;
                     $genres    = self::getSongTags('artist', $albumArtist_id);
                     Tag::update_tag_list(implode(',', $genres), 'artist', $albumArtist_id, true);
                 }
                 // update the song artists too
-                foreach (Album::get_artist_map('song', $libitem->id) as $songArtist_id) {
+                foreach ($albumRepository->getArtistMap($libitem, 'song') as $songArtist_id) {
                     if (!in_array($songArtist_id, $artists)) {
                         $genres = self::getSongTags('artist', $songArtist_id);
                         Tag::update_tag_list(implode(',', $genres), 'artist', $songArtist_id, true);
@@ -2639,6 +2642,9 @@ abstract class Catalog extends database_object
             $new_song->album = $song->album;
         }
 
+        $albumRepository = self::getAlbumRepository();
+        $new_song_album  = new Album($new_song->album);
+
         // get the artists / album_artists for this song
         $songArtist_array  = array($new_song->artist);
         $albumArtist_array = array($new_song->albumartist);
@@ -2646,8 +2652,8 @@ abstract class Catalog extends database_object
         $artist_map_song  = Artist::get_artist_map('song', $song->id);
         $artist_map_album = Artist::get_artist_map('album', $new_song->album);
         // album_map stores song_artist and album_artist against the album_id
-        $album_map_songArtist  = Album::get_artist_map('song', $new_song->album);
-        $album_map_albumArtist = Album::get_artist_map('album', $new_song->album);
+        $album_map_songArtist  = $albumRepository->getArtistMap($new_song_album, 'song');
+        $album_map_albumArtist = $albumRepository->getArtistMap($new_song_album, 'album');
         // don't update counts unless something changes
         $map_change = false;
 
@@ -3469,6 +3475,7 @@ abstract class Catalog extends database_object
         if (!$items) {
             return array($string);
         }
+
         return array_map('trim', $items);
     }
 

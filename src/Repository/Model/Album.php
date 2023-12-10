@@ -670,23 +670,6 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * Get the primary album_artist
-     * @param int $album_id
-     * @return int|null
-     */
-    public static function get_album_artist($album_id): ?int
-    {
-        $sql        = "SELECT DISTINCT `album_artist` FROM `album` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, array($album_id));
-
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int)$row['album_artist'];
-        }
-
-        return null;
-    }
-
-    /**
      * get_parent
      * Return parent `object_type`, `object_id`; null otherwise.
      */
@@ -1111,25 +1094,6 @@ class Album extends database_object implements library_item
         return false;
     }
 
-    /**
-     * get_artist_map
-     *
-     * This returns an ids of artists that have songs/albums mapped
-     * @param string $object_type
-     * @param int $album_id
-     * @return list<int>
-     */
-    public static function get_artist_map($object_type, $album_id)
-    {
-        $results    = array();
-        $sql        = "SELECT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?";
-        $db_results = Dba::read($sql, array($object_type, $album_id));
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['object_id'];
-        }
-
-        return $results;
-    }
     /**
      * count_album
      *
