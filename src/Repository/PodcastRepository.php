@@ -28,9 +28,13 @@ namespace Ampache\Repository;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Generator;
+use PDO;
 
 /**
  * Manages podcast related database access
@@ -168,5 +172,109 @@ final class PodcastRepository implements PodcastRepositoryInterface
         }
 
         return $episodeIds;
+    }
+
+    /**
+     * Deletes a podcast
+     */
+    public function delete(Podcast $podcast): void
+    {
+        $this->connection->query(
+            'DELETE FROM `podcast` WHERE `id` = ?',
+            [$podcast->getId()]
+        );
+    }
+
+    /**
+     * Deletes a podcast-episode
+     *
+     * Before deleting the episode, a backup of the episodes meta-data is created
+     */
+    public function deleteEpisode(Podcast_Episode $episode): void
+    {
+        $params = [$episode->getId()];
+
+        // keep details about deletions
+        $sql = <<<SQL
+        REPLACE INTO
+            `deleted_podcast_episode`
+            (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`)
+        SELECT
+            `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`
+        FROM
+            `podcast_episode`
+        WHERE
+            `id` = ?;
+        SQL;
+
+        $this->connection->query($sql, $params);
+
+        $this->connection->query(
+            'DELETE FROM `podcast_episode` WHERE `id` = ?',
+            $params
+        );
+    }
+
+    /**
+     * Returns all podcast episodes which are eligible for deletion
+     *
+     * If enabled, this will return all episodes of the podcast which are above the keep-limit
+     *
+     * @return Generator<Podcast_Episode>
+     */
+    public function getEpisodesEligibleForDeletion(Podcast $podcast): Generator
+    {
+        $keepLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_KEEP);
+
+        if ($keepLimit !== 0) {
+            $result = $this->connection->query(
+                sprintf(
+                    'SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? ORDER BY `pubdate` DESC LIMIT %d,18446744073709551615',
+                    $keepLimit
+                ),
+                [$podcast->getId()]
+            );
+
+            while ($episodeId = $result->fetchColumn()) {
+                yield $this->modelFactory->createPodcastEpisode((int)$episodeId);
+            }
+        }
+    }
+
+    /**
+     * Returns all deleted podcast episodes
+     *
+     * @return list<array{
+     *  id: int,
+     *  addition_time: int,
+     *  delete_time: int,
+     *  title: string,
+     *  file: string,
+     *  catalog: int,
+     *  total_count: int,
+     *  total_skip: int,
+     *  podcast: int
+     * }>
+     */
+    public function getDeletedEpisodes(): array
+    {
+        $episodes = [];
+
+        $result = $this->connection->query('SELECT * FROM `deleted_podcast_episode`');
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $episodes[] = [
+                'id' => (int) $row['id'],
+                'addition_time' => (int) $row['addition_time'],
+                'delete_time' => (int) $row['delete_time'],
+                'title' => (string) $row['title'],
+                'file' => (string) $row['file'],
+                'catalog' => (int) $row['catalog'],
+                'total_count' => (int) $row['total_count'],
+                'total_skip' => (int) $row['total_skip'],
+                'podcast' => (int) $row['podcast'],
+            ];
+        }
+
+        return $episodes;
     }
 }

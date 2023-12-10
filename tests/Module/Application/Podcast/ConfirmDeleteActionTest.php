@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
@@ -48,6 +49,8 @@ class ConfirmDeleteActionTest extends TestCase
 
     private ModelFactoryInterface&MockObject $modelFactory;
 
+    private PodcastDeleterInterface&MockObject $podcastDeleter;
+
     private ConfirmDeleteAction $subject;
 
     private ServerRequestInterface&MockObject $request;
@@ -59,11 +62,13 @@ class ConfirmDeleteActionTest extends TestCase
         $this->configContainer = $this->createMock(ConfigContainerInterface::class);
         $this->ui              = $this->createMock(UiInterface::class);
         $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
+        $this->podcastDeleter  = $this->createMock(PodcastDeleterInterface::class);
 
         $this->subject = new ConfirmDeleteAction(
             $this->configContainer,
             $this->ui,
             $this->modelFactory,
+            $this->podcastDeleter,
         );
 
         $this->request    = $this->createMock(ServerRequestInterface::class);
@@ -119,64 +124,6 @@ class ConfirmDeleteActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
-    public function testRunShowsErrorsIfRemovalFails(): void
-    {
-        $podcastId = 666;
-        $webPath   = 'some-path';
-
-        $podcast = $this->createMock(Podcast::class);
-
-        $this->configContainer->expects(static::exactly(2))
-            ->method('isFeatureEnabled')
-            ->with(...$this->withConsecutive(
-                [ConfigurationKeyEnum::PODCAST],
-                [ConfigurationKeyEnum::DEMO_MODE],
-            ))
-            ->willReturn(true, false);
-        $this->configContainer->expects(static::once())
-            ->method('getWebPath')
-            ->willReturn($webPath);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
-            ->willReturn(true);
-
-        $this->request->expects(static::once())
-            ->method('getQueryParams')
-            ->willReturn(['podcast_id' => (string) $podcastId]);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
-            ->with($podcastId)
-            ->willReturn($podcast);
-
-        $podcast->expects(static::once())
-            ->method('remove')
-            ->willReturn(false);
-
-        $this->ui->expects(static::once())
-            ->method('showHeader');
-        $this->ui->expects(static::once())
-            ->method('showConfirmation')
-            ->with(
-                'There Was a Problem',
-                'Couldn\'t delete this Podcast.',
-                sprintf(
-                    '%s/browse.php?action=podcast',
-                    $webPath
-                )
-            );
-        $this->ui->expects(static::once())
-            ->method('showQueryStats');
-        $this->ui->expects(static::once())
-            ->method('showFooter');
-
-        static::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
-    }
-
     public function testRunConfirmsRemoval(): void
     {
         $podcastId = 666;
@@ -209,9 +156,9 @@ class ConfirmDeleteActionTest extends TestCase
             ->with($podcastId)
             ->willReturn($podcast);
 
-        $podcast->expects(static::once())
-            ->method('remove')
-            ->willReturn(true);
+        $this->podcastDeleter->expects(static::once())
+            ->method('delete')
+            ->with($podcast);
 
         $this->ui->expects(static::once())
             ->method('showHeader');

@@ -32,12 +32,17 @@ use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class PodcastRepositoryTest extends TestCase
 {
+    use ConsecutiveParams;
+
     private ModelFactoryInterface&MockObject $modelFactory;
 
     private DatabaseConnectionInterface&MockObject $connection;
@@ -55,7 +60,7 @@ class PodcastRepositoryTest extends TestCase
         $this->subject = new PodcastRepository(
             $this->modelFactory,
             $this->connection,
-            $this->configContainer
+            $this->configContainer,
         );
     }
 
@@ -68,13 +73,13 @@ class PodcastRepositoryTest extends TestCase
             ->with(
                 'SELECT `id` FROM `podcast` WHERE `feed`= ?',
                 [
-                    $feedUrl
-                ]
+                    $feedUrl,
+                ],
             )
             ->willReturn(false);
 
         static::assertNull(
-            $this->subject->findByFeedUrl($feedUrl)
+            $this->subject->findByFeedUrl($feedUrl),
         );
     }
 
@@ -90,8 +95,8 @@ class PodcastRepositoryTest extends TestCase
             ->with(
                 'SELECT `id` FROM `podcast` WHERE `feed`= ?',
                 [
-                    $feedUrl
-                ]
+                    $feedUrl,
+                ],
             )
             ->willReturn((string) $podcastId);
 
@@ -102,7 +107,7 @@ class PodcastRepositoryTest extends TestCase
 
         static::assertSame(
             $podcast,
-            $this->subject->findByFeedUrl($feedUrl)
+            $this->subject->findByFeedUrl($feedUrl),
         );
     }
 
@@ -151,8 +156,8 @@ class PodcastRepositoryTest extends TestCase
                     $language,
                     $copyright,
                     $generator,
-                    $lastBuildDate
-                ]
+                    $lastBuildDate,
+                ],
             );
         $this->connection->expects(static::once())
             ->method('getLastInsertedId')
@@ -180,8 +185,8 @@ class PodcastRepositoryTest extends TestCase
                     'copyright' => $copyright,
                     'generator' => $generator,
                     'lastBuildDate' => $lastBuildDate,
-                ]
-            )
+                ],
+            ),
         );
     }
 
@@ -202,7 +207,7 @@ class PodcastRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` WHERE `podcast_episode`.`podcast`= ? AND `catalog`.`enabled` = \'1\' ORDER BY `podcast_episode`.`pubdate` DESC',
-                [$podcastId]
+                [$podcastId],
             )
             ->willReturn($result);
 
@@ -216,7 +221,7 @@ class PodcastRepositoryTest extends TestCase
 
         static::assertSame(
             [$episodeId],
-            $this->subject->getEpisodes($podcast)
+            $this->subject->getEpisodes($podcast),
         );
     }
 
@@ -238,7 +243,7 @@ class PodcastRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast`= ? AND `podcast_episode`.`state` = ? ORDER BY `podcast_episode`.`pubdate` DESC',
-                [$podcastId, $stateFilter]
+                [$podcastId, $stateFilter],
             )
             ->willReturn($result);
 
@@ -252,7 +257,170 @@ class PodcastRepositoryTest extends TestCase
 
         static::assertSame(
             [$episodeId],
-            $this->subject->getEpisodes($podcast, $stateFilter)
+            $this->subject->getEpisodes($podcast, $stateFilter),
+        );
+    }
+
+    public function testGetDeletedEpisodesReturnsData(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $id           = 666;
+        $additionTime = 123;
+        $deleteTime   = 456;
+        $title        = 'some-title';
+        $file         = 'some-file';
+        $catalog      = 789;
+        $totalCount   = 111;
+        $totalSkip    = 222;
+        $podcast      = 333;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT * FROM `deleted_podcast_episode`')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(
+                [
+                    'id' => (string) $id,
+                    'addition_time' => (string) $additionTime,
+                    'delete_time' => (string) $deleteTime,
+                    'title' => $title,
+                    'file' => $file,
+                    'catalog' => (string) $catalog,
+                    'total_count' => (string) $totalCount,
+                    'total_skip' => (string) $totalSkip,
+                    'podcast' => (string) $podcast,
+                ],
+                false
+            );
+
+        static::assertSame(
+            [[
+                'id' => $id,
+                'addition_time' => $additionTime,
+                'delete_time' => $deleteTime,
+                'title' => $title,
+                'file' => $file,
+                'catalog' => $catalog,
+                'total_count' => $totalCount,
+                'total_skip' => $totalSkip,
+                'podcast' => $podcast,
+            ]],
+            $this->subject->getDeletedEpisodes()
+        );
+    }
+
+    public function testDeleteDeletesPodcast(): void
+    {
+        $podcastId = 666;
+
+        $podcast = $this->createMock(Podcast::class);
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `podcast` WHERE `id` = ?',
+                [$podcastId]
+            );
+
+        $this->subject->delete($podcast);
+    }
+
+    public function testDeleteEpisodeDeletes(): void
+    {
+        $episode = $this->createMock(Podcast_Episode::class);
+
+        $episodeId    = 666;
+        $replaceQuery = <<<SQL
+        REPLACE INTO
+            `deleted_podcast_episode`
+            (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`)
+        SELECT
+            `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`
+        FROM
+            `podcast_episode`
+        WHERE
+            `id` = ?;
+        SQL;
+        $deleteQuery = 'DELETE FROM `podcast_episode` WHERE `id` = ?';
+
+        $episode->expects(static::once())
+            ->method('getId')
+            ->willReturn($episodeId);
+
+        $this->connection->expects(self::exactly(2))
+            ->method('query')
+            ->with(...self::withConsecutive(
+                [$replaceQuery, [$episodeId]],
+                [$deleteQuery, [$episodeId]],
+            ));
+
+        $this->subject->deleteEpisode($episode);
+    }
+
+    public function testGetEpisodeEligibleForDeletionReturnsNothingIfDisabled(): void
+    {
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_KEEP)
+            ->willReturn('');
+
+        static::assertSame(
+            [],
+            iterator_to_array($this->subject->getEpisodesEligibleForDeletion($this->createMock(Podcast::class)))
+        );
+    }
+
+    public function testGetEpisodeEligibleForDeletionYieldsEpisodes(): void
+    {
+        $keepLimit = 666;
+        $episodeId = 42;
+        $podcastId = 21;
+
+        $podcast = $this->createMock(Podcast::class);
+        $result  = $this->createMock(PDOStatement::class);
+        $episode = $this->createMock(Podcast_Episode::class);
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_KEEP)
+            ->willReturn((string) $keepLimit);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                sprintf(
+                    'SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? ORDER BY `pubdate` DESC LIMIT %d,18446744073709551615',
+                    $keepLimit
+                ),
+                [$podcastId]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $episodeId, false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcastEpisode')
+            ->with($episodeId)
+            ->willReturn($episode);
+
+        static::assertSame(
+            [$episode],
+            iterator_to_array($this->subject->getEpisodesEligibleForDeletion($podcast))
         );
     }
 }
