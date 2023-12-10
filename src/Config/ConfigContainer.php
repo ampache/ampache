@@ -123,6 +123,14 @@ final class ConfigContainer implements ConfigContainerInterface
         return $this->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE);
     }
 
+    /**
+     * Returns the current Ampache version
+     */
+    public function getVersion(): string
+    {
+        return $this->configuration[ConfigurationKeyEnum::VERSION] ?? '';
+    }
+
     public function getConfigFilePath(): string
     {
         return __DIR__ . '/../../config/ampache.cfg.php';

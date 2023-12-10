@@ -145,6 +145,10 @@ final class ConfigurationKeyEnum
     public const PODCAST_NEW_DOWNLOAD                  = 'podcast_new_download';
     public const PODCAST                               = 'podcast';
     public const POPULAR_THRESHOLD                     = 'popular_threshold';
+    public const PROXY_HOST                            = 'proxy_host';
+    public const PROXY_PASS                            = 'proxy_pass';
+    public const PROXY_PORT                            = 'proxy_port';
+    public const PROXY_USER                            = 'proxy_user';
     public const RADIO                                 = 'live_stream';
     public const RATE_LIMIT                            = 'rate_limit';
     public const RATING_FILE_TAG_USER                  = 'rating_file_tag_user';

@@ -29,8 +29,7 @@ use Ampache\Repository\Model\Podcast_Episode;
 interface PodcastEpisodeDownloaderInterface
 {
     /**
-     * gather
-     * download the podcast episode to your catalog
+     * Download the podcast-episodes files and perform media info update
      */
     public function fetch(Podcast_Episode $episode): void;
 }

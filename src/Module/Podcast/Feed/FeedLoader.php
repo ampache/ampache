@@ -28,6 +28,9 @@ namespace Ampache\Module\Podcast\Feed;
 use Ampache\Module\Podcast\Feed\Exception\FeedLoadingException;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use SimpleXMLElement;
 
 /**
@@ -35,6 +38,14 @@ use SimpleXMLElement;
  */
 final class FeedLoader implements FeedLoaderInterface
 {
+    private WebFetcherInterface $webFetcher;
+
+    public function __construct(
+        WebFetcherInterface $webFetcher
+    ) {
+        $this->webFetcher = $webFetcher;
+    }
+
     /**
      * Load the podcast content by its feed-url
      *
@@ -58,9 +69,10 @@ final class FeedLoader implements FeedLoaderInterface
         $lastBuildDate = null;
         $artUrl        = null;
 
-        $xmlstr = file_get_contents($feedUrl, false, stream_context_create(Core::requests_options()));
-        if ($xmlstr === false) {
-            throw new FeedLoadingException();
+        try {
+            $xmlstr = $this->webFetcher->fetch($feedUrl);
+        } catch (FetchFailedException $e) {
+            throw new FeedLoadingException($e->getMessage());
         }
 
         $xml = simplexml_load_string($xmlstr);
