@@ -45,15 +45,18 @@ final class PodcastSyncer implements PodcastSyncerInterface
     private ModelFactoryInterface $modelFactory;
 
     private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader;
+    private PodcastDeleterInterface $podcastDeleter;
 
     public function __construct(
         PodcastRepositoryInterface $podcastRepository,
         ModelFactoryInterface $modelFactory,
-        PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader
+        PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
+        PodcastDeleterInterface $podcastDeleter
     ) {
         $this->podcastRepository        = $podcastRepository;
         $this->modelFactory             = $modelFactory;
         $this->podcastEpisodeDownloader = $podcastEpisodeDownloader;
+        $this->podcastDeleter           = $podcastDeleter;
     }
 
     /**
@@ -140,7 +143,6 @@ final class PodcastSyncer implements PodcastSyncerInterface
         }
         $change = 0;
         $time   = time();
-        $params = array($podcast->id);
 
         // Select episodes to download
         $dlnb = (int)AmpConfig::get('podcast_new_download');
@@ -149,7 +151,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
             if ($dlnb > 0) {
                 $sql .= " LIMIT " . (string)$dlnb;
             }
-            $db_results = Dba::read($sql, $params);
+            $db_results = Dba::read($sql, [$podcast->getId()]);
             while ($row = Dba::fetch_row($db_results)) {
                 $episode = new Podcast_Episode($row[0]);
                 $episode->change_state('pending');
@@ -161,22 +163,16 @@ final class PodcastSyncer implements PodcastSyncerInterface
             }
         }
         if ($change > 0) {
-            // Remove items outside limit
-            $keepnb = AmpConfig::get('podcast_keep');
-            if ($keepnb > 0) {
-                $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
-                $db_results = Dba::read($sql, $params);
-                while ($row = Dba::fetch_row($db_results)) {
-                    $episode = new Podcast_Episode($row[0]);
-                    $episode->remove();
-                }
-            }
+            // cleanup old episodes (if available)
+            $this->podcastDeleter->deleteEpisode(
+                $this->podcastRepository->getEpisodesEligibleForDeletion($podcast)
+            );
+
             // update the episode count after adding / removing episodes
             $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
-            Dba::write($sql, $params);
+            Dba::write($sql, [$podcast->getId()]);
             Catalog::update_mapping('podcast');
             Catalog::update_mapping('podcast_episode');
-            Catalog::count_table('podcast_episode');
         }
         $this->update_lastsync($podcast, $time);
     }

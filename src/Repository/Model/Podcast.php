@@ -322,30 +322,6 @@ class Podcast extends database_object implements library_item
     }
 
     /**
-     * remove
-     * Delete the object from disk and/or database where applicable.
-     */
-    public function remove(): bool
-    {
-        $episodes = $this->getPodcastRepository()->getEpisodes($this);
-        foreach ($episodes as $episode_id) {
-            $episode = new Podcast_Episode($episode_id);
-            $episode->remove();
-        }
-
-        $sql = "DELETE FROM `podcast` WHERE `id` = ?";
-
-        if (Dba::write($sql, array($this->id)) !== false) {
-            Catalog::count_table('podcast');
-            Catalog::count_table('podcast_episode');
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @deprecated Inject by constructor
      */
     private function getPodcastRepository(): PodcastRepositoryInterface

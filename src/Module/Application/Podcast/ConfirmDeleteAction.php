@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -31,6 +31,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -49,14 +50,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private PodcastDeleterInterface $podcastDeleter;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        PodcastDeleterInterface $podcastDeleter
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
+        $this->podcastDeleter  = $podcastDeleter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -76,27 +81,17 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             (int) ($request->getQueryParams()['podcast_id'] ?? 0)
         );
 
-        $this->ui->showHeader();
-        if ($podcast->remove()) {
-            $this->ui->showConfirmation(
-                T_('No Problem'),
-                T_('Podcast has been deleted'),
-                sprintf(
-                    '%s/browse.php?action=podcast',
-                    $this->configContainer->getWebPath()
-                )
-            );
-        } else {
-            $this->ui->showConfirmation(
-                T_('There Was a Problem'),
-                T_('Couldn\'t delete this Podcast.'),
-                sprintf(
-                    '%s/browse.php?action=podcast',
-                    $this->configContainer->getWebPath()
-                )
-            );
-        }
+        $this->podcastDeleter->delete($podcast);
 
+        $this->ui->showHeader();
+        $this->ui->showConfirmation(
+            T_('No Problem'),
+            T_('Podcast has been deleted'),
+            sprintf(
+                '%s/browse.php?action=podcast',
+                $this->configContainer->getWebPath()
+            )
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

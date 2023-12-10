@@ -27,6 +27,9 @@ namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Generator;
+use Traversable;
 
 interface PodcastRepositoryInterface
 {
@@ -62,6 +65,21 @@ interface PodcastRepositoryInterface
      * @return list<int>
      */
     public function getEpisodes(Podcast $podcast, string $stateFilter = ''): array;
+
+    /**
+     * Deletes a podcast
+     */
+    public function delete(Podcast $podcast): void;
+
+    /**
+     * Deletes a podcast-episode
+     */
+    public function deleteEpisode(Podcast_Episode $episode): void;
+
+    /**
+     * @return Traversable<Podcast_Episode>
+     */
+    public function getEpisodesEligibleForDeletion(Podcast $podcast): Traversable;
 
     /**
      * Returns all deleted podcast episodes

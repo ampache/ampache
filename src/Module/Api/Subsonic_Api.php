@@ -32,6 +32,7 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
@@ -2119,11 +2120,9 @@ class Subsonic_Api
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $podcast = new Podcast(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
             if ($podcast->id) {
-                if ($podcast->remove()) {
-                    $response = Subsonic_Xml_Data::addSubsonicResponse('deletepodcastchannel');
-                } else {
-                    $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'deletepodcastchannel');
-                }
+                self::getPodcastDeleter()->delete($podcast);
+
+                $response = Subsonic_Xml_Data::addSubsonicResponse('deletepodcastchannel');
             } else {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletepodcastchannel');
             }
@@ -3148,5 +3147,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PodcastEpisodeDownloaderInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastDeleter(): PodcastDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastDeleterInterface::class);
     }
 }
