@@ -27,10 +27,14 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Rss\AmpacheRss;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 
 /** @var int[] $data */
 
@@ -41,6 +45,7 @@ $user_id   = $user_id ?? -1;
 $link      = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_skipped', $user_id) : '';
 $web_path  = (string)AmpConfig::get('web_path', '');
 $is_admin  = Access::check('interface', 100);
+$showAlbum = AmpConfig::get('album_group');
 UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
 <table class="tabledata striped-rows">
     <thead>
@@ -49,6 +54,7 @@ UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
         <th class="cel_title"><?php echo T_('Title'); ?></th>
         <th class="cel_add"></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_year"><?php echo T_('Date'); ?></th>
         <?php if ($user_id > 0) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
@@ -66,7 +72,12 @@ UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
 foreach ($data as $row) {
     $row_id   = ($row['user'] > 0) ? (int) $row['user'] : -1;
     $row_user = new User($row_id);
-    $song     = new Song($row['object_id']);
+    $className = ObjectTypeToClassNameMapper::map($row['object_type']);
+    /** @var Song|Live_Stream|Podcast_Episode|Video $media */
+    $media = new $className($row['object_id']);
+    if ($media->isNew()) {
+        continue;
+    }
 
     $agent              = ($is_admin) ? $row['agent'] : '';
     $time_string        = '-';
@@ -105,33 +116,34 @@ foreach ($data as $row) {
                 $time_string = sprintf(nT_('%d decade ago', '%d decades ago', $interval), $interval);
             }
         }
-        $song->format(); ?>
+        $media->format(); ?>
             <tr>
                 <td class="cel_play">
                     <span class="cel_play_content">&nbsp;</span>
                     <div class="cel_play_hover">
                         <?php if (AmpConfig::get('directplay')) { ?>
-                            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $count . '_' . $song->id); ?>
+                            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId(), 'play', T_('Play'), 'play_song_' . $count . '_' . $media->getId()); ?>
                             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $count . '_' . $song->id); ?>
+                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId() . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $count . '_' . $media->getId()); ?>
                             <?php } ?>
                             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $count . '_' . $song->id); ?>
+                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId() . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $count . '_' . $media->getId()); ?>
                             <?php } ?>
                         <?php } ?>
                     </div>
                 </td>
-                <td class="cel_song"><?php echo $song->get_f_link(); ?></td>
+                <td class="cel_song"><?php echo $media->get_f_link(); ?></td>
                 <td class="cel_add">
                 <span class="cel_item_add">
-                    <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>
-                    <a id="<?php echo 'add_playlist_' . $count . '_' . $song->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id; ?>')">
+                    <?php echo Ajax::button('?action=basket&type=song&id=' . $media->getId(), 'add', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $media->getId()); ?>
+                    <a id="<?php echo 'add_playlist_' . $count . '_' . $media->getId(); ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $media->getId(); ?>')">
                         <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
                     </a>
                 </span>
                 </td>
-                <td class="cel_artist"><?php echo $song->get_f_artist_link(); ?></td>
-                <td class="cel_year"><?php echo $song->getYear(); ?></td>
+                <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
+                <td class="cel_album"><?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?></td>
+                <td class="cel_year"><?php echo $media->getYear(); ?></td>
                 <?php if ($user_id > 0) { ?>
                     <td class="cel_username">
                         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out((string)$row_user->id); ?>">
@@ -168,6 +180,7 @@ foreach ($data as $row) {
         <th class="cel_title"><?php echo T_('Title'); ?></th>
         <th class="cel_add"></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_year"><?php echo T_('Year'); ?></th>
         <?php if ($user_id > 0) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>

@@ -48,6 +48,7 @@ $refresh   = (isset($no_refresh))
     : "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
 $web_path  = (string)AmpConfig::get('web_path', '');
 $is_admin  = Access::check('interface', 100);
+$showAlbum = AmpConfig::get('album_group');
 UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_played'); ?>
 <table class="tabledata striped-rows">
     <thead>
@@ -56,6 +57,7 @@ UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_pla
         <th class="cel_title"><?php echo T_('Title'); ?></th>
         <th class="cel_add"></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_year"><?php echo T_('Year'); ?></th>
         <?php if ($user_id > 0) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
@@ -143,6 +145,7 @@ foreach ($data as $row) {
                 </span>
                 </td>
                 <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
+                <td class="cel_album"><?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?></td>
                 <td class="cel_year"><?php echo $media->getYear(); ?></td>
                 <?php if ($user_id > 0) { ?>
                     <td class="cel_username">
@@ -180,6 +183,7 @@ foreach ($data as $row) {
         <th class="cel_title"><?php echo T_('Title'); ?></th>
         <th class="cel_add"></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_year"><?php echo T_('Year'); ?></th>
         <?php if ($user_id > 0) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
