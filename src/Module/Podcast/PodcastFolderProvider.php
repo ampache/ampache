@@ -51,10 +51,12 @@ final class PodcastFolderProvider implements PodcastFolderProviderInterface
      */
     public function getBaseFolder(Podcast $podcast): string
     {
+        $catalogId = $podcast->getCatalogId();
+
         try {
-            $catalog = $this->catalogLoader->getById($podcast->catalog);
+            $catalog = $this->catalogLoader->getById($catalogId);
         } catch (CatalogLoadingException $e) {
-            throw new PodcastFolderException(sprintf('Catalog not found: %d', $podcast->catalog));
+            throw new PodcastFolderException(sprintf('Catalog not found: %d', $catalogId));
         }
 
         $catalogType = $catalog->get_type();

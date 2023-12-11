@@ -973,14 +973,14 @@ class Json_Data
             $flag                = new Userflag($podcast_id, 'podcast');
             $art_url             = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
             $podcast_name        = $podcast->get_fullname();
-            $podcast_description = $podcast->description;
-            $podcast_language    = $podcast->f_language;
-            $podcast_copyright   = $podcast->f_copyright;
-            $podcast_feed_url    = $podcast->feed;
-            $podcast_generator   = $podcast->f_generator;
-            $podcast_website     = $podcast->f_website;
-            $podcast_build_date  = $podcast->f_lastbuilddate;
-            $podcast_sync_date   = $podcast->f_lastsync;
+            $podcast_description = $podcast->get_description();
+            $podcast_language    = scrub_out($podcast->getLanguage());
+            $podcast_copyright   = scrub_out($podcast->getCopyright());
+            $podcast_feed_url    = $podcast->getFeed();
+            $podcast_generator   = scrub_out($podcast->getGenerator());
+            $podcast_website     = scrub_out($podcast->getWebsite());
+            $podcast_build_date  = $podcast->getLastBuildDate()->format(DATE_ATOM);
+            $podcast_sync_date   = $podcast->getLastSyncDate()->format(DATE_ATOM);
             $podcast_public_url  = $podcast->get_link();
             $podcast_episodes    = array();
             if ($episodes) {

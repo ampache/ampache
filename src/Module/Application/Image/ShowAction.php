@@ -178,8 +178,10 @@ final class ShowAction implements ApplicationActionInterface
             $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
             $className = ObjectTypeToClassNameMapper::map($type);
             $item      = new $className($object_id);
-            if ($item instanceof Song || $item instanceof Video || $item instanceof Podcast || $item instanceof Podcast_Episode) {
+            if ($item instanceof Song || $item instanceof Video || $item instanceof Podcast_Episode) {
                 $filename = $item->title;
+            } elseif ($item instanceof Podcast) {
+                $filename = $item->getTitle();
             } elseif ($item instanceof User) {
                 $filename = $item->username;
             } else {

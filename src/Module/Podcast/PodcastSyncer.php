@@ -33,6 +33,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\PodcastRepositoryInterface;
+use DateTimeInterface;
 use SimpleXMLElement;
 
 /**
@@ -66,13 +67,15 @@ final class PodcastSyncer implements PodcastSyncerInterface
         Podcast $podcast,
         bool $gather = false
     ): bool {
-        debug_event(self::class, 'Syncing feed ' . $podcast->feed . ' ...', 4);
-        if ($podcast->feed === null) {
+        $feed = $podcast->getFeed();
+
+        debug_event(self::class, 'Syncing feed ' . $feed . ' ...', 4);
+        if ($feed === '') {
             return false;
         }
-        $xmlstr = file_get_contents($podcast->feed, false, stream_context_create(Core::requests_options()));
+        $xmlstr = file_get_contents($feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
-            debug_event(self::class, 'Cannot access feed ' . $podcast->feed, 1);
+            debug_event(self::class, 'Cannot access feed ' . $feed, 1);
 
             return false;
         }
@@ -82,12 +85,12 @@ final class PodcastSyncer implements PodcastSyncerInterface
             $xml = simplexml_load_string(str_replace('&', '&amp;', $xmlstr));
         }
         if ($xml === false) {
-            debug_event(self::class, 'Cannot read feed ' . $podcast->feed, 1);
+            debug_event(self::class, 'Cannot read feed ' . $feed, 1);
 
             return false;
         }
 
-        $this->addEpisodes($podcast, $xml->channel->item, $podcast->lastsync, $gather);
+        $this->addEpisodes($podcast, $xml->channel->item, $podcast->getLastSyncDate(), $gather);
 
         return true;
     }
@@ -133,7 +136,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
     public function addEpisodes(
         Podcast $podcast,
         SimpleXMLElement $episodes,
-        int $lastSync = 0,
+        ?DateTimeInterface $lastSync = null,
         bool $gather = false
     ): void {
         foreach ($episodes as $episode) {
@@ -178,10 +181,13 @@ final class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
-     * add_episode
+     * Adds the provided xml element as new podcast-episode
      */
-    private function add_episode(Podcast $podcast, SimpleXMLElement $episode, int $lastSync = 0): void
-    {
+    private function add_episode(
+        Podcast $podcast,
+        SimpleXMLElement $episode,
+        ?DateTimeInterface $lastSync
+    ): void {
         $title       = html_entity_decode((string)$episode->title);
         $website     = (string)$episode->link;
         $guid        = (string)$episode->guid;
@@ -250,7 +256,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
         // by default you want to download all the episodes
         $state = 'pending';
         // if you're syncing an old podcast, check the pubdate and skip it if published to the feed before your last sync
-        if ($lastSync > 0 && $pubdate < $lastSync) {
+        if ($lastSync !== null && $pubdate < $lastSync->getTimestamp()) {
             $state = 'skipped';
         }
 
@@ -270,7 +276,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
             $time,
             $pubdate,
             time(),
-            $podcast->catalog
+            $podcast->getCatalogId()
         ));
     }
 

@@ -52,9 +52,9 @@ Ui::show_box_top((string)$podcast->get_fullname(), 'info-box'); ?>
     $thumb = Ui::is_grid_view('podcast') ? 32 : 11;
 Art::display('podcast', $podcast->id, (string)$podcast->get_fullname(), $thumb); ?>
 </div>
-<?php if ($podcast->description) { ?>
+<?php if ($podcast->get_description()) { ?>
 <div id="item_summary">
-    <?php echo $podcast->description; ?>
+    <?php echo $podcast->get_description(); ?>
 </div>
 <?php } ?>
 <?php if (User::is_registered()) { ?>
@@ -100,7 +100,7 @@ Art::display('podcast', $podcast->id, (string)$podcast->get_fullname(), $thumb);
         </li>
         <?php } ?>
         <li>
-            <a href="<?php echo $podcast->website; ?>" target="_blank">
+            <a href="<?php echo $podcast->getWebsite(); ?>" target="_blank">
                 <?php echo Ui::get_icon('link', T_('Website')); ?>
                 <?php echo T_('Website'); ?>
             </a>

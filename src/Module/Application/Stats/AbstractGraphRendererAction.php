@@ -84,9 +84,9 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
 
         $blink = '';
         if ($libitem !== null) {
-            $libitem->get_f_link();
-            if (!empty($libitem->f_link)) {
-                $blink = $libitem->f_link;
+            $f_link = $libitem->get_f_link();
+            if (!empty($f_link)) {
+                $blink = $f_link;
             }
         } elseif ($user_id > 0) {
             $user  = new User($user_id);

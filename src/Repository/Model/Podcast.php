@@ -28,6 +28,8 @@ use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\PodcastRepositoryInterface;
+use DateTime;
+use DateTimeInterface;
 
 class Podcast extends database_object implements library_item
 {
@@ -35,31 +37,40 @@ class Podcast extends database_object implements library_item
 
     /* Variables from DB */
     public int $id = 0;
-    public ?string $feed;
-    public int $catalog;
-    public ?string $title;
-    public ?string $website;
-    public ?string $description;
-    public ?string $language;
-    public ?string $copyright;
-    public ?string $generator;
-    public int $lastbuilddate;
-    public int $lastsync;
-    public int $total_count;
-    public int $total_skip;
-    public int $episodes;
 
-    public ?string $link = null;
-    public $f_name;
-    public $f_website;
-    public $f_description;
-    public $f_language;
-    public $f_copyright;
-    public $f_generator;
-    public $f_lastbuilddate;
-    public $f_lastsync;
-    public $f_link;
-    public $f_website_link;
+    private ?string $feed;
+
+    public int $catalog;
+
+    private ?string $title;
+
+    private ?string $website;
+
+    private ?string $description;
+
+    private ?string $language;
+
+    private ?string $copyright;
+
+    private ?string $generator;
+
+    private int $lastbuilddate;
+
+    private int $lastsync;
+
+    private int $total_count;
+
+    private int $total_skip;
+
+    private int $episodes;
+
+    private ?string $link = null;
+
+    private ?string $f_name = null;
+
+    private ?string $f_description = null;
+
+    private ?string $f_link = null;
 
     private ?bool $has_art = null;
 
@@ -106,21 +117,11 @@ class Podcast extends database_object implements library_item
      * this function takes the object and formats some values
      *
      * @param bool $details
+     *
+     * @deprecated
      */
     public function format($details = true): void
     {
-        if ($this->isNew()) {
-            return;
-        }
-        $this->f_description   = scrub_out($this->description);
-        $this->f_language      = scrub_out($this->language);
-        $this->f_copyright     = scrub_out($this->copyright);
-        $this->f_generator     = scrub_out($this->generator);
-        $this->f_website       = scrub_out($this->website);
-        $this->f_lastbuilddate = date("c", (int)$this->lastbuilddate);
-        $this->f_lastsync      = date("c", (int)$this->lastsync);
-        $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
-        $this->get_f_link();
     }
 
     /**
@@ -183,7 +184,7 @@ class Podcast extends database_object implements library_item
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_link)) {
+        if ($this->f_link === null) {
             $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
@@ -262,6 +263,76 @@ class Podcast extends database_object implements library_item
         }
 
         return $this->f_description;
+    }
+
+    public function getEpisodeCount(): int
+    {
+        return $this->episodes;
+    }
+
+    public function getTotalCount(): int
+    {
+        return $this->total_count;
+    }
+
+    public function getTotalSkip(): int
+    {
+        return $this->total_skip;
+    }
+
+    public function getGenerator(): string
+    {
+        return (string) $this->generator;
+    }
+
+    public function getWebsite(): string
+    {
+        return (string) $this->website;
+    }
+
+    public function getCopyright(): string
+    {
+        return (string) $this->copyright;
+    }
+
+    public function getLanguage(): string
+    {
+        return (string) $this->language;
+    }
+
+    public function getFeed(): string
+    {
+        return (string) $this->feed;
+    }
+
+    public function getTitle(): string
+    {
+        return (string) $this->title;
+    }
+
+    public function getDescription(): string
+    {
+        return (string) $this->description;
+    }
+
+    public function getCatalogId(): int
+    {
+        return $this->catalog;
+    }
+
+    public function getLink(): string
+    {
+        return (string) $this->link;
+    }
+
+    public function getLastSyncDate(): DateTimeInterface
+    {
+        return new DateTime('@' . $this->lastsync);
+    }
+
+    public function getLastBuildDate(): DateTimeInterface
+    {
+        return new DateTime('@' . $this->lastbuilddate);
     }
 
     /**

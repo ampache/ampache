@@ -7421,27 +7421,7 @@ parameters:
 			path: src/Module/Cli/UpdateDbCommand.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_album\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_artist\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_link\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_fullname\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
@@ -7791,28 +7771,8 @@ parameters:
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_album\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_artist\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_link\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
 			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_fullname\\(\\)\\.$#"
-			count: 2
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
@@ -15242,56 +15202,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_copyright has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_description has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_generator has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_language has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_lastbuilddate has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_lastsync has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_website has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$f_website_link has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
 

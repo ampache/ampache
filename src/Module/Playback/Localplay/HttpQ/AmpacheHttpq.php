@@ -26,6 +26,7 @@ namespace Ampache\Module\Playback\Localplay\HttpQ;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
@@ -487,8 +488,9 @@ class AmpacheHttpq extends localplay_controller
                         $media->format();
                         switch ($row['type']) {
                             case 'song':
+                                /** @var Song $media */
                                 $data['name'] = $media->get_fullname() . ' - ' . $media->f_album . ' - ' . $media->f_artist;
-                                $data['link'] = $media->f_link;
+                                $data['link'] = $media->get_f_link();
                                 break;
                             case 'live_stream':
                                 /** @var Live_Stream $media */

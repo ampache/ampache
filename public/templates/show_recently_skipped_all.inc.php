@@ -70,8 +70,8 @@ UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
     <?php
     $count = 0;
 foreach ($data as $row) {
-    $row_id   = ($row['user'] > 0) ? (int) $row['user'] : -1;
-    $row_user = new User($row_id);
+    $row_id    = ($row['user'] > 0) ? (int) $row['user'] : -1;
+    $row_user  = new User($row_id);
     $className = ObjectTypeToClassNameMapper::map($row['object_type']);
     /** @var Song|Live_Stream|Podcast_Episode|Video $media */
     $media = new $className($row['object_id']);

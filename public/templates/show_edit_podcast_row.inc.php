@@ -32,27 +32,27 @@ use Ampache\Repository\Model\Podcast;
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Feed'); ?></td>
-                <td><input type="text" name="feed" value="<?php echo scrub_out($libitem->feed); ?>" autofocus /></td>
+                <td><input type="text" name="feed" value="<?php echo scrub_out($libitem->getFeed()); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Title'); ?></td>
-                <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" /></td>
+                <td><input type="text" name="title" value="<?php echo scrub_out($libitem->getTitle()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Description'); ?></td>
-                <td><textarea name="description" cols="44" rows="4"><?php echo scrub_out($libitem->description); ?></textarea></td>
+                <td><textarea name="description" cols="44" rows="4"><?php echo scrub_out($libitem->get_description()); ?></textarea></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Language'); ?></td>
-                <td><input type="text" name="language" value="<?php echo scrub_out($libitem->language); ?>" /></td>
+                <td><input type="text" name="language" value="<?php echo scrub_out($libitem->getLanguage()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Copyright'); ?></td>
-                <td><input type="text" name="copyright" value="<?php echo scrub_out($libitem->copyright); ?>" /></td>
+                <td><input type="text" name="copyright" value="<?php echo scrub_out($libitem->getCopyright()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Website'); ?></td>
-                <td><input type="text" name="website" value="<?php echo scrub_out($libitem->website); ?>" /></td>
+                <td><input type="text" name="website" value="<?php echo scrub_out($libitem->getWebsite()); ?>" /></td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />

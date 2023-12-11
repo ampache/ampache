@@ -37,7 +37,7 @@ if ($catalog->enabled) {
     $icontext = T_('Enable');
 }
 $button_flip_state_id = 'button_flip_state_' . $catalog->id; ?>
-<td class="cel_catalog"><?php echo $catalog->f_link; ?></td>
+<td class="cel_catalog"><?php echo $catalog->get_f_link(); ?></td>
 <td class="cel_info"><?php echo scrub_out($catalog->f_info); ?></td>
 <td class="cel_lastverify"><?php echo scrub_out($catalog->f_update); ?></td>
 <td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
