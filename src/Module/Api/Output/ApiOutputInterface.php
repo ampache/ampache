@@ -27,6 +27,25 @@ use Ampache\Repository\Model\User;
 
 interface ApiOutputInterface
 {
+    public function setOffset(int $offset): void;
+
+    public function setLimit(int $limit): void;
+
+    /**
+     * @param list<int> $result
+     */
+    public function podcastEpisodes(
+        array $result,
+        User $user
+    ): string;
+
+    /**
+     * Generate an empty api result
+     */
+    public function writeEmpty(
+        string $emptyType
+    ): string;
+
     /**
      * This generates an error message
      */

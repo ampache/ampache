@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Api\Method\PodcastEpisodesMethod;
 use Ampache\Module\Api\Output\ApiOutputFactory;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
 
@@ -44,4 +45,5 @@ return [
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
     Edit\ShowEditPlaylistAction::class => autowire(),
+    PodcastEpisodesMethod::class => autowire(),
 ];
