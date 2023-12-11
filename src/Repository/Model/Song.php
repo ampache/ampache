@@ -35,6 +35,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
@@ -910,7 +911,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             return '';
         }
         if (!isset($this->albumartist)) {
-            $this->albumartist = Album::get_album_artist($this->album);
+            $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
         }
 
         return self::get_artist_fullname($this->albumartist);
@@ -1561,7 +1562,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!isset($this->albumartists)) {
             $this->albumartists = self::get_parent_array($this->album, 'album');
         }
-        $this->albumartist = Album::get_album_artist($this->album);
+        $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
 
         // Format the album name
         $this->f_album_full = $this->get_album_fullname();
@@ -2334,5 +2335,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         global $dic;
 
         return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

@@ -13637,7 +13637,7 @@ parameters:
 
 		-
 			message: "#^Cannot access an offset on array\\<int\\<0, max\\>, int\\>\\|int\\.$#"
-			count: 3
+			count: 2
 			path: src/Repository/AlbumRepository.php
 
 		-
@@ -13646,24 +13646,9 @@ parameters:
 			path: src/Repository/AlbumRepository.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\AlbumRepository\\:\\:getAlbumDiskByArtist\\(\\) should return array\\<int\\> but returns array\\<int\\|string, array\\<int, int\\>\\|int\\>\\.$#"
-			count: 1
-			path: src/Repository/AlbumRepository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\AlbumRepository\\:\\:getArtistCountGroup\\(\\) has parameter \\$albumArray with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/AlbumRepository.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\AlbumRepository\\:\\:getByArtist\\(\\) should return array\\<int\\> but returns array\\<int\\|string, array\\<int, int\\>\\|int\\>\\.$#"
 			count: 1
 			path: src/Repository/AlbumRepository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\AlbumRepositoryInterface\\:\\:getArtistCountGroup\\(\\) has parameter \\$albumArray with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/AlbumRepositoryInterface.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:_get_extra_info\\(\\) return type has no value type specified in iterable type array\\.$#"

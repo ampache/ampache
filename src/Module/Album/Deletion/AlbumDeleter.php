@@ -97,18 +97,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
             }
         }
 
-        $deleted = $this->albumRepository->delete(
-            $albumId
-        );
-
-        if ($deleted === false) {
-            $this->logger->critical(
-                sprintf('Error when deleting the album `%d`.', $albumId),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-
-            throw new AlbumDeletionException();
-        }
+        $this->albumRepository->delete($album);
 
         Art::garbage_collection('album', $albumId);
         Userflag::garbage_collection('album', $albumId);

@@ -22,6 +22,8 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Album;
+
 interface AlbumRepositoryInterface
 {
     /**
@@ -84,38 +86,13 @@ interface AlbumRepositoryInterface
      * Deletes the album entry
      */
     public function delete(
-        int $albumId
-    ): bool;
+        Album $album
+    ): void;
 
     /**
      * Cleans out unused albums
      */
     public function collectGarbage(): void;
-
-    /**
-     * Get time for an album disk by album.
-     */
-    public function getAlbumDuration(int $albumId): int;
-
-    /**
-     * Get play count for an album disk by album id.
-     */
-    public function getAlbumPlayCount(int $albumId): int;
-
-    /**
-     * Get song count for an album disk by album id.
-     */
-    public function getSongCount(int $albumId): int;
-
-    /**
-     * Get distinct artist count for an album disk by album id.
-     */
-    public function getArtistCount(int $albumId): int;
-
-    /**
-     * Get distinct artist count for an album array.
-     */
-    public function getArtistCountGroup(array $albumArray): int;
 
     /**
      * gets the album ids that this artist is a part of
@@ -142,21 +119,9 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
-     * gets the album disk ids that this artist is a part of
-     * Return AlbumDisk only
-     *
-     * @return int[]
-     */
-    public function getAlbumDiskByArtist(
-        int $artistId,
-        ?int $catalogId = null,
-        bool $group_release_type = false
-    ): array;
-
-    /**
      * gets the album id has the same artist and title
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByName(
         string $name,
@@ -166,9 +131,21 @@ interface AlbumRepositoryInterface
     /**
      * gets the album id that is part of this mbid_group
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByMbidGroup(
-        string $mbid
+        string $musicBrainzId
     ): array;
+
+    /**
+     * This returns the ids of artists that have songs/albums mapped
+     *
+     * @return list<int>
+     */
+    public function getArtistMap(Album $album, string $objectType): array;
+
+    /**
+     * Get the primary album_artist
+     */
+    public function getAlbumArtistId(int $albumId): ?int;
 }
