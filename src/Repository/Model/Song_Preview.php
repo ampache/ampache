@@ -400,6 +400,14 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
+     * get_stream_name
+     */
+    public function get_stream_name(): string
+    {
+        return (string)$this->title;
+    }
+
+    /**
      * get_transcode_settings
      *
      * FIXME: Song Preview transcoding is not implemented
@@ -414,11 +422,11 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * get_stream_name
+     * getYear
      */
-    public function get_stream_name(): string
+    public function getYear(): string
     {
-        return (string)$this->title;
+        return '';
     }
 
     /**

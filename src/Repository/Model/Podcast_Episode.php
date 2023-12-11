@@ -564,6 +564,14 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     }
 
     /**
+     * getYear
+     */
+    public function getYear(): string
+    {
+        return date("Y", (int)$this->pubdate) ?: '';
+    }
+
+    /**
      * play_url
      * This function takes all the song information and correctly formats a
      * stream URL taking into account the downsmapling mojo and everything

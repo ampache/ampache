@@ -67,23 +67,27 @@ if ($user instanceof User) {
 </div>
 <?php
 }
-    if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
-        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos')); ?>
+if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos')); ?>
 <div id="random_video_selection" class="random_selection">
     <?php Ui::show_box_top(T_('Videos of the Moment'));
-        echo T_('Loading...');
-        Ui::show_box_bottom(); ?>
+    echo T_('Loading...');
+    Ui::show_box_bottom(); ?>
 </div>
     <?php
-    } ?>
+} ?>
 <?php if (AmpConfig::get('home_recently_played')) { ?>
 <!-- Recently Played -->
 <div id="recently_played">
-    <?php
-        $user_id   = Core::get_global('user')->id ?? -1;
-        $data      = Stats::get_recently_played($user_id, 'stream', 'song');
-        $ajax_page = 'index';
+<?php $user_id = Core::get_global('user')->id ?? -1;
+    $ajax_page = 'index';
+    if (AmpConfig::get('home_recently_played_all')) {
+        $data = Stats::get_recently_played($user_id);
+        require_once Ui::find_template('show_recently_played_all.inc.php');
+    } else {
+        $data = Stats::get_recently_played($user_id, 'stream', 'song');
         Song::build_cache(array_keys($data));
-        require_once Ui::find_template('show_recently_played.inc.php'); ?>
+        require_once Ui::find_template('show_recently_played.inc.php');
+    } ?>
 </div>
 <?php } ?>

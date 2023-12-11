@@ -554,6 +554,14 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
+     * getYear
+     */
+    public function getYear(): string
+    {
+        return '';
+    }
+
+    /**
      * type_to_mime
      *
      * Returns the mime type for the specified file extension/type

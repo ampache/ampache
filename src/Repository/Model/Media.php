@@ -55,6 +55,12 @@ interface Media
     public function play_url($additional_params = '', $player = '', $local = false): string;
 
     /**
+     * get_stream_name
+     * Get the complete name to display for the stream.
+     */
+    public function get_stream_name(): string;
+
+    /**
      * get_transcode_settings
      *
      * Should only be called if 'transcode' was returned by get_stream_types
@@ -69,10 +75,9 @@ interface Media
     public function get_transcode_settings($target = null, $player = null, $options = array());
 
     /**
-     * get_stream_name
-     * Get the complete name to display for the stream.
+     * getYear
      */
-    public function get_stream_name(): string;
+    public function getYear(): string;
 
     /**
      * @param int $user_id

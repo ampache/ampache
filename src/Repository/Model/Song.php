@@ -2060,6 +2060,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     }
 
     /**
+     * getYear
+     */
+    public function getYear(): string
+    {
+        return (string)($this->year ?: '');
+    }
+
+    /**
      * Get lyrics.
      * @return array
      */

@@ -598,6 +598,14 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * getYear
+     */
+    public function getYear(): string
+    {
+        return (string)($this->year ?: '');
+    }
+
+    /**
      * Get item f_artist_link.
      */
     public function get_f_artist_link(): ?string

@@ -432,6 +432,14 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
+     * getYear
+     */
+    public function getYear(): string
+    {
+        return '';
+    }
+
+    /**
      * @param int $user_id
      * @param string $agent
      * @param array $location

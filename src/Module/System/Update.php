@@ -918,6 +918,9 @@ class Update
         $update_string = "* Add column `last_update` and `date`to search table";
         $version[]     = array('version' => '600045', 'description' => $update_string);
 
+        $update_string = "* Add user preference `home_recently_played_all`, Show all media types in Recently Played";
+        $version[]     = array('version' => '600046', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5150,5 +5153,14 @@ class Update
         Dba::write($sql);
 
         return (self::_write($interactor, "ALTER TABLE `search` ADD COLUMN `date` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `type`;") !== false);
+    }
+
+    /** _update_600046
+     *
+     * Add user preference `home_recently_played_all`, Show all media types in Recently Played
+     */
+    private static function _update_600046(Interactor $interactor = null): bool
+    {
+        return self::_write_preference($interactor, 'home_recently_played_all', 'Show all media types in Recently Played', '0', 25, 'bool', 'interface', 'home');
     }
 }
