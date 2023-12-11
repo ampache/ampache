@@ -54,7 +54,7 @@ UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_pla
     <thead>
     <tr class="th-top">
         <th class="cel_play"></th>
-        <th class="cel_title"><?php echo T_('Title'); ?></th>
+        <th class="cel_song"><?php echo T_('Title'); ?></th>
         <th class="cel_add"></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
@@ -135,7 +135,7 @@ foreach ($data as $row) {
                         <?php } ?>
                     </div>
                 </td>
-                <td class="cel_title"><?php echo $media->get_f_link(); ?></td>
+                <td class="cel_song"><?php echo $media->get_f_link(); ?></td>
                 <td class="cel_add">
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=' . $row['object_type'] . '&id=' . $media->getId(), 'add', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $media->getId()); ?>
@@ -180,7 +180,7 @@ foreach ($data as $row) {
     <tfoot>
     <tr class="th-bottom">
         <th class="cel_play"></th>
-        <th class="cel_title"><?php echo T_('Title'); ?></th>
+        <th class="cel_song"><?php echo T_('Title'); ?></th>
         <th class="cel_add"></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>

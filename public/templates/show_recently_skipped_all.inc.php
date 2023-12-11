@@ -51,7 +51,7 @@ UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
     <thead>
     <tr class="th-top">
         <th class="cel_play"></th>
-        <th class="cel_title"><?php echo T_('Title'); ?></th>
+        <th class="cel_song"><?php echo T_('Title'); ?></th>
         <th class="cel_add"></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
@@ -177,7 +177,7 @@ foreach ($data as $row) {
     <tfoot>
     <tr class="th-bottom">
         <th class="cel_play"></th>
-        <th class="cel_title"><?php echo T_('Title'); ?></th>
+        <th class="cel_song"><?php echo T_('Title'); ?></th>
         <th class="cel_add"></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
