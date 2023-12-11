@@ -417,7 +417,9 @@ class Album extends database_object implements library_item
      */
     public function format($details = true, $limit_threshold = ''): void
     {
-        $web_path = AmpConfig::get('web_path');
+        if ($this->isNew()) {
+            return;
+        }
 
         $this->f_release_type = ucwords((string)$this->release_type);
         $this->get_artists();
@@ -441,6 +443,7 @@ class Album extends database_object implements library_item
         if (!$this->year) {
             $this->f_year = "N/A";
         } else {
+            $web_path          = AmpConfig::get('web_path');
             $year              = $this->year;
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }

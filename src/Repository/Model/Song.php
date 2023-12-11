@@ -1547,6 +1547,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function format($details = true): void
     {
+        if ($this->isNew()) {
+            return;
+        }
         if ($details) {
             $this->fill_ext_info();
 

@@ -109,6 +109,9 @@ class Podcast extends database_object implements library_item
      */
     public function format($details = true): void
     {
+        if ($this->isNew()) {
+            return;
+        }
         $this->f_description   = scrub_out($this->description);
         $this->f_language      = scrub_out($this->language);
         $this->f_copyright     = scrub_out($this->copyright);

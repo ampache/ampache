@@ -894,7 +894,7 @@ class User extends database_object
      */
     public function format($details = true): void
     {
-        if (!$this->id) {
+        if ($this->isNew()) {
             return;
         }
         /* If they have a last seen date */

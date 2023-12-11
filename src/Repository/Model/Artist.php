@@ -315,8 +315,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function format($details = true, $limit_threshold = ''): void
     {
-        // If this is a memory-only object, we're done here
-        if (!$this->id) {
+        if ($this->isNew()) {
             return;
         }
         $this->songs  = $this->song_count ?? 0;
