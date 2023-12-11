@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Gui\Song;
 
@@ -277,8 +277,6 @@ class SongViewAdapterTest extends MockeryTestCase
     public function testGetSongLinkReturnsValues(): void
     {
         $value = 'some-link';
-
-        $this->song->f_link = $value;
 
         $this->song->shouldReceive('get_f_link')
             ->withNoArgs()

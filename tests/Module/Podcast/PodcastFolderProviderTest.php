@@ -59,7 +59,9 @@ class PodcastFolderProviderTest extends TestCase
 
         $podcast = $this->createMock(Podcast::class);
 
-        $podcast->catalog = $catalogId;
+        $podcast->expects(static::once())
+            ->method('getCatalogId')
+            ->willReturn($catalogId);
 
         static::expectException(PodcastFolderException::class);
         static::expectExceptionMessage(sprintf('Catalog not found: %d', $catalogId));
@@ -79,10 +81,12 @@ class PodcastFolderProviderTest extends TestCase
         $podcast = $this->createMock(Podcast::class);
         $catalog = $this->createMock(Catalog::class);
 
-        $podcast->catalog = $catalogId;
-
         static::expectException(PodcastFolderException::class);
         static::expectExceptionMessage('Bad catalog type: snafu');
+
+        $podcast->expects(static::once())
+            ->method('getCatalogId')
+            ->willReturn($catalogId);
 
         $this->catalogLoader->expects(static::once())
             ->method('getById')
@@ -105,8 +109,6 @@ class PodcastFolderProviderTest extends TestCase
         $podcast = $this->createMock(Podcast::class);
         $catalog = $this->createMock(Catalog::class);
 
-        $podcast->catalog = $catalogId;
-
         static::expectException(PodcastFolderException::class);
         static::expectExceptionMessage(sprintf('Cannot create folder: %s/%s', $catalogPath, $podcastTitle));
 
@@ -125,6 +127,9 @@ class PodcastFolderProviderTest extends TestCase
         $podcast->expects(static::once())
             ->method('get_fullname')
             ->willReturn($podcastTitle);
+        $podcast->expects(static::once())
+            ->method('getCatalogId')
+            ->willReturn($catalogId);
 
         $this->subject->getBaseFolder($podcast);
     }
@@ -136,8 +141,6 @@ class PodcastFolderProviderTest extends TestCase
 
         $podcast = $this->createMock(Podcast::class);
         $catalog = $this->createMock(Catalog::class);
-
-        $podcast->catalog = $catalogId;
 
         $this->catalogLoader->expects(static::once())
             ->method('getById')
@@ -154,6 +157,9 @@ class PodcastFolderProviderTest extends TestCase
         $podcast->expects(static::once())
             ->method('get_fullname')
             ->willReturn($podcastTitle);
+        $podcast->expects(static::once())
+            ->method('getCatalogId')
+            ->willReturn($catalogId);
 
         static::assertSame(
             sprintf('%s/%s', $this->rootFolder->url(), $podcastTitle),
@@ -171,8 +177,6 @@ class PodcastFolderProviderTest extends TestCase
         $podcast = $this->createMock(Podcast::class);
         $catalog = $this->createMock(Catalog::class);
 
-        $podcast->catalog = $catalogId;
-
         $this->catalogLoader->expects(static::once())
             ->method('getById')
             ->with($catalogId)
@@ -188,6 +192,9 @@ class PodcastFolderProviderTest extends TestCase
         $podcast->expects(static::once())
             ->method('get_fullname')
             ->willReturn($podcastTitle);
+        $podcast->expects(static::once())
+            ->method('getCatalogId')
+            ->willReturn($catalogId);
 
         static::assertSame(
             sprintf('%s/%s', $this->rootFolder->url(), $podcastTitle),

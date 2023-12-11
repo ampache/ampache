@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -33,6 +34,8 @@ use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use PDOStatement;
 use Ampache\Module\System\Session;
@@ -274,7 +277,7 @@ class Stream_Playlist
                 }
             } else {
                 if (in_array($type, array('song', 'podcast_episode', 'video'))) {
-                    /** @var \Ampache\Repository\Model\Song|\Ampache\Repository\Model\Podcast_Episode|\Ampache\Repository\Model\Video $object */
+                    /** @var Song|Podcast_Episode|\Ampache\Repository\Model\Video $object */
                     $url['url'] = (!empty($user))
                         ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
                         : $object->play_url($additional_params);
@@ -293,10 +296,10 @@ class Stream_Playlist
             $url['time']   = (isset($object->time)) ? $object->time : 0;
             switch ($type) {
                 case 'song':
-                    /** @var \Ampache\Repository\Model\Song $object */
+                    /** @var Song $object */
                     $url['title']     = $object->title;
                     $url['author']    = $object->f_artist_full;
-                    $url['info_url']  = $object->f_link;
+                    $url['info_url']  = $object->get_f_link();
                     $show_song_art    = AmpConfig::get('show_song_art', false);
                     $has_art          = Art::has_db($object->id, 'song');
                     $art_object       = ($show_song_art && $has_art) ? $object->id : $object->album;
@@ -314,12 +317,12 @@ class Stream_Playlist
                     $url['codec']      = $object->type;
                     break;
                 case 'live_stream':
-                    /** @var \Ampache\Repository\Model\Live_Stream $object */
+                    /** @var Live_Stream $object */
                     $url['title'] = 'Radio - ' . $object->name;
                     if (!empty($object->site_url)) {
                         $url['title'] .= ' (' . $object->site_url . ')';
                     }
-                    $url['info_url']  = $object->f_link;
+                    $url['info_url']  = $object->get_f_link();
                     $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->codec;
                     break;
@@ -330,10 +333,10 @@ class Stream_Playlist
                     $url['codec']  = $object->type;
                     break;
                 case 'podcast_episode':
-                    /** @var \Ampache\Repository\Model\Podcast_Episode $object */
+                    /** @var Podcast_Episode $object */
                     $url['title']     = $object->f_name;
                     $url['author']    = $object->f_podcast;
-                    $url['info_url']  = $object->f_link;
+                    $url['info_url']  = $object->get_f_link();
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->type;
                     break;

@@ -57,10 +57,10 @@ use Ampache\Module\Util\Ui;
     <?php Art::display('podcast', $libitem->id, (string)$libitem->get_fullname(), 2, $libitem->get_link()); ?>
 </td>
 <td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
-<td class="cel_siteurl"><?php echo $libitem->f_website_link; ?></td>
-<td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
+<td class="cel_siteurl"><?php echo "<a target=\"_blank\" href=\"" . $libitem->getWebsite() . "\">" . $libitem->getWebsite() . "</a>"; ?></td>
+<td class="cel_episodes"><?php echo $libitem->getEpisodeCount(); ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
+    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->getTotalCount(); ?></td>
 <?php } ?>
 <?php if ($show_ratings) { ?>
         <td class="cel_ratings">

@@ -56,7 +56,7 @@ use Ampache\Module\Util\Ui;
 <td class="<?php echo $cel_cover; ?>">
     <?php Art::display('tvshow_season', $libitem->id, (string)$libitem->get_fullname(), 6, $libitem->get_link()); ?>
 </td>
-<td class="cel_season"><?php echo $libitem->f_link; ?></td>
+<td class="cel_season"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_tvshow"><?php echo $libitem->f_tvshow_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <?php

@@ -25,6 +25,7 @@ namespace Ampache\Module\Podcast;
 
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
+use DateTimeInterface;
 use SimpleXMLElement;
 
 interface PodcastSyncerInterface
@@ -51,7 +52,7 @@ interface PodcastSyncerInterface
     public function addEpisodes(
         Podcast $podcast,
         SimpleXMLElement $episodes,
-        int $lastSync = 0,
+        ?DateTimeInterface $lastSync = null,
         bool $gather = false
     ): void;
 }

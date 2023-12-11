@@ -58,7 +58,7 @@ use Ampache\Module\Util\Ui;
 <td class="<?php echo $cel_cover; ?>">
     <?php Art::display('tvshow', $libitem->id, (string)$libitem->get_fullname(), 6, $libitem->get_link()); ?>
 </td>
-<td class="cel_tvshow"><?php echo $libitem->f_link; ?></td>
+<td class="cel_tvshow"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <td class="cel_seasons"><?php echo $libitem->seasons; ?></td>
 <?php if (!$hide_genres) { ?>

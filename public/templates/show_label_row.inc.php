@@ -36,7 +36,7 @@ $name = scrub_out((string)$libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php Art::display('label', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->id); ?>
 </td>
-<td class="cel_label"><?php echo $libitem->f_link; ?></td>
+<td class="cel_label"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_category"><?php echo $libitem->category; ?></td>
 <td class="cel_artists"><?php echo $libitem->artist_count; ?></td>
 <td class="cel_country"><?php echo $libitem->country; ?></td>
