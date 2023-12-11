@@ -60,6 +60,10 @@ final class GuiGatekeeper implements GuiGatekeeperInterface
 
     public function getUser(): ?User
     {
-        return Core::get_global('user');
+        $globalUser = Core::get_global('user');
+
+        return (!empty($globalUser))
+            ? $globalUser
+            : null;
     }
 }
