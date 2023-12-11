@@ -3436,16 +3436,6 @@ parameters:
 			path: src/Module/Api/Method/PodcastEpisodeMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastEpisodesMethod\\:\\:podcast_episodes\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastEpisodesMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastEpisodesMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastMethod\\:\\:podcast\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PodcastMethod.php
@@ -3727,6 +3717,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Output/JsonOutput.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:podcastEpisodes\\(\\) should return string but returns array\\|string\\.$#"
 			count: 1
 			path: src/Module/Api/Output/JsonOutput.php
 

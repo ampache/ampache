@@ -33,6 +33,32 @@ use Ampache\Repository\Model\User;
 final class JsonOutput implements ApiOutputInterface
 {
     /**
+     * @param list<int> $result
+     */
+    public function podcastEpisodes(array $result, User $user): string
+    {
+        return Json_Data::podcast_episodes($result, $user);
+    }
+
+    public function setOffset(int $offset): void
+    {
+        Json_Data::set_offset($offset);
+    }
+
+    public function setLimit(int $limit): void
+    {
+        Json_Data::set_limit($limit);
+    }
+
+    /**
+     * Generate an empty api result
+     */
+    public function writeEmpty(string $emptyType): string
+    {
+        return Json_Data::empty($emptyType);
+    }
+
+    /**
      * At the moment, this method just acts as a proxy
      */
     public function error(int $code, string $message, string $action, string $type): string

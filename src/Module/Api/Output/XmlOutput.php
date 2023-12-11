@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Api\Xml5_Data;
@@ -33,6 +34,32 @@ use Ampache\Repository\Model\User;
 
 final class XmlOutput implements ApiOutputInterface
 {
+    /**
+     * @param list<int> $result
+     */
+    public function podcastEpisodes(array $result, User $user): string
+    {
+        return Xml_Data::podcast_episodes($result, $user);
+    }
+
+    public function setOffset(int $offset): void
+    {
+        Xml_Data::set_offset($offset);
+    }
+
+    public function setLimit(int $limit): void
+    {
+        Xml_Data::set_limit($limit);
+    }
+
+    /**
+     * Generate an empty api result
+     */
+    public function writeEmpty(string $emptyType): string
+    {
+        return Json_Data::empty($emptyType);
+    }
+
     /**
      * At the moment, this method just acts a proxy
      */
