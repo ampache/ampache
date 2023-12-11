@@ -74,7 +74,7 @@ final class ShowAction implements ApplicationActionInterface
 
         $episode_id = (int)$this->requestParser->getFromRequest('podcast_episode');
         $episode    = $this->modelFactory->createPodcastEpisode($episode_id);
-        if (!isset($episode->id)) {
+        if ($episode->isNew()) {
             $this->logger->warning(
                 'Requested a podcast_episode that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

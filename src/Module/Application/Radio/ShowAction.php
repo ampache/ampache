@@ -76,7 +76,7 @@ final class ShowAction implements ApplicationActionInterface
 
         $radio_id = (int)$this->requestParser->getFromRequest('radio');
         $radio    = $this->modelFactory->createLiveStream($radio_id);
-        if (!isset($radio->id)) {
+        if ($radio->isNew()) {
             $this->logger->warning(
                 'Requested a live_stream that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

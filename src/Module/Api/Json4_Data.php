@@ -305,7 +305,7 @@ class Json4_Data
 
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
-            if (!isset($artist->id)) {
+            if ($artist->isNew()) {
                 continue;
             }
             $artist->format();
@@ -379,6 +379,9 @@ class Json4_Data
         $JSON = [];
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
             $album->format();
 
             $rating      = new Rating($album_id, 'album');

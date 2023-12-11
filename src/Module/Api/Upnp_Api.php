@@ -636,7 +636,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $album = new Album((int)$pathreq[1]);
-                        if (isset($album->id)) {
+                        if ($album->isNew() === false) {
                             $album->format();
                             $meta = self::_itemAlbum($album, $root . '/albums');
                         }
@@ -831,6 +831,9 @@ class Upnp_Api
                             [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);
+                                if ($album->isNew()) {
+                                    continue;
+                                }
                                 $album->format();
                                 $mediaItems[] = self::_itemAlbum($album, $parent);
                             }
@@ -845,6 +848,9 @@ class Upnp_Api
                         [$maxCount, $album_ids] = array($counts['album'], $album_ids);
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
+                            if ($album->isNew()) {
+                                continue;
+                            }
                             $album->format();
                             $mediaItems[] = self::_itemAlbum($album, $parent);
                         }
@@ -1529,6 +1535,9 @@ class Upnp_Api
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $artist_id) {
                     $artist = new Artist($artist_id);
+                    if ($artist->isNew()) {
+                        continue;
+                    }
                     $artist->format();
                     $mediaItems[] = self::_itemArtist($artist, "amp://music/artists");
                 }
@@ -1546,6 +1555,9 @@ class Upnp_Api
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $album_id) {
                     $album = new Album($album_id);
+                    if ($album->isNew()) {
+                        continue;
+                    }
                     $album->format();
                     //debug_event(self::class, $album->get_fullname(), 5);
                     $mediaItems[] = self::_itemAlbum($album, "amp://music/albums");

@@ -680,7 +680,7 @@ class Subsonic_Api
             return;
         }
         $album = new Album(Subsonic_Xml_Data::_getAmpacheId($albumid));
-        if (!isset($album->id)) {
+        if ($album->isNew()) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getalbum');
         } else {
             $response = Subsonic_Xml_Data::addSubsonicResponse('getalbum');
@@ -867,6 +867,9 @@ class Subsonic_Api
                     debug_event(self::class, $similar['name'] . ' (id=' . $similar['id'] . ')', 5);
                     if ($similar['id']) {
                         $artist = new Artist($similar['id']);
+                        if ($artist->isNew()) {
+                            continue;
+                        }
                         // get the songs in a random order for even more chaos
                         $artist_songs = static::getSongRepository()->getRandomByArtist($artist);
                         foreach ($artist_songs as $song) {
@@ -2148,7 +2151,7 @@ class Subsonic_Api
 
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
-            if (!isset($episode->id)) {
+            if ($episode->isNew()) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletepodcastepisode');
             } else {
                 if ($episode->remove()) {
@@ -2180,7 +2183,7 @@ class Subsonic_Api
 
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
-            if (!isset($episode->id)) {
+            if ($episode->isNew()) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'downloadpodcastepisode');
             } else {
                 self::getPodcastEpisodeDownloader()->fetch($episode);

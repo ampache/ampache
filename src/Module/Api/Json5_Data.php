@@ -382,7 +382,7 @@ class Json5_Data
         Rating::build_cache('artist', $artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
-            if (!isset($artist->id)) {
+            if ($artist->isNew()) {
                 continue;
             }
             $artist->format();
@@ -457,6 +457,9 @@ class Json5_Data
         $JSON = [];
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
             $album->format();
 
             $rating      = new Rating($album_id, 'album');

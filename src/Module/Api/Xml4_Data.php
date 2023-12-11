@@ -275,7 +275,7 @@ class Xml4_Data
                         $string .= self::artists(array($object_id), array('songs', 'albums'), $user, false);
                     } else {
                         $artist = new Artist($object_id);
-                        if (!isset($artist->id)) {
+                        if ($artist->isNew()) {
                             break;
                         }
                         $albums = static::getAlbumRepository()->getAlbumByArtist($object_id);
@@ -428,7 +428,7 @@ class Xml4_Data
 
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
-            if (!isset($artist->id)) {
+            if ($artist->isNew()) {
                 continue;
             }
             $artist->format();
@@ -480,7 +480,7 @@ class Xml4_Data
 
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
-            if (!isset($album->id)) {
+            if ($album->isNew()) {
                 continue;
             }
             $album->format();

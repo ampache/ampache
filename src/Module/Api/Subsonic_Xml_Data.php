@@ -270,6 +270,9 @@ class Subsonic_Xml_Data
      */
     public static function addArtist($xml, $artist, $extra = false, $albums = false, $albumsSet = false): void
     {
+        if ($artist->isNew()) {
+            return;
+        }
         $artist->format();
         $sub_id  = (string)self::_getArtistId($artist->id);
         $xartist = self::addChildToResultXml($xml, 'artist');
@@ -375,6 +378,9 @@ class Subsonic_Xml_Data
      */
     public static function addAlbum($xml, $album, $songs = false, $elementName = "album"): void
     {
+        if ($album->isNew()) {
+            return;
+        }
         $album->format();
         $sub_id = (string)self::_getAlbumId($album->id);
         $xalbum = self::addChildToResultXml($xml, htmlspecialchars($elementName));

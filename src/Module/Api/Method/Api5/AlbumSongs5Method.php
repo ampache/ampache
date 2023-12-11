@@ -58,7 +58,7 @@ class AlbumSongs5Method
         }
         $object_id = (int) $input['filter'];
         $album     = new Album($object_id);
-        if (!isset($album->id)) {
+        if ($album->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 

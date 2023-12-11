@@ -59,8 +59,7 @@ final class PodcastEpisodeDelete5Method
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
-
-        if (!isset($episode->id)) {
+        if ($episode->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 

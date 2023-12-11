@@ -59,8 +59,7 @@ final class PodcastEpisode4Method
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
-
-        if (!isset($episode->id)) {
+        if ($episode->isNew()) {
             Api4::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
 
             return false;

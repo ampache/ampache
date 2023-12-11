@@ -516,7 +516,7 @@ class Json_Data
         $JSON = [];
         foreach ($objects as $artist_id) {
             $artist = new Artist($artist_id);
-            if (!isset($artist->id)) {
+            if ($artist->isNew()) {
                 continue;
             }
             $artist->format();
@@ -598,6 +598,9 @@ class Json_Data
         $JSON = [];
         foreach ($objects as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
             $album->format();
 
             $rating      = new Rating($album_id, 'album');
