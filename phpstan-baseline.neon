@@ -2096,62 +2096,7 @@ parameters:
 			path: src/Module/Api/Method/Api4/UserDelete4Method.php
 
 		-
-			message: "#^Cannot access property \\$access on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
-			message: "#^Cannot call method update_city\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
-			message: "#^Cannot call method update_email\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
-			message: "#^Cannot call method update_fullname\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
-			message: "#^Cannot call method update_password\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
-			message: "#^Cannot call method update_state\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
-			message: "#^Cannot call method update_website\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\UserUpdate4Method\\:\\:user_update\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$address of static method Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:validate_address\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of method Ampache\\\\Module\\\\User\\\\UserStateTogglerInterface\\:\\:disable\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of method Ampache\\\\Module\\\\User\\\\UserStateTogglerInterface\\:\\:enable\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/UserUpdate4Method.php
 
@@ -2836,62 +2781,7 @@ parameters:
 			path: src/Module/Api/Method/Api5/UserPreferences5Method.php
 
 		-
-			message: "#^Cannot access property \\$access on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
-			message: "#^Cannot call method update_city\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
-			message: "#^Cannot call method update_email\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
-			message: "#^Cannot call method update_fullname\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
-			message: "#^Cannot call method update_password\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
-			message: "#^Cannot call method update_state\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
-			message: "#^Cannot call method update_website\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\UserUpdate5Method\\:\\:user_update\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$address of static method Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:validate_address\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of method Ampache\\\\Module\\\\User\\\\UserStateTogglerInterface\\:\\:disable\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of method Ampache\\\\Module\\\\User\\\\UserStateTogglerInterface\\:\\:enable\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/UserUpdate5Method.php
 

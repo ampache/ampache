@@ -1020,7 +1020,7 @@ abstract class Catalog extends database_object
             foreach ($catalogs as $catalogid) {
                 debug_event(__CLASS__, 'cache_catalogs: ' . $catalogid, 5);
                 $catalog = self::create_from_id($catalogid);
-                if (!$catalog instanceof Catalog) {
+                if ($catalog === null) {
                     break;
                 }
                 $catalog->cache_catalog_proc();
@@ -1052,7 +1052,7 @@ abstract class Catalog extends database_object
         }
         foreach ($catalogs as $catalogid) {
             $catalog = self::create_from_id($catalogid);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 break;
             }
             if ($catalog->last_add > $last_update) {
@@ -1395,7 +1395,7 @@ abstract class Catalog extends database_object
         $results = array();
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 break;
             }
             $video_ids = $catalog->get_video_ids($type);
@@ -1459,7 +1459,7 @@ abstract class Catalog extends database_object
         $results = array();
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 break;
             }
             $tvshow_ids = $catalog->get_tvshow_ids();
@@ -1849,7 +1849,7 @@ abstract class Catalog extends database_object
         $results = array();
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 break;
             }
             $podcast_ids = $catalog->get_podcast_ids();
@@ -1896,7 +1896,7 @@ abstract class Catalog extends database_object
 
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 break;
             }
             $episode_ids = $catalog->get_newest_podcasts_ids($count);
@@ -2417,7 +2417,7 @@ abstract class Catalog extends database_object
     ) {
         $array   = array();
         $catalog = self::create_from_id($media->catalog);
-        if (!$catalog instanceof Catalog) {
+        if ($catalog === null) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
             $array['error'] = true;
 
@@ -4236,13 +4236,20 @@ abstract class Catalog extends database_object
             case 'garbage_collect':
                 debug_event(__CLASS__, 'Run Garbage collection', 5);
                 static::getCatalogGarbageCollector()->collect();
-                /** @var Catalog $catalog */
-                $catalog_media_type = $catalog->gather_types;
-                if ($catalog_media_type == 'music') {
-                    self::clean_empty_albums();
-                    Album::update_album_artist();
+                $catalog_media_types = array();
+                foreach ($catalogs as $catalog_id) {
+                    $catalog = self::create_from_id($catalog_id);
+                    if ($catalog !== null && !in_array($catalog->gather_types, $catalog_media_types)) {
+                        $catalog_media_types[] = $catalog_media_types;
+                    }
                 }
-                self::update_catalog_map($catalog_media_type);
+                foreach ($catalog_media_types as $catalog_media_type) {
+                    if ($catalog_media_types == 'music') {
+                        self::clean_empty_albums();
+                        Album::update_album_artist();
+                    }
+                    self::update_catalog_map($catalog_media_type);
+                }
                 self::garbage_collect_mapping();
                 self::garbage_collect_filters();
                 self::update_counts();

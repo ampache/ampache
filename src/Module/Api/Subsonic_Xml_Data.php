@@ -167,7 +167,7 @@ class Subsonic_Xml_Data
         $xfolders = self::addChildToResultXml($xml, 'musicFolders');
         foreach ($catalogs as $folder_id) {
             $catalog = Catalog::create_from_id($folder_id);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 break;
             }
             $xfolder = self::addChildToResultXml($xfolders, 'musicFolder');
@@ -607,7 +607,7 @@ class Subsonic_Xml_Data
     private static function addDirectory_Catalog($xml, $catalog_id): void
     {
         $catalog = Catalog::create_from_id((int)$catalog_id);
-        if (!$catalog instanceof Catalog) {
+        if ($catalog === null) {
             return;
         }
         $xdir = self::addChildToResultXml($xml, 'directory');

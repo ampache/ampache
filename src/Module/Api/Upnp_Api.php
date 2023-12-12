@@ -875,7 +875,7 @@ class Upnp_Api
                     $catalogs = Catalog::get_catalogs();
                     foreach ($catalogs as $catalog_id) {
                         $catalog = Catalog::create_from_id($catalog_id);
-                        if (!$catalog instanceof Catalog) {
+                        if ($catalog === null) {
                             break;
                         }
                         $songs              = $catalog->get_songs();

@@ -902,9 +902,8 @@ class Json_Data
         }
         $JSON = [];
         foreach ($objects as $catalog_id) {
-            /** @var Catalog $catalog */
             $catalog = Catalog::create_from_id($catalog_id);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 break;
             }
             $catalog->format();

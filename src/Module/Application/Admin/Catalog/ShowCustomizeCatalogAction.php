@@ -60,7 +60,7 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
-        if (!$catalog instanceof Catalog) {
+        if ($catalog === null) {
             return null;
         }
         $catalog->format();

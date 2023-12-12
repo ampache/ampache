@@ -603,9 +603,8 @@ class Xml4_Data
         $string = "<total_count>" . count($catalogs) . "</total_count>\n";
 
         foreach ($catalogs as $catalog_id) {
-            /** @var Catalog $catalog */
             $catalog = Catalog::create_from_id($catalog_id);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 break;
             }
             $catalog->format();

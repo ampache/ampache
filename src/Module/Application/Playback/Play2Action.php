@@ -659,7 +659,7 @@ final class Play2Action implements ApplicationActionInterface
             } else {
                 // Build up the catalog for our current object
                 $catalog = Catalog::create_from_id($mediaCatalogId);
-                if (!$catalog instanceof Catalog) {
+                if ($catalog === null) {
                     return null;
                 }
 

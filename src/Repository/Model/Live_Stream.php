@@ -364,7 +364,7 @@ class Live_Stream extends database_object implements Media, library_item
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($data['catalog']);
-        if (!$catalog instanceof Catalog) {
+        if ($catalog === null) {
             AmpError::add('catalog', T_('Catalog is invalid'));
         }
 

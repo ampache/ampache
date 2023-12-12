@@ -70,7 +70,7 @@ final class CatalogLoader implements CatalogLoaderInterface
 
         foreach ($catalogIds as $catalogId) {
             $catalog = Catalog::create_from_id($catalogId);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 continue;
             }
 

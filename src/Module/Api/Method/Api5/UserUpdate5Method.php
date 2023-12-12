@@ -77,7 +77,12 @@ final class UserUpdate5Method
 
         // identify the user to modify
         $update_user = User::get_from_username($username);
-        $user_id     = $update_user->getId();
+        if ($update_user === null) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+
+            return false;
+        }
 
         if ($password && $update_user->access == 100) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -86,8 +91,7 @@ final class UserUpdate5Method
             return false;
         }
 
-        $userStateToggler = static::getUserStateToggler();
-
+        $user_id = $update_user->getId();
         if ($user_id > 0) {
             if ($password && !AmpConfig::get('simple_user_mode')) {
                 $update_user->update_password('', $password);
@@ -95,7 +99,7 @@ final class UserUpdate5Method
             if ($fullname) {
                 $update_user->update_fullname($fullname);
             }
-            if (Mailer::validate_address($email)) {
+            if ($email && Mailer::validate_address($email)) {
                 $update_user->update_email($email);
             }
             if ($website) {
@@ -107,6 +111,7 @@ final class UserUpdate5Method
             if ($city) {
                 $update_user->update_city($city);
             }
+            $userStateToggler = static::getUserStateToggler();
             if ($disable === '1') {
                 $userStateToggler->disable($update_user);
             } elseif ($disable === '0') {

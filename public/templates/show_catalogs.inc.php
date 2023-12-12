@@ -47,7 +47,7 @@ if ($browse->is_show_header()) {
         <?php
             foreach ($object_ids as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
-                if (!$catalog instanceof Catalog) {
+                if ($catalog === null) {
                     continue;
                 }
                 $catalog->format(); ?>

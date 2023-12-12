@@ -62,7 +62,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $utilityFactory = $dic->get(UtilityFactoryInterface::class);
 
         $catalog = Catalog::create_from_id($song->catalog);
-        if (!$catalog instanceof Catalog) {
+        if ($catalog === null) {
             return;
         }
         if ($catalog->get_type() == 'local') {
@@ -244,7 +244,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $utilityFactory = $dic->get(UtilityFactoryInterface::class);
 
         $catalog = Catalog::create_from_id($song->catalog);
-        if (!$catalog instanceof Catalog) {
+        if ($catalog === null) {
             return;
         }
         if ($catalog->get_type() == 'local') {

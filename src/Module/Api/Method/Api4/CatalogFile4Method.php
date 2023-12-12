@@ -84,7 +84,7 @@ final class CatalogFile4Method
         }
         $catalog_id = (int) $input['catalog'];
         $catalog    = Catalog::create_from_id($catalog_id);
-        if (!$catalog instanceof Catalog) {
+        if ($catalog === null) {
             Api4::message('error', T_('Catalog not found') . ' ' . $catalog_id, '404', $input['api_format']);
 
             return false;

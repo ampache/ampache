@@ -56,9 +56,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         ob_start();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            /** @var Catalog_local $catalog */
             $catalog = Catalog::create_from_id($row['id']);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 $interactor->error(
                     sprintf(T_('Catalog `%s` not found'), $catname),
                     true
@@ -68,6 +67,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
             }
             ob_flush();
             // Identify the catalog and file (if it exists in the DB)
+            /** @var Catalog_local $catalog */
             switch ($catalog->gather_types) {
                 case 'podcast':
                     $type    = 'podcast_episode';

@@ -893,9 +893,8 @@ class Xml_Data
         $string = "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n";
 
         foreach ($catalogs as $catalog_id) {
-            /** @var Catalog $catalog */
             $catalog = Catalog::create_from_id($catalog_id);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 break;
             }
             $catalog->format();

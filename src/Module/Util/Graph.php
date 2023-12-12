@@ -301,7 +301,7 @@ class Graph
             $catalogs = Catalog::get_catalogs();
             foreach ($catalogs as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
-                if (!$catalog instanceof Catalog) {
+                if ($catalog === null) {
                     break;
                 }
                 $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom);

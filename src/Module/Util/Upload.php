@@ -156,7 +156,7 @@ class Upload
         }
         if (array_key_exists('upl', $_FILES) && $_FILES['upl']['error'] == 0) {
             $catalog = Catalog::create_from_id($catalog_id);
-            if (!$catalog instanceof Catalog) {
+            if ($catalog === null) {
                 return null;
             }
             if ($catalog->catalog_type == "local") {

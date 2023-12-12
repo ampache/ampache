@@ -128,7 +128,7 @@ final class CatalogAddMethod
             return false;
         }
         $catalog = Catalog::create_from_id($catalog_id);
-        if (!$catalog instanceof Catalog) {
+        if ($catalog === null) {
             Api::empty('catalog', $input['api_format']);
 
             return false;

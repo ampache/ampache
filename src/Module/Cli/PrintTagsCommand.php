@@ -65,7 +65,7 @@ final class PrintTagsCommand extends Command
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
         $catalog    = Catalog::create_from_id($row['id']);
-        if (!$catalog instanceof Catalog) {
+        if ($catalog === null) {
             return;
         }
 

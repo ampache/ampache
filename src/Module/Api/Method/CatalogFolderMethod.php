@@ -96,7 +96,7 @@ final class CatalogFolderMethod
         $output_task = rtrim($output_task, ', ');
         $catalog_id  = (int) $input['catalog'];
         $catalog     = Catalog::create_from_id($catalog_id);
-        if (!$catalog instanceof Catalog) {
+        if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
 
