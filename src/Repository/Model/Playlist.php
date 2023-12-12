@@ -359,14 +359,11 @@ class Playlist extends playlist_object
     /**
      * get_random_items
      * This is the same as before but we randomize the buggers!
-     * @param string $limit
+     * @param string|null $limit
      * @return array
      */
     public function get_random_items($limit = '')
     {
-        $limit_sql = (!empty($limit))
-            ? ' LIMIT ' . (string)($limit)
-            : '';
         $results = array();
         $user    = Core::get_global('user');
         $user_id = $user->id ?? 0;
@@ -395,7 +392,12 @@ class Playlist extends playlist_object
                     $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist`= ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' AND `playlist_data`.`object_type` != 'live_stream' ORDER BY `track`";
                     debug_event(__CLASS__, "get_items(): $object_type not handled", 5);
             }
-            $db_results = Dba::read($sql . $limit_sql, $params);
+            $sql .= (!empty($limit))
+                ? ' LIMIT ' . $limit
+                : '';
+
+            //debug_event(__CLASS__, "get_random_items(): " . $sql . $limit_sql, 5);
+            $db_results = Dba::read($sql, $params);
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = array(
                     'object_type' => $row['object_type'],
@@ -404,8 +406,7 @@ class Playlist extends playlist_object
                     'track_id' => $row['id']
                 );
             }
-        } // end while
-        //debug_event(__CLASS__, "get_random_items(): " . $sql . $limit_sql, 5);
+        }
 
         return $results;
     }

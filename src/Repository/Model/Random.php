@@ -198,7 +198,7 @@ class Random
         $results  = array();
         $playlist = new Playlist($playlist_id);
         if ($playlist->has_access($user->id)) {
-            foreach ($playlist->get_random_items(1) as $songs) {
+            foreach ($playlist->get_random_items('1') as $songs) {
                 $results[] = (int)$songs['object_id'];
             }
         }
@@ -218,7 +218,7 @@ class Random
         $results = array();
         $search  = new Search($search_id, 'song', $user);
         if ($search->has_access($user->id) || $search->type == 'public') {
-            foreach ($search->get_random_items(1) as $songs) {
+            foreach ($search->get_random_items('1') as $songs) {
                 $results[] = (int)$songs['object_id'];
             }
 
@@ -426,7 +426,7 @@ class Random
     public static function get_play_url($object_type, $object_id): string
     {
         $user = Core::get_global('user');
-        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out($user->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out($object_id);
+        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out((string)$user->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
 
         return Stream_Url::format($link);
     }

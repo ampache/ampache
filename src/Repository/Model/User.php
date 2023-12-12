@@ -223,6 +223,18 @@ class User extends database_object
     }
 
     /**
+     * get_from_global
+     */
+    public static function get_from_global(): ?User
+    {
+        $globalUser = Core::get_global('user');
+
+        return (!empty($globalUser))
+            ? $globalUser
+            : null;
+    }
+
+    /**
      * get_from_username
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance

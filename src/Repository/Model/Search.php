@@ -92,9 +92,10 @@ class Search extends playlist_object
      */
     public function __construct($search_id = 0, $object_type = 'song', ?User $user = null)
     {
-        $this->search_user = ($user instanceof User)
-            ? $user
-            : Core::get_global('user');
+        $this->search_user = $user;
+        if (!$this->search_user instanceof User) {
+            $this->search_user = User::get_from_global() ?? new User(-1);
+        }
         $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
             ? strtolower($object_type)
             : 'song';
@@ -1361,15 +1362,14 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
-     * @param int $limit
+     * @param string|null $limit
      * @return array
      */
-    public function get_random_items($limit = null)
+    public function get_random_items($limit = '')
     {
         $results = array();
-
-        $sqltbl = $this->to_sql();
-        $sql    = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
+        $sqltbl  = $this->to_sql();
+        $sql     = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
         if (!empty($sqltbl['where_sql'])) {
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
@@ -1389,13 +1389,12 @@ class Search extends playlist_object
         }
 
         $sql .= " ORDER BY RAND()";
-        $sql .= ($limit)
-            ? " LIMIT " . (string) ($limit)
+        $sql .= (!empty($limit))
+            ? " LIMIT " . $limit
             : "";
+
         //debug_event(self::class, 'SQL get_random_items: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
-
         $db_results = Dba::read($sql, $sqltbl['parameters']);
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array(
                 'object_id' => $row['id'],

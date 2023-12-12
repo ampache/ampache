@@ -56,7 +56,7 @@ final class LegacyLogger implements LoggerInterface
     }
 
     /**
-     * Use LegacyLogger::critical (Required function to implement LoggerInterface)
+     * @see LegacyLogger::critical (Required function to implement LoggerInterface)
      */
     public function emergency($message, array $context = []): void
     {
@@ -68,7 +68,7 @@ final class LegacyLogger implements LoggerInterface
     }
 
     /**
-     * Use LegacyLogger::critical (Required function to implement LoggerInterface)
+     * @see LegacyLogger::critical (Required function to implement LoggerInterface)
      */
     public function alert($message, array $context = []): void
     {
@@ -128,7 +128,7 @@ final class LegacyLogger implements LoggerInterface
     }
 
     /**
-     * Use LegacyLogger::notice(Required function to implement LoggerInterface)
+     * @see LegacyLogger::notice (Required function to implement LoggerInterface)
      */
     public function info($message, array $context = []): void
     {

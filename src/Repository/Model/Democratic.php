@@ -265,7 +265,7 @@ class Democratic extends Tmp_Playlist
             $base_playlist = ($use_search)
                 ? new Search($this->base_playlist)
                 : new Playlist($this->base_playlist);
-            $data = $base_playlist->get_random_items(1);
+            $data = $base_playlist->get_random_items('1');
 
             return $data[0]['object_id'];
         } else {
