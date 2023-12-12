@@ -196,7 +196,7 @@ class User extends database_object
      */
     public function load_playlist(): void
     {
-        if ($this->playlist === null) {
+        if ($this->playlist === null && session_id()) {
             $this->playlist = Tmp_Playlist::get_from_session(session_id());
         }
     }
