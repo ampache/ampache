@@ -98,7 +98,7 @@ class Search extends playlist_object
         $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
             ? strtolower($object_type)
             : 'song';
-        $this->user = $this->search_user->id; // define a user for live searches (overwriten if saved before)
+        $this->user = $this->search_user->id ?? -1; // define a user for live searches (overwriten if saved before)
         if ($search_id > 0) {
             $info = $this->get_info($search_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
