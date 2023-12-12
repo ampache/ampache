@@ -32,7 +32,7 @@ use Ampache\Repository\SongRepositoryInterface;
  * This is the class responsible for handling the Album object
  * it is related to the album table in the database.
  */
-class AlbumDisk extends database_object implements library_item
+class AlbumDisk extends database_object implements library_item, CatalogizedItemInterface
 {
     protected const DB_TABLENAME = 'album_disk';
 
@@ -453,14 +453,11 @@ class AlbumDisk extends database_object implements library_item
     }
 
     /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return list<int>
+     * Returns the id of the catalog the item is associated to
      */
-    public function get_catalogs()
+    public function getCatalogId(): int
     {
-        return array($this->catalog);
+        return $this->catalog;
     }
 
     /**

@@ -56,7 +56,7 @@ final class UpdatePodcast4Method
         }
         $object_id = (int) scrub_in((string) $input['filter']);
         $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
+        if ($podcast->isNew() === false) {
             if (static::getPodcastSyncer()->sync($podcast, true)) {
                 Api4::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['api_format']);
                 Session::extend($input['auth'], 'api');

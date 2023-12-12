@@ -61,7 +61,7 @@ final class PodcastDelete4Method
         }
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
+        if ($podcast->isNew() === false) {
             self::getPodcastDeleter()->delete($podcast);
 
             Api4::message('success', 'podcast ' . $object_id . ' deleted', null, $input['api_format']);

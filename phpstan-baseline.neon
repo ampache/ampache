@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Property Ampache\\\\Application\\\\Api\\\\Ajax\\\\AjaxApplication\\:\\:\\$dic has no type specified\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/AjaxApplication.php
-
-		-
 			message: "#^Parameter \\#1 \\$artist of method Ampache\\\\Repository\\\\SongRepositoryInterface\\:\\:getRandomByArtist\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Artist, object given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
@@ -3546,11 +3541,6 @@ parameters:
 			path: src/Module/Api/SubsonicApiApplication.php
 
 		-
-			message: "#^Argument of an invalid type SimpleXMLElement\\|null supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Cannot access offset '' on array\\<string\\>\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -5081,11 +5071,6 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Caught class PHPUnit\\\\Framework\\\\MockObject\\\\DuplicateMethodException not found\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Access/AddHostAction.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Admin\\\\Catalog\\\\AbstractCatalogAction\\:\\:getCatalogIds\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Application/Admin/Catalog/AbstractCatalogAction.php
@@ -5264,11 +5249,6 @@ parameters:
 			message: "#^Call to function is_array\\(\\) with non\\-falsy\\-string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Application/Share/ShowCreateAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/Shout/ShowAddShoutAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:set_rules\\(\\) expects array, array\\|object\\|null given\\.$#"

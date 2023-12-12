@@ -72,7 +72,7 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
             'show_update_items.inc.php',
             [
                 'object_id' => $albumId,
-                'catalog_id' => $album->get_catalogs(),
+                'catalog_id' => $album->getCatalogId(),
                 'type' => 'album',
                 'target_url' => sprintf(
                     '%s/albums.php?action=show&amp;album=%d',

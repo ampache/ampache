@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
@@ -82,7 +82,7 @@ class UpdateDiskFromTagsActionTest extends TestCase
 
         $albumDiskId = 666;
         $webPath     = 'some-web-path';
-        $catalogList = [123];
+        $catalogId   = 123;
 
         $gatekeeper->expects(static::once())
             ->method('mayAccess')
@@ -101,8 +101,8 @@ class UpdateDiskFromTagsActionTest extends TestCase
         $albumDisk->expects(static::once())
             ->method('format');
         $albumDisk->expects(static::once())
-            ->method('get_catalogs')
-            ->willReturn($catalogList);
+            ->method('getCatalogId')
+            ->willReturn($catalogId);
 
         $this->configContainer->expects(static::once())
             ->method('getWebPath')
@@ -119,7 +119,7 @@ class UpdateDiskFromTagsActionTest extends TestCase
                 'show_update_items.inc.php',
                 [
                     'object_id' => $albumDiskId,
-                    'catalog_id' => $catalogList,
+                    'catalog_id' => $catalogId,
                     'type' => 'album_disk',
                     'target_url' => sprintf(
                         '%s/albums.php?action=show_disk&amp;album_disk=%d',

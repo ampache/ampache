@@ -28,7 +28,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 
 /** @var int $object_id */
-/** @var list<int> $catalog_id */
+/** @var int|null $catalog_id */
 /** @var string $type */
 /** @var string $target_url */
 
@@ -46,7 +46,7 @@ if ($object_id != $return_id) {
 // gather art for this item
 $art = new Art($object_id, $type);
 if (!$art->has_db_info() && !AmpConfig::get('art_order') == 'db') {
-    if (is_array($catalog_id) && $catalog_id[0] != '') {
+    if ($catalog_id !== null) {
         Catalog::gather_art_item($type, $object_id);
     }
 } ?>

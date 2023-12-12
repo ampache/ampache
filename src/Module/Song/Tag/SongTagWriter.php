@@ -38,13 +38,18 @@ use Psr\Log\LoggerInterface;
 final class SongTagWriter implements SongTagWriterInterface
 {
     private ConfigContainerInterface $configContainer;
+
+    private UtilityFactoryInterface $utilityFactory;
+
     private LoggerInterface $logger;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
+        UtilityFactoryInterface $utilityFactory,
         LoggerInterface $logger
     ) {
         $this->configContainer = $configContainer;
+        $this->utilityFactory  = $utilityFactory;
         $this->logger          = $logger;
     }
 
@@ -58,10 +63,7 @@ final class SongTagWriter implements SongTagWriterInterface
             return;
         }
 
-        global $dic;
-        $utilityFactory = $dic->get(UtilityFactoryInterface::class);
-
-        $catalog = Catalog::create_from_id($song->catalog);
+        $catalog = Catalog::create_from_id($song->getCatalogId());
         if ($catalog === null) {
             return;
         }
@@ -77,8 +79,8 @@ final class SongTagWriter implements SongTagWriterInterface
                     $ndata[$metadata->getField()->getName()] = $metadata->getData();
                 }
             }
-            $vainfo = $utilityFactory->createVaInfo(
-                $song->file
+            $vainfo = $this->utilityFactory->createVaInfo(
+                (string) $song->file
             );
 
             $result     = $vainfo->read_id3();
@@ -240,10 +242,7 @@ final class SongTagWriter implements SongTagWriterInterface
             return;
         }
 
-        global $dic;
-        $utilityFactory = $dic->get(UtilityFactoryInterface::class);
-
-        $catalog = Catalog::create_from_id($song->catalog);
+        $catalog = Catalog::create_from_id($song->getCatalogId());
         if ($catalog === null) {
             return;
         }
@@ -253,8 +252,8 @@ final class SongTagWriter implements SongTagWriterInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
-            $vainfo = $utilityFactory->createVaInfo(
-                $song->file
+            $vainfo = $this->utilityFactory->createVaInfo(
+                (string) $song->file
             );
 
             $ndata      = array();

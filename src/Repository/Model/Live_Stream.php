@@ -36,7 +36,7 @@ use Ampache\Module\System\AmpError;
  * this can include podcasts or what-have-you
  *
  */
-class Live_Stream extends database_object implements Media, library_item
+class Live_Stream extends database_object implements Media, library_item, CatalogizedItemInterface
 {
     protected const DB_TABLENAME = 'live_stream';
 
@@ -236,14 +236,11 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return list<int>
+     * Returns the id of the catalog the item is associated to
      */
-    public function get_catalogs()
+    public function getCatalogId(): int
     {
-        return array($this->catalog);
+        return $this->catalog;
     }
 
     /**

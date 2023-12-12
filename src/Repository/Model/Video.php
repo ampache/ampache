@@ -37,7 +37,11 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-class Video extends database_object implements Media, library_item, GarbageCollectibleInterface
+class Video extends database_object implements
+    Media,
+    library_item,
+    GarbageCollectibleInterface,
+    CatalogizedItemInterface
 {
     protected const DB_TABLENAME = 'video';
 
@@ -414,14 +418,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return list<int>
+     * Returns the id of the catalog the item is associated to
      */
-    public function get_catalogs()
+    public function getCatalogId(): int
     {
-        return array($this->catalog);
+        return $this->catalog;
     }
 
     /**

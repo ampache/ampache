@@ -47,6 +47,7 @@ use Psr\Container\ContainerInterface;
 
 final class AjaxApplication implements ApplicationInterface
 {
+    /** @var array<string, class-string> */
     private const HANDLER_LIST = [
         'browse' => BrowseAjaxHandler::class,
         'catalog' => CatalogAjaxHandler::class,
@@ -65,7 +66,7 @@ final class AjaxApplication implements ApplicationInterface
         'user' => UserAjaxHandler::class,
     ];
 
-    private $dic;
+    private ContainerInterface $dic;
 
     public function __construct(
         ContainerInterface $dic

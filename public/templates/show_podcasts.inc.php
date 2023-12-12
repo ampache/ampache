@@ -94,7 +94,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                         continue;
                     }
                     $libitem->format(); ?>
-        <tr id="podcast_<?php echo $libitem->id; ?>">
+        <tr id="podcast_<?php echo $libitem->getId(); ?>">
             <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
         </tr>
         <?php

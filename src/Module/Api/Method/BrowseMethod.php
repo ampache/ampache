@@ -178,19 +178,22 @@ final class BrowseMethod
             // for sub objects you want to browse their children
             switch ($object_type) {
                 case 'artist':
+                    /** @var Artist $item */
                     $output_type = 'album';
                     $browse->set_type('album');
-                    $browse->set_filter('artist', $item->id);
+                    $browse->set_filter('artist', $item->getId());
                     break;
                 case 'album':
+                    /** @var Album $item */
                     $output_type = 'song';
                     $browse->set_type('song');
-                    $browse->set_filter('album', $item->id);
+                    $browse->set_filter('album', $item->getId());
                     break;
                 case 'podcast':
+                    /** @var Podcast $item */
                     $output_type = 'podcast_episode';
                     $browse->set_type('podcast_episode');
-                    $browse->set_filter('podcast', $item->id);
+                    $browse->set_filter('podcast', $item->getId());
                     break;
                 default:
                     $output_type = $object_type;

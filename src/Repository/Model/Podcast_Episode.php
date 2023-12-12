@@ -35,7 +35,11 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 
-class Podcast_Episode extends database_object implements Media, library_item, GarbageCollectibleInterface
+class Podcast_Episode extends database_object implements
+    Media,
+    library_item,
+    GarbageCollectibleInterface,
+    CatalogizedItemInterface
 {
     protected const DB_TABLENAME = 'podcast_episode';
 
@@ -135,14 +139,11 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     }
 
     /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return list<int>
+     * Returns the id of the catalog the item is associated to
      */
-    public function get_catalogs()
+    public function getCatalogId(): int
     {
-        return array($this->catalog);
+        return $this->catalog;
     }
 
     /**

@@ -31,16 +31,16 @@ use Ampache\Repository\PodcastRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
 
-class Podcast extends database_object implements library_item
+class Podcast extends database_object implements library_item, CatalogizedItemInterface
 {
     protected const DB_TABLENAME = 'podcast';
 
     /* Variables from DB */
-    public int $id = 0;
+    private int $id = 0;
 
     private ?string $feed;
 
-    public int $catalog;
+    private int $catalog;
 
     private ?string $title;
 
@@ -99,17 +99,6 @@ class Podcast extends database_object implements library_item
     public function isNew(): bool
     {
         return $this->getId() === 0;
-    }
-
-    /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return list<int>
-     */
-    public function get_catalogs()
-    {
-        return array($this->catalog);
     }
 
     /**
