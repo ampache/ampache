@@ -252,7 +252,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return int|null
+     * get_user_owner
      */
     public function get_user_owner(): ?int
     {
@@ -264,7 +264,7 @@ class Label extends database_object implements library_item
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         $search                    = array();
         $search['type']            = "artist";
@@ -314,10 +314,8 @@ class Label extends database_object implements library_item
 
     /**
      * helper
-     * @param string $name
-     * @return int|null
      */
-    public static function helper(string $name)
+    public static function helper(string $name): ?int
     {
         $label_data = array(
             'name' => $name,
@@ -341,7 +339,7 @@ class Label extends database_object implements library_item
      * @param array $data
      * @return int|null
      */
-    public static function create(array $data)
+    public static function create(array $data): ?int
     {
         if (static::getLabelRepository()->lookup($data['name']) !== 0) {
             return null;
@@ -374,7 +372,7 @@ class Label extends database_object implements library_item
      * get_artists
      * @return int[]
      */
-    public function get_artists()
+    public function get_artists(): array
     {
         if (empty($this->artists)) {
             $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
