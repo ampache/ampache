@@ -50,7 +50,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
             <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_stats"><?php echo T_('Clear Stats'); ?></a>
+            <a class="option-list" href="javascript:NavigateTo('<?php echo $web_path; ?>/admin/catalog.php?action=clear_stats');" onclick="return confirm('<?php echo T_('Are you sure?'); ?>');"><?php echo T_('Clear Stats'); ?></a>
         </li>
     </ul>
     <form style="padding-left: 250px;" method="post" action="<?php echo $web_path; ?>/admin/catalog.php?action=update_from">
