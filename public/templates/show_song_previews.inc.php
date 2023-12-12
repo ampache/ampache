@@ -40,6 +40,7 @@ use Ampache\Repository\Model\Song_Preview;
     <tbody>
         <?php
         foreach ($object_ids as $libitem) {
+            /** @var $libitem Song_Preview */
             if ($libitem->isNew()) {
                 continue;
             } ?>
