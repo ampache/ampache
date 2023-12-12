@@ -98,7 +98,13 @@ final class CreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         if (AmpError::occurred()) {
-            $this->ui->show('show_add_podcast.inc.php');
+            $this->ui->show(
+                'show_add_podcast.inc.php',
+                [
+                    'catalog_id' => (int)($data['catalog'] ?? 0),
+                    'feed' => ($data['feed'] ?? '')
+                ]
+            );
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),
