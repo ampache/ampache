@@ -225,7 +225,7 @@ class Userflag extends database_object
         if ($this->type == 'song') {
             $user = new User($user_id);
             $song = new Song($this->id);
-            if ($song->id) {
+            if ($song->isNew() === false) {
                 $song->format();
                 self::save_flag($user, $song, $flagged);
             }

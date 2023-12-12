@@ -425,7 +425,7 @@ class Recommendation
             ? (int)$xml->artist->bio->yearformed
             : null;
 
-        if ($artist->id) {
+        if ($artist->isNew() === false) {
             $results['id'] = $artist->id;
             if (!empty($results['summary'])) {
                 $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
@@ -474,7 +474,7 @@ class Recommendation
         ));
         $results['summary'] = str_replace("Read more on Last.fm", "", $results['summary']);
 
-        if ($album->id) {
+        if ($album->isNew() === false) {
             $results['id']          = $album->id;
             $results['largephoto']  = Art::url($album->id, 'album', null, 174);
             $results['smallphoto']  = Art::url($album->id, 'album', null, 34);

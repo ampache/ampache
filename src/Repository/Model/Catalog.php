@@ -2042,7 +2042,7 @@ abstract class Catalog extends database_object
             }
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
-                if ($song->id) {
+                if ($song->isNew() === false) {
                     if (!in_array($song->album, $searches['album'])) {
                         $searches['album'][] = $song->album;
                     }

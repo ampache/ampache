@@ -79,7 +79,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                     $playlist = ($user->id)
                         ? new Search($searchId, 'song', $user)
                         : new Search($searchId);
-                    if ($playlist->id) {
+                    if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
                 }
@@ -94,7 +94,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 $items = array();
                 foreach ($ids as $playlist_id) {
                     $playlist = new Playlist($playlist_id);
-                    if ($playlist->id) {
+                    if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
                 }

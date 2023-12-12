@@ -889,7 +889,7 @@ class Xml4_Data
             $activity = new Useractivity($activity_id);
             $user     = new User($activity->user);
             $string .= "\t<activity id=\"" . $activity_id . "\">\n\t\t<date>" . $activity->activity_date . "</date>\n\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n\t\t<object_id>" . $activity->object_id . "</object_id>\n\t\t<action><![CDATA[" . $activity->action . "]]></action>\n";
-            if ($user->id) {
+            if ($user->isNew() === false) {
                 $string .= "\t\t<user id=\"" . (string) $user->id . "\">\n\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n\t\t</user>\n";
             }
             $string .= "\t</activity>\n";

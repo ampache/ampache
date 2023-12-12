@@ -46,16 +46,6 @@ parameters:
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/PlaylistAjaxHandler.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_medias\\(\\)\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/PlaylistAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$sid of static method Ampache\\\\Module\\\\System\\\\Session\\:\\:update_geolocation\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/StatsAjaxHandler.php
@@ -5221,48 +5211,8 @@ parameters:
 			path: src/Module/Application/Admin/Catalog/AddCatalogAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$licenseId of method Ampache\\\\Repository\\\\LicenseRepositoryInterface\\:\\:update\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/License/EditAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$licenseId of method Ampache\\\\Repository\\\\Model\\\\ModelFactoryInterface\\:\\:createLicense\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/License/EditAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$name of method Ampache\\\\Repository\\\\LicenseRepositoryInterface\\:\\:create\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/License/EditAction.php
-
-		-
 			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|object\\|null given\\.$#"
 			count: 7
-			path: src/Module/Application/Admin/License/EditAction.php
-
-		-
-			message: "#^Parameter \\#2 \\$description of method Ampache\\\\Repository\\\\LicenseRepositoryInterface\\:\\:create\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/License/EditAction.php
-
-		-
-			message: "#^Parameter \\#2 \\$name of method Ampache\\\\Repository\\\\LicenseRepositoryInterface\\:\\:update\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/License/EditAction.php
-
-		-
-			message: "#^Parameter \\#3 \\$description of method Ampache\\\\Repository\\\\LicenseRepositoryInterface\\:\\:update\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/License/EditAction.php
-
-		-
-			message: "#^Parameter \\#3 \\$externalLink of method Ampache\\\\Repository\\\\LicenseRepositoryInterface\\:\\:create\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/License/EditAction.php
-
-		-
-			message: "#^Parameter \\#4 \\$externalLink of method Ampache\\\\Repository\\\\LicenseRepositoryInterface\\:\\:update\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
 			path: src/Module/Application/Admin/License/EditAction.php
 
 		-
@@ -5787,11 +5737,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Auth_OpenID_ConsumerResponse\\:\\:\\$message\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
 

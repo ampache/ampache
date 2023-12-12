@@ -913,7 +913,7 @@ class Catalog_local extends Catalog
             $results['artist_id']      = $options['artist_id'];
             $results['albumartist_id'] = $options['artist_id'];
             $artist                    = new Artist($results['artist_id']);
-            if ($artist->id) {
+            if ($artist->isNew() === false) {
                 $results['artist'] = $artist->name;
             }
         }

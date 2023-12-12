@@ -280,7 +280,7 @@ class Share extends database_object
 
     public function show_action_buttons()
     {
-        if ($this->id) {
+        if ($this->isNew() === false) {
             if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) || $this->user == (int)Core::get_global('user')->id) {
                 if ($this->allow_download) {
                     echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download', T_('Download')) . "</a>";

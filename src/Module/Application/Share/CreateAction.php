@@ -127,7 +127,13 @@ final class CreateAction implements ApplicationActionInterface
             $className   = ObjectTypeToClassNameMapper::map($object_type);
             /** @var Song|Album|AlbumDisk|Playlist|Video $object */
             $object = new $className((int)$_REQUEST['id']);
-            if ($object->id) {
+            if ($object->isNew()) {
+                $this->ui->showContinue(
+                    T_('There Was a Problem'),
+                    T_('Failed to create share'),
+                    AmpConfig::get('web_path') . '/stats.php?action=share'
+                );
+            } else {
                 $object->format();
                 $message   = T_('Failed to create share');
                 $token     = $this->passwordGenerator->generate_token();
@@ -142,12 +148,6 @@ final class CreateAction implements ApplicationActionInterface
                         'token' => $token,
                         'isZipable' => $isZipable
                     ]
-                );
-            } else {
-                $this->ui->showContinue(
-                    T_('There Was a Problem'),
-                    T_('Failed to create share'),
-                    AmpConfig::get('web_path') . '/stats.php?action=share'
                 );
             }
         }

@@ -107,13 +107,13 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
             $list_array = array();
             foreach (explode(',', $this->playlist) as $list_id) {
                 $playlist     = new Playlist((int)$list_id);
-                if ($playlist->id) {
+                if ($playlist->isNew() === false) {
                     $list_array[] = array($playlist, 'playlist');
                 }
             }
             foreach (explode(',', $this->smartlist) as $list_id) {
                 $smartlist = new Search((int)$list_id);
-                if ($smartlist->id) {
+                if ($smartlist->isNew() === false) {
                     $list_array[] = array($smartlist, 'search');
                 }
             }
@@ -127,7 +127,7 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
                 foreach ($list_array as $item) {
                     $this->user->format();
 
-                    if ($item[0]->id) {
+                    if ($item[0]->isNew() === false) {
                         echo '<tr id="playlist_' . $item[0]->id . '" class="libitem_menu">';
                         echo '<td style="height: 50px;">' . $item[0]->get_f_link() . '</td>';
                         echo '<td style="height: auto;">';

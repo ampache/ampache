@@ -119,7 +119,7 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
             echo '">';
             foreach ($userflags as $userflag) {
                 $item = new Song($userflag);
-                if ($item->id) {
+                if ($item->isNew() === false) {
                     echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
                     if ($this->gridview) {
                         echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';

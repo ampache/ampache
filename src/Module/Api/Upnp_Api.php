@@ -615,7 +615,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $artist = new Artist((int)$pathreq[1]);
-                        if ($artist->id) {
+                        if ($artist->isNew() === false) {
                             $artist->format();
                             $meta = self::_itemArtist($artist, $root . '/artists');
                         }
@@ -657,7 +657,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $song = new Song((int)$pathreq[1]);
-                        if ($song->id) {
+                        if ($song->isNew() === false) {
                             $song->format();
                             $meta = self::_itemSong($song, $root . '/songs');
                         }
@@ -678,7 +678,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $playlist = new Playlist((int)$pathreq[1]);
-                        if ($playlist->id) {
+                        if ($playlist->isNew() === false) {
                             $playlist->format();
                             $meta = self::_itemPlaylist($playlist, $root . '/playlists');
                         }
@@ -699,7 +699,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $playlist = new Search((int)$pathreq[1], 'song');
-                        if ($playlist->id) {
+                        if ($playlist->isNew() === false) {
                             $playlist->format();
                             $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
                         }
@@ -720,7 +720,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $radio = new Live_Stream((int)$pathreq[1]);
-                        if ($radio->id) {
+                        if ($radio->isNew() === false) {
                             $radio->format();
                             $meta = self::_itemLiveStream($radio, $root . '/live_streams');
                         }
@@ -741,7 +741,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $podcast = new Podcast((int)$pathreq[1]);
-                        if ($podcast->id) {
+                        if ($podcast->isNew() === false) {
                             $podcast->format();
                             $meta = self::_itemPodcast($podcast, $root . '/podcasts');
                         }
@@ -826,7 +826,7 @@ class Upnp_Api
                         break;
                     case 2: // Get artist's albums list
                         $artist = new Artist((int)$pathreq[1]);
-                        if ($artist->id) {
+                        if ($artist->isNew() === false) {
                             $album_ids              = static::getAlbumRepository()->getAlbumByArtist($artist->id);
                             [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
@@ -900,7 +900,7 @@ class Upnp_Api
                         break;
                     case 2: // Get playlist's songs list
                         $playlist = new Playlist((int)$pathreq[1]);
-                        if ($playlist->id) {
+                        if ($playlist->isNew() === false) {
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
@@ -926,7 +926,7 @@ class Upnp_Api
                         break;
                     case 2: // Get playlist's songs list
                         $playlist = new Search((int)$pathreq[1], 'song');
-                        if ($playlist->id) {
+                        if ($playlist->isNew() === false) {
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
@@ -964,7 +964,7 @@ class Upnp_Api
                         break;
                     case 2: // Get podcast episodes list
                         $podcast = new Podcast((int)$pathreq[1]);
-                        if ($podcast->id) {
+                        if ($podcast->isNew() === false) {
                             $episodes = self::getPodcastRepository()->getEpisodes($podcast);
 
                             [$maxCount, $episodes] = self::_slice($episodes, $start, $count);
@@ -1031,21 +1031,21 @@ class Upnp_Api
                         break;
                     case 2:
                         $tvshow = new TvShow((int)$pathreq[1]);
-                        if ($tvshow->id) {
+                        if ($tvshow->isNew() === false) {
                             $tvshow->format();
                             $meta = self::_itemTVShow($tvshow, $root . '/tvshows');
                         }
                         break;
                     case 3:
                         $season = new TVShow_Season((int)$pathreq[2]);
-                        if ($season->id) {
+                        if ($season->isNew() === false) {
                             $season->format();
                             $meta = self::_itemTVShowSeason($season, $root . '/tvshows/' . $pathreq[1]);
                         }
                         break;
                     case 4:
                         $video = new TVShow_Episode((int)$pathreq[3]);
-                        if ($video->id) {
+                        if ($video->isNew() === false) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/tvshows/' . $pathreq[1] . '/' . $pathreq[2]);
                         }
@@ -1067,7 +1067,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $video = new Clip((int)$pathreq[1]);
-                        if ($video->id) {
+                        if ($video->isNew() === false) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/clips');
                         }
@@ -1089,7 +1089,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $video = new Movie((int)$pathreq[1]);
-                        if ($video->id) {
+                        if ($video->isNew() === false) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/movies');
                         }
@@ -1111,7 +1111,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $video = new Personal_Video((int)$pathreq[1]);
-                        if ($video->id) {
+                        if ($video->isNew() === false) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/personal_videos');
                         }
@@ -1168,7 +1168,7 @@ class Upnp_Api
                         break;
                     case 2: // Get season list
                         $tvshow = new TvShow((int)$pathreq[1]);
-                        if ($tvshow->id) {
+                        if ($tvshow->isNew() === false) {
                             $season_ids                  = $tvshow->get_seasons();
                             [$maxCount, $season_ids]     = self::_slice($season_ids, $start, $count);
                             foreach ($season_ids as $season_id) {
@@ -1180,7 +1180,7 @@ class Upnp_Api
                         break;
                     case 3: // Get episode list
                         $season = new TVShow_Season((int)$pathreq[2]);
-                        if ($season->id) {
+                        if ($season->isNew() === false) {
                             $episode_ids                  = $season->get_episodes();
                             [$maxCount, $episode_ids]     = self::_slice($episode_ids, $start, $count);
                             foreach ($episode_ids as $episode_id) {

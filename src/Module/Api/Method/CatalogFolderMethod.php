@@ -148,7 +148,7 @@ final class CatalogFolderMethod
                             }
                             break;
                         case 'verify':
-                            if ($media->id) {
+                            if ($media->isNew() === false) {
                                 Catalog::update_media_from_tags($media, array($type));
                             }
                             break;

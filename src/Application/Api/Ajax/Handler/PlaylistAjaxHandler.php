@@ -32,6 +32,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Playlist;
 
 final class PlaylistAjaxHandler implements AjaxHandlerInterface
@@ -108,8 +109,9 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $item_ids = explode(',', $item_id);
                     foreach ($item_ids as $iid) {
                         $className = ObjectTypeToClassNameMapper::map($item_type);
-                        $libitem   = new $className($iid);
-                        if ($libitem->id) {
+                        /** @var library_item $libitem */
+                        $libitem = new $className($iid);
+                        if ($libitem->isNew() === false) {
                             $medias = array_merge($medias, $libitem->get_medias());
                         }
                     }

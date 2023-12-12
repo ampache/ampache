@@ -1087,10 +1087,10 @@ class Subsonic_Api
         $offset = $input['offset'] ?? '';
 
         $tag = Tag::construct_from_name($genre);
-        if ($tag->id) {
-            $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset);
-        } else {
+        if ($tag->isNew()) {
             $songs = array();
+        } else {
+            $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset);
         }
         $response = Subsonic_Xml_Data::addSubsonicResponse('getsongsbygenre');
         Subsonic_Xml_Data::addSongsByGenre($response, $songs);
@@ -2008,11 +2008,11 @@ class Subsonic_Api
         if (AmpConfig::get('podcast')) {
             if ($podcast_id) {
                 $podcast = new Podcast(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
-                if ($podcast->id) {
+                if ($podcast->isNew()) {
+                    $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getpodcasts');
+                } else {
                     $response = Subsonic_Xml_Data::addSubsonicResponse('getpodcasts');
                     Subsonic_Xml_Data::addPodcasts($response, array($podcast), $includeEpisodes);
-                } else {
-                    $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getpodcasts');
                 }
             } else {
                 $podcasts = Catalog::get_podcasts(User::get_user_catalogs($user->id));
@@ -2123,12 +2123,11 @@ class Subsonic_Api
 
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $podcast = new Podcast(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
-            if ($podcast->id) {
-                self::getPodcastDeleter()->delete($podcast);
-
-                $response = Subsonic_Xml_Data::addSubsonicResponse('deletepodcastchannel');
-            } else {
+            if ($podcast->isNew()) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletepodcastchannel');
+            } else {
+                self::getPodcastDeleter()->delete($podcast);
+                $response = Subsonic_Xml_Data::addSubsonicResponse('deletepodcastchannel');
             }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'deletepodcastchannel');
@@ -2740,9 +2739,7 @@ class Subsonic_Api
 
         if (!empty($type)) {
             $bookmark = new Bookmark(Subsonic_Xml_Data::_getAmpacheId($object_id), $type);
-            if ($bookmark->id) {
-                static::getBookmarkRepository()->update($bookmark->getId(), (int)$position, time());
-            } else {
+            if ($bookmark->isNew()) {
                 Bookmark::create(
                     [
                         'object_id' => Subsonic_Xml_Data::_getAmpacheId($object_id),
@@ -2753,6 +2750,8 @@ class Subsonic_Api
                     $user->id,
                     time()
                 );
+            } else {
+                static::getBookmarkRepository()->update($bookmark->getId(), (int)$position, time());
             }
             $response = Subsonic_Xml_Data::addSubsonicResponse('createbookmark');
         } else {
@@ -2777,11 +2776,11 @@ class Subsonic_Api
         $type = Subsonic_Xml_Data::_getAmpacheType((string)$object_id);
 
         $bookmark = new Bookmark(Subsonic_Xml_Data::_getAmpacheId($object_id), $type, $user->id);
-        if ($bookmark->id) {
+        if ($bookmark->isNew()) {
+            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletebookmark');
+        } else {
             static::getBookmarkRepository()->delete($bookmark->getId());
             $response = Subsonic_Xml_Data::addSubsonicResponse('deletebookmark');
-        } else {
-            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletebookmark');
         }
         self::_apiOutput($input, $response);
     }

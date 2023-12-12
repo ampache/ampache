@@ -75,7 +75,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $broadcast = new Broadcast((int) $broadcast_id);
-                if ($broadcast->id) {
+                if ($broadcast->isNew() === false) {
                     $key = Broadcast::generate_key();
                     $broadcast->update_state(true, $key);
                     $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
@@ -84,7 +84,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
             case 'unbroadcast':
                 $broadcast_id = Core::get_get('broadcast_id');
                 $broadcast    = new Broadcast((int) $broadcast_id);
-                if ($broadcast->id) {
+                if ($broadcast->isNew() === false) {
                     $broadcast->update_state(false);
                     $results['broadcast'] = Broadcast::get_broadcast_link() . '<script>stopBroadcast();</script>';
                 }

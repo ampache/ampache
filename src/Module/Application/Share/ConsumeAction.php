@@ -100,7 +100,7 @@ final class ConsumeAction implements ApplicationActionInterface
         $share_id = (int)$this->requestParser->getFromRequest('id');
         $secret   = $this->requestParser->getFromRequest('secret');
         $share    = new Share($share_id);
-        if (empty($action) && $share->id) {
+        if (empty($action) && $share->isNew() === false) {
             if ($share->allow_stream) {
                 $action = 'stream';
             } elseif ($share->allow_download) {

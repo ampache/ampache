@@ -67,10 +67,10 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
 
                 if (array_key_exists('podcast_id', $_REQUEST)) {
                     $podcast = new Podcast($_REQUEST['podcast_id']);
-                    if ($podcast->id) {
-                        $this->podcastSyncer->sync($podcast, true);
-                    } else {
+                    if ($podcast->isNew()) {
                         debug_event('podcast.ajax', 'Cannot find podcast', 1);
+                    } else {
+                        $this->podcastSyncer->sync($podcast, true);
                     }
                 } elseif (array_key_exists('podcast_episode_id', $_REQUEST)) {
                     $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);

@@ -783,7 +783,7 @@ class Catalog_dropbox extends Catalog
             $searches['album']  = array();
             $searches['artist'] = array();
             foreach ($songs as $song) {
-                if ($song->id) {
+                if ($song->isNew() === false) {
                     $meta    = $dropbox->getMetadata((string)$song->file);
                     $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 

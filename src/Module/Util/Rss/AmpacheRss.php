@@ -110,7 +110,7 @@ final class AmpacheRss implements AmpacheRssInterface
                     $className = ObjectTypeToClassNameMapper::map($object_type);
                     /** @var Album|Artist|Podcast $libitem */
                     $libitem = new $className($object_id);
-                    if ($libitem->id) {
+                    if ($libitem->isNew() === false) {
                         $libitem->format();
 
                         return $this->rssPodcastBuilder->build(

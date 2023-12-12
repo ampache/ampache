@@ -615,7 +615,7 @@ class AmpacheXbmc extends localplay_controller
                 if ($url_data != null) {
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
-                    if ($song->id) {
+                    if ($song->isNew() === false) {
                         $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                     }
                 }

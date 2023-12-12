@@ -462,7 +462,9 @@ class Daap_Api
                         $playlist = new Playlist($object_id);
                     }
 
-                    if ($playlist->id) {
+                    if ($playlist->isNew()) {
+                        self::createApiError('daap.playlistsongs', 500, 'Invalid playlist id: ' . $object_id);
+                    } else {
                         $meta   = explode(',', strtolower(Core::get_get('meta')));
                         $output = self::tlv('dmap.status', 200);
                         $output .= self::tlv('dmap.updatetype', 0);
@@ -485,8 +487,6 @@ class Daap_Api
                         $output .= self::tlv('dmap.listing', self::tlv_songs($songs, $meta));
 
                         $output = self::tlv('daap.playlistsongs', $output);
-                    } else {
-                        self::createApiError('daap.playlistsongs', 500, 'Invalid playlist id: ' . $object_id);
                     }
                 }
             }

@@ -128,13 +128,13 @@ final class CatalogFileMethod
                 }
                 switch ($item) {
                     case 'clean':
-                        if ($media->id) {
+                        if ($media->isNew() === false) {
                             /** @var Catalog_local $catalog */
                             $catalog->clean_file($file, $type);
                         }
                         break;
                     case 'verify':
-                        if ($media->id) {
+                        if ($media->isNew() === false) {
                             Catalog::update_media_from_tags($media, array($type));
                         }
                         break;
@@ -145,7 +145,7 @@ final class CatalogFileMethod
                         }
                         break;
                     case 'remove':
-                        if ($media->id) {
+                        if ($media->isNew() === false) {
                             $media->remove();
                         }
                         break;

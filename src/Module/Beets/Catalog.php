@@ -270,7 +270,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $song                  = new Song($this->getIdFromPath($beetsSong['file']));
         $beetsSong['album_id'] = $song->album;
 
-        if ($song->id) {
+        if ($song->isNew() === false) {
             $song->update($beetsSong);
             if (Song::isCustomMetadataEnabled()) {
                 $tags = $this->getCleanMetadata($song, $beetsSong);

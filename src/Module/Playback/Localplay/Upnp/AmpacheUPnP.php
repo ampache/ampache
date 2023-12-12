@@ -469,7 +469,7 @@ class AmpacheUPnP extends localplay_controller
             $url_data = Stream_Url::parse($data['link']);
             if (array_key_exists('id', $url_data)) {
                 $song = new Song($url_data['id']);
-                if ($song->id) {
+                if ($song->isNew() === false) {
                     $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                 }
             }
@@ -509,7 +509,7 @@ class AmpacheUPnP extends localplay_controller
         $url_data = Stream_Url::parse($array['track']);
         if (array_key_exists('id', $url_data)) {
             $song = new Song($url_data['id']);
-            if ($song->id) {
+            if ($song->isNew() === false) {
                 $array['track_artist'] = $song->get_artist_fullname();
                 $array['track_album']  = $song->get_album_fullname();
             }

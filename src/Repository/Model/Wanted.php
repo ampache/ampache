@@ -157,7 +157,7 @@ class Wanted extends database_object
                         ) {
                             $wantedid = self::get_wanted($group->id);
                             $wanted   = new Wanted($wantedid);
-                            if ($wanted->id) {
+                            if ($wanted->isNew() === false) {
                                 $wanted->format();
                             } else {
                                 $wanted->mbid = $group->id;
@@ -335,7 +335,7 @@ class Wanted extends database_object
      */
     public function show_action_buttons(): void
     {
-        if ($this->id) {
+        if ($this->isNew() === false) {
             if (!$this->accepted) {
                 if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
                     echo Ajax::button(
