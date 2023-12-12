@@ -325,9 +325,9 @@ class Stats
         }
 
         if (AmpConfig::get('cron_cache')) {
-            $sql = "SELECT `count` AS `total_count` FROM `cache_object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ? AND `threshold` = " . $threshold;
+            $sql = "SELECT `count` AS `total_count` FROM `cache_object_count` WHERE `object_type` = ? AND `object_id` = ? AND `count_type` = ? AND `threshold` = " . $threshold;
         } else {
-            $sql = "SELECT COUNT(*) AS `total_count` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
+            $sql = "SELECT COUNT(*) AS `total_count` FROM `object_count` WHERE `object_type` = ? AND `object_id` = ? AND `count_type` = ?";
             if ($threshold > 0) {
                 $date = time() - (86400 * (int)$threshold);
                 $sql .= " AND `date` >= '" . $date . "'";
@@ -355,9 +355,9 @@ class Stats
         }
 
         if (AmpConfig::get('cron_cache')) {
-            $sql = "SELECT `count_total` AS `total_count` FROM `object_total` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ? AND `threshold` = " . $threshold;
+            $sql = "SELECT `count_total` AS `total_count` FROM `object_total` WHERE `object_type` = ? AND `object_id` = ? AND `count_type` = ? AND `threshold` = " . $threshold;
         } else {
-            $sql = "SELECT COUNT(*) AS `total_count` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
+            $sql = "SELECT COUNT(*) AS `total_count` FROM `object_count` WHERE `object_type` = ? AND `object_id` = ? AND `count_type` = ?";
             if ($threshold > 0) {
                 $date = time() - (86400 * (int)$threshold);
                 $sql .= "AND `date` >= '" . $date . "'";

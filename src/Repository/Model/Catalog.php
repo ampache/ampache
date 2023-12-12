@@ -4215,7 +4215,10 @@ abstract class Catalog extends database_object
                 // Intentional break fall-through
             case 'update_file_tags':
                 $write_tags = AmpConfig::get('write_tags', false);
-                AmpConfig::set_by_array(['write_tags' => 'true'], true);
+                AmpConfig::set_by_array(
+                    ['write_tags' => 'true'],
+                    true
+                );
 
                 $songTagWriter = static::getSongTagWriter();
                 set_time_limit(0);
@@ -4231,7 +4234,10 @@ abstract class Catalog extends database_object
                         }
                     }
                 }
-                AmpConfig::set_by_array(['write_tags' => $write_tags], true);
+                AmpConfig::set_by_array(
+                    ['write_tags' => $write_tags],
+                    true
+                );
                 break;
             case 'garbage_collect':
                 debug_event(__CLASS__, 'Run Garbage collection', 5);

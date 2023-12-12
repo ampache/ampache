@@ -70,7 +70,7 @@ class User_Playlist extends database_object
     {
         $items = array();
         // Select the current object for this user
-        $sql        = "SELECT `object_type`, `object_id`, `track`, `current_track`, `current_time` FROM `user_playlist` WHERE `user`= ? AND `current_track` = 1 LIMIT 1";
+        $sql        = "SELECT `object_type`, `object_id`, `track`, `current_track`, `current_time` FROM `user_playlist` WHERE `user` = ? AND `current_track` = 1 LIMIT 1";
         $db_results = Dba::read($sql, array($this->user));
 
         while ($results = Dba::fetch_assoc($db_results)) {

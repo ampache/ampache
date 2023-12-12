@@ -115,7 +115,7 @@ final class WantedRepository implements WantedRepositoryInterface
         }
 
         $params     = [$wantedId];
-        $sql        = "SELECT * FROM `wanted` WHERE `id`= ?";
+        $sql        = "SELECT * FROM `wanted` WHERE `id` = ?";
         $db_results = Dba::read($sql, $params);
 
         if (!$db_results) {

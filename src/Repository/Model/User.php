@@ -385,8 +385,8 @@ class User extends database_object
     public function is_logged_in()
     {
         $sql = (AmpConfig::get('perpetual_api_session'))
-            ? "SELECT `id`, `ip` FROM `session` WHERE `username`= ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
-            : "SELECT `id`, `ip` FROM `session` WHERE `username`= ? AND `expire` > ?;";
+            ? "SELECT `id`, `ip` FROM `session` WHERE `username` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
+            : "SELECT `id`, `ip` FROM `session` WHERE `username` = ? AND `expire` > ?;";
         $db_results = Dba::read($sql, array($this->username, time()));
 
         if ($row = Dba::fetch_assoc($db_results)) {
@@ -444,7 +444,7 @@ class User extends database_object
      */
     public static function set_user_data(int $user_id, string $key, $value)
     {
-        Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, $key, $value));
+        Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", array($user_id, $key, $value));
     }
 
     /**
@@ -1037,7 +1037,7 @@ class User extends database_object
             $pref_id = $row['preference'];
             // Check for duplicates
             if (isset($results[$pref_id])) {
-                $sql = "DELETE FROM `user_preference` WHERE `user` = ? AND `preference`= ? AND `value` = ?;";
+                $sql = "DELETE FROM `user_preference` WHERE `user` = ? AND `preference` = ? AND `value` = ?;";
                 Dba::write($sql, array($user_id, $row['preference'], $row['value']));
             } else {
                 // if its set

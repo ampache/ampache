@@ -327,7 +327,7 @@ final class InstallationHelper implements InstallationHelperInterface
         // If they've picked something other than English update default preferences
         if (AmpConfig::get('lang') != 'en_US') {
             // FIXME: 31? I hate magic.
-            $sql = 'UPDATE `preference` SET `value`= ? WHERE `id` = 31';
+            $sql = 'UPDATE `preference` SET `value` = ? WHERE `id` = 31';
             Dba::write($sql, array(AmpConfig::get('lang')));
             $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `preference` = 31';
             Dba::write($sql, array(AmpConfig::get('lang')));

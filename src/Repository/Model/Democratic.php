@@ -177,7 +177,7 @@ class Democratic extends Tmp_Playlist
         }
         $democratic_id = AmpConfig::get('democratic_id', false);
         if (!$democratic_id) {
-            $sql        = "SELECT `id` FROM `democratic` WHERE `level` <= ? ORDER BY `level` DESC,`primary` DESC";
+            $sql        = "SELECT `id` FROM `democratic` WHERE `level` <= ? ORDER BY `level` DESC, `primary` DESC";
             $db_results = Dba::read($sql, array($user->access ?? 0));
             $row        = Dba::fetch_assoc($db_results);
             if (!empty($row)) {
@@ -498,7 +498,7 @@ class Democratic extends Tmp_Playlist
             $cool = 1;
         }
 
-        $sql = "UPDATE `democratic` SET `name` = ?, `base_playlist` = ?,`cooldown` = ?, `primary` = ?, `level` = ? WHERE `id` = ?";
+        $sql = "UPDATE `democratic` SET `name` = ?, `base_playlist` = ?, `cooldown` = ?, `primary` = ?, `level` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $base, $cool, $default, $level, $demo_id));
 
         return $this->id;

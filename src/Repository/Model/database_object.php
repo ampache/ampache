@@ -67,7 +67,7 @@ abstract class database_object
         }
 
         $params     = array($object_id);
-        $sql        = "SELECT * FROM `$table` WHERE `id`= ?";
+        $sql        = "SELECT * FROM `$table` WHERE `id` = ?";
         $db_results = Dba::read($sql, $params);
 
         if (!$db_results) {

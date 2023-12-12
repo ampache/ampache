@@ -304,7 +304,7 @@ class Preference extends database_object
         }
 
         if ($applytodefault && $access100) {
-            $sql = "UPDATE `preference` SET `value` = ? WHERE `id`= ?";
+            $sql = "UPDATE `preference` SET `value` = ? WHERE `id` = ?";
             Dba::write($sql, $params);
         }
 
@@ -483,7 +483,7 @@ class Preference extends database_object
         $user_id    = Dba::escape($user_id);
         $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
 
-        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` = ? AND `user_preference`.`user`= ? AND `preference`.`catagory` != 'internal' $user_limit ORDER BY `preference`.`subcatagory`, `preference`.`description`";
+        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` = ? AND `user_preference`.`user` = ? AND `preference`.`catagory` != 'internal' $user_limit ORDER BY `preference`.`subcatagory`, `preference`.`description`";
 
         $db_results = Dba::read($sql, array($pref_name, $user_id));
         $results    = array();
@@ -1218,7 +1218,7 @@ class Preference extends database_object
         }
 
         /* Get Global Preferences */
-        $sql        = "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`catagory`!='system'";
+        $sql        = "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`catagory` !='system'";
         $db_results = Dba::read($sql, array($user_id));
 
         $results = array();

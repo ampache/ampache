@@ -328,7 +328,7 @@ class Plugin
         $name    = Dba::escape('Plugin_' . $this->_plugin->name);
         $version = (int)Dba::escape($version);
 
-        $sql = "REPLACE INTO `update_info` SET `key` = ?, `value`= ?";
+        $sql = "REPLACE INTO `update_info` SET `key` = ?, `value` = ?";
         Dba::write($sql, array($name, $version));
     }
 

@@ -1964,20 +1964,20 @@ class Update
         $sql_array = array(
             "ALTER TABLE `artist` ADD `user` int(11) NULL AFTER `last_update`",
             "CREATE TABLE IF NOT EXISTS `license` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `description` varchar(256) NULL, `external_link` varchar(256) NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('0 - default', '')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY', 'https://creativecommons.org/licenses/by/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC', 'https://creativecommons.org/licenses/by-nc/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC ND', 'https://creativecommons.org/licenses/by-nc-nd/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC SA', 'https://creativecommons.org/licenses/by-nc-sa/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY ND', 'https://creativecommons.org/licenses/by-nd/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY SA', 'https://creativecommons.org/licenses/by-sa/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Licence Art Libre', 'http://artlibre.org/licence/lal/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Yellow OpenMusic', 'http://openmusic.linuxtag.org/yellow.html')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Green OpenMusic', 'http://openmusic.linuxtag.org/green.html')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Gnu GPL Art', 'http://gnuart.org/english/gnugpl.html')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('WTFPL', 'https://en.wikipedia.org/wiki/WTFPL')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('FMPL', 'http://www.fmpl.org/fmpl.html')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('C Reaction', 'http://morne.free.fr/Necktar7/creaction.htm')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('0 - default', '')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY', 'https://creativecommons.org/licenses/by/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY NC', 'https://creativecommons.org/licenses/by-nc/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY NC ND', 'https://creativecommons.org/licenses/by-nc-nd/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY NC SA', 'https://creativecommons.org/licenses/by-nc-sa/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY ND', 'https://creativecommons.org/licenses/by-nd/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY SA', 'https://creativecommons.org/licenses/by-sa/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('Licence Art Libre', 'http://artlibre.org/licence/lal/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('Yellow OpenMusic', 'http://openmusic.linuxtag.org/yellow.html')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('Green OpenMusic', 'http://openmusic.linuxtag.org/green.html')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('Gnu GPL Art', 'http://gnuart.org/english/gnugpl.html')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('WTFPL', 'https://en.wikipedia.org/wiki/WTFPL')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('FMPL', 'http://www.fmpl.org/fmpl.html')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('C Reaction', 'http://morne.free.fr/Necktar7/creaction.htm')",
             "ALTER TABLE `song` ADD `user_upload` int(11) NULL AFTER `addition_time`, ADD `license` int(11) NULL AFTER `user_upload`"
         );
         foreach ($sql_array as $sql) {
@@ -3543,7 +3543,7 @@ class Update
             while ($results = Dba::fetch_assoc($db_p)) {
                 $total = $total + $results['size'];
             }
-            $sql = "REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;";
+            $sql = "REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;";
             if (self::_write($interactor, $sql, array($user_id, 'play_size', $total)) === false) {
                 return false;
             }
@@ -4997,7 +4997,7 @@ class Update
         // After the change recalculate their total Bandwidth Usage
         foreach ($user_list as $user_id) {
             $total = User::get_play_size($user_id);
-            $sql   = "REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;";
+            $sql   = "REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;";
             if (self::_write($interactor, $sql, array($user_id, 'play_size', $total)) === false) {
                 return false;
             }

@@ -909,7 +909,7 @@ final class VaInfo implements VaInfoInterface
             ? Core::get_global('user')
             : new User(-1);
         // don't loop over getid3 and filename
-        $tag_order = array_diff($tag_order, array('getid3','filename'));
+        $tag_order = array_diff($tag_order, array('getid3', 'filename'));
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
                 $plugin            = new Plugin($tag_source);

@@ -66,7 +66,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
         string $feedUrl
     ): ?Podcast {
         $podcastId = $this->connection->fetchOne(
-            'SELECT `id` FROM `podcast` WHERE `feed`= ?',
+            'SELECT `id` FROM `podcast` WHERE `feed` = ?',
             [
                 $feedUrl
             ]
@@ -151,7 +151,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
             $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` ';
         }
 
-        $sql .= 'WHERE `podcast_episode`.`podcast`= ? ';
+        $sql .= 'WHERE `podcast_episode`.`podcast` = ? ';
 
         if (!empty($stateFilter)) {
             $sql .= 'AND `podcast_episode`.`state` = ? ';

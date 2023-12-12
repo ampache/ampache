@@ -501,7 +501,7 @@ final class Session implements SessionInterface
             $expire = $time + AmpConfig::get('session_length', 3600);
         }
 
-        $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
+        $sql = 'UPDATE `session` SET `expire` = ? WHERE `id` = ?';
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
             if ($expire !== 0) {
                 debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
@@ -541,7 +541,7 @@ final class Session implements SessionInterface
      */
     public static function update_username($sid, $username)
     {
-        $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
+        $sql = 'UPDATE `session` SET `username` = ? WHERE `id` = ?';
 
         return Dba::write($sql, array($username, $sid));
     }
@@ -556,7 +556,7 @@ final class Session implements SessionInterface
      */
     public static function update_agent($sid, $agent)
     {
-        $sql = 'UPDATE `session` SET `agent` = ? WHERE `id`= ?';
+        $sql = 'UPDATE `session` SET `agent` = ? WHERE `id` = ?';
 
         return Dba::write($sql, array($agent, $sid));
     }

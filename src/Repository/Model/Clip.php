@@ -115,8 +115,8 @@ class Clip extends Video
         }
         if ($artist_id || $song_id) {
             debug_event(__CLASS__, 'insert ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
-            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) VALUES (?, ?, ?)";
 
+            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) VALUES (?, ?, ?)";
             Dba::write($sql, array($data['id'], $artist_id, $song_id));
         }
 
@@ -132,7 +132,7 @@ class Clip extends Video
         debug_event(self::class, 'update ' . print_r($data, true), 5);
         $artist_id = self::_get_artist_id($data);
         $song_id   = Song::find($data);
-        debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id], true), 5);
+        debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
 
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($artist_id, $song_id, $this->id));

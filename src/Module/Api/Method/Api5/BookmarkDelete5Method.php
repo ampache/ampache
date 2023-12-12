@@ -55,7 +55,7 @@ final class BookmarkDelete5Method
      */
     public static function bookmark_delete(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter','type'), self::ACTION)) {
+        if (!Api5::check_parameter($input, array('filter', 'type'), self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];

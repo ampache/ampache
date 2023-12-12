@@ -71,7 +71,7 @@ class PodcastRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                'SELECT `id` FROM `podcast` WHERE `feed`= ?',
+                'SELECT `id` FROM `podcast` WHERE `feed` = ?',
                 [
                     $feedUrl,
                 ],
@@ -93,7 +93,7 @@ class PodcastRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                'SELECT `id` FROM `podcast` WHERE `feed`= ?',
+                'SELECT `id` FROM `podcast` WHERE `feed` = ?',
                 [
                     $feedUrl,
                 ],
@@ -206,7 +206,7 @@ class PodcastRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` WHERE `podcast_episode`.`podcast`= ? AND `catalog`.`enabled` = \'1\' ORDER BY `podcast_episode`.`pubdate` DESC',
+                'SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` WHERE `podcast_episode`.`podcast` = ? AND `catalog`.`enabled` = \'1\' ORDER BY `podcast_episode`.`pubdate` DESC',
                 [$podcastId],
             )
             ->willReturn($result);
@@ -242,7 +242,7 @@ class PodcastRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast`= ? AND `podcast_episode`.`state` = ? ORDER BY `podcast_episode`.`pubdate` DESC',
+                'SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? AND `podcast_episode`.`state` = ? ORDER BY `podcast_episode`.`pubdate` DESC',
                 [$podcastId, $stateFilter],
             )
             ->willReturn($result);

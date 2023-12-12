@@ -54,7 +54,7 @@ final class UserRepository implements UserRepositoryInterface
             return 0;
         }
         $db_results = Dba::read(
-            'SELECT `id` FROM `user` WHERE `username`= ?',
+            'SELECT `id` FROM `user` WHERE `username` = ?',
             [$username]
         );
 
@@ -74,7 +74,7 @@ final class UserRepository implements UserRepositoryInterface
     public function idByEmail(string $email): int
     {
         $db_results = Dba::read(
-            'SELECT `id` FROM `user` WHERE `email`= ?',
+            'SELECT `id` FROM `user` WHERE `email` = ?',
             [$email]
         );
 
