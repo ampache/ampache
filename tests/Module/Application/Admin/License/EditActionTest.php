@@ -115,6 +115,11 @@ class EditActionTest extends MockeryTestCase
             )
             ->once();
 
+        $license->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
