@@ -72,7 +72,7 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
             'show_update_items.inc.php',
             [
                 'object_id' => $songId,
-                'catalog_id' => $song->catalog,
+                'catalog_id' => $song->getCatalogId(),
                 'type' => 'song',
                 'target_url' => sprintf(
                     '%s/song.php?action=show&amp;song_id=%d',
