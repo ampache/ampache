@@ -135,4 +135,16 @@ final class XmlOutput implements ApiOutputInterface
 
         return Xml_Data::albums($albums, $include, $user, $encode);
     }
+
+    /**
+     * This generates a standard JSON Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<mixed> $return_data
+     */
+    public function success(string $string, array $return_data = []): string
+    {
+        return Xml_Data::success($string, $return_data);
+    }
 }

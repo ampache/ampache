@@ -3226,11 +3226,6 @@ parameters:
 			path: src/Module/Api/Method/PodcastCreateMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastDeleteMethod\\:\\:podcast_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastDeleteMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastEditMethod\\:\\:podcast_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PodcastEditMethod.php
@@ -3544,11 +3539,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Subsonic_Api', non\\-falsy\\-string\\} given\\.$#"
 			count: 1
 			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
-			message: "#^Argument of an invalid type SimpleXMLElement\\|null supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
 
 		-
 			message: "#^Cannot access offset '' on array\\<string\\>\\|false\\.$#"
@@ -5079,11 +5069,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Caught class PHPUnit\\\\Framework\\\\MockObject\\\\DuplicateMethodException not found\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Access/AddHostAction.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Admin\\\\Catalog\\\\AbstractCatalogAction\\:\\:getCatalogIds\\(\\) return type has no value type specified in iterable type array\\.$#"
