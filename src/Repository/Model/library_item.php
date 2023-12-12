@@ -58,7 +58,7 @@ interface library_item extends playable_item
      * @param int $thumb
      * @param bool $force
      */
-    public function display_art($thumb = 2, $force = false);
+    public function display_art($thumb = 2, $force = false): void;
 
     /**
      * @param array $data

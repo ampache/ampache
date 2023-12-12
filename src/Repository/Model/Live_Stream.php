@@ -271,7 +271,7 @@ class Live_Stream extends database_object implements Media, library_item
      * @param int $thumb
      * @param bool $force
      */
-    public function display_art($thumb = 2, $force = false)
+    public function display_art($thumb = 2, $force = false): void
     {
         if ($this->has_art() || $force) {
             Art::display('live_stream', $this->id, (string)$this->get_fullname(), $thumb, $this->get_link());

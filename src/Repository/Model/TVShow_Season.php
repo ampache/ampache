@@ -315,7 +315,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      * @param int $thumb
      * @param bool $force
      */
-    public function display_art($thumb = 2, $force = false)
+    public function display_art($thumb = 2, $force = false): void
     {
         $tvshow_id = null;
         $type      = null;

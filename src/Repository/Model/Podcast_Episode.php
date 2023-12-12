@@ -427,7 +427,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param int $thumb
      * @param bool $force
      */
-    public function display_art($thumb = 2, $force = false)
+    public function display_art($thumb = 2, $force = false): void
     {
         $episode_id = null;
         $type       = null;

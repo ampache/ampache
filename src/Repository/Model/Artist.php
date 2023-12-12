@@ -605,7 +605,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int $thumb
      * @param bool $force
      */
-    public function display_art($thumb = 2, $force = false)
+    public function display_art($thumb = 2, $force = false): void
     {
         $artist_id = null;
         $type      = null;

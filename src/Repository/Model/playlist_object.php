@@ -255,7 +255,7 @@ abstract class playlist_object extends database_object implements library_item
      * @param bool $force
      * @param bool $link
      */
-    public function display_art($thumb = 2, $force = false, $link = true)
+    public function display_art($thumb = 2, $force = false, $link = true): void
     {
         if (AmpConfig::get('playlist_art') || $force) {
             $add_link  = ($link) ? $this->get_link() : null;
