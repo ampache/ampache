@@ -85,11 +85,8 @@ class Movie extends Video
     /**
      * create
      * This takes a key'd array of data as input and inserts a new movie entry, it returns the record id
-     * @param array $data
-     * @param array $gtypes
-     * @param array $options
      */
-    public static function insert(array $data, $gtypes = array(), $options = array()): int
+    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
     {
         $trimmed = Catalog::trim_prefix(trim((string)$data['original_name']));
         $name    = $trimmed['string'];

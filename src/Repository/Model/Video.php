@@ -605,11 +605,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * Insert new video.
-     * @param array $data
-     * @param array $gtypes
-     * @param array $options
      */
-    public static function insert(array $data, $gtypes = array(), $options = array()): int
+    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
     {
         $check_file = Catalog::get_id_from_file($data['file'], 'video');
         if ($check_file > 0) {
@@ -647,7 +644,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
             }
         }
 
-        if ($data['art'] && $options['gather_art']) {
+        if ($data['art'] && !empty($options) && $options['gather_art']) {
             $art = new Art((int) $video_id, 'video');
             $art->insert_url($data['art']);
         }
@@ -659,13 +656,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * Insert video for derived type.
-     * @param array $data
-     * @param array $gtypes
-     * @param array $options
      */
-    private static function insert_video_type(array $data, $gtypes, $options = array()): int
+    private static function insert_video_type(array $data, ?array $gtypes = array(), ?array $options = array()): int
     {
-        if (count($gtypes) > 0) {
+        if (is_array($gtypes) && count($gtypes) > 0) {
             $gtype = $gtypes[0];
             switch ($gtype) {
                 case 'tvshow':

@@ -104,11 +104,8 @@ class Clip extends Video
     /**
      * create
      * This takes a key'd array of data as input and inserts a new clip entry, it returns the record id
-     * @param array $data
-     * @param array $gtypes
-     * @param array $options
      */
-    public static function insert(array $data, $gtypes = array(), $options = array()): int
+    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
     {
         debug_event(self::class, 'insert ' . print_r($data, true), 5);
         $artist_id = self::_get_artist_id($data);

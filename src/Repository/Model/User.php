@@ -736,12 +736,11 @@ class User extends database_object
     /**
      * update_access
      * updates their access level
-     * @param $new_access
      */
-    public function update_access($new_access): bool
+    public function update_access(int $new_access): bool
     {
-        /* Prevent Only User accounts */
-        if ($new_access < '100') {
+        // There must always be at least one admin left if you're reducing access
+        if ($new_access < 100) {
             $sql        = "SELECT `id` FROM `user` WHERE `access`='100' AND `id` != '$this->id'";
             $db_results = Dba::read($sql);
             if (!Dba::num_rows($db_results)) {

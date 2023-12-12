@@ -1282,13 +1282,14 @@ class Subsonic_Api
         $user = (isset($input['username']))
             ? User::get_from_username($input['username'])
             : $user;
+        $user_id   = $user->id ?? 0;
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
-        $playlists = Playlist::get_playlists($user->id, '', true, true, false);
-        $searches  = Playlist::get_smartlists($user->id, '', true, false);
+        $playlists = Playlist::get_playlists($user_id, '', true, true, false);
+        $searches  = Playlist::get_smartlists($user_id, '', true, false);
         // allow skipping dupe search names when used as refresh searches
-        $hide_dupe_searches = (bool)Preference::get_by_user($user->id, 'api_hide_dupe_searches');
+        $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
 
-        Subsonic_Xml_Data::addPlaylists($response, $user->id, $playlists, $searches, $hide_dupe_searches);
+        Subsonic_Xml_Data::addPlaylists($response, $user_id, $playlists, $searches, $hide_dupe_searches);
         self::_apiOutput($input, $response);
     }
 
@@ -2612,8 +2613,8 @@ class Subsonic_Api
             }
             // identify the user to modify
             $update_user = User::get_from_username((string)$username);
-            $user_id     = $update_user->id;
-            if ($user_id > 0) {
+            if ($update_user instanceof User) {
+                $user_id = $update_user->id;
                 // update access level
                 $update_user->update_access($access);
                 // update password
@@ -2661,7 +2662,7 @@ class Subsonic_Api
         $username = self::_check_parameter($input, 'username');
         if ($user->access === 100) {
             $update_user = User::get_from_username((string)$username);
-            if ($update_user->id) {
+            if ($update_user instanceof User) {
                 $update_user->delete();
                 $response = Subsonic_Xml_Data::addSubsonicResponse('deleteuser');
             } else {
@@ -2688,7 +2689,7 @@ class Subsonic_Api
         $password = self::_decryptPassword($inp_pass);
         if ($user->username == $username || $user->access === 100) {
             $update_user = User::get_from_username((string) $username);
-            if ($update_user->id && !AmpConfig::get('simple_user_mode')) {
+            if ($update_user instanceof User && !AmpConfig::get('simple_user_mode')) {
                 $update_user->update_password($password);
                 $response = Subsonic_Xml_Data::addSubsonicResponse('changepassword');
             } else {

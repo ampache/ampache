@@ -80,10 +80,8 @@ class Personal_Video extends Video
     /**
      * create
      * This takes a key'd array of data as input and inserts a new personal video entry, it returns the record id
-     * @param array $data
-     * @param array $gtypes
      */
-    public static function insert(array $data, $gtypes = array(), $options = array()): int
+    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
     {
         $sql = "INSERT INTO `personal_video` (`id`, `location`, `summary`) VALUES (?, ?, ?)";
         Dba::write($sql, array($data['id'], $data['location'], $data['summary']));

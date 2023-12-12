@@ -349,7 +349,7 @@ class Art extends database_object
      * This takes the string representation of an image and inserts it into
      * the database. You must also pass the mime type.
      * @param string $source
-     * @param string $mime
+     * @param string|null $mime
      */
     public function insert($source, $mime = ''): bool
     {

@@ -3756,31 +3756,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 7
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot call method delete\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot call method update_access\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot call method update_email\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot call method update_password\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_albumList\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -13611,11 +13586,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_artists\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -13669,11 +13639,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -13901,11 +13866,6 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -14004,11 +13964,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -14761,11 +14716,6 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -14827,11 +14777,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:display_art\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
 
@@ -15171,11 +15116,6 @@ parameters:
 			path: src/Repository/Model/Plugin.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
@@ -15202,11 +15142,6 @@ parameters:
 
 		-
 			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:display_art\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -15467,16 +15402,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced_sql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
-			message: "#^Parameter \\#1 \\$limit of method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_random_items\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Random.php
 
@@ -15832,11 +15757,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:deleteMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:display_art\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -16356,11 +16276,6 @@ parameters:
 			path: src/Repository/Model/TVShow_Season.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Season.php
@@ -16467,11 +16382,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:display_art\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 
@@ -16612,11 +16522,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:check\\(\\) has parameter \\$year with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:display_art\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/TvShow.php
 
@@ -16776,11 +16681,6 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:update_access\\(\\) has parameter \\$new_access with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:update_catalog_filter_group\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
@@ -16858,11 +16758,6 @@ parameters:
 		-
 			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 2
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Parameter \\#1 \\$session_id of static method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_from_session\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
 			path: src/Repository/Model/User.php
 
 		-
@@ -17186,11 +17081,6 @@ parameters:
 			path: src/Repository/Model/database_object.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:display_art\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/library_item.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/library_item.php
@@ -17217,11 +17107,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method object\\:\\:get_parent\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:display_art\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
 
