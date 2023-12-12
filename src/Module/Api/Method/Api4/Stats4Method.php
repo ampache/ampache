@@ -108,10 +108,10 @@ final class Stats4Method
             case 'forgotten':
                 debug_event(self::class, 'stats ' . $input['filter'], 4);
                 $newest = $input['filter'] == 'recent';
-                if ($user->id) {
-                    $results = $user->get_recently_played($type, $limit, $offset, $newest);
-                } else {
+                if ($user->isNew()) {
                     $results = Stats::get_recent($type, $limit, $offset, $newest);
+                } else {
+                    $results = $user->get_recently_played($type, $limit, $offset, $newest);
                 }
                 break;
             case 'flagged':

@@ -98,7 +98,7 @@ final class Scrobble4Method
             Api4::message('error', T_('Failed to scrobble: No item found!'), '401', $input['api_format']);
         } else {
             $item = new Song((int) $scrobble_id);
-            if (!$item->id) {
+            if ($item->isNew()) {
                 Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 
                 return false;

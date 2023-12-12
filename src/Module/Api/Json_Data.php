@@ -1119,9 +1119,8 @@ class Json_Data
         $JSON = [];
         foreach ($objects as $song_id) {
             $song = new Song($song_id);
-
             // If the song id is invalid/null
-            if (!$song->id) {
+            if ($song->isNew()) {
                 continue;
             }
             $song->format();

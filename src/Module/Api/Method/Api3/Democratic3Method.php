@@ -50,7 +50,7 @@ final class Democratic3Method
         switch ($input['method']) {
             case 'vote':
                 $media = new Song($input['oid']);
-                if (!$media->id) {
+                if ($media->isNew()) {
                     echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
                     break;
                 }
@@ -70,7 +70,7 @@ final class Democratic3Method
                 break;
             case 'devote':
                 $media = new Song($input['oid']);
-                if (!$media->id) {
+                if ($media->isNew()) {
                     echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
                 }
 

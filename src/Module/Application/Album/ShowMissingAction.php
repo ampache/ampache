@@ -67,7 +67,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         $mbid   = $this->requestParser->getFromRequest('mbid');
         $walbum = $this->modelFactory->createWanted(Wanted::get_wanted($mbid));
 
-        if (!$walbum->id) {
+        if ($walbum->isNew()) {
             $walbum->mbid = $mbid;
             if (array_key_exists('artist', $_REQUEST)) {
                 $artist_id           = (int)$this->requestParser->getFromRequest('artist');

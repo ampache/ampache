@@ -66,7 +66,7 @@ final class PodcastEdit4Method
         }
         $podcast_id = $input['filter'];
         $podcast    = new Podcast($podcast_id);
-        if (!$podcast->id) {
+        if ($podcast->isNew()) {
             Api4::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['api_format']);
 
             return false;

@@ -60,7 +60,7 @@ final class Label5Method
         }
         $object_id = (int) $input['filter'];
         $label     = new Label($object_id);
-        if (!$label->id) {
+        if ($label->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 

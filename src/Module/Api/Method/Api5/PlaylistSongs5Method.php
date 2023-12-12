@@ -62,7 +62,7 @@ final class PlaylistSongs5Method
             ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
             : new Playlist((int) $object_id);
 
-        if (!$playlist->id) {
+        if ($playlist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 

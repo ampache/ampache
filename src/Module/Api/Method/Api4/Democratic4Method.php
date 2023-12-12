@@ -62,7 +62,7 @@ final class Democratic4Method
                 $type      = 'song';
                 $object_id = (int)($input['oid'] ?? 0);
                 $media     = new Song($object_id);
-                if (!$media->id) {
+                if ($media->isNew()) {
                     Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
                     break;
                 }
@@ -90,7 +90,7 @@ final class Democratic4Method
                 $type      = 'song';
                 $object_id = (int)($input['oid'] ?? 0);
                 $media     = new Song($object_id);
-                if (!$media->id) {
+                if ($media->isNew()) {
                     Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
                     break;
                 }

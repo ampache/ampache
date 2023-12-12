@@ -58,7 +58,7 @@ final class UpdateArtistInfo5Method
         }
         $object_id = (int) $input['id'];
         $item      = new Artist($object_id);
-        if (!$item->id) {
+        if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
 

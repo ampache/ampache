@@ -830,7 +830,7 @@ class Xml5_Data
             $song = new Song($song_id);
 
             // If the song id is invalid/null
-            if (!$song->id) {
+            if ($song->isNew()) {
                 continue;
             }
 

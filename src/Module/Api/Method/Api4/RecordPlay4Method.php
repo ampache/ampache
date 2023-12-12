@@ -80,7 +80,7 @@ final class RecordPlay4Method
         $agent = scrub_in((string)($input['client'] ?? 'api'));
 
         $media = new Song($object_id);
-        if (!$media->id) {
+        if ($media->isNew()) {
             Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 
             return false;

@@ -96,7 +96,7 @@ final class Scrobble5Method
             Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
         } else {
             $media = new Song((int) $scrobble_id);
-            if (!$media->id) {
+            if ($media->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api5::error(sprintf(T_('Not Found: %s'), $scrobble_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
 

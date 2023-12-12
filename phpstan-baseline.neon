@@ -2061,11 +2061,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/ToggleFollow4Method.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UpdateArt4Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\UpdateArt4Method\\:\\:update_art\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/UpdateArt4Method.php
@@ -2074,11 +2069,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\UpdateArtistInfo4Method\\:\\:update_artist_info\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/UpdateArtistInfo4Method.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UpdateFromTags4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\UpdateFromTags4Method\\:\\:update_from_tags\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2276,19 +2266,9 @@ parameters:
 			path: src/Module/Api/Method/Api5/Artists5Method.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/BookmarkCreate5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\BookmarkCreate5Method\\:\\:bookmark_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/BookmarkCreate5Method.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/BookmarkDelete5Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\BookmarkDelete5Method\\:\\:bookmark_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2361,11 +2341,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/Download5Method.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Flag5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Flag5Method\\:\\:flag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Flag5Method.php
@@ -2429,11 +2404,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\GetArt5Method\\:\\:get_art\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/GetArt5Method.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/GetBookmark5Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\GetBookmark5Method\\:\\:get_bookmark\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2661,11 +2631,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/PreferenceEdit5Method.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Rate5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Rate5Method\\:\\:rate\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Rate5Method.php
@@ -2821,11 +2786,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/ToggleFollow5Method.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UpdateArt5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\UpdateArt5Method\\:\\:update_art\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/UpdateArt5Method.php
@@ -2834,11 +2794,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\UpdateArtistInfo5Method\\:\\:update_artist_info\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/UpdateArtistInfo5Method.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UpdateFromTags5Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\UpdateFromTags5Method\\:\\:update_from_tags\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3011,11 +2966,6 @@ parameters:
 			path: src/Module/Api/Method/BookmarkCreateMethod.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/BookmarkDeleteMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\BookmarkDeleteMethod\\:\\:bookmark_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/BookmarkDeleteMethod.php
@@ -3034,11 +2984,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\BookmarksMethod\\:\\:bookmarks\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/BookmarksMethod.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/BrowseMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\BrowseMethod\\:\\:browse\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3131,11 +3076,6 @@ parameters:
 			path: src/Module/Api/Method/Exception/ResultEmptyException.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/FlagMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\FlagMethod\\:\\:flag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/FlagMethod.php
@@ -3199,11 +3139,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\GetArtMethod\\:\\:get_art\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/GetArtMethod.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/GetBookmarkMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\GetBookmarkMethod\\:\\:get_bookmark\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3461,11 +3396,6 @@ parameters:
 			path: src/Module/Api/Method/PreferenceEditMethod.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/RateMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\RateMethod\\:\\:rate\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/RateMethod.php
@@ -3601,11 +3531,6 @@ parameters:
 			path: src/Module/Api/Method/ToggleFollowMethod.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UpdateArtMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UpdateArtMethod\\:\\:update_art\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/UpdateArtMethod.php
@@ -3614,11 +3539,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UpdateArtistInfoMethod\\:\\:update_artist_info\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/UpdateArtistInfoMethod.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UpdateFromTagsMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UpdateFromTagsMethod\\:\\:update_from_tags\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -12786,22 +12706,12 @@ parameters:
 			path: src/Module/WebDav/WebDavCatalog.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/WebDav/WebDavDirectory.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\WebDav\\\\WebDavDirectory\\:\\:getChildFromArray\\(\\) has parameter \\$array with no type specified\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavDirectory.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\WebDav\\\\WebDavDirectory\\:\\:getChildren\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/WebDav/WebDavDirectory.php
-
-		-
-			message: "#^Parameter \\#1 \\$libitem of class Ampache\\\\Module\\\\WebDav\\\\WebDavDirectory constructor expects Ampache\\\\Repository\\\\Model\\\\library_item, object given\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavDirectory.php
 

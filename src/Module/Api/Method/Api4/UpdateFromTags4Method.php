@@ -26,7 +26,10 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 
@@ -62,8 +65,9 @@ final class UpdateFromTags4Method
             return false;
         }
         $className = ObjectTypeToClassNameMapper::map($type);
+        /** @var Artist|Album|Song $item */
         $item      = new $className($object_id);
-        if (!$item->id) {
+        if (!$item->isNew()) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
             return false;

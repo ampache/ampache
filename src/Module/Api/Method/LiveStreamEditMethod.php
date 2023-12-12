@@ -64,7 +64,7 @@ final class LiveStreamEditMethod
         }
         $object_id = (int)filter_var($input['filter'], FILTER_SANITIZE_NUMBER_INT);
         $item      = new Live_Stream($object_id);
-        if (!$item->id) {
+        if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 

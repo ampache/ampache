@@ -1272,7 +1272,7 @@ class Search extends playlist_object
     public function get_items()
     {
         $results = array();
-        if (!$this->id) {
+        if ($this->isNew()) {
             return $results;
         }
         $sqltbl = $this->to_sql();
@@ -1731,7 +1731,7 @@ class Search extends playlist_object
         }
         $this->username = User::get_username((int)$this->user);
 
-        if (!$this->id) {
+        if ($this->isNew()) {
             return 0;
         }
 

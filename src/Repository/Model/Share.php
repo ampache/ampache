@@ -86,6 +86,11 @@ class Share extends database_object
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * delete_share
      * @param $share_id
@@ -385,7 +390,7 @@ class Share extends database_object
      */
     public function is_valid($secret, $action): bool
     {
-        if (!$this->id) {
+        if ($this->isNew()) {
             debug_event(self::class, 'Access Denied: Invalid share.', 3);
 
             return false;

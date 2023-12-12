@@ -91,6 +91,11 @@ class Bookmark extends database_object
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * getBookmarks
      * @param array{

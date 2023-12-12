@@ -60,7 +60,7 @@ final class LiveStream5Method
         }
         $object_id   = (int) $input['filter'];
         $live_stream = new Live_Stream($object_id);
-        if (!$live_stream->id) {
+        if ($live_stream->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 

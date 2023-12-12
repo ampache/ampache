@@ -55,7 +55,7 @@ final class SongMethod
         }
         $object_id = (int) $input['filter'];
         $song      = new Song($object_id);
-        if (!$song->id) {
+        if ($song->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 

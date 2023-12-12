@@ -56,7 +56,7 @@ final class UpdateArtistInfo4Method
         }
         $object = (int) $input['id'];
         $item   = new Artist($object);
-        if (!$item->id) {
+        if ($item->isNew()) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
             return false;

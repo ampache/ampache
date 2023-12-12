@@ -82,7 +82,7 @@ final class RecordPlay5Method
         $agent = scrub_in((string)($input['client'] ?? 'api'));
 
         $media = new Song($object_id);
-        if (!$media->id) {
+        if ($media->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
 

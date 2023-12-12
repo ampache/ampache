@@ -68,7 +68,7 @@ final class CreateAction implements ApplicationActionInterface
         $democratic = Democratic::get_current_playlist();
 
         // If we don't have anything currently create something
-        if (!$democratic->id) {
+        if ($democratic->isNew()) {
             // Create the playlist
             Democratic::create($_POST);
         } else {

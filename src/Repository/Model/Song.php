@@ -1980,7 +1980,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
     {
-        if (!$this->id) {
+        if ($this->isNew()) {
             return '';
         }
         if (!$uid) {

@@ -506,7 +506,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
     {
-        if (!$this->id) {
+        if ($this->isNew()) {
             return '';
         }
         if (!$uid) {

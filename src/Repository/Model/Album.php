@@ -212,7 +212,7 @@ class Album extends database_object implements library_item
      */
     private function _get_extra_info()
     {
-        if (!$this->id) {
+        if ($this->isNew()) {
             return array();
         }
         if (parent::is_cached('album_extra', $this->id)) {

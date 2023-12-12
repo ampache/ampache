@@ -139,7 +139,7 @@ final class CatalogFile5Method
                         }
                         break;
                     case 'add':
-                        if (!$media->id) {
+                        if ($media->isNew()) {
                             /** @var Catalog_local $catalog */
                             $catalog->add_file($file, array());
                         }

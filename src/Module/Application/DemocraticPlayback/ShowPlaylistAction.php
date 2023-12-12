@@ -67,7 +67,7 @@ final class ShowPlaylistAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         $democratic = Democratic::get_current_playlist();
-        if (!$democratic->id) {
+        if ($democratic->isNew()) {
             require_once Ui::find_template('show_democratic.inc.php');
 
             $this->ui->showQueryStats();
