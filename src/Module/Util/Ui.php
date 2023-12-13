@@ -774,6 +774,7 @@ class Ui implements UiInterface
             case 'show_played_times':
             case 'show_playlist_username':
             case 'show_skipped_times':
+            case 'show_wrapped':
             case 'show_subtitle':
             case 'sidebar_light':
             case 'song_page_title':

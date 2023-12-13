@@ -921,6 +921,9 @@ class Update
         $update_string = "* Add user preference `home_recently_played_all`, Show all media types in Recently Played";
         $version[]     = array('version' => '600046', 'description' => $update_string);
 
+        $update_string = "* Add user preference `show_wrapped`, Enable access to your personal \"Spotify Wrapped\" from your user page";
+        $version[]     = array('version' => '600047', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5162,5 +5165,14 @@ class Update
     private static function _update_600046(Interactor $interactor = null): bool
     {
         return self::_write_preference($interactor, 'home_recently_played_all', 'Show all media types in Recently Played', '0', 25, 'bool', 'interface', 'home');
+    }
+
+    /** _update_600047
+     *
+     * Add user preference `show_wrapped`, Enable access to your personal "Spotify Wrapped" from your user page
+     */
+    private static function _update_600047(Interactor $interactor = null): bool
+    {
+        return self::_write_preference($interactor, 'show_wrapped', 'Enable access to your personal "Spotify Wrapped" from your user page', '0', 25, 'bool', 'interface', 'privacy');
     }
 }

@@ -167,6 +167,7 @@ final class ConfigurationKeyEnum
     public const SHOW_PLAYED_TIMES                     = 'show_played_times';
     public const SHOW_PLAYLIST_USERNAME                = 'show_playlist_username';
     public const SHOW_SKIPPED_TIMES                    = 'show_skipped_times';
+    public const SHOW_WRAPPED                          = 'show_wrapped';
     public const SIDEBAR_LIGHT                         = 'sidebar_light';
     public const SIMPLE_USER_MODE                      = 'simple_user_mode';
     public const SITE_CHARSET                          = 'site_charset';

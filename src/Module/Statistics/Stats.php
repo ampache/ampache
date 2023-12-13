@@ -341,6 +341,38 @@ class Stats
     }
 
     /**
+     * get_play_data
+     * Get data about object history and play data from object_count
+     * @param string $dataType
+     * @param int $startTime
+     * @param int $endTime
+     * @param int $user_id
+     */
+    public static function get_object_data($dataType, $startTime, $endTime, $user_id): string
+    {
+        $params = array($startTime, $endTime, $user_id);
+        switch ($dataType) {
+            case 'song_count':
+                $sql = "SELECT COUNT(`object_id`) AS `data` FROM `object_count` WHERE `date` >= ? AND `date` <= ? AND `user` = ? AND `count_type` = 'stream' AND `object_type` = 'song';";
+                break;
+            case 'song_minutes':
+                $sql = "SELECT ROUND(SUM(`song`.`time`) / 60) AS `data` FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` AND `object_type` = 'song' WHERE `date` > ? AND `date` < ? AND `user` = ? AND `count_type` = 'stream' AND `object_type` = 'song';";
+                break;
+            default:
+                return '';
+        }
+
+        $db_results = Dba::read($sql, $params);
+        $results    = Dba::fetch_assoc($db_results);
+        if (isset($results['data'])) {
+
+            return $results['data'];
+        }
+
+        return '';
+    }
+
+    /**
      * get_object_total
      * Get count for an object
      * @param string $object_type
@@ -612,6 +644,8 @@ class Stats
      * @param int $user_id
      * @param bool $random
      * @param bool $addAdditionalColumns
+     * @param int $since
+     * @param int $before
      * @return string
      */
     public static function get_top_sql(
@@ -620,10 +654,12 @@ class Stats
         $count_type = 'stream',
         $user_id = null,
         $random = false,
+        $since = 0,
+        $before = 0,
         bool $addAdditionalColumns = false
     ): string {
         $type           = self::validate_type($input_type);
-        $date           = time() - (86400 * (int)$threshold);
+        $date           = $since ?: time() - (86400 * (int)$threshold);
         $catalog_filter = (AmpConfig::get('catalog_filter'));
         if ($type == 'playlist' && !$addAdditionalColumns) {
             $sql = "SELECT `id` FROM `playlist`";
@@ -681,8 +717,11 @@ class Stats
                 $sql .= " WHERE `object_count`.`object_type` = '" . $type . "' AND `object_count`.`user` = " . (string)$user_id;
             } else {
                 $sql .= " WHERE `object_count`.`object_type` = '" . $type . "' ";
-                if ($threshold > 0) {
-                    $sql .= "AND `object_count`.`date` >= '" . $date . "'";
+            }
+            if ($threshold > 0) {
+                $sql .= " AND `object_count`.`date` >= '" . $date . "'";
+                if ($before > 0) {
+                    $sql .= " AND `object_count`.`date` <= '" . $before . "'";
                 }
             }
             if ($input_type == 'album_artist') {
@@ -723,9 +762,11 @@ class Stats
      * @param int $offset
      * @param int $user_id
      * @param bool $random
+     * @param int $since
+     * @param int $before
      * @return array
      */
-    public static function get_top($input_type, $count, $threshold, $offset = 0, $user_id = null, $random = false)
+    public static function get_top($input_type, $count, $threshold, $offset = 0, $user_id = null, $random = false, $since = 0, $before = 0)
     {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -734,7 +775,7 @@ class Stats
             $count  = 0;
             $offset = 0;
         }
-        $sql   = self::get_top_sql($input_type, $threshold, 'stream', $user_id, $random);
+        $sql   = self::get_top_sql($input_type, $threshold, 'stream', $user_id, $random, $since, $before);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;

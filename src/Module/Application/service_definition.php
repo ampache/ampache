@@ -141,6 +141,7 @@ return [
     Radio\ShowAction::class => autowire(Radio\ShowAction::class),
     Image\ShowAction::class => autowire(Image\ShowAction::class),
     Mashup\ShowAction::class => autowire(Mashup\ShowAction::class),
+    Mashup\WrappedAction::class => autowire(Mashup\WrappedAction::class),
     Podcast\ShowCreateAction::class => autowire(Podcast\ShowCreateAction::class),
     Podcast\CreateAction::class => autowire(Podcast\CreateAction::class),
     Podcast\DeleteAction::class => autowire(Podcast\DeleteAction::class),
