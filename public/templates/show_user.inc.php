@@ -100,7 +100,7 @@ if (AmpConfig::get('sociable')) {
         <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_icon('play_preview', T_('Now Playing')); ?></a>
 <?php } ?>
 <?php if (AmpConfig::get('show_wrapped')) { ?>
-        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_icon('icon_info', T_('Wrapped')); ?></a>
+        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_icon('info', T_('Wrapped')); ?></a>
 <?php } ?>
     </dd>
     <dt><?php echo T_('Member Since'); ?></dt>
