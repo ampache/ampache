@@ -23,9 +23,10 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Userflag;
 
 /** @var int $endTime */
 /** @var int $startTime */
@@ -65,6 +66,15 @@ $browse->show_objects($object_ids);
 Ui::show_box_bottom();
 Ui::show_box_top(T_('Songs'));
 $object_ids = Stats::get_top('song', $limit, $threshold, 0, $user_id, false, $startTime, $endTime);
+$browse     = new Browse();
+$browse->set_type('song');
+$browse->set_use_filters(false);
+$browse->set_show_header(false);
+$browse->set_mashup(true);
+$browse->show_objects($object_ids);
+Ui::show_box_bottom();
+Ui::show_box_top(T_('Favorites'));
+$object_ids = Userflag::get_latest('song', $user_id, -1, 0, $startTime, $endTime);
 $browse     = new Browse();
 $browse->set_type('song');
 $browse->set_use_filters(false);

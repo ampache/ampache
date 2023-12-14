@@ -261,8 +261,10 @@ class Userflag extends database_object
      * Get the latest sql
      * @param string $input_type
      * @param int $user_id
+     * @param int $since
+     * @param int $before
      */
-    public static function get_latest_sql($input_type, $user_id = null): string
+    public static function get_latest_sql($input_type, $user_id = null, $since = 0, $before = 0): string
     {
         $type    = Stats::validate_type($input_type);
         $user_id = (int)($user_id);
@@ -285,6 +287,12 @@ class Userflag extends database_object
         if ($input_type == 'song_artist') {
             $sql .= " AND `artist`.`song_count` > 0";
         }
+        if ($since > 0) {
+            $sql .= " AND `user_flag`.`date` >= '" . $since . "'";
+            if ($before > 0) {
+                $sql .= " AND `user_flag`.`date` <= '" . $before . "'";
+            }
+        }
         $sql .= " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `date` DESC ";
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
@@ -298,9 +306,11 @@ class Userflag extends database_object
      * @param int $user_id
      * @param int $count
      * @param int $offset
+     * @param int $since
+     * @param int $before
      * @return array
      */
-    public static function get_latest($type, $user_id = null, $count = 0, $offset = 0)
+    public static function get_latest($type, $user_id = null, $count = 0, $offset = 0, $since = 0, $before = 0)
     {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -311,7 +321,7 @@ class Userflag extends database_object
         }
 
         // Select Top objects counting by # of rows
-        $sql   = self::get_latest_sql($type, $user_id);
+        $sql   = self::get_latest_sql($type, $user_id, $since, $before);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;

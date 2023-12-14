@@ -643,9 +643,9 @@ class Stats
      * @param string $count_type
      * @param int $user_id
      * @param bool $random
-     * @param bool $addAdditionalColumns
      * @param int $since
      * @param int $before
+     * @param bool $addAdditionalColumns
      * @return string
      */
     public static function get_top_sql(
