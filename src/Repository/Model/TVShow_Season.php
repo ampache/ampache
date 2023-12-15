@@ -34,7 +34,7 @@ use PDOStatement;
 class TVShow_Season extends database_object implements
     library_item,
     GarbageCollectibleInterface,
-    CatalogizedItemInterface
+    CatalogItemInterface
 {
     protected const DB_TABLENAME = 'tvshow_season';
 

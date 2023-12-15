@@ -36,7 +36,7 @@ use Ampache\Module\System\AmpError;
  * this can include podcasts or what-have-you
  *
  */
-class Live_Stream extends database_object implements Media, library_item, CatalogizedItemInterface
+class Live_Stream extends database_object implements Media, library_item, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'live_stream';
 

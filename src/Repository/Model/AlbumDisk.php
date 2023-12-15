@@ -32,7 +32,7 @@ use Ampache\Repository\SongRepositoryInterface;
  * This is the class responsible for handling the Album object
  * it is related to the album table in the database.
  */
-class AlbumDisk extends database_object implements library_item, CatalogizedItemInterface
+class AlbumDisk extends database_object implements library_item, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'album_disk';
 

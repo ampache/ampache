@@ -39,7 +39,7 @@ class Podcast_Episode extends database_object implements
     Media,
     library_item,
     GarbageCollectibleInterface,
-    CatalogizedItemInterface
+    CatalogItemInterface
 {
     protected const DB_TABLENAME = 'podcast_episode';
 

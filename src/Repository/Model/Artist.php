@@ -36,7 +36,7 @@ use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use PDOStatement;
 
-class Artist extends database_object implements library_item, GarbageCollectibleInterface, CatalogizedItemInterface
+class Artist extends database_object implements library_item, GarbageCollectibleInterface, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'artist';
 

@@ -38,7 +38,7 @@ use Exception;
  * This is the class responsible for handling the Album object
  * it is related to the album table in the database.
  */
-class Album extends database_object implements library_item, CatalogizedItemInterface
+class Album extends database_object implements library_item, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'album';
 

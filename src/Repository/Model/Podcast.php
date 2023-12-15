@@ -31,7 +31,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
 
-class Podcast extends database_object implements library_item, CatalogizedItemInterface
+class Podcast extends database_object implements library_item, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'podcast';
 

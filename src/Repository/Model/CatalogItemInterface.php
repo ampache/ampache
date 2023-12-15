@@ -27,7 +27,7 @@ namespace Ampache\Repository\Model;
 /**
  * Describes methods for items which have a catalog assigned
  */
-interface CatalogizedItemInterface
+interface CatalogItemInterface
 {
     /**
      * Returns the id of the catalog the item is associated to

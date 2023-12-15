@@ -47,7 +47,7 @@ class Song extends database_object implements
     Media,
     library_item,
     GarbageCollectibleInterface,
-    CatalogizedItemInterface
+    CatalogItemInterface
 {
     use Metadata;
 

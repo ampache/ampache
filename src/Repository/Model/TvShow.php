@@ -31,7 +31,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-class TvShow extends database_object implements library_item, CatalogizedItemInterface
+class TvShow extends database_object implements library_item, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'tvshow';
 
