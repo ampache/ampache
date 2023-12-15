@@ -38,7 +38,7 @@ use Exception;
  * This is the class responsible for handling the Album object
  * it is related to the album table in the database.
  */
-class Album extends database_object implements library_item
+class Album extends database_object implements library_item, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'album';
 
@@ -769,16 +769,11 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return int[]
+     * Returns the id of the catalog the item is associated to
      */
-    public function get_catalogs()
+    public function getCatalogId(): int
     {
-        return [
-            $this->catalog
-        ];
+        return $this->catalog;
     }
 
     /**

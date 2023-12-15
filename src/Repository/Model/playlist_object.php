@@ -301,15 +301,4 @@ abstract class playlist_object extends database_object implements library_item
 
         return $images;
     }
-
-    /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return int[]
-     */
-    public function get_catalogs()
-    {
-        return array();
-    }
 }

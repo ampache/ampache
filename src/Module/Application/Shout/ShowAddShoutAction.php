@@ -92,7 +92,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
             $data = $this->requestParser->getFromRequest('offset');
         }
         $object_type = ObjectTypeToClassNameMapper::reverseMap(get_class($object));
-        $shouts      = $this->shoutRepository->getBy($object_type, $object->id);
+        $shouts      = $this->shoutRepository->getBy($object_type, $object->getId());
 
         // Now go ahead and display the page where we let them add a comment etc
         $this->ui->show(

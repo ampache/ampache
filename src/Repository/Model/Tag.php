@@ -1029,17 +1029,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return list<int>
-     */
-    public function get_catalogs()
-    {
-        return array();
-    }
-
-    /**
      * @return int|null
      */
     public function get_user_owner(): ?int

@@ -448,7 +448,7 @@ class Subsonic_Xml_Data
     public static function addSong($xml, $song_id, $elementName = 'song'): SimpleXMLElement
     {
         $song        = new Song($song_id);
-        $catalogData = self::_getCatalogData($song->catalog, (string)$song->file);
+        $catalogData = self::_getCatalogData($song->getCatalogId(), (string)$song->file);
 
         // Don't create entries for disabled songs
         if ($song->enabled) {
@@ -504,7 +504,7 @@ class Subsonic_Xml_Data
             if (AmpConfig::get('transcode') != 'never') {
                 $cache_path     = (string)AmpConfig::get('cache_path', '');
                 $cache_target   = (string)AmpConfig::get('cache_target', '');
-                $file_target    = Catalog::get_cache_path($song->id, $song->catalog, $cache_path, $cache_target);
+                $file_target    = Catalog::get_cache_path($song->getId(), $song->getCatalogId(), $cache_path, $cache_target);
                 $transcode_type = ($file_target && is_file($file_target))
                     ? $cache_target
                     : Stream::get_transcode_format($song->type, null, 'api');
@@ -1303,7 +1303,7 @@ class Subsonic_Xml_Data
         $xpodcasts = self::addChildToResultXml($xml, 'podcasts');
         foreach ($podcasts as $podcast) {
             $podcast->format();
-            $sub_id   = (string)self::_getPodcastId($podcast->id);
+            $sub_id   = (string)self::_getPodcastId($podcast->getId());
             $xchannel = self::addChildToResultXml($xpodcasts, 'channel');
             $xchannel->addAttribute('id', $sub_id);
             $xchannel->addAttribute('url', $podcast->getFeed());

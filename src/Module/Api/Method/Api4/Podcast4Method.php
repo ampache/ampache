@@ -60,7 +60,7 @@ final class Podcast4Method
         }
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
+        if ($podcast->isNew() === false) {
             $episodes = (array_key_exists('include', $input) && $input['include'] == 'episodes');
 
             ob_end_clean();

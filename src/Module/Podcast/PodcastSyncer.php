@@ -241,13 +241,13 @@ final class PodcastSyncer implements PodcastSyncerInterface
             return;
         }
         // podcast urls can change over time so check these
-        if (self::get_id_from_title($podcast->id, $title, $time) > 0) {
+        if (self::get_id_from_title($podcast->getId(), $title, $time) > 0) {
             debug_event(self::class, 'Episode title already exists, skipped', 3);
 
             return;
         }
         // podcast pubdate can be used to skip duplicate/fixed episodes when you already have them
-        if (self::get_id_from_pubdate($podcast->id, $pubdate) > 0) {
+        if (self::get_id_from_pubdate($podcast->getId(), $pubdate) > 0) {
             debug_event(self::class, 'Episode with the same publication date already exists, skipped', 3);
 
             return;
@@ -260,13 +260,13 @@ final class PodcastSyncer implements PodcastSyncerInterface
             $state = 'skipped';
         }
 
-        debug_event(self::class, 'Adding new episode to podcast ' . $podcast->id . '... ' . $pubdate, 4);
+        debug_event(self::class, 'Adding new episode to podcast ' . $podcast->getId() . '... ' . $pubdate, 4);
         $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         Dba::write($sql, array(
             $title,
             $guid,
-            $podcast->id,
+            $podcast->getId(),
             $state,
             $source,
             $website,
@@ -289,7 +289,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
             'UPDATE `podcast` SET `lastsync` = ? WHERE `id` = ?',
             [
                 $time,
-                $podcast->id,
+                $podcast->getId(),
             ],
         );
     }

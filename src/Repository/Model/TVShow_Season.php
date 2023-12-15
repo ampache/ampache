@@ -31,7 +31,10 @@ use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use PDOStatement;
 
-class TVShow_Season extends database_object implements library_item, GarbageCollectibleInterface
+class TVShow_Season extends database_object implements
+    library_item,
+    GarbageCollectibleInterface,
+    CatalogItemInterface
 {
     protected const DB_TABLENAME = 'tvshow_season';
 
@@ -276,14 +279,11 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     }
 
     /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return list<int>
+     * Returns the id of the catalog the item is associated to
      */
-    public function get_catalogs()
+    public function getCatalogId(): int
     {
-        return array($this->catalog_id);
+        return $this->catalog_id;
     }
 
     /**

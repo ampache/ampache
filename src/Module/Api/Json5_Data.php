@@ -953,7 +953,7 @@ class Json5_Data
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();
             $objArray['playcount']             = (int)$song->total_count;
-            $objArray['catalog']               = (int)$song->catalog;
+            $objArray['catalog']               = $song->getCatalogId();
             $objArray['composer']              = $song->composer;
             $objArray['channels']              = $song->channels;
             $objArray['comment']               = $song->comment;

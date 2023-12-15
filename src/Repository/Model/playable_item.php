@@ -90,14 +90,6 @@ interface playable_item
      */
     public function get_medias($filter_type = null);
 
-    /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return list<int>
-     */
-    public function get_catalogs();
-
     public function getId(): int;
 
     public function has_art(): bool;

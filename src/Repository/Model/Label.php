@@ -130,14 +130,6 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return list<int>
-     */
-    public function get_catalogs()
-    {
-        return array();
-    }
-
-    /**
      * @return array
      */
     public function get_childrens()

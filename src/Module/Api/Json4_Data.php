@@ -818,7 +818,7 @@ class Json4_Data
             $ourSong['rating']                = $user_rating;
             $ourSong['averagerating']         = ($rating->get_average_rating() ?? null);
             $ourSong['playcount']             = (int) $song->played;
-            $ourSong['catalog']               = (int) $song->catalog;
+            $ourSong['catalog']               = $song->getCatalogId();
             $ourSong['composer']              = $song->composer;
             $ourSong['channels']              = $song->channels;
             $ourSong['comment']               = $song->comment;

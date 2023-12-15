@@ -28,7 +28,7 @@ use Ampache\Repository\Model\Podcast;
 /** @var Podcast $libitem */
 ?>
 <div>
-    <form method="post" id="edit_podcast_<?php echo $libitem->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_podcast_<?php echo $libitem->getId(); ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Feed'); ?></td>
@@ -55,7 +55,7 @@ use Ampache\Repository\Model\Podcast;
                 <td><input type="text" name="website" value="<?php echo scrub_out($libitem->getWebsite()); ?>" /></td>
             </tr>
         </table>
-        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $libitem->getId(); ?>" />
         <input type="hidden" name="type" value="podcast_row" />
     </form>
 </div>
