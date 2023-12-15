@@ -102,4 +102,14 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     );
+
+
+    /**
+     * This generates a standard JSON Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<mixed> $return_data
+     */
+    public function success(string $string, array $return_data = []): string;
 }

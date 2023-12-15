@@ -3221,11 +3221,6 @@ parameters:
 			path: src/Module/Api/Method/PodcastCreateMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastDeleteMethod\\:\\:podcast_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastDeleteMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastEditMethod\\:\\:podcast_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PodcastEditMethod.php
