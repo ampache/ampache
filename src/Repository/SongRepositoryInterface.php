@@ -26,6 +26,7 @@ namespace Ampache\Repository;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
 use Generator;
 use Traversable;
 
@@ -61,6 +62,15 @@ interface SongRepositoryInterface
      */
     public function getRandomByArtist(
         Artist $artist
+    ): array;
+
+    /**
+     * Gets the songs from a genre in a random order
+     *
+     * @return int[]
+     */
+    public function getRandomByGenre(
+        Tag $genre
     ): array;
 
     /**

@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
 use Generator;
 
 final class SongRepository implements SongRepositoryInterface
@@ -130,6 +131,24 @@ final class SongRepository implements SongRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }
+
+        return $results;
+    }
+
+    /**
+     * Gets the songs from a genre in a random order
+     *
+     * @return int[]
+     */
+    public function getRandomByGenre(
+        Tag $genre
+    ): array {
+        if ($genre->isNew()) {
+            return array();
+        }
+
+        $results = Tag::get_tag_objects('song', $genre->getId());
+        shuffle($results);
 
         return $results;
     }

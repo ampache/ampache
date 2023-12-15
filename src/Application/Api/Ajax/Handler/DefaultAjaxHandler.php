@@ -29,12 +29,14 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -150,12 +152,15 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
                             break;
-                        case 'artist_random':
                         case 'tag_random':
-                            $data      = explode('_', $request_type);
-                            $type      = $data['0'];
-                            $className = ObjectTypeToClassNameMapper::map($type);
-                            $object    = new $className($request_id);
+                            $object = new Tag($request_id);
+                            $songs  = $this->songRepository->getRandomByGenre($object);
+                            foreach ($songs as $song_id) {
+                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                            }
+                            break;
+                        case 'artist_random':
+                            $object    = new Artist($request_id);
                             $songs     = $this->songRepository->getRandomByArtist($object);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
@@ -180,9 +185,10 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 /* Setting ratings */
                 if (User::is_registered()) {
                     ob_start();
-                    $rating = new Rating((int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), Core::get_get('rating_type'));
+                    $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                    $rating    = new Rating($object_id, Core::get_get('rating_type'));
                     $rating->set_rating(Core::get_get('rating'));
-                    echo Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), Core::get_get('rating_type'));
+                    echo Rating::show($object_id, Core::get_get('rating_type'));
                     $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . Core::get_get('rating_type');
                     $results[$key] = ob_get_contents();
                     ob_end_clean();
@@ -207,8 +213,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'action_buttons':
-                $rating_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-                $rating_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+                $rating_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $rating_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
                 ob_start();
                 if (AmpConfig::get('ratings') && Rating::is_valid($rating_type)) {
                     echo " <span id='rating_" . $rating_id . "_" . $rating_type . "'>";
