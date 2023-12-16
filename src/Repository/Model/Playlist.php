@@ -303,7 +303,12 @@ class Playlist extends playlist_object
      * This returns an array of playlist medias that are in this playlist.
      * Because the same media can be on the same playlist twice they are
      * keyed by the uid from playlist_data
-     * @return array
+     * @return list<array{
+     *  object_type: string,
+     *  object_id: int,
+     *  track: int,
+     *  track_id: int
+     * }>
      */
     public function get_items()
     {

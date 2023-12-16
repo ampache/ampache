@@ -41,10 +41,11 @@ use Ampache\Config\AmpConfig;
  * @property string $album
  * @property string $type
  * @property string $codec
+ * @property string $track_num
  */
 class Stream_Url extends MemoryObject
 {
-    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec');
+    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec', 'track_num');
 
     /**
      * parse

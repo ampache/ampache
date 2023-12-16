@@ -1,31 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$artist of method Ampache\\\\Repository\\\\SongRepositoryInterface\\:\\:getRandomByArtist\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Artist, object given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:show\\(\\) expects int, string\\|false\\|null given\\.$#"
-			count: 2
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:show\\(\\) expects int, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:show\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:show\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$artist_id of static method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:get_artists_like\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
@@ -8916,116 +8891,6 @@ parameters:
 			path: src/Module/Playback/Stream_Playlist.php
 
 		-
-			message: "#^Class Ampache\\\\Module\\\\Playback\\\\Stream_Url referenced with incorrect case\\: Ampache\\\\Module\\\\Playback\\\\Stream_URL\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:_add_urls\\(\\) has parameter \\$urls with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:add\\(\\) has parameter \\$media with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:add_urls\\(\\) has parameter \\$urls with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_asx\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_democratic\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_hls\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_localplay\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_m3u\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_pls\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_ram\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_simple_m3u\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_web_player\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:create_xspf\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:generate_playlist\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_to_url\\(\\) has parameter \\$media with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_to_urlarray\\(\\) has parameter \\$media with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_to_urlarray\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:show_web_player\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
 			message: "#^Parameter \\#1 \\$object of static method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_object_to_url\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Media, object given\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
@@ -9036,22 +8901,7 @@ parameters:
 			path: src/Module/Playback/Stream_Playlist.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:\\$streamtoken has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:\\$title has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:\\$urls has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
 
@@ -14701,11 +14551,6 @@ parameters:
 			path: src/Repository/Model/Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_random_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
@@ -16847,11 +16692,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
 

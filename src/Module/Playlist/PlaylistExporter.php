@@ -117,7 +117,10 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 ? ''
                 : $dirname;
             foreach ($medias as $media) {
-                $pl->urls[] = Stream_Playlist::media_to_url($media, $media_path, $urltype, $user);
+                $url = Stream_Playlist::media_to_url($media, $media_path, $urltype, $user);
+                if ($url !== null) {
+                    $pl->urls[] = $url;
+                }
             }
 
             $plstr = $pl->{'get_' . $ext . '_string'}();
