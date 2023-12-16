@@ -131,7 +131,10 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->show(
             'show_now_playing.inc.php',
-            ['results' => $results]
+            [
+                'web_path' => $this->configContainer->get(ConfigurationKeyEnum::WEB_PATH),
+                'results' => $results
+            ]
         );
         print('</body></html>');
 
