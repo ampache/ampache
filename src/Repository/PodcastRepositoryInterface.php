@@ -97,4 +97,9 @@ interface PodcastRepositoryInterface
      * }>
      */
     public function getDeletedEpisodes(): array;
+
+    /**
+     * Retrieve a single podcast-item by its id
+     */
+    public function findById(int $podcastId): ?Podcast;
 }

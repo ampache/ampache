@@ -28,12 +28,14 @@ namespace Ampache\Module\Application\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\PodcastRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -47,7 +49,7 @@ class ConfirmDeleteActionTest extends TestCase
 
     private UiInterface&MockObject $ui;
 
-    private ModelFactoryInterface&MockObject $modelFactory;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
 
     private PodcastDeleterInterface&MockObject $podcastDeleter;
 
@@ -59,15 +61,15 @@ class ConfirmDeleteActionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
-        $this->podcastDeleter  = $this->createMock(PodcastDeleterInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->ui                = $this->createMock(UiInterface::class);
+        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
+        $this->podcastDeleter    = $this->createMock(PodcastDeleterInterface::class);
 
         $this->subject = new ConfirmDeleteAction(
             $this->configContainer,
             $this->ui,
-            $this->modelFactory,
+            $this->podcastRepository,
             $this->podcastDeleter,
         );
 
@@ -124,6 +126,32 @@ class ConfirmDeleteActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
+
+    public function testRunErrorsIfPodcastWasNotFound(): void
+    {
+        static::expectException(ObjectNotFoundException::class);
+
+        $this->configContainer->expects(static::exactly(2))
+            ->method('isFeatureEnabled')
+            ->with(...$this->withConsecutive(
+                [ConfigurationKeyEnum::PODCAST],
+                [ConfigurationKeyEnum::DEMO_MODE],
+            ))
+            ->willReturn(true, false);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->willReturn(true);
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
+            ->with(0)
+            ->willReturn(null);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
     public function testRunConfirmsRemoval(): void
     {
         $podcastId = 666;
@@ -151,8 +179,8 @@ class ConfirmDeleteActionTest extends TestCase
             ->method('getQueryParams')
             ->willReturn(['podcast_id' => (string) $podcastId]);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
             ->with($podcastId)
             ->willReturn($podcast);
 

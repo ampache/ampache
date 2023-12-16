@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class PodcastEdit4Method
@@ -65,8 +66,8 @@ final class PodcastEdit4Method
             return false;
         }
         $podcast_id = $input['filter'];
-        $podcast    = new Podcast($podcast_id);
-        if ($podcast->isNew()) {
+        $podcast    = self::getPodcastRepository()->findById((int) $podcast_id);
+        if ($podcast === null) {
             Api4::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['api_format']);
 
             return false;
@@ -93,5 +94,15 @@ final class PodcastEdit4Method
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

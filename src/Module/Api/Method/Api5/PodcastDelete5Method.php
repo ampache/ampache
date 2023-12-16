@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class PodcastDelete5Method
@@ -62,9 +63,9 @@ final class PodcastDelete5Method
             return false;
         }
         $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
+        $podcast   = self::getPodcastRepository()->findById($object_id);
 
-        if ($podcast->isNew()) {
+        if ($podcast === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
@@ -86,5 +87,15 @@ final class PodcastDelete5Method
         global $dic;
 
         return $dic->get(PodcastDeleterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

@@ -28,7 +28,6 @@ namespace Ampache\Repository;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
@@ -276,5 +275,18 @@ final class PodcastRepository implements PodcastRepositoryInterface
         }
 
         return $episodes;
+    }
+
+    /**
+     * Retrieve a single podcast-item by its id
+     */
+    public function findById(int $podcastId): ?Podcast
+    {
+        $podcast = $this->modelFactory->createPodcast($podcastId);
+        if ($podcast->isNew()) {
+            return null;
+        }
+
+        return $podcast;
     }
 }

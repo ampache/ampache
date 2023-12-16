@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -64,6 +65,7 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -2005,10 +2007,12 @@ class Subsonic_Api
         $podcast_id      = $input['id'] ?? null;
         $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
 
-        if (AmpConfig::get('podcast')) {
+        if (AmpConfig::get(ConfigurationKeyEnum::PODCAST)) {
             if ($podcast_id) {
-                $podcast = new Podcast(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
-                if ($podcast->isNew()) {
+                $podcast = self::getPodcastRepository()->findById(
+                    Subsonic_Xml_Data::_getAmpacheId($podcast_id)
+                );
+                if ($podcast === null) {
                     $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getpodcasts');
                 } else {
                     $response = Subsonic_Xml_Data::addSubsonicResponse('getpodcasts');
@@ -2121,9 +2125,9 @@ class Subsonic_Api
             return;
         }
 
-        if (AmpConfig::get('podcast') && $user->access >= 75) {
-            $podcast = new Podcast(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
-            if ($podcast->isNew()) {
+        if (AmpConfig::get(ConfigurationKeyEnum::PODCAST) && $user->access >= AccessLevelEnum::LEVEL_MANAGER) {
+            $podcast = self::getPodcastRepository()->findById(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
+            if ($podcast === null) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletepodcastchannel');
             } else {
                 self::getPodcastDeleter()->delete($podcast);
@@ -3160,5 +3164,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PodcastDeleterInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

@@ -53,6 +53,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -1846,6 +1847,8 @@ abstract class Catalog extends database_object
             $catalogs = self::get_catalogs('podcast');
         }
 
+        $podcastRepository = self::getPodcastRepository();
+
         $results = array();
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
@@ -1854,7 +1857,10 @@ abstract class Catalog extends database_object
             }
             $podcast_ids = $catalog->get_podcast_ids();
             foreach ($podcast_ids as $podcast_id) {
-                $results[] = new Podcast($podcast_id);
+                $podcast = $podcastRepository->findById($podcast_id);
+                if ($podcast !== null) {
+                    $results[] = $podcast;
+                }
             }
         }
 
@@ -4489,5 +4495,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

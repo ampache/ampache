@@ -27,9 +27,9 @@ namespace Ampache\Module\Podcast;
 use Ampache\Module\Podcast\Exception\PodcastFolderException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\PodcastRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -40,23 +40,23 @@ class PodcastEpisodeDownloaderTest extends TestCase
 
     private WebFetcherInterface&MockObject $webFetcher;
 
-    private ModelFactoryInterface&MockObject $modelFactory;
-
     private LoggerInterface&MockObject $logger;
 
     private PodcastEpisodeDownloader $subject;
+
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
 
     protected function setUp(): void
     {
         $this->podcastFolderProvider = $this->createMock(PodcastFolderProviderInterface::class);
         $this->webFetcher            = $this->createMock(WebFetcherInterface::class);
-        $this->modelFactory          = $this->createMock(ModelFactoryInterface::class);
         $this->logger                = $this->createMock(LoggerInterface::class);
+        $this->podcastRepository     = $this->createMock(PodcastRepositoryInterface::class);
 
         $this->subject = new PodcastEpisodeDownloader(
             $this->podcastFolderProvider,
             $this->webFetcher,
-            $this->modelFactory,
+            $this->podcastRepository,
             $this->logger,
         );
     }
@@ -111,8 +111,9 @@ class PodcastEpisodeDownloaderTest extends TestCase
             ->method('getPodcastId')
             ->willReturn($podcastId);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
+            ->with($podcastId)
             ->willReturn($podcast);
 
         $this->podcastFolderProvider->expects(static::once())

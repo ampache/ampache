@@ -35,8 +35,8 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -52,18 +52,18 @@ final class PodcastDeleteMethod implements MethodInterface
 
     private PrivilegeCheckerInterface $privilegeChecker;
 
-    private ModelFactoryInterface $modelFactory;
+    private PodcastRepositoryInterface $podcastRepository;
 
     public function __construct(
         PodcastDeleterInterface $podcastDeleter,
         ConfigContainerInterface $configContainer,
         PrivilegeCheckerInterface $privilegeChecker,
-        ModelFactoryInterface $modelFactory
+        PodcastRepositoryInterface $podcastRepository
     ) {
-        $this->podcastDeleter   = $podcastDeleter;
-        $this->configContainer  = $configContainer;
-        $this->privilegeChecker = $privilegeChecker;
-        $this->modelFactory     = $modelFactory;
+        $this->podcastDeleter    = $podcastDeleter;
+        $this->configContainer   = $configContainer;
+        $this->privilegeChecker  = $privilegeChecker;
+        $this->podcastRepository = $podcastRepository;
     }
 
     /**
@@ -102,9 +102,9 @@ final class PodcastDeleteMethod implements MethodInterface
             );
         }
 
-        $podcast = $this->modelFactory->createPodcast($podcastId);
+        $podcast = $this->podcastRepository->findById($podcastId);
 
-        if ($podcast->isNew()) {
+        if ($podcast === null) {
             throw new ResultEmptyException(
                 (string) $podcastId
             );

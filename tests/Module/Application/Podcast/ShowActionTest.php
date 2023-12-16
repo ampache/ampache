@@ -30,7 +30,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -46,8 +45,6 @@ class ShowActionTest extends TestCase
 
     private LoggerInterface&MockObject $logger;
 
-    private ModelFactoryInterface&MockObject $modelFactory;
-
     private ServerRequestInterface&MockObject $request;
 
     private GuiGatekeeperInterface&MockObject $gatekeeper;
@@ -61,7 +58,6 @@ class ShowActionTest extends TestCase
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
         $this->ui                = $this->createMock(UiInterface::class);
         $this->logger            = $this->createMock(LoggerInterface::class);
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
 
         $this->request    = $this->createMock(ServerRequestInterface::class);
@@ -71,7 +67,6 @@ class ShowActionTest extends TestCase
             $this->configContainer,
             $this->ui,
             $this->logger,
-            $this->modelFactory,
             $this->podcastRepository,
         );
     }
@@ -90,20 +85,14 @@ class ShowActionTest extends TestCase
 
     public function testRunShowErrorIfPodcastDoesNotExist(): void
     {
-        $podcast = $this->createMock(Podcast::class);
-
         $this->request->expects(static::once())
             ->method('getQueryParams')
             ->willReturn([]);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
             ->with(0)
-            ->willReturn($podcast);
-
-        $podcast->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
+            ->willReturn(null);
 
         $this->ui->expects(static::once())
             ->method('showHeader');
@@ -142,16 +131,11 @@ class ShowActionTest extends TestCase
             ->method('getQueryParams')
             ->willReturn([]);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
             ->with(0)
             ->willReturn($podcast);
 
-        $podcast->expects(static::once())
-            ->method('isNew')
-            ->willReturn(false);
-        $podcast->expects(static::once())
-            ->method('format');
         $podcast->expects(static::once())
             ->method('get_fullname')
             ->willReturn($name);
