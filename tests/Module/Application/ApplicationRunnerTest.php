@@ -56,10 +56,9 @@ class ApplicationRunnerTest extends MockeryTestCase
     /** @var MockInterface|UiInterface|null  */
     private ?MockInterface $ui;
 
-    /** @var ApplicationRunner|null */
     private ApplicationRunner $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->dic               = $this->mock(ContainerInterface::class);
         $this->logger            = $this->mock(LoggerInterface::class);

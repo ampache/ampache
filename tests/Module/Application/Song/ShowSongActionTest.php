@@ -56,10 +56,9 @@ class ShowSongActionTest extends MockeryTestCase
     /** @var LoggerInterface|MockInterface|null */
     private MockInterface $logger;
 
-    /** @var ShowSongAction|null */
     private ShowSongAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);
         $this->modelFactory = $this->mock(ModelFactoryInterface::class);

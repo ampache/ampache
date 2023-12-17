@@ -62,10 +62,9 @@ class AlbumViewAdapterTest extends MockeryTestCase
     /** @var Album|MockInterface|null */
     private MockInterface $album;
 
-    /** @var AlbumViewAdapter|null */
     private AlbumViewAdapter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
@@ -124,7 +123,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
             ->andReturn($averageRating);
 
         $this->assertSame(
-            (string) $averageRating,
+            $averageRating,
             $this->subject->getAverageRating()
         );
     }

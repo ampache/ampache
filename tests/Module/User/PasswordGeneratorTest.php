@@ -31,7 +31,7 @@ class PasswordGeneratorTest extends MockeryTestCase
 {
     private ?PasswordGenerator $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->subject = new PasswordGenerator();
     }

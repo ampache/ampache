@@ -36,7 +36,7 @@ class GatekeeperFactoryTest extends MockeryTestCase
 
     private ?GatekeeperFactory $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
 

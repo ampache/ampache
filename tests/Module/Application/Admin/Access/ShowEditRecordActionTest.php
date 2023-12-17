@@ -48,7 +48,7 @@ class ShowEditRecordActionTest extends MockeryTestCase
 
     private ?ShowEditRecordAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);
         $this->modelFactory = $this->mock(ModelFactoryInterface::class);
@@ -103,9 +103,7 @@ class ShowEditRecordActionTest extends MockeryTestCase
         $this->ui->shouldReceive('show')
             ->with(
                 'show_edit_access.inc.php',
-                Mockery::on(static function (array $context): bool {
-                    return $context['access'] instanceof AccessListItemInterface;
-                })
+                Mockery::on(static fn (array $context): bool => $context['access'] instanceof AccessListItemInterface)
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')

@@ -1,31 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$artist of method Ampache\\\\Repository\\\\SongRepositoryInterface\\:\\:getRandomByArtist\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Artist, object given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:show\\(\\) expects int, string\\|false\\|null given\\.$#"
-			count: 2
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:show\\(\\) expects int, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:show\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:show\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$artist_id of static method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:get_artists_like\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php

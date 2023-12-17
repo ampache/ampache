@@ -52,7 +52,7 @@ class WriteConfigActionTest extends MockeryTestCase
 
     private ?WriteConfigAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer    = $this->mock(ConfigContainerInterface::class);
         $this->installationHelper = $this->mock(InstallationHelperInterface::class);
@@ -120,9 +120,7 @@ class WriteConfigActionTest extends MockeryTestCase
 
         $this->installationHelper->shouldReceive('write_config')
             ->with(
-                Mockery::on(function (): bool {
-                    return true;
-                })
+                Mockery::on(static fn (): bool => true)
             )
             ->once()
             ->andReturnTrue();

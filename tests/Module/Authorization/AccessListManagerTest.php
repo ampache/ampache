@@ -40,7 +40,7 @@ class AccessListManagerTest extends MockeryTestCase
 
     private ?AccessListManager $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->accessRepository = $this->mock(AccessRepositoryInterface::class);
 

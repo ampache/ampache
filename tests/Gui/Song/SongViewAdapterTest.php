@@ -50,10 +50,9 @@ class SongViewAdapterTest extends MockeryTestCase
     /** @var Song|MockInterface|null */
     private MockInterface $song;
 
-    /** @var SongViewAdapter|null */
     private SongViewAdapter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
@@ -164,7 +163,7 @@ class SongViewAdapterTest extends MockeryTestCase
             ->andReturn($averageRating);
 
         $this->assertSame(
-            (string) $averageRating,
+            $averageRating,
             $this->subject->getAverageRating()
         );
     }
@@ -339,6 +338,7 @@ class SongViewAdapterTest extends MockeryTestCase
             $this->subject->getAlbumDiskLink()
         );
     }
+
     public function testGetYearReturnsValues(): void
     {
         $value = 666;

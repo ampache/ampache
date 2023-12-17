@@ -30,10 +30,9 @@ use Ratchet\Server\EchoServer;
 
 class WebSocketFactoryTest extends MockeryTestCase
 {
-    /** @var WebSocketFactory|null */
     private ?WebSocketFactory $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->subject = new WebSocketFactory();
     }

@@ -107,6 +107,7 @@
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-mockery": "^1.1",
         "phpunit/phpunit": "^10",
+        "rector/rector": "^0.18.12",
         "seec/phpunit-consecutive-params": "^1.1",
         "squizlabs/php_codesniffer": "^3.8",
         "szymach/c-pchart": "^3.0"
@@ -388,7 +389,9 @@
         "fix-cs": "vendor/bin/php-cs-fixer fix -v",
         "post-autoload-dump": [
             "@php resources/scripts/composer/check_tag_tools.php"
-        ]
+        ],
+        "rector:dry": "rector process -n",
+        "rector:fix": "rector process"
     },
     "scripts-descriptions": {
         "coverage": "Generates the code-coverage report into the build/coverage directory",
@@ -398,7 +401,9 @@
         "tests": "Executes the unit tests",
         "codestyle": "Performs code-style related checks",
         "syntax": "Performs php syntax checks",
-        "fix-cs": "Performs code-style corrections on the whole codebase"
+        "fix-cs": "Performs code-style corrections on the whole codebase",
+        "rector:dry": "Performs rector code-migrations dry run",
+        "rector:fix": "Applies pending rector code-migrations"
     },
     "suggest": {
         "szymach/c-pchart": "Enable graphical statistics",

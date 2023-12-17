@@ -41,7 +41,7 @@ class UserActionTest extends MockeryTestCase
 
     private UserAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui = $this->mock(UiInterface::class);
 

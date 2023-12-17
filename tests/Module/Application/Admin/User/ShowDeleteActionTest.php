@@ -48,7 +48,7 @@ class ShowDeleteActionTest extends MockeryTestCase
 
     private ShowDeleteAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);

@@ -29,10 +29,9 @@ use Ampache\MockeryTestCase;
 
 class TalTranslationServiceTest extends MockeryTestCase
 {
-    /** @var TalTranslationService|null */
     private TalTranslationService $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->subject = new TalTranslationService();
     }

@@ -46,7 +46,7 @@ class StatsViewAdapterTest extends MockeryTestCase
 
     private ?StatsViewAdapter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->guiFactory      = $this->mock(GuiFactoryInterface::class);

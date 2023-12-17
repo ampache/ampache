@@ -50,7 +50,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
 
     private ?ShowDeleteRecordAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
