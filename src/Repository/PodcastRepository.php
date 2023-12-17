@@ -28,7 +28,7 @@ namespace Ampache\Repository;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
-use Ampache\Module\System\Dba;
+use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
@@ -39,7 +39,7 @@ use PDO;
 /**
  * Manages podcast related database access
  *
- * Tables: `podcast`, `podcast_episode`
+ * Tables: `podcast`, `podcast_episode`, `deleted_podcast_episodes`
  */
 final class PodcastRepository implements PodcastRepositoryInterface
 {
@@ -224,7 +224,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
      */
     public function getEpisodesEligibleForDeletion(Podcast $podcast): Generator
     {
-        $keepLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_KEEP);
+        $keepLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_KEEP);
 
         if ($keepLimit !== 0) {
             $result = $this->connection->query(
@@ -236,9 +236,62 @@ final class PodcastRepository implements PodcastRepositoryInterface
             );
 
             while ($episodeId = $result->fetchColumn()) {
-                yield $this->modelFactory->createPodcastEpisode((int)$episodeId);
+                yield $this->modelFactory->createPodcastEpisode((int) $episodeId);
             }
         }
+    }
+
+    /**
+     * Returns all podcast episodes which are eligible for download
+     *
+     * @return Generator<Podcast_Episode>
+     */
+    public function getEpisodesEligibleForDownload(Podcast $podcast): Generator
+    {
+        $downloadLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
+
+        if ($downloadLimit !== 0) {
+            $query = <<<SQL
+            SELECT
+                `id`
+            FROM
+                `podcast_episode`
+            WHERE
+                `podcast` = ?
+                AND
+                (`addition_time` > ? OR `state` = ?)
+            ORDER BY
+                `pubdate`
+            DESC LIMIT %d
+            SQL;
+
+            $result = $this->connection->query(
+                sprintf(
+                    $query,
+                    $downloadLimit
+                ),
+                [
+                    $podcast->getId(),
+                    $podcast->getLastSyncDate()->getTimestamp(),
+                    PodcastEpisodeStateEnum::PENDING
+                ]
+            );
+
+            while ($episodeId = $result->fetchColumn()) {
+                yield $this->modelFactory->createPodcastEpisode((int) $episodeId);
+            }
+        }
+    }
+
+    /**
+     * Returns the calculated count of available episodes for the given podcast
+     */
+    public function getEpisodeCount(Podcast $podcast): int
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(id) from `podcast_episode` where `podcast` = ?',
+            [$podcast->getId()]
+        );
     }
 
     /**
@@ -276,5 +329,61 @@ final class PodcastRepository implements PodcastRepositoryInterface
         }
 
         return $episodes;
+    }
+
+    /**
+     * Persists the podcast-item in the database
+     *
+     * If the item is new, it will be created. Otherwise, an update will happen
+     *
+     * @return null|non-negative-int
+     */
+    public function persist(Podcast $podcast): ?int
+    {
+        $result = null;
+
+        if ($podcast->isNew()) {
+            $this->connection->query(
+                'INSERT INTO `podcast` (`catalog`, `feed`, `title`, `website`, `description`, `language`, `generator`, `copyright`, `total_skip`, `total_count`, `episodes`, `lastbuilddate`, `lastsync`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [
+                    $podcast->getCatalogId(),
+                    $podcast->getFeedUrl(),
+                    $podcast->getTitle(),
+                    $podcast->getWebsite(),
+                    $podcast->getDescription(),
+                    $podcast->getLanguage(),
+                    $podcast->getGenerator(),
+                    $podcast->getCopyright(),
+                    $podcast->getTotalSkip(),
+                    $podcast->getTotalCount(),
+                    $podcast->getEpisodeCount(),
+                    $podcast->getLastBuildDate()->getTimestamp(),
+                    $podcast->getLastSyncDate()->getTimestamp()
+                ]
+            );
+
+            $result = $this->connection->getLastInsertedId();
+        } else {
+            $this->connection->query(
+                'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `language` = ?, `generator` = ?, `copyright` = ?, `total_skip` = ?, `total_count` = ?, `episodes` = ?, `lastbuilddate` = ?, `lastsync` = ? WHERE `id` = ?',
+                [
+                    $podcast->getFeedUrl(),
+                    $podcast->getTitle(),
+                    $podcast->getWebsite(),
+                    $podcast->getDescription(),
+                    $podcast->getLanguage(),
+                    $podcast->getGenerator(),
+                    $podcast->getCopyright(),
+                    $podcast->getTotalSkip(),
+                    $podcast->getTotalCount(),
+                    $podcast->getEpisodeCount(),
+                    $podcast->getLastBuildDate()->getTimestamp(),
+                    $podcast->getLastSyncDate()->getTimestamp(),
+                    $podcast->getId(),
+                ]
+            );
+        }
+
+        return $result;
     }
 }

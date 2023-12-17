@@ -77,9 +77,25 @@ interface PodcastRepositoryInterface
     public function deleteEpisode(Podcast_Episode $episode): void;
 
     /**
+     * Returns all podcast episodes which are eligible for deletion
+     *
+     * If enabled, this will return all episodes of the podcast which are above the keep-limit
+     *
      * @return Traversable<Podcast_Episode>
      */
     public function getEpisodesEligibleForDeletion(Podcast $podcast): Traversable;
+
+    /**
+     * Returns all podcast episodes which are eligible for download
+     *
+     * @return Generator<Podcast_Episode>
+     */
+    public function getEpisodesEligibleForDownload(Podcast $podcast): Traversable;
+
+    /**
+     * Returns the calculated count of available episodes for the given podcast
+     */
+    public function getEpisodeCount(Podcast $podcast): int;
 
     /**
      * Returns all deleted podcast episodes
@@ -97,4 +113,13 @@ interface PodcastRepositoryInterface
      * }>
      */
     public function getDeletedEpisodes(): array;
+
+    /**
+     * Persists the podcast-item in the database
+     *
+     * If the item is new, it will be created. Otherwise, an update will happen
+     *
+     * @return null|non-negative-int
+     */
+    public function persist(Podcast $podcast): ?int;
 }

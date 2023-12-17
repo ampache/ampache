@@ -646,12 +646,12 @@ class Json4_Data
             $podcast_description = $podcast->get_description();
             $podcast_language    = scrub_out($podcast->getLanguage());
             $podcast_copyright   = scrub_out($podcast->getCopyright());
-            $podcast_feed_url    = $podcast->getFeed();
+            $podcast_feed_url    = $podcast->getFeedUrl();
             $podcast_generator   = scrub_out($podcast->getGenerator());
             $podcast_website     = scrub_out($podcast->getWebsite());
             $podcast_build_date  = $podcast->getLastBuildDate()->format(DATE_ATOM);
             $podcast_sync_date   = $podcast->getLastSyncDate()->format(DATE_ATOM);
-            $podcast_public_url  = $podcast->getLink();
+            $podcast_public_url  = $podcast->get_link();
             $podcast_episodes    = array();
             if ($episodes) {
                 $results          = $podcastRepository->getEpisodes($podcast);

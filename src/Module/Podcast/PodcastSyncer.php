@@ -25,14 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\PodcastRepositoryInterface;
+use DateTime;
 use DateTimeInterface;
 use SimpleXMLElement;
 
@@ -46,6 +45,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
     private ModelFactoryInterface $modelFactory;
 
     private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader;
+
     private PodcastDeleterInterface $podcastDeleter;
 
     public function __construct(
@@ -67,7 +67,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
         Podcast $podcast,
         bool $gather = false
     ): bool {
-        $feed = $podcast->getFeed();
+        $feed = $podcast->getFeedUrl();
 
         debug_event(self::class, 'Syncing feed ' . $feed . ' ...', 4);
         if ($feed === '') {
@@ -144,40 +144,35 @@ final class PodcastSyncer implements PodcastSyncerInterface
                 $this->add_episode($podcast, $episode, $lastSync);
             }
         }
-        $change = 0;
-        $time   = time();
+        $change   = 0;
+        $syncDate = new DateTime();
 
         // Select episodes to download
-        $dlnb = (int)AmpConfig::get('podcast_new_download');
-        if ($dlnb <> 0) {
-            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` = ? AND (`podcast_episode`.`addition_time` > `podcast`.`lastsync` OR `podcast_episode`.`state` = 'pending') ORDER BY `podcast_episode`.`pubdate` DESC";
-            if ($dlnb > 0) {
-                $sql .= " LIMIT " . (string)$dlnb;
-            }
-            $db_results = Dba::read($sql, [$podcast->getId()]);
-            while ($row = Dba::fetch_row($db_results)) {
-                $episode = new Podcast_Episode($row[0]);
-                $episode->change_state('pending');
-                if ($gather) {
-                    $this->podcastEpisodeDownloader->fetch($episode);
+        $downloadEpisodes = $this->podcastRepository->getEpisodesEligibleForDownload($podcast);
+        foreach ($downloadEpisodes as $episode) {
+            $episode->change_state('pending');
+            if ($gather) {
+                $this->podcastEpisodeDownloader->fetch($episode);
 
-                    $change++;
-                }
+                $change++;
             }
         }
+
         if ($change > 0) {
             // cleanup old episodes (if available)
             $this->podcastDeleter->deleteEpisode(
                 $this->podcastRepository->getEpisodesEligibleForDeletion($podcast)
             );
 
-            // update the episode count after adding / removing episodes
-            $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
-            Dba::write($sql, [$podcast->getId()]);
+            $podcast->setEpisodeCount(
+                $this->podcastRepository->getEpisodeCount($podcast)
+            );
             Catalog::update_mapping('podcast');
             Catalog::update_mapping('podcast_episode');
         }
-        $this->update_lastsync($podcast, $time);
+
+        $podcast->setLastSyncDate($syncDate);
+        $podcast->save();
     }
 
     /**
@@ -254,10 +249,10 @@ final class PodcastSyncer implements PodcastSyncerInterface
         }
 
         // by default you want to download all the episodes
-        $state = 'pending';
+        $state = PodcastEpisodeStateEnum::PENDING;
         // if you're syncing an old podcast, check the pubdate and skip it if published to the feed before your last sync
         if ($lastSync !== null && $pubdate < $lastSync->getTimestamp()) {
-            $state = 'skipped';
+            $state = PodcastEpisodeStateEnum::SKIPPED;
         }
 
         debug_event(self::class, 'Adding new episode to podcast ' . $podcast->getId() . '... ' . $pubdate, 4);
@@ -278,20 +273,6 @@ final class PodcastSyncer implements PodcastSyncerInterface
             time(),
             $podcast->getCatalogId()
         ));
-    }
-
-    /**
-     * update_lastsync
-     */
-    private function update_lastsync(Podcast $podcast, int $time): void
-    {
-        Dba::write(
-            'UPDATE `podcast` SET `lastsync` = ? WHERE `id` = ?',
-            [
-                $time,
-                $podcast->getId(),
-            ],
-        );
     }
 
     /**
