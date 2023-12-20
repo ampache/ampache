@@ -45,7 +45,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
 
     private UpdateFromTagsAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->ui              = $this->mock(UiInterface::class);

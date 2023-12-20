@@ -42,7 +42,7 @@ class AdvancedActionTest extends MockeryTestCase
 
     private ?AdvancedAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
         $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
@@ -66,7 +66,7 @@ class AdvancedActionTest extends MockeryTestCase
                 'show_random.inc.php',
                 [
                     'videoRepository' => $this->videoRepository,
-                    'object_ids' => array()
+                    'object_ids' => []
                 ]
             )
             ->once();

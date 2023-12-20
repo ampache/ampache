@@ -36,7 +36,7 @@ class AjaxUriRetrieverTest extends MockeryTestCase
 
     private AjaxUriRetriever $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
 

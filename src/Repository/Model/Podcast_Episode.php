@@ -34,6 +34,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 class Podcast_Episode extends database_object implements
     Media,
@@ -287,8 +288,12 @@ class Podcast_Episode extends database_object implements
     public function get_f_podcast(): string
     {
         if (!isset($this->f_podcast)) {
-            $podcast         = new Podcast($this->podcast);
-            $this->f_podcast = $podcast->get_fullname();
+            $podcast         = $this->getPodcastRepository()->findById($this->podcast);
+            if ($podcast === null) {
+                $this->f_podcast = '';
+            } else {
+                $this->f_podcast = $podcast->get_fullname();
+            }
         }
 
         return $this->f_podcast;
@@ -300,8 +305,12 @@ class Podcast_Episode extends database_object implements
     public function get_f_podcast_link(): string
     {
         if (!isset($this->f_podcast_link)) {
-            $podcast              = new Podcast($this->podcast);
-            $this->f_podcast_link = $podcast->get_f_link();
+            $podcast              = $this->getPodcastRepository()->findById($this->podcast);
+            if ($podcast === null) {
+                $this->f_podcast_link = '';
+            } else {
+                $this->f_podcast_link = $podcast->get_f_link();
+            }
         }
 
         return $this->f_podcast_link;
@@ -691,5 +700,15 @@ class Podcast_Episode extends database_object implements
         global $dic;
 
         return $dic->get(PodcastDeleterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

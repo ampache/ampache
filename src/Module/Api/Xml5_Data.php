@@ -382,16 +382,17 @@ class Xml5_Data
                     $string .= self::shares($objects, $user);
                     break;
                 case 'podcast':
-                    $podcast = new Podcast($object_id);
-                    $podcast->format();
-                    $string .= "<podcast id=\"$object_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n";
-                    if ($include) {
-                        $episodes = self::getPodcastRepository()->getEpisodes($podcast);
-                        foreach ($episodes as $episode_id) {
-                            $string .= self::podcast_episodes(array($episode_id), $user, false);
+                    $podcast = self::getPodcastRepository()->findById($object_id);
+                    if ($podcast !== null) {
+                        $string .= "<podcast id=\"$object_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n";
+                        if ($include) {
+                            $episodes = self::getPodcastRepository()->getEpisodes($podcast);
+                            foreach ($episodes as $episode_id) {
+                                $string .= self::podcast_episodes(array($episode_id), $user, false);
+                            }
                         }
+                        $string .= "\t</podcast>\n";
                     }
-                    $string .= "\t</podcast>\n";
                     break;
                 case 'podcast_episode':
                     $string .= self::podcast_episodes($objects, $user);
@@ -755,8 +756,11 @@ class Xml5_Data
         $string = "<total_count>" . Catalog::get_update_info('podcast', $user->id) . "</total_count>\n";
 
         foreach ($podcasts as $podcast_id) {
-            $podcast = new Podcast($podcast_id);
-            $podcast->format();
+            $podcast = self::getPodcastRepository()->findById($podcast_id);
+            if ($podcast === null) {
+                continue;
+            }
+
             $rating      = new Rating($podcast_id, 'podcast');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($podcast_id, 'podcast');

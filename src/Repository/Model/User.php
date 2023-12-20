@@ -172,9 +172,16 @@ class User extends database_object
                 'id' => -1,
                 'username' => 'System',
                 'fullname' => 'Ampache User',
+                'fullname_public' => 1,
+                'email' => null,
+                'website' => null,
                 'access' => 25,
+                'disabled' => 0,
                 'catalog_filter_group' => 0,
-                'catalogs' => self::get_user_catalogs(-1)
+                'catalogs' => self::get_user_catalogs(-1),
+                'apikey' => null,
+                'rsstoken' => null,
+                'streamtoken' => null,
             );
         }
 

@@ -37,7 +37,7 @@ class UpdateViewAdapterTest extends MockeryTestCase
 
     private ?UpdateViewAdapter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
 

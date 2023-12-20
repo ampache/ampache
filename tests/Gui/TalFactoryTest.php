@@ -38,10 +38,9 @@ class TalFactoryTest extends MockeryTestCase
     /** @var MockInterface|GuiFactoryInterface|null */
     private MockInterface $guiFactory;
 
-    /** @var TalFactory|null */
     private TalFactory $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->guiFactory      = $this->mock(GuiFactoryInterface::class);

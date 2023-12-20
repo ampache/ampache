@@ -740,9 +740,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $podcast = new Podcast((int)$pathreq[1]);
-                        if ($podcast->isNew() === false) {
-                            $podcast->format();
+                        $podcast = self::getPodcastRepository()->findById((int)$pathreq[1]);
+                        if ($podcast !== null) {
                             $meta = self::_itemPodcast($podcast, $root . '/podcasts');
                         }
                         break;
@@ -958,13 +957,12 @@ class Upnp_Api
                         $podcasts              = Catalog::get_podcasts();
                         [$maxCount, $podcasts] = self::_slice($podcasts, $start, $count);
                         foreach ($podcasts as $podcast) {
-                            $podcast->format();
                             $mediaItems[] = self::_itemPodcast($podcast, $parent);
                         }
                         break;
                     case 2: // Get podcast episodes list
-                        $podcast = new Podcast((int)$pathreq[1]);
-                        if ($podcast->isNew() === false) {
+                        $podcast = self::getPodcastRepository()->findById((int)$pathreq[1]);
+                        if ($podcast !== null) {
                             $episodes = self::getPodcastRepository()->getEpisodes($podcast);
 
                             [$maxCount, $episodes] = self::_slice($episodes, $start, $count);

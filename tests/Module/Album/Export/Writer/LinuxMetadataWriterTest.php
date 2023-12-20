@@ -31,7 +31,7 @@ class LinuxMetadataWriterTest extends MockeryTestCase
 {
     private ?LinuxMetadataWriter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->subject = new LinuxMetadataWriter();
     }

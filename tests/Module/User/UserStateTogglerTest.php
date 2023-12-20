@@ -44,7 +44,7 @@ class UserStateTogglerTest extends MockeryTestCase
 
     private UserStateToggler $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->utilityFactory  = $this->mock(UtilityFactoryInterface::class);

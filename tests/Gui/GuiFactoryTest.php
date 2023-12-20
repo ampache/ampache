@@ -73,10 +73,9 @@ class GuiFactoryTest extends MockeryTestCase
     /** @var MockInterface|VideoRepositoryInterface|null */
     private MockInterface $videoRepository;
 
-    /** @var GuiFactory|null */
     private GuiFactory $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer  = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory     = $this->mock(ModelFactoryInterface::class);

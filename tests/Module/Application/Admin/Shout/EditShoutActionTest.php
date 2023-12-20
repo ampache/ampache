@@ -44,7 +44,7 @@ class EditShoutActionTest extends MockeryTestCase
 
     private EditShoutAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
         $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);

@@ -111,7 +111,10 @@ final class PodcastSyncer implements PodcastSyncerInterface
             $podcastIds = $catalog->get_podcast_ids();
 
             foreach ($podcastIds as $podcastId) {
-                $podcast = $this->modelFactory->createPodcast($podcastId);
+                $podcast = $this->podcastRepository->findById($podcastId);
+                if ($podcast === null) {
+                    continue;
+                }
 
                 $this->sync($podcast);
 

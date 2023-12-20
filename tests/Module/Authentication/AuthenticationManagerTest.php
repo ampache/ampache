@@ -41,10 +41,9 @@ class AuthenticationManagerTest extends MockeryTestCase
 
     private string $authenticatorName = 'some-authenticator';
 
-    /** @var AuthenticationManager|null */
     private ?AuthenticationManager $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
         $this->authenticator   = Mockery::mock(AuthenticatorInterface::class);

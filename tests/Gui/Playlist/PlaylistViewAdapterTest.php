@@ -58,10 +58,9 @@ class PlaylistViewAdapterTest extends MockeryTestCase
     /** @var Playlist|MockInterface|null */
     private MockInterface $playlist;
 
-    /** @var PlaylistViewAdapter|null */
     private PlaylistViewAdapter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
@@ -118,7 +117,7 @@ class PlaylistViewAdapterTest extends MockeryTestCase
             ->andReturn($averageRating);
 
         $this->assertSame(
-            (string) $averageRating,
+            $averageRating,
             $this->subject->getAverageRating()
         );
     }

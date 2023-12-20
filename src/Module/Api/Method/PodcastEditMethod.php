@@ -30,6 +30,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class PodcastEditMethod
@@ -68,9 +69,9 @@ final class PodcastEditMethod
             return false;
         }
         $podcast_id = $input['filter'];
-        $podcast    = new Podcast($podcast_id);
+        $podcast    = self::getPodcastRepository()->findById((int) $podcast_id);
 
-        if ($podcast->isNew()) {
+        if ($podcast === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $podcast_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
@@ -95,5 +96,15 @@ final class PodcastEditMethod
         Api::message('podcast ' . $podcast_id . ' updated', $input['api_format']);
 
         return true;
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

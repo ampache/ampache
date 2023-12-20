@@ -54,7 +54,7 @@ class ShowActionTest extends MockeryTestCase
 
     private ?ShowAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->talFactory      = $this->mock(TalFactoryInterface::class);
         $this->guiFactory      = $this->mock(GuiFactoryInterface::class);

@@ -46,7 +46,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
 
     private ?UpdateFromTagsAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->ui              = $this->mock(UiInterface::class);

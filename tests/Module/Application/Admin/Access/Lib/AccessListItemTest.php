@@ -40,7 +40,7 @@ class AccessListItemTest extends MockeryTestCase
 
     private AccessListItem $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->access       = $this->mock(Access::class);
         $this->modelFactory = $this->mock(ModelFactoryInterface::class);

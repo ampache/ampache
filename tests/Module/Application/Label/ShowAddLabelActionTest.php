@@ -44,7 +44,7 @@ class ShowAddLabelActionTest extends MockeryTestCase
 
     private ?ShowAddLabelAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->ui              = $this->mock(UiInterface::class);

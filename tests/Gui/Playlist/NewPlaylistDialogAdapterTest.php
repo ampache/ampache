@@ -48,7 +48,7 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
 
     private ?NewPlaylistDialogAdapter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);
         $this->ajaxUriRetriever = $this->mock(AjaxUriRetrieverInterface::class);

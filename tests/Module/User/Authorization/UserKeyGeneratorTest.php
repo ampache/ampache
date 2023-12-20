@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Authorization;
 
+use Exception;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\LegacyLogger;
@@ -43,7 +44,7 @@ class UserKeyGeneratorTest extends MockeryTestCase
 
     private ?UserKeyGenerator $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->userRepository = $this->mock(UserRepositoryInterface::class);
         $this->logger         = $this->mock(LoggerInterface::class);
@@ -121,7 +122,6 @@ class UserKeyGeneratorTest extends MockeryTestCase
 
     public function testGenerateRssTokenDoesNothingOnError(): void
     {
-        $userId       = 666;
         $errorMessage = 'some-error-message';
 
         $user = $this->mock(User::class);
@@ -129,7 +129,7 @@ class UserKeyGeneratorTest extends MockeryTestCase
         $user->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andThrow(new \Exception($errorMessage));
+            ->andThrow(new Exception($errorMessage));
 
         $this->logger->shouldReceive('error')
             ->with(

@@ -35,10 +35,9 @@ class ConfigViewAdapterTest extends MockeryTestCase
     /** @var MockInterface|ConfigContainerInterface|null */
     private MockInterface $configContainer;
 
-    /** @var ConfigViewAdapter|null */
     private ConfigViewAdapter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
 

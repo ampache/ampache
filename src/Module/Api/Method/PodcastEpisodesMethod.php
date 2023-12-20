@@ -32,7 +32,6 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -45,16 +44,12 @@ final class PodcastEpisodesMethod implements MethodInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
         PodcastRepositoryInterface $podcastRepository,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ConfigContainerInterface $configContainer
     ) {
         $this->podcastRepository = $podcastRepository;
         $this->configContainer   = $configContainer;
-        $this->modelFactory      = $modelFactory;
     }
 
     /**
@@ -102,8 +97,8 @@ final class PodcastEpisodesMethod implements MethodInterface
             );
         }
 
-        $podcast = $this->modelFactory->createPodcast($podcastId);
-        if ($podcast->isNew()) {
+        $podcast = $this->podcastRepository->findById($podcastId);
+        if ($podcast === null) {
             throw new ResultEmptyException(
                 (string) $podcastId
             );

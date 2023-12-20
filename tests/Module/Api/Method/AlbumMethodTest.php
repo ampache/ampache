@@ -48,7 +48,7 @@ class AlbumMethodTest extends MockeryTestCase
 
     private ?AlbumMethod $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
         $this->streamFactory = $this->mock(StreamFactoryInterface::class);

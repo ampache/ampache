@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Export;
 
+use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -51,7 +52,7 @@ class AlbumArtExporterTest extends MockeryTestCase
 
     private ?AlbumArtExporter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
@@ -109,11 +110,10 @@ class AlbumArtExporterTest extends MockeryTestCase
         $songId   = 42;
         $file     = $fs_root->url() . '/some-file';
         $raw_mime = '/some-raw-mime.png';
-        $fileName = 'some-full-name';
 
         $album->id = $albumId;
 
-        $this->expectException(Exception\AlbumArtExportException::class);
+        $this->expectException(AlbumArtExportException::class);
         $this->expectExceptionMessage(
             'Unable to open `vfs:/folder.some-raw-mime.png` for writing',
         );

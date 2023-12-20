@@ -46,7 +46,7 @@ class ShowAllSongsActionTest extends MockeryTestCase
 
     private ?ShowAllSongsAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->modelFactory   = $this->mock(ModelFactoryInterface::class);
         $this->ui             = $this->mock(UiInterface::class);
@@ -92,7 +92,7 @@ class ShowAllSongsActionTest extends MockeryTestCase
                     'artist' => $artist,
                     'object_type' => 'song',
                     'object_ids' => $songList,
-                    'multi_object_ids' => array(),
+                    'multi_object_ids' => [],
                     'gatekeeper' => $gatekeeper,
                 ]
             )

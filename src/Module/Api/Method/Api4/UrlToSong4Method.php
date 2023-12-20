@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
@@ -51,15 +52,16 @@ final class UrlToSong4Method
         if (!Api4::check_parameter($input, array('url'), self::ACTION)) {
             return false;
         }
-        // Don't scrub, the function needs her raw and juicy
-        $url_data = Stream_URL::parse($input['url']);
+        $charset  = AmpConfig::get('site_charset');
+        $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
+        $url_data = Stream_URL::parse($song_url);
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::songs(array((int)$url_data['id']), $user);
+                echo Json4_Data::songs(array((int)($url_data['id'] ?? 0)), $user);
                 break;
             default:
-                echo Xml4_Data::songs(array((int)$url_data['id']), $user);
+                echo Xml4_Data::songs(array((int)($url_data['id'] ?? 0)), $user);
         }
 
         return true;

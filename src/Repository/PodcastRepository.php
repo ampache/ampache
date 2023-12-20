@@ -386,4 +386,17 @@ final class PodcastRepository implements PodcastRepositoryInterface
 
         return $result;
     }
+
+    /**
+     * Retrieve a single podcast-item by its id
+     */
+    public function findById(int $podcastId): ?Podcast
+    {
+        $podcast = $this->modelFactory->createPodcast($podcastId);
+        if ($podcast->isNew()) {
+            return null;
+        }
+
+        return $podcast;
+    }
 }

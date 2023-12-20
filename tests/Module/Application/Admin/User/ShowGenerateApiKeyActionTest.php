@@ -37,7 +37,7 @@ class ShowGenerateApiKeyActionTest extends TestCase
 
     private ShowGenerateApiKeyAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui = $this->createMock(UiInterface::class);
 

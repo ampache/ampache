@@ -36,7 +36,7 @@ class AlbumActivityTypeHandlerTest extends MockeryTestCase
 
     private ?AlbumActivityTypeHandler $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
 

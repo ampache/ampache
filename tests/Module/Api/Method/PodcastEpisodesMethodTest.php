@@ -32,7 +32,6 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -46,8 +45,6 @@ class PodcastEpisodesMethodTest extends TestCase
     private PodcastRepositoryInterface&MockObject $podcastRepository;
 
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private ModelFactoryInterface&MockObject $modelFactory;
 
     private PodcastEpisodesMethod $subject;
 
@@ -63,12 +60,10 @@ class PodcastEpisodesMethodTest extends TestCase
     {
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
 
         $this->subject = new PodcastEpisodesMethod(
             $this->podcastRepository,
             $this->configContainer,
-            $this->modelFactory,
         );
 
         $this->gatekeeper = $this->createMock(GatekeeperInterface::class);
@@ -142,8 +137,6 @@ class PodcastEpisodesMethodTest extends TestCase
 
     public function testHandleThrowsIfPodcastIsNew(): void
     {
-        $podcast = $this->createMock(Podcast::class);
-
         $podcastId = 666;
 
         static::expectException(ResultEmptyException::class);
@@ -154,14 +147,10 @@ class PodcastEpisodesMethodTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST)
             ->willReturn('1');
 
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
             ->with($podcastId)
-            ->willReturn($podcast);
-
-        $podcast->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
+            ->willReturn(null);
 
         static::assertSame(
             $this->response,
@@ -190,14 +179,10 @@ class PodcastEpisodesMethodTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST)
             ->willReturn('1');
 
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
             ->with($podcastId)
             ->willReturn($podcast);
-
-        $podcast->expects(static::once())
-            ->method('isNew')
-            ->willReturn(false);
 
         $this->response->expects(static::once())
             ->method('getBody')
@@ -255,15 +240,10 @@ class PodcastEpisodesMethodTest extends TestCase
             ->method('write')
             ->with($result);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
             ->with($podcastId)
             ->willReturn($podcast);
-
-        $podcast->expects(static::once())
-            ->method('isNew')
-            ->willReturn(false);
-
         $this->podcastRepository->expects(static::once())
             ->method('getEpisodes')
             ->with($podcast)

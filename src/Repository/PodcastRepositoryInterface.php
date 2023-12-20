@@ -122,4 +122,9 @@ interface PodcastRepositoryInterface
      * @return null|non-negative-int
      */
     public function persist(Podcast $podcast): ?int;
+
+    /**
+     * Retrieve a single podcast-item by its id
+     */
+    public function findById(int $podcastId): ?Podcast;
 }

@@ -32,6 +32,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 
 /**
@@ -426,8 +427,9 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_pvmsgs.inc.php');
                 break;
             case 'podcast':
-                $box_title = $this->get_title(T_('Podcasts'));
-                $box_req   = Ui::find_template('show_podcasts.inc.php');
+                $podcastRepository = $this->getPodcastRepository();
+                $box_title         = $this->get_title(T_('Podcasts'));
+                $box_req           = Ui::find_template('show_podcasts.inc.php');
                 break;
             case 'podcast_episode':
                 $box_title = $this->get_title(T_('Podcast Episodes'));
@@ -789,5 +791,15 @@ class Browse extends Query
         global $dic;
 
         return $dic->get(ShoutObjectLoaderInterface::class);
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

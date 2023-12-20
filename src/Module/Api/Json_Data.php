@@ -965,8 +965,11 @@ class Json_Data
 
         $JSON = [];
         foreach ($objects as $podcast_id) {
-            $podcast = new Podcast($podcast_id);
-            $podcast->format();
+            $podcast = $podcastRepository->findById($podcast_id);
+            if ($podcast === null) {
+                continue;
+            }
+
             $rating              = new Rating($podcast_id, 'podcast');
             $user_rating         = $rating->get_user_rating($user->getId());
             $flag                = new Userflag($podcast_id, 'podcast');

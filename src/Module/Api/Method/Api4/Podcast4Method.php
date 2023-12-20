@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class Podcast4Method
@@ -59,8 +60,9 @@ final class Podcast4Method
             return false;
         }
         $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
-        if ($podcast->isNew() === false) {
+        $podcast   = self::getPodcastRepository()->findById($object_id);
+
+        if ($podcast !== null) {
             $episodes = (array_key_exists('include', $input) && $input['include'] == 'episodes');
 
             ob_end_clean();
@@ -76,5 +78,15 @@ final class Podcast4Method
         }
 
         return true;
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }
