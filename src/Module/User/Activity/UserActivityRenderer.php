@@ -77,6 +77,9 @@ final class UserActivityRenderer implements UserActivityRendererInterface
             case 'follow':
                 $descr .= T_('started to follow');
                 break;
+            case 'rating':
+                $descr .= T_('rated');
+                break;
             default:
                 $descr .= T_('did something on');
                 break;
