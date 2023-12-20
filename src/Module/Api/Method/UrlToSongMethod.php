@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -53,9 +54,10 @@ final class UrlToSongMethod
         if (!Api::check_parameter($input, array('url'), self::ACTION)) {
             return false;
         }
-        // Don't scrub, the function needs her raw and juicy
-        $url_data = Stream_Url::parse($input['url']);
-        if (array_key_exists('id', $url_data)) {
+        $charset  = AmpConfig::get('site_charset');
+        $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
+        $url_data = Stream_Url::parse($song_url);
+        if (!array_key_exists('id', $url_data)) {
             Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
 
             return false;

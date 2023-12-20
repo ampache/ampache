@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Repository\Model\User;
@@ -43,9 +44,10 @@ final class UrlToSong3Method
      */
     public static function url_to_song(array $input, User $user): void
     {
-        // Don't scrub, the function needs her raw and juicy
-        $url_data = Stream_URL::parse($input['url']);
+        $charset  = AmpConfig::get('site_charset');
+        $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
+        $url_data = Stream_URL::parse($song_url);
         ob_end_clean();
-        echo Xml3_Data::songs(array((int)$url_data['id']), $user);
+        echo Xml3_Data::songs(array((int)($url_data['id'] ?? 0)), $user);
     }
 }
