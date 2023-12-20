@@ -23,7 +23,6 @@ declare(strict_types=0);
  *
  */
 
-
 namespace Ampache\Module\Application\Playback;
 
 use Ampache\Config\AmpConfig;
