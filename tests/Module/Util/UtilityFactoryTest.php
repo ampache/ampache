@@ -42,7 +42,7 @@ class UtilityFactoryTest extends MockeryTestCase
 
     private UtilityFactory $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->userRepository  = $this->mock(UserRepositoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);

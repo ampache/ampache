@@ -36,7 +36,7 @@ class GuiGatekeeperTest extends MockeryTestCase
 
     private ?GuiGatekeeper $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
 

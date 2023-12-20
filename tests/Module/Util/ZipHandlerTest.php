@@ -40,7 +40,7 @@ class ZipHandlerTest extends MockeryTestCase
 
     private ?ZipHandler $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->logger          = $this->mock(LoggerInterface::class);

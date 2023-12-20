@@ -37,7 +37,7 @@ class ShowGenerateRssTokenActionTest extends TestCase
 
     private ShowGenerateRssTokenAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui = $this->createMock(UiInterface::class);
 

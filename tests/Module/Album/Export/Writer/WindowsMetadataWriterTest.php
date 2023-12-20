@@ -31,7 +31,7 @@ class WindowsMetadataWriterTest extends MockeryTestCase
 {
     private ?WindowsMetadataWriter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->subject = new WindowsMetadataWriter();
     }

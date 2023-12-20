@@ -36,7 +36,7 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
 
     private ?ArtistActivityTypeHandler $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
 

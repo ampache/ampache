@@ -60,7 +60,7 @@ class GenerateConfigActionTest extends MockeryTestCase
 
     private ?GenerateConfigAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer    = $this->mock(ConfigContainerInterface::class);
         $this->browser            = $this->mock(Horde_Browser::class);

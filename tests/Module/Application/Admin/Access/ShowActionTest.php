@@ -49,7 +49,7 @@ class ShowActionTest extends MockeryTestCase
 
     private ShowAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui               = $this->mock(UiInterface::class);
         $this->accessRepository = $this->mock(AccessRepositoryInterface::class);
@@ -94,9 +94,7 @@ class ShowActionTest extends MockeryTestCase
         $this->ui->shouldReceive('show')
             ->with(
                 'show_access_list.inc.php',
-                Mockery::on(static function (array $context): bool {
-                    return current($context['list']) instanceof AccessListItemInterface;
-                })
+                Mockery::on(static fn (array $context): bool => current($context['list']) instanceof AccessListItemInterface)
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')

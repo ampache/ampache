@@ -39,7 +39,7 @@ class WebDavFactoryTest extends MockeryTestCase
 
     private WebDavFactory $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->authenticationManager = Mockery::mock(AuthenticationManagerInterface::class);
 

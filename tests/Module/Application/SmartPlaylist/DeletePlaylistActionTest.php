@@ -50,7 +50,7 @@ class DeletePlaylistActionTest extends MockeryTestCase
 
     private ?DeletePlaylistAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->responseFactory = $this->mock(ResponseFactoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);

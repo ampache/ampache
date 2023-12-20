@@ -35,10 +35,9 @@ class InitializationHandlerEnvironmentTest extends MockeryTestCase
     /** @var MockInterface|EnvironmentInterface|null */
     private MockInterface $environment;
 
-    /** @var InitializationHandlerEnvironment|null */
     private InitializationHandlerEnvironment $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->environment = $this->mock(EnvironmentInterface::class);
 

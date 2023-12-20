@@ -48,7 +48,7 @@ class DisableActionTest extends MockeryTestCase
 
     private DisableAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);

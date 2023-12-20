@@ -57,7 +57,7 @@ class ShowActionTest extends MockeryTestCase
 
     private ?ShowAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
@@ -145,7 +145,7 @@ class ShowActionTest extends MockeryTestCase
                 [
                     'artist' => $artist,
                     'object_type' => $objectType,
-                    'object_ids' => array(),
+                    'object_ids' => [],
                     'multi_object_ids' => $multi_object_ids,
                     'gatekeeper' => $gatekeeper,
                 ]
@@ -220,7 +220,7 @@ class ShowActionTest extends MockeryTestCase
                     'artist' => $artist,
                     'object_type' => $objectType,
                     'object_ids' => $object_ids,
-                    'multi_object_ids' => array(),
+                    'multi_object_ids' => [],
                     'gatekeeper' => $gatekeeper,
                 ]
             )

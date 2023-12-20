@@ -44,7 +44,7 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
 
     private ?RefreshPlaylistMediasAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->requestParser = $this->mock(RequestParserInterface::class);
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);

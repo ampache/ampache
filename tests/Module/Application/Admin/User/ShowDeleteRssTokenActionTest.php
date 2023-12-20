@@ -37,7 +37,7 @@ class ShowDeleteRssTokenActionTest extends TestCase
 
     private ShowDeleteRssTokenAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui = $this->createMock(UiInterface::class);
 

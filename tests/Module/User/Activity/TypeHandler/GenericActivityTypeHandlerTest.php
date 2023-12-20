@@ -36,7 +36,7 @@ class GenericActivityTypeHandlerTest extends MockeryTestCase
 
     private ?GenericActivityTypeHandler $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
 

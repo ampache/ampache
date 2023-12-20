@@ -42,7 +42,7 @@ class UserActivityPosterTest extends MockeryTestCase
 
     private ?UserActivityPoster $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->activityTypeHandlerMapper = $this->mock(ActivityTypeHandlerMapperInterface::class);
         $this->logger                    = $this->mock(LoggerInterface::class);

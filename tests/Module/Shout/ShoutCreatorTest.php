@@ -90,7 +90,7 @@ class ShoutCreatorTest extends TestCase
 
         $shout->expects(static::once())
             ->method('setDate')
-            ->with(self::callback(fn (DateTimeInterface $value): bool => true))
+            ->with(self::callback(static fn (DateTimeInterface $value): bool => true))
             ->willReturnSelf();
         $shout->expects(static::once())
             ->method('setUser')
@@ -130,9 +130,7 @@ class ShoutCreatorTest extends TestCase
                 'shout',
                 $objectType,
                 $objectId,
-                self::callback(function (int $value): bool {
-                    return $value <= time();
-                })
+                self::callback(static fn (int $value): bool => $value <= time())
             );
 
         $this->subject->create(

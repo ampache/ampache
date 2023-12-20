@@ -29,10 +29,9 @@ use Ampache\MockeryTestCase;
 
 class ApiOutputFactoryTest extends MockeryTestCase
 {
-    /** @var ApiOutputFactory|null */
     private ApiOutputFactory $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->subject = new ApiOutputFactory();
     }

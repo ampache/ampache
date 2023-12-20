@@ -44,7 +44,7 @@ class WebDavApplicationTest extends MockeryTestCase
 
     private ?WebDavApplication $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
         $this->webDavFactory   = Mockery::mock(WebDavFactoryInterface::class);

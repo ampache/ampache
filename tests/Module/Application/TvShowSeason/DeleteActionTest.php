@@ -47,7 +47,7 @@ class DeleteActionTest extends MockeryTestCase
 
     private ?DeleteAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->ui              = $this->mock(UiInterface::class);
