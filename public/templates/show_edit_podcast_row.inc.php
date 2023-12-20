@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Podcast;
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Feed'); ?></td>
-                <td><input type="text" name="feed" value="<?php echo scrub_out($libitem->getFeed()); ?>" autofocus /></td>
+                <td><input type="text" name="feed" value="<?php echo scrub_out($libitem->getFeedUrl()); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Title'); ?></td>

@@ -27,10 +27,16 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\PodcastRepository;
 use Ampache\Repository\PodcastRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
 
+/**
+ * Podcast item
+ *
+ * @see PodcastRepository
+ */
 class Podcast extends database_object implements library_item, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'podcast';
@@ -38,35 +44,33 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     /* Variables from DB */
     private int $id = 0;
 
-    private ?string $feed;
+    private ?string $feed = null;
 
-    private int $catalog;
+    private int $catalog = 0;
 
-    private ?string $title;
+    private ?string $title = null;
 
-    private ?string $website;
+    private ?string $website = null;
 
-    private ?string $description;
+    private ?string $description = null;
 
-    private ?string $language;
+    private ?string $language = null;
 
-    private ?string $copyright;
+    private ?string $copyright = null;
 
-    private ?string $generator;
+    private ?string $generator = null;
 
-    private int $lastbuilddate;
+    private int $lastbuilddate = 0;
 
-    private int $lastsync;
+    private int $lastsync = 0;
 
-    private int $total_count;
+    private int $total_count = 0;
 
-    private int $total_skip;
+    private int $total_skip = 0;
 
-    private int $episodes;
+    private int $episodes = 0;
 
     private ?string $link = null;
-
-    private ?string $f_name = null;
 
     private ?string $f_description = null;
 
@@ -127,18 +131,23 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
+     * @return array{
+     *  podcast: array{
+     *    important: bool,
+     *    label: string,
+     *    value: null|string
+     *  }
+     * }
      */
     public function get_keywords()
     {
-        $keywords            = array();
-        $keywords['podcast'] = array(
-            'important' => true,
-            'label' => T_('Podcast'),
-            'value' => $this->get_fullname()
-        );
-
-        return $keywords;
+        return [
+            'podcast' => [
+                'important' => true,
+                'label' => T_('Podcast'),
+                'value' => $this->get_fullname()
+            ]
+        ];
     }
 
     /**
@@ -146,11 +155,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function get_fullname(): ?string
     {
-        if (!isset($this->f_name)) {
-            $this->f_name = $this->title;
-        }
-
-        return $this->f_name;
+        return $this->title;
     }
 
     /**
@@ -254,74 +259,246 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         return $this->f_description;
     }
 
+    /**
+     * Sets the episode count
+     */
+    public function setEpisodeCount(int $value): Podcast
+    {
+        $this->episodes = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the episode count
+     */
     public function getEpisodeCount(): int
     {
         return $this->episodes;
     }
 
+    /**
+     * Sets the total count
+     */
+    public function setTotalCount(int $value): Podcast
+    {
+        $this->total_count = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the total count
+     */
     public function getTotalCount(): int
     {
         return $this->total_count;
     }
 
+    /**
+     * Sets the total skip count
+     */
+    public function setTotalSkip(int $value): Podcast
+    {
+        $this->total_skip = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the total skip count
+     */
     public function getTotalSkip(): int
     {
         return $this->total_skip;
     }
 
+    /**
+     * Sets the generator
+     */
+    public function setGenerator(string $value): Podcast
+    {
+        $this->generator = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the generator
+     */
     public function getGenerator(): string
     {
         return (string) $this->generator;
     }
 
+    /**
+     * Sets the website
+     */
+    public function setWebsite(string $value): Podcast
+    {
+        $this->website = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the website
+     */
     public function getWebsite(): string
     {
         return (string) $this->website;
     }
 
+    /**
+     * Sets the copyright
+     */
+    public function setCopyright(string $value): Podcast
+    {
+        $this->copyright = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the copyright
+     */
     public function getCopyright(): string
     {
         return (string) $this->copyright;
     }
 
+    /**
+     * Sets the language
+     */
+    public function setLanguage(string $value): Podcast
+    {
+        $this->language = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the language
+     */
     public function getLanguage(): string
     {
         return (string) $this->language;
     }
 
-    public function getFeed(): string
+    /**
+     * Sets the feed-url
+     */
+    public function setFeedUrl(string $value): Podcast
+    {
+        $this->feed = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the feed-url
+     */
+    public function getFeedUrl(): string
     {
         return (string) $this->feed;
     }
 
+    /**
+     * Sets the title
+     */
+    public function setTitle(string $value): Podcast
+    {
+        $this->title = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the title
+     */
     public function getTitle(): string
     {
         return (string) $this->title;
     }
 
+    /**
+     * Sets the description
+     */
+    public function setDescription(string $value): Podcast
+    {
+        $this->description = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the description
+     */
     public function getDescription(): string
     {
         return (string) $this->description;
     }
 
+    /**
+     * Sets the catalog
+     */
+    public function setCatalog(Catalog $catalog): Podcast
+    {
+        $this->catalog = $catalog->getId();
+
+        return $this;
+    }
+
+    /**
+     * Returns the id of the catalog the item is associated to
+     */
     public function getCatalogId(): int
     {
         return $this->catalog;
     }
 
-    public function getLink(): string
+    /**
+     * Sets the last sync-date
+     */
+    public function setLastSyncDate(DateTimeInterface $value): Podcast
     {
-        return (string) $this->link;
+        $this->lastsync = $value->getTimestamp();
+
+        return $this;
     }
 
+    /**
+     * Returns the last sync-date
+     */
     public function getLastSyncDate(): DateTimeInterface
     {
         return new DateTime('@' . $this->lastsync);
     }
 
+    /**
+     * Sets the last build-date
+     */
+    public function setLastBuildDate(DateTimeInterface $value): Podcast
+    {
+        $this->lastbuilddate = $value->getTimestamp();
+
+        return $this;
+    }
+
+    /**
+     * Returns the last build-date
+     */
     public function getLastBuildDate(): DateTimeInterface
     {
         return new DateTime('@' . $this->lastbuilddate);
+    }
+
+    /**
+     * Saves the item
+     */
+    public function save(): void
+    {
+        $this->getPodcastRepository()->persist($this);
     }
 
     /**

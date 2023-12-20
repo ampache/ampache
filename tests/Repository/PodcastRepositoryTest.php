@@ -33,6 +33,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use DateTime;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -421,6 +422,292 @@ class PodcastRepositoryTest extends TestCase
         static::assertSame(
             [$episode],
             iterator_to_array($this->subject->getEpisodesEligibleForDeletion($podcast))
+        );
+    }
+
+    public function testGetEpisodeEligibleForDownloadYieldsEpisodes(): void
+    {
+        $downloadLimit = 666;
+        $episodeId     = 42;
+        $podcastId     = 21;
+        $lastSyncDate  = new DateTime();
+
+        $podcast = $this->createMock(Podcast::class);
+        $result  = $this->createMock(PDOStatement::class);
+        $episode = $this->createMock(Podcast_Episode::class);
+
+        $query = <<<SQL
+            SELECT
+                `id`
+            FROM
+                `podcast_episode`
+            WHERE
+                `podcast` = ?
+                AND
+                (`addition_time` > ? OR `state` = ?)
+            ORDER BY
+                `pubdate`
+            DESC LIMIT %d
+            SQL;
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+        $podcast->expects(static::once())
+            ->method('getLastSyncDate')
+            ->willReturn($lastSyncDate);
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
+            ->willReturn((string) $downloadLimit);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                sprintf(
+                    $query,
+                    $downloadLimit
+                ),
+                [
+                    $podcastId,
+                    $lastSyncDate->getTimestamp(),
+                    PodcastEpisodeStateEnum::PENDING
+                ]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $episodeId, false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcastEpisode')
+            ->with($episodeId)
+            ->willReturn($episode);
+
+        static::assertSame(
+            [$episode],
+            iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast))
+        );
+    }
+
+    public function testGetEpisodeEligibleForDownloadReturnsNothingIfDisabled(): void
+    {
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
+            ->willReturn('');
+
+        static::assertSame(
+            [],
+            iterator_to_array($this->subject->getEpisodesEligibleForDownload($this->createMock(Podcast::class)))
+        );
+    }
+
+    public function testGetEpisodeCountReturnsValue(): void
+    {
+        $podcastId = 666;
+        $result    = 42;
+
+        $podcast = $this->createMock(Podcast::class);
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT COUNT(id) from `podcast_episode` where `podcast` = ?',
+                [$podcastId]
+            )
+            ->willReturn((string) $result);
+
+        static::assertSame(
+            $result,
+            $this->subject->getEpisodeCount($podcast)
+        );
+    }
+
+    public function testPersistCreateItem(): void
+    {
+        $catalogId     = 666;
+        $feed          = 'some-feed';
+        $title         = 'some-title';
+        $website       = 'some-website';
+        $description   = 'some-description';
+        $language      = 'some-language';
+        $generator     = 'some-generator';
+        $copyright     = 'some-copyright';
+        $totalSkip     = 123;
+        $totalCount    = 456;
+        $episodeCount  = 789;
+        $lastBuildDate = new DateTime();
+        $lastSyncDate  = new DateTime();
+        $podcastId     = 42;
+
+        $podcast = $this->createMock(Podcast::class);
+
+        $podcast->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `podcast` (`catalog`, `feed`, `title`, `website`, `description`, `language`, `generator`, `copyright`, `total_skip`, `total_count`, `episodes`, `lastbuilddate`, `lastsync`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [
+                    $catalogId,
+                    $feed,
+                    $title,
+                    $website,
+                    $description,
+                    $language,
+                    $generator,
+                    $copyright,
+                    $totalSkip,
+                    $totalCount,
+                    $episodeCount,
+                    $lastBuildDate->getTimestamp(),
+                    $lastSyncDate->getTimestamp()
+                ]
+            );
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn($podcastId);
+
+        $podcast->expects(static::once())
+            ->method('getCatalogId')
+            ->willReturn($catalogId);
+        $podcast->expects(static::once())
+            ->method('getFeedUrl')
+            ->willReturn($feed);
+        $podcast->expects(static::once())
+            ->method('getTitle')
+            ->willReturn($title);
+        $podcast->expects(static::once())
+            ->method('getWebsite')
+            ->willReturn($website);
+        $podcast->expects(static::once())
+            ->method('getDescription')
+            ->willReturn($description);
+        $podcast->expects(static::once())
+            ->method('getLanguage')
+            ->willReturn($language);
+        $podcast->expects(static::once())
+            ->method('getGenerator')
+            ->willReturn($generator);
+        $podcast->expects(static::once())
+            ->method('getCopyright')
+            ->willReturn($copyright);
+        $podcast->expects(static::once())
+            ->method('getTotalSkip')
+            ->willReturn($totalSkip);
+        $podcast->expects(static::once())
+            ->method('getTotalCount')
+            ->willReturn($totalCount);
+        $podcast->expects(static::once())
+            ->method('getEpisodeCount')
+            ->willReturn($episodeCount);
+        $podcast->expects(static::once())
+            ->method('getLastBuildDate')
+            ->willReturn($lastBuildDate);
+        $podcast->expects(static::once())
+            ->method('getLastSyncDate')
+            ->willReturn($lastSyncDate);
+
+        static::assertSame(
+            $podcastId,
+            $this->subject->persist($podcast)
+        );
+    }
+
+    public function testPersistUpdatesItemIfNotNew(): void
+    {
+        $feed          = 'some-feed';
+        $title         = 'some-title';
+        $website       = 'some-website';
+        $description   = 'some-description';
+        $language      = 'some-language';
+        $generator     = 'some-generator';
+        $copyright     = 'some-copyright';
+        $totalSkip     = 123;
+        $totalCount    = 456;
+        $episodeCount  = 789;
+        $lastBuildDate = new DateTime();
+        $lastSyncDate  = new DateTime();
+        $podcastId     = 42;
+
+        $podcast = $this->createMock(Podcast::class);
+
+        $podcast->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `language` = ?, `generator` = ?, `copyright` = ?, `total_skip` = ?, `total_count` = ?, `episodes` = ?, `lastbuilddate` = ?, `lastsync` = ? WHERE `id` = ?',
+                [
+                    $feed,
+                    $title,
+                    $website,
+                    $description,
+                    $language,
+                    $generator,
+                    $copyright,
+                    $totalSkip,
+                    $totalCount,
+                    $episodeCount,
+                    $lastBuildDate->getTimestamp(),
+                    $lastSyncDate->getTimestamp(),
+                    $podcastId
+                ]
+            );
+
+        $podcast->expects(static::once())
+            ->method('getFeedUrl')
+            ->willReturn($feed);
+        $podcast->expects(static::once())
+            ->method('getTitle')
+            ->willReturn($title);
+        $podcast->expects(static::once())
+            ->method('getWebsite')
+            ->willReturn($website);
+        $podcast->expects(static::once())
+            ->method('getDescription')
+            ->willReturn($description);
+        $podcast->expects(static::once())
+            ->method('getLanguage')
+            ->willReturn($language);
+        $podcast->expects(static::once())
+            ->method('getGenerator')
+            ->willReturn($generator);
+        $podcast->expects(static::once())
+            ->method('getCopyright')
+            ->willReturn($copyright);
+        $podcast->expects(static::once())
+            ->method('getTotalSkip')
+            ->willReturn($totalSkip);
+        $podcast->expects(static::once())
+            ->method('getTotalCount')
+            ->willReturn($totalCount);
+        $podcast->expects(static::once())
+            ->method('getEpisodeCount')
+            ->willReturn($episodeCount);
+        $podcast->expects(static::once())
+            ->method('getLastBuildDate')
+            ->willReturn($lastBuildDate);
+        $podcast->expects(static::once())
+            ->method('getLastSyncDate')
+            ->willReturn($lastSyncDate);
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        static::assertNull(
+            $this->subject->persist($podcast)
         );
     }
 }

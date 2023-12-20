@@ -78,26 +78,22 @@ final class PodcastEditMethod
             return false;
         }
 
-        $feed        = (array_key_exists('feed', $input) && filter_var($input['feed'], FILTER_VALIDATE_URL)) ? filter_var($input['feed'], FILTER_VALIDATE_URL) : $podcast->getFeed();
+        $feed        = (array_key_exists('feed', $input) && filter_var($input['feed'], FILTER_VALIDATE_URL)) ? filter_var($input['feed'], FILTER_VALIDATE_URL) : $podcast->getFeedUrl();
         $title       = (array_key_exists('title', $input)) ? scrub_in((string) $input['title']) : $podcast->getTitle();
         $website     = (array_key_exists('website', $input) && filter_var($input['website'], FILTER_VALIDATE_URL)) ? filter_var($input['website'], FILTER_VALIDATE_URL) : $podcast->getWebsite();
         $description = (array_key_exists('description', $input)) ? scrub_in((string) $input['description']) : $podcast->get_description();
         $generator   = (array_key_exists('generator', $input)) ? scrub_in((string) $input['generator']) : $podcast->getGenerator();
         $copyright   = (array_key_exists('copyright', $input)) ? scrub_in((string) $input['copyright']) : $podcast->getCopyright();
-        $data        = array(
-            'feed' => $feed,
-            'title' => $title,
-            'website' => $website,
-            'description' => $description,
-            'generator' => $generator,
-            'copyright' => $copyright
-        );
-        if ($podcast->update($data) !== false) {
-            Api::message('podcast ' . $podcast_id . ' updated', $input['api_format']);
-        } else {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $podcast_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
-        }
+
+        $podcast->setFeedUrl($feed)
+            ->setTitle($title)
+            ->setWebsite($website)
+            ->setDescription($description)
+            ->setGenerator($generator)
+            ->setCopyright($copyright)
+            ->save();
+
+        Api::message('podcast ' . $podcast_id . ' updated', $input['api_format']);
 
         return true;
     }

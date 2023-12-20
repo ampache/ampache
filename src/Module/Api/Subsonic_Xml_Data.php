@@ -1306,7 +1306,7 @@ class Subsonic_Xml_Data
             $sub_id   = (string)self::_getPodcastId($podcast->getId());
             $xchannel = self::addChildToResultXml($xpodcasts, 'channel');
             $xchannel->addAttribute('id', $sub_id);
-            $xchannel->addAttribute('url', $podcast->getFeed());
+            $xchannel->addAttribute('url', $podcast->getFeedUrl());
             $xchannel->addAttribute('title', self::_checkName($podcast->get_fullname()));
             $xchannel->addAttribute('description', $podcast->get_description());
             if ($podcast->has_art()) {

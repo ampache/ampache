@@ -14691,11 +14691,6 @@ parameters:
 			path: src/Repository/Model/Podcast.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:get_medias\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
