@@ -1523,6 +1523,8 @@ class Subsonic_Api
                 $input,
                 Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'hls')
             );
+
+            return;
         }
         $media['object_id'] = Subsonic_Xml_Data::_getAmpacheId($fileid);
         $medias             = array();

@@ -56,7 +56,10 @@ abstract class playlist_object extends database_object implements library_item
     private ?bool $has_art = null;
 
     /**
-     * @return array
+     * @return list<array{
+     *  object_type: string,
+     *  object_id: int
+     * }>
      */
     abstract public function get_items();
 
