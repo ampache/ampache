@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -61,7 +62,7 @@ final class PlayFavoriteAction extends AbstractStreamAction
         $mediaIds  = [];
         $inputType = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        /** @var \Ampache\Repository\Model\User $user */
+        /** @var User $user */
         $user = Core::get_global('user');
         $data = $user->get_favorites($inputType);
 

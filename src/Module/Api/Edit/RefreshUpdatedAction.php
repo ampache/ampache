@@ -30,11 +30,19 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -103,7 +111,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
          */
         switch ($object_type) {
             case 'song_row':
-                /** @var \Ampache\Repository\Model\Song $libitem */
+                /** @var Song $libitem */
                 $hide_genres    = AmpConfig::get('hide_genres');
                 $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
                 $argument_param = '&hide=' . Core::get_request('hide');
@@ -135,7 +143,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 );
                 break;
             case 'playlist_row':
-                /** @var \Ampache\Repository\Model\Playlist $libitem */
+                /** @var Playlist $libitem */
                 $show_art = AmpConfig::get('playlist_art');
                 $results  = preg_replace(
                     '/<\/?html(.|\s)*?>/',
@@ -152,7 +160,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 );
                 break;
             case 'album_row':
-                /** @var \Ampache\Repository\Model\Album $libitem */
+                /** @var Album $libitem */
                 $hide_genres       = AmpConfig::get('hide_genres');
                 $show_played_times = AmpConfig::get('show_played_times');
                 $results           = preg_replace(
@@ -177,7 +185,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 );
                 break;
             case 'album_disk_row':
-                /** @var \Ampache\Repository\Model\AlbumDisk $libitem */
+                /** @var AlbumDisk $libitem */
                 $hide_genres       = AmpConfig::get('hide_genres');
                 $show_played_times = AmpConfig::get('show_played_times');
                 $results           = preg_replace(
@@ -202,7 +210,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 );
                 break;
             case 'artist_row':
-                /** @var \Ampache\Repository\Model\Artist $libitem */
+                /** @var Artist $libitem */
                 $hide_genres      = AmpConfig::get('hide_genres');
                 $show_direct_play = AmpConfig::get('directplay');
                 ob_start();
@@ -230,7 +238,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             case 'podcast_row':
-                /** @var \Ampache\Repository\Model\Podcast $libitem */
+                /** @var Podcast $libitem */
                 ob_start();
 
                 $this->ui->show(
@@ -253,7 +261,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             case 'podcast_episode_row':
-                /** @var \Ampache\Repository\Model\Podcast_Episode $libitem */
+                /** @var Podcast_Episode $libitem */
                 ob_start();
 
                 $this->ui->show(
@@ -276,7 +284,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             case 'video_row':
-                /** @var \Ampache\Repository\Model\Video $libitem */
+                /** @var Video $libitem */
                 $hide_genres = AmpConfig::get('hide_genres');
                 ob_start();
 

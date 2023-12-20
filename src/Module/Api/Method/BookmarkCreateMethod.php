@@ -28,11 +28,14 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Video;
 
 /**
  * Class BookmarkCreateMethod
@@ -88,7 +91,7 @@ final class BookmarkCreateMethod
             return false;
         }
 
-        /** @var \Ampache\Repository\Model\Song|\Ampache\Repository\Model\Podcast_Episode|\Ampache\Repository\Model\Video $item */
+        /** @var Song|Podcast_Episode|Video $item */
         $item = new $className($object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

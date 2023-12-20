@@ -29,8 +29,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
-/** @var \Ampache\Repository\Model\User $client */
+/** @var User $client */
 $web_path       = (string)AmpConfig::get('web_path', '');
 $access100      = Access::check('interface', 100);
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>

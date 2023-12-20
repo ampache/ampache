@@ -31,6 +31,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Song;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
@@ -84,7 +85,7 @@ if ($browse->is_show_header()) {
             $item = (array) $item;
         }
         $className = ObjectTypeToClassNameMapper::map($item['object_type']);
-        /** @var \Ampache\Repository\Model\Song $media */
+        /** @var Song $media */
         $media = new $className($item['object_id']);
         if ($media->isNew()) {
             continue;

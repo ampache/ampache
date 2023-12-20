@@ -36,10 +36,12 @@ use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\Video;
 
 /**
  * Stream_Playlist Class
@@ -275,7 +277,7 @@ class Stream_Playlist
                 }
             } else {
                 if (in_array($type, array('song', 'podcast_episode', 'video'))) {
-                    /** @var Song|Podcast_Episode|\Ampache\Repository\Model\Video $object */
+                    /** @var Song|Podcast_Episode|Video $object */
                     $url['url'] = (!empty($user))
                         ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
                         : $object->play_url($additional_params);
@@ -308,7 +310,7 @@ class Stream_Playlist
                     $url['track_num'] = (string)$object->track;
                     break;
                 case 'video':
-                    /** @var \Ampache\Repository\Model\Video $object */
+                    /** @var Video $object */
                     $url['title']      = 'Video - ' . $object->title;
                     $url['author']     = $object->f_artist_full;
                     $url['resolution'] = $object->f_resolution;
@@ -325,7 +327,7 @@ class Stream_Playlist
                     $url['codec']     = $object->codec;
                     break;
                 case 'song_preview':
-                    /** @var \Ampache\Repository\Model\Song_Preview $object */
+                    /** @var Song_Preview $object */
                     $url['title']  = $object->title;
                     $url['author'] = $object->f_artist_full;
                     $url['codec']  = $object->type;

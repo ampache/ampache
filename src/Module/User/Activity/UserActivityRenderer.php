@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Activity;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Useractivity;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -58,7 +59,7 @@ final class UserActivityRenderer implements UserActivityRendererInterface
         $user      = $this->modelFactory->createUser((int) $useractivity->user);
         $className = ObjectTypeToClassNameMapper::map($useractivity->object_type);
 
-        /** @var \Ampache\Repository\Model\library_item $libitem */
+        /** @var library_item $libitem */
         $libitem = new $className($useractivity->object_id);
         $descr   = $user->get_f_link() . ' ';
         switch ($useractivity->action) {
