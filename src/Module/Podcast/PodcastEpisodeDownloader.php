@@ -30,8 +30,8 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -43,19 +43,19 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
 
     private WebFetcherInterface $webFetcher;
 
-    private ModelFactoryInterface $modelFactory;
+    private PodcastRepositoryInterface $podcastRepository;
 
     private LoggerInterface $logger;
 
     public function __construct(
         PodcastFolderProviderInterface $podcastFolderProvider,
         WebFetcherInterface $webFetcher,
-        ModelFactoryInterface $modelFactory,
+        PodcastRepositoryInterface $podcastRepository,
         LoggerInterface $logger
     ) {
         $this->podcastFolderProvider = $podcastFolderProvider;
         $this->webFetcher            = $webFetcher;
-        $this->modelFactory          = $modelFactory;
+        $this->podcastRepository     = $podcastRepository;
         $this->logger                = $logger;
     }
 
@@ -81,7 +81,11 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
         $destinationFilePath = $episode->getFile();
         if ($destinationFilePath === '') {
             // new file (pending)
-            $podcast = $this->modelFactory->createPodcast($episode->getPodcastId());
+            $podcast = $this->podcastRepository->findById($episode->getPodcastId());
+            if ($podcast === null) {
+                return;
+            }
+
             try {
                 $path = $this->podcastFolderProvider->getBaseFolder($podcast);
             } catch (PodcastFolderException $e) {

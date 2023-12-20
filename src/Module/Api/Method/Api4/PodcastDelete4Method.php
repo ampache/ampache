@@ -30,6 +30,7 @@ use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class PodcastDelete4Method
@@ -60,8 +61,9 @@ final class PodcastDelete4Method
             return false;
         }
         $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
-        if ($podcast->isNew() === false) {
+        $podcast   = self::getPodcastRepository()->findById($object_id);
+
+        if ($podcast !== null) {
             self::getPodcastDeleter()->delete($podcast);
 
             Api4::message('success', 'podcast ' . $object_id . ' deleted', null, $input['api_format']);
@@ -80,5 +82,15 @@ final class PodcastDelete4Method
         global $dic;
 
         return $dic->get(PodcastDeleterInterface::class);
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

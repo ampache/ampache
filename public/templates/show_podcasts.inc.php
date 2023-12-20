@@ -31,9 +31,11 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
+/** @var PodcastRepositoryInterface $podcastRepository */
 
 $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
@@ -88,9 +90,9 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                     Userflag::build_cache('podcast', $object_ids);
                 }
 
-                foreach ($object_ids as $podcast_id) {
-                    $libitem = new Podcast($podcast_id);
-                    if ($libitem->isNew()) {
+                foreach ($object_ids as $podcastId) {
+                    $libitem = $podcastRepository->findById($podcastId);
+                    if ($libitem === null) {
                         continue;
                     }
                     $libitem->format(); ?>

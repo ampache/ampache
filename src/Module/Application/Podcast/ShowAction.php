@@ -28,7 +28,6 @@ namespace Ampache\Module\Application\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -50,20 +49,17 @@ final class ShowAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
-    private ModelFactoryInterface $modelFactory;
     private PodcastRepositoryInterface $podcastRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory,
         PodcastRepositoryInterface $podcastRepository
     ) {
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
         $this->logger            = $logger;
-        $this->modelFactory      = $modelFactory;
         $this->podcastRepository = $podcastRepository;
     }
 
@@ -76,16 +72,14 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $podcastId = (int) ($request->getQueryParams()['podcast'] ?? 0);
-        $podcast   = $this->modelFactory->createPodcast($podcastId);
-        if ($podcast->isNew()) {
+        $podcast   = $this->podcastRepository->findById($podcastId);
+        if ($podcast === null) {
             $this->logger->warning(
                 'Requested a podcast that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $podcast->format();
-
             $this->ui->showBoxTop((string)$podcast->get_fullname(), 'info-box');
             $this->ui->show(
                 'show_podcast.inc.php',

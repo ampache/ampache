@@ -60,9 +60,17 @@ final class PodcastEpisodes4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $podcast_id = (int) scrub_in((string) $input['filter']);
+        $podcast_id = (int) $input['filter'];
         debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
-        $podcast = new Podcast($podcast_id);
+        $podcastRepository = self::getPodcastRepository();
+        $podcast           = $podcastRepository->findById($podcast_id);
+
+        if ($podcast === null) {
+            Api4::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['api_format']);
+
+            return false;
+        }
+
         $results = self::getPodcastRepository()->getEpisodes($podcast);
 
         ob_end_clean();

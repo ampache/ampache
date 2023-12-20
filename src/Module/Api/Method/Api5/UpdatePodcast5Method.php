@@ -31,6 +31,7 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\System\Session;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class UpdatePodcast5Method
@@ -57,8 +58,8 @@ final class UpdatePodcast5Method
             return false;
         }
         $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
-        if ($podcast->isNew() === false) {
+        $podcast   = self::getPodcastRepository()->findById($object_id);
+        if ($podcast !== null) {
             if (static::getPodcastSyncer()->sync($podcast, true)) {
                 Api5::message('Synced episodes for podcast: ' . (string) $object_id, $input['api_format']);
                 Session::extend($input['auth'], 'api');
@@ -81,5 +82,15 @@ final class UpdatePodcast5Method
         global $dic;
 
         return $dic->get(PodcastSyncerInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

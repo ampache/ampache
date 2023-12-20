@@ -32,6 +32,7 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class Podcast5Method
@@ -61,9 +62,9 @@ final class Podcast5Method
         }
         $object_id = (int) $input['filter'];
         $include   = $input['include'] ?? '';
-        $podcast   = new Podcast($object_id);
+        $podcast   = self::getPodcastRepository()->findById($object_id);
 
-        if ($podcast->isNew()) {
+        if ($podcast === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
@@ -81,5 +82,15 @@ final class Podcast5Method
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

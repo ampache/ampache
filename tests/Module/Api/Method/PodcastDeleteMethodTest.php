@@ -38,6 +38,7 @@ use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -51,7 +52,7 @@ class PodcastDeleteMethodTest extends TestCase
 
     private PrivilegeCheckerInterface $privilegeChecker;
 
-    private ModelFactoryInterface&MockObject $modelFactory;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
 
     private PodcastDeleteMethod $subject;
 
@@ -65,16 +66,16 @@ class PodcastDeleteMethodTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->podcastDeleter   = $this->createMock(PodcastDeleterInterface::class);
-        $this->configContainer  = $this->createMock(ConfigContainerInterface::class);
-        $this->privilegeChecker = $this->createMock(PrivilegeCheckerInterface::class);
-        $this->modelFactory     = $this->createMock(ModelFactoryInterface::class);
+        $this->podcastDeleter    = $this->createMock(PodcastDeleterInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->privilegeChecker  = $this->createMock(PrivilegeCheckerInterface::class);
+        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
 
         $this->subject = new PodcastDeleteMethod(
             $this->podcastDeleter,
             $this->configContainer,
             $this->privilegeChecker,
-            $this->modelFactory,
+            $this->podcastRepository,
         );
 
         $this->gatekeeper = $this->createMock(GatekeeperInterface::class);
@@ -167,8 +168,6 @@ class PodcastDeleteMethodTest extends TestCase
         $userId    = 666;
         $podcastId = 42;
 
-        $podcast = $this->createMock(Podcast::class);
-
         static::expectException(ResultEmptyException::class);
         static::expectExceptionMessage((string) $podcastId);
 
@@ -181,18 +180,14 @@ class PodcastDeleteMethodTest extends TestCase
             ->method('getId')
             ->willReturn($userId);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
             ->with($podcastId)
-            ->willReturn($podcast);
+            ->willReturn(null);
 
         $this->privilegeChecker->expects(static::once())
             ->method('check')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER, $userId)
-            ->willReturn(true);
-
-        $podcast->expects(static::once())
-            ->method('isNew')
             ->willReturn(true);
 
         $this->subject->handle(
@@ -222,8 +217,8 @@ class PodcastDeleteMethodTest extends TestCase
             ->method('getId')
             ->willReturn($userId);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
             ->with($podcastId)
             ->willReturn($podcast);
 
@@ -231,10 +226,6 @@ class PodcastDeleteMethodTest extends TestCase
             ->method('check')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER, $userId)
             ->willReturn(true);
-
-        $podcast->expects(static::once())
-            ->method('isNew')
-            ->willReturn(false);
 
         $this->podcastDeleter->expects(static::once())
             ->method('delete')

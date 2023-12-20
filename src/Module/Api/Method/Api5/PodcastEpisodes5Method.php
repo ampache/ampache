@@ -61,16 +61,19 @@ final class PodcastEpisodes5Method
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+
+        $podcastRepository = self::getPodcastRepository();
+
         $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
-        if ($podcast->isNew()) {
+        $podcast   = $podcastRepository->findById($object_id);
+        if ($podcast === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
-        $results = self::getPodcastRepository()->getEpisodes($podcast);
+        $results = $podcastRepository->getEpisodes($podcast);
         if (empty($results)) {
             Api5::empty('podcast_episode', $input['api_format']);
 
