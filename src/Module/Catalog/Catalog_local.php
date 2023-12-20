@@ -995,7 +995,7 @@ class Catalog_local extends Catalog
                 foreach ($results['rating'] as $user => $rating) {
                     debug_event('local.catalog', "Setting rating for Song $song_id to $rating for user $user", 5);
                     $o_rating = new Rating($song_id, 'song');
-                    $o_rating->set_rating($rating, $user);
+                    $o_rating->set_rating((int)$rating, $user);
                 }
             }
             // Extended metadata loading is not deferred, retrieve it now

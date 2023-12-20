@@ -187,7 +187,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                     ob_start();
                     $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
                     $rating    = new Rating($object_id, Core::get_get('rating_type'));
-                    $rating->set_rating(Core::get_get('rating'));
+                    $rating->set_rating((int)Core::get_get('rating'));
                     echo Rating::show($object_id, Core::get_get('rating_type'));
                     $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . Core::get_get('rating_type');
                     $results[$key] = ob_get_contents();

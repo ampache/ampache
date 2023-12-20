@@ -30,6 +30,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
 use PDOStatement;
 
@@ -266,7 +267,7 @@ class Rating extends database_object
         if ($input_type == 'song_artist') {
             $sql .= " AND `artist`.`song_count` > 0";
         }
-        $sql .= " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `id` DESC ";
+        $sql .= " GROUP BY `rating`.`object_id` ORDER BY `rating`.`rating` DESC, `rating`.`count` DESC, `rating`.`date` DESC ";
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
         return $sql;
@@ -314,7 +315,7 @@ class Rating extends database_object
      * set_rating
      * This function sets the rating for the current object.
      * If no user_id is passed in, we use the currently logged in user.
-     * @param string $rating
+     * @param int $rating
      * @param int $user_id
      */
     public function set_rating($rating, $user_id = null): bool
@@ -326,15 +327,18 @@ class Rating extends database_object
         if ($user_id === 0) {
             return false;
         }
+        $time = time();
         // Everything else is a single item
         debug_event(self::class, "Setting rating for $this->type $this->id to $rating", 5);
-        if ($rating == '-1') {
-            // If score is -1, then remove rating
+        if ($rating < 1) {
+            // If score is negative or 0, then remove rating
             $sql    = "DELETE FROM `rating` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = array($this->id, $this->type, $user_id);
         } else {
-            $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`) VALUES (?, ?, ?, ?)";
-            $params = array($this->id, $this->type, $rating, $user_id);
+            $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`, `date`) VALUES (?, ?, ?, ?, ?)";
+            $params = array($this->id, $this->type, $rating, $user_id, $time);
+
+            static::getUserActivityPoster()->post((int) $user_id, 'rating', $this->type, (int) $this->id, $time);
         }
         Dba::write($sql, $params);
 
@@ -460,5 +464,15 @@ class Rating extends database_object
         $sql = "UPDATE IGNORE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserActivityPoster(): UserActivityPosterInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityPosterInterface::class);
     }
 }

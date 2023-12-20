@@ -48,7 +48,7 @@ final class Rate5Method
      *
      * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id     = (integer) $object_id
-     * rating = (integer) 0,1|2|3|4|5 $rating
+     * rating = (integer) 0|1|2|3|4|5 $rating
      */
     public static function rate(array $input, User $user): bool
     {
@@ -90,7 +90,7 @@ final class Rate5Method
                 return false;
             }
             $rate = new Rating($object_id, $type);
-            $rate->set_rating($rating, $user->id);
+            $rate->set_rating((int)$rating, $user->id);
             Api5::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
         }
 

@@ -57,7 +57,7 @@ final class AdvancedSearch4Method
      *
      * operator        = (string) 'and'|'or' (whether to match one rule or all)
      * rule_1          = (string)
-     * rule_1_operator = (integer) 0,1|2|3|4|5|6
+     * rule_1_operator = (integer) 0|1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
      * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
      * offset          = (integer)

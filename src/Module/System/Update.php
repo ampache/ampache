@@ -924,6 +924,9 @@ class Update
         $update_string = "* Add user preference `show_wrapped`, Enable access to your personal \"Spotify Wrapped\" from your user page";
         $version[]     = array('version' => '600047', 'description' => $update_string);
 
+        $update_string = "* Add `date` column to rating table";
+        $version[]     = array('version' => '600048', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4473,7 +4476,7 @@ class Update
             return false;
         }
         // rating (id, `user`, object_type, object_id, rating)
-        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
+        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating`, `rating`.`date` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
         Dba::write($sql);
         // user_flag (id, `user`, object_id, object_type, `date`)
         $sql = "INSERT IGNORE INTO `user_flag` (`object_type`, `object_id`, `user`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `user_flag`.`user`, `user_flag`.`date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_type` = 'album' AND `user_flag`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `user_flag` AS `album_flag` ON `album_flag`.`object_type` = 'album' AND `user_flag`.`date` = `album_flag`.`date` AND `user_flag`.`user` = `album_flag`.`user` WHERE `user_flag`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
@@ -4802,7 +4805,7 @@ class Update
         $sql = "DELETE FROM `object_count` WHERE `object_type` = '';";
         Dba::write($sql);
         // rating (id, `user`, object_type, object_id, rating)
-        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
+        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating`, `rating`.`date` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
         Dba::write($sql);
         // user_flag (id, `user`, object_id, object_type, `date`)
         $sql = "INSERT IGNORE INTO `user_flag` (`object_type`, `object_id`, `user`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `user_flag`.`user`, `user_flag`.`date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_type` = 'album' AND `user_flag`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `user_flag` AS `album_flag` ON `album_flag`.`object_type` = 'album' AND `user_flag`.`date` = `album_flag`.`date` AND `user_flag`.`user` = `album_flag`.`user` WHERE `user_flag`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
@@ -5174,5 +5177,17 @@ class Update
     private static function _update_600047(Interactor $interactor = null): bool
     {
         return self::_write_preference($interactor, 'show_wrapped', 'Enable access to your personal "Spotify Wrapped" from your user page', '0', 25, 'bool', 'interface', 'privacy');
+    }
+
+    /** _update_600048
+     *
+     * Add `date` column to rating table
+     */
+    private static function _update_600048(Interactor $interactor = null): bool
+    {
+        $sql = "ALTER TABLE `rating` DROP COLUMN `date`;";
+        Dba::write($sql);
+
+        return (self::_write($interactor, "ALTER TABLE `rating` ADD COLUMN `date` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `rating`;") !== false);
     }
 }

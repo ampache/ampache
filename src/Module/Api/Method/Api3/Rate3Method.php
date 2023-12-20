@@ -48,7 +48,7 @@ final class Rate3Method
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $rating    = (string) $input['rating'];
+        $rating    = (int) $input['rating'];
 
         if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
             echo Xml3_Data::error(401, T_('Wrong library item type.'));

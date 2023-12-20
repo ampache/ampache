@@ -2873,7 +2873,7 @@ abstract class Catalog extends database_object
             foreach ($results['rating'] as $user => $rating) {
                 debug_event(__CLASS__, "Updating rating for Song " . $song->id . " to $rating for user $user", 5);
                 $o_rating = new Rating($song->id, 'song');
-                $o_rating->set_rating($rating, $user);
+                $o_rating->set_rating((int)$rating, $user);
             }
         }
         // lets always update the time when you update
