@@ -1382,7 +1382,7 @@ class Song extends database_object implements
     /**
      * update_license
      * updates license field
-     * @param string $new_license
+     * @param int|null $new_license
      * @param int $song_id
      */
     public static function update_license($new_license, $song_id)
@@ -1482,7 +1482,7 @@ class Song extends database_object implements
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param string|int $value
+     * @param string|int|null $value
      * @param int $song_id
      * @param int $level
      * @param bool $check_owner

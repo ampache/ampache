@@ -64,7 +64,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'song':
-                $songs = Random::get_default('', Core::get_global('user'));
+                $songs = Random::get_default((int)AmpConfig::get('offset_limit', 50), Core::get_global('user'));
 
                 if (!count($songs)) {
                     $results['rfc3514'] = '0x1';

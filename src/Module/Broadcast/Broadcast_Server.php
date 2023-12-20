@@ -112,7 +112,7 @@ class Broadcast_Server implements MessageComponentInterface
                             $this->notifyEnded($from);
                             break;
                         case self::BROADCAST_REGISTER_BROADCAST:
-                            $this->registerBroadcast($from, (int)$cmdinfo[1]);
+                            $this->registerBroadcast($from, (string)$cmdinfo[1]);
                             break;
                         case self::BROADCAST_REGISTER_LISTENER:
                             $this->registerListener($from, (int)$cmdinfo[1]);
@@ -191,7 +191,7 @@ class Broadcast_Server implements MessageComponentInterface
             $seekdiff  = $broadcast->song_position - $song_position;
             if ($seekdiff > 2 || $seekdiff < -2) {
                 $clients = $this->getListeners($broadcast);
-                $this->broadcastMessage($clients, self::BROADCAST_SONG_POSITION, $song_position);
+                $this->broadcastMessage($clients, self::BROADCAST_SONG_POSITION, (string)$song_position);
             }
             $broadcast->song_position = $song_position;
 
@@ -317,7 +317,7 @@ class Broadcast_Server implements MessageComponentInterface
                 self::BROADCAST_SONG,
                 base64_encode($this->getSongJS($broadcast->song))
             );
-            $this->broadcastMessage(array($from), self::BROADCAST_SONG_POSITION, $broadcast->song_position);
+            $this->broadcastMessage(array($from), self::BROADCAST_SONG_POSITION, (string)$broadcast->song_position);
             $this->notifyNbListeners($broadcast);
 
             self::echo_message($this->verbose, "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n");
@@ -376,7 +376,7 @@ class Broadcast_Server implements MessageComponentInterface
             $clients[]    = $this->clients[$broadcaster_id];
             $nb_listeners = count($this->listeners[$broadcast->id]);
             $broadcast->update_listeners($nb_listeners);
-            $this->broadcastMessage($clients, self::BROADCAST_NB_LISTENERS, $nb_listeners);
+            $this->broadcastMessage($clients, self::BROADCAST_NB_LISTENERS, (string)$nb_listeners);
         }
     }
 

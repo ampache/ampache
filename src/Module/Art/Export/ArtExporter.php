@@ -81,7 +81,7 @@ final class ArtExporter implements ArtExporterInterface
 
             $extension = Art::extension($artMime);
             $filename  = 'art-' . $artSize . '.' . $extension;
-            $folder    = Art::get_dir_on_disk($artType, (string) $artId, $artKind, true);
+            $folder    = Art::get_dir_on_disk($artType, $artId, $artKind, true);
             if (!$folder) {
                 throw new Export\Exception\ArtExportException(
                     T_('local_metadata_dir setting is required to store art on disk')

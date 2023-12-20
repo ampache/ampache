@@ -557,7 +557,7 @@ class Art extends database_object
     /**
      * get_dir_on_disk
      * @param string $type
-     * @param string $uid
+     * @param int $uid
      * @param string $kind
      * @param bool $autocreate
      * @return string|false
@@ -692,7 +692,7 @@ class Art extends database_object
     /**
      * delete_from_dir
      * @param string $type
-     * @param string $uid
+     * @param int $uid
      * @param string $kind
      */
     private static function delete_from_dir($type, $uid, $kind = ''): void
@@ -1143,7 +1143,7 @@ class Art extends database_object
             'video'
         );
 
-        if ($object_type !== null) {
+        if ($object_type !== null && $object_id !== null) {
             if (in_array($object_type, $types)) {
                 if (AmpConfig::get('album_art_store_disk')) {
                     self::delete_from_dir($object_type, $object_id);
@@ -1161,7 +1161,7 @@ class Art extends database_object
                     $sql        = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
                     $db_results = Dba::read($sql);
                     while ($row = Dba::fetch_row($db_results)) {
-                        self::delete_from_dir($row[1], $row[0]);
+                        self::delete_from_dir($row[1], (int)$row[0]);
                     }
                 }
                 $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";

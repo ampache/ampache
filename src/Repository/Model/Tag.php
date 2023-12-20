@@ -597,11 +597,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      * @param string $type
      * @param $tag_id
-     * @param string $count
-     * @param string $offset
+     * @param int $count
+     * @param int $offset
      * @return int[]
      */
-    public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
+    public static function get_tag_objects($type, $tag_id, $count = 0, $offset = 0)
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();

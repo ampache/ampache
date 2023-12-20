@@ -127,7 +127,7 @@ interface UserRepositoryInterface
     /**
      * Updates a users api key
      */
-    public function updateApiKey(string $userId, string $apikey): void;
+    public function updateApiKey(int $userId, string $apikey): void;
 
     /**
      * Get the current hashed user password

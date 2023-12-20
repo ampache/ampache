@@ -1971,11 +1971,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/Stats4Method.php
 
 		-
-			message: "#^Parameter \\#1 \\$limit of static method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_default\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 3
 			path: src/Module/Api/Method/Api4/Stats4Method.php
@@ -2612,11 +2607,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Stats5Method\\:\\:stats\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\$limit of static method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_default\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Stats5Method.php
 
@@ -3326,11 +3316,6 @@ parameters:
 			path: src/Module/Api/Method/StatsMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\$limit of static method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_default\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/StatsMethod.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 5
 			path: src/Module/Api/Method/StatsMethod.php
@@ -3491,17 +3476,7 @@ parameters:
 			path: src/Module/Api/Output/JsonOutput.php
 
 		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:error\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Output/JsonOutput.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\XmlOutput\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Output/XmlOutput.php
-
-		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:error\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Output/XmlOutput.php
 
@@ -3991,36 +3966,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_id of static method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getAmpacheId\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of static method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getAmpacheId\\(\\) expects string, int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$rating of method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:set_rating\\(\\) expects string, int\\<0, 5\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, array\\<int, string\\>\\|string given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#3 \\$count of static method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tag_objects\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Parameter \\#4 \\$offset of static method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tag_objects\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -4047,11 +3992,6 @@ parameters:
 
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Variable \\$internetradiostations in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4151,7 +4091,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addInternetRadioStations\\(\\) has parameter \\$radios with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addInternetRadioStations\\(\\) has parameter \\$radios with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -4767,11 +4707,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:videos\\(\\) has parameter \\$videos with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$additional_params of method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:play_url\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
 
@@ -6016,22 +5951,7 @@ parameters:
 			path: src/Module/Broadcast/Broadcast_Server.php
 
 		-
-			message: "#^Parameter \\#2 \\$broadcast_key of method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:registerBroadcast\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
 			message: "#^Parameter \\#2 \\$haystack of function array_search expects array, Ratchet\\\\ConnectionInterface given\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Parameter \\#3 \\$value of method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:broadcastMessage\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Parameter \\#3 \\$value of method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:broadcastMessage\\(\\) expects string, int\\<0, max\\> given\\.$#"
 			count: 1
 			path: src/Module/Broadcast/Broadcast_Server.php
 
@@ -9661,11 +9581,6 @@ parameters:
 			path: src/Module/System/Update.php
 
 		-
-			message: "#^Parameter \\#1 \\$userId of method Ampache\\\\Repository\\\\UserRepositoryInterface\\:\\:updateApiKey\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/User/Authorization/UserKeyGenerator.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/User/PasswordGenerator.php
@@ -12311,16 +12226,6 @@ parameters:
 			path: src/Module/Util/Waveform.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, int given\\.$#"
-			count: 2
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of function fwrite expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
 			message: "#^Parameter \\#4 \\$color of function imagefill expects int, int\\|false given\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
@@ -12778,11 +12683,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:rule_process\\(\\) has parameter \\$rule_array with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Parameter \\#1 \\$rating of method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:set_rating\\(\\) expects string, int given\\.$#"
-			count: 9
 			path: src/Plugin/AmpacheRatingMatch.php
 
 		-
@@ -13378,21 +13278,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$object_type of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:has_db\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#2 \\$uid of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:delete_from_dir\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#2 \\$uid of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:delete_from_dir\\(\\) expects string, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#2 \\$uid of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:get_dir_on_disk\\(\\) expects string, int given\\.$#"
-			count: 2
 			path: src/Repository/Model/Art.php
 
 		-
@@ -14002,11 +13887,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, array\\<int, string\\>\\|string given\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$new_license of static method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:update_license\\(\\) expects string, int\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -14982,6 +14862,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:is_valid\\(\\) has parameter \\$type with no type specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Rating.php
+
+		-
+			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Repository/Model/Rating.php
 

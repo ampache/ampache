@@ -1006,10 +1006,7 @@ class Subsonic_Api
      */
     public static function getrandomsongs($input, $user): void
     {
-        $size = $input['size'] ?? false;
-        if (!$size) {
-            $size = 10;
-        }
+        $size = (int)($input['size'] ?? 10);
 
         $genre         = $input['genre'] ?? '';
         $fromYear      = $input['fromYear'] ?? null;
@@ -1085,8 +1082,8 @@ class Subsonic_Api
     {
         unset($user);
         $genre  = self::_check_parameter($input, 'genre');
-        $count  = $input['count'] ?? '';
-        $offset = $input['offset'] ?? '';
+        $count  = (int)($input['count'] ?? 0);
+        $offset = (int)($input['offset'] ?? 0);
 
         $tag = Tag::construct_from_name($genre);
         if ($tag->isNew()) {
@@ -1348,7 +1345,7 @@ class Subsonic_Api
             }
             if (!empty($playlistId)) {
                 $response = Subsonic_Xml_Data::addSubsonicResponse('createplaylist');
-                $playlist = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlistId));
+                $playlist = new Playlist(Subsonic_Xml_Data::_getAmpacheId((string)$playlistId));
                 Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
             } else {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'createplaylist');
@@ -1563,7 +1560,15 @@ class Subsonic_Api
      */
     public static function getcoverart($input, $user): void
     {
-        $sub_id = str_replace('al-', '', self::_check_parameter($input, 'id'));
+        $sub_id = self::_check_parameter($input, 'id');
+        if (!$sub_id) {
+            self::_setHeader($input['f'] ?? 'xml');
+            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getcoverart');
+            self::_apiOutput($input, $response);
+
+            return;
+        }
+        $sub_id = str_replace('al-', '', (string)$sub_id);
         $sub_id = str_replace('ar-', '', $sub_id);
         $sub_id = str_replace('pl-', '', $sub_id);
         $sub_id = str_replace('pod-', '', $sub_id);
@@ -1887,7 +1892,7 @@ class Subsonic_Api
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
                 $song_id     = Subsonic_Xml_Data::_getAmpacheId($object_id[0]);
                 $tmp_song    = new Song($song_id);
-                $object_id   = Subsonic_Xml_Data::_getAmpacheId($tmp_song->album);
+                $object_id   = $tmp_song->album;
                 $object_type = 'album';
             } else {
                 if (Subsonic_Xml_Data::_isAlbum($object_id)) {
@@ -2122,7 +2127,7 @@ class Subsonic_Api
      */
     public static function deletepodcastchannel($input, $user): void
     {
-        $podcast_id = (int)self::_check_parameter($input, 'id');
+        $podcast_id = self::_check_parameter($input, 'id');
         if (!$podcast_id) {
             return;
         }
@@ -2349,9 +2354,7 @@ class Subsonic_Api
                 "catalog" => $catalogs[0],
                 "site_url" => $site_url
             );
-            $internetradiostations   = array();
-            $internetradiostations[] = Live_Stream::create($data);
-            if (empty($internetradiostations)) {
+            if (!Live_Stream::create($data)) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'createinternetradiostation');
                 self::_apiOutput($input, $response);
 

@@ -413,7 +413,7 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * Updates a users api key
      */
-    public function updateApiKey(string $userId, string $apikey): void
+    public function updateApiKey(int $userId, string $apikey): void
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
 

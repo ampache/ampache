@@ -1052,7 +1052,7 @@ class Subsonic_Xml_Data
     /**
      * addInternetRadioStations
      * @param SimpleXMLElement $xml
-     * @param $radios
+     * @param array $radios
      */
     public static function addInternetRadioStations($xml, $radios): void
     {
@@ -1651,7 +1651,7 @@ class Subsonic_Xml_Data
         $track       = 1;
         foreach ($object_ids as $object_id) {
             $ampidarrays[] = array(
-                'object_id' => self::_getAmpacheId($object_id),
+                'object_id' => self::_getAmpacheId((string)$object_id),
                 'object_type' => self::_getAmpacheType((string)$object_id),
                 'track' => $track
             );

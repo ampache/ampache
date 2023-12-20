@@ -103,7 +103,7 @@ class Random
                 $song_ids = self::get_search($user, $object_id);
                 break;
             default:
-                $song_ids = self::get_default('1', $user);
+                $song_ids = self::get_default(1, $user);
         }
         $song = array_pop($song_ids);
         //debug_event(__CLASS__, "get_single_song:" . $song, 5);
@@ -115,17 +115,14 @@ class Random
      * get_default
      * This just randomly picks a song at whim from all catalogs
      * nothing special here...
-     * @param string $limit
+     * @param int $limit
      * @param User $user
      * @return int[]
      */
-    public static function get_default($limit = '', $user = null)
+    public static function get_default($limit, $user = null)
     {
         $results = array();
 
-        if (empty($limit)) {
-            $limit = AmpConfig::get('offset_limit', 50);
-        }
         if (empty($user)) {
             $user = Core::get_global('user');
         }
