@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Playback;
 
@@ -397,7 +397,7 @@ final class PlayAction implements ApplicationActionInterface
             $user = new User($share->user);
         }
 
-        if ((!$user instanceof User || $user->id < 1) && (!$share_id && !$secret)) {
+        if ((!$user instanceof User || $user->isNew()) && (!$share_id && !$secret)) {
             $this->logger->error(
                 'No user specified {' . print_r($user, true) . '}',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
