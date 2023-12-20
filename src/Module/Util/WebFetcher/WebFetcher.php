@@ -37,6 +37,9 @@ use Psr\Log\LoggerInterface;
  */
 final class WebFetcher implements WebFetcherInterface
 {
+    /** @var int Curl operation timeout in seconds */
+    private const TIMEOUT = 300;
+
     private ConfigContainerInterface $config;
 
     private UtilityFactoryInterface $utilityFactory;
@@ -101,7 +104,7 @@ final class WebFetcher implements WebFetcherInterface
             );
         } else {
             throw new Exception\FetchFailedException(
-                sprintf('Error downloading to file: %s', $destinationFilePath)
+                sprintf('Error downloading to file: %s. Reason: %s', $destinationFilePath, $curl->errorMessage)
             );
         }
     }
@@ -118,6 +121,7 @@ final class WebFetcher implements WebFetcherInterface
 
         $curl = $this->utilityFactory->createCurl();
         $curl->setFollowLocation();
+        $curl->setTimeout(self::TIMEOUT);
         $curl->setUserAgent(sprintf('Ampache/%s', $this->config->getVersion()));
 
         if ($proxyHost && $proxyPort) {

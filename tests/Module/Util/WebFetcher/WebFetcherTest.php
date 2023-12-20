@@ -143,6 +143,9 @@ class WebFetcherTest extends TestCase
             ->method('setProxy')
             ->with($proxyHost, $proxyPort, null, null);
         $curl->expects(static::once())
+            ->method('setTimeout')
+            ->with(300);
+        $curl->expects(static::once())
             ->method('get')
             ->with($uri);
         $curl->expects(static::once())
