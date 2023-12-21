@@ -76,6 +76,8 @@ class AmpacheBitly implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return (
+            Preference::delete('bitly_username') &&
+            Preference::delete('bitly_api_key') &&
             Preference::delete('bitly_token') &&
             Preference::delete('bitly_group_guid')
         );
