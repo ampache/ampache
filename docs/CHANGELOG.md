@@ -2,13 +2,15 @@
 
 ## Ampache 6.2.0
 
-This release has been all about static typing and crushing bugs related to that.
+Builds for PHP 8.3 are now available!
 
-Updates from an Ampache 3.9.0 database to now have been tested successfully.
+This release has been all about static typing and crushing bugs related to that.
 
 Hundreds of static analysis bugs have been fixed. (A drop of about 50%)
 
 There has been a big focus on making sure everything does what it says it does.
+
+For older servers we've tested updates from an Ampache 3.9.0 database to 6.2.0 successfully!
 
 As an end of year bonus you can access your own Ampache Wrapped from the user page when enabled
 
@@ -25,7 +27,7 @@ As an end of year bonus you can access your own Ampache Wrapped from the user pa
   * Set correct preference type for `use_play2`
   * Add user preference `jp_volume`, Default webplayer volume
   * Add system preference `perpetual_api_session`, endless api sessions. (**AT YOUR OWN RISK**)
-  * Add column `last_update` and `date`to search table
+  * Add column `last_update` and `date` to search table
   * Add user preference `home_recently_played_all`, Show everything in the now playing box
   * Add user preference `show_wrapped`, Access your personal "Spotify Wrapped" from your user page
   * Add `date` column to rating table
