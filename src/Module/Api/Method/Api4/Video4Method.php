@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -41,17 +41,14 @@ final class Video4Method
      * video
      * This returns a single video
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of video
-     * @return boolean
      */
     public static function video(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $video_id = scrub_in($input['filter']);
+        $video_id = scrub_in((string) $input['filter']);
 
         switch ($input['api_format']) {
             case 'json':
@@ -62,5 +59,5 @@ final class Video4Method
         }
 
         return true;
-    } // video
+    }
 }

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Api\Ajax;
@@ -29,6 +30,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
 use PDOStatement;
 
@@ -54,33 +56,27 @@ class Rating extends database_object
     );
 
     // Public variables
-    public $id; // The ID of the object rated
-    public $type; // The type of object we want
+    public int $id; // The object_id of the object rated
+    public string $type; // The object_type of object we want
 
     /**
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the rating for
-     * @param integer $rating_id
+     * @param int|null $rating_id
      * @param string $type
      */
     public function __construct($rating_id, $type)
     {
         $this->id   = (int)$rating_id;
         $this->type = $type;
-
-        return true;
-    } // Constructor
+    }
 
     public function getId(): int
     {
         return (int)($this->id ?? 0);
     }
 
-    /**
-     * @param $type
-     * @return bool
-     */
     public static function is_valid($type): bool
     {
         return in_array($type, self::RATING_TYPES);
@@ -91,9 +87,9 @@ class Rating extends database_object
      *
      * Remove ratings for items that no longer exist.
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
      */
-    public static function garbage_collection($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null): void
     {
         $types = array(
             'album',
@@ -135,10 +131,9 @@ class Rating extends database_object
      * single query, saving on connection overhead
      * @param string $type
      * @param array $ids
-     * @param integer $user_id
-     * @return boolean
+     * @param int $user_id
      */
-    public static function build_cache($type, $ids, $user_id = null)
+    public static function build_cache($type, $ids, $user_id = null): bool
     {
         if (empty($ids)) {
             return false;
@@ -186,15 +181,15 @@ class Rating extends database_object
         }
 
         return true;
-    } // build_cache
+    }
 
     /**
      * get_user_rating
      * Get a user's rating. If no userid is passed in, we use the currently logged in user.
-     * @param integer $user_id
-     * @return integer|null
+     * @param int $user_id
+     * @return int|null
      */
-    public function get_user_rating($user_id = null)
+    public function get_user_rating($user_id = null): ?int
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -219,18 +214,18 @@ class Rating extends database_object
         parent::add_to_cache($key, $this->id, array($rating));
 
         return $rating;
-    } // get_user_rating
+    }
 
     /**
      * get_average_rating
      * Get the floored average rating of what everyone has rated this object as.
      * @return double|null
      */
-    public function get_average_rating()
+    public function get_average_rating(): ?float
     {
         $key = 'rating_' . $this->type . '_all';
         if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
-            return (double)parent::get_from_cache($key, $this->id)[0];
+            return (float)parent::get_from_cache($key, $this->id)[0];
         }
 
         $sql        = "SELECT ROUND(AVG(`rating`), 2) AS `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
@@ -239,20 +234,19 @@ class Rating extends database_object
         if (empty($row)) {
             return null;
         }
-        $rating = (double)$row['rating'];
+        $rating = (float)$row['rating'];
         parent::add_to_cache($key, $this->id, array($rating));
 
         return $rating;
-    } // get_average_rating
+    }
 
     /**
      * get_highest_sql
      * Get highest sql
      * @param string $input_type
-     * @param integer $user_id
-     * @return string
+     * @param int $user_id
      */
-    public static function get_highest_sql($input_type, $user_id = null)
+    public static function get_highest_sql($input_type, $user_id = null): string
     {
         $type    = Stats::validate_type($input_type);
         $user_id = (int)($user_id);
@@ -273,7 +267,7 @@ class Rating extends database_object
         if ($input_type == 'song_artist') {
             $sql .= " AND `artist`.`song_count` > 0";
         }
-        $sql .= " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `id` DESC ";
+        $sql .= " GROUP BY `rating`.`object_id` ORDER BY `rating`.`rating` DESC, `rating`.`count` DESC, `rating`.`date` DESC ";
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
         return $sql;
@@ -283,8 +277,9 @@ class Rating extends database_object
      * get_highest
      * Get objects with the highest average rating.
      * @param string $input_type
-     * @param integer $count
-     * @param integer $offset
+     * @param int $count
+     * @param int $offset
+     * @param int $user_id
      * @return array
      */
     public static function get_highest($input_type, $count = 0, $offset = 0, $user_id = null)
@@ -320,11 +315,10 @@ class Rating extends database_object
      * set_rating
      * This function sets the rating for the current object.
      * If no user_id is passed in, we use the currently logged in user.
-     * @param string $rating
-     * @param integer $user_id
-     * @return boolean
+     * @param int $rating
+     * @param int $user_id
      */
-    public function set_rating($rating, $user_id = null)
+    public function set_rating($rating, $user_id = null): bool
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -333,15 +327,18 @@ class Rating extends database_object
         if ($user_id === 0) {
             return false;
         }
+        $time = time();
         // Everything else is a single item
         debug_event(self::class, "Setting rating for $this->type $this->id to $rating", 5);
-        if ($rating == '-1') {
-            // If score is -1, then remove rating
+        if ($rating < 1) {
+            // If score is negative or 0, then remove rating
             $sql    = "DELETE FROM `rating` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = array($this->id, $this->type, $user_id);
         } else {
-            $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`) VALUES (?, ?, ?, ?)";
-            $params = array($this->id, $this->type, $rating, $user_id);
+            $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`, `date`) VALUES (?, ?, ?, ?, ?)";
+            $params = array($this->id, $this->type, $rating, $user_id, $time);
+
+            static::getUserActivityPoster()->post((int) $user_id, 'rating', $this->type, (int) $this->id, $time);
         }
         Dba::write($sql, $params);
 
@@ -350,17 +347,17 @@ class Rating extends database_object
         self::save_rating($this->id, $this->type, (int)$rating, (int)$user_id);
 
         return true;
-    } // set_rating
+    }
 
     /**
      * save_rating
      * Forward rating value to plugins
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
-     * @param integer $new_rating
-     * @param integer $user_id
+     * @param int $new_rating
+     * @param int $user_id
      */
-    public static function save_rating($object_id, $object_type, $new_rating, $user_id)
+    public static function save_rating($object_id, $object_type, $new_rating, $user_id): void
     {
         $rating = new Rating($object_id, $object_type);
         $user   = new User($user_id);
@@ -368,7 +365,7 @@ class Rating extends database_object
             foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
                 try {
                     $plugin = new Plugin($plugin_name);
-                    if ($plugin->load($user)) {
+                    if ($plugin->_plugin !== null && $plugin->load($user)) {
                         debug_event(self::class, 'save_rating... ' . $plugin->_plugin->name, 5);
                         $plugin->_plugin->save_rating($rating, $new_rating);
                     }
@@ -383,9 +380,9 @@ class Rating extends database_object
      * show
      * This takes an id and a type and displays the rating if ratings are
      * enabled.  If $show_global_rating is true, also show the average from all users.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $type
-     * @param boolean $show_global_rating
+     * @param bool $show_global_rating
      */
     public static function show($object_id, $type, $show_global_rating = false): string
     {
@@ -453,19 +450,29 @@ class Rating extends database_object
             $global_rating,
             Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id . '_' . $rating->type, '', 'star0')
         );
-    } // show
+    }
 
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
         $sql = "UPDATE IGNORE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserActivityPoster(): UserActivityPosterInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityPosterInterface::class);
     }
 }

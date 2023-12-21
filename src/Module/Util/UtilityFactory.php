@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,12 +23,11 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Curl\Curl;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -75,5 +77,13 @@ final class UtilityFactory implements UtilityFactoryInterface
             $filePattern,
             $isLocal
         );
+    }
+
+    /**
+     * Returns a new Curl instance
+     */
+    public function createCurl(): Curl
+    {
+        return new Curl();
     }
 }

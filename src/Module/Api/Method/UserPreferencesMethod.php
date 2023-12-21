@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,13 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
  * Class UserPreferencesMethod
@@ -42,23 +42,32 @@ final class UserPreferencesMethod
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your user preferences
-     *
-     * @param array $input
-     * @param User $user
      */
-    public static function user_preferences(array $input, User $user)
+    public static function user_preferences(array $input, User $user): void
     {
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $preferences  = Preference::get_all($user->id);
-        $output_array = array('preference' => $preferences);
+        $results = [
+            'preference' => self::getPreferenceRepository()->getAll($user)
+        ];
+
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($output_array['preference'], 'preference');
+                echo Xml_Data::object_array($results['preference'], 'preference');
         }
+    }
+
+    /**
+     * @todo Replace by constructor injection
+     */
+    private static function getPreferenceRepository(): PreferenceRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PreferenceRepositoryInterface::class);
     }
 }

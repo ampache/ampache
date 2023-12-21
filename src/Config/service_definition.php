@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Config;
 
 use Ampache\Config\Init\Init;
@@ -31,6 +32,8 @@ use Ampache\Config\Init\InitializationHandlerDatabaseUpdate;
 use Ampache\Config\Init\InitializationHandlerEnvironment;
 use Ampache\Config\Init\InitializationHandlerGetText;
 use Ampache\Config\Init\InitializationHandlerGlobals;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\DbaDatabaseConnection;
 use Ampache\Module\Util\EnvironmentInterface;
 use getID3;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
@@ -49,6 +52,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use SpotifyWebAPI\SpotifyWebAPI;
+
 use function DI\autowire;
 use function DI\factory;
 
@@ -89,4 +93,5 @@ return [
     ServerRequestFactoryInterface::class => autowire(Psr17Factory::class),
     PhpTalInterface::class => autowire(PHPTAL::class),
     SapiEmitter::class => autowire(SapiEmitter::class),
+    DatabaseConnectionInterface::class => autowire(DbaDatabaseConnection::class),
 ];

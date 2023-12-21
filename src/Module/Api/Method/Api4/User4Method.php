@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,10 +44,7 @@ final class User4Method
      *
      * This get a user's public information
      *
-     * @param array $input
-     * @param User $user
      * username = (string) $username)
-     * @return boolean
      */
     public static function user(array $input, User $user): bool
     {
@@ -56,7 +53,7 @@ final class User4Method
         }
         $username   = (string) $input['username'];
         $check_user = User::get_from_username($username);
-        $valid      = $check_user !== null && in_array($check_user->id, static::getUserRepository()->getValid(true));
+        $valid      = $check_user instanceof User && in_array($check_user->id, static::getUserRepository()->getValid(true));
         if (!$valid) {
             Api4::message('error', T_('User_id not found'), '404', $input['api_format']);
 
@@ -78,7 +75,7 @@ final class User4Method
         }
 
         return true;
-    } // user
+    }
 
     /**
      * @deprecated inject dependency

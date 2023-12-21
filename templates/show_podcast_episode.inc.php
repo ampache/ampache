@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -33,7 +36,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Podcast_Episode $episode */
 
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 
 Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->get_f_podcast_link(), 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
@@ -95,7 +98,7 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->get_f_podcast_link
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php } ?>
-            <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo addslashes(T_('Podcast Episode Edit')) ?>', '')">
+            <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id; ?>', '<?php echo 'edit_podcast_episode_' . $episode->id; ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php } ?>
@@ -106,22 +109,22 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->get_f_podcast_link
         <?php } ?>
     </dd>
 <?php
-    $songprops[T_('Title')]                  = $episode->get_fullname();
-$songprops[T_('Description')]                = $episode->description;
-$songprops[T_('Category')]                   = $episode->f_category;
-$songprops[T_('Author')]                     = $episode->f_author;
-$songprops[T_('Publication Date')]           = $episode->f_pubdate;
-$songprops[T_('State')]                      = $episode->f_state;
-$songprops[T_('Website')]                    = $episode->f_website;
+    $songprops[T_('Title')]        = $episode->get_fullname();
+$songprops[T_('Description')]      = $episode->description;
+$songprops[T_('Category')]         = $episode->f_category;
+$songprops[T_('Author')]           = $episode->f_author;
+$songprops[T_('Publication Date')] = $episode->f_pubdate;
+$songprops[T_('State')]            = $episode->f_state;
+$songprops[T_('Website')]          = $episode->f_website;
 if ($episode->time > 0) {
-    $songprops[T_('Length')]           = $episode->f_time;
+    $songprops[T_('Length')] = $episode->f_time;
 }
 
 if (!empty($episode->file)) {
     $songprops[T_('File')]     = $episode->file;
     $songprops[T_('Size')]     = $episode->f_size;
     $songprops[T_('Bitrate')]  = scrub_out($episode->f_bitrate);
-    $songprops[T_('Channels')] = scrub_out($episode->channels);
+    $songprops[T_('Channels')] = scrub_out((string)$episode->channels);
 }
 
 foreach ($songprops as $key => $value) {

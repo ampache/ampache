@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -43,14 +43,11 @@ final class ShareEdit4Method
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
      *
-     * @param array $input
-     * @param User $user
      * filter      = (string) Alpha-numeric search term
      * stream      = (boolean) 0,1 //optional
      * download    = (boolean) 0,1 //optional
      * expires     = (integer) number of whole days before expiry //optional
      * description = (string) update description //optional
-     * @return boolean
      */
     public static function share_edit(array $input, User $user): bool
     {
@@ -87,5 +84,5 @@ final class ShareEdit4Method
         }
 
         return true;
-    } // share_edit
+    }
 }

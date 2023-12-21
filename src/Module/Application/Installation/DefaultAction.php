@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -75,12 +76,12 @@ final class DefaultAction implements ApplicationActionInterface
         $htaccess_rest_file = __DIR__ . '/../../../../rest/.htaccess';
 
         // Clean up incoming variables
-        $web_path   = scrub_in($_REQUEST['web_path'] ?? '');
-        $username   = (string) scrub_in($_REQUEST['local_username'] ?? '');
+        $web_path   = scrub_in((string) ($_REQUEST['web_path'] ?? ''));
+        $username   = scrub_in((string) ($_REQUEST['local_username'] ?? ''));
         $password   = $_REQUEST['local_pass'] ?? null;
-        $hostname   = scrub_in($_REQUEST['local_host'] ?? '');
-        $database   = scrub_in($_REQUEST['local_db'] ?? '');
-        $port       = scrub_in($_REQUEST['local_port'] ?? '');
+        $hostname   = scrub_in((string) ($_REQUEST['local_host'] ?? ''));
+        $database   = scrub_in((string) ($_REQUEST['local_db'] ?? ''));
+        $port       = scrub_in((string) ($_REQUEST['local_port'] ?? ''));
         $skip_admin = isset($_REQUEST['skip_admin']);
 
         AmpConfig::set_by_array(array(
@@ -134,7 +135,7 @@ final class DefaultAction implements ApplicationActionInterface
             }
         }
         AmpConfig::set('lang', $htmllang, true);
-        AmpConfig::set('site_charset', $charset ?: 'UTF-8', true);
+        AmpConfig::set('site_charset', $charset ?? 'UTF-8', true);
         if (!class_exists('Gettext\Translations')) {
             require_once __DIR__ . '/../../../../templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
@@ -191,12 +192,12 @@ final class DefaultAction implements ApplicationActionInterface
                 $all  = (isset($_POST['create_all']));
                 $skip = (isset($_POST['skip_config']));
                 if (!$skip) {
-                    $write                     = (isset($_POST['write']));
-                    $download                  = (isset($_POST['download']));
-                    $download_htaccess_rest    = (isset($_POST['download_htaccess_rest']));
-                    $download_htaccess_play    = (isset($_POST['download_htaccess_play']));
-                    $write_htaccess_rest       = (isset($_POST['write_htaccess_rest']));
-                    $write_htaccess_play       = (isset($_POST['write_htaccess_play']));
+                    $write                  = (isset($_POST['write']));
+                    $download               = (isset($_POST['download']));
+                    $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
+                    $download_htaccess_play = (isset($_POST['download_htaccess_play']));
+                    $write_htaccess_rest    = (isset($_POST['write_htaccess_rest']));
+                    $write_htaccess_play    = (isset($_POST['write_htaccess_play']));
 
                     $created_config = true;
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -28,15 +30,15 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-class AmpacheRSSView
+class AmpacheRSSView implements AmpachePluginInterface
 {
-    public $name        = 'RSSView';
-    public $categories  = 'home';
-    public $description = 'RSS View';
-    public $url         = '';
-    public $version     = '000001';
-    public $min_ampache = '370021';
-    public $max_ampache = '999999';
+    public string $name        = 'RSSView';
+    public string $categories  = 'home';
+    public string $description = 'RSS View';
+    public string $url         = '';
+    public string $version     = '000001';
+    public string $min_ampache = '370021';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $feed_url;
@@ -44,51 +46,45 @@ class AmpacheRSSView
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('RSS View');
-
-        return true;
     }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
-        // Check and see if it's already installed
-        if (Preference::exists('rssview_feed_url')) {
+        if (!Preference::exists('rssview_feed_url') && !Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', 25, 'string', 'plugins', $this->name);
-        Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, 25, 'integer', 'plugins', $this->name);
+        if (!Preference::exists('rssview_max_items') && !Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, 25, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('rssview_feed_url');
-        Preference::delete('rssview_max_items');
-
-        return true;
+        return (
+            Preference::delete('rssview_feed_url') &&
+            Preference::delete('rssview_max_items')
+        );
     }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
     }
@@ -97,11 +93,13 @@ class AmpacheRSSView
      * display_home
      * This display the module in home page
      */
-    public function display_home()
+    public function display_home(): void
     {
         $xmlstr = file_get_contents($this->feed_url, false, stream_context_create(Core::requests_options()));
-        $xml    = simplexml_load_string($xmlstr);
-        if ($xml->channel) {
+        $xml    = ($xmlstr)
+            ? simplexml_load_string($xmlstr)
+            : false;
+        if ($xml && $xml->channel) {
             Ui::show_box_top($xml->channel->title);
             $count = 0;
             echo '<div class="home_plugin"><table class="tabledata striped-rows">';
@@ -109,7 +107,7 @@ class AmpacheRSSView
                 echo '<tr><td>';
                 echo '<div>';
                 echo '<div style="float: left; font-weight: bold;"><a href="' . $item->link . '" target="_blank">' . $item->title . '</a></div>';
-                echo '<div style="float: right;">' . get_datetime(strtotime($item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
+                echo '<div style="float: right;">' . get_datetime((int) strtotime($item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
                 echo '</div><br />';
                 echo '<div style="margin-left: 30px;">';
                 if (isset($item->image)) {
@@ -131,12 +129,10 @@ class AmpacheRSSView
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Authorization;
 
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
@@ -41,7 +42,7 @@ class Access
 
     // Variables from DB
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
 
@@ -61,12 +62,12 @@ class Access
     public $end;
 
     /**
-     * @var integer $level
+     * @var int $level
      */
     public $level;
 
     /**
-     * @var integer $user
+     * @var int $user
      */
     public $user;
 
@@ -76,7 +77,7 @@ class Access
     public $type;
 
     /**
-     * @var boolean $enabled
+     * @var bool $enabled
      *
      * @deprecated seems not to be in use
      */
@@ -86,14 +87,35 @@ class Access
      * constructor
      *
      * Takes an ID of the access_id dealie :)
-     * @param integer|null $access_id
+     * @param int|null $access_id
      */
     public function __construct($access_id)
     {
-        /* Assign id for use in has_info() */
+        if (!$access_id) {
+            return;
+        }
+        $info = $this->has_info($access_id);
+        if (!$info) {
+            return;
+        }
         $this->id = (int)$access_id;
-        $info     = $this->has_info();
-        foreach ($info as $key => $value) {
+    }
+
+    /**
+     * has_info
+     *
+     * Gets the vars for $this out of the database.
+     * @param int $access_id
+     */
+    private function has_info($access_id): bool
+    {
+        $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
+        $db_results = Dba::read($sql, array($access_id));
+        $data       = Dba::fetch_assoc($db_results);
+        if (empty($data)) {
+            return false;
+        }
+        foreach ($data as $key => $value) {
             $this->$key = $value;
         }
 
@@ -101,29 +123,13 @@ class Access
     }
 
     /**
-     * has_info
-     *
-     * Gets the vars for $this out of the database.
-     * @return array
-     */
-    private function has_info()
-    {
-        $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($this->id));
-
-        return Dba::fetch_assoc($db_results);
-    }
-
-    /**
      * check_function
      *
      * This checks if specific functionality is enabled.
-     * @param string $type
-     * @return boolean
-     *
+     * @param string $type     *
      * @deprecated See FunctionChecker::check
      */
-    public static function check_function($type)
+    public static function check_function($type): bool
     {
         global $dic;
 
@@ -141,13 +147,11 @@ class Access
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
      * @param string $type
-     * @param integer $level
-     * @param integer|null $user_id
-     * @return boolean
-     *
+     * @param int $level
+     * @param int|null $user_id
      * @deprecated See PrivilegeChecker::check
      */
-    public static function check($type, $level, $user_id = null)
+    public static function check($type, $level, $user_id = null): bool
     {
         global $dic;
 

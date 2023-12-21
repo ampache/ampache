@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
@@ -48,7 +49,7 @@ final class PingMethod
      * auth    = (string) //optional
      * version = (string) $version //optional
      */
-    public static function ping(array $input)
+    public static function ping(array $input): void
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ((int)$version >= 350001) ? Api::$version_numeric : Api::$version;
@@ -60,12 +61,20 @@ final class PingMethod
         );
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
-        if (Session::exists('api', $input['auth'])) {
-            Session::extend($input['auth']);
-            if (in_array($data_version, array(3, 4, 5, 6))) {
-                Session::write($input['auth'], $data_version);
+        if (array_key_exists('auth', $input) && Session::exists('api', $input['auth'])) {
+            Session::extend($input['auth'], 'api');
+            // perpetual sessions do not expire
+            $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+            $session_expire = ($perpetual)
+                ? 0
+                : date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60);
+            if (in_array($data_version, Api::API_VERSIONS)) {
+                Session::write($input['auth'], $data_version, $perpetual);
             }
-            $results = array_merge(array('session_expire' => date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60)), $results, Api::server_details($input['auth'])
+            $results = array_merge(
+                array('session_expire' => $session_expire),
+                $results,
+                Api::server_details($input['auth'])
             );
         }
 
@@ -79,5 +88,5 @@ final class PingMethod
             default:
                 echo Xml_Data::keyed_array($results);
         }
-    } // ping
+    }
 }

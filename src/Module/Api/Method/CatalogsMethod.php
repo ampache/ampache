@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
@@ -35,7 +36,7 @@ use Ampache\Repository\Model\User;
  */
 final class CatalogsMethod
 {
-    const ACTION = 'catalogs';
+    public const ACTION = 'catalogs';
 
     /**
      * catalogs
@@ -43,12 +44,9 @@ final class CatalogsMethod
      *
      * Get information about catalogs this user is allowed to manage.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) set $filter_type //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function catalogs(array $input, User $user): bool
     {

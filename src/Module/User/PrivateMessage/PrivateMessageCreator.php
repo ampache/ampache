@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\User\PrivateMessage;
 
@@ -74,19 +75,20 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
         if (Preference::get_by_user($recipient->getId(), 'notify_email')) {
             $mailer = $this->utilityFactory->createMailer();
             if (!empty($recipient->email) && $mailer->isMailEnabled()) {
-                $mailer->set_default_sender();
-                $mailer->recipient      = $recipient->email;
-                $mailer->recipient_name = $recipient->fullname;
-                $mailer->subject        = sprintf('[%s] %s', T_('Private Message'), $subject);
                 /* HINT: User fullname */
-                $mailer->message = sprintf(
+                $message = sprintf(
                     T_('You received a new private message from %s.'),
                     $sender->fullname
                 );
-                $mailer->message .= "\n\n----------------------\n\n";
-                $mailer->message .= $message;
-                $mailer->message .= "\n\n----------------------\n\n";
-                $mailer->message .= $this->configContainer->getWebPath() . "/pvmsg.php?action=show&pvmsg_id=" . $messageId;
+                $message .= "\n\n----------------------\n\n";
+                $message .= $message;
+                $message .= "\n\n----------------------\n\n";
+                $message .= $this->configContainer->getWebPath() . "/pvmsg.php?action=show&pvmsg_id=" . $messageId;
+
+                $mailer->set_default_sender();
+                $mailer->setRecipient((string) $recipient->email, (string) $recipient->get_fullname());
+                $mailer->setSubject(sprintf('[%s] %s', T_('Private Message'), $subject));
+                $mailer->setMessage($message);
                 $mailer->send();
             }
         }

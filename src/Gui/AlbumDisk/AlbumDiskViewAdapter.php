@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Gui\AlbumDisk;
 
@@ -116,7 +117,9 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 
-        return Art::display_without_return('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
+        Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
+
+        return '';
     }
 
     public function canAutoplayNext(): bool
@@ -291,17 +294,17 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getAlbumUrl(): string
     {
-        return $this->albumDisk->get_link();
+        return (string)$this->albumDisk->get_link();
     }
 
     public function getAlbumLink(): string
     {
-        return $this->albumDisk->get_f_link();
+        return (string)$this->albumDisk->get_f_link();
     }
 
     public function getArtistLink(): string
     {
-        return $this->albumDisk->get_f_artist_link();
+        return (string)$this->albumDisk->get_f_artist_link();
     }
 
     public function canShowYear(): bool
@@ -311,14 +314,16 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getDisplayYear(): int
     {
-        return ($this->configContainer->get('use_original_year') && $this->albumDisk->original_year)
-            ? $this->albumDisk->original_year
-            : $this->albumDisk->year;
+        if ($this->configContainer->get('use_original_year') && $this->albumDisk->original_year) {
+            return $this->albumDisk->original_year ?? 0;
+        }
+
+        return $this->albumDisk->year ?? 0;
     }
 
     public function getGenre(): string
     {
-        return $this->albumDisk->f_tags;
+        return (string)$this->albumDisk->f_tags;
     }
 
     public function getSongCount(): int

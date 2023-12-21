@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -23,6 +26,11 @@
 // Try to guess the web path
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+
+/** @var string $web_path */
+/** @var string $configfile */
+/** @var string $htaccess_play_file */
+/** @var string $htaccess_rest_file */
 
 $web_path_guess = $_REQUEST['web_path'] ?? '';
 if (empty($web_path_guess)) {
@@ -89,7 +97,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
 <div class="form-group">
     <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL Port (optional)'); ?></label>
     <div class="col-sm-8">
-        <input type="text" class="form-control" id="local_port" name="local_port" value="<?php echo scrub_out($_REQUEST['local_port']);?>"/>
+        <input type="text" class="form-control" id="local_port" name="local_port" value="<?php echo scrub_out($_REQUEST['local_port']); ?>"/>
     </div>
 </div>
 <div class="form-group">
@@ -251,12 +259,12 @@ foreach ($modes as $mode) { ?>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
                 <div class="col-sm-8"><?php echo debug_result(is_readable($configfile)); ?></div>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
-                <div class="col-sm-8"><?php $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
+                <div class="col-sm-8"><?php $results = (is_readable($configfile) && parse_ini_file($configfile)) ? parse_ini_file($configfile) : array();
 echo debug_result(check_config_values($results)); ?></div>
                 &nbsp;
 
                 <div class="col-sm-4"></div>
-                <?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . $_REQUEST['local_db'] ?? '' . "&local_host=" . $_REQUEST['local_host'] ?? ''; ?>
+                <?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . ($_REQUEST['local_db'] ?? '') . "&local_host=" . ($_REQUEST['local_host'] ?? ''); ?>
                 <div class="col-sm-8">
                     <a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
                 </div>

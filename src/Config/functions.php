@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -41,9 +42,9 @@ use Psr\Log\LoggerInterface;
  * set_memory_limit
  * This function attempts to change the php memory limit using init_set.
  * Will never reduce it below the current setting.
- * @param $new_limit
+ * @param int|string $new_limit
  */
-function set_memory_limit($new_limit)
+function set_memory_limit($new_limit): void
 {
     $current_limit = ini_get('memory_limit');
     if ($current_limit == -1) {
@@ -56,13 +57,16 @@ function set_memory_limit($new_limit)
     if ($current_limit < $new_limit) {
         ini_set('memory_limit', $new_limit);
     }
-} // set_memory_limit
+}
 
 /**
  * scrub_in
  * Run on inputs, stuff that might get stuck in our db
- * @param string|array $input
- * @return string|array
+ *
+ * @template TType of string|array
+ *
+ * @param TType $input
+ * @return TType
  */
 function scrub_in($input)
 {
@@ -76,7 +80,7 @@ function scrub_in($input)
 
         return $results;
     }
-} // scrub_in
+}
 
 /**
  * scrub_out
@@ -84,40 +88,40 @@ function scrub_in($input)
  * onto the page, it htmlentities the mojo
  * This is the inverse of the scrub_in function
  * (Not deprecated yet see Ui::scrubOut)
- * @param string|null $string
- * @return string
+ * @param null|string $string
  *
  */
-function scrub_out($string)
+function scrub_out($string): string
 {
     if ($string === null) {
         return '';
     }
 
     return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
-} // scrub_out
+}
 
 /**
  * unhtmlentities
  * Undoes htmlentities()
  * @param string $string
- * @return string
  */
-function unhtmlentities($string)
+function unhtmlentities($string): string
 {
     return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
-} // unhtmlentities
+}
 
 /**
  * make_bool
  * This takes a value and returns what we consider to be the correct boolean
  * value. We need a special function because PHP considers "false" to be true.
  *
- * @param string $string
- * @return boolean
+ * @param bool|null|string $string
  */
-function make_bool($string)
+function make_bool($string): bool
 {
+    if (is_bool($string)) {
+        return $string;
+    }
     if ($string === null) {
         return false;
     }
@@ -126,18 +130,17 @@ function make_bool($string)
     }
 
     return (bool) $string;
-} // make_bool
+}
 
 /**
  * invert_bool
  * This returns the opposite of what you've got
- * @param $value
- * @return boolean
+ * @param bool|string $value
  */
-function invert_bool($value)
+function invert_bool($value): bool
 {
     return make_bool($value) ? false : true;
-} // invert_bool
+}
 
 /**
  * get_languages
@@ -323,7 +326,9 @@ function get_languages()
                 default:
                     $name = sprintf(
                         /* HINT: File */
-                        T_('Unknown %s'), '(' . $file . ')');
+                        T_('Unknown %s'),
+                        '(' . $file . ')'
+                    );
                     break;
             } // end switch
 
@@ -338,54 +343,17 @@ function get_languages()
     $results = array("en_US" => "English (US)") + $results;
 
     return $results;
-} // get_languages
+}
 
 /**
  * is_rtl
  * This checks whether to be a Right-To-Left language.
- * @param $locale
- * @return boolean
+ * @param string $locale
  */
-function is_rtl($locale)
+function is_rtl($locale): bool
 {
     return in_array($locale, array("he_IL", "fa_IR", "ar_SA"));
 }
-
-/**
- * translate_pattern_code
- * This just contains a keyed array which it checks against to give you the
- * 'tag' name that said pattern code corresponds to. It returns false if nothing
- * is found.
- * @param $code
- * @return string|false
- */
-function translate_pattern_code($code)
-{
-    $code_array = array(
-        '%a' => 'artist',
-        '%A' => 'album',
-        '%b' => 'barcode',
-        '%c' => 'comment',
-        '%C' => 'catalog_number',
-        '%d' => 'disk',
-        '%g' => 'genre',
-        '%l' => 'label',
-        '%t' => 'title',
-        '%T' => 'track',
-        '%r' => 'release_type',
-        '%R' => 'release_status',
-        '%s' => 'subtitle',
-        '%y' => 'year',
-        '%Y' => 'original_year',
-        '%o' => 'zz_other'
-    );
-
-    if (isset($code_array[$code])) {
-        return $code_array[$code];
-    }
-
-    return false;
-} // translate_pattern_code
 
 // Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
 if (!function_exists('apache_request_headers')) {
@@ -424,9 +392,9 @@ if (!function_exists('getallheaders')) {
 }
 
 /**
- * @return string
+ * get_current_path
  */
-function get_current_path()
+function get_current_path(): string
 {
     if (strlen((string) $_SERVER['PHP_SELF'])) {
         $root = $_SERVER['PHP_SELF'];
@@ -438,9 +406,9 @@ function get_current_path()
 }
 
 /**
- * @return string
+ * get_web_path
  */
-function get_web_path()
+function get_web_path(): string
 {
     $root = get_current_path();
 
@@ -449,14 +417,17 @@ function get_web_path()
 
 /**
  * get_datetime
- * @param integer $time
+ * @param DateTimeInterface|int $time
  * @param string $date_format
  * @param string $time_format
  * @param string $overwrite
- * @return string
  */
-function get_datetime($time, $date_format = 'short', $time_format = 'short', $overwrite = '')
+function get_datetime($time, $date_format = 'short', $time_format = 'short', $overwrite = ''): string
 {
+    if ($time instanceof DateTimeInterface) {
+        $time = $time->getTimestamp();
+    }
+
     // allow time or date only
     $date_type = ($date_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
     $time_type = ($time_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
@@ -477,9 +448,8 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
  * check_config_values
  * checks to make sure that they have at least set the needed variables
  * @param array $conf
- * @return boolean
  */
-function check_config_values($conf)
+function check_config_values($conf): bool
 {
     if (!is_array($conf)) {
         return false;
@@ -516,11 +486,11 @@ function check_config_values($conf)
     }
 
     return true;
-} // check_config_values
+}
 
 /**
  * @param string $val
- * @return integer|string
+ * @return int|string
  */
 function return_bytes($val)
 {
@@ -544,42 +514,40 @@ function return_bytes($val)
 /**
  * check_config_writable
  * This checks whether we can write the config file
- * @return boolean
  */
-function check_config_writable()
+function check_config_writable(): bool
 {
     // file eixsts && is writable, or dir is writable
-    return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/ampache.cfg.php'))
-        || (!file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/')));
+    return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/ampache.cfg.php')) ||
+        (!file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/')));
 }
 
 /**
- * @return boolean
+ * check_htaccess_rest_writable
  */
-function check_htaccess_rest_writable()
+function check_htaccess_rest_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../rest/.htaccess') && is_writeable(__DIR__ . '/../../rest/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../rest/.htaccess') && is_writeable(__DIR__ . '/../../rest/')));
+    return ((file_exists(__DIR__ . '/../../rest/.htaccess') && is_writeable(__DIR__ . '/../../rest/.htaccess')) ||
+        (!file_exists(__DIR__ . '/../../rest/.htaccess') && is_writeable(__DIR__ . '/../../rest/')));
 }
 
 /**
- * @return boolean
+ * check_htaccess_play_writable
  */
-function check_htaccess_play_writable()
+function check_htaccess_play_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../play/.htaccess') && is_writeable(__DIR__ . '/../../play/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../play/.htaccess') && is_writeable(__DIR__ . '/../../play/')));
+    return ((file_exists(__DIR__ . '/../../play/.htaccess') && is_writeable(__DIR__ . '/../../play/.htaccess')) ||
+        (!file_exists(__DIR__ . '/../../play/.htaccess') && is_writeable(__DIR__ . '/../../play/')));
 }
 
 /**
  * debug_result
  * Convenience function to format the output.
- * @param string|boolean $status
+ * @param string|bool $status
  * @param string $value
  * @param string $comment
- * @return string
  */
-function debug_result($status = false, $value = null, $comment = '')
+function debug_result($status = false, $value = null, $comment = ''): string
 {
     $class = $status ? 'success' : 'danger';
 
@@ -596,12 +564,8 @@ function debug_result($status = false, $value = null, $comment = '')
  *
  * An error handler for ampache that traps as many errors as it can and logs
  * them.
- * @param $errno
- * @param $errstr
- * @param $errfile
- * @param $errline
  */
-function ampache_error_handler($errno, $errstr, $errfile, $errline)
+function ampache_error_handler(int $errno, string $errstr, string $errfile, int $errline): bool
 {
     $level = 1;
 
@@ -668,6 +632,8 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
 
     $log_line = "[$error_name] $errstr in file $errfile($errline)";
     debug_event('log.lib', $log_line, $level, 'ampache');
+
+    return true;
 }
 
 /**
@@ -677,13 +643,12 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  * calls log event if both requirements are met.
  * @param string $type
  * @param string $message
- * @param integer $level
+ * @param int $level
  * @param string $username
- * @return boolean
  *
  * @deprecated Use LegacyLogger
  */
-function debug_event($type, $message, $level, $username = '')
+function debug_event($type, $message, $level, $username = ''): bool
 {
     if (!$username && Core::get_global('user')) {
         $username = Core::get_global('user')->username;
@@ -705,34 +670,27 @@ function debug_event($type, $message, $level, $username = '')
     }
 
     return true;
-} // debug_event
+}
 
 /**
- * @param $action
- * @param $catalogs
+ * @param string $action
+ * @param array|null $catalogs
  * @param array $options
  */
-function catalog_worker($action, $catalogs = null, $options = null)
+function catalog_worker($action, $catalogs = null, $options = null): void
 {
     if (AmpConfig::get('ajax_load')) {
         $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs));
         if ($options) {
             $sse_url .= "&options=" . urlencode(json_encode($_POST));
         }
-        sse_worker($sse_url);
+
+        echo '<script>';
+        echo "sse_worker('$sse_url');";
+        echo "</script>\n";
     } else {
         Catalog::process_action($action, $catalogs, $options);
     }
-}
-
-/**
- * @param string $url
- */
-function sse_worker($url)
-{
-    echo '<script>';
-    echo "sse_worker('$url');";
-    echo "</script>\n";
 }
 
 /**
@@ -740,9 +698,8 @@ function sse_worker($url)
  * returns the script part of the referer address passed by the web browser
  * this is not %100 accurate. Also because this is not passed by us we need
  * to clean it up, take the filename then check for a /admin/ and dump the rest
- * @return string
  */
-function return_referer()
+function return_referer(): string
 {
     $referer = Core::get_server('HTTP_REFERER');
     if (substr($referer, -1) == '/') {
@@ -758,20 +715,20 @@ function return_referer()
     }
 
     return $file;
-} // return_referer
+}
 
 /**
  * show_album_select
  * This displays a select of every album that we've got in Ampache (which can be hella long).
  * It's used by the Edit page and takes a $name and an $album_id
  * @param string $name
- * @param integer $album_id
- * @param boolean $allow_add
- * @param integer $song_id
- * @param boolean $allow_none
- * @param string $user
+ * @param int $album_id
+ * @param bool $allow_add
+ * @param int $song_id
+ * @param bool $allow_none
+ * @param int $user_id
  */
-function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
+function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null): void
 {
     static $album_id_cnt = 0;
 
@@ -784,9 +741,9 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
 
     $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix` FROM `album`";
     $params = array();
-    if ($user !== null) {
+    if ($user_id !== null) {
         $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
-        $params[] = $user;
+        $params[] = $user_id;
     }
     $sql .= "ORDER BY `album`.`name`";
     $db_results = Dba::read($sql, $params);
@@ -819,20 +776,20 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
     if ($count === 0) {
         echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
     }
-} // show_album_select
+}
 
 /**
  * show_artist_select
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
  * @param string $name
- * @param integer $artist_id
- * @param boolean $allow_add
- * @param integer $song_id
- * @param boolean $allow_none
- * @param integer $user_id
+ * @param int $artist_id
+ * @param bool $allow_add
+ * @param int $song_id
+ * @param bool $allow_none
+ * @param int $user_id
  */
-function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
+function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null): void
 {
     static $artist_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -876,19 +833,19 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
     if ($count === 0) {
         echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
     }
-} // show_artist_select
+}
 
 /**
  * show_tvshow_select
  * This is the same as show_album_select except it's *gasp* for tvshows! How
  * inventive!
  * @param string $name
- * @param integer $tvshow_id
- * @param boolean $allow_add
- * @param integer $season_id
- * @param boolean $allow_none
+ * @param int $tvshow_id
+ * @param bool $allow_add
+ * @param int $season_id
+ * @param bool $allow_none
  */
-function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false)
+function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false): void
 {
     static $tvshow_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -922,17 +879,16 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
     }
 
     echo "</select>\n";
-} // show_tvshow_select
+}
 
 /**
  * @param string $name
- * @param $season_id
- * @param boolean $allow_add
- * @param integer $video_id
- * @param boolean $allow_none
- * @return boolean
+ * @param int $season_id
+ * @param bool $allow_add
+ * @param int $video_id
+ * @param bool $allow_none
  */
-function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false)
+function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false): bool
 {
     if (!$season_id) {
         return false;
@@ -980,12 +936,12 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  * @param string $name
- * @param integer $catalog_id
+ * @param int $catalog_id
  * @param string $style
- * @param boolean $allow_none
+ * @param bool $allow_none
  * @param string $filter_type
  */
-function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = '')
+function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = ''): void
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
@@ -1020,17 +976,17 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     } // end while
 
     echo "</select>\n";
-} // show_catalog_select
+}
 
 /**
  * show_album_select
  * This displays a select of every album that we've got in Ampache (which can be hella long).
  * It's used by the Edit page and takes a $name and an $album_id
  * @param string $name
- * @param integer $license_id
- * @param integer $song_id
+ * @param int|null $license_id
+ * @param int|null $song_id
  */
-function show_license_select($name, $license_id = 0, $song_id = 0)
+function show_license_select($name, $license_id = 0, $song_id = 0): void
 {
     static $license_id_cnt = 0;
 
@@ -1065,7 +1021,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0)
 
     echo "</select>\n";
     echo "<a href=\"javascript:show_selected_license_link('" . $key . "');\">" . T_('View License') . "</a>";
-} // show_license_select
+}
 
 /**
  * show_user_select
@@ -1075,7 +1031,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0)
  * @param string $selected
  * @param string $style
  */
-function show_user_select($name, $selected = '', $style = '')
+function show_user_select($name, $selected = '', $style = ''): void
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"-1\">" . T_('All') . "</option>\n";
@@ -1095,9 +1051,9 @@ function show_user_select($name, $selected = '', $style = '')
     } // end while users
 
     echo "</select>\n";
-} // show_user_select
+}
 
-function xoutput_headers()
+function xoutput_headers(): void
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
@@ -1115,9 +1071,9 @@ function xoutput_headers()
 
 /**
  * @param array $array
- * @param boolean $callback
+ * @param bool $callback
  * @param string $type
- * @return false|mixed|string
+ * @return mixed|string
  */
 function xoutput_from_array($array, $callback = false, $type = '')
 {
@@ -1129,29 +1085,17 @@ function xoutput_from_array($array, $callback = false, $type = '')
 
         return $array[$outputnode];
     } else {
-        return json_encode($array);
+        return json_encode($array) ?: '';
     }
 }
-
-/**
- * toggle_visible
- * This is identical to the javascript command that it actually calls
- * @param $element
- */
-function toggle_visible($element)
-{
-    echo '<script>';
-    echo "toggleVisible('$element');";
-    echo "</script>\n";
-} // toggle_visible
 
 /**
  * display_notification
  * Show a javascript notification to the user
  * @param string $message
- * @param integer $timeout
+ * @param int $timeout
  */
-function display_notification($message, $timeout = 5000)
+function display_notification($message, $timeout = 5000): void
 {
     echo "<script>";
     echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE)) . "', " . $timeout . ");";
@@ -1159,29 +1103,11 @@ function display_notification($message, $timeout = 5000)
 }
 
 /**
- * print_bool
- * This function takes a boolean value and then prints out a friendly text
- * message.
- * @param $value
- * @return string
- */
-function print_bool($value)
-{
-    if ($value) {
-        $string = '<span class="item_on">' . T_('On') . '</span>';
-    } else {
-        $string = '<span class="item_off">' . T_('Off') . '</span>';
-    }
-
-    return $string;
-} // print_bool
-
-/**
  * show_now_playing
  * This shows the Now Playing templates and does some garbage collection
  * this should really be somewhere else
  */
-function show_now_playing()
+function show_now_playing(): void
 {
     Session::garbage_collection();
     Stream::garbage_collection();
@@ -1189,20 +1115,20 @@ function show_now_playing()
     $web_path = AmpConfig::get('web_path');
     $results  = Stream::get_now_playing();
     require_once Ui::find_template('show_now_playing.inc.php');
-} // show_now_playing
+}
 
 /**
- * @param boolean $render
- * @param boolean $force
+ * @param bool $render
+ * @param bool $force
  */
-function show_table_render($render = false, $force = false)
+function show_table_render($render = false, $force = false): void
 {
     // Include table render javascript only once
     if ($force || !defined('TABLE_RENDERED')) {
         if (!defined('TABLE_RENDERED')) {
             define('TABLE_RENDERED', 1);
         } ?>
-        <?php if (isset($render) && $render) { ?>
+        <?php if ($render) { ?>
             <script>sortPlaylistRender();</script>
             <?php
         }
@@ -1212,12 +1138,10 @@ function show_table_render($render = false, $force = false)
 /**
  * load_gettext
  * Sets up our local gettext settings.
- *
- * @return boolean
  */
-function load_gettext()
+function load_gettext(): bool
 {
-    $lang   = AmpConfig::get('lang');
+    $lang   = AmpConfig::get('lang', 'en_US');
     $mopath = __DIR__ . '/../../locale/' . $lang . '/LC_MESSAGES/messages.mo';
 
     $gettext = new Translator();
@@ -1228,15 +1152,13 @@ function load_gettext()
     $gettext->register();
 
     return true;
-} // load_gettext
+}
 
 /**
  * T_
  * Translate string
- * @param string $msgid
- * @return string
  */
-function T_($msgid)
+function T_(string $msgid): string
 {
     if (function_exists('__')) {
         return __($msgid);
@@ -1246,15 +1168,15 @@ function T_($msgid)
 }
 
 /**
- * @param $original
- * @param $plural
- * @param $value
- * @return mixed
+ * @param string $original
+ * @param string $plural
+ * @param int|string $value
+ * @return string
  */
 function nT_($original, $plural, $value)
 {
     if (function_exists('n__')) {
-        return n__($original, $plural, $value);
+        return n__($original, $plural, (string)$value);
     }
 
     return $plural;
@@ -1292,13 +1214,13 @@ function get_themes()
     ksort($results);
 
     return $results;
-} // get_themes
+}
 
 /**
  * get_theme
  * get a single theme and read the config file then return the results
  * @param string $name
- * @return array|boolean|false|mixed|null
+ * @return array|bool|false|mixed|null
  */
 function get_theme($name)
 {
@@ -1330,7 +1252,7 @@ function get_theme($name)
     $_mapcache[$name] = $results;
 
     return $results;
-} // get_theme
+}
 
 /**
  * Used in graph class also format string
@@ -1338,27 +1260,10 @@ function get_theme($name)
  * @see \Ampache\Module\Util\Graph
  *
  * @param $value
- * @return string
  */
-function pGraph_Yformat_bytes($value)
+function pGraph_Yformat_bytes($value): string
 {
     return Ui::format_bytes($value);
-}
-
-function get_mime_from_image($data): string
-{
-    switch ($data) {
-        case substr($data, 0, 4) == 'ffd8':
-            return "image/jpeg";
-        case '89504E47':
-            return "image/png";
-        case '47494638':
-            return "image/gif";
-        case substr($data,0, 4) == '424d':
-            return 'image/bmp';
-        default:
-            return 'image/jpeg';
-    }
 }
 
 /**

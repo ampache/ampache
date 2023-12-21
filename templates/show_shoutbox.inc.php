@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -20,16 +23,21 @@
  *
  */
 
-use Ampache\Repository\Model\Shoutbox;
+use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Shoutbox;
+
+/** @var list<Shoutbox> $shouts */
+/** @var ShoutRendererInterface $shoutRenderer */
 
 Ui::show_box_top(T_('Shoutbox')); ?>
 <div id="shoutbox">
 <?php
-  foreach ($shouts as $shout_id) {
-      $shout = new Shoutbox($shout_id); ?>
-<div id="shout<?php echo $shout->id; ?>" class="shout">
-    <?php echo $shout->get_display(true, true); ?>
+  foreach ($shouts as $shout) {?>
+<div id="shout<?php echo $shout->getId(); ?>" class="shout">
+    <?php
+    echo $shoutRenderer->render($shout, true, true);
+      ?>
 </div>
 <?php
   } ?>

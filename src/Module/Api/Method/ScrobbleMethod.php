@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -45,8 +47,6 @@ final class ScrobbleMethod
      * Search for a song using text info and then record a play if found.
      * This allows other sources to record play history to Ampache
      *
-     * @param array $input
-     * @param User $user
      * song       = (string)  $song_name
      * artist     = (string)  $artist_name
      * album      = (string)  $album_name
@@ -55,7 +55,6 @@ final class ScrobbleMethod
      * albummbid  = (string)  $album_mbid //optional
      * date       = (integer) UNIXTIME() //optional
      * client     = (string)  $agent //optional
-     * @return boolean
      */
     public static function scrobble(array $input, User $user): bool
     {
@@ -70,14 +69,14 @@ final class ScrobbleMethod
         $song_mbid   = html_entity_decode(scrub_out($input['song_mbid'] ?? $input['songmbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $artist_mbid = html_entity_decode(scrub_out($input['artist_mbid'] ?? $input['artistmbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $album_mbid  = html_entity_decode(scrub_out($input['album_mbid'] ?? $input['albummbid'] ?? ''), ENT_QUOTES, $charset); //optional
-        $date        = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
-        $user_id     = $user->id ?? 0;
+        $date        = (array_key_exists('date', $input) && is_numeric(scrub_in((string) $input['date']))) ? (int) scrub_in((string) $input['date']) : time(); //optional
+        $user_id     = $user->id;
         $valid       = in_array($user_id, static::getUserRepository()->getValid());
 
         // validate supplied user
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $user_id), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $user_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'empty', $input['api_format']);
 
             return false;
         }
@@ -85,22 +84,22 @@ final class ScrobbleMethod
         // validate minimum required options
         debug_event(self::class, 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
 
             return false;
         }
 
         // validate client string or fall back to 'api'
-        $agent       = (string)(scrub_in($input['client']) ?? 'api');
+        $agent       = scrub_in((string)($input['client'] ?? 'api'));
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
 
         if ($scrobble_id === '') {
-            Api::error(T_('Not Found'), '4704', self::ACTION, 'song', $input['api_format']);
+            Api::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
         } else {
             $media = new Song((int) $scrobble_id);
-            if (!$media->id) {
+            if ($media->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $scrobble_id), '4704', self::ACTION, 'song', $input['api_format']);
+                Api::error(sprintf(T_('Not Found: %s'), $scrobble_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
 
                 return false;
             }

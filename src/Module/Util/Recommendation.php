@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
@@ -43,10 +44,9 @@ class Recommendation
      * @param string $method
      * @param string $query
      * @return SimpleXMLElement
-     *
      * @throws LastFmQueryFailedException
      */
-    public static function get_lastfm_results($method, $query)
+    public static function get_lastfm_results($method, $query): SimpleXMLElement
     {
         global $dic;
 
@@ -58,7 +58,7 @@ class Recommendation
      *
      * This cleans out old recommendations cache
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         Dba::write("DELETE FROM `recommendation` WHERE `last_update` < ? OR ((`object_type` = 'song' AND `object_id` NOT IN (SELECT `id` FROM `song`)) OR (`object_type` = 'artist' AND `object_id` NOT IN (SELECT `id` FROM `artist`)) OR (`object_type` = 'album' AND `object_id` NOT IN (SELECT `id` FROM `album`)));", array((time() - 31556952)));
         Dba::write("UPDATE `recommendation_item` SET `mbid` = NULL WHERE `mbid` = '';");
@@ -66,10 +66,9 @@ class Recommendation
 
     /**
      * @param string $object_type
-     * @param integer $object_id
-     * @return bool
+     * @param int $object_id
      */
-    public static function has_recommendation_cache($object_type, $object_id)
+    public static function has_recommendation_cache($object_type, $object_id): bool
     {
         $sql        = "SELECT `id` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($object_type, $object_id));
@@ -83,8 +82,8 @@ class Recommendation
 
     /**
      * @param string $type
-     * @param integer $object_id
-     * @param boolean $get_items
+     * @param int $object_id
+     * @param bool $get_items
      * @return array
      */
     protected static function get_recommendation_cache($type, $object_id, $get_items = false)
@@ -118,7 +117,7 @@ class Recommendation
     /**
      * delete_recommendation_cache
      * @param string $type
-     * @param integer $object_id
+     * @param int $object_id
      */
     protected static function delete_recommendation_cache($type, $object_id)
     {
@@ -132,7 +131,7 @@ class Recommendation
     /**
      * update_recommendation_cache
      * @param string $type
-     * @param integer $object_id
+     * @param int $object_id
      * @param $recommendations
      */
     protected static function update_recommendation_cache($type, $object_id, $recommendations)
@@ -158,9 +157,9 @@ class Recommendation
     /**
      * get_songs_like
      * Returns a list of similar songs
-     * @param integer $song_id
-     * @param integer $limit
-     * @param boolean $local_only
+     * @param int $song_id
+     * @param int $limit
+     * @param bool $local_only
      * @return array
      */
     public static function get_songs_like($song_id, $limit = 5, $local_only = true)
@@ -171,10 +170,10 @@ class Recommendation
 
         $song     = new Song($song_id);
         $artist   = new Artist($song->artist);
-        $fullname = $artist->get_fullname();
+        $fullname = (string)$artist->get_fullname();
         $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
-        if (isset($song->mbid)) {
+        if (!empty($song->mbid)) {
             $query = 'mbid=' . rawurlencode($song->mbid);
         }
 
@@ -249,9 +248,9 @@ class Recommendation
     /**
      * get_artists_like
      * Returns a list of similar artists
-     * @param integer $artist_id
-     * @param integer $limit
-     * @param boolean $local_only
+     * @param int $artist_id
+     * @param int $limit
+     * @param bool $local_only
      * @return array
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
@@ -264,7 +263,7 @@ class Recommendation
         if (!array_key_exists('id', $cache)) {
             $artist   = new Artist($artist_id);
             $similars = array();
-            $fullname = $artist->get_fullname();
+            $fullname = (string)$artist->get_fullname();
             $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
             try {
@@ -346,7 +345,7 @@ class Recommendation
         }
 
         return $results;
-    } // get_artists_like
+    }
 
     /**
      * get_artist_info_by_name
@@ -366,19 +365,22 @@ class Recommendation
             return $results;
         }
 
-        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
-            (string)$xml->artist->bio->summary));
+        $results['summary'] = strip_tags(preg_replace(
+            "#<a href=([^<]*)Last\.fm</a>.#",
+            "",
+            (string)$xml->artist->bio->summary
+        ));
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (string)$xml->artist->bio->placeformed;
         $results['yearformed']  = (string)$xml->artist->bio->yearformed;
 
         return $results;
-    } // get_artist_info_by_name
+    }
 
     /**
      * get_artist_info
      * Returns artist information
-     * @param integer $artist_id
+     * @param int $artist_id
      * @return array
      */
     public static function get_artist_info($artist_id)
@@ -386,7 +388,7 @@ class Recommendation
         $artist = new Artist($artist_id);
         $query  = ($artist->mbid)
             ? 'mbid=' . rawurlencode($artist->mbid)
-            : 'artist=' . rawurlencode($artist->get_fullname());
+            : 'artist=' . rawurlencode((string)$artist->get_fullname());
 
         // Data newer than 6 months, use it
         if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
@@ -410,16 +412,23 @@ class Recommendation
         }
 
         $results            = array();
-        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
-            ($xml->artist->bio->summary ?? '')));
+        $results['summary'] = strip_tags(preg_replace(
+            "#<a href=([^<]*)Last\.fm</a>.#",
+            "",
+            ($xml->artist->bio->summary ?? '')
+        ));
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
-        $results['placeformed'] = ($xml->artist->bio->placeformed ?? '');
-        $results['yearformed']  = ($xml->artist->bio->yearformed ?? '');
+        $results['placeformed'] = (isset($xml->artist->bio->yearformed))
+            ? (string)$xml->artist->bio->placeformed
+            : null;
+        $results['yearformed'] = (isset($xml->artist->bio->yearformed))
+            ? (int)$xml->artist->bio->yearformed
+            : null;
 
-        if ($artist->id) {
+        if ($artist->isNew() === false) {
             $results['id'] = $artist->id;
             if (!empty($results['summary'])) {
-                $artist->update_artist_info($results['summary'], $results['placeformed'], (int)$results['yearformed']);
+                $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
             }
             $results['largephoto']  = Art::url($artist->id, 'artist', null, 174);
             $results['smallphoto']  = Art::url($artist->id, 'artist', null, 34);
@@ -428,12 +437,12 @@ class Recommendation
         }
 
         return $results;
-    } // get_artist_info
+    }
 
     /**
      * get_album_info
      * Returns album information
-     * @param integer $album_id
+     * @param int $album_id
      * @return array
      */
     public static function get_album_info($album_id)
@@ -441,7 +450,7 @@ class Recommendation
         $album = new Album($album_id);
         $query = ($album->mbid)
             ? 'mbid=' . rawurlencode($album->mbid)
-            : 'artist=' . rawurlencode($album->get_artist_fullname()) . '&album=' . rawurlencode($album->get_fullname());
+            : 'artist=' . rawurlencode((string)$album->get_artist_fullname()) . '&album=' . rawurlencode((string)$album->get_fullname());
 
         $results = array(
             'id' => $album_id,
@@ -458,11 +467,14 @@ class Recommendation
             return $results;
         }
 
-        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
-            ($xml->album->wiki->summary ?? '')));
-        $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
+        $results['summary'] = strip_tags(preg_replace(
+            "#<a href=([^<]*)Last\.fm</a>.#",
+            "",
+            ($xml->album->wiki->summary ?? '')
+        ));
+        $results['summary'] = str_replace("Read more on Last.fm", "", $results['summary']);
 
-        if ($album->id) {
+        if ($album->isNew() === false) {
             $results['id']          = $album->id;
             $results['largephoto']  = Art::url($album->id, 'album', null, 174);
             $results['smallphoto']  = Art::url($album->id, 'album', null, 34);
@@ -471,14 +483,14 @@ class Recommendation
         }
 
         return $results;
-    } // get_album_info
+    }
 
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
+     * @param int $old_object_id
      */
-    public static function migrate($object_type, $old_object_id)
+    public static function migrate($object_type, $old_object_id): void
     {
         self::delete_recommendation_cache($object_type, $old_object_id);
     }

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
@@ -44,22 +45,21 @@ class User_Playlist extends database_object
      * This takes a user_id as an optional argument and gathers the
      * information.  If no user_id is passed or the requested one isn't
      * found, return false.
-     * @param int $user_id
+     * @param int|null $user_id
+     * @param string|null $client
      */
-    public function __construct($user_id, $client = null)
+    public function __construct($user_id = 0, $client = null)
     {
         if (!$user_id) {
-            return false;
+            return;
         }
         $client = $client ?? $this->get_latest();
         if (empty($client)) {
-            return false;
+            return;
         }
         $this->user   = (int)$user_id;
-        $this->client = substr($client ?? $this->get_latest(), 0, 254);
-
-        return true;
-    } // __construct
+        $this->client = substr($client, 0, 254);
+    }
 
     /**
      * get_current_object
@@ -70,7 +70,7 @@ class User_Playlist extends database_object
     {
         $items = array();
         // Select the current object for this user
-        $sql        = "SELECT `object_type`, `object_id`, `track`, `current_track`, `current_time` FROM `user_playlist` WHERE `user`= ? AND `current_track` = 1 LIMIT 1";
+        $sql        = "SELECT `object_type`, `object_id`, `track`, `current_track`, `current_time` FROM `user_playlist` WHERE `user` = ? AND `current_track` = 1 LIMIT 1";
         $db_results = Dba::read($sql, array($this->user));
 
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -85,7 +85,7 @@ class User_Playlist extends database_object
         }
 
         return $items;
-    } // get_current_object
+    }
 
     /**
      * set_current_object
@@ -102,7 +102,7 @@ class User_Playlist extends database_object
         // set the new one
         $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `object_id` = ? AND `user` = ? LIMIT 1";
         Dba::write($sql, array($position, $object_type, $object_id, $this->user));
-    } // set_current_object
+    }
 
     /**
      * set_current_id
@@ -119,28 +119,26 @@ class User_Playlist extends database_object
         // set the new one
         $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `track` = ? AND `user` = ? LIMIT 1";
         Dba::write($sql, array($position, $object_type, $track, $this->user));
-    } // set_current_object
+    }
 
     /**
      * get_count
      * This returns a count of the total number of tracks that are in this playlist
-     * @return int
      */
-    public function get_count()
+    public function get_count(): int
     {
         $sql        = "SELECT MAX(`track`) AS `count` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
         $db_results = Dba::read($sql, array($this->user, $this->client));
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['count'];
-    } // get_count
+    }
 
     /**
      * get_time
      * This returns a count of the total number of tracks that are in this playlist
-     * @return int
      */
-    public function get_time()
+    public function get_time(): int
     {
         $sql        = "SELECT DISTINCT(`playqueue_time`) AS `time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
         $db_results = Dba::read($sql, array($this->user, $this->client));
@@ -150,21 +148,20 @@ class User_Playlist extends database_object
         }
 
         return (int)$results['time'];
-    } // get_count
+    }
 
     /**
      * get_latest
      * get the most recent playqueue for the user
-     * @return string
      */
-    public function get_latest()
+    public function get_latest(): string
     {
         $sql        = "SELECT MAX(`playqueue_time`) AS `time`, `playqueue_client`, `user` FROM `user_playlist` WHERE `user` = ? GROUP BY `playqueue_client`, `user`";
         $db_results = Dba::read($sql, array($this->user));
         $results    = Dba::fetch_assoc($db_results);
 
         return $results['playqueue_client'] ?? '';
-    } // get_count
+    }
 
     /**
      * clear
@@ -174,7 +171,7 @@ class User_Playlist extends database_object
     {
         $sql = "DELETE FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
         Dba::write($sql, array($this->user, $this->client));
-    } // clear
+    }
 
     /**
      * add_items
@@ -197,7 +194,7 @@ class User_Playlist extends database_object
         $sql = substr($sql, 0, -1) . ';';
 
         return Dba::write($sql, $values);
-    } // add_item
+    }
 
     /**
      * set_items
@@ -221,7 +218,7 @@ class User_Playlist extends database_object
             User::set_user_data($this->user, 'playqueue_time', $time);
             User::set_user_data($this->user, 'playqueue_client', $this->client);
         }
-    } // set_items
+    }
 
     /**
      * get_items
@@ -247,5 +244,5 @@ class User_Playlist extends database_object
         }
 
         return $items;
-    } // get_items
+    }
 }

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Playlist;
 
@@ -74,11 +75,11 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 }
                 $items = array();
                 foreach ($ids as $playlist_id) {
-                    $searchId   = (int)str_replace('smart_', '', $playlist_id);
-                    $playlist   = ($user->id)
+                    $searchId = (int)str_replace('smart_', '', $playlist_id);
+                    $playlist = ($user->id)
                         ? new Search($searchId, 'song', $user)
                         : new Search($searchId);
-                    if ($playlist->id) {
+                    if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
                 }
@@ -88,12 +89,12 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 if ((int)$playlistId < 1) {
                     $ids = Playlist::get_playlists($userId);
                 } else {
-                    $ids = array($playlistId);
+                    $ids = array((int)$playlistId);
                 }
                 $items = array();
                 foreach ($ids as $playlist_id) {
                     $playlist = new Playlist($playlist_id);
-                    if ($playlist->id) {
+                    if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
                 }
@@ -103,7 +104,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
 
         foreach ($items as $item) {
             $item->format();
-            $name = $item->get_fullname();
+            $name = (string)$item->get_fullname();
             // We don't know about file system encoding / specificity
             // For now, we only keep simple characters to be sure it will work everywhere
             $name       = preg_replace('/[:]/', '.', $name);
@@ -116,7 +117,10 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 ? ''
                 : $dirname;
             foreach ($medias as $media) {
-                $pl->urls[] = Stream_Playlist::media_to_url($media, $media_path, $urltype, $user);
+                $url = Stream_Playlist::media_to_url($media, $media_path, $urltype, $user);
+                if ($url !== null) {
+                    $pl->urls[] = $url;
+                }
             }
 
             $plstr = $pl->{'get_' . $ext . '_string'}();

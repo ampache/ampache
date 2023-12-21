@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
@@ -56,7 +57,7 @@ class ShowActionTest extends MockeryTestCase
 
     private ?ShowAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
@@ -99,9 +100,6 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturn($artist);
 
-        $artist->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
         $artist->shouldReceive('isNew')
             ->withNoArgs()
             ->once()
@@ -145,10 +143,10 @@ class ShowActionTest extends MockeryTestCase
             ->with(
                 'show_artist.inc.php',
                 [
-                    'multi_object_ids' => $multi_object_ids,
-                    'object_ids' => null,
-                    'object_type' => $objectType,
                     'artist' => $artist,
+                    'object_type' => $objectType,
+                    'object_ids' => [],
+                    'multi_object_ids' => $multi_object_ids,
                     'gatekeeper' => $gatekeeper,
                 ]
             )
@@ -219,10 +217,10 @@ class ShowActionTest extends MockeryTestCase
             ->with(
                 'show_artist.inc.php',
                 [
-                    'multi_object_ids' => null,
-                    'object_ids' => $object_ids,
-                    'object_type' => $objectType,
                     'artist' => $artist,
+                    'object_type' => $objectType,
+                    'object_ids' => $object_ids,
+                    'multi_object_ids' => [],
                     'gatekeeper' => $gatekeeper,
                 ]
             )

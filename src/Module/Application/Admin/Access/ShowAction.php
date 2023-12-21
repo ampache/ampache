@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
@@ -60,20 +61,21 @@ final class ShowAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
+        $items       = [];
+        $accessItems = $this->accessRepository->getAccessLists();
 
+        foreach ($accessItems as $accessItem) {
+            $items[] = new Lib\AccessListItem(
+                $this->modelFactory,
+                $accessItem
+            );
+        }
+
+        $this->ui->showHeader();
         $this->ui->show(
             'show_access_list.inc.php',
             [
-                'list' => array_map(
-                    function (int $accessId): Lib\AccessListItemInterface {
-                        return new Lib\AccessListItem(
-                            $this->modelFactory,
-                            $this->modelFactory->createAccess($accessId)
-                        );
-                    },
-                    $this->accessRepository->getAccessLists()
-                )
+                'list' => $items,
             ]
         );
 

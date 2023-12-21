@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\Album;
@@ -41,6 +42,7 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Repository\Model\TVShow_Season;
@@ -74,6 +76,7 @@ final class ObjectTypeToClassNameMapper
         'search' => Search::class,
         'share' => Share::class,
         'song' => Song::class,
+        'song_preview' => Song_Preview::class,
         'tag_hidden' => Tag::class,
         'tag' => Tag::class,
         'tvshow_episode' => TVShow_Episode::class,
@@ -92,13 +95,13 @@ final class ObjectTypeToClassNameMapper
         Video::class => 'video',
     ];
 
-    public static function map(string $object_type)
+    public static function map(string $object_type): string
     {
         return self::OBJECT_TYPE_MAPPING[strtolower($object_type)] ?? $object_type;
     }
 
-    public static function reverseMap(string $class_name): string
+    public static function reverseMap(string $className): string
     {
-        return array_flip(self::OBJECT_TYPE_MAPPING)[$class_name] ?? $class_name;
+        return array_flip(self::OBJECT_TYPE_MAPPING)[$className] ?? $className;
     }
 }

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,10 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Batch;
 
+use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -36,7 +39,6 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,6 +48,8 @@ final class DefaultAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'default';
 
+    private RequestParserInterface $requestParser;
+
     private ModelFactoryInterface $modelFactory;
 
     private LoggerInterface $logger;
@@ -54,23 +58,21 @@ final class DefaultAction implements ApplicationActionInterface
 
     private FunctionCheckerInterface $functionChecker;
 
-    private AlbumRepositoryInterface $albumRepository;
-
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ZipHandlerInterface $zipHandler,
         FunctionCheckerInterface $functionChecker,
-        AlbumRepositoryInterface $albumRepository,
         SongRepositoryInterface $songRepository
     ) {
+        $this->requestParser   = $requestParser;
         $this->modelFactory    = $modelFactory;
         $this->logger          = $logger;
         $this->zipHandler      = $zipHandler;
         $this->functionChecker = $functionChecker;
-        $this->albumRepository = $albumRepository;
         $this->songRepository  = $songRepository;
     }
 
@@ -90,10 +92,10 @@ final class DefaultAction implements ApplicationActionInterface
         $media_ids    = [];
         $default_name = 'Unknown';
         $name         = $default_name;
-        $action       = (string) scrub_in(Core::get_request('action'));
+        $action       = $this->requestParser->getFromRequest('action');
         $flat_path    = (in_array($action, array('browse', 'playlist', 'tmp_playlist')));
         $object_type  = ($action == 'browse')
-            ? (string) scrub_in(Core::get_request('type'))
+            ? $this->requestParser->getFromRequest('type')
             : $action;
 
         if (!$this->zipHandler->isZipable($object_type)) {
@@ -105,22 +107,21 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         if (InterfaceImplementationChecker::is_playable_item($object_type)) {
-            $object_id = $_REQUEST['id'] ?? array();
-            if (!is_array($object_id)) {
-                $object_id = [$object_id];
-            }
-            foreach ($object_id as $item) {
-                $this->logger->debug(
-                    'Requested item ' . $item,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-                $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                $libitem    = new $class_name($item);
-                if ($libitem->id) {
+            $object_id = (int)$this->requestParser->getFromRequest('id');
+            $this->logger->debug(
+                'Requested item ' . $object_id,
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+
+            $className = ObjectTypeToClassNameMapper::map($object_type);
+            /** @var class-string<library_item> $className */
+            $libitem = new $className($object_id);
+            if ($libitem->isNew() === false) {
+                if (method_exists($libitem, 'format')) {
                     $libitem->format();
-                    $name      = $libitem->get_fullname();
-                    $media_ids = array_merge($media_ids, $libitem->get_medias());
                 }
+                $name      = (string)$libitem->get_fullname();
+                $media_ids = array_merge($media_ids, $libitem->get_medias());
             }
         } else {
             // Switch on the actions
@@ -130,7 +131,7 @@ final class DefaultAction implements ApplicationActionInterface
                     $name      = Core::get_global('user')->username . ' - Playlist';
                     break;
                 case 'browse':
-                    $object_id        = (int)Core::get_request('browse_id');
+                    $object_id        = (int)$this->requestParser->getFromRequest('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
                     $browse_media_ids = $browse->get_saved();
                     foreach ($browse_media_ids as $media_id) {
@@ -156,7 +157,7 @@ final class DefaultAction implements ApplicationActionInterface
             }
         }
 
-        if (!User::stream_control($media_ids)) {
+        if (!defined('NO_SESSION') && !User::stream_control($media_ids)) {
             $this->logger->notice(
                 'Access denied: Stream control failed for user ' . Core::get_global('user')->username,
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -198,28 +199,33 @@ final class DefaultAction implements ApplicationActionInterface
                     $type    = array_shift($element);
                     $mediaid = array_shift($element);
                 }
-                $class_name = ObjectTypeToClassNameMapper::map($type);
-                $media      = new $class_name($mediaid);
+                $className = ObjectTypeToClassNameMapper::map($type);
+                /** @var class-string<library_item> $className */
+                $media = new $className($mediaid);
             } else {
                 $media = $this->modelFactory->createSong((int) $element);
             }
             if ($media->enabled) {
-                $total_size = $total_size + (int)$media->size;
+                $total_size = ((int)$total_size) + ($media->size ?? 0);
                 $dirname    = '';
                 $parent     = $media->get_parent();
                 if ($parent != null) {
-                    $class_name = ObjectTypeToClassNameMapper::map($parent['object_type']);
-                    $pobj       = new $class_name($parent['object_id']);
+                    $className = ObjectTypeToClassNameMapper::map($parent['object_type']);
+                    /** @var class-string<library_item> $className */
+                    $pobj = new $className($parent['object_id']);
                     $pobj->format();
-                    $dirname = $pobj->get_fullname();
+                    $dirname = (string)$pobj->get_fullname();
                 }
-                if (!array_key_exists($dirname, $media_files)) {
+                if (!empty($dirname) && !array_key_exists($dirname, $media_files)) {
                     $media_files[$dirname] = [];
                 }
                 $media_files[$dirname][] = Core::conv_lc_file($media->file);
             }
         }
 
-        return array($media_files, $total_size);
+        return array(
+            $media_files,
+            $total_size
+        );
     }
 }

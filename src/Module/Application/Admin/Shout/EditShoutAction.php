@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,38 +23,36 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Shout;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Edits a ShoutBox item
+ */
 final class EditShoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'edit_shout';
 
     private UiInterface $ui;
 
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
+    private ShoutRepositoryInterface $shoutRepository;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ShoutRepositoryInterface $shoutRepository
     ) {
         $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
+        $this->shoutRepository = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -60,28 +61,24 @@ final class EditShoutAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
+        $requestData = $request->getParsedBody();
+        $shoutId     = (int) ($requestData['shout_id'] ?? 0);
 
-        $data  = $request->getParsedBody();
-        $shout = $this->modelFactory->createShoutbox(
-            (int)(filter_var($data['shout_id'], FILTER_SANITIZE_NUMBER_INT) ?? 0)
-        );
-
-        if ($shout->id) {
-            $data['comment'] = (array_key_exists('license_id', $data))
-                ? filter_var($data['comment'], FILTER_SANITIZE_STRING)
-                : '';
-            $data['sticky']  = (array_key_exists('license_id', $data))
-                ? filter_var($data['sticky'], FILTER_SANITIZE_STRING)
-                : '';
-            $shout->update($data);
+        $shout = $this->shoutRepository->findById($shoutId);
+        if ($shout === null) {
+            throw new ObjectNotFoundException($shoutId);
         }
+
+        $shout->setText($requestData['comment'] ?? '');
+        $shout->setSticky((bool) ($requestData['sticky'] ?? ''));
+        $shout->save();
+
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Shoutbox post has been updated'),
-            sprintf('%s/admin/shout.php', $this->configContainer->getWebPath())
+            'admin/shout.php'
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

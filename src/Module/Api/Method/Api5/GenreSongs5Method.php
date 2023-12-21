@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Repository\Model\Tag;
@@ -36,7 +36,7 @@ use Ampache\Module\Api\Xml5_Data;
  */
 final class GenreSongs5Method
 {
-    const ACTION = 'genre_songs';
+    public const ACTION = 'genre_songs';
 
     /**
      * genre_songs
@@ -44,16 +44,13 @@ final class GenreSongs5Method
      *
      * returns the songs for this genre
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Genre //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function genre_songs(array $input, User $user): bool
     {
-        $results = Tag::get_tag_objects('song', ($input['filter'] ?? ''));
+        $results = Tag::get_tag_objects('song', (int)($input['filter'] ?? 0));
         if (empty($results)) {
             Api5::empty('song', $input['api_format']);
 

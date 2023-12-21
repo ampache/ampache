@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Repository\Model\Art;
@@ -38,7 +38,9 @@ final class DbCollectorModule implements CollectorModuleInterface
         array $data = []
     ): array {
         if ($art->has_db_info()) {
-            return ['db' => true];
+            return [
+                'db' => true
+            ];
         }
 
         return [];

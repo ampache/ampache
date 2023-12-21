@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
@@ -55,7 +55,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
      * This function gathers art from the spotify catalog
      *
      * @param Art $art
-     * @param integer $limit
+     * @param int $limit
      * @param array $data
      *
      * @return array
@@ -121,7 +121,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             if (key_exists('search_limit', $data)) {
                 $limit = $data['search_limit'];
                 if (key_exists('artist', $data) && !empty($artist_str)) {
-                    $filter[]= 'artist';
+                    $filter[] = 'artist';
                 }
                 if (key_exists('year_filter', $data)) {
                     $filter[] = $data['year_filter'];

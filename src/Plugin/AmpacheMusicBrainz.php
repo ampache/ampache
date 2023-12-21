@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -35,15 +37,15 @@ use MusicBrainz\Filters\LabelFilter;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
-class AmpacheMusicBrainz
+class AmpacheMusicBrainz implements AmpachePluginInterface
 {
-    public $name        = 'MusicBrainz';
-    public $categories  = 'metadata';
-    public $description = 'MusicBrainz metadata integration';
-    public $url         = 'http://www.musicbrainz.org';
-    public $version     = '000003';
-    public $min_ampache = '360003';
-    public $max_ampache = '999999';
+    public string $name        = 'MusicBrainz';
+    public string $categories  = 'metadata';
+    public string $description = 'MusicBrainz metadata integration';
+    public string $url         = 'http://www.musicbrainz.org';
+    public string $version     = '000003';
+    public string $min_ampache = '360003';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     public $overwrite_name;
@@ -55,37 +57,35 @@ class AmpacheMusicBrainz
     public function __construct()
     {
         $this->description = T_('MusicBrainz metadata integration');
-
-        return true;
     }
 
     /**
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
-        Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+        if (!Preference::exists('mb_overwrite_name') && !Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('mb_overwrite_name');
-
         return true;
-    } // uninstall
+    }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version == 0) {
@@ -109,9 +109,8 @@ class AmpacheMusicBrainz
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -123,24 +122,24 @@ class AmpacheMusicBrainz
         $this->overwrite_name = (bool)$data['mb_overwrite_name'];
 
         return true;
-    } // load
+    }
 
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
      * @param array $gather_types
-     * @param array $song_info
-     * @return array|null
+     * @param array $media_info
+     * @return array
      */
-    public function get_metadata($gather_types, $song_info)
+    public function get_metadata($gather_types, $media_info)
     {
         // Music metadata only
         if (!in_array('music', $gather_types)) {
-            return null;
+            return array();
         }
 
-        if (!$mbid = $song_info['mb_trackid']) {
-            return null;
+        if (!$mbid = $media_info['mb_trackid']) {
+            return array();
         }
 
         $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
@@ -153,7 +152,7 @@ class AmpacheMusicBrainz
         } catch (Exception $error) {
             debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
-            return null;
+            return array();
         }
 
         $results = array();
@@ -171,7 +170,7 @@ class AmpacheMusicBrainz
         }
 
         return $results;
-    } // get_metadata
+    }
 
     /**
      * get_external_metadata
@@ -180,7 +179,7 @@ class AmpacheMusicBrainz
      * @param string $object_type
      * @return bool
      */
-    public function get_external_metadata($object, string $object_type)
+    public function get_external_metadata($object, string $object_type): bool
     {
         $valid_types = array('label', 'artist');
         // Artist metadata only for now
@@ -192,7 +191,7 @@ class AmpacheMusicBrainz
 
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
         $results = array();
-        if (Vainfo::is_mbid($object->mbid)) {
+        if ($object->mbid !== null && VaInfo::is_mbid($object->mbid)) {
             try {
                 $results = $mbrainz->lookup($object_type, $object->mbid);
             } catch (Exception $error) {
@@ -253,7 +252,7 @@ class AmpacheMusicBrainz
                     );
 
                     // when you come in with an mbid you might want to keep the name updated
-                    if ($this->overwrite_name && Vainfo::is_mbid($object->mbid) && $data['name'] !== $object->get_fullname()) {
+                    if ($this->overwrite_name && $object->mbid !== null && VaInfo::is_mbid($object->mbid) && $data['name'] !== $object->get_fullname()) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         $object->prefix = $name_check['prefix'];
                         $object->name   = $name_check['name'];
@@ -269,7 +268,7 @@ class AmpacheMusicBrainz
         }
 
         return false;
-    } // get_external_metadata
+    }
 
     /**
      * get_artist
@@ -283,7 +282,7 @@ class AmpacheMusicBrainz
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
         $results = array();
         $data    = array();
-        if (Vainfo::is_mbid($mbid)) {
+        if (VaInfo::is_mbid($mbid)) {
             try {
                 $results = $mbrainz->lookup('artist', $mbid);
             } catch (Exception $error) {
@@ -303,5 +302,5 @@ class AmpacheMusicBrainz
         }
 
         return $data;
-    } // get_artist
+    }
 }

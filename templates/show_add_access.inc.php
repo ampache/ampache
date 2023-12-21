@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -26,14 +29,17 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var string $add_type */
+
 Ui::show_box_top(T_('Add Access Control List'), 'box box_add_access');
 echo AmpError::display('general');
 $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');
 $streamaccess = T_('Stream Access');
 $all          = T_('All');
-
-/** @var string $add_type */ ?>
+$current_ip   = !filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
+    ? ''
+    : (string)filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP); ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
     <table class="tabledata">
         <tr>
@@ -97,7 +103,7 @@ $all          = T_('All');
                     <?php echo AmpError::display('start'); ?>
                     <input type="text" name="start" value="<?php
                         if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
-                            echo scrub_out(filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP));
+                            echo scrub_out($current_ip);
                         } else {
                             echo scrub_out(Core::get_request('start'));
                         } ?>" /></td>
@@ -106,7 +112,7 @@ $all          = T_('All');
                     <?php echo AmpError::display('end'); ?>
                     <input type="text" name="end" value="<?php
                             if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
-                                echo scrub_out(filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP));
+                                echo scrub_out($current_ip);
                             } else {
                                 echo scrub_out(Core::get_request('end'));
                             } ?>" /></td>

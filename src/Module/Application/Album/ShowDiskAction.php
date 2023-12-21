@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -34,7 +35,6 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -51,8 +51,6 @@ final class ShowDiskAction implements ApplicationActionInterface
 
     private PrivilegeCheckerInterface $privilegeChecker;
 
-    private AlbumRepositoryInterface $albumRepository;
-
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
@@ -60,14 +58,12 @@ final class ShowDiskAction implements ApplicationActionInterface
         UiInterface $ui,
         LoggerInterface $logger,
         PrivilegeCheckerInterface $privilegeChecker,
-        AlbumRepositoryInterface $albumRepository,
         ConfigContainerInterface $configContainer
     ) {
         $this->modelFactory     = $modelFactory;
         $this->ui               = $ui;
         $this->logger           = $logger;
         $this->privilegeChecker = $privilegeChecker;
-        $this->albumRepository  = $albumRepository;
         $this->configContainer  = $configContainer;
     }
 
@@ -78,7 +74,6 @@ final class ShowDiskAction implements ApplicationActionInterface
         $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
 
         $albumDisk = $this->modelFactory->createAlbumDisk($albumDiskId);
-        $albumDisk->format();
 
         if ($albumDisk->isNew()) {
             $this->logger->warning(
@@ -87,6 +82,7 @@ final class ShowDiskAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
+            $albumDisk->format();
             $this->ui->show(
                 'show_album_disk.inc.php',
                 [

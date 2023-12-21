@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -46,8 +46,6 @@ final class GetIndexes4Method
      *
      * This takes a collection of inputs and returns ID + name for the object type
      *
-     * @param array $input
-     * @param User $user
      * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
@@ -57,7 +55,6 @@ final class GetIndexes4Method
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * @return boolean
      */
     public static function get_indexes(array $input, User $user): bool
     {
@@ -104,7 +101,7 @@ final class GetIndexes4Method
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
         if ($type == 'playlist') {
-            $browse->set_filter('playlist_type', $user->id);
+            $browse->set_filter('playlist_type', 1);
             if (!$hide) {
                 $results = array_merge($browse->get_objects(), Playlist::get_smartlists($user->id));
             } else {
@@ -128,5 +125,5 @@ final class GetIndexes4Method
         }
 
         return true;
-    } // get_indexes
+    }
 }

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Radio;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -33,7 +34,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -69,7 +69,7 @@ final class CreateAction implements ApplicationActionInterface
 
         // Try to create the sucker
         if (!Live_Stream::create($_POST)) {
-            require_once Ui::find_template('show_add_live_stream.inc.php');
+            $this->ui->show('show_add_live_stream.inc.php');
         } else {
             Catalog::update_mapping('live_stream');
             $body  = T_('Radio Station created');

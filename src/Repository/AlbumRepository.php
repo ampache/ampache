@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,19 +20,28 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 
 final class AlbumRepository implements AlbumRepositoryInterface
 {
+    private DatabaseConnectionInterface $connection;
+
+    public function __construct(
+        DatabaseConnectionInterface $connection
+    ) {
+        $this->connection = $connection;
+    }
+
     /**
      * This returns a number of random albums
      *
@@ -199,14 +211,12 @@ final class AlbumRepository implements AlbumRepositoryInterface
      * Deletes the album entry
      */
     public function delete(
-        int $albumId
-    ): bool {
-        $result = Dba::write(
+        Album $album
+    ): void {
+        $this->connection->query(
             'DELETE FROM `album` WHERE `id` = ?',
-            [$albumId]
+            [$album->getId()]
         );
-
-        return $result !== false;
     }
 
     /**
@@ -215,87 +225,16 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function collectGarbage(): void
     {
         // delete old mappings or bad ones
-        Dba::write("DELETE FROM `album_map` WHERE `object_type` = 'album' AND `album_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);");
-        Dba::write("DELETE FROM `album_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`);");
-        Dba::write("DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`);");
-        Dba::write("DELETE FROM `album_map` WHERE `album_map`.`album_id` IN (SELECT `album_id` FROM (SELECT DISTINCT `album_map`.`album_id` FROM `album_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `album_map`.`object_type` AND `artist_map`.`artist_id` = `album_map`.`object_id` AND `artist_map`.`object_id` = `album_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `album_map`.`object_type` = 'album') AS `null_album`);");
+        $this->connection->query('DELETE FROM `album_map` WHERE `object_type` = \'album\' AND `album_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL)');
+        $this->connection->query('DELETE FROM `album_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`)');
+        $this->connection->query('DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`)');
+        $this->connection->query('DELETE FROM `album_map` WHERE `album_map`.`album_id` IN (SELECT `album_id` FROM (SELECT DISTINCT `album_map`.`album_id` FROM `album_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `album_map`.`object_type` AND `artist_map`.`artist_id` = `album_map`.`object_id` AND `artist_map`.`object_id` = `album_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `album_map`.`object_type` = \'album\') AS `null_album`)');
+
         // delete the albums that don't have any songs left
-        Dba::write("DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `album_map`);");
+        $this->connection->query('DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `album_map`)');
+
         // delete old album_disks that shouldn't exist
-        Dba::write("DELETE FROM `album_disk` WHERE `album_id` NOT IN (SELECT `id` FROM `album`);");
-    }
-
-    /**
-     * Get time for an album disk by album.
-     */
-    public function getAlbumDuration(int $albumId): int
-    {
-        $db_results = Dba::read(
-            'SELECT `time` FROM `album` WHERE `album`.`id` = ?',
-            [$albumId]
-        );
-
-        $results = Dba::fetch_assoc($db_results);
-
-        return (int) $results['time'];
-    }
-
-    /**
-     * Get play count for an album disk by album id.
-     */
-    public function getAlbumPlayCount(int $albumId): int
-    {
-        $db_results = Dba::read(
-            'SELECT `total_count` FROM `album` WHERE `album`.`id` = ?',
-            [$albumId]
-        );
-
-        $results = Dba::fetch_assoc($db_results);
-
-        return (int) $results['total_count'];
-    }
-
-    /**
-     * Get song count for an album disk by album id.
-     */
-    public function getSongCount(int $albumId): int
-    {
-        $db_results = Dba::read(
-            'SELECT `song_count` FROM `album` WHERE `album`.`id` = ?',
-            [$albumId]
-        );
-
-        $results = Dba::fetch_assoc($db_results);
-
-        return (int) $results['song_count'];
-    }
-
-    /**
-     * Get distinct artist count for an album disk by album id.
-     */
-    public function getArtistCount(int $albumId): int
-    {
-        $db_results = Dba::read(
-            'SELECT `artist_count` FROM `album` WHERE `album`.`id` = ? AND `album`.`album_artist` IS NOT NULL',
-            [$albumId]
-        );
-
-        $results = Dba::fetch_assoc($db_results);
-
-        return (int) $results['artist_count'];
-    }
-
-    /**
-     * Get distinct artist count for an album array.
-     */
-    public function getArtistCountGroup(array $albumArray): int
-    {
-        $idlist     = '(' . implode(',', $albumArray) . ')';
-        $sql        = "SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' AND `song`.`album` IN $idlist;";
-        $db_results = Dba::read($sql);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return (int) $results['artist_count'];
+        $this->connection->query('DELETE FROM `album_disk` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)');
     }
 
     /**
@@ -306,13 +245,13 @@ final class AlbumRepository implements AlbumRepositoryInterface
      */
     public function getByArtist(
         int $artistId,
-        ?int $catalog = null,
+        ?int $catalogId = null,
         bool $group_release_type = false
     ): array {
         $userId        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
-        if ($catalog !== null) {
-            $catalog_where = "AND `album`.`catalog` = '" . Dba::escape($catalog) . "'";
+        if ($catalogId !== null) {
+            $catalog_where = "AND `album`.`catalog` = '" . Dba::escape($catalogId) . "'";
         }
         $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
@@ -334,7 +273,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 $sql_sort = "`album`.`name`, $original_year";
         }
 
-        $sql        = ($showAlbum)
+        $sql = ($showAlbum)
             ? "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort"
             : "SELECT DISTINCT `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, $original_year FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, $original_year ORDER BY $sql_sort, `album_disk`.`disk`";
         $db_results = Dba::read($sql, array($artistId));
@@ -378,13 +317,13 @@ final class AlbumRepository implements AlbumRepositoryInterface
      */
     public function getAlbumByArtist(
         int $artistId,
-        ?int $catalog = null,
+        ?int $catalogId = null,
         bool $group_release_type = false
     ): array {
         $userId        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
-        if ($catalog !== null) {
-            $catalog_where .= " AND `album`.`catalog` = '" . Dba::escape($catalog) . "'";
+        if ($catalogId !== null) {
+            $catalog_where .= " AND `album`.`catalog` = '" . Dba::escape($catalogId) . "'";
         }
         $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
@@ -440,109 +379,82 @@ final class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
-     * gets the album ids that the artist is a part of
-     * Return AlbumDisk only
-     *
-     * @return int[]
-     */
-    public function getAlbumDiskByArtist(
-        int $artistId,
-        ?int $catalog = null,
-        bool $group_release_type = false
-    ): array {
-        $userId        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $catalog_where = "AND `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
-        if ($catalog !== null) {
-            $catalog_where .= "AND `album_disk`.`catalog` = '" . Dba::escape($catalog) . "'";
-        }
-        $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
-        $sort_type     = AmpConfig::get('album_sort');
-        switch ($sort_type) {
-            case 'name_asc':
-                $sql_sort = "`album`.`name` ASC";
-                break;
-            case 'name_desc':
-                $sql_sort = "`album`.`name` DESC";
-                break;
-            case 'year_asc':
-                $sql_sort = "$original_year ASC";
-                break;
-            case 'year_desc':
-                $sql_sort = "$original_year DESC";
-                break;
-            default:
-                $sql_sort = "`album`.`name`, $original_year";
-        }
-
-        $sql        = "SELECT DISTINCT `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, $original_year FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, $original_year ORDER BY $sql_sort, `album_disk`.`disk`";
-        $db_results = Dba::read($sql, array($artistId));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ($group_release_type) {
-                // We assume undefined release type is album
-                $rtype = $row['release_type'] ?? 'album';
-                if (!isset($results[$rtype])) {
-                    $results[$rtype] = array();
-                }
-                $results[$rtype][] = (int)$row['id'];
-
-                $sort = (string)AmpConfig::get('album_release_type_sort');
-                if ($sort) {
-                    $results_sort = array();
-                    $asort        = explode(',', $sort);
-
-                    foreach ($asort as $rtype) {
-                        if (array_key_exists($rtype, $results)) {
-                            $results_sort[$rtype] = $results[$rtype];
-                            unset($results[$rtype]);
-                        }
-                    }
-
-                    $results = array_merge($results_sort, $results);
-                }
-            } else {
-                $results[] = (int)$row['id'];
-            }
-        }
-
-        return $results;
-    }
-
-    /**
      * gets the album id has the same artist and title
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByName(
         string $name,
         int $artistId
     ): array {
-        $sql        = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`album_artist` = ?";
-        $params     = array($name, $name, $artistId);
-        $db_results = Dba::read($sql, $params);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+        $result = $this->connection->query(
+            'SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, \'\'), \' \', `album`.`name`)) = ?) AND `album`.`album_artist` = ?',
+            [$name, $name, $artistId]
+        );
+
+        $albumIds = [];
+        while ($albumId = $result->fetchColumn()) {
+            $albumIds[] = (int) $albumId;
         }
 
-        return $results;
+        return $albumIds;
     }
 
     /**
      * gets the album id that is part of this mbid_group
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByMbidGroup(
-        string $mbid
+        string $musicBrainzId
     ): array {
-        $sql        = "SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?";
-        $db_results = Dba::read($sql, array($mbid));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+        $result = $this->connection->query(
+            'SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?',
+            [$musicBrainzId]
+        );
+
+        $albumIds = [];
+        while ($albumId = $result->fetchColumn()) {
+            $albumIds[] = (int) $albumId;
         }
 
-        return $results;
+        return $albumIds;
+    }
+
+    /**
+     * This returns the ids of artists that have songs/albums mapped
+     *
+     * @return list<int>
+     */
+    public function getArtistMap(Album $album, string $objectType): array
+    {
+        $result = $this->connection->query(
+            'SELECT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?',
+            [$objectType, $album->getId()]
+        );
+
+        $artistIds = [];
+        while ($artistId = $result->fetchColumn()) {
+            $artistIds[] = (int) $artistId;
+        }
+
+        return $artistIds;
+    }
+
+    /**
+     * Get the primary album_artist
+     */
+    public function getAlbumArtistId(int $albumId): ?int
+    {
+        $albumArtistId = $this->connection->fetchOne(
+            'SELECT DISTINCT `album_artist` FROM `album` WHERE `id` = ?;',
+            [$albumId]
+        );
+
+        if ($albumArtistId !== false) {
+            return (int) $albumArtistId;
+        }
+
+        return null;
     }
 }

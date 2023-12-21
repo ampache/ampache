@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\System;
 
 /**
@@ -32,8 +33,9 @@ namespace Ampache\Module\System;
  */
 class AmpError
 {
-    private static $state  = false; // set to one when an error occurs
-    public static $errors  = array(); // Errors array key'd array with errors that have occurred
+    private static $state = false; // set to one when an error occurs
+
+    public static $errors = array(); // Errors array key'd array with errors that have occurred
 
     /**
      * __destruct
@@ -44,7 +46,7 @@ class AmpError
         foreach (self::$errors as $key => $error) {
             $_SESSION['errors'][$key] = $error;
         }
-    } // __destruct
+    }
 
     /**
      * add
@@ -52,9 +54,9 @@ class AmpError
      * It can optionally clobber rather then adding to the error message
      * @param string $name
      * @param string $message
-     * @param integer $clobber
+     * @param int $clobber
      */
-    public static function add($name, $message, $clobber = 0)
+    public static function add($name, $message, $clobber = 0): void
     {
         // Make sure its set first
         if (!isset(AmpError::$errors[$name])) {
@@ -79,45 +81,42 @@ class AmpError
             ob_flush();
             flush();
         }
-    } // add
+    }
 
     /**
      * occurred
      * This returns true / false if an error has occurred anywhere
-     * @return boolean
      */
-    public static function occurred()
+    public static function occurred(): bool
     {
         if (self::$state == '1') {
             return true;
         }
 
         return false;
-    } // occurred
+    }
 
     /**
      * get
      * This returns an error by name
      * @param string $name
-     * @return string
      */
-    public static function get($name)
+    public static function get($name): string
     {
         if (!isset(AmpError::$errors[$name])) {
             return '';
         }
 
         return AmpError::$errors[$name];
-    } // get
+    }
 
     /**
      * display
      * This prints the error out with a standard Error class span
      * Ben Goska: Renamed from print to display, print is reserved
      * @param string $name
-     * @return string
      */
-    public static function display($name)
+    public static function display($name): string
     {
         // Be smart about this, if no error don't print
         if (isset(AmpError::$errors[$name])) {
@@ -125,7 +124,7 @@ class AmpError
         }
 
         return '';
-    } // display
+    }
 
     public static function getErrorsFormatted(string $name): string
     {

@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -43,12 +44,9 @@ final class PlaylistAddSong5Method
      *
      * This adds a song to a playlist
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
      * song   = (string) UID of song to add to playlist
      * check  = (integer) 0,1 Check for duplicates //optional, default = 0
-     * @return boolean
      */
     public static function playlist_add_song(array $input, User $user): bool
     {
@@ -59,13 +57,13 @@ final class PlaylistAddSong5Method
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
         if (!$playlist->has_access($user->id) && $user->access !== 100) {
-            Api5::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
+            Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
         if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int)$input['check'] == 1)) && in_array($song, $playlist->get_songs())) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $song), '4710', self::ACTION, 'duplicate', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $song), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'duplicate', $input['api_format']);
 
             return false;
         }

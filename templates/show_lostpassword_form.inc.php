@@ -1,7 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
 
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -32,9 +34,9 @@ use Ampache\Module\Util\Ui;
 if (AmpConfig::get('session_length', 3600) >= AmpConfig::get('remember_length', 604800)) {
     $remember_disabled = 'disabled="disabled"';
 }
-$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-$dir      = is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';
-$web_path = AmpConfig::get('web_path');
+$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
+$dir      = is_rtl(AmpConfig::get('lang', 'en_US')) ? 'rtl' : 'ltr';
+$web_path = (string)AmpConfig::get('web_path', '');
 
 $_SESSION['login'] = true;
 $mobile_session    = false;

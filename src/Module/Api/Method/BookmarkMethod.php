@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
@@ -45,11 +45,8 @@ final class BookmarkMethod
      *
      * Get a single bookmark
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) bookmark_id
      * include = (integer) 0,1, if true include the object in the bookmark //optional
-     * @return boolean
      */
     public static function bookmark(array $input, User $user): bool
     {

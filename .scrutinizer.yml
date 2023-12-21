@@ -19,7 +19,7 @@ tools:
                 - '.github.*'
             paths: {  }
     php_code_sniffer:
-        enabled: false
+        enabled: true
     php_pdepend:
         enabled: true
         configuration_file: null

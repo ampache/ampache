@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -40,16 +43,16 @@ $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $show_playlist_add = Access::check('interface', 25);
 $hide_genres       = AmpConfig::get('hide_genres');
 //mashup and grid view need different css
-$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="playlist">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="playlist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
             <?php if ($show_art) { ?>
-            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
+            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <?php } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
@@ -68,13 +71,16 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
 $talFactory = $dic->get(TalFactoryInterface::class);
 $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
-
+$user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
 foreach ($object_ids as $playlist_id) {
     $libitem = new Playlist($playlist_id);
+    if ($libitem->isNew()) {
+        continue;
+    }
     $libitem->format();
 
     // Don't show empty playlist if not admin or the owner
-    if (Access::check('interface', 100) || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
+    if (Access::check('interface', 100) || $libitem->get_user_owner() == $user_id || $libitem->get_media_count() > 0) { ?>
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
             <?php $content = $talFactory->createTalView()
         ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
@@ -90,7 +96,7 @@ foreach ($object_ids as $playlist_id) {
         </tr>
         <?php
     }
-} // end foreach ($playlists as $playlist)?>
+} ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="10"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>

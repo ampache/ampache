@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -31,16 +34,16 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_table     = $browse->is_grid_view();
 //mashup and grid view need different css
-$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="tvshow_season">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="tvshow_season">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -62,6 +65,9 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
 }
 foreach ($object_ids as $season_id) {
     $libitem = new TVShow_season($season_id);
+    if ($libitem->isNew()) {
+        continue;
+    }
     $libitem->format(); ?>
         <tr id="tvshow_season_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_tvshow_season_row.inc.php'); ?>

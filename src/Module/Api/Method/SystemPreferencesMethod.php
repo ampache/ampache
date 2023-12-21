@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,14 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
  * Class SystemPreferencesMethod
@@ -42,26 +43,32 @@ final class SystemPreferencesMethod
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your system preferences
-     *
-     * @param array $input
-     * @param User $user
-     * @return boolean
      */
     public static function system_preferences(array $input, User $user): bool
     {
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $preferences  = Preference::get_all(-1);
-        $output_array = array('preference' => $preferences);
+        $results = ['preference' => self::getPreferenceRepository()->getAll()];
+
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($output_array['preference'], 'preference');
+                echo Xml_Data::object_array($results['preference'], 'preference');
         }
 
         return true;
+    }
+
+    /**
+     * @todo Replace by constructor injection
+     */
+    private static function getPreferenceRepository(): PreferenceRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PreferenceRepositoryInterface::class);
     }
 }

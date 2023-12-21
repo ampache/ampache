@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,46 +20,39 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Shout;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 
 class EditShoutActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface|null */
-    private MockInterface $ui;
+    private MockInterface&UiInterface $ui;
 
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
+    private MockObject&ShoutRepositoryInterface $shoutRepository;
 
-    /** @var MockInterface|ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
+    private EditShoutAction $subject;
 
-    private ?EditShoutAction $subject;
-
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);
 
         $this->subject = new EditShoutAction(
             $this->ui,
-            $this->configContainer,
-            $this->modelFactory
+            $this->shoutRepository
         );
     }
 
@@ -75,40 +71,73 @@ class EditShoutActionTest extends MockeryTestCase
         $this->subject->run($request, $gatekeeper);
     }
 
-    public function testRunUpdatesEntry(): void
+    public function testRunUpdatesErrorsIfShoutWasNotFound(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $shoutbox   = $this->mock(Shoutbox::class);
 
-        $shout_id     = 666;
-        $data         = ['shout_id' => $shout_id, 'comment' => '', 'sticky' => ''];
-        $webPath      = 'some-path';
-        $shoutbox->id = $shout_id;
+        $shoutId = 666;
 
-        $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($webPath);
+        static::expectException(ObjectNotFoundException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ->once()
             ->andReturnTrue();
 
-        $this->modelFactory->shouldReceive('createShoutbox')
-            ->with($shout_id)
-            ->once()
-            ->andReturn($shoutbox);
-
-        $shoutbox->shouldReceive('update')
-            ->with($data)
-            ->once();
+        $this->shoutRepository->expects(static::once())
+            ->method('findById')
+            ->with($shoutId)
+            ->willReturn(null);
 
         $request->shouldReceive('getParsedBody')
             ->withNoArgs()
             ->once()
-            ->andReturn($data);
+            ->andReturn([
+                'shout_id' => (string)$shoutId,
+            ]);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunUpdatesEntry(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $shout      = $this->createMock(Shoutbox::class);
+
+        $shoutId = 666;
+        $comment = 'some-comment';
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->shoutRepository->expects(static::once())
+            ->method('findById')
+            ->with($shoutId)
+            ->willReturn($shout);
+
+        $shout->expects(static::once())
+            ->method('setText')
+            ->with($comment)
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('setSticky')
+            ->with(true)
+            ->willReturnSelf();
+        $shout->expects(static::once())
+            ->method('save');
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([
+                'shout_id' => (string)$shoutId,
+                'comment' => $comment,
+                'sticky' => 'on',
+            ]);
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -117,7 +146,7 @@ class EditShoutActionTest extends MockeryTestCase
             ->with(
                 'No Problem',
                 'Shoutbox post has been updated',
-                sprintf('%s/admin/shout.php', $webPath)
+                'admin/shout.php'
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')

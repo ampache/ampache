@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +23,13 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 
@@ -42,11 +46,8 @@ final class UpdateFromTags4Method
      *
      * updates a single album, artist, song from the tag data
      *
-     * @param array $input
-     * @param User $user
      * type = (string) 'artist'|'album'|'song'
      * id   = (integer) $artist_id, $album_id, $song_id
-     * @return boolean
      */
     public static function update_from_tags(array $input, User $user): bool
     {
@@ -64,8 +65,9 @@ final class UpdateFromTags4Method
             return false;
         }
         $className = ObjectTypeToClassNameMapper::map($type);
+        /** @var Artist|Album|Song $item */
         $item      = new $className($object_id);
-        if (!$item->id) {
+        if (!$item->isNew()) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
             return false;
@@ -76,5 +78,5 @@ final class UpdateFromTags4Method
         Api4::message('success', 'Updated tags for: ' . (string) $object_id . ' (' . $type . ')', null, $input['api_format']);
 
         return true;
-    } // update_from_tags
+    }
 }

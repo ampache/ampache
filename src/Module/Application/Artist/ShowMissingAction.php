@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Artist;
 
@@ -53,7 +54,10 @@ final class ShowMissingAction implements ApplicationActionInterface
         $mbid    = VaInfo::parse_mbid($_REQUEST['mbid'] ?? '');
         $wartist = Wanted::get_missing_artist($mbid);
 
-        require Ui::find_template('show_missing_artist.inc.php');
+        $this->ui->show(
+            'show_missing_artist.inc.php',
+            ['wartist' => $wartist]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

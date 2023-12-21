@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,9 +20,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Album\Export;
 
@@ -31,7 +33,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Album\Export;
 use Ampache\Repository\SongRepositoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * This runs through all of the albums and tries to dump the
@@ -41,20 +42,16 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
 {
     private ConfigContainerInterface $configContainer;
 
-    private LoggerInterface $logger;
-
     private ModelFactoryInterface $modelFactory;
 
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory,
         SongRepositoryInterface $songRepository
     ) {
         $this->configContainer = $configContainer;
-        $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
         $this->songRepository  = $songRepository;
     }
@@ -84,7 +81,7 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
             // Get the first song in the album
             $songs = $this->songRepository->getByAlbum($albumId, 1);
             $song  = $this->modelFactory->createSong((int) $songs[0]);
-            $dir   = dirname($song->file);
+            $dir   = dirname((string)$song->file);
 
             $extension = Art::extension($art->raw_mime);
 

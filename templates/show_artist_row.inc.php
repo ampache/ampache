@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -32,6 +35,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Artist $libitem */
+/** @var Ampache\Repository\Model\Browse|null $browse */
 /** @var bool $show_direct_play */
 /** @var bool $show_playlist_add */
 /** @var bool $hide_genres */
@@ -44,7 +48,7 @@ use Ampache\Module\Util\Ui;
 // @deprecated
 global $dic;
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
-$web_path   = AmpConfig::get('web_path'); ?>
+$web_path   = (string)AmpConfig::get('web_path', ''); ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
@@ -59,9 +63,9 @@ $web_path   = AmpConfig::get('web_path'); ?>
     } ?>
     </div>
 </td>
-<?php $name = scrub_out($libitem->get_fullname()); ?>
+<?php $name = scrub_out((string)$libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
+    <?php $thumb = (isset($browse) && $browse->is_grid_view()) ? 1 : 11;
 Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
 <td class="<?php echo $cel_artist; ?>"><?php echo $libitem->get_f_link(); ?></td>
@@ -70,7 +74,7 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
     <?php if ($show_playlist_add) {
         echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_artist_' . $libitem->id);
         echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id, 'random', T_('Random to Temporary Playlist'), 'random_artist_' . $libitem->id); ?>
-            <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id ?>')">
+            <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id; ?>')">
                 <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php
@@ -106,12 +110,12 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
     </a>
     <?php }
     if (canEditArtist($libitem, $gatekeeper->getUserId())) { ?>
-        <a id="<?php echo 'edit_artist_' . $libitem->id ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_artist_' . $libitem->id ?>', '<?php echo addslashes(T_('Artist Edit')) ?>', 'artist_')">
+        <a id="<?php echo 'edit_artist_' . $libitem->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_artist_' . $libitem->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', 'artist_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
     <?php }
     if (Catalog::can_remove($libitem)) { ?>
-        <a id="<?php echo 'delete_artist_' . $libitem->id ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $libitem->id; ?>">
+        <a id="<?php echo 'delete_artist_' . $libitem->id; ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
     <?php }

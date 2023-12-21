@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -36,27 +39,28 @@ use Ampache\Module\Util\Ui;
 
 $browse = new Browse();
 $browse->set_type($object_type);
+$browse->set_use_filters(false);
 // these are usually set so not sure why missing
 $limit_threshold = AmpConfig::get('stats_threshold', 7);
 $argument        = false;
 if (array_key_exists('argument', $_REQUEST)) {
-    $argument = scrub_in($_REQUEST['argument']);
+    $argument = (string)scrub_in((string)$_REQUEST['argument']);
 }
-
-Ui::show_box_top($label->get_fullname(), 'info-box');
+$f_name = (string)$label->get_fullname();
+Ui::show_box_top($f_name, 'info-box');
 if ($label->website) {
     echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";
 } ?>
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($label->get_fullname()); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($label->get_fullname()); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($label->get_fullname()); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($label->get_fullname()); ?>%22&type=label" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($f_name); ?>%22&type=label" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     </div>
     <div id="artist_biography">
         <div class="item_info">
-            <?php Art::display('label', $label->id, $label->get_fullname(), 2); ?>
+            <?php Art::display('label', $label->id, $f_name, 2); ?>
             <div class="item_properties">
                 <?php echo scrub_out($label->address); ?>
             </div>
@@ -90,7 +94,7 @@ if ($label->website) {
         <?php } ?>
         <?php if ($isLabelEditable) { ?>
         <li>
-            <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo addslashes(T_('Label Edit')) ?>', '')">
+            <a id="<?php echo 'edit_label_' . $label->id; ?>" onclick="showEditDialog('label_row', '<?php echo $label->id; ?>', '<?php echo 'edit_label_' . $label->id; ?>', '<?php echo addslashes(T_('Label Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Label'); ?>
             </a>
@@ -98,7 +102,7 @@ if ($label->website) {
         <?php } ?>
         <?php if (Catalog::can_remove($label)) { ?>
         <li>
-            <a id="<?php echo 'delete_label_' . $label->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
+            <a id="<?php echo 'delete_label_' . $label->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>

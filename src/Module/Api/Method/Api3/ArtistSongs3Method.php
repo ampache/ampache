@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
@@ -40,10 +40,8 @@ final class ArtistSongs3Method
     /**
      * artist_songs
      * This returns the songs of the specified artist
-     * @param array $input
-     * @param User $user
      */
-    public static function artist_songs(array $input, User $user)
+    public static function artist_songs(array $input, User $user): void
     {
         $artist  = new Artist($input['filter']);
         $results = static::getSongRepository()->getByArtist($artist->id);
@@ -53,7 +51,7 @@ final class ArtistSongs3Method
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
         echo Xml3_Data::songs($results, $user);
-    } // artist_songs
+    }
 
     private static function getSongRepository(): SongRepositoryInterface
     {

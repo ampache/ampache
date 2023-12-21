@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Repository\Model\Album;
@@ -44,18 +45,15 @@ final class Album5Method
      *
      * This returns a single album based on the UID provided
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) UID of Album
      * include = (array|string) 'songs' //optional
-     * @return boolean
      */
     public static function album(array $input, User $user): bool
     {
         $objectId = $input['filter'] ?? null;
 
         if ($objectId === null) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $objectId), '4710', self::ACTION, 'type', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $objectId), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

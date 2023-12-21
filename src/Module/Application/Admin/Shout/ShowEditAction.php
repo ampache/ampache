@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,40 +23,45 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Shout;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Displays the shouts edit-view
+ */
 final class ShowEditAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_edit';
 
     private UiInterface $ui;
 
-    private ConfigContainerInterface $configContainer;
+    private ShoutRepositoryInterface $shoutRepository;
 
     private ModelFactoryInterface $modelFactory;
 
+    private ShoutObjectLoaderInterface $shoutObjectLoader;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ShoutObjectLoaderInterface $shoutObjectLoader,
+        ShoutRepositoryInterface $shoutRepository
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
+        $this->ui                = $ui;
+        $this->modelFactory      = $modelFactory;
+        $this->shoutObjectLoader = $shoutObjectLoader;
+        $this->shoutRepository   = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,16 +70,36 @@ final class ShowEditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $shoutId = (int)($request->getQueryParams()['shout_id'] ?? 0);
+        $shout   = $this->shoutRepository->findById($shoutId);
+
+        if ($shout === null) {
+            throw new ObjectNotFoundException($shoutId);
+        }
+
+        // load the object the shout is referring to
+        $object = $this->shoutObjectLoader->loadByShout($shout);
+        if ($object === null) {
+            throw new ObjectNotFoundException($shout->getObjectId());
+        }
+
+        // load the used who created the shout
+        $shoutUserId = $shout->getUserId();
+
+        $user = $this->modelFactory->createUser($shoutUserId);
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($shoutUserId);
+        }
+
         $this->ui->showHeader();
-
-        $shout  = $this->modelFactory->createShoutbox((int)($request->getQueryParams()['shout_id'] ?? 0));
-        $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
-        $object->format();
-
-        $client = $this->modelFactory->createUser($shout->user);
-        $client->format();
-
-        require_once Ui::find_template('show_edit_shout.inc.php');
+        $this->ui->show(
+            'show_edit_shout.inc.php',
+            [
+                'shout' => $shout,
+                'object' => $object,
+                'client' => $user,
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

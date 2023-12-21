@@ -93,12 +93,13 @@ Following these tips prior to raising a pull request will speed up the review cy
 * Make sure the code you add follows project coding standards and passes all tests before submitting
 * Lines that are not part of your change should not be edited
   * e.g. don't format unchanged lines, don't reorder existing imports
+
 * Add the appropriate [license headers](#license-headers) to any new files
 * Make your own branch for your changes based on the develop branch. (e.g. my-patch-branch)
 
 ### Coding standards and principles
 
-* We use PSR2 code style
+* We use PSR12 code style
 * We follow the [`SOLID`](https://en.wikipedia.org/wiki/SOLID) principles
 
 ### Submitting your changes

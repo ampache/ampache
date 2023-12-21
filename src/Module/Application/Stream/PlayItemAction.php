@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stream;
 
@@ -59,9 +60,9 @@ final class PlayItemAction extends AbstractStreamAction
         $mediaIds   = [];
         if (InterfaceImplementationChecker::is_playable_item($objectType)) {
             foreach ($objectIds as $object_id) {
-                $class_name = ObjectTypeToClassNameMapper::map($objectType);
-                $item       = new $class_name($object_id);
-                $mediaIds   = array_merge($mediaIds, $item->get_medias());
+                $className = ObjectTypeToClassNameMapper::map($objectType);
+                $item      = new $className($object_id);
+                $mediaIds  = array_merge($mediaIds, $item->get_medias());
 
                 if (array_key_exists('custom_play_action', $_REQUEST)) {
                     foreach ($mediaIds as $mediaId) {

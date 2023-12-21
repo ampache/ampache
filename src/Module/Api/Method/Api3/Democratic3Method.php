@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
@@ -39,10 +40,8 @@ final class Democratic3Method
     /**
      * democratic
      * This is for controlling democratic play
-     * @param array $input
-     * @param User $user
      */
-    public static function democratic(array $input, User $user)
+    public static function democratic(array $input, User $user): void
     {
         // Load up democratic information
         $democratic = Democratic::get_current_playlist($user);
@@ -51,8 +50,8 @@ final class Democratic3Method
         switch ($input['method']) {
             case 'vote':
                 $media = new Song($input['oid']);
-                if (!$media->id) {
-                    echo Xml3_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                if ($media->isNew()) {
+                    echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
                     break;
                 }
                 $democratic->add_vote(array(
@@ -71,8 +70,8 @@ final class Democratic3Method
                 break;
             case 'devote':
                 $media = new Song($input['oid']);
-                if (!$media->id) {
-                    echo Xml3_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                if ($media->isNew()) {
+                    echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id);
@@ -99,8 +98,8 @@ final class Democratic3Method
                 echo Xml3_Data::keyed_array($results);
                 break;
             default:
-                echo Xml3_Data::error('405', T_('Invalid Request'));
+                echo Xml3_Data::error(405, T_('Invalid Request'));
                 break;
         } // switch on method
-    } // democratic
+    }
 }

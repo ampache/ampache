@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Json_Data;
@@ -59,17 +60,14 @@ final class AdvancedSearchMethod
      * https://ampache.org/api/api-xml-methods
      * https://ampache.org/api/api-json-methods
      *
-     * @param array $input
-     * @param User $user
      * operator        = (string) 'and', 'or' (whether to match one rule or all)
      * rule_1          = (string)
-     * rule_1_operator = (integer) 0,1|2|3|4|5|6
+     * rule_1_operator = (integer) 0|1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
      * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
      * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
      * offset          = (integer) //optional
      * limit           = (integer) //optional
-     * @return boolean
      */
     public static function advanced_search(array $input, User $user): bool
     {
@@ -79,13 +77,13 @@ final class AdvancedSearchMethod
 
         $type = (isset($input['type'])) ? (string) $input['type'] : 'song';
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

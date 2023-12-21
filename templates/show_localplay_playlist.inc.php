@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -24,6 +27,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
 
 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
 $localplay->connect();
@@ -54,7 +60,7 @@ $status = $localplay->status(); ?>
                 <?php echo $localplay->format_name($object['name'], $object['id']); ?>
             </td>
             <td class="cel_action">
-            <?php echo Ajax::button('?page=localplay&action=delete_track&id=' . (int) ($object['id']), 'delete', T_('Delete'), 'localplay_delete_' . (int) ($object['id'])); ?>
+            <?php echo Ajax::button('?page=localplay&action=delete_track&browse_id=' . $browse->getId() . '&id=' . (int) ($object['id']), 'delete', T_('Delete'), 'localplay_delete_' . (int) ($object['id'])); ?>
             </td>
         </tr>
         <?php

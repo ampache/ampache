@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -45,13 +45,10 @@ final class Podcasts4Method
      *
      * Get information about podcasts.
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) Alpha-numeric search term
      * include = (string) 'episodes' (include episodes in the response) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * @return boolean
      */
     public static function podcasts(array $input, User $user): bool
     {
@@ -87,5 +84,5 @@ final class Podcasts4Method
         }
 
         return true;
-    } // podcasts
+    }
 }

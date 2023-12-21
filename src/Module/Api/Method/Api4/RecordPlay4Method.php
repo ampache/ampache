@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,13 +45,10 @@ final class RecordPlay4Method
      * This allows other sources to record play history to Ampache.
      * Require 100 (Admin) permission to change other user's play history
      *
-     * @param array $input
-     * @param User $user
      * id     = (integer) $object_id
      * user   = (integer|string) $user_id OR $username //optional
      * client = (string) $agent //optional
      * date   = (integer) UNIXTIME() //optional
-     * @return boolean
      */
     public static function record_play(array $input, User $user): bool
     {
@@ -59,7 +57,7 @@ final class RecordPlay4Method
         }
         $play_user = $user;
         if (isset($input['user'])) {
-            $play_user =  ((int)$input['user'] > 0)
+            $play_user = ((int)$input['user'] > 0)
                 ? new User((int)$input['user'])
                 : User::get_from_username((string)$input['user']);
         }
@@ -76,13 +74,13 @@ final class RecordPlay4Method
         }
         ob_end_clean();
         $object_id = (int) $input['id'];
-        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
+        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in((string) $input['date']))) ? (int) scrub_in((string) $input['date']) : time(); //optional
 
         // validate client string or fall back to 'api'
-        $agent = (string)(scrub_in($input['client']) ?? 'api');
+        $agent = scrub_in((string)($input['client'] ?? 'api'));
 
         $media = new Song($object_id);
-        if (!$media->id) {
+        if ($media->isNew()) {
             Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 
             return false;
@@ -98,7 +96,7 @@ final class RecordPlay4Method
         Api4::message('success', 'successfully recorded play: ' . $media->id . ' for: ' . $play_user->username, null, $input['api_format']);
 
         return true;
-    } // record_play
+    }
 
     /**
      * @deprecated inject dependency

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\User;
 
@@ -66,16 +67,12 @@ final class NewPasswordSender implements NewPasswordSenderInterface
         }
 
         $time        = time();
-        $reset_limit = ($time - 3600) > (User::get_user_data($client->id, 'password_reset')['password_reset'] ?? $time); // don't let a user spam resets
+        $last_reset  = (int)User::get_user_data($client->id, 'password_reset', 0)['password_reset'];
+        $reset_limit = ($time - 3600) > $last_reset; // don't let a user spam resets
         if ($client->email == $email && Mailer::is_mail_enabled() && $reset_limit) {
             $newpassword = $this->passwordGenerator->generate();
-            $mailer      = new Mailer();
-            $mailer->set_default_sender();
-            $mailer->subject        = T_('Lost Password');
-            $mailer->recipient_name = $client->fullname;
-            $mailer->recipient      = $client->email;
 
-            $message  = sprintf(
+            $message = sprintf(
                 /* HINT: %1 IP Address, %2 Username */
                 T_('A user from "%1$s" has requested a password reset for "%2$s"'),
                 $current_ip,
@@ -83,7 +80,12 @@ final class NewPasswordSender implements NewPasswordSenderInterface
             );
             $message .= "\n";
             $message .= sprintf(T_("The password has been set to: %s"), $newpassword);
-            $mailer->message = $message;
+
+            $mailer = new Mailer();
+            $mailer->set_default_sender();
+            $mailer->setSubject(T_('Lost Password'));
+            $mailer->setRecipient((string) $client->email, (string) $client->fullname);
+            $mailer->setMessage($message);
 
             if ($mailer->send()) {
                 // only update the password when the email was sent

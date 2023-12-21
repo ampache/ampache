@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -29,15 +31,15 @@ use Ampache\Repository\Model\User;
 use Exception;
 use Moinax;
 
-class AmpacheTvdb
+class AmpacheTvdb implements AmpachePluginInterface
 {
-    public $name        = 'Tvdb';
-    public $categories  = 'metadata';
-    public $description = 'TVDb metadata integration';
-    public $url         = 'http://thetvdb.com';
-    public $version     = '000003';
-    public $min_ampache = '370009';
-    public $max_ampache = '999999';
+    public string $name        = 'Tvdb';
+    public string $categories  = 'metadata';
+    public string $description = 'TVDb metadata integration';
+    public string $url         = 'http://thetvdb.com';
+    public string $version     = '000003';
+    public string $min_ampache = '370009';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
@@ -49,44 +51,46 @@ class AmpacheTvdb
     public function __construct()
     {
         $this->description = T_('TVDb metadata integration');
-
-        return true;
     }
 
     /**
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('tvdb_api_key')) {
+        if (!Preference::exists('tvdb_api_key') && !Preference::insert('tvdb_api_key', T_('TVDb API key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        Preference::insert('tvdb_api_key', T_('TVDb API key'), '', 75, 'string', 'plugins', $this->name);
-
         return true;
-    } // install
+    }
 
     /**
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('tvdb_api_key');
+        return Preference::delete('tvdb_api_key');
+    }
 
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
-    } // uninstall
+    }
 
     /**
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -105,7 +109,7 @@ class AmpacheTvdb
         }
 
         return true;
-    } // load
+    }
 
     /**
      * get_metadata
@@ -140,8 +144,11 @@ class AmpacheTvdb
                 $release                   = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
                 $results['tvshow_imdb_id'] = $release->imdbId;
-                $results['tvshow_summary'] = substr($release->overview, 0,
-                    255); // Summary column in db is only 256 characters.
+                $results['tvshow_summary'] = substr(
+                    $release->overview,
+                    0,
+                    255
+                ); // Summary column in db is only 256 characters.
                 $results['tvshow'] = $release->name;
 
                 if ($release->FirstAired) {
@@ -174,15 +181,17 @@ class AmpacheTvdb
                 }
 
                 if ($media_info['tvshow_season'] && $media_info['tvshow_episode']) {
-                    $release = $client->getEpisode($results['tvdb_tvshow_id'],
+                    $release = $client->getEpisode(
+                        $results['tvdb_tvshow_id'],
                         ltrim($media_info['tvshow_season'], "0"),
-                        ltrim($media_info['tvshow_episode'], "0"));
+                        ltrim($media_info['tvshow_episode'], "0")
+                    );
                     if ($release->id) {
-                        $results['tvdb_id']                      = $release->id;
-                        $results['tvshow_season']                = $release->season;
-                        $results['tvshow_episode']               = $release->number;
-                        $results['original_name']                = $release->name;
-                        $results['imdb_id']                      = $release->imdbId;
+                        $results['tvdb_id']        = $release->id;
+                        $results['tvshow_season']  = $release->season;
+                        $results['tvshow_episode'] = $release->number;
+                        $results['original_name']  = $release->name;
+                        $results['imdb_id']        = $release->imdbId;
                         if ($release->firstAired) {
                             $results['release_date'] = $release->firstAired->getTimestamp();
                             $results['year']         = $release->firstAired->format('Y');
@@ -199,12 +208,12 @@ class AmpacheTvdb
         }
 
         return $results;
-    } // get_metadata
+    }
 
     /**
      * @param $type
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function gather_arts($type, $options = array(), $limit = 5)
@@ -232,8 +241,8 @@ class AmpacheTvdb
 
         if ((count($titles) > 1) && ($year != null)) {
             foreach ($titles as $index) {
-                $y = $index->firstAired->format('Y');
-                if ($year == $y) {
+                $airedYear = $index->firstAired->format('Y');
+                if ($year == $airedYear) {
                     return $index;
                 }
             }

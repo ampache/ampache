@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -46,15 +48,11 @@ final class LocalplayMethod
      *
      * This is for controlling Localplay
      *
-     * @param array $input
-     * @param User $user
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
      * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
-     * id
-     * @return boolean
      */
     public static function localplay(array $input, User $user): bool
     {
@@ -69,7 +67,7 @@ final class LocalplayMethod
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api::error(T_('Unable to connect to localplay controller'), '4710', self::ACTION, 'account', $input['api_format']);
+            Api::error(T_('Unable to connect to localplay controller'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -82,11 +80,11 @@ final class LocalplayMethod
                 $object_id = (int)($input['oid'] ?? 0);
                 $type      = $input['type'] ? (string) $input['type'] : 'Song';
                 if (!AmpConfig::get('allow_video') && $type == 'Video') {
-                    Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+                    Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
                     return false;
                 }
-                $clear       = (int)($input['clear'] ?? 0);
+                $clear = (int)($input['clear'] ?? 0);
                 // clear before the add
                 if ($clear == 1) {
                     $localplay->delete_all();
@@ -141,13 +139,13 @@ final class LocalplayMethod
                 break;
             default:
                 // They are doing it wrong
-                Api::error(T_('Bad Request'), '4710', self::ACTION, 'command', $input['api_format']);
+                Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'command', $input['api_format']);
 
                 return false;
         } // end switch on command
         $results = (!empty($status))
             ? array('localplay' => array('command' => array($input['command'] => $status)))
-            : array('localplay' => array('command' => array($input['command'] => make_bool($result))));
+            : array('localplay' => array('command' => array($input['command'] => $result)));
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);

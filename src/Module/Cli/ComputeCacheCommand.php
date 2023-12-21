@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
@@ -36,7 +37,7 @@ final class ComputeCacheCommand extends Command
     ) {
         parent::__construct('run:computeCache', T_('Update the object cache tables'));
 
-        $this->objectCache     = $objectCache;
+        $this->objectCache = $objectCache;
     }
 
     public function execute(): void

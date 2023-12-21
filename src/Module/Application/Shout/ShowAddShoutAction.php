@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,18 +23,17 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Shout;
 
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
+use Ampache\Module\Shout\ShoutRendererInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,26 +43,40 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_add_shout';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ShoutRepositoryInterface $shoutRepository;
 
+    private ShoutRendererInterface $shoutRenderer;
+    private ShoutObjectLoaderInterface $shoutObjectLoader;
+
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
-        ShoutRepositoryInterface $shoutRepository
+        ShoutRepositoryInterface $shoutRepository,
+        ShoutRendererInterface $shoutRenderer,
+        ShoutObjectLoaderInterface $shoutObjectLoader
     ) {
-        $this->ui              = $ui;
-        $this->shoutRepository = $shoutRepository;
+        $this->requestParser     = $requestParser;
+        $this->ui                = $ui;
+        $this->shoutRepository   = $shoutRepository;
+        $this->shoutRenderer     = $shoutRenderer;
+        $this->shoutObjectLoader = $shoutObjectLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $object_type = $this->requestParser->getFromRequest('type');
+        $object_id   = (int)$this->requestParser->getFromRequest('id');
+
         // Get our object first
-        $object = Shoutbox::get_object($_REQUEST['type'], (int) Core::get_request('id'));
+        $object = $this->shoutObjectLoader->loadByObjectType($object_type, $object_id);
 
         $this->ui->showHeader();
 
-        if (!$object || !$object->id) {
+        if ($object === null || !$object->getId()) {
             AmpError::add('general', T_('Invalid object selected'));
             echo AmpError::display('general');
 
@@ -69,16 +85,26 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
             return null;
         }
-
         $object->format();
-        if (get_class($object) == Song::class) {
-            $data = $_REQUEST['offset'] ?? '';
+
+        $data = '';
+        if (get_class($object) === Song::class) {
+            $data = $this->requestParser->getFromRequest('offset');
         }
         $object_type = ObjectTypeToClassNameMapper::reverseMap(get_class($object));
-        $shouts      = $this->shoutRepository->getBy($object_type, $object->id);
+        $shouts      = $this->shoutRepository->getBy($object_type, $object->getId());
 
         // Now go ahead and display the page where we let them add a comment etc
-        require_once Ui::find_template('show_add_shout.inc.php');
+        $this->ui->show(
+            'show_add_shout.inc.php',
+            [
+                'data' => $data,
+                'object' => $object,
+                'object_type' => $object_type,
+                'shouts' => $shouts,
+                'shoutRenderer' => $this->shoutRenderer,
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showHeader();

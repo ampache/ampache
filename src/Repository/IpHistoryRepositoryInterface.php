@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -22,15 +23,40 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\User;
+use DateTimeInterface;
+use Traversable;
+
 interface IpHistoryRepositoryInterface
 {
     /**
-     * This returns the ip_history from the last AmpConfig::get('user_ip_cardinality') days
+     * This returns the ip_history for the provided user
      *
-     * @param int $userId
-     * @param int $count
-     * @param bool $distinct
-     * @return array
+     * @return Traversable<array{ip: string, date: DateTimeInterface}>
      */
-    public function getHistory(int $userId, int $count = 1, bool $distinct = false): array;
+    public function getHistory(
+        User $user,
+        int $limit = 1,
+        bool $distinct = false
+    ): Traversable;
+
+    /**
+     * Returns the most recent ip-address used by the provided user
+     */
+    public function getRecentIpForUser(User $user): ?string;
+
+    /**
+     * Deletes outdated records
+     */
+    public function collectGarbage(): void;
+
+    /**
+     * Inserts a new row into the database
+     */
+    public function create(
+        User $user,
+        string $ipAddress,
+        string $userAgent,
+        DateTimeInterface $date
+    ): void;
 }

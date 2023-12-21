@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Modules;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -37,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UninstallCatalogTypeAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'unintall_catalog_type';
+    public const REQUEST_KEY = 'uninstall_catalog_type';
 
     private UiInterface $ui;
 
@@ -59,10 +60,10 @@ final class UninstallCatalogTypeAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $type = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $catalog = Catalog::create_catalog_type($type);
-        if ($catalog == null) {
+        if ($catalog === null) {
             AmpError::add('general', T_("Unable to disable the Catalog module."));
             echo AmpError::display('general');
 

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -42,10 +44,7 @@ final class PreferenceDeleteMethod
      *
      * Delete a non-system preference by name
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * @return boolean
      */
     public static function preference_delete(array $input, User $user): bool
     {
@@ -56,16 +55,16 @@ final class PreferenceDeleteMethod
             return false;
         }
         $pref_name  = (string)($input['filter'] ?? '');
-        $preference = Preference::get($pref_name,-1);
+        $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
-            Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         // Might be a good idea to not delete system preferences
         if (in_array($pref_name, Preference::SYSTEM_LIST)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $pref_name), '4710', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $pref_name), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

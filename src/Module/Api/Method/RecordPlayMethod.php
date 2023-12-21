@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -45,13 +47,10 @@ final class RecordPlayMethod
      * This allows other sources to record play history to Ampache.
      * Require 100 (Admin) permission to change other user's play history
      *
-     * @param array $input
-     * @param User $user
      * id     = (integer) $object_id
      * user   = (integer|string) $user_id OR $username //optional
      * client = (string) $agent //optional
      * date   = (integer) UNIXTIME() //optional
-     * @return boolean
      */
     public static function record_play(array $input, User $user): bool
     {
@@ -60,7 +59,7 @@ final class RecordPlayMethod
         }
         $play_user = $user;
         if (isset($input['user'])) {
-            $play_user =  ((int)$input['user'] > 0)
+            $play_user = ((int)$input['user'] > 0)
                 ? new User((int)$input['user'])
                 : User::get_from_username((string)$input['user']);
         }
@@ -68,7 +67,7 @@ final class RecordPlayMethod
         $valid = ($play_user instanceof User && in_array($play_user->id, static::getUserRepository()->getValid()));
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $input['user'] ?? $user->id), '4704', self::ACTION, 'user', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $input['user'] ?? $user->id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'user', $input['api_format']);
 
             return false;
         }
@@ -78,15 +77,15 @@ final class RecordPlayMethod
         }
         ob_end_clean();
         $object_id = (int) $input['id'];
-        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
+        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in((string) $input['date']))) ? (int) scrub_in((string) $input['date']) : time(); //optional
 
         // validate client string or fall back to 'api'
-        $agent = (string)(scrub_in($input['client']) ?? 'api');
+        $agent = scrub_in((string)($input['client'] ?? 'api'));
 
         $media = new Song($object_id);
-        if (!$media->id) {
+        if ($media->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
 
             return false;
         }

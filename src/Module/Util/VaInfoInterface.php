@@ -1,6 +1,7 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,9 +29,9 @@ namespace Ampache\Module\Util;
 interface VaInfoInterface
 {
     /**
-     * @param $size
+     * forceSize
      */
-    public function forceSize($size);
+    public function forceSize(int $size): void;
 
     /**
      * get_info
@@ -43,9 +44,8 @@ interface VaInfoInterface
      * check_time
      * check a cached file is close to the expected time
      * @param int $time
-     * @return bool
      */
-    public function check_time($time);
+    public function check_time($time): bool;
 
     /**
      * write_id3
@@ -53,7 +53,7 @@ interface VaInfoInterface
      * @param $tagData
      * @throws \Exception
      */
-    public function write_id3($tagData);
+    public function write_id3($tagData): void;
 
     /**
      * prepare_metadata_for_writing

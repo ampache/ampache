@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Util\Recommendation;
@@ -44,13 +45,10 @@ final class GetSimilar5Method
      *
      * Return similar artist id's or similar song ids compared to the input filter
      *
-     * @param array $input
-     * @param User $user
      * type   = (string) 'song', 'artist'
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function get_similar(array $input, User $user): bool
     {
@@ -61,7 +59,7 @@ final class GetSimilar5Method
         $object_id = (int) $input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'artist'))) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

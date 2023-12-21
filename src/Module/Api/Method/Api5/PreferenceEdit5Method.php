@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -43,19 +44,16 @@ final class PreferenceEdit5Method
      *
      * Edit a preference value and apply to all users if allowed
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * value  = (string|integer) Preference value
      * all    = (boolean) apply to all users //optional
-     * @return boolean
      */
     public static function preference_edit(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter', 'value'), self::ACTION)) {
             return false;
         }
-        $all  = array_key_exists('all', $input) && (int)$input['all'] == 1;
+        $all = array_key_exists('all', $input) && (int)$input['all'] == 1;
         // don't apply to all when you aren't an admin
         if ($all && !Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -67,13 +65,13 @@ final class PreferenceEdit5Method
         $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api5::error(sprintf(T_('Not Found: %s'), $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         $value = $input['value'];
         if (!Preference::update($pref_name, $user->id, $value, $all)) {
-            Api5::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

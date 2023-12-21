@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -45,20 +47,18 @@ final class UrlToSongMethod
      *
      * This takes a url and returns the song object in question
      *
-     * @param array $input
-     * @param User $user
      * url = (string) $url
-     * @return boolean
      */
     public static function url_to_song(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('url'), self::ACTION)) {
             return false;
         }
-        // Don't scrub, the function needs her raw and juicy
-        $url_data = Stream_Url::parse($input['url']);
-        if (array_key_exists('id', $url_data)) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'url', $input['api_format']);
+        $charset  = AmpConfig::get('site_charset');
+        $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
+        $url_data = Stream_Url::parse($song_url);
+        if (!array_key_exists('id', $url_data)) {
+            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
 
             return false;
         }

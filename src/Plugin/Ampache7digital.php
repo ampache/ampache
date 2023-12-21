@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -29,67 +31,64 @@ use Ampache\Module\Util\OAuth\OAuthConsumer;
 use Ampache\Module\Util\OAuth\OAuthRequest;
 use Ampache\Module\Util\OAuth\OAuthSignatureMethod_HMAC_SHA1;
 
-class Ampache7digital
+class Ampache7digital implements AmpachePluginInterface
 {
-    public $name        = '7digital';
-    public $categories  = 'preview';
-    public $description = 'Song preview from 7digital';
-    public $url         = 'http://www.7digital.com';
-    public $version     = '000001';
-    public $min_ampache = '370015';
-    public $max_ampache = '999999';
+    public string $name        = '7digital';
+    public string $categories  = 'preview';
+    public string $description = 'Song preview from 7digital';
+    public string $url         = 'http://www.7digital.com';
+    public string $version     = '000001';
+    public string $min_ampache = '370015';
+    public string $max_ampache = '999999';
 
+    // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
     private $secret;
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Song preview from 7digital');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('7digital_api_key')) {
+        if (Preference::exists('7digital_api_key') && !Preference::insert('7digital_api_key', T_('7digital consumer key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        Preference::insert('7digital_api_key', T_('7digital consumer key'), '', 75, 'string', 'plugins', $this->name);
-        Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', 75, 'string', 'plugins', $this->name);
+        if (Preference::exists('7digital_secret_api_key') && !Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('7digital_api_key');
-        Preference::delete('7digital_secret_api_key');
-
-        return true;
-    } // uninstall
+        return (
+            Preference::delete('7digital_api_key') &&
+            Preference::delete('7digital_secret_api_key')
+        );
+    }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * Get song preview.
@@ -104,10 +103,9 @@ class Ampache7digital
     }
 
     /**
-     * @param $file
-     * @return boolean
+     * @param string $file
      */
-    public function stream_song_preview($file)
+    public function stream_song_preview($file): void
     {
         if (strpos($file, "7digital") !== false) {
             $consumer = new OAuthConsumer($this->api_key, $this->secret, null);
@@ -116,21 +114,15 @@ class Ampache7digital
             $url = $request->to_url();
 
             header("Location: " . $url);
-
-            return false;
         }
-
-        return false;
     }
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -157,5 +149,5 @@ class Ampache7digital
         }
 
         return true;
-    } // load
+    }
 }

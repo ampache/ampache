@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -24,7 +27,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
@@ -50,10 +52,10 @@ use Ampache\Module\Util\Ui;
 $current_user = Core::get_global('user');
 $last_seen    = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date  = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $allow_upload = Upload::can_upload($current_user);
 $client->format();
-Ui::show_box_top($client->get_fullname()); ?>
+Ui::show_box_top((string)$client->get_fullname()); ?>
 <?php if ($client->id > 0) { ?>
 <div class="user_avatar">
 <?php if ($client->f_avatar) {
@@ -69,7 +71,7 @@ if (AmpConfig::get('sociable')) {
     <ul id="plugins_user_field">
 <?php foreach ($plugins as $plugin_name) {
     $plugin = new Plugin($plugin_name);
-    if ($plugin->load($client)) { ?>
+    if ($plugin->_plugin !== null && $plugin->load($client)) { ?>
         <li><?php $plugin->_plugin->display_user_field(); ?> </li>
 <?php } ?>
 <?php
@@ -83,7 +85,7 @@ if (AmpConfig::get('sociable')) {
     <dd>
         <?php echo $client->get_fullname(); ?>
         <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>
@@ -97,6 +99,9 @@ if (AmpConfig::get('sociable')) {
 <?php if (AmpConfig::get('use_now_playing_embedded')) { ?>
         <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_icon('play_preview', T_('Now Playing')); ?></a>
 <?php } ?>
+<?php if (AmpConfig::get('show_wrapped')) { ?>
+        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_icon('info', T_('Wrapped')); ?></a>
+<?php } ?>
     </dd>
     <dt><?php echo T_('Member Since'); ?></dt>
     <dd><?php echo $create_date; ?></dd>
@@ -104,7 +109,7 @@ if (AmpConfig::get('sociable')) {
     <dd><?php echo $last_seen; ?></dd>
     <?php if (Access::check('interface', 50)) { ?>
     <dt><?php echo T_('Activity'); ?></dt>
-    <dd><?php echo $client->f_usage; ?></dd>
+    <dd><?php echo $client->f_usage; ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <a href="<?php echo $web_path; ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
         <?php } ?>
@@ -139,7 +144,7 @@ if (AmpConfig::get('sociable')) {
     </div>
     <div id="tabs_content">
         <div id="recently_played" class="tab_content" style="display: block;">
-        <?php $current_list = Tmp_Playlist::get_from_username($client->username);
+        <?php $current_list = Tmp_Playlist::get_from_username((string)$client->username);
 if ($current_list) {
     $tmp_playlist = new Tmp_Playlist($current_list);
     $object_ids   = $tmp_playlist->get_items();
@@ -149,10 +154,10 @@ if ($current_list) {
                     <tr>
                         <td>
         <?php foreach ($object_ids as $object_data) {
+            $type      = array_shift($object_data);
+            $className = ObjectTypeToClassNameMapper::map($type);
             /** @var Ampache\Repository\Model\playable_item $object */
-            $type       = array_shift($object_data);
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            $object     = new $class_name(array_shift($object_data));
+            $object = new $className(array_shift($object_data));
             echo $object->get_f_link(); ?>
             <br />
             <?php
@@ -163,11 +168,17 @@ if ($current_list) {
         <?php Ui::show_box_bottom();
     }
 }
-$ajax_page = 'stats';
-$limit     = AmpConfig::get('popular_threshold', 10);
-$data      = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
-Song::build_cache(array_keys($data));
-require Ui::find_template('show_recently_played.inc.php'); ?>
+$ajax_page  = 'stats';
+$limit      = AmpConfig::get('popular_threshold', 10);
+$no_refresh = true;
+if (AmpConfig::get('home_recently_played_all')) {
+    $data = Stats::get_recently_played($client->getId(), 'stream', null, true);
+    require_once Ui::find_template('show_recently_played_all.inc.php');
+} else {
+    $data = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
+    Song::build_cache(array_keys($data));
+    require Ui::find_template('show_recently_played.inc.php');
+} ?>
         </div>
         <div id="recently_skipped" class="tab_content">
 <?php $ajax_page = 'stats';
@@ -178,8 +189,8 @@ require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
 <?php if ($allow_upload) { ?>
         <div id="artists" class="tab_content">
-    <?php $sql  = Catalog::get_uploads_sql('artist', $client->id);
-    $browse     = new Browse();
+    <?php $sql = Catalog::get_uploads_sql('artist', $client->id);
+    $browse    = new Browse();
     $browse->set_type('artist', $sql);
     $browse->set_simple_browse(true);
     $browse->show_objects();
@@ -192,6 +203,7 @@ $show_all     = (($current_user->id ?? 0) == $client->id || ($current_user->acce
 $playlist_ids = $client->get_playlists($show_all);
 $browse       = new Browse();
 $browse->set_type('playlist');
+$browse->set_use_filters(false);
 $browse->set_simple_browse(false);
 $browse->show_objects($playlist_ids);
 $browse->store(); ?>
@@ -200,6 +212,7 @@ $browse->store(); ?>
         <div id="following" class="tab_content">
     <?php $browse = new Browse();
     $browse->set_type('user');
+    $browse->set_use_filters(false);
     $browse->set_simple_browse(false);
     $browse->show_objects($following);
     $browse->store(); ?>
@@ -207,6 +220,7 @@ $browse->store(); ?>
         <div id="followers" class="tab_content">
     <?php $browse = new Browse();
     $browse->set_type('user');
+    $browse->set_use_filters(false);
     $browse->set_simple_browse(false);
     $browse->show_objects($followers);
     $browse->store(); ?>

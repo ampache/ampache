@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,24 +23,13 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Cache;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 
 final class ObjectCache implements ObjectCacheInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
-    }
-
     public function compute(): void
     {
         $count_types = ['stream', 'download', 'skip'];
@@ -54,7 +46,7 @@ final class ObjectCache implements ObjectCacheInterface
             foreach ($count_types as $count_type) {
                 foreach ($object_types as $object_type) {
                     $sql = "INSERT INTO `cache_object_count_run` (`object_id`, `count`, `object_type`, `count_type`, `threshold`) ";
-                    $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null, false, true);
+                    $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null, false, 0, 0, true);
                     $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES (`count`)";
                     Dba::write($sql);
                 }

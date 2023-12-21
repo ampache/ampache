@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
@@ -61,9 +62,8 @@ class Ui implements UiInterface
      * by the theme if it's not a php file, or if it is and if option
      * allow_php_themes is set to true.
      * @param string $template
-     * @return string
      */
-    public static function find_template($template, bool $extern = false)
+    public static function find_template($template, bool $extern = false): string
     {
         $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
         $realpath  = __DIR__ . '/../../../' . $path;
@@ -79,6 +79,17 @@ class Ui implements UiInterface
         }
     }
 
+    public function showObjectNotFound(): void
+    {
+        $this->showHeader();
+        echo T_('You have requested an object that does not exist');
+        $this->showQueryStats();
+        $this->showFooter();
+    }
+
+    /**
+     * Displays the default error page
+     */
     public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
@@ -87,6 +98,9 @@ class Ui implements UiInterface
         require_once self::find_template('show_denied.inc.php');
     }
 
+    /**
+     * Displays an error page when you can't write the config
+     */
     public function permissionDenied(string $fileName): void
     {
         // Clear any buffered crap
@@ -100,26 +114,23 @@ class Ui implements UiInterface
      *
      * Does some trickery with the output buffer to return the output of a
      * template.
-     * @param string $template
-     * @return string
      */
-    public static function ajax_include($template)
+    public static function ajax_include(string $template): string
     {
         ob_start();
         require self::find_template('') . $template;
         $output = ob_get_contents();
         ob_end_clean();
 
-        return $output;
+        return $output ?: '';
     }
 
     /**
      * check_iconv
      *
-     * Checks to see whether iconv is available;
-     * @return boolean
+     * Checks to see whether iconv is available.
      */
-    public static function check_iconv()
+    public static function check_iconv(): bool
     {
         if (function_exists('iconv') && function_exists('iconv_substr')) {
             return true;
@@ -133,9 +144,8 @@ class Ui implements UiInterface
      *
      * Stupid little cutesie thing to ratelimit output of long-running
      * operations.
-     * @return boolean
      */
-    public static function check_ticker()
+    public static function check_ticker(): bool
     {
         if (defined('SSE_OUTPUT') || defined('API')) {
             return false;
@@ -156,9 +166,8 @@ class Ui implements UiInterface
      * (which is a subset of valid UTF-8, but close enough for our purposes.)
      * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
      * @param string $string
-     * @return string
      */
-    public static function clean_utf8($string)
+    public static function clean_utf8($string): string
     {
         if ($string) {
             $clean = preg_replace(
@@ -184,9 +193,8 @@ class Ui implements UiInterface
      * @param $value
      * @param int $precision
      * @param int $pass
-     * @return string
      */
-    public static function format_bytes($value, $precision = 2, $pass = 0)
+    public static function format_bytes($value, $precision = 2, $pass = 0): string
     {
         if (!$value) {
             return '';
@@ -224,14 +232,14 @@ class Ui implements UiInterface
      * unformat_bytes
      *
      * Parses a human-readable size
-     * @param $value
+     * @param string|int $value
      * @return string
      * @noinspection PhpMissingBreakStatementInspection
      */
-    public static function unformat_bytes($value)
+    public static function unformat_bytes($value): string
     {
         if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', (string)$value, $matches)) {
-            $value = $matches[1];
+            $value = (int)$matches[1];
             $unit  = strtolower(substr($matches[2], 0, 1));
         } else {
             return (string)$value;
@@ -262,48 +270,38 @@ class Ui implements UiInterface
      * get_icon
      *
      * Returns an <img> or <svg> tag for the specified icon
-     * @param string $name
-     * @param string $title
-     * @param string $id_attrib
-     * @param string $class_attrib
-     * @return string
      */
-    public static function get_icon($name, $title = null, $id_attrib = null, $class_attrib = null)
+    public static function get_icon(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
-        if (is_array($name)) {
-            $hover_name = $name[1];
-            $name       = $name[0];
-        }
-
-        $title    = $title ?: T_(ucfirst($name));
+        $title    = $title ?? T_(ucfirst($name));
         $icon_url = self::_find_icon($name);
         $icontype = pathinfo($icon_url, PATHINFO_EXTENSION);
-        if (isset($hover_name)) {
-            $hover_url = self::_find_icon($hover_name);
-        }
+        $tag      = '';
         if ($icontype == 'svg') {
             // load svg file
             $svgicon = simplexml_load_file($icon_url);
+            if ($svgicon !== false) {
+                if (empty($svgicon->title)) {
+                    $svgicon->addChild('title', $title);
+                } else {
+                    $svgicon->title = $title;
+                }
+                if (empty($svgicon->desc)) {
+                    $svgicon->addChild('desc', $title);
+                } else {
+                    $svgicon->desc = $title;
+                }
 
-            if (empty($svgicon->title)) {
-                $svgicon->addChild('title', $title);
-            } else {
-                $svgicon->title = $title;
+                if (!empty($id_attrib)) {
+                    $svgicon->addAttribute('id', $id_attrib);
+                }
+                if (empty($class_attrib)) {
+                    $class_attrib = 'icon icon-' . $name;
+                }
+                $svgicon->addAttribute('class', $class_attrib);
+
+                $tag = explode("\n", (string)$svgicon->asXML(), 2)[1];
             }
-            if (empty($svgicon->desc)) {
-                $svgicon->addChild('desc', $title);
-            } else {
-                $svgicon->desc = $title;
-            }
-
-            if (!empty($id_attrib)) {
-                $svgicon->addAttribute('id', $id_attrib);
-            }
-
-            $class_attrib = ($class_attrib) ?: 'icon icon-' . $name;
-            $svgicon->addAttribute('class', $class_attrib);
-
-            $tag = explode("\n", $svgicon->asXML(), 2)[1];
         } else {
             // fall back to png
             $tag = '<img src="' . $icon_url . '" ';
@@ -314,10 +312,6 @@ class Ui implements UiInterface
             }
             if ($class_attrib !== null) {
                 $tag .= 'class="' . $class_attrib . '" ';
-            }
-            if (isset($hover_name) && isset($hover_url)) {
-                $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
-                $tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
             }
             $tag .= '/>';
         }
@@ -330,9 +324,8 @@ class Ui implements UiInterface
      *
      * Does the finding icon thing. match svg first over png
      * @param string $name
-     * @return string
      */
-    private static function _find_icon($name)
+    private static function _find_icon($name): string
     {
         if (isset(self::$_icon_cache[$name])) {
             return self::$_icon_cache[$name];
@@ -358,51 +351,39 @@ class Ui implements UiInterface
      * get_image
      *
      * Returns an <img> or <svg> tag for the specified image
-     * @param string $name
-     * @param string $title
-     * @param string $id_attrib
-     * @param string $class_attrib
-     * @return string
      */
-    public static function get_image($name, $title = null, $id_attrib = null, $class_attrib = null)
+    public static function get_image(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
-        if (is_array($name)) {
-            $hover_name = $name[1];
-            $name       = $name[0];
-        }
-
-        $title = $title ?: ucfirst($name);
-
+        $title     = $title ?? ucfirst($name);
         $image_url = self::_find_image($name);
         $imagetype = pathinfo($image_url, PATHINFO_EXTENSION);
-        if (isset($hover_name)) {
-            $hover_url = self::_find_image($hover_name);
-        }
+        $tag       = '';
         if ($imagetype == 'svg') {
             // load svg file
             $svgimage = simplexml_load_file($image_url);
+            if ($svgimage !== false) {
+                $svgimage->addAttribute('class', 'image');
 
-            $svgimage->addAttribute('class', 'image');
+                if (empty($svgimage->title)) {
+                    $svgimage->addChild('title', $title);
+                } else {
+                    $svgimage->title = $title;
+                }
+                if (empty($svgimage->desc)) {
+                    $svgimage->addChild('desc', $title);
+                } else {
+                    $svgimage->desc = $title;
+                }
 
-            if (empty($svgimage->title)) {
-                $svgimage->addChild('title', $title);
-            } else {
-                $svgimage->title = $title;
+                if (!empty($id_attrib)) {
+                    $svgimage->addAttribute('id', $id_attrib);
+                }
+
+                $class_attrib = ($class_attrib) ?? 'image image-' . $name;
+                $svgimage->addAttribute('class', $class_attrib);
+
+                $tag = explode("\n", (string)$svgimage->asXML(), 2)[1];
             }
-            if (empty($svgimage->desc)) {
-                $svgimage->addChild('desc', $title);
-            } else {
-                $svgimage->desc = $title;
-            }
-
-            if (!empty($id_attrib)) {
-                $svgimage->addAttribute('id', $id_attrib);
-            }
-
-            $class_attrib = ($class_attrib) ?: 'image image-' . $name;
-            $svgimage->addAttribute('class', $class_attrib);
-
-            $tag = explode("\n", $svgimage->asXML(), 2)[1];
         } else {
             // fall back to png
             $tag = '<img src="' . $image_url . '" ';
@@ -413,10 +394,6 @@ class Ui implements UiInterface
             }
             if ($class_attrib !== null) {
                 $tag .= 'class="' . $class_attrib . '" ';
-            }
-            if (isset($hover_name) && isset($hover_url)) {
-                $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
-                $tag .= 'onmouseout="this.src=\'' . $image_url . '\'; return true;" ';
             }
             $tag .= '/>';
         }
@@ -429,9 +406,8 @@ class Ui implements UiInterface
      *
      * Does the finding image thing. match svg first over png
      * @param string $name
-     * @return string
      */
-    private static function _find_image($name)
+    private static function _find_image($name): string
     {
         if (isset(self::$_image_cache[$name])) {
             return self::$_image_cache[$name];
@@ -480,7 +456,7 @@ class Ui implements UiInterface
      *
      * @deprecated use non-static version
      */
-    public static function show_footer()
+    public static function show_footer(): void
     {
         if (!defined("TABLE_RENDERED")) {
             show_table_render();
@@ -489,7 +465,7 @@ class Ui implements UiInterface
         $plugins = Plugin::get_plugins('display_on_footer');
         foreach ($plugins as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                 $plugin->_plugin->display_on_footer();
             }
         }
@@ -519,7 +495,7 @@ class Ui implements UiInterface
      *
      * @deprecated Use non-static version
      */
-    public static function show_box_top($title = '', $class = '')
+    public static function show_box_top($title = '', $class = ''): void
     {
         require self::find_template('show_box_top.inc.php');
     }
@@ -531,7 +507,7 @@ class Ui implements UiInterface
      *
      * @deprecated Use non-static version
      */
-    public static function show_box_bottom()
+    public static function show_box_bottom(): void
     {
         require self::find_template('show_box_bottom.inc.php');
     }
@@ -544,7 +520,7 @@ class Ui implements UiInterface
         require self::find_template('show_query_stats.inc.php');
     }
 
-    public static function show_custom_style()
+    public static function show_custom_style(): void
     {
         if (AmpConfig::get('custom_login_background', false)) {
             echo "<style> body { background-position: center; background-size: cover; background-image: url('" . AmpConfig::get('custom_login_background') . "') !important; }</style>";
@@ -554,7 +530,7 @@ class Ui implements UiInterface
             echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get('web_path') . "/favicon.ico";
+        $favicon = AmpConfig::get('custom_favicon', false) ?? AmpConfig::get('web_path') . "/favicon.ico";
         echo "<link rel='shortcut icon' href='" . $favicon . "' />\n";
     }
 
@@ -566,7 +542,7 @@ class Ui implements UiInterface
      * @param string $field
      * @param $value
      */
-    public static function update_text($field, $value)
+    public static function update_text($field, $value): void
     {
         if (defined('API')) {
             return;
@@ -600,9 +576,8 @@ class Ui implements UiInterface
      *
      * Get the custom logo or logo relating to your theme color
      * @param string $color
-     * @return string
      */
-    public static function get_logo_url($color = null)
+    public static function get_logo_url($color = null): string
     {
         if (AmpConfig::get('custom_logo')) {
             return AmpConfig::get('custom_logo');
@@ -616,9 +591,8 @@ class Ui implements UiInterface
 
     /**
      * @param $type
-     * @return boolean
      */
-    public static function is_grid_view($type)
+    public static function is_grid_view($type): bool
     {
         $isgv = true;
         $name = 'browse_' . $type . '_grid_view';
@@ -635,9 +609,9 @@ class Ui implements UiInterface
      * @param string $title The Title of the message
      * @param string $text The details of the message
      * @param string $next_url Where to go next
-     * @param integer $cancel T/F show a cancel button that uses return_referer()
+     * @param int $cancel T/F show a cancel button that uses return_referer()
      * @param string $form_name
-     * @param boolean $visible
+     * @param bool $visible
      */
     public function showConfirmation(
         $title,
@@ -654,8 +628,16 @@ class Ui implements UiInterface
         } else {
             $path = sprintf('%s/%s', $webPath, $next_url);
         }
-
-        require Ui::find_template('show_confirmation.inc.php');
+        $this->show(
+            'show_confirmation.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'path' => $path,
+                'form_name' => $form_name,
+                'cancel' => $cancel
+            ]
+        );
     }
 
     /**
@@ -674,7 +656,14 @@ class Ui implements UiInterface
             $path = sprintf('%s/%s', $webPath, $next_url);
         }
 
-        require Ui::find_template('show_continue.inc.php');
+        $this->show(
+            'show_continue.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'path' => $path
+            ]
+        );
     }
 
     /**
@@ -697,7 +686,7 @@ class Ui implements UiInterface
     public function createPreferenceInput(
         string $name,
         $value
-    ) {
+    ): void {
         if (!Preference::has_access($name)) {
             if ($value == '1') {
                 echo T_("Enabled");
@@ -759,12 +748,14 @@ class Ui implements UiInterface
             case 'home_moment_videos':
             case 'home_now_playing':
             case 'home_recently_played':
+            case 'home_recently_played_all':
             case 'libitem_contextmenu':
             case 'lock_songs':
             case 'mb_overwrite_name':
             case 'no_symlinks':
             case 'notify_email':
             case 'now_playing_per_user':
+            case 'perpetual_api_session':
             case 'personalfav_display':
             case 'quarantine':
             case 'ratingmatch_flags':
@@ -783,6 +774,7 @@ class Ui implements UiInterface
             case 'show_played_times':
             case 'show_playlist_username':
             case 'show_skipped_times':
+            case 'show_wrapped':
             case 'show_subtitle':
             case 'sidebar_light':
             case 'song_page_title':
@@ -941,6 +933,55 @@ class Ui implements UiInterface
                 echo "<option value=\"4\" $is_4>" . T_('Allow API4 Only') . "</option>\n";
                 echo "<option value=\"5\" $is_5>" . T_('Allow API5 Only') . "</option>\n";
                 echo "<option value=\"6\" $is_6>" . T_('Allow API6 Only') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'jp_volume':
+                $is_0  = '';
+                $is_1  = '';
+                $is_2  = '';
+                $is_3  = '';
+                $is_4  = '';
+                $is_5  = '';
+                $is_6  = '';
+                $is_7  = '';
+                $is_8  = '';
+                $is_9  = '';
+                $is_10 = '';
+                if ($value == 0.0) {
+                    $is_0 = 'selected="selected"';
+                } elseif ($value == 0.1) {
+                    $is_1 = 'selected="selected"';
+                } elseif ($value == 0.2) {
+                    $is_2 = 'selected="selected"';
+                } elseif ($value == 0.3) {
+                    $is_3 = 'selected="selected"';
+                } elseif ($value == 0.4) {
+                    $is_4 = 'selected="selected"';
+                } elseif ($value == 0.5) {
+                    $is_5 = 'selected="selected"';
+                } elseif ($value == 0.6) {
+                    $is_6 = 'selected="selected"';
+                } elseif ($value == 0.7) {
+                    $is_7 = 'selected="selected"';
+                } elseif ($value == 0.8) {
+                    $is_8 = 'selected="selected"';
+                } elseif ($value == 0.9) {
+                    $is_9 = 'selected="selected"';
+                } elseif ($value == 1.0) {
+                    $is_10 = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "<option value=0.00 $is_0>0%</option>\n";
+                echo "<option value=0.10 $is_1>10%</option>\n";
+                echo "<option value=0.20 $is_2>20%</option>\n";
+                echo "<option value=0.30 $is_3>30%</option>\n";
+                echo "<option value=0.40 $is_4>40%</option>\n";
+                echo "<option value=0.50 $is_5>50%</option>\n";
+                echo "<option value=0.60 $is_6>60%</option>\n";
+                echo "<option value=0.70 $is_7>70%</option>\n";
+                echo "<option value=0.80 $is_8>80%</option>\n";
+                echo "<option value=0.90 $is_9>90%</option>\n";
+                echo "<option value=1.00 $is_10>100%</option>\n";
                 echo "</select>\n";
                 break;
             case 'ratingmatch_stars':
@@ -1175,5 +1216,21 @@ class Ui implements UiInterface
                 'ui' => $this
             ]
         );
+    }
+
+
+    /**
+     * This function takes a boolean value and then prints out a friendly text
+     * message.
+     */
+    public static function printBool(bool $value): string
+    {
+        if ($value) {
+            $string = '<span class="item_on">' . T_('On') . '</span>';
+        } else {
+            $string = '<span class="item_off">' . T_('Off') . '</span>';
+        }
+
+        return $string;
     }
 }

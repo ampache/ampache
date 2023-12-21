@@ -1,6 +1,9 @@
 <?php
-/* vim:set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -39,18 +42,21 @@ header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 <meta property="og:description" content="A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device." />
 <meta property="og:site_name" content="Ampache"/>
 <?php
-if (!isset($isShare) || (isset($isShare) && !$isShare)) {
+$isRadio      = false;
+$isVideo      = false;
+$isDemocratic = false;
+$isRandom     = false;
+$radio        = null;
+$isShare      = isset($isShare) && $isShare;
+$iframed      = isset($iframed) && $iframed;
+$embed        = isset($embed) && $embed;
+if (!$isShare) {
     $stream_id = $_REQUEST['playlist_id'] ?? null;
     if (is_string($stream_id) || is_integer($stream_id)) {
         $playlist = new Stream_Playlist($stream_id);
     }
 }
 
-$isRadio      = false;
-$isVideo      = false;
-$isDemocratic = false;
-$isRandom     = false;
-$radio        = null;
 if (isset($playlist)) {
     if (WebPlayer::is_playlist_radio($playlist)) {
         // Special stuff for web radio (to better handle Icecast/Shoutcast metadata ...)

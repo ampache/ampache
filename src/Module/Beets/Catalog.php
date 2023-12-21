@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,7 +23,6 @@
  *
  */
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 namespace Ampache\Module\Beets;
 
 use Ampache\Repository\Model\Album;
@@ -31,7 +33,10 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\Video;
 
 /**
  * Catalog parent for local and remote beets catalog
@@ -42,13 +47,13 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 {
     /**
      * Added Songs counter
-     * @var integer
+     * @var int
      */
     protected $addedSongs = 0;
 
     /**
      * Verified Songs counter
-     * @var integer
+     * @var int
      */
     protected $verifiedSongs = 0;
 
@@ -73,7 +78,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param integer $catalog_id
+     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -89,24 +94,33 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      *
-     * @param Media $media
-     * @return Media
+     * @param Song|Podcast_Episode|Video $media
+     * @return array{
+     *   file_path: string,
+     *   file_name: string,
+     *   file_size: int,
+     *   file_type: string
+     * }
      */
-    public function prepare_media($media)
+    public function prepare_media($media): array
     {
-        /** @var Song $media */
         debug_event(self::class, 'Play: Started remote stream - ' . $media->file, 5);
 
-        return $media;
+        return [
+            'file_path' => (string) $media->file,
+            'file_name' => $media->f_file,
+            'file_size' => $media->size,
+            'file_type' => $media->type
+        ];
     }
 
     /**
      * @param string $prefix Prefix like add, updated, verify and clean
-     * @param integer $count song count
+     * @param int $count song count
      * @param array $song Song array
-     * @param boolean $ignoreTicker ignoring the ticker for the last update
+     * @param bool $ignoreTicker ignoring the ticker for the last update
      */
-    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false)
+    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false): void
     {
         if (!defined('SSE_OUTPUT') && !defined('API')) {
             return;
@@ -127,9 +141,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Adds new songs to the catalog
      * @param array $options
-     * @return int
      */
-    public function add_to_catalog($options = null)
+    public function add_to_catalog($options = null): int
     {
         if (!defined('SSE_OUTPUT') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
@@ -139,7 +152,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_top(T_('Running Beets Update'));
         }
-        /* @var Handler $parser */
+        /** @var Handler $parser */
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'added', 0));
@@ -157,7 +170,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Add $song to ampache if it isn't already
      * @param array $song
      */
-    public function addSong($song)
+    public function addSong($song): void
     {
         $song['catalog'] = $this->id;
 
@@ -167,7 +180,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'] ?? null, $song['mb_releasegroupid'] ?? null, $song['album_artist'] ?? null, $song['release_type'] ?? null, $song['release_status'] ?? null, $song['original_year'] ?? null, $song['barcode'] ?? null, $song['catalog_number'] ?? null, $song['version'] ?? null);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
-            if (Song::isCustomMetadataEnabled() && $songId) {
+            if (Song::isCustomMetadataEnabled() && $songId !== false) {
                 $songObj = new Song($songId);
                 $this->addMetadata($songObj, $song);
                 $this->updateUi('add', ++$this->addedSongs, $song);
@@ -179,7 +192,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * @param library_item $libraryItem
      * @param $metadata
      */
-    public function addMetadata(library_item $libraryItem, $metadata)
+    public function addMetadata(library_item $libraryItem, $metadata): void
     {
         $tags = $this->getCleanMetadata($libraryItem, $metadata);
 
@@ -212,7 +225,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Add the song to the DB
      * @param array $song
-     * @return integer
+     * @return int|false
      */
     protected function insertSong($song)
     {
@@ -231,14 +244,14 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * @return int
+     * verify_catalog_proc
      */
-    public function verify_catalog_proc()
+    public function verify_catalog_proc(): int
     {
         debug_event(self::class, 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        /* @var Handler $parser */
+        /** @var Handler $parser */
         $parser = $this->getParser();
         $parser->setHandler($this, 'verifySong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'mtime', $this->last_update));
@@ -252,12 +265,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Verify and update a song
      * @param array $beetsSong
      */
-    public function verifySong($beetsSong)
+    public function verifySong($beetsSong): void
     {
         $song                  = new Song($this->getIdFromPath($beetsSong['file']));
         $beetsSong['album_id'] = $song->album;
 
-        if ($song->id) {
+        if ($song->isNew() === false) {
             $song->update($beetsSong);
             if (Song::isCustomMetadataEnabled()) {
                 $tags = $this->getCleanMetadata($song, $beetsSong);
@@ -271,11 +284,10 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Cleans the Catalog.
      * This way is a little fishy, but if we start beets for every single file, it may take horribly long.
      * So first we get the difference between our and the beets database and then clean up the rest.
-     * @return int
      */
-    public function clean_catalog_proc()
+    public function clean_catalog_proc(): int
     {
-        /* @var Handler $parser */
+        /** @var Handler $parser */
         $parser      = $this->getParser();
         $this->songs = $this->getAllSongfiles();
         $parser->setHandler($this, 'removeFromDeleteList');
@@ -305,17 +317,16 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return boolean
      */
-    public function move_catalog_proc($new_path)
+    public function move_catalog_proc($new_path): bool
     {
         return false;
     }
 
     /**
-     * @return bool
+     * cache_catalog_proc
      */
-    public function cache_catalog_proc()
+    public function cache_catalog_proc(): bool
     {
         return false;
     }
@@ -324,7 +335,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Remove a song from the "to be deleted"-list if it was found.
      * @param array $song
      */
-    public function removeFromDeleteList($song)
+    public function removeFromDeleteList($song): void
     {
         $key = array_search($song['file'], $this->songs, true);
         $this->updateUi('clean', ++$this->cleanCounter, $song);
@@ -337,7 +348,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Delete Song from DB
      * @param array $songs
      */
-    protected function deleteSongs($songs)
+    protected function deleteSongs($songs): void
     {
         $ids = implode(',', array_keys($songs));
         $sql = "DELETE FROM `song` WHERE `id` IN ($ids)";
@@ -347,15 +358,18 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      *
      * @param string $path
-     * @return integer|boolean
+     * @return int
      */
-    protected function getIdFromPath($path)
+    protected function getIdFromPath($path): int
     {
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($path));
         $row        = Dba::fetch_row($db_results);
+        if (empty($row)) {
+            return 0;
+        }
 
-        return $row[0] ?? 0;
+        return (int)$row[0];
     }
 
     /**
@@ -378,9 +392,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Assembles a virtual Path. Mostly just to looks nice in the UI.
      * @param array $song
-     * @return string
      */
-    protected function getVirtualSongPath($song)
+    protected function getVirtualSongPath($song): string
     {
         return implode('/', array(
             $song['artist'],
@@ -393,7 +406,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * get_description
      * This returns the description of this catalog
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->description;
     }
@@ -402,7 +415,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * get_version
      * This returns the current version
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
     }
@@ -411,17 +424,17 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * get_type
      * This returns the current catalog type
      */
-    public function get_type()
+    public function get_type(): string
     {
         return $this->type;
     }
 
     /**
-     * Doesn't seems like we need this...
      * @param string $file_path
      */
-    public function get_rel_path($file_path)
+    public function get_rel_path($file_path): string
     {
+        return '';
     }
 
     /**
@@ -429,7 +442,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      *
      * This makes the object human-readable.
      */
-    public function format()
+    public function format(): void
     {
         parent::format();
     }
@@ -438,7 +451,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * @param $song
      * @param $tags
      */
-    public function updateMetadata($song, $tags)
+    public function updateMetadata($song, $tags): void
     {
         foreach ($tags as $tag => $value) {
             $field = $song->getField($tag);

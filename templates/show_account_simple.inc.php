@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -26,9 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
-/** @var \Ampache\Repository\Model\User $client */
-$web_path       = AmpConfig::get('web_path');
+/** @var User $client */
+$web_path       = (string)AmpConfig::get('web_path', '');
 $access100      = Access::check('interface', 100);
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>

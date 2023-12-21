@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,16 +23,14 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Rss;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\AmpacheRss;
+use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\Rss\AmpacheRssInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,20 +40,27 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private ResponseFactoryInterface $responseFactory;
 
     private StreamFactoryInterface $streamFactory;
+    private AmpacheRssInterface $ampacheRss;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
+        AmpacheRssInterface $ampacheRss
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
+        $this->ampacheRss      = $ampacheRss;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -65,15 +73,14 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        $type     = Core::get_request('type');
-        $rsstoken = Core::get_request('rsstoken');
-        $rss      = new AmpacheRss($type, $rsstoken);
+        $type     = $this->requestParser->getFromRequest('type');
+        $rsstoken = $this->requestParser->getFromRequest('rsstoken');
         $params   = null;
 
         if ($type === 'podcast') {
             $params                = [];
-            $params['object_type'] = Core::get_request('object_type');
-            $params['object_id']   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+            $params['object_type'] = $this->requestParser->getFromRequest('object_type');
+            $params['object_id']   = (int) $this->requestParser->getFromRequest('object_id');
             if (empty($params['object_id'])) {
                 return null;
             }
@@ -88,7 +95,13 @@ final class ShowAction implements ApplicationActionInterface
                 )
             )
             ->withBody(
-                $this->streamFactory->createStream($rss->get_xml($params))
+                $this->streamFactory->createStream(
+                    $this->ampacheRss->get_xml(
+                        $rsstoken,
+                        $type,
+                        $params
+                    )
+                )
             );
     }
 }

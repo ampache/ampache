@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -26,7 +29,8 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-?>
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */ ?>
 <div id="information_actions">
     <ul>
         <?php if (Access::check('interface', 25)) { ?>
@@ -42,12 +46,13 @@ use Ampache\Module\Util\Ui;
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="smartplaylist">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="smartplaylist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
             <th class="cel_playlist essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
+            <th class="cel_last_update optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=last_update', T_('Last Update'), 'playlist_sort_last_update'); ?></th>
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_random optional"><?php echo T_('Random'); ?></th>
             <th class="cel_limit optional"><?php echo T_('Item Limit'); ?></th>
@@ -56,26 +61,28 @@ use Ampache\Module\Util\Ui;
         </tr>
     </thead>
     <tbody>
-        <?php
-        foreach ($object_ids as $playlist_id) {
-            $libitem = new Search($playlist_id, 'song');
-            $libitem->format(); ?>
+<?php foreach ($object_ids as $playlist_id) {
+    $libitem = new Search($playlist_id, 'song');
+    if ($libitem->isNew()) {
+        continue;
+    }
+    $libitem->format(); ?>
         <tr id="smartplaylist_row_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_search_row.inc.php'); ?>
         </tr>
-        <?php
-        } ?>
-        <?php if (!count($object_ids)) { ?>
+<?php } ?>
+<?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No smart playlist found'); ?></span></td>
         </tr>
-        <?php } ?>
+<?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <th class="cel_playlist"></th>
             <th class="cel_add"></th>
+            <th class="cel_last_update"></th>
             <th class="cel_type"></th>
             <th class="cel_random"></th>
             <th class="cel_limit"></th>

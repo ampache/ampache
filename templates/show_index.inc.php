@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -27,6 +30,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
 ?>
 <div id="browse_header">
@@ -34,10 +38,10 @@ use Ampache\Module\Util\Ui;
 </div> <!-- Close browse_header Div -->
 
 <?php $user = Core::get_global('user');
-if (isset($user->id)) {
+if ($user instanceof User) {
     foreach (Plugin::get_plugins('display_home') as $plugin_name) {
         $plugin = new Plugin($plugin_name);
-        if ($plugin->load($user)) {
+        if ($plugin->_plugin !== null && $plugin->load($user)) {
             $plugin->_plugin->display_home();
         }
     }
@@ -63,23 +67,27 @@ if (isset($user->id)) {
 </div>
 <?php
 }
-    if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
-        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos')); ?>
+if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos')); ?>
 <div id="random_video_selection" class="random_selection">
     <?php Ui::show_box_top(T_('Videos of the Moment'));
-        echo T_('Loading...');
-        Ui::show_box_bottom(); ?>
+    echo T_('Loading...');
+    Ui::show_box_bottom(); ?>
 </div>
     <?php
-    } ?>
+} ?>
 <?php if (AmpConfig::get('home_recently_played')) { ?>
 <!-- Recently Played -->
 <div id="recently_played">
-    <?php
-        $user_id   = Core::get_global('user')->id ?? -1;
-        $data      = Stats::get_recently_played($user_id, 'stream', 'song');
-        $ajax_page = 'index';
+<?php $user_id = Core::get_global('user')->id ?? -1;
+    $ajax_page = 'index';
+    if (AmpConfig::get('home_recently_played_all')) {
+        $data = Stats::get_recently_played($user_id);
+        require_once Ui::find_template('show_recently_played_all.inc.php');
+    } else {
+        $data = Stats::get_recently_played($user_id, 'stream', 'song');
         Song::build_cache(array_keys($data));
-        require_once Ui::find_template('show_recently_played.inc.php'); ?>
+        require_once Ui::find_template('show_recently_played.inc.php');
+    } ?>
 </div>
 <?php } ?>

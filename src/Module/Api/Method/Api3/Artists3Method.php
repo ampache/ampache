@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
@@ -34,16 +34,14 @@ use Ampache\Repository\Model\User;
  */
 final class Artists3Method
 {
-    const ACTION = 'artists';
+    public const ACTION = 'artists';
 
     /**
      * artists
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
-     * @param array $input
-     * @param User $user
      */
-    public static function artists(array $input, User $user)
+    public static function artists(array $input, User $user): void
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -67,5 +65,5 @@ final class Artists3Method
         // echo out the resulting xml document
         ob_end_clean();
         echo Xml3_Data::artists($results, $include, $user);
-    } // artists
+    }
 }

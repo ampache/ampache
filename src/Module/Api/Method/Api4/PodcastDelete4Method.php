@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,14 +23,14 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class PodcastDelete4Method
@@ -43,10 +45,7 @@ final class PodcastDelete4Method
      *
      * Delete an existing podcast.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of podcast to delete
-     * @return boolean
      */
     public static function podcast_delete(array $input, User $user): bool
     {
@@ -62,17 +61,36 @@ final class PodcastDelete4Method
             return false;
         }
         $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
-            if ($podcast->remove()) {
-                Api4::message('success', 'podcast ' . $object_id . ' deleted', null, $input['api_format']);
-            } else {
-                Api4::message('error', 'podcast ' . $object_id . ' was not deleted', '401', $input['api_format']);
-            }
+        $podcast   = self::getPodcastRepository()->findById($object_id);
+
+        if ($podcast !== null) {
+            self::getPodcastDeleter()->delete($podcast);
+
+            Api4::message('success', 'podcast ' . $object_id . ' deleted', null, $input['api_format']);
         } else {
             Api4::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);
         }
 
         return true;
-    } // podcast_delete
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastDeleter(): PodcastDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastDeleterInterface::class);
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
+    }
 }

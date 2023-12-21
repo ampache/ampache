@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,14 +23,13 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class PodcastEdit4Method
@@ -43,8 +44,6 @@ final class PodcastEdit4Method
      * Update the description and/or expiration date for an existing podcast.
      * Takes the podcast id to update with optional description and expires parameters.
      *
-     * @param array $input
-     * @param User $user
      * filter      = (string) Alpha-numeric search term
      * feed        = (string) feed url (xml!) //optional
      * title       = (string) title string //optional
@@ -52,7 +51,6 @@ final class PodcastEdit4Method
      * description = (string) //optional
      * generator   = (string) //optional
      * copyright   = (string) //optional
-     * @return boolean
      */
     public static function podcast_edit(array $input, User $user): bool
     {
@@ -68,19 +66,19 @@ final class PodcastEdit4Method
             return false;
         }
         $podcast_id = $input['filter'];
-        $podcast    = new Podcast($podcast_id);
-        if (!$podcast->id) {
+        $podcast    = self::getPodcastRepository()->findById((int) $podcast_id);
+        if ($podcast === null) {
             Api4::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['api_format']);
 
             return false;
         }
 
-        $feed        = (array_key_exists('feed', $input) && filter_var($input['feed'], FILTER_VALIDATE_URL)) ? filter_var($input['feed'], FILTER_VALIDATE_URL) : $podcast->feed;
-        $title       = (array_key_exists('title', $input)) ? scrub_in($input['title']) : $podcast->title;
-        $website     = (array_key_exists('website', $input) && filter_var($input['website'], FILTER_VALIDATE_URL)) ? filter_var($input['website'], FILTER_VALIDATE_URL) : $podcast->website;
-        $description = (array_key_exists('description', $input)) ? scrub_in($input['description']) : $podcast->description;
-        $generator   = (array_key_exists('generator', $input)) ? scrub_in($input['generator']) : $podcast->generator;
-        $copyright   = (array_key_exists('copyright', $input)) ? scrub_in($input['copyright']) : $podcast->copyright;
+        $feed        = (array_key_exists('feed', $input) && filter_var($input['feed'], FILTER_VALIDATE_URL)) ? filter_var($input['feed'], FILTER_VALIDATE_URL) : $podcast->getFeedUrl();
+        $title       = (array_key_exists('title', $input)) ? scrub_in((string) $input['title']) : $podcast->getTitle();
+        $website     = (array_key_exists('website', $input) && filter_var($input['website'], FILTER_VALIDATE_URL)) ? filter_var($input['website'], FILTER_VALIDATE_URL) : $podcast->getWebsite();
+        $description = (array_key_exists('description', $input)) ? scrub_in((string) $input['description']) : $podcast->get_description();
+        $generator   = (array_key_exists('generator', $input)) ? scrub_in((string) $input['generator']) : $podcast->getGenerator();
+        $copyright   = (array_key_exists('copyright', $input)) ? scrub_in((string) $input['copyright']) : $podcast->getCopyright();
         $data        = array(
             'feed' => $feed,
             'title' => $title,
@@ -89,12 +87,22 @@ final class PodcastEdit4Method
             'generator' => $generator,
             'copyright' => $copyright
         );
-        if ($podcast->update($data)) {
+        if ($podcast->update($data) !== false) {
             Api4::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
         } else {
             Api4::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['api_format']);
         }
 
         return true;
-    } // podcast_edit
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
+    }
 }

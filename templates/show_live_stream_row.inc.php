@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,6 +31,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 /** @var Live_Stream $libitem */
+/** @var Ampache\Repository\Model\Browse $browse */
 /** @var string $cel_cover */
 ?>
 <td class="cel_play">
@@ -45,7 +49,7 @@ use Ampache\Module\Util\Ui;
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
+    <?php $thumb = ($browse->is_grid_view()) ? 1 : 11;
 $libitem->display_art($thumb); ?>
 </td>
 <td class="cel_streamname"><?php echo $libitem->get_f_link(); ?></td>
@@ -53,8 +57,8 @@ $libitem->display_art($thumb); ?>
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->id);
 if (Access::check('interface', 25)) { ?>
-            <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, '<?php echo 'live_stream' ?>', '<?php echo $libitem->id ?>')">
-                <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')) ?>
+            <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, '<?php echo 'live_stream'; ?>', '<?php echo $libitem->id; ?>')">
+                <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php } ?>
     </span>
@@ -64,7 +68,7 @@ if (Access::check('interface', 25)) { ?>
 <td class="cel_action">
     <?php
 if (Access::check('interface', 50)) { ?>
-        <a id="<?php echo 'edit_live_stream_' . $libitem->id ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_live_stream_' . $libitem->id ?>', '<?php echo addslashes(T_('Live Stream Edit')) ?>', 'live_stream_')">
+        <a id="<?php echo 'edit_live_stream_' . $libitem->id; ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_live_stream_' . $libitem->id; ?>', '<?php echo addslashes(T_('Live Stream Edit')); ?>', 'live_stream_')">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php

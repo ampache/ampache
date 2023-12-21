@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Playlist;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -40,6 +41,8 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'set_track_numbers';
 
+    private RequestParserInterface $requestParser;
+
     private ModelFactoryInterface $modelFactory;
 
     private UiInterface $ui;
@@ -47,18 +50,21 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
         LoggerInterface $logger
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
-        $this->logger       = $logger;
+        $this->requestParser = $requestParser;
+        $this->modelFactory  = $modelFactory;
+        $this->ui            = $ui;
+        $this->logger        = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
+        $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
+        $playlist    = $this->modelFactory->createPlaylist($playlist_id);
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
             throw new AccessDeniedException();
@@ -68,7 +74,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
-            $_GET[$key] = unhtmlentities((string) scrub_in($data));
+            $_GET[$key] = unhtmlentities(scrub_in((string) $data));
 
             $this->logger->debug(
                 $key . '=' . Core::get_get($key),

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Playlist\Search;
 
@@ -43,12 +44,12 @@ final class AlbumSearch implements SearchInterface
         $catalog_filter     = AmpConfig::get('catalog_filter');
         $subsearch_count    = 0;
 
-        $where       = array();
-        $table       = array();
-        $join        = array();
-        $group       = array();
-        $having      = array();
-        $parameters  = array();
+        $where      = array();
+        $table      = array();
+        $join       = array();
+        $group      = array();
+        $having     = array();
+        $parameters = array();
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
@@ -56,13 +57,13 @@ final class AlbumSearch implements SearchInterface
             if (!$type) {
                 continue;
             }
-            foreach ($search->basetypes[$type] as $op) {
-                if ($op['name'] == $rule[1]) {
-                    $operator = $op;
+            foreach ($search->basetypes[$type] as $baseOperator) {
+                if ($baseOperator['name'] == $rule[1]) {
+                    $operator = $baseOperator;
                     break;
                 }
             }
-            $input        = $search->filter_data($rule[2], $type, $operator);
+            $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
             $group[]      = "`album`.`id`";
             switch ($rule[0]) {
@@ -85,7 +86,7 @@ final class AlbumSearch implements SearchInterface
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
                 case 'time':
-                    $input        = $input * 60;
+                    $input        = ((int)$input) * 60;
                     $where[]      = "`album`.`time` $operator_sql ?";
                     $parameters[] = $input;
                     break;
@@ -272,7 +273,7 @@ final class AlbumSearch implements SearchInterface
                     $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `album` ORDER BY $operator_sql DESC LIMIT " . (int)$input . ") AS `addition_time_$key` ON `album`.`id` = `addition_time_$key`.`id`";
                     break;
                 case 'genre':
-                    $where[]      = ($operator_sql == "NOT LIKE")
+                    $where[] = ($operator_sql == "NOT LIKE")
                         ? "`album`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)"
                         : "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $operator_sql ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
@@ -281,7 +282,7 @@ final class AlbumSearch implements SearchInterface
                     $where[] = "`album`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'song_genre':
-                    $where[]      = ($operator_sql == "NOT LIKE")
+                    $where[] = ($operator_sql == "NOT LIKE")
                         ? "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)"
                         : "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $operator_sql ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
@@ -297,7 +298,7 @@ final class AlbumSearch implements SearchInterface
                     break;
                 case 'smartplaylist':
                     //debug_event(self::class, '_get_sql_song: SUBSEARCH ' . $input, 5);
-                    $subsearch = new Search($input, 'song', $search->search_user);
+                    $subsearch = new Search((int)$input, 'song', $search->search_user);
                     $results   = $subsearch->get_subsearch('song');
                     if (!empty($results)) {
                         $subsearch_count++;
@@ -343,11 +344,11 @@ final class AlbumSearch implements SearchInterface
                 case 'mbid':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`album`.`mbid` IS NULL";
+                            $where[] = "`album`.`mbid` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`album`.`mbid` IS NOT NULL";
+                            $where[] = "`album`.`mbid` IS NOT NULL";
                             break;
                         }
                     }
@@ -357,11 +358,11 @@ final class AlbumSearch implements SearchInterface
                 case 'mbid_song':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`song`.`mbid` IS NULL";
+                            $where[] = "`song`.`mbid` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`song`.`mbid` IS NOT NULL";
+                            $where[] = "`song`.`mbid` IS NOT NULL";
                             break;
                         }
                     }
@@ -372,11 +373,11 @@ final class AlbumSearch implements SearchInterface
                 case 'mbid_artist':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`artist`.`mbid` IS NULL";
+                            $where[] = "`artist`.`mbid` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`artist`.`mbid` IS NOT NULL";
+                            $where[] = "`artist`.`mbid` IS NOT NULL";
                             break;
                         }
                     }

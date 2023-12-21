@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
@@ -58,7 +58,7 @@ final class LastFmCollectorModule implements CollectorModuleInterface
      * account but may in the future.
      *
      * @param Art $art
-     * @param integer $limit
+     * @param int $limit
      * @param array $data
      * @return array
      */
@@ -115,7 +115,7 @@ final class LastFmCollectorModule implements CollectorModuleInterface
                 );
 
                 // HACK: we shouldn't rely on the extension to determine file type
-                $results  = pathinfo($url);
+                $results = pathinfo($url);
                 if (is_array($results) && array_key_exists('extension', $results) && !empty($results['extension'])) {
                     $mime     = 'image/' . $results['extension'];
                     $images[] = ['url' => $url, 'mime' => $mime, 'title' => 'LastFM'];

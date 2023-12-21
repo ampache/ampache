@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Method\LostPasswordMethod;
 use Ampache\Module\Api\Method\RegisterMethod;
 use Ampache\Module\System\Session;
@@ -40,8 +42,9 @@ use Ampache\Module\Api\Method\PingMethod;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -63,12 +66,15 @@ final class ApiHandler implements ApiHandlerInterface
 
     private ContainerInterface $dic;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         RequestParserInterface $requestParser,
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
+        UserRepositoryInterface $userRepository,
         ContainerInterface $dic
     ) {
         $this->requestParser   = $requestParser;
@@ -77,6 +83,7 @@ final class ApiHandler implements ApiHandlerInterface
         $this->configContainer = $configContainer;
         $this->networkChecker  = $networkChecker;
         $this->dic             = $dic;
+        $this->userRepository  = $userRepository;
     }
 
     public function handle(
@@ -85,28 +92,35 @@ final class ApiHandler implements ApiHandlerInterface
         ApiOutputInterface $output
     ): ?ResponseInterface {
         $gatekeeper = new Gatekeeper(
+            $this->userRepository,
             $request,
             $this->logger
         );
         // block html and visual output
         define('API', true);
 
-        $action        = $this->requestParser->getFromRequest('action');
-        $is_handshake  = $action == HandshakeMethod::ACTION;
-        $is_ping       = $action == PingMethod::ACTION;
-        $is_register   = $action == RegisterMethod::ACTION;
-        $is_forgotten  = $action == LostPasswordMethod::ACTION;
-        $is_public     = ($is_handshake || $is_ping || $is_register || $is_forgotten);
-        $input         = $request->getQueryParams();
-        $input['auth'] = $gatekeeper->getAuth();
-        $api_format    = $input['api_format'];
-        $version       = (isset($input['version'])) ? $input['version'] : Api::$version;
-        $user          = $gatekeeper->getUser();
-        $userId        = $user->id ?? -1;
-        $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
+        $action       = $this->requestParser->getFromRequest('action');
+        $is_handshake = $action == HandshakeMethod::ACTION;
+        $is_ping      = $action == PingMethod::ACTION;
+        $is_register  = $action == RegisterMethod::ACTION;
+        $is_forgotten = $action == LostPasswordMethod::ACTION;
+        $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
+        $input        = $request->getQueryParams();
+        $header_auth  = false;
+        if (!isset($input['auth'])) {
+            if (!$is_public || $is_ping) {
+                $header_auth = true;
+            }
+            $input['auth'] = $gatekeeper->getAuth();
+        }
+        $api_format  = $input['api_format'];
+        $version     = (isset($input['version'])) ? $input['version'] : Api::$version;
+        $user        = $gatekeeper->getUser();
+        $userId      = $user->id ?? -1;
+        $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
-            $api_version = ($is_public)
+            $api_version = ($is_public || $header_auth)
                 ? (int)substr($version, 0, 1)
                 : $api_session;
             // roll up the version if you haven't enabled the older versions
@@ -145,6 +159,24 @@ final class ApiHandler implements ApiHandlerInterface
         // send the version to API calls (this is used to determine return data for api4/api5)
         $input['api_version'] = $api_version;
 
+        // Create a simplified session for header authenticated sessions
+        if ($header_auth && $user instanceof User) {
+            $data             = [];
+            $data['username'] = $user->username;
+            $data['type']     = 'header';
+            $data['apikey']   = md5((string)$user->username);
+            $data['value']    = $api_version;
+            // Session might not exist or has expired
+            if (!Session::read($data['apikey'])) {
+                Session::destroy($data['apikey']);
+                Session::create($data);
+            }
+            if (in_array($api_version, Api::API_VERSIONS)) {
+                Session::write($data['apikey'], $api_version, $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PERPETUAL_API_SESSION));
+            }
+            // Continue with the new session string to hide your header token
+            $input['auth'] = $data['apikey'];
+        }
         // If it's not a handshake then we can allow it to take up lots of time
         if (!$is_handshake) {
             set_time_limit(0);
@@ -164,7 +196,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                '501',
+                                501,
                                 T_('Access Control not Enabled')
                             )
                         )
@@ -173,7 +205,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                '501',
+                                501,
                                 T_('Access Control not Enabled')
                             )
                         )
@@ -210,7 +242,11 @@ final class ApiHandler implements ApiHandlerInterface
          */
         if (
             !$is_public &&
-            $gatekeeper->sessionExists() === false
+            (
+                !$user instanceof User || // User is required for non-public methods
+                (!$header_auth && $input['auth'] === md5((string)$user->username)) || // require header auth for simplified session
+                $gatekeeper->sessionExists($input['auth']) === false // no valid session
+            )
         ) {
             $this->logger->warning(
                 sprintf('Invalid Session attempt to API [%s]', $action),
@@ -223,7 +259,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                '401',
+                                401,
                                 T_('Session Expired')
                             )
                         )
@@ -232,7 +268,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                '401',
+                                401,
                                 T_('Session Expired')
                             )
                         )
@@ -275,7 +311,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                '403',
+                                403,
                                 T_('Unauthorized access attempt to API - ACL Error')
                             )
                         )
@@ -284,7 +320,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                '403',
+                                403,
                                 T_('Unauthorized access attempt to API - ACL Error')
                             )
                         )
@@ -316,7 +352,8 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         if (
-            !$is_public
+            !$is_public &&
+            $user instanceof User
         ) {
             /**
              * @todo get rid of implicit user registration and pass the user explicitly
@@ -337,7 +374,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                '405',
+                                405,
                                 T_('Invalid Request')
                             )
                         )
@@ -352,7 +389,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                '405',
+                                405,
                                 T_('Invalid Request')
                             )
                         )
@@ -418,7 +455,7 @@ final class ApiHandler implements ApiHandlerInterface
                     $user
                 );
 
-                $gatekeeper->extendSession();
+                $gatekeeper->extendSession($input['auth']);
 
                 return $response;
             } elseif ($is_public) {
@@ -427,7 +464,7 @@ final class ApiHandler implements ApiHandlerInterface
                     $input
                 );
 
-                $gatekeeper->extendSession();
+                $gatekeeper->extendSession($input['auth']);
 
                 return null;
             } else {
@@ -437,7 +474,7 @@ final class ApiHandler implements ApiHandlerInterface
                     $user
                 );
 
-                $gatekeeper->extendSession();
+                $gatekeeper->extendSession($input['auth']);
 
                 return null;
             }
@@ -499,7 +536,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                '405',
+                                405,
                                 T_('Invalid Request')
                             )
                         )
@@ -508,7 +545,7 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                '405',
+                                405,
                                 T_('Invalid Request')
                             )
                         )

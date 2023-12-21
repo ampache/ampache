@@ -33,7 +33,8 @@
             "composer/installers": true,
             "robloach/component-installer": true,
             "oomphinc/composer-installers-extender": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true
         }
     },
     "require": {
@@ -52,7 +53,7 @@
         "ext-xml": "*",
         "adhocore/cli": "^0.9.0",
         "aehlke/tag-it": "2.*",
-        "ampache/ampacheapi-php": "1.0.1",
+        "ampache/ampacheapi-php": "dev-master",
         "aterrien/jquery-knob": "1.2.*",
         "blueimp/jquery-file-upload": "v10.2.0",
         "cboden/ratchet": "0.4.*",
@@ -78,6 +79,7 @@
         "nyholm/psr7-server": "^1.0",
         "oomphinc/composer-installers-extender": "^2.0",
         "openid/php-openid": "^3",
+        "php-curl-class/php-curl-class": "^9.18",
         "php-di/php-di": "^6.0",
         "phpmailer/phpmailer": "6.5.*",
         "pklauzinski/jscroll": "2.*",
@@ -101,8 +103,13 @@
         "friendsofphp/php-cs-fixer": "3.16.0",
         "mikey179/vfsstream": "^1.6",
         "mockery/mockery": "^1.3",
-        "phpunit/phpunit": "^9",
-        "squizlabs/php_codesniffer": "^3.5",
+        "phpstan/extension-installer": "^1.3",
+        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan-mockery": "^1.1",
+        "phpunit/phpunit": "^10",
+        "rector/rector": "^0.18.12",
+        "seec/phpunit-consecutive-params": "^1.1",
+        "squizlabs/php_codesniffer": "^3.8",
         "szymach/c-pchart": "^3.0"
     },
     "repositories":
@@ -372,15 +379,31 @@
         }
     },
     "scripts": {
-        "coverage": "./vendor/bin/phpunit --warm-coverage-cache && XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
-        "qa": "composer run-script syntax && composer run-script fix-cs && composer run-script tests",
-        "tests": "./vendor/bin/phpunit tests",
+        "coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
+        "qa": "composer run-script syntax && composer run-script fix-cs && composer run-script tests && composer run-script stan",
+        "stan": "resources/scripts/tests/stan.sh",
+        "stan-baseline": "vendor/bin/phpstan --generate-baseline",
+        "tests": "vendor/bin/phpunit tests",
         "codestyle": "resources/scripts/tests/codestyle.sh",
         "syntax": "resources/scripts/tests/syntax.sh",
-        "fix-cs": "vendor/bin/php-cs-fixer fix -v .",
+        "fix-cs": "vendor/bin/php-cs-fixer fix -v",
         "post-autoload-dump": [
             "@php resources/scripts/composer/check_tag_tools.php"
-        ]
+        ],
+        "rector:dry": "rector process -n",
+        "rector:fix": "rector process"
+    },
+    "scripts-descriptions": {
+        "coverage": "Generates the code-coverage report into the build/coverage directory",
+        "qa": "Runs several qa-related tests",
+        "stan": "Performs static analysis",
+        "stan-baseline": "Regenerate phpstan baseline",
+        "tests": "Executes the unit tests",
+        "codestyle": "Performs code-style related checks",
+        "syntax": "Performs php syntax checks",
+        "fix-cs": "Performs code-style corrections on the whole codebase",
+        "rector:dry": "Performs rector code-migrations dry run",
+        "rector:fix": "Applies pending rector code-migrations"
     },
     "suggest": {
         "szymach/c-pchart": "Enable graphical statistics",

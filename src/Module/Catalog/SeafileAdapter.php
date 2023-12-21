@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -95,9 +96,9 @@ class SeafileAdapter
     // do we have all the info we need?
 
     /**
-     * @return boolean
+     * ready
      */
-    public function ready()
+    public function ready(): bool
     {
         return $this->server != null && $this->api_key != null && $this->library_name != null && $this->call_delay != null;
     }
@@ -105,9 +106,9 @@ class SeafileAdapter
     // create API client object & find library
 
     /**
-     * @return boolean
+     * prepare
      */
-    public function prepare()
+    public function prepare(): bool
     {
         if ($this->client !== null) {
             return true;
@@ -145,8 +146,10 @@ class SeafileAdapter
         }));
 
         if (count($matches) == 0) {
-            AmpError::add('general', sprintf(T_('Could not find the Seafile library called "%s", no media was updated'),
-                $this->library_name));
+            AmpError::add('general', sprintf(
+                T_('Could not find the Seafile library called "%s", no media was updated'),
+                $this->library_name
+            ));
 
             return false;
         }
@@ -190,9 +193,8 @@ class SeafileAdapter
 
     /**
      * @param $file
-     * @return string
      */
-    public function to_virtual_path($file)
+    public function to_virtual_path($file): string
     {
         return $this->library->name . '|' . $file->dir . '|' . $file->name;
     }
@@ -207,7 +209,10 @@ class SeafileAdapter
     {
         $split = explode('|', $file_path);
 
-        return array('path' => $split[1], 'filename' => $split[2]);
+        return array(
+            'path' => $split[1],
+            'filename' => $split[2]
+        );
     }
 
     /**
@@ -251,9 +256,8 @@ class SeafileAdapter
      * Returns number added, or -1 on failure
      * @param $func
      * @param string $path
-     * @return integer
      */
-    public function for_all_files($func, $path = '/')
+    public function for_all_files($func, $path = '/'): int
     {
         if ($this->client != null) {
             $directoryItems = $this->get_cached_directory($path);
@@ -300,10 +304,9 @@ class SeafileAdapter
 
     /**
      * @param $file
-     * @param boolean $partial
-     * @return string
+     * @param bool $partial
      */
-    public function download($file, $partial = false)
+    public function download($file, $partial = false): string
     {
         $url = $this->throttle_check(function () use ($file) {
             return $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir);
@@ -331,9 +334,9 @@ class SeafileAdapter
     }
 
     /**
-     * @return string
+     * get_format_string
      */
-    public function get_format_string()
+    public function get_format_string(): string
     {
         return 'Seafile server "' . $this->server . '", library "' . $this->library_name . '"';
     }

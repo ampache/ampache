@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Repository\Model\Art;
@@ -30,10 +31,9 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class DbCollectorModuleTest extends MockeryTestCase
 {
-    /** @var DbCollectorModule|null */
     private ?DbCollectorModule $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->subject = new DbCollectorModule();
     }

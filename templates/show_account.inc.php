@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -30,7 +33,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\User $client */
 
-$web_path       = AmpConfig::get('web_path');
+$web_path       = (string)AmpConfig::get('web_path', '');
 $display_fields = (array) AmpConfig::get('registration_display_fields');
 $access100      = Access::check('interface', 100); ?>
 <?php echo AmpError::display('general'); ?>
@@ -141,7 +144,7 @@ $access100      = Access::check('interface', 100); ?>
         </tr>
     </table>
     <div class="formValidation">
-            <input type="hidden" name="user_id" value="<?php echo scrub_out($client->id); ?>" />
+            <input type="hidden" name="user_id" value="<?php echo scrub_out((string)$client->id); ?>" />
             <?php echo Core::form_register('update_user'); ?>
             <input type="hidden" name="tab" value="<?php echo scrub_out(Core::get_request('tab')); ?>" />
             <input class="button" type="submit" value="<?php echo T_('Update Account'); ?>" />

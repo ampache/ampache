@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
@@ -39,10 +39,8 @@ final class AdvancedSearch3Method
     /**
      * advanced_search
      * Perform an advanced search given passed rules
-     * @param array $input
-     * @param User $user
      */
-    public static function advanced_search(array $input, User $user)
+    public static function advanced_search(array $input, User $user): void
     {
         ob_end_clean();
 
@@ -71,5 +69,5 @@ final class AdvancedSearch3Method
                 echo Xml3_Data::songs($results, $user);
                 break;
         }
-    } // advanced_search
+    }
 }

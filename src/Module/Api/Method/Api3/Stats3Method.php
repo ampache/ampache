@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
@@ -42,18 +42,16 @@ final class Stats3Method
 
     /**
      * This get library stats.
-     * @param array $input
-     * @param User $user
      */
-    public static function stats(array $input, User $user)
+    public static function stats(array $input, User $user): void
     {
         $type     = $input['type'];
         $offset   = $input['offset'];
         $limit    = $input['limit'];
         $username = $input['username'];
         // override your user if you're looking at others
-        if (array_key_exists('username', $input)) {
-            $user    = User::get_from_username($input['username']);
+        if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
+            $user = User::get_from_username($input['username']);
         }
         $results = null;
         if ($type == "newest") {
@@ -67,10 +65,10 @@ final class Stats3Method
                 } else {
                     if ($type == "recent") {
                         if (!empty($username)) {
-                            if ($user !== null) {
-                                $results = $user->get_recently_played('album', $limit);
-                            } else {
+                            if ($user->isNew()) {
                                 debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+                            } else {
+                                $results = $user->get_recently_played('album', $limit);
                             }
                         } else {
                             $results = Stats::get_recent('album', $limit, $offset);
@@ -93,7 +91,7 @@ final class Stats3Method
             ob_end_clean();
             echo Xml3_Data::albums($results, array(), $user);
         }
-    } // stats
+    }
 
     /**
      * @deprecated Inject by constructor

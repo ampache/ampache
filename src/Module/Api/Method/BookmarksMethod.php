@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
@@ -48,14 +48,12 @@ final class BookmarksMethod
      * @param array $input
      * client = (string) Filter results to a specific comment/client name //optional
      * include = (integer) 0,1, if true include the object in the bookmark //optional
-     * @param User $user
-     * @return boolean
      */
     public static function bookmarks(array $input, User $user): bool
     {
         $include = (bool)($input['include'] ?? false);
         $results = (!empty($input['client']))
-            ? static::getBookmarkRepository()->getBookmarksByComment($user->getId(), (string)scrub_in($input['client']))
+            ? static::getBookmarkRepository()->getBookmarksByComment($user->getId(), scrub_in((string) $input['client']))
             : static::getBookmarkRepository()->getBookmarks($user->getId());
         if (empty($results)) {
             Api::empty('bookmark', $input['api_format']);

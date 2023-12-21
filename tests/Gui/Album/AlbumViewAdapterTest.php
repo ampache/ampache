@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Gui\Album;
 
@@ -61,10 +62,9 @@ class AlbumViewAdapterTest extends MockeryTestCase
     /** @var Album|MockInterface|null */
     private MockInterface $album;
 
-    /** @var AlbumViewAdapter|null */
     private AlbumViewAdapter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
@@ -123,7 +123,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
             ->andReturn($averageRating);
 
         $this->assertSame(
-            (string) $averageRating,
+            $averageRating,
             $this->subject->getAverageRating()
         );
     }

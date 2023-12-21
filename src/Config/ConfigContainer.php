@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -121,6 +121,14 @@ final class ConfigContainer implements ConfigContainerInterface
     public function isDemoMode(): bool
     {
         return $this->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE);
+    }
+
+    /**
+     * Returns the current Ampache version
+     */
+    public function getVersion(): string
+    {
+        return $this->configuration[ConfigurationKeyEnum::VERSION] ?? '';
     }
 
     public function getConfigFilePath(): string

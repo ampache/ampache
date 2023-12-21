@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -24,13 +27,24 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\Ui;
 
+/** @var int $object_id */
+/** @var string $object_type */
+/** @var int $user_id */
+/** @var int $end_date */
+/** @var null|string $f_end_date */
+/** @var int $start_date */
+/** @var null|string $f_start_date */
+/** @var string $zoom */
+/** @var array $gtypes */
+/** @var string $blink */
+
 $boxtitle = T_('Statistical Graphs');
 if ($blink) {
     $boxtitle .= ' - ' . $blink;
 } ?>
 <?php Ui::show_box_top($boxtitle, 'box box_graph'); ?>
 <div class="stats_graph">
-    <?php $web_path = AmpConfig::get('web_path');
+    <?php $web_path = (string)AmpConfig::get('web_path', '');
 foreach ($gtypes as $gtype) {
     $graph_link = $web_path . "/graph.php?type=" . $gtype . "&start_date=" . $start_date . "&end_date=" . $end_date . "&zoom=" . $zoom . "&user_id=" . $user_id . "&object_type=" . $object_type . "&object_id=" . $object_id; ?>
     <a href="<?php echo $graph_link; ?>&width=1400&height=690" target="_blank" title="<?php echo T_('Show large'); ?>"><img src="<?php echo $graph_link; ?>" /></a>
@@ -82,7 +96,7 @@ foreach ($date_formats as $dtype => $dname) {
     <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
     <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
     <input type="hidden" name="action" value="<?php echo filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
-    <input type="hidden" name="type" value="<?php echo $type; ?>" />
+    <input type="hidden" name="type" value="<?php echo $type ?? ''; ?>" />
 </form>
 <script>
     $('#start_date').datetimepicker({

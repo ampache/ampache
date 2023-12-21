@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
@@ -76,7 +76,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
         $argument = false;
         if (array_key_exists('argument', $_REQUEST)) {
-            $argument = scrub_in($_REQUEST['argument']);
+            $argument = scrub_in((string) $_REQUEST['argument']);
         }
         // hide some of the useless columns in a browse
         if (array_key_exists('hide', $_REQUEST)) {
@@ -124,7 +124,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $browse->set_catalog($_SESSION['catalog']);
 
                 ob_start();
-                $browse->show_objects(null, $argument);
+                $browse->show_objects(array(), $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'set_sort':
@@ -137,7 +137,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects(null, $argument);
+                $browse->show_objects(array(), $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'toggle_tag':
@@ -183,17 +183,22 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
             case 'page':
                 $browse->set_start((int)($_REQUEST['start'] ?? 0));
                 ob_start();
-                $browse->show_objects(null, $argument);
+                $browse->show_objects(array(), $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'show_art':
                 ob_start();
-                $browse->show_objects(null, $argument);
+                $browse->show_objects(array(), $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_filters':
                 ob_start();
                 require_once Ui::find_template('browse_filters.inc.php');
+                $results['browse_filters'] = ob_get_clean();
+                break;
+            case 'hide_filters':
+                ob_start();
+                echo '';
                 $results['browse_filters'] = ob_get_clean();
                 break;
             case 'options':
@@ -247,12 +252,12 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects(null, $argument);
+                $browse->show_objects(array(), $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_share_links':
                 $object_type = Core::get_request('object_type');
-                $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $object_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
                 if (InterfaceImplementationChecker::is_library_item($object_type) && $object_id > 0) {
                     echo $this->shareUiLinkRenderer->render($object_type, $object_id);

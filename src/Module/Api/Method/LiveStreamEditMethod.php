@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\User;
@@ -46,15 +47,12 @@ final class LiveStreamEditMethod
      *
      * Edit a live_stream (radio station) object.
      *
-     * @param array $input
-     * @param User $user
      * filter   = (string) object_id
      * name     = (string) Stream title //optional
      * url      = (string) URL of the http/s stream //optional
      * codec    = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac') //optional
      * catalog  = (int) Catalog ID to associate with this stream //optional
      * site_url = (string) Homepage URL of the stream //optional
-     * @return boolean
      */
     public static function live_stream_edit(array $input, User $user): bool
     {
@@ -64,25 +62,40 @@ final class LiveStreamEditMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $object_id = filter_var($input['filter'], FILTER_SANITIZE_NUMBER_INT);
+        $object_id = (int)filter_var($input['filter'], FILTER_SANITIZE_NUMBER_INT);
         $item      = new Live_Stream($object_id);
-        if (!$item->id) {
+        if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
-        $name       = (isset($input['name'])) ? filter_var(urldecode($input['name']), FILTER_SANITIZE_SPECIAL_CHARS) : $item->name;
-        $url        = (isset($input['url'])) ? filter_var(urldecode($input['url']), FILTER_VALIDATE_URL) ?? '' : $item->url;
-        $codec      = (isset($input['codec'])) ? preg_replace("/[^a-z]/", "", strtolower($input['codec'])) ?? '' : $item->codec;
-        $site_url   = (isset($input['site_url'])) ? filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL) ?? '' : $item->site_url;
-        $catalog_id = (isset($input['catalog'])) ? filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT) : $item->catalog;
+        $name = $item->name;
+        if (isset($input['name']) && filter_var(urldecode($input['name']), FILTER_SANITIZE_SPECIAL_CHARS)) {
+            $name = (string)filter_var(urldecode($input['name']), FILTER_SANITIZE_SPECIAL_CHARS);
+        }
+        $url = $item->url;
+        if (isset($input['url']) && filter_var(urldecode($input['url']), FILTER_VALIDATE_URL)) {
+            $url = (string)filter_var(urldecode($input['url']), FILTER_VALIDATE_URL);
+        }
+        $codec = $item->codec;
+        if (isset($input['codec']) && preg_replace("/[^a-z]/", "", strtolower($input['codec']))) {
+            $codec = (string)preg_replace("/[^a-z]/", "", strtolower($input['codec']));
+        }
+        $site_url = $item->site_url;
+        if (isset($input['site_url']) && filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL)) {
+            $site_url = (string)filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL);
+        }
+        $catalog_id = $item->catalog;
+        if (isset($input['catalog']) && filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT)) {
+            $catalog_id = (int)filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
+        }
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($catalog_id);
-        if (!$catalog->name) {
+        if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
         }
 
         $data = array(
@@ -96,7 +109,7 @@ final class LiveStreamEditMethod
 
         // check for the live_stream first
         $results = $item->update($data);
-        if (empty($results)) {
+        if ($results === false) {
             Api::empty('live_stream', $input['api_format']);
 
             return false;
@@ -105,10 +118,10 @@ final class LiveStreamEditMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams(array((int)$results));
+                echo Json_Data::live_streams(array($results));
                 break;
             default:
-                echo Xml_Data::live_streams(array((int)$results), $user);
+                echo Xml_Data::live_streams(array($results), $user);
         }
 
         return true;

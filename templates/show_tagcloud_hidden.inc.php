@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -59,7 +62,7 @@ $ui->show(
         <div class="tag_actions">
             <ul>
                 <li>
-                    <a class="tag_hidden_edit" id="<?php echo 'tag_hidden_row' . $data['id'] ?>" onclick="showEditDialog('tag_hidden_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_hidden_' . $data['id'] ?>', '<?php echo addslashes(T_('Edit')) ?>', 'click_tag_')">
+                    <a class="tag_hidden_edit" id="<?php echo 'tag_hidden_row' . $data['id']; ?>" onclick="showEditDialog('tag_hidden_row', '<?php echo $data['id']; ?>', '<?php echo 'edit_tag_hidden_' . $data['id']; ?>', '<?php echo addslashes(T_('Edit')); ?>', 'click_tag_')">
                         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                     </a>
                 </li>

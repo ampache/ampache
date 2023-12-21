@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Repository;
 
@@ -44,4 +45,6 @@ return [
     PrivateMessageRepositoryInterface::class => autowire(PrivateMessageRepository::class),
     VideoRepositoryInterface::class => autowire(VideoRepository::class),
     Model\ModelFactoryInterface::class => autowire(Model\ModelFactory::class),
+    PreferenceRepositoryInterface::class => autowire(PreferenceRepository::class),
+    PodcastRepositoryInterface::class => autowire(PodcastRepository::class),
 ];

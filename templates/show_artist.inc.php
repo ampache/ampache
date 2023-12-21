@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,36 +24,38 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\AmpacheRss;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Repository\Model\Browse;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\ZipHandlerInterface;
 
-$web_path          = AmpConfig::get('web_path');
+/** @var Artist $artist */
+/** @var array $multi_object_ids */
+/** @var array $object_ids */
+/** @var string $object_type */
+/** @var GuiGatekeeperInterface $gatekeeper */
+
+$web_path          = (string)AmpConfig::get('web_path', '');
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', 25);
 $show_similar      = AmpConfig::get('show_similar');
-$directplay_limit  = AmpConfig::get('direct_play_limit');
+$directplay_limit  = (int)AmpConfig::get('direct_play_limit', 0);
 $use_label         = AmpConfig::get('label');
 $use_wanted        = AmpConfig::get('wanted');
-
-/** @var Artist $artist */
-/** @var string $object_type */
-/** @var array $object_ids */
-/** @var GuiGatekeeperInterface $gatekeeper */
+$is_album_type     = $object_type == 'album' || $object_type == 'album_disk';
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($artist->song_count <= $directplay_limit);
@@ -59,7 +64,7 @@ if ($directplay_limit > 0) {
     }
 }
 $current_user = Core::get_global('user');
-$f_name       = $artist->get_fullname();
+$f_name       = (string)$artist->get_fullname();
 $title        = scrub_out($f_name);
 Ui::show_box_top($title, 'info-box'); ?>
 <div class="item_right_info">
@@ -111,7 +116,30 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
-<?php if ($object_type == 'album' || $object_type == 'album_disk') { ?>
+<?php if ($is_album_type) {
+    $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+    $sort_type     = AmpConfig::get('album_sort');
+    switch ($sort_type) {
+        case 'name_asc':
+            $sort  = 'name';
+            $order = 'ASC';
+            break;
+        case 'name_desc':
+            $sort  = 'name';
+            $order = 'DESC';
+            break;
+        case 'year_asc':
+            $sort  = $original_year;
+            $order = 'ASC';
+            break;
+        case 'year_desc':
+            $sort  = $original_year;
+            $order = 'DESC';
+            break;
+        default:
+            $sort  = 'name_' . $original_year;
+            $order = 'ASC';
+    } ?>
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&amp;artist=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('view', T_('Show Artist Songs')); ?>
@@ -173,7 +201,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => (string)$artist->id)); ?>
         </li>
 <?php } ?>
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
@@ -220,7 +248,7 @@ if (canEditArtist($artist, $gatekeeper->getUserId())) {
             <?php
     } ?>
             <li>
-                <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo addslashes(T_('Artist Edit')) ?>', '')">
+                <a id="<?php echo 'edit_artist_' . $artist->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id; ?>', '<?php echo 'edit_artist_' . $artist->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', '')">
                     <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                     <?php echo T_('Edit Artist'); ?>
                 </a>
@@ -229,7 +257,7 @@ if (canEditArtist($artist, $gatekeeper->getUserId())) {
 if (Catalog::can_remove($artist)) {
     $delete = T_('Delete'); ?>
         <li>
-            <a id="<?php echo 'delete_artist_' . $artist->id ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
+            <a id="<?php echo 'delete_artist_' . $artist->id; ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('delete', $delete); ?>
                 <?php echo $delete; ?>
             </a>
@@ -259,7 +287,7 @@ if ($use_label) { ?>
     </div>
     <div id="tabs_content">
         <div id="albums" class="tab_content" style="display: block;">
-<?php if (!isset($multi_object_ids) || $multi_object_ids === null) {
+<?php if (empty($multi_object_ids)) {
     $multi_object_ids = array('' => $object_ids);
 }
 
@@ -267,6 +295,10 @@ if ($use_label) { ?>
         $title  = (!empty($key)) ? ucwords($key) : '';
         $browse = new Browse();
         $browse->set_type($object_type);
+        $browse->set_use_filters(false);
+        if ($is_album_type) {
+            $browse->set_sort($sort, $order);
+        }
         $browse->set_use_alpha(false, false);
         if (!empty($key)) {
             $browse->set_content_div_ak($key);
@@ -277,7 +309,7 @@ if ($use_label) { ?>
         </div>
         <?php echo Ajax::observe('top_tracks_link', 'click', Ajax::action('?page=index&action=top_tracks&artist=' . $artist->id, 'top_tracks')); ?>
         <div id="top_tracks" class="tab_content">
-            <?php Ui::show_box_top(null, 'info-box');
+            <?php Ui::show_box_top('', 'info-box');
 echo T_('Loading...');
 Ui::show_box_bottom(); ?>
         </div>
@@ -299,7 +331,7 @@ if ($show_similar) {
         </div>
         <?php echo Ajax::observe('similar_songs_link', 'click', Ajax::action('?page=index&action=similar_songs&artist=' . $artist->id, 'similar_songs')); ?>
         <div id="similar_songs" class="tab_content">
-            <?php Ui::show_box_top(null, 'info-box');
+            <?php Ui::show_box_top('', 'info-box');
     echo T_('Loading...');
     Ui::show_box_bottom(); ?>
         </div>

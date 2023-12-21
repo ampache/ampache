@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\License;
 
@@ -52,7 +53,7 @@ class EditActionTest extends MockeryTestCase
 
     private ?EditAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui                = $this->mock(UiInterface::class);
         $this->configContainer   = $this->mock(ConfigContainerInterface::class);
@@ -114,6 +115,11 @@ class EditActionTest extends MockeryTestCase
             )
             ->once();
 
+        $license->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
@@ -164,10 +170,10 @@ class EditActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $name          = 'some-name';
-        $description   = 'some-description';
-        $data          = ['name' => $name, 'description' => $description];
-        $webPath       = 'some-path';
+        $name        = 'some-name';
+        $description = 'some-description';
+        $data        = ['name' => $name, 'description' => $description];
+        $webPath     = 'some-path';
 
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()

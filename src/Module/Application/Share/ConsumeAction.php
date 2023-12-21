@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -29,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Batch\DefaultAction;
 use Ampache\Module\Application\Stream\DownloadAction;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -53,16 +55,20 @@ final class ConsumeAction implements ApplicationActionInterface
 
     private ContainerInterface $dic;
 
+    private UiInterface $ui;
+
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
-        ContainerInterface $dic
+        ContainerInterface $dic,
+        UiInterface $ui
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->networkChecker  = $networkChecker;
         $this->dic             = $dic;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -73,7 +79,7 @@ final class ConsumeAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
-        $action = $_REQUEST['action'] ?? '';
+        $action = $this->requestParser->getFromRequest('action');
 
         /**
          * If Access Control is turned on then we don't
@@ -91,11 +97,10 @@ final class ConsumeAction implements ApplicationActionInterface
             }
         } // access_control is enabled
 
-        $share_id = $this->requestParser->getFromRequest('id');
-        $secret   = $_REQUEST['secret'] ?? '';
-
-        $share = new Share($share_id);
-        if (empty($action) && $share->id) {
+        $share_id = (int)$this->requestParser->getFromRequest('id');
+        $secret   = $this->requestParser->getFromRequest('secret');
+        $share    = new Share($share_id);
+        if (empty($action) && $share->isNew() === false) {
             if ($share->allow_stream) {
                 $action = 'stream';
             } elseif ($share->allow_download) {
@@ -122,7 +127,10 @@ final class ConsumeAction implements ApplicationActionInterface
                 return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
             }
         } elseif ($action == 'stream') {
-            require Ui::find_template('show_share.inc.php');
+            $this->ui->show(
+                'show_share.inc.php',
+                ['share' => $share]
+            );
         } else {
             throw new AccessDeniedException('Access Denied: unknown action.');
         }

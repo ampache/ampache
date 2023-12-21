@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -43,10 +43,7 @@ final class ShareDelete4Method
      *
      * Delete an existing share.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of share to delete
-     * @return boolean
      */
     public static function share_delete(array $input, User $user): bool
     {
@@ -60,7 +57,7 @@ final class ShareDelete4Method
         }
         $object_id = $input['filter'];
         if (in_array($object_id, Share::get_share_list($user))) {
-            if (Share::delete_share($object_id, $user)) {
+            if (Share::delete_share((int)$object_id, $user)) {
                 Api4::message('success', 'share ' . $object_id . ' deleted', null, $input['api_format']);
             } else {
                 Api4::message('error', 'share ' . $object_id . ' was not deleted', '401', $input['api_format']);
@@ -70,5 +67,5 @@ final class ShareDelete4Method
         }
 
         return true;
-    } // share_delete
+    }
 }

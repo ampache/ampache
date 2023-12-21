@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Util\OAuth;
 
@@ -56,9 +57,8 @@ class OAuthUtil
     // seem to be used anywhere so leaving it as is.
     /**
      * @param string $string
-     * @return string
      */
-    public static function urldecode_rfc3986($string)
+    public static function urldecode_rfc3986($string): string
     {
         return urldecode($string);
     }
@@ -69,14 +69,13 @@ class OAuthUtil
      * May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
      * see http://code.google.com/p/oauth/issues/detail?id=163
      * @param $header
-     * @param boolean $oauth_parameters
+     * @param bool $oauth_parameters
      * @return array
      */
     public static function split_header($header, $oauth_parameters = true)
     {
         $params = array();
-        if (preg_match_all('/(' . ($oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/',
-            $header, $matches)) {
+        if (preg_match_all('/(' . ($oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
             foreach ($matches[1] as $i => $h) {
                 $params[$h] = OAuthUtil::urldecode_rfc3986(empty($matches[3][$i]) ? $matches[4][$i] : $matches[3][$i]);
             }
@@ -178,9 +177,8 @@ class OAuthUtil
 
     /**
      * @param $params
-     * @return string
      */
-    public static function build_http_query($params)
+    public static function build_http_query($params): string
     {
         if (!$params) {
             return '';

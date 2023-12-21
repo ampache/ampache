@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,13 +23,15 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -49,8 +53,6 @@ final class BrowseMethod
      * If you don't send any parameters you'll get a catalog list (the 'root' path)
      * Catalog ID is required on 'artist', 'album', 'podcast' so you can filter the browse correctly
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) object_id //optional
      * type    = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
      * catalog = (integer) catalog ID you are browsing // optional
@@ -58,7 +60,6 @@ final class BrowseMethod
      * update  = Api::set_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * @return boolean
      */
     public static function browse(array $input, User $user): bool
     {
@@ -66,13 +67,13 @@ final class BrowseMethod
         $object_id   = $input['filter'] ?? null;
         $object_type = $input['type'] ?? 'root';
         if (!AmpConfig::get('podcast') && $object_type == 'podcast') {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($object_type), array('root', 'catalog', 'artist', 'album', 'podcast'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $object_type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -98,21 +99,18 @@ final class BrowseMethod
                 return false;
             }
             $catalog = Catalog::create_from_id($object_id);
-            if (!$catalog) {
+            if ($catalog === null) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
-            $catalog_media_type = $catalog->gather_types;
-            $output_type        = $catalog_media_type;
-
             $browse = Api::getBrowse();
             $browse->reset_filters();
 
             Api::set_filter('add', $input['add'] ?? '', $browse);
             Api::set_filter('update', $input['update'] ?? '', $browse);
-            switch ($catalog_media_type) {
+            switch ((string)$catalog->gather_types) {
                 case 'clip':
                 case 'tvshow':
                 case 'movie':
@@ -124,13 +122,18 @@ final class BrowseMethod
                 case 'music':
                     $output_type = 'artist';
                     $browse->set_type('album_artist');
-                    $browse->set_filter('gather_types', $catalog_media_type);
+                    $browse->set_filter('gather_types', 'music');
                     break;
                 case 'podcast':
                     $output_type = 'podcast';
                     $browse->set_type('podcast');
-                    $browse->set_filter('gather_types', $catalog_media_type);
+                    $browse->set_filter('gather_types', 'podcast');
                     break;
+                default:
+                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                    Api::error(sprintf(T_('Bad Request: %s'), $catalog_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'catalog', $input['api_format']);
+
+                    return false;
             }
             $child_type = $output_type;
             $browse->set_sort('name', 'ASC');
@@ -147,24 +150,25 @@ final class BrowseMethod
                 return false;
             }
             $catalog = Catalog::create_from_id($catalog_id);
-            if (!$catalog) {
+            if ($catalog === null) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
+                Api::error(sprintf(T_('Not Found: %s'), $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
 
                 return false;
             }
             $className = ObjectTypeToClassNameMapper::map($object_type);
             if ($className === $object_type || !$object_id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $object_type), '4710', self::ACTION, 'type', $input['api_format']);
+                Api::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
                 return false;
             }
 
+            /** @var Artist|Album|Podcast $item */
             $item = new $className($object_id);
-            if (!$item->id) {
+            if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
@@ -174,19 +178,22 @@ final class BrowseMethod
             // for sub objects you want to browse their children
             switch ($object_type) {
                 case 'artist':
+                    /** @var Artist $item */
                     $output_type = 'album';
                     $browse->set_type('album');
-                    $browse->set_filter('artist', $item->id);
+                    $browse->set_filter('artist', $item->getId());
                     break;
                 case 'album':
+                    /** @var Album $item */
                     $output_type = 'song';
                     $browse->set_type('song');
-                    $browse->set_filter('album', $item->id);
+                    $browse->set_filter('album', $item->getId());
                     break;
                 case 'podcast':
+                    /** @var Podcast $item */
                     $output_type = 'podcast_episode';
                     $browse->set_type('podcast_episode');
-                    $browse->set_filter('podcast', $item->id);
+                    $browse->set_filter('podcast', $item->getId());
                     break;
                 default:
                     $output_type = $object_type;

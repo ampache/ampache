@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
@@ -62,7 +62,7 @@ final class ArtCollector implements ArtCollectorInterface
      * This tries to get the art in question
      * @param Art $art
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function collect(
@@ -117,6 +117,7 @@ final class ArtCollector implements ArtCollectorInterface
 
             return $playlist->gather_art($limit);
         }
+        /** @var User $user */
         $user = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
@@ -128,7 +129,7 @@ final class ArtCollector implements ArtCollectorInterface
                 $plugin            = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version > 0) {
-                    if ($plugin->load($user)) {
+                    if ($plugin->_plugin !== null && $plugin->load($user)) {
                         $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }
                 }

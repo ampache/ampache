@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -49,11 +52,12 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_playlist_' . $libitem->id); ?>
-        <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $libitem->id ?>')">
+        <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $libitem->id; ?>')">
             <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
     </span>
 </td>
+<td class="cel_last_update"><?php echo $libitem->f_last_update; ?></td>
 <td class="cel_type"><?php echo $libitem->get_f_type(); ?></td>
 <td class="cel_random"><?php echo($libitem->random ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_limit"><?php echo(($libitem->limit > 0) ? $libitem->limit : T_('None')); ?></td>
@@ -67,7 +71,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('search')
                 </a>
 <?php }
 if ($libitem->has_access()) { ?>
-                <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo addslashes(T_('Smart Playlist Edit')) ?>', 'smartplaylist_row_')">
+                <a id="<?php echo 'edit_playlist_' . $libitem->id; ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_playlist_' . $libitem->id; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', 'smartplaylist_row_')">
                     <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 </a>
     <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id);

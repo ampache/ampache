@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,14 +31,16 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Song;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 
 $democratic = Democratic::get_current_playlist();
-$web_path   = AmpConfig::get('web_path');
+$web_path   = (string)AmpConfig::get('web_path', '');
 $use_search = AmpConfig::get('demo_use_search');
 $access100  = Access::check('interface', 100);
+$showAlbum  = AmpConfig::get('album_group');
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -79,9 +84,12 @@ if ($browse->is_show_header()) {
         if (!is_array($item)) {
             $item = (array) $item;
         }
-        /** @var \Ampache\Repository\Model\Song $media */
-        $class_name = ObjectTypeToClassNameMapper::map($item['object_type']);
-        $media      = new $class_name($item['object_id']);
+        $className = ObjectTypeToClassNameMapper::map($item['object_type']);
+        /** @var Song $media */
+        $media = new $className($item['object_id']);
+        if ($media->isNew()) {
+            continue;
+        }
         $media->format(); ?>
 <tr>
     <td class="cel_action">
@@ -93,7 +101,7 @@ if ($browse->is_show_header()) {
     </td>
     <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['id'])); ?></td>
     <td class="cel_title"><?php echo $media->get_f_link(); ?></td>
-    <td class="cel_album"><?php echo $media->f_album_link; ?></td>
+    <td class="cel_album"><?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?></td>
     <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
     <?php if ($access100) { ?>
@@ -103,7 +111,7 @@ if ($browse->is_show_header()) {
     <?php } ?>
 </tr>
 <?php
-    } // end foreach?>
+    } ?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">

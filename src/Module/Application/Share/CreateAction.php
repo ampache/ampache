@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,23 +23,29 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class CreateAction implements ApplicationActionInterface
 {
@@ -46,12 +55,24 @@ final class CreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
+    private PasswordGeneratorInterface $passwordGenerator;
+
+    private ZipHandlerInterface $zipHandler;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        LoggerInterface $logger,
+        PasswordGeneratorInterface $passwordGenerator,
+        ZipHandlerInterface $zipHandler
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->configContainer   = $configContainer;
+        $this->ui                = $ui;
+        $this->logger            = $logger;
+        $this->passwordGenerator = $passwordGenerator;
+        $this->zipHandler        = $zipHandler;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,32 +92,16 @@ final class CreateAction implements ApplicationActionInterface
 
         $share_id = Share::create_share(
             Core::get_global('user')->id,
-            $_REQUEST['type'],
-            (int)$_REQUEST['id'],
-            (int)($_REQUEST['allow_stream'] ?? 0),
-            (int)($_REQUEST['allow_download'] ?? 0),
+            $_REQUEST['type'] ?? '',
+            (int)($_REQUEST['id'] ?? 0),
+            (bool)($_REQUEST['allow_stream'] ?? 0),
+            (bool)($_REQUEST['allow_download'] ?? 0),
             (int) $_REQUEST['expire'],
             $_REQUEST['secret'],
             (int) $_REQUEST['max_counter']
         );
 
-        if (!$share_id) {
-            debug_event(__CLASS__, 'Share failed: ' . (int)$_REQUEST['id'], 2);
-
-            $class_name = ObjectTypeToClassNameMapper::map($_REQUEST['type']);
-            $object     = new $class_name((int)$_REQUEST['id']);
-            if ($object->id) {
-                $message = T_('Failed to create share');
-                $object->format();
-                require_once Ui::find_template('show_add_share.inc.php');
-            } else {
-                $this->ui->showContinue(
-                    T_('There Was a Problem'),
-                    T_('Failed to create share'),
-                    AmpConfig::get('web_path') . '/stats.php?action=share'
-                );
-            }
-        } else {
+        if ($share_id) {
             $share = new Share($share_id);
             $body  = T_('Share created') . '<br />' .
                 T_('You can now start sharing the following URL:') . '<br />' .
@@ -105,7 +110,7 @@ final class CreateAction implements ApplicationActionInterface
                 '<script>$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
                 '<br /><br />' .
                 T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
-                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, $share->secret) . '&embed=true"></iframe>') . '</i><br />';
+                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url((int)$share->id, (string)$share->secret) . '&embed=true"></iframe>') . '</i><br />';
 
             $title = T_('No Problem');
             $this->ui->showConfirmation(
@@ -113,6 +118,38 @@ final class CreateAction implements ApplicationActionInterface
                 $body,
                 AmpConfig::get('web_path') . '/stats.php?action=share'
             );
+        } else {
+            $this->logger->error(
+                'Share failed: ' . (int)($_REQUEST['id'] ?? 0),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            $object_type = $_REQUEST['type'] ?? '';
+            $className   = ObjectTypeToClassNameMapper::map($object_type);
+            /** @var Song|Album|AlbumDisk|Playlist|Video $object */
+            $object = new $className((int)$_REQUEST['id']);
+            if ($object->isNew()) {
+                $this->ui->showContinue(
+                    T_('There Was a Problem'),
+                    T_('Failed to create share'),
+                    AmpConfig::get('web_path') . '/stats.php?action=share'
+                );
+            } else {
+                $object->format();
+                $message   = T_('Failed to create share');
+                $token     = $this->passwordGenerator->generate_token();
+                $isZipable = $this->zipHandler->isZipable($object_type);
+                $this->ui->show(
+                    'show_add_share.inc.php',
+                    [
+                        'has_failed' => true,
+                        'message' => $message,
+                        'object' => $object,
+                        'object_type' => $object_type,
+                        'token' => $token,
+                        'isZipable' => $isZipable
+                    ]
+                );
+            }
         }
         $this->ui->showFooter();
 

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Preferences;
 
@@ -97,15 +98,17 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
             display_notification($notification_text);
         }
 
-        // Show the default preferences page
-        $this->ui->show(
-            'show_preferences.inc.php',
-            [
-                'fullname' => $fullname,
-                'preferences' => $user->get_preferences($_REQUEST['tab'], $system),
-                'ui' => $this->ui
-            ]
-        );
+        if ($user !== null) {
+            // Show the default preferences page
+            $this->ui->show(
+                'show_preferences.inc.php',
+                [
+                    'fullname' => $fullname,
+                    'preferences' => $user->get_preferences($_REQUEST['tab'], $system),
+                    'ui' => $this->ui
+                ]
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

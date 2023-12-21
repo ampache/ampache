@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -53,15 +53,12 @@ final class Stats4Method
      * This method has partial backwards compatibility with older api versions
      * but should be updated to follow the current input values
      *
-     * @param array $input
-     * @param User $user
      * type     = (string)  'song'|'album'|'artist'
      * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
      * user_id  = (integer) //optional
      * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) //optional
-     * @return boolean
      */
     public static function stats(array $input, User $user): bool
     {
@@ -70,12 +67,15 @@ final class Stats4Method
         }
         $user_id = $user->id;
         // override your user if you're looking at others
-        if ($input['username']) {
+        if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
             $user    = User::get_from_username($input['username']);
             $user_id = $user->id;
-        } elseif ($input['user_id']) {
-            $user_id = (int) $input['user_id'];
-            $user    = new User($user_id);
+        } elseif (array_key_exists('user_id', $input)) {
+            $userTwo = new User($user_id);
+            if (!$userTwo->isNew()) {
+                $user_id = (int)$input['user_id'];
+                $user    = new User($user_id);
+            }
         }
         // moved type to filter and allowed multiple type selection
         $type   = $input['type'];
@@ -108,10 +108,10 @@ final class Stats4Method
             case 'forgotten':
                 debug_event(self::class, 'stats ' . $input['filter'], 4);
                 $newest = $input['filter'] == 'recent';
-                if ($user->id) {
-                    $results = $user->get_recently_played($type, $limit, $offset, $newest);
-                } else {
+                if ($user->isNew()) {
                     $results = Stats::get_recent($type, $limit, $offset, $newest);
+                } else {
+                    $results = $user->get_recently_played($type, $limit, $offset, $newest);
                 }
                 break;
             case 'flagged':
@@ -176,7 +176,7 @@ final class Stats4Method
         }
 
         return true;
-    } // stats
+    }
 
     /**
      * @deprecated Inject by constructor

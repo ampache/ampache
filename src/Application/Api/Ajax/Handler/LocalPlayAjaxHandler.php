@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -41,7 +41,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         RequestParserInterface $requestParser
     ) {
-        $this->requestParser   = $requestParser;
+        $this->requestParser = $requestParser;
     }
 
     public function handle(): void
@@ -96,13 +96,13 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                     case 'stop':
                     case 'play':
                     case 'pause':
-                        $command = scrub_in($_REQUEST['command']);
+                        $command = scrub_in((string) $_REQUEST['command']);
                         $localplay->$command();
                         break;
                     case 'volume_up':
                     case 'volume_down':
                     case 'volume_mute':
-                        $command = scrub_in($_REQUEST['command']);
+                        $command = scrub_in((string) $_REQUEST['command']);
                         $localplay->$command();
 
                         // We actually want to refresh something here
@@ -157,10 +157,10 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 // Wait in case we just deleted what we were playing
                 sleep(3);
                 $objects = $localplay->get();
-                $status  = $localplay->status();
 
                 ob_start();
-                $browse = new Browse();
+                $browse_id = (int)($_REQUEST['browse_id'] ?? 0);
+                $browse    = new Browse($browse_id);
                 $browse->set_type('playlist_localplay');
                 $browse->set_static_content(true);
                 $browse->save_objects($objects);

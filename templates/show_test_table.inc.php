@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -29,12 +32,11 @@ use Ampache\Module\Util\Ui;
  * debug_wresult
  *
  * Convenience function to format the output.
- * @param boolean $status
+ * @param bool $status
  * @param string $value
  * @param string $comment
- * @return string
  */
-function debug_wresult($status = false, $value = null, $comment = '')
+function debug_wresult($status = false, $value = null, $comment = ''): string
 {
     $class = $status ? 'success' : 'warning';
 
@@ -48,6 +50,7 @@ function debug_wresult($status = false, $value = null, $comment = '')
 
 // TODO remove me
 global $dic;
+/** @var EnvironmentInterface $environment */
 $environment = $dic->get(EnvironmentInterface::class); ?>
 <tr>
     <td><?php echo T_('PHP version'); ?></td>

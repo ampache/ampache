@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -33,6 +33,7 @@ use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Session;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 
 final class StatsAjaxHandler implements AjaxHandlerInterface
 {
@@ -41,20 +42,23 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         RequestParserInterface $requestParser
     ) {
-        $this->requestParser   = $requestParser;
+        $this->requestParser = $requestParser;
     }
 
     public function handle(): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
-        $user    = Core::get_global('user');
+        /** @var User $user */
+        $user = (!empty(Core::get_global('user')))
+            ? Core::get_global('user')
+            : new User(-1);
 
         // Switch on the actions
         switch ($action) {
             case 'geolocation':
                 if (AmpConfig::get('geolocation')) {
-                    if ($user->id) {
+                    if ($user->id > 0) {
                         $name = $_REQUEST['name'] ?? null;
                         if (empty($name)) {
                             $latitude  = (float)($_REQUEST['latitude'] ?? 0);
@@ -64,7 +68,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                             if (empty($name)) {
                                 foreach (Plugin::get_plugins('get_location_name') as $plugin_name) {
                                     $plugin = new Plugin($plugin_name);
-                                    if ($plugin->load($user)) {
+                                    if ($plugin->_plugin !== null && $plugin->load($user)) {
                                         $name = $plugin->_plugin->get_location_name($latitude, $longitude);
                                         if (!empty($name)) {
                                             break;
@@ -89,11 +93,16 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $user_id   = $user->id ?? -1;
-                $data      = Stats::get_recently_played($user_id, 'stream', 'song');
+                $user_id   = $user->id;
                 $ajax_page = 'stats';
-                Song::build_cache(array_keys($data));
-                require_once Ui::find_template('show_recently_played.inc.php');
+                if (AmpConfig::get('home_recently_played_all')) {
+                    $data = Stats::get_recently_played($user_id);
+                    require_once Ui::find_template('show_recently_played_all.inc.php');
+                } else {
+                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
+                    Song::build_cache(array_keys($data));
+                    require Ui::find_template('show_recently_played.inc.php');
+                }
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'delete_skip':
@@ -102,7 +111,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $user_id   = $user->id ?? -1;
+                $user_id   = $user->id;
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song');
                 $ajax_page = 'stats';
                 Song::build_cache(array_keys($data));

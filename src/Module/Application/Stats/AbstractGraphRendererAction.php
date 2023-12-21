@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -22,6 +23,7 @@
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -47,9 +49,10 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
         $libitem  = null;
         $owner_id = 0;
         if (($object_id) && (InterfaceImplementationChecker::is_library_item($object_type))) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $libitem    = new $class_name($object_id);
-            $owner_id   = $libitem->get_user_owner();
+            $className = ObjectTypeToClassNameMapper::map($object_type);
+            /** @var library_item $libitem */
+            $libitem  = new $className($object_id);
+            $owner_id = $libitem->get_user_owner();
         }
 
         if (
@@ -63,11 +66,11 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
         }
 
         $user_id      = (int)Core::get_request('user_id');
-        $end_date     = $_REQUEST['end_date'] ? strtotime((string) $_REQUEST['end_date']) : time();
+        $end_date     = (isset($_REQUEST['end_date'])) ? (int)strtotime((string)$_REQUEST['end_date']) : time();
         $f_end_date   = get_datetime((int)$end_date);
-        $start_date   = $_REQUEST['start_date'] ? strtotime((string) $_REQUEST['start_date']) : ($end_date - 864000);
+        $start_date   = (isset($_REQUEST['start_date'])) ? (int)strtotime((string)$_REQUEST['start_date']) : ($end_date - 864000);
         $f_start_date = get_datetime((int)$start_date);
-        $zoom         = $_REQUEST['zoom'] ?? 'day';
+        $zoom         = (string)($_REQUEST['zoom'] ?? 'day');
 
         $gtypes   = array();
         $gtypes[] = 'user_hits';
@@ -81,14 +84,13 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
 
         $blink = '';
         if ($libitem !== null) {
-            $libitem->format();
-            if (isset($libitem->f_link)) {
-                $blink = $libitem->f_link;
+            $f_link = $libitem->get_f_link();
+            if (!empty($f_link)) {
+                $blink = $f_link;
             }
-        } elseif ($user_id) {
-            $user = new User($user_id);
-            $user->format();
-            $blink = $user->f_link;
+        } elseif ($user_id > 0) {
+            $user  = new User($user_id);
+            $blink = $user->get_f_link();
         }
 
         require_once Ui::find_template('show_graphs.inc.php');

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,14 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\TvShow;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -36,27 +37,39 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->requestParser = $requestParser;
+        $this->ui            = $ui;
+        $this->modelFactory  = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
 
-        $tvshow = $this->modelFactory->createTvShow((int) $_REQUEST['tvshow']);
+        $tvshow_id = (int)$this->requestParser->getFromRequest('tvshow');
+        $tvshow    = $this->modelFactory->createTvShow($tvshow_id);
         $tvshow->format();
         $object_ids  = $tvshow->get_seasons();
         $object_type = 'tvshow_season';
-        require_once Ui::find_template('show_tvshow.inc.php');
+        $this->ui->show(
+            'show_tvshow.inc.php',
+            [
+                'tvshow' => $tvshow,
+                'object_ids' => $object_ids,
+                'object_type' => $object_type
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

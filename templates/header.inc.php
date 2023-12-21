@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -35,10 +38,10 @@ use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
-$web_path          = AmpConfig::get('web_path');
+$web_path          = (string)AmpConfig::get('web_path', '');
 $access100         = Access::check('interface', 100);
 $access25          = ($access100 || Access::check('interface', 25));
-$site_lang         = AmpConfig::get('lang');
+$site_lang         = AmpConfig::get('lang', 'en_US');
 $site_title        = scrub_out(AmpConfig::get('site_title'));
 $site_social       = AmpConfig::get('sociable');
 $site_ajax         = AmpConfig::get('ajax_load');
@@ -80,7 +83,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
     : 'jQuery-contextMenu';
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl($site_lang) ? 'rtl' : 'ltr';?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl($site_lang) ? 'rtl' : 'ltr'; ?>">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
         <link rel="search" type="application/opensearchdescription+xml" title="<?php echo $site_title; ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
@@ -125,8 +128,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" defer></script>
         <?php if (file_exists(__DIR__ . '/../lib/javascript/custom.js')) { ?>
             <script src="<?php echo $web_path; ?>/lib/javascript/custom.js" defer></script>
-        <?php } // file exists custom.js?>
-
+        <?php } ?>
         <script>
             $(document).ready(function(){
                 $("a[rel^='prettyPhoto']").prettyPhoto({
@@ -142,7 +144,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
             var jsWebPath = "<?php echo $web_path; ?>";
             var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
-            var jsSiteTitle = "<?php echo addslashes(AmpConfig::get('site_title', '')) ?>";
+            var jsSiteTitle = "<?php echo addslashes(AmpConfig::get('site_title', '')); ?>";
             var jsHomeTitle = "<?php echo addslashes(T_('Home')); ?>";
             var jsUploadTitle = "<?php echo addslashes(T_('Upload')); ?>";
             var jsLocalplayTitle = "<?php echo addslashes(T_('Localplay')); ?>";
@@ -171,8 +173,8 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             var jsPodcastEpisodeTitle = "<?php echo addslashes(T_('Podcast Episode')); ?>";
             var jsRadioTitle = "<?php echo addslashes(T_('Radio Stations')); ?>";
             var jsVideoTitle = "<?php echo addslashes(T_('Video')); ?>";
-            var jsSaveTitle = "<?php echo addslashes(T_('Save')) ?>";
-            var jsCancelTitle = "<?php echo addslashes(T_('Cancel')) ?>";
+            var jsSaveTitle = "<?php echo addslashes(T_('Save')); ?>";
+            var jsCancelTitle = "<?php echo addslashes(T_('Cancel')); ?>";
         </script>
 
         <?php if ($site_ajax) {
@@ -462,11 +464,11 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             $.contextMenu({
                 selector: ".libitem_menu",
                 items: {
-                    play: {name: "<?php echo $t_play ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay'); }},
-                    play_next: {name: "<?php echo T_('Play next') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay&playnext=true'); }},
-                    play_last: {name: "<?php echo T_('Play last') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay&append=true'); }},
-                    add_tmp_playlist: {name: "<?php echo T_('Add to Temporary Playlist') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?action=basket'); }},
-                    add_playlist: {name: "<?php echo T_('Add to playlist') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, ''); }}
+                    play: {name: "<?php echo $t_play; ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay'); }},
+                    play_next: {name: "<?php echo T_('Play next'); ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay&playnext=true'); }},
+                    play_last: {name: "<?php echo T_('Play last'); ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay&append=true'); }},
+                    add_tmp_playlist: {name: "<?php echo T_('Add to Temporary Playlist'); ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?action=basket'); }},
+                    add_playlist: {name: "<?php echo T_('Add to playlist'); ?>", callback: function(key, opt){ libitem_action(opt.$trigger, ''); }}
                 }
             });
         </script>
@@ -503,7 +505,7 @@ if ($is_session) {
                         <?php } ?>
                         </span>
                     <?php } ?>
-                    <?php if ($site_ajax && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
+                    <?php if ($site_ajax) { ?>
                         <div id="rightbar-minimize">
                             <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_icon('minimize', T_('Show/Hide Playlist')); ?></a>
                         </div>
@@ -517,25 +519,25 @@ if ($is_session) {
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/index.php">
                         <?php echo Ui::get_image('topmenu-home', $t_home); ?>
-                        <span><?php echo $t_home ?></span>
+                        <span><?php echo $t_home; ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/browse.php?action=album_artist">
                         <?php echo Ui::get_image('topmenu-artist', $t_artists); ?>
-                        <span><?php echo $t_artists ?></span>
+                        <span><?php echo $t_artists; ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/browse.php?action=playlist">
                         <?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?>
-                        <span><?php echo $t_playlists ?></span>
+                        <span><?php echo $t_playlists; ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist">
                         <?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?>
-                        <span><?php echo $t_genres ?></span>
+                        <span><?php echo $t_genres; ?></span>
                     </a>
                 </div>
 
@@ -543,7 +545,7 @@ if ($is_session) {
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/stats.php?action=userflag_<?php echo $albumString; ?>">
                         <?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?>
-                        <span><?php echo $t_favorites ?></span>
+                        <span><?php echo $t_favorites; ?></span>
                     </a>
                 </div>
                 <?php } ?>
@@ -551,7 +553,7 @@ if ($is_session) {
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/upload.php">
                         <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
-                        <span><?php echo $t_upload ?></span>
+                        <span><?php echo $t_upload; ?></span>
                     </a>
                 </div>
                 <?php } ?>
@@ -601,7 +603,7 @@ $isCollapsed                    = (($sidebarLight && (!isset($_COOKIE['sidebar_s
                     $('#sidebar').show(500);
                 });
 
-                Cookies.set('sidebar_state', newstate, {<?php echo $cookie_string ?>});
+                Cookies.set('sidebar_state', newstate, {<?php echo $cookie_string; ?>});
             });
             </script>
             <div id="rightbar" class="rightbar-fixed">
@@ -613,7 +615,7 @@ $isCollapsed                    = (($sidebarLight && (!isset($_COOKIE['sidebar_s
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
-            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo((isset($count_temp_playlist) || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild');
+            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (!$count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild';
 echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if ($access100) {

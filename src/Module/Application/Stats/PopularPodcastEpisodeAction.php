@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -32,7 +33,6 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,18 +46,14 @@ final class PopularPodcastEpisodeAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private VideoRepositoryInterface $videoRepository;
-
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        VideoRepositoryInterface $videoRepository
+        ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
-        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,6 +73,7 @@ final class PopularPodcastEpisodeAction implements ApplicationActionInterface
         $objects = Stats::get_top('podcast_episode', -1, $thresh_value, 0, $user_id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
+        $browse->set_use_filters(false);
         $browse->set_type('podcast_episode');
         $browse->show_objects($objects);
         $browse->store();

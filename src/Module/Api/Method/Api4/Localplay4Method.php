@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,13 +45,10 @@ final class Localplay4Method
      *
      * This is for controlling Localplay
      *
-     * @param array $input
-     * @param User $user
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
-     * @return boolean
      */
     public static function localplay(array $input, User $user): bool
     {
@@ -71,14 +69,14 @@ final class Localplay4Method
         switch ($input['command']) {
             case 'add':
                 // for add commands get the object details
-                $object_id   = (int)($input['oid'] ?? 0);
-                $type        = $input['type'] ? (string) $input['type'] : 'Song';
+                $object_id = (int)($input['oid'] ?? 0);
+                $type      = $input['type'] ? (string) $input['type'] : 'Song';
                 if (!AmpConfig::get('allow_video') && $type == 'Video') {
                     Api4::message('error', T_('Access Denied: allow_video is not enabled.'), '400', $input['api_format']);
 
                     return false;
                 }
-                $clear       = (int)($input['clear'] ?? 0);
+                $clear = (int)($input['clear'] ?? 0);
                 // clear before the add
                 if ($clear == 1) {
                     $localplay->delete_all();
@@ -132,7 +130,7 @@ final class Localplay4Method
         } // end switch on command
         $results = (!empty($status))
             ? array('localplay' => array('command' => array($input['command'] => $status)))
-            : array('localplay' => array('command' => array($input['command'] => make_bool($result))));
+            : array('localplay' => array('command' => array($input['command'] => $result)));
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);
@@ -142,5 +140,5 @@ final class Localplay4Method
         }
 
         return true;
-    } // localplay
+    }
 }

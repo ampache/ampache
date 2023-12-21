@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -27,12 +30,11 @@ use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 
-global $dic;
-
 /** @var array $configuration */
 
+global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
-$web_path    = AmpConfig::get('web_path');
+$web_path    = (string)AmpConfig::get('web_path', '');
 // don't share the database password
 $configuration['database_password'] = '*********';
 // check your versions
@@ -59,6 +61,11 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_icon('cog', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
             </li>
+    <?php if (AmpConfig::get('perpetual_api_session')) { ?>
+            <li>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=perpetual_api_session"><?php echo Ui::get_icon('cog', T_('Clear Perpetual API Sessions')) . ' ' . T_('Clear Perpetual API Sessions'); ?></a>
+            </li>
+    <?php  } ?>
         </ul>
     </div>
     <?php Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
@@ -116,23 +123,23 @@ echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Zlib Support'); ?></td>
-            <td><?php echo print_bool(function_exists('gzcompress')); ?></td>
+            <td><?php echo Ui::printBool(function_exists('gzcompress')); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('GD Support'); ?></td>
-            <td><?php echo print_bool(function_exists('imagecreatefromstring')); ?></td>
+            <td><?php echo Ui::printBool(function_exists('imagecreatefromstring')); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Iconv Support'); ?></td>
-            <td><?php echo print_bool(function_exists('iconv')); ?></td>
+            <td><?php echo Ui::printBool(function_exists('iconv')); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Gettext Support'); ?></td>
-            <td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
+            <td><?php echo Ui::printBool(function_exists('bindtextdomain')); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('PHP intl extension'); ?></td>
-            <td><?php echo print_bool($environment->check_php_intl()); ?></td>
+            <td><?php echo Ui::printBool($environment->check_php_intl()); ?></td>
         </tr>
         </tbody>
     </table>
@@ -165,7 +172,7 @@ echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
         $value = $string;
     }
     if (Preference::is_boolean($key)) {
-        $value = print_bool($value);
+        $value = Ui::printBool($value);
     }
 
     // Be sure to print only scalar values

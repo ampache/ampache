@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -26,15 +29,15 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-/** @var integer|string $upload_max */
+/** @var int|string $upload_max */
+/** @var string $ajaxfs */
 
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 Ui::show_box_top(T_('Upload'));
-$ajaxfs   = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
 $artist   = (int) (Core::get_request('artist'));
 $album    = (int) (Core::get_request('album'));
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $access50 = Access::check('interface', 50);
 $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 <div id="container" role="main">
@@ -177,12 +180,12 @@ if ($upload_max > 0) { ?>
 <?php } ?>
 <table class="tabledata">
     <tr>
-    <h5><?php echo T_('Leave the artist and album fields blank to read file tags') ?></h5>
+    <h5><?php echo T_('Leave the artist and album fields blank to read file tags'); ?></h5>
     </tr>
 </table>
 <table class="tabledata">
 <tr>
-    <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
+    <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
     <td class="upload_select">
         <?php show_artist_select('artist', $artist, true, 1, true); ?>
         <div id="artist_select_1">
@@ -191,7 +194,7 @@ if ($upload_max > 0) { ?>
     </td>
 </tr>
 <tr>
-    <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
+    <td class="edit_dialog_content_header"><?php echo T_('Album'); ?></td>
     <td class="upload_select">
         <?php show_album_select('album_id', $album, true, 1, true); ?>
         <div id="album_select_1">
@@ -201,7 +204,7 @@ if ($upload_max > 0) { ?>
 </tr>
 <?php if (AmpConfig::get('licensing')) { ?>
 <tr>
-    <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
+    <td class="edit_dialog_content_header"><?php echo T_('Music License'); ?></td>
     <td class="upload_select">
         <?php show_license_select('license'); ?>
         <div id="album_select_license">

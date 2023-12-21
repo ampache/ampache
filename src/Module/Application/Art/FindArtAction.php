@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Art;
 
 use Ampache\Repository\Model\Art;
@@ -30,7 +31,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,7 +57,7 @@ final class FindArtAction extends AbstractArtAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $item        = $this->getItem($gatekeeper);
 
         if ($item === null) {
@@ -139,7 +139,7 @@ final class FindArtAction extends AbstractArtAction
 
         if (!empty($_REQUEST['cover'])) {
             $path_info            = pathinfo($_REQUEST['cover']);
-            $cover_url[0]['url']  = scrub_in($_REQUEST['cover']);
+            $cover_url[0]['url']  = scrub_in((string) $_REQUEST['cover']);
             $cover_url[0]['mime'] = 'image/' . $path_info['extension'];
         }
         $images = array_merge($cover_url, $images);
@@ -154,10 +154,26 @@ final class FindArtAction extends AbstractArtAction
             } // end foreach
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
-            require_once Ui::find_template('show_arts.inc.php');
+            $this->ui->show(
+                'show_arts.inc.php',
+                [
+                    'images' => $images,
+                    'object_id' => $object_id,
+                    'object_type' => $object_type,
+                    'burl' => $burl
+                ]
+            );
         }
 
-        require_once Ui::find_template('show_get_art.inc.php');
+        $this->ui->show(
+            'show_get_art.inc.php',
+            [
+                'item' => $item,
+                'object_id' => $object_id,
+                'object_type' => $object_type,
+                'burl' => $burl
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

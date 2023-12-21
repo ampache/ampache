@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,33 +24,35 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\AmpacheRss;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Repository\Model\Browse;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\ZipHandlerInterface;
+use Psr\Container\ContainerInterface;
 
 /** @var Album $album */
 /** @var bool $isAlbumEditable */
-
+/** @var ContainerInterface $dic */
 global $dic;
+
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 $batch_dl   = Access::check_function('batch_download');
 $zip_album  = $batch_dl && $zipHandler->isZipable('album');
 // Title for this album
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $simple   = $album->get_fullname(true);
 $f_name   = $album->get_fullname(false, true);
 $title    = ($album->album_artist !== null)
@@ -84,8 +89,8 @@ if ($directplay_limit > 0) {
     <?php } ?>
     </div>
     <?php
-        $name  = '[' . scrub_out($album->f_artist_name) . '] ' . scrub_out($f_name);
-$thumb         = Ui::is_grid_view('album') ? 32 : 11;
+        $name = '[' . scrub_out($album->f_artist_name) . '] ' . scrub_out($f_name);
+$thumb        = Ui::is_grid_view('album') ? 32 : 11;
 Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) {
@@ -121,9 +126,9 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
         <?php if ($show_direct_play) {
-            $play       = T_('Play');
-            $playnext   = T_('Play next');
-            $playlast   = T_('Play last'); ?>
+            $play     = T_('Play');
+            $playnext = T_('Play next');
+            $playlast = T_('Play last'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id, 'play', $play, 'directplay_full_' . $album->id); ?>
         </li>
@@ -151,16 +156,16 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php echo Ajax::button_with_text('?action=basket&type=album_random&id=' . $album->id, 'random', $randtotemp, 'play_random_' . $album->id); ?>
         </li>
         <li>
-            <a id="<?php echo 'add_playlist_' . $album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
+            <a id="<?php echo 'add_playlist_' . $album->id; ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id; ?>')">
                 <?php echo Ui::get_icon('playlist_add', $addtoexist);
-            echo $addtoexist ?>
+            echo $addtoexist; ?>
             </a>
         </li>
         <?php
         }
 if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => (string)$album->id)); ?>
         </li>
         <?php }
 if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
@@ -183,7 +188,7 @@ if (Access::check('interface', 25)) {
             <?php }
     }
 if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->id) || Access::check('interface', 50)) {
-    $saveorder  = T_('Save Track Order');
+    $saveorder = T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
@@ -211,14 +216,14 @@ if ($isAlbumEditable) {
     $t_upload = T_('Upload');
     if (Upload::can_upload($current_user) && $album->album_artist > 0) { ?>
                 <li>
-                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id ?>">
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id; ?>">
                         <?php echo Ui::get_icon('upload', $t_upload);
         echo $t_upload; ?>
                     </a>
                 </li>
     <?php } ?>
         <li>
-            <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', '')">
+            <a id="<?php echo 'edit_album_' . $album->id; ?>" onclick="showEditDialog('album_row', '<?php echo $album->id; ?>', '<?php echo 'edit_album_' . $album->id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit'));
     echo T_('Edit Album'); ?>
             </a>
@@ -226,7 +231,7 @@ if ($isAlbumEditable) {
         <?php
 }
 if ($zip_album) {
-    $download   = T_('Download'); ?>
+    $download = T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
                 <?php echo Ui::get_icon('batch_download', $download);
@@ -238,7 +243,7 @@ if ($zip_album) {
 if (Catalog::can_remove($album)) {
     $delete = T_('Delete'); ?>
         <li>
-            <a id="<?php echo 'delete_album_' . $album->id ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
+            <a id="<?php echo 'delete_album_' . $album->id; ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
                 <?php echo Ui::get_icon('delete', $delete);
     echo $delete; ?>
             </a>
@@ -258,6 +263,6 @@ $browse->set_simple_browse(true);
 $browse->set_filter('album', $album->id);
 $browse->set_sort('track', 'ASC');
 $browse->get_objects();
-$browse->show_objects(null, array('hide' => $hide_array));
+$browse->show_objects(array(), array('hide' => $hide_array));
 $browse->store(); ?>
 </div>

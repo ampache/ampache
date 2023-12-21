@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,13 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -37,20 +37,16 @@ final class AlbumRandomAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'album_random';
 
-    private ModelFactoryInterface $modelFactory;
-
     private ConfigContainerInterface $configContainer;
 
     private AlbumRepositoryInterface $albumRepository;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         AlbumRepositoryInterface $albumRepository
     ) {
         parent::__construct($logger, $configContainer);
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
         $this->albumRepository = $albumRepository;
     }

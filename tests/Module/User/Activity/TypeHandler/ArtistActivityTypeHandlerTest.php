@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\MockeryTestCase;
@@ -35,7 +36,7 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
 
     private ?ArtistActivityTypeHandler $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
 
@@ -46,11 +47,11 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
 
     public function testRegisterActivityRegisterArtistActivity(): void
     {
-        $objectId           = 666;
-        $objectType         = 'some-object-type';
-        $action             = 'some-action';
-        $userId             = 42;
-        $date               = 123;
+        $objectId   = 666;
+        $objectType = 'some-object-type';
+        $action     = 'some-action';
+        $userId     = 42;
+        $date       = 123;
 
         $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(

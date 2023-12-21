@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Api\Output;
 
 use Ampache\Module\Api\Json4_Data;
@@ -31,6 +32,32 @@ use Ampache\Repository\Model\User;
 
 final class JsonOutput implements ApiOutputInterface
 {
+    /**
+     * @param list<int> $result
+     */
+    public function podcastEpisodes(array $result, User $user): string
+    {
+        return Json_Data::podcast_episodes($result, $user);
+    }
+
+    public function setOffset(int $offset): void
+    {
+        Json_Data::set_offset($offset);
+    }
+
+    public function setLimit(int $limit): void
+    {
+        Json_Data::set_limit($limit);
+    }
+
+    /**
+     * Generate an empty api result
+     */
+    public function writeEmpty(string $emptyType): string
+    {
+        return Json_Data::empty($emptyType);
+    }
+
     /**
      * At the moment, this method just acts as a proxy
      */
@@ -58,7 +85,7 @@ final class JsonOutput implements ApiOutputInterface
     public function error4(int $code, string $message): string
     {
         return Json4_Data::error(
-            $code,
+            (string)$code,
             $message
         );
     }
@@ -79,13 +106,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param integer[] $albums
+     * @param int[] $albums
      * @param array $include
      * @param User $user
      * @param bool $encode
      * @param bool $asObject
-     * @param integer $limit
-     * @param integer $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return array|string
      */
@@ -102,5 +129,17 @@ final class JsonOutput implements ApiOutputInterface
         Json_Data::set_limit($limit);
 
         return Json_Data::albums($albums, $include, $user, $encode, $asObject);
+    }
+
+    /**
+     * This generates a standard JSON Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<mixed> $return_data
+     */
+    public function success(string $string, array $return_data = []): string
+    {
+        return Json_Data::success($string, $return_data);
     }
 }

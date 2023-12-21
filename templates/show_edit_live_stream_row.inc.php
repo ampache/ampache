@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -26,19 +29,19 @@
     <form method="post" id="edit_live_stream_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Stream URL') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Stream URL'); ?></td>
                 <td><input type="text" name="url" value="<?php echo scrub_out($libitem->url); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Website') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Website'); ?></td>
                 <td><input type="text" name="site_url" value="<?php echo scrub_out($libitem->site_url); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Codec') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Codec'); ?></td>
                 <td><input type="text" name="codec" value="<?php echo scrub_out($libitem->codec); ?>" /></td>
             </tr>
         </table>

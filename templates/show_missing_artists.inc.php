@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -23,6 +26,8 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
+/** @var array $wartists */
+
 Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
 <table class="tabledata striped-rows">
     <thead>
@@ -32,8 +37,8 @@ Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
     </thead>
     <tbody>
         <?php
-        if ($wartists) {
-            $web_path = AmpConfig::get('web_path');
+        if (!empty($wartists)) {
+            $web_path = (string)AmpConfig::get('web_path', '');
             foreach ($wartists as $libitem) { ?>
         <tr id="wartist_<?php echo $libitem['mbid']; ?>">
             <td class="cel_artist">
@@ -42,10 +47,9 @@ Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
         </tr>
         <?php
             }
-        } ?>
-        <?php if (!$wartists || !count($wartists)) { ?>
+        } else { ?>
         <tr>
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
+            <td colspan="<?php echo 5; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>

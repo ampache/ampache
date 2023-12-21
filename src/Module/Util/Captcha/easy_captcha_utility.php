@@ -50,7 +50,10 @@ class easy_captcha_utility
                     $_SERVER['TEMPDIR'] ?? null,
                     function_exists("sys_get_temp_dir") ? sys_get_temp_dir() : "",
                     '/tmp'
-                )), "is_writeable"));
+                )
+            ),
+            "is_writeable"
+        ));
     }
 
 
@@ -247,6 +250,7 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
 
     /* static */
     /**
+     * patch contributed from Fedora downstream by Patrick Monnerat
      * @param $url
      * @return string
      */
@@ -283,5 +287,5 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
         $path = $abspath . implode('/', $path);
 
         return empty($path) ? '.' : $path;
-    }  //patch contributed from Fedora downstream by Patrick Monnerat
+    }
 }

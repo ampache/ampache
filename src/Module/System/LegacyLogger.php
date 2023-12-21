@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\System;
 
@@ -56,7 +56,7 @@ final class LegacyLogger implements LoggerInterface
     }
 
     /**
-     * Use LegacyLogger::critical (Required function to implement LoggerInterface)
+     * @see LegacyLogger::critical (Required function to implement LoggerInterface)
      */
     public function emergency($message, array $context = []): void
     {
@@ -68,7 +68,7 @@ final class LegacyLogger implements LoggerInterface
     }
 
     /**
-     * Use LegacyLogger::critical (Required function to implement LoggerInterface)
+     * @see LegacyLogger::critical (Required function to implement LoggerInterface)
      */
     public function alert($message, array $context = []): void
     {
@@ -128,7 +128,7 @@ final class LegacyLogger implements LoggerInterface
     }
 
     /**
-     * Use LegacyLogger::notice(Required function to implement LoggerInterface)
+     * @see LegacyLogger::notice (Required function to implement LoggerInterface)
      */
     public function info($message, array $context = []): void
     {

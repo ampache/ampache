@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
@@ -30,6 +31,7 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 /**
  * Class LastShouts4Method
@@ -44,11 +46,8 @@ final class LastShouts4Method
      *
      * This get the latest posted shouts
      *
-     * @param array $input
-     * @param User $user
      * username = (string) $username //optional
      * limit = (integer) $limit //optional
-     * @return boolean
      */
     public static function last_shouts(array $input, User $user): bool
     {
@@ -63,14 +62,15 @@ final class LastShouts4Method
         unset($user);
         $limit = (int)($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
+            $limit = (int) AmpConfig::get('popular_threshold', 10);
         }
-        $username = $input['username'];
-        if (!empty($username)) {
-            $results = Shoutbox::get_top($limit, $username);
+        if (!empty($input['username'])) {
+            $username = $input['username'];
         } else {
-            $results = Shoutbox::get_top($limit);
+            $username = null;
         }
+
+        $results = static::getShoutRepository()->getTop($limit, $username);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -82,5 +82,15 @@ final class LastShouts4Method
         }
 
         return true;
-    } // last_shouts
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private static function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
+    }
 }

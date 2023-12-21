@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,12 +45,9 @@ class AlbumSongs4Method
      *
      * This returns the songs of a specified album
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function album_songs(array $input, User $user): bool
     {
@@ -80,7 +78,7 @@ class AlbumSongs4Method
         }
 
         return true;
-    } // album_songs
+    }
 
     /**
      * @deprecated

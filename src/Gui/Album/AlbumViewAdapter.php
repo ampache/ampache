@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Gui\Album;
 
@@ -111,7 +112,9 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 
-        return Art::display_without_return('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
+        Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
+
+        return '';
     }
 
     public function canAutoplayNext(): bool
@@ -286,17 +289,17 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAlbumUrl(): string
     {
-        return $this->album->get_link();
+        return (string)$this->album->get_link();
     }
 
     public function getAlbumLink(): string
     {
-        return $this->album->get_f_link();
+        return (string)$this->album->get_f_link();
     }
 
     public function getArtistLink(): string
     {
-        return $this->album->get_f_artist_link();
+        return (string)$this->album->get_f_artist_link();
     }
 
     public function canShowYear(): bool
@@ -313,7 +316,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getGenre(): string
     {
-        return $this->album->f_tags;
+        return (string)$this->album->f_tags;
     }
 
     public function getSongCount(): int

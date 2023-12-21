@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
@@ -279,7 +280,8 @@ final class Environment implements EnvironmentInterface
         // In case the local setting is 0
         ini_set('session.gc_probability', '5');
         $current_memory = ini_get('memory_limit');
-        if (!$current_memory ||
+        if (
+            !$current_memory ||
             (Ui::unformat_bytes($current_memory) < Ui::unformat_bytes('32M'))
         ) {
             $current_memory = '32M';

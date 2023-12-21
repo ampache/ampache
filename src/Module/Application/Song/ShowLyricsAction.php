@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,14 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Song;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -36,16 +37,20 @@ final class ShowLyricsAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_lyrics';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->requestParser = $requestParser;
+        $this->ui            = $ui;
+        $this->modelFactory  = $modelFactory;
     }
 
     public function run(
@@ -54,11 +59,19 @@ final class ShowLyricsAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $this->ui->showHeader();
 
-        $song = $this->modelFactory->createSong((int)($_REQUEST['song_id'] ?? 0));
+        $song_id = (int)$this->requestParser->getFromRequest('song_id');
+        $song    = $this->modelFactory->createSong($song_id);
         $song->format();
         $song->fill_ext_info();
         $lyrics = $song->get_lyrics();
-        require_once Ui::find_template('show_lyrics.inc.php');
+
+        $this->ui->show(
+            'show_lyrics.inc.php',
+            [
+                'song' => $song,
+                'lyrics' => $lyrics
+            ]
+        );
 
         // Show the Footer
         $this->ui->showQueryStats();

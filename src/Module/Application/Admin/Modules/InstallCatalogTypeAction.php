@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Modules;
 
@@ -59,9 +60,9 @@ final class InstallCatalogTypeAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $type    = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $type    = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $catalog = Catalog::create_catalog_type($type);
-        if ($catalog == null) {
+        if ($catalog === null) {
             AmpError::add('general', T_('Failed to enable the Catalog module'));
             echo AmpError::display('general');
 

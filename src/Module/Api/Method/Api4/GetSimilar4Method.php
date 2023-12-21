@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,13 +44,10 @@ final class GetSimilar4Method
      *
      * Return similar artist id's or similar song ids compared to the input filter
      *
-     * @param array $input
-     * @param User $user
      * type   = (string) 'song'|'artist'
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function get_similar(array $input, User $user): bool
     {
@@ -93,5 +90,5 @@ final class GetSimilar4Method
         }
 
         return true;
-    } // get_similar
+    }
 }

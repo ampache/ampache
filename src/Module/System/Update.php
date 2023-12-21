@@ -1,5 +1,8 @@
-<?php /** @noinspection PhpUnusedPrivateMethodInspection */
-/*
+<?php
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\System;
 
@@ -58,7 +59,7 @@ class Update
      * @return string
      * @throws EnvironmentNotSuitableException
      */
-    private static function _get_db_version()
+    private static function _get_db_version(): string
     {
         /* Make sure that update_info exits */
         $sql        = "SHOW TABLES LIKE 'update_info'";
@@ -81,7 +82,7 @@ class Update
         }
         // now it's really got problems
         throw new EnvironmentNotSuitableException();
-    } // get_version
+    }
 
     /**
      * check_tables
@@ -147,7 +148,7 @@ class Update
             'album_disk' => "CREATE TABLE IF NOT EXISTS `album_disk` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `album_id` int(11) UNSIGNED NOT NULL, `disk` int(11) UNSIGNED NOT NULL, `disk_count` int(11) unsigned DEFAULT 0 NOT NULL, `time` bigint(20) UNSIGNED DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0, `song_count` smallint(5) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY `unique_album_disk` (`album_id`, `disk`, `catalog`), INDEX `id_index` (`id`), INDEX `album_id_type_index` (`album_id`, `disk`), INDEX `id_disk_index` (`id`, `disk`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
             'user_playlist' => "CREATE TABLE IF NOT EXISTS `user_playlist` (`playqueue_time` int(11) UNSIGNED NOT NULL, `playqueue_client` varchar(255) CHARACTER SET $charset COLLATE $collation, user int(11) DEFAULT 0, `object_type` enum('song','live_stream','video','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `track` smallint(6) UNSIGNED NOT NULL DEFAULT 0, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`playqueue_time`, `playqueue_client`, `user`, `track`), KEY `user` (`user`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;"
         );
-        $versions   = array(
+        $versions = array(
             'image' => 360003,
             'tmp_browse' => 360005,
             'search' => 360006,
@@ -220,9 +221,8 @@ class Update
      *
      * Make the version number pretty. (600028 => 6.0.0 Build: 028)
      * @param string $version
-     * @return string
      */
-    public static function format_version($version = '') : string
+    public static function format_version($version = ''): string
     {
         if (empty($version)) {
             $version = self::_get_db_version();
@@ -257,7 +257,6 @@ class Update
     /**
      * _set_versions
      * Set the list of database updates used by self::$versions
-     * @return array
      */
     private static function _set_versions(): array
     {
@@ -909,6 +908,24 @@ class Update
         $update_string = "* Add user preference `bookmark_latest`, Only keep the latest media bookmark";
         $version[]     = array('version' => '600042', 'description' => $update_string);
 
+        $update_string = "* Set correct preference type for `use_play2`<br />* Add user preference `jp_volume`, Default webplayer volume";
+        $version[]     = array('version' => '600043', 'description' => $update_string);
+
+        $update_string = "* Add system preference `perpetual_api_session`, API sessions do not expire";
+        $version[]     = array('version' => '600044', 'description' => $update_string);
+
+        $update_string = "* Add column `last_update` and `date`to search table";
+        $version[]     = array('version' => '600045', 'description' => $update_string);
+
+        $update_string = "* Add user preference `home_recently_played_all`, Show all media types in Recently Played";
+        $version[]     = array('version' => '600046', 'description' => $update_string);
+
+        $update_string = "* Add user preference `show_wrapped`, Enable access to your personal \"Spotify Wrapped\" from your user page";
+        $version[]     = array('version' => '600047', 'description' => $update_string);
+
+        $update_string = "* Add `date` column to rating table";
+        $version[]     = array('version' => '600048', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1003,7 +1020,7 @@ class Update
         debug_event(self::class, 'run_update: Upgrade complete', 4);
 
         return true;
-    } // run_update
+    }
 
     /**
      * _write
@@ -1012,7 +1029,6 @@ class Update
      * @param Interactor|null $interactor
      * @param string $sql
      * @param array $params
-     * @return boolean
      */
     private static function _write($interactor, $sql, $params = array()): bool
     {
@@ -1031,10 +1047,40 @@ class Update
     }
 
     /**
+     * _write_preference
+     *
+     * Add preferences and print update errors for preference inserts on failure
+     * @param Interactor|null $interactor
+     * @param string $name
+     * @param string $description
+     * @param string|int|float $default
+     * @param int $level
+     * @param string $type
+     * @param string $category
+     * @param null|string $subcategory
+     */
+    private static function _write_preference($interactor, $name, $description, $default, $level, $type, $category, $subcategory = null): bool
+    {
+        if (Preference::insert($name, $description, $default, $level, $type, $category, $subcategory, true) === false) {
+            if ($interactor) {
+                $interactor->info(
+                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                    sprintf(T_('Bad Request: %s'), $name),
+                    true
+                );
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * _set_db_version
      *
      * This updates the 'update_info' which is used by the updater.
-     * @param $value
+     * @param string $value
      */
     private static function _set_db_version($value)
     {
@@ -1099,10 +1145,8 @@ class Update
         }
 
         // Now add in the min_object_count preference and the random_method
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('bandwidth', '50', 'Bandwidth', '5', 'integer', 'interface')";
-        Dba::write($sql);
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('features', '50', 'Features', '5', 'integer', 'interface')";
-        Dba::write($sql);
+        self::_write_preference($interactor, 'bandwidth', 'Bandwidth', '50', 5, 'integer', 'interface');
+        self::_write_preference($interactor, 'features', 'Features', '50', 5, 'integer', 'interface');
 
         return true;
     }
@@ -1299,14 +1343,7 @@ class Update
      */
     private static function _update_360015(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('iframes', '1', 'Iframes', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'iframes', 'Iframes', '1', 25, 'boolean', 'interface');
     }
 
     /*
@@ -1316,14 +1353,7 @@ class Update
      */
     private static function _update_360016(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('now_playing_per_user', '1', 'Now playing filtered per user', 50, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'now_playing_per_user', 'Now playing filtered per user', '1', 50, 'boolean', 'interface');
     }
 
     /**
@@ -1346,14 +1376,7 @@ class Update
      */
     private static function _update_360018(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_sort', '0', 'Album Default Sort', 25, 'string', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'album_sort', 'Album Default Sort', '0', 25, 'string', 'interface');
     }
 
     /**
@@ -1363,14 +1386,7 @@ class Update
      */
     private static function _update_360019(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('show_played_times', '0', 'Show # played', 25, 'string', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'show_played_times', 'Show # played', '0', 25, 'string', 'interface');
     }
 
     /**
@@ -1432,14 +1448,8 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'song_page_title', 'Show current song in Web player page title', '1', 25, 'boolean', 'interface');
     }
 
     /**
@@ -1465,23 +1475,14 @@ class Update
      */
     private static function _update_360023(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('subsonic_backend', '1', 'Use SubSonic backend', 100, 'boolean', 'system')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'subsonic_backend', 'Use SubSonic backend', '1', 100, 'boolean', 'system') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'plex_backend', 'Use Plex backend', '0', 100, 'boolean', 'system') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('plex_backend', '0', 'Use Plex backend', 100, 'boolean', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -1501,23 +1502,14 @@ class Update
      */
     private static function _update_360025(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_flash', '1', 'Authorize Flash Web Player(s)', 25, 'boolean', 'streaming')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'webplayer_flash', 'Authorize Flash Web Player(s)', '1', 25, 'boolean', 'streaming') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'webplayer_html5', 'Authorize HTML5 Web Player(s)', '1', 25, 'boolean', 'streaming') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_html5', '1', 'Authorize HTML5 Web Player(s)', 25, 'boolean', 'streaming')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -1537,14 +1529,7 @@ class Update
      */
     private static function _update_360027(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_personal_info', '1', 'Allow to show my personal info to other users (now playing, recently played)', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'allow_personal_info', 'Allow to show my personal info to other users (now playing, recently played)', '1', 25, 'boolean', 'interface');
     }
 
     /**
@@ -1563,36 +1548,19 @@ class Update
         }
 
         // Insert new recently played preference
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_personal_info_recent', '1', 'Personal information visibility - Recently played / actions', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'allow_personal_info_recent', 'Personal information visibility - Recently played / actions', '1', 25, 'boolean', 'interface') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-
         // Insert streaming time preference
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_personal_info_time', '1', 'Personal information visibility - Recently played - Allow to show streaming date/time', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'allow_personal_info_time', 'Personal information visibility - Recently played - Allow to show streaming date/time', '1', 25, 'boolean', 'interface') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-
         // Insert streaming agent preference
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_personal_info_agent', '1', 'Personal information visibility - Recently played - Allow to show streaming agent', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'allow_personal_info_agent', 'Personal information visibility - Recently played - Allow to show streaming agent', '1', 25, 'boolean', 'interface') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -1628,14 +1596,7 @@ class Update
      */
     private static function _update_360031(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'ui_fixed', 'Fix header position on compatible themes', '0', 25, 'boolean', 'interface');
     }
 
     /**
@@ -1645,19 +1606,18 @@ class Update
      */
     private static function _update_360032(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'autoupdate', 'Check for Ampache updates automatically', '1', 100, 'boolean', 'system') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'autoupdate_lastcheck', 'AutoUpdate last check time', '', 25, 'string', 'internal') === false) {
             return false;
         }
-
-        Preference::insert('autoupdate_lastcheck', 'AutoUpdate last check time', '', '25', 'string', 'internal');
-        Preference::insert('autoupdate_lastversion', 'AutoUpdate last version from last check', '', '25', 'string', 'internal');
-        Preference::insert('autoupdate_lastversion_new', 'AutoUpdate last version from last check is newer', '', '25', 'boolean', 'internal');
+        if (self::_write_preference($interactor, 'autoupdate_lastversion', 'AutoUpdate last version from last check', '', 25, 'string', 'internal') === false) {
+            return false;
+        }
+        if (self::_write_preference($interactor, 'autoupdate_lastversion_new', 'AutoUpdate last version from last check is newer', '', 25, 'boolean', 'internal') === false) {
+            return false;
+        }
 
         return true;
     }
@@ -1685,23 +1645,14 @@ class Update
      */
     private static function _update_360034(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'webplayer_confirmclose', 'Confirmation when closing current playing window', '0', 25, 'boolean', 'interface') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'webplayer_pausetabs', 'Auto-pause betweens tabs', '1', 25, 'boolean', 'interface') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_pausetabs', '1', 'Auto-pause betweens tabs', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -1716,14 +1667,7 @@ class Update
      */
     private static function _update_360035(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('stream_beautiful_url', '0', 'Use beautiful stream url', 100, 'boolean', 'streaming')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'stream_beautiful_url', 'Use beautiful stream url', '0', 100, 'boolean', 'streaming');
     }
 
     /**
@@ -1768,23 +1712,14 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('share', '0', 'Allow Share', 100, 'boolean', 'options')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'share', 'Allow Share', '0', 100, 'boolean', 'options') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'share_expire', 'Share links default expiration days (0=never)', '7', 100, 'integer', 'system') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '7')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -1862,14 +1797,7 @@ class Update
      */
     private static function _update_360043(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'slideshow_time', 'Artist slideshow inactivity time', '0', 25, 'integer', 'interface');
     }
 
     /**
@@ -1912,14 +1840,7 @@ class Update
      */
     private static function _update_360046(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'broadcast_by_default', 'Broadcast web player by default', '0', 25, 'boolean', 'streaming');
     }
 
     /**
@@ -1941,23 +1862,14 @@ class Update
      */
     private static function _update_360048(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'concerts_limit_future', 'Limit number of future events', '0', 25, 'integer', 'interface') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'concerts_limit_past', 'Limit number of past events', '0', 25, 'integer', 'interface') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -1967,14 +1879,7 @@ class Update
      */
     private static function _update_360049(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_group', '0', 'Album - Group multiple disks', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'album_group', 'Album - Group multiple disks', '0', 25, 'boolean', 'interface');
     }
 
     /**
@@ -1984,14 +1889,7 @@ class Update
      */
     private static function _update_360050(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('topmenu', '0', 'Top menu', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'topmenu', 'Top menu', '0', 25, 'boolean', 'interface');
     }
 
     /**
@@ -2015,14 +1913,8 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('demo_clear_sessions', '0', 'Clear democratic votes of expired user sessions', 25, 'boolean', 'playlist')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'demo_clear_sessions', 'Clear democratic votes of expired user sessions', '0', 25, 'boolean', 'playlist');
     }
 
     /**
@@ -2042,19 +1934,13 @@ class Update
      */
     private static function _update_370003(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'show_donate', 'Show donate button in footer', '1', 25, 'boolean', 'interface');
     }
 
     /**
      * _update_370004
      *
+     * Add system upload preferences
      * Add license information and user's artist association
      */
     private static function _update_370004(Interactor $interactor = null): bool
@@ -2062,77 +1948,41 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_catalog', '-1', 'Uploads catalog destination', 100, 'integer', 'system')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'upload_catalog', 'Uploads catalog destination', '-1', 100, 'integer', 'system') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '-1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'allow_upload', 'Allow users to upload media', '0', 75, 'boolean', 'options') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_upload', '0', 'Allow users to upload media', 75, 'boolean', 'options')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'upload_subdir', 'Upload: create a subdirectory per user (recommended)', '1', 100, 'boolean', 'system') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'upload_user_artist', 'Upload: consider the user sender as the track\'s artist', '0', 100, 'boolean', 'system') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_subdir', '1', 'Upload: create a subdirectory per user (recommended)', 100, 'boolean', 'system')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'upload_script', 'Upload: run the following script after upload (current directory = upload target directory)', '', 100, 'string', 'system') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_user_artist', '0', 'Upload: consider the user sender as the track\'s artist', 100, 'boolean', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_script', '', 'Upload: run the following script after upload (current directory = upload target directory)', 100, 'string', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_allow_edit', '1', 'Upload: allow users to edit uploaded songs', 100, 'boolean', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'upload_allow_edit', 'Upload: allow users to edit uploaded songs', '1', 100, 'boolean', 'system') === false) {
             return false;
         }
         $sql_array = array(
             "ALTER TABLE `artist` ADD `user` int(11) NULL AFTER `last_update`",
             "CREATE TABLE IF NOT EXISTS `license` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `description` varchar(256) NULL, `external_link` varchar(256) NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('0 - default', '')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY', 'https://creativecommons.org/licenses/by/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC', 'https://creativecommons.org/licenses/by-nc/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC ND', 'https://creativecommons.org/licenses/by-nc-nd/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC SA', 'https://creativecommons.org/licenses/by-nc-sa/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY ND', 'https://creativecommons.org/licenses/by-nd/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY SA', 'https://creativecommons.org/licenses/by-sa/3.0/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Licence Art Libre', 'http://artlibre.org/licence/lal/')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Yellow OpenMusic', 'http://openmusic.linuxtag.org/yellow.html')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Green OpenMusic', 'http://openmusic.linuxtag.org/green.html')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Gnu GPL Art', 'http://gnuart.org/english/gnugpl.html')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('WTFPL', 'https://en.wikipedia.org/wiki/WTFPL')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('FMPL', 'http://www.fmpl.org/fmpl.html')",
-            "INSERT INTO `license`(`name`, `external_link`) VALUES ('C Reaction', 'http://morne.free.fr/Necktar7/creaction.htm')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('0 - default', '')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY', 'https://creativecommons.org/licenses/by/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY NC', 'https://creativecommons.org/licenses/by-nc/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY NC ND', 'https://creativecommons.org/licenses/by-nc-nd/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY NC SA', 'https://creativecommons.org/licenses/by-nc-sa/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY ND', 'https://creativecommons.org/licenses/by-nd/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('CC BY SA', 'https://creativecommons.org/licenses/by-sa/3.0/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('Licence Art Libre', 'http://artlibre.org/licence/lal/')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('Yellow OpenMusic', 'http://openmusic.linuxtag.org/yellow.html')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('Green OpenMusic', 'http://openmusic.linuxtag.org/green.html')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('Gnu GPL Art', 'http://gnuart.org/english/gnugpl.html')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('WTFPL', 'https://en.wikipedia.org/wiki/WTFPL')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('FMPL', 'http://www.fmpl.org/fmpl.html')",
+            "INSERT INTO `license` (`name`, `external_link`) VALUES ('C Reaction', 'http://morne.free.fr/Necktar7/creaction.htm')",
             "ALTER TABLE `song` ADD `user_upload` int(11) NULL AFTER `addition_time`, ADD `license` int(11) NULL AFTER `user_upload`"
         );
         foreach ($sql_array as $sql) {
@@ -2148,7 +1998,6 @@ class Update
      * _update_370005
      *
      * Add new column album_artist into table album
-     *
      */
     private static function _update_370005(Interactor $interactor = null): bool
     {
@@ -2159,7 +2008,6 @@ class Update
      * _update_370006
      *
      * Add random and limit options to smart playlists
-     *
      */
     private static function _update_370006(Interactor $interactor = null): bool
     {
@@ -2176,22 +2024,10 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'daap_backend', 'Use DAAP backend', '0', 100, 'boolean', 'system') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('daap_pass', '', 'DAAP backend password', 100, 'string', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'daap_pass', 'DAAP backend password', '', 100, 'string', 'system') === false) {
             return false;
         }
         $sql = "CREATE TABLE IF NOT EXISTS `daap_session` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `creationdate` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
@@ -2203,18 +2039,10 @@ class Update
      * _update_370008
      *
      * Add UPnP backend preference
-     *
      */
     private static function _update_370008(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'upnp_backend', 'Use UPnP backend', '0', 100, 'boolean', 'system');
     }
 
     /**
@@ -2241,18 +2069,8 @@ class Update
                 return false;
             }
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_video', '1', 'Allow video features', 75, 'integer', 'options')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "ALTER TABLE `image` ADD `kind` varchar(32) NULL DEFAULT 'default' AFTER `object_id`";
 
-        return (self::_write($interactor, $sql) !== false);
+        return self::_write_preference($interactor, 'allow_video', 'Allow video features', '1', 75, 'integer', 'options');
     }
 
     /**
@@ -2306,14 +2124,8 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'allow_video', 'Allow video features', '1', 75, 'integer', 'options');
     }
 
     /**
@@ -2327,14 +2139,8 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'ajax_load', 'Ajax page load', '1', 25, 'boolean', 'interface');
     }
 
     /**
@@ -2367,14 +2173,7 @@ class Update
      */
     private static function _update_370016(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'direct_play_limit', 'Limit direct play to maximum media count', '0', 25, 'integer', 'interface');
     }
 
     /**
@@ -2384,50 +2183,20 @@ class Update
      */
     private static function _update_370017(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('home_moment_albums', '1', 'Show Albums of the moment at home page', 25, 'integer', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'home_moment_albums', 'Show Albums of the moment at home page', '1', 25, 'integer', 'interface') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'home_moment_videos', 'Show Videos of the moment at home page', '1', 25, 'integer', 'interface') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('home_moment_videos', '1', 'Show Videos of the moment at home page', 25, 'integer', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'home_now_playing', 'Show Now Playing at home page', '1', 25, 'integer', 'interface') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'custom_logo', 'Custom logo url', '', 25, 'string', 'interface') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('home_recently_played', '1', 'Show Recently Played at home page', 25, 'integer', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('home_now_playing', '1', 'Show Now Playing at home page', 25, 'integer', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_logo', '', 'Custom logo url', 25, 'string', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /*
@@ -2481,14 +2250,7 @@ class Update
      */
     private static function _update_370019(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type Sort', 25, 'string', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, 'album,ep,live,single')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'album_release_type_sort', 'Album - Group per release type Sort', 'album,ep,live,single', 25, 'string', 'interface');
     }
 
     /**
@@ -2498,23 +2260,14 @@ class Update
      */
     private static function _update_370020(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('browser_notify', '1', 'WebPlayer browser notifications', 25, 'integer', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'browser_notify', 'WebPlayer browser notifications', '1', 25, 'integer', 'interface') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'browser_notify_timeout', 'WebPlayer browser notifications timeout (seconds)', '10', 25, 'integer', 'interface') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('browser_notify_timeout', '10', 'WebPlayer browser notifications timeout (seconds)', 25, 'integer', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '10')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -2542,14 +2295,8 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('geolocation', '0', 'Allow geolocation', 25, 'integer', 'options')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'geolocation', 'Allow geolocation', '0', 25, 'integer', 'options');
     }
 
     /**
@@ -2559,14 +2306,7 @@ class Update
      */
     private static function _update_370023(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'webplayer_aurora', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', '1', 25, 'boolean', 'streaming');
     }
 
     /**
@@ -2603,7 +2343,6 @@ class Update
      * _update_370027
      *
      * Move column album_artist from table song to table album
-     *
      */
     private static function _update_370027(Interactor $interactor = null): bool
     {
@@ -2624,7 +2363,6 @@ class Update
      * _update_370028
      *
      * Add width and height in table image
-     *
      */
     private static function _update_370028(Interactor $interactor = null): bool
     {
@@ -2652,7 +2390,6 @@ class Update
      * _update_370029
      *
      * Set image column from image table as nullable.
-     *
      */
     private static function _update_370029(Interactor $interactor = null): bool
     {
@@ -2666,14 +2403,7 @@ class Update
      */
     private static function _update_370030(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 100, 'boolean', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'upload_allow_remove', 'Upload: allow users to remove uploaded songs', '1', 100, 'boolean', 'system');
     }
 
     /**
@@ -2683,20 +2413,14 @@ class Update
      */
     private static function _update_370031(Interactor $interactor = null): bool
     {
-        $sql_array = array(
-            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface')",
-            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_favicon', '', 'Custom favicon url', 75, 'string', 'interface')",
-            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface')"
-        );
-        foreach ($sql_array as $sql) {
-            if (self::_write($interactor, $sql) === false) {
-                return false;
-            }
-            $row_id = Dba::insert_id();
-            $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-            if (self::_write($interactor, $sql, array($row_id)) === false) {
-                return false;
-            }
+        if (self::_write_preference($interactor, 'custom_login_logo', 'Custom login page logo url', '', 75, 'string', 'interface') === false) {
+            return false;
+        }
+        if (self::_write_preference($interactor, 'custom_favicon', 'Custom favicon url', '', 75, 'string', 'interface') === false) {
+            return false;
+        }
+        if (self::_write_preference($interactor, 'custom_text_footer', 'Custom text footer', '', 75, 'string', 'interface') === false) {
+            return false;
         }
 
         return true;
@@ -2709,14 +2433,7 @@ class Update
      */
     private static function _update_370032(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'webdav_backend', 'Use WebDAV backend', '0', 100, 'boolean', 'system');
     }
 
     /**
@@ -2756,14 +2473,8 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'notify_email', 'Receive notifications by email (shouts, private messages, ...)', '0', 25, 'boolean', 'options');
     }
 
     /**
@@ -2803,14 +2514,7 @@ class Update
      */
     private static function _update_370038(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('theme_color', 'dark', 'Theme color',0, 'special', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, 'dark')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'theme_color', 'Theme color', 'dark', 0, 'special', 'interface');
     }
 
     /**
@@ -2855,23 +2559,14 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)', 100, 'string', 'system')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'disabled_custom_metadata_fields', 'Disable custom metadata fields (ctrl / shift click to select multiple)', '', 100, 'string', 'system') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'disabled_custom_metadata_fields_input', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', '', 100, 'string', 'system') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('disabled_custom_metadata_fields_input', '', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', 100, 'string', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -2892,22 +2587,10 @@ class Update
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('podcast_keep', '10', 'Podcast: # latest episodes to keep', 100, 'integer', 'system')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'podcast_keep', 'Podcast: # latest episodes to keep', '10', 100, 'integer', 'system') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '10')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('podcast_new_download', '1', 'Podcast: # episodes to download when new episodes are available', 100, 'integer', 'system')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'podcast_new_download', 'Podcast: # episodes to download when new episodes are available', '1', 100, 'integer', 'system') === false) {
             return false;
         }
         $sql = "ALTER TABLE `rating` CHANGE `object_type` `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') NULL";
@@ -2967,14 +2650,7 @@ class Update
      */
     private static function _update_380006(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('libitem_contextmenu', '1', 'Library item context menu',0, 'boolean', 'interface', 'library')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'libitem_contextmenu', 'Library item context menu', '1', 0, 'boolean', 'interface', 'library');
     }
 
     /**
@@ -2984,24 +2660,14 @@ class Update
      */
     private static function _update_380007(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'upload_catalog_pattern', 'Rename uploaded file according to catalog pattern', '0', 100, 'boolean', 'system', 'upload') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'catalog_check_duplicate', 'Check library item at import time and disable duplicates', '0', 100, 'boolean', 'system', 'catalog') === false) {
             return false;
         }
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', 100, 'boolean', 'system', 'catalog')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -3011,24 +2677,14 @@ class Update
      */
     private static function _update_380008(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'library')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'browse_filter', 'Show filter box on browse', '0', 25, 'boolean', 'interface', 'library') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'sidebar_light', 'Light sidebar by default', '0', 25, 'boolean', 'interface', 'theme') === false) {
             return false;
         }
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -3048,20 +2704,14 @@ class Update
      */
     private static function _update_380010(Interactor $interactor = null): bool
     {
-        $sql_array = array(
-            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom')",
-            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom')",
-            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'library')"
-        );
-        foreach ($sql_array as $sql) {
-            if (self::_write($interactor, $sql) === false) {
-                return false;
-            }
-            $row_id = Dba::insert_id();
-            $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-            if (self::_write($interactor, $sql, array($row_id)) === false) {
-                return false;
-            }
+        if (self::_write_preference($interactor, 'custom_blankalbum', 'Custom blank album default image', '', 75, 'string', 'interface', 'custom') === false) {
+            return false;
+        }
+        if (self::_write_preference($interactor, 'custom_blankmovie', 'Custom blank video default image', '', 75, 'string', 'interface', 'custom') === false) {
+            return false;
+        }
+        if (self::_write_preference($interactor, 'libitem_browse_alpha', 'Alphabet browsing by default for following library items (album,artist,...)', '', 75, 'string', 'interface', 'library') === false) {
+            return false;
         }
 
         return true;
@@ -3338,24 +2988,14 @@ class Update
      */
     private static function _update_400007(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'library')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'show_skipped_times', 'Show # skipped', '0', 25, 'boolean', 'interface', 'library') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'custom_datetime', 'Custom datetime', '', 25, 'string', 'interface', 'custom') === false) {
             return false;
         }
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -3365,13 +3005,7 @@ class Update
      */
     private static function _update_400008(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'cron_cache', 'Cache computed SQL data (eg. media hits stats) using a cron', '0', 100, 'boolean', 'system', 'catalog') === false) {
             return false;
         }
 
@@ -3398,14 +3032,7 @@ class Update
      */
     private static function _update_400009(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', null)";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'unique_playlist', 'Only add unique items to playlists', '0', 25, 'boolean', 'playlist');
     }
 
     /**
@@ -3483,7 +3110,7 @@ class Update
         $sql = "ALTER TABLE `artist` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
 
         return (self::_write($interactor, $sql) !== false);
-    } //
+    }
 
     /**
      * _update_400015
@@ -3538,14 +3165,7 @@ class Update
      */
     private static function _update_400019(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '6')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'of_the_moment', 'Set the amount of items Album/Video of the Moment will display', '6', 25, 'integer', 'interface', 'home');
     }
 
     /**
@@ -3555,14 +3175,7 @@ class Update
      */
     private static function _update_400020(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'custom_login_background', 'Custom URL - Login page background', '', 75, 'string', 'interface', 'custom');
     }
 
     /**
@@ -3741,25 +3354,39 @@ class Update
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $tables    = ['song', 'album', 'video', 'podcast_episode'];
+        $catalogs  = Catalog::get_catalogs();
+        // Make sure your files have a catalog
+        foreach ($catalogs as $catalog_id) {
+            $catalog = Catalog::create_from_id($catalog_id);
+            if ($catalog !== null) {
+                $rootdir = realpath($catalog->get_path());
+                foreach ($tables as $type) {
+                    $sql = ($type === 'album')
+                        ? "UPDATE `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` SET `album`.`catalog` = ? WHERE `song`.`file` LIKE '$rootdir%' AND (`$type`.`catalog` IS NULL OR `$type`.`catalog` != ?);"
+                        : "UPDATE `$type` SET `catalog` = ? WHERE `$type`.`file` LIKE '$rootdir%' AND (`$type`.`catalog` IS NULL OR `$type`.`catalog` != ?);";
+                    Dba::write($sql, array($catalog->id, $catalog->id));
+                }
+            }
+        }
         // create the table
         $sql = "CREATE TABLE IF NOT EXISTS `catalog_map` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `catalog_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `unique_catalog_map` (`object_id`, `object_type`, `catalog_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
         // fill the data
-        $tables = ['song', 'album', 'video', 'podcast_episode'];
         foreach ($tables as $type) {
-            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type`;";
+            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type` WHERE `$type`.`catalog` > 0;";
             if (self::_write($interactor, $sql) === false) {
                 return false;
             }
         }
         // artist is a special one as it can be across multiple tables
-        $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id`;";
+        $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`catalog` > 0;";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id`;";
+        $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `album`.`catalog` > 0;";
 
         return (self::_write($interactor, $sql) !== false);
     }
@@ -3821,14 +3448,7 @@ class Update
             return false;
         }
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'show_license', 'Show License', '1', 25, 'boolean', 'interface', 'browse');
     }
 
     /**
@@ -3838,6 +3458,8 @@ class Update
      */
     private static function _update_500008(Interactor $interactor = null): bool
     {
+        $sql = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
+        Dba::write($sql);
         $sql = "ALTER TABLE `catalog` ADD `filter_user` int(11) unsigned DEFAULT 0 NOT NULL;";
         if (self::_write($interactor, $sql) === false) {
             return false;
@@ -3850,6 +3472,8 @@ class Update
                 return false;
             }
         }
+        $sql = "ALTER TABLE `user_data` DROP KEY `unique_data`;";
+        Dba::write($sql);
         $sql = "ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`, `key`);";
 
         return (self::_write($interactor, $sql) !== false);
@@ -3862,14 +3486,7 @@ class Update
      */
     private static function _update_500009(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'use_original_year', 'Browse by Original Year for albums (falls back to Year)', '0', 25, 'boolean', 'interface', 'browse');
     }
 
     /**
@@ -3879,14 +3496,7 @@ class Update
      */
     private static function _update_500010(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'hide_single_artist', 'Hide the Song Artist column for Albums with one Artist', '0', 25, 'boolean', 'interface', 'browse');
     }
 
     /**
@@ -3938,7 +3548,7 @@ class Update
             while ($results = Dba::fetch_assoc($db_p)) {
                 $total = $total + $results['size'];
             }
-            $sql = "REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;";
+            $sql = "REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;";
             if (self::_write($interactor, $sql, array($user_id, 'play_size', $total)) === false) {
                 return false;
             }
@@ -4023,14 +3633,7 @@ class Update
      */
     private static function _update_500015(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'hide_genres', 'Hide the Genre column in browse table rows', '0', 25, 'boolean', 'interface', 'browse');
     }
 
     /**
@@ -4092,14 +3695,7 @@ class Update
      */
     private static function _update_510005(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'subsonic_always_download', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', '0', 25, 'boolean', 'options', 'subsonic');
     }
 
     /**
@@ -4110,41 +3706,20 @@ class Update
      */
     private static function _update_520000(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_3', '1', 'Enable API3 responses', 25, 'boolean', 'options')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'api_enable_3', 'Enable API3 responses', '1', 25, 'boolean', 'options') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'api_enable_4', 'Enable API4 responses', '1', 25, 'boolean', 'options') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_4', '1', 'Enable API4 responses', 25, 'boolean', 'options')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'api_enable_5', 'Enable API5 responses', '1', 25, 'boolean', 'options') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'api_force_version', 'Force a specific API response (even if that version is disabled)', '0', 25, 'special', 'options') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_5', '1', 'Enable API5 responses', 25, 'boolean', 'options')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_force_version', '0', 'Force a specific API response (even if that version is disabled)', 25, 'special', 'options')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -4179,14 +3754,7 @@ class Update
      */
     private static function _update_520002(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'show_playlist_username', 'Show playlist owner username in titles', '1', 25, 'boolean', 'interface', 'browse');
     }
 
     /**
@@ -4196,14 +3764,7 @@ class Update
      */
     private static function _update_520003(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'api_hidden_playlists', 'Hide playlists in Subsonic and API clients that start with this string', '', 25, 'string', 'options');
     }
 
     /**
@@ -4225,14 +3786,7 @@ class Update
      */
     private static function _update_520005(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'api_hide_dupe_searches', 'Hide smartlists that match playlist names in Subsonic and API clients', '0', 25, 'boolean', 'options');
     }
 
     /**
@@ -4305,9 +3859,7 @@ class Update
     private static function _update_530003(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `catalog_map` DROP COLUMN `id`;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
+        Dba::write($sql);
         $sql = "ALTER TABLE `catalog_map` MODIFY COLUMN object_type varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
 
         return (self::_write($interactor, $sql) !== false);
@@ -4531,26 +4083,24 @@ class Update
     {
         $sql = "ALTER TABLE `object_count` DROP KEY `object_count_full_index`;";
         Dba::write($sql);
-        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_type_IDX`;";
-        Dba::write($sql);
-        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_date_IDX`;";
-        Dba::write($sql);
-        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_user_IDX`;";
-        Dba::write($sql);
-        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_unique`;";
-        Dba::write($sql);
         $sql = "CREATE INDEX `object_count_full_index` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_type_IDX`;";
+        Dba::write($sql);
         $sql = "CREATE INDEX `object_count_type_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`);";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_date_IDX`;";
+        Dba::write($sql);
         $sql = "CREATE INDEX `object_count_date_IDX` USING BTREE ON `object_count` (`date`, `count_type`);";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_user_IDX`;";
+        Dba::write($sql);
         $sql = "CREATE INDEX `object_count_user_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `user`, `count_type`);";
 
         return (self::_write($interactor, $sql) !== false);
@@ -4596,24 +4146,14 @@ class Update
      */
     private static function _update_530015(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'show_album_artist', 'Show \'Album Artists\' link in the main sidebar', '1', 25, 'boolean', 'interface', 'theme') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'show_artist', 'Show \'Artists\' link in the main sidebar', '0', 25, 'boolean', 'interface', 'theme') === false) {
             return false;
         }
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -4712,9 +4252,9 @@ class Update
      */
     private static function _update_550001(Interactor $interactor = null): bool
     {
-        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine     = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         // Add the new catalog_filter_group table
         $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
@@ -4820,14 +4360,7 @@ class Update
      */
     private static function _update_550003(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 25, 'boolean', 'playlist')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'demo_use_search', 'Democratic - Use smartlists for base playlist', '0', 25, 'boolean', 'playlist');
     }
 
     /** _update_550004
@@ -4869,14 +4402,7 @@ class Update
      */
     private static function _update_600001(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'webplayer_removeplayed', 'Remove tracks before the current playlist item in the webplayer when played', '0', 25, 'special', 'streaming', 'player');
     }
 
     /** _update_600002
@@ -4949,7 +4475,7 @@ class Update
             return false;
         }
         // rating (id, `user`, object_type, object_id, rating)
-        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
+        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating`, `rating`.`date` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
         Dba::write($sql);
         // user_flag (id, `user`, object_id, object_type, `date`)
         $sql = "INSERT IGNORE INTO `user_flag` (`object_type`, `object_id`, `user`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `user_flag`.`user`, `user_flag`.`date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_type` = 'album' AND `user_flag`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `user_flag` AS `album_flag` ON `album_flag`.`object_type` = 'album' AND `user_flag`.`date` = `album_flag`.`date` AND `user_flag`.`user` = `album_flag`.`user` WHERE `user_flag`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
@@ -4977,10 +4503,10 @@ class Update
         }
         // get all matching albums that will migrate into the base albums
         foreach ($album_list as $album_id) {
-            $album    = new Album((int)$album_id);
-            $f_name   = $album->get_fullname(true);
-            $where    = " WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
-            $params   = array($f_name, $f_name);
+            $album  = new Album((int)$album_id);
+            $f_name = $album->get_fullname(true);
+            $where  = " WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
+            $params = array($f_name, $f_name);
             if ($album->mbid) {
                 $where .= 'AND `album`.`mbid` = ? ';
                 $params[] = $album->mbid;
@@ -5190,14 +4716,7 @@ class Update
      */
     private static function _update_600013(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_6', '1', 'Enable API6 responses', 25, 'boolean', 'options')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'api_enable_6', 'Enable API6 responses', '1', 25, 'boolean', 'options');
     }
 
     /**
@@ -5231,7 +4750,7 @@ class Update
      */
     private static function _update_600016(Interactor $interactor = null): bool
     {
-        $sql = "ALTER TABLE `artist_map` DROP KEY `object_type_IDX`;";
+        $sql = "ALTER TABLE `album_map` DROP KEY `object_type_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `object_type_IDX` USING BTREE ON `album_map` (`object_type`);";
         if (self::_write($interactor, $sql) === false) {
@@ -5285,7 +4804,7 @@ class Update
         $sql = "DELETE FROM `object_count` WHERE `object_type` = '';";
         Dba::write($sql);
         // rating (id, `user`, object_type, object_id, rating)
-        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
+        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating`, `rating`.`date` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
         Dba::write($sql);
         // user_flag (id, `user`, object_id, object_type, `date`)
         $sql = "INSERT IGNORE INTO `user_flag` (`object_type`, `object_id`, `user`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `user_flag`.`user`, `user_flag`.`date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_type` = 'album' AND `user_flag`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `user_flag` AS `album_flag` ON `album_flag`.`object_type` = 'album' AND `user_flag`.`date` = `album_flag`.`date` AND `user_flag`.`user` = `album_flag`.`user` WHERE `user_flag`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
@@ -5334,14 +4853,7 @@ class Update
      */
     private static function _update_600023(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('upload_access_level', '25', 'Upload Access Level', 100, 'special', 'system', 'upload')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '25')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'upload_access_level', 'Upload Access Level', '25', 100, 'special', 'system', 'upload');
     }
 
     /**
@@ -5352,23 +4864,14 @@ class Update
      */
     private static function _update_600024(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse')";
-        if (self::_write($interactor, $sql) === false) {
+        if (self::_write_preference($interactor, 'show_subtitle', 'Show Album subtitle on links (if available)', '1', 25, 'boolean', 'interface', 'browse') === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
+        if (self::_write_preference($interactor, 'show_original_year', 'Show Album original year on links (if available)', '1', 25, 'boolean', 'interface', 'browse') === false) {
             return false;
         }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return true;
     }
 
     /**
@@ -5378,14 +4881,7 @@ class Update
      */
     private static function _update_600025(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'show_header_login', 'Show the login / registration links in the site header', '1', 100, 'boolean', 'system', 'interface');
     }
 
     /** _update_600026
@@ -5394,14 +4890,7 @@ class Update
      */
     private static function _update_600026(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'use_play2', 'Use an alternative playback action for streaming if you have issues with playing music', '0', 25, 'special', 'streaming', 'player');
     }
 
     /**
@@ -5487,6 +4976,8 @@ class Update
      */
     private static function _update_600035(Interactor $interactor = null): bool
     {
+        $sql = "ALTER TABLE `podcast_episode` DROP COLUMN `enabled`;";
+        Dba::write($sql);
         $sql = "ALTER TABLE `podcast_episode` ADD COLUMN `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 AFTER `played`;";
         if (self::_write($interactor, $sql) === false) {
             return false;
@@ -5511,7 +5002,7 @@ class Update
         // After the change recalculate their total Bandwidth Usage
         foreach ($user_list as $user_id) {
             $total = User::get_play_size($user_id);
-            $sql   = "REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;";
+            $sql   = "REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;";
             if (self::_write($interactor, $sql, array($user_id, 'play_size', $total)) === false) {
                 return false;
             }
@@ -5580,14 +5071,7 @@ class Update
      */
     private static function _update_600039(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', 25, 'string', 'interface', 'custom')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'custom_timezone', 'Custom timezone (Override PHP date.timezone)', '', 25, 'string', 'interface', 'custom');
     }
 
     /** _update_600040
@@ -5596,11 +5080,14 @@ class Update
      */
     private static function _update_600040(Interactor $interactor = null): bool
     {
+        $sql = "ALTER TABLE `song_data` DROP COLUMN `disksubtitle`;";
+        Dba::write($sql);
         $sql = "ALTER TABLE `song_data` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL;";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-
+        $sql = "ALTER TABLE `album_disk` DROP COLUMN `disksubtitle`;";
+        Dba::write($sql);
         $sql = "ALTER TABLE `album_disk` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL;";
         if (self::_write($interactor, $sql) === false) {
             return false;
@@ -5615,6 +5102,8 @@ class Update
      */
     private static function _update_600041(Interactor $interactor = null): bool
     {
+        $sql = "ALTER TABLE `label_asso` DROP KEY `label_asso_label_IDX`;";
+        Dba::write($sql);
         $sql = "CREATE INDEX `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`);";
 
         return (self::_write($interactor, $sql) !== false);
@@ -5626,13 +5115,78 @@ class Update
      */
     private static function _update_600042(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('bookmark_latest', '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options')";
+        return self::_write_preference($interactor, 'bookmark_latest', 'Only keep the latest media bookmark', '0', 25, 'boolean', 'options');
+    }
+
+    /** _update_600043
+     *
+     * Set correct preference type for `use_play2`
+     * Add user preference `jp_volume`, Default webplayer volume
+     */
+    private static function _update_600043(Interactor $interactor = null): bool
+    {
+        $sql = "UPDATE `preference` SET `type` = 'boolean' WHERE `name` = 'use_play2'";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
 
-        return (self::_write($interactor, $sql, array($row_id)) !== false);
+        return self::_write_preference($interactor, 'jp_volume', 'Default webplayer volume', 0.80, 25, 'special', 'streaming', 'player');
     }
-} // end update.class
+
+    /** _update_600044
+     *
+     * Add system preference `perpetual_api_session`, API sessions do not expire
+     */
+    private static function _update_600044(Interactor $interactor = null): bool
+    {
+        return self::_write_preference($interactor, 'perpetual_api_session', 'API sessions do not expire', '0', 100, 'boolean', 'system', 'backend');
+    }
+
+    /** _update_600045
+     *
+     * Add column `last_update` and `date`to search table
+     */
+    private static function _update_600045(Interactor $interactor = null): bool
+    {
+        $sql = "ALTER TABLE `search` DROP COLUMN `last_update`;";
+        Dba::write($sql);
+        $sql = "ALTER TABLE `search` ADD COLUMN `last_update` int(11) unsigned NOT NULL DEFAULT 0 AFTER `type`;";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+        $sql = "ALTER TABLE `search` DROP COLUMN `date`;";
+        Dba::write($sql);
+
+        return (self::_write($interactor, "ALTER TABLE `search` ADD COLUMN `date` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `type`;") !== false);
+    }
+
+    /** _update_600046
+     *
+     * Add user preference `home_recently_played_all`, Show all media types in Recently Played
+     */
+    private static function _update_600046(Interactor $interactor = null): bool
+    {
+        return self::_write_preference($interactor, 'home_recently_played_all', 'Show all media types in Recently Played', '0', 25, 'bool', 'interface', 'home');
+    }
+
+    /** _update_600047
+     *
+     * Add user preference `show_wrapped`, Enable access to your personal "Spotify Wrapped" from your user page
+     */
+    private static function _update_600047(Interactor $interactor = null): bool
+    {
+        return self::_write_preference($interactor, 'show_wrapped', 'Enable access to your personal "Spotify Wrapped" from your user page', '0', 25, 'bool', 'interface', 'privacy');
+    }
+
+    /** _update_600048
+     *
+     * Add `date` column to rating table
+     */
+    private static function _update_600048(Interactor $interactor = null): bool
+    {
+        $sql = "ALTER TABLE `rating` DROP COLUMN `date`;";
+        Dba::write($sql);
+
+        return (self::_write($interactor, "ALTER TABLE `rating` ADD COLUMN `date` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `rating`;") !== false);
+    }
+}

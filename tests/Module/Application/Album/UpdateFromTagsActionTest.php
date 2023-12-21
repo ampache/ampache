@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,9 +20,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
@@ -36,18 +38,15 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class UpdateFromTagsActionTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
+    private ModelFactoryInterface&MockInterface $modelFactory;
 
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface&MockInterface $ui;
 
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
+    private ConfigContainerInterface&MockInterface $configContainer;
 
-    private ?UpdateFromTagsAction $subject;
+    private UpdateFromTagsAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->ui              = $this->mock(UiInterface::class);
@@ -82,7 +81,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $album      = $this->mock(Album::class);
 
         $albumId   = 666;
-        $catalogId = [42];
+        $catalogId = 42;
         $webPath   = 'some-web-path';
 
         $gatekeeper->shouldReceive('mayAccess')
@@ -108,7 +107,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $album->shouldReceive('format')
             ->withNoArgs()
             ->once();
-        $album->shouldReceive('get_catalogs')
+        $album->shouldReceive('getCatalogId')
             ->withNoArgs()
             ->once()
             ->andReturn($catalogId);

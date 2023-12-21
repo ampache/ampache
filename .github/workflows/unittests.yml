@@ -10,17 +10,17 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        os: [ubuntu-22.04]
-        php: [8.2]
+        os: ['ubuntu-latest']
+        php: ['8.2', '8.3']
+    continue-on-error: ${{ matrix.php == '8.3' }}
     steps:
       - uses: actions/checkout@v2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: ${{ matrix.php }}
 
       - name: Validate composer.json and composer.lock
         run: composer validate
@@ -35,8 +35,22 @@ jobs:
             ${{ runner.os }}-php-
 
       - name: Install dependencies
-        if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer install --prefer-dist --no-progress --no-suggest
+        if: ${{ matrix.php != '8.3' }}
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: composer update --no-interaction --no-progress
+
+      - name: Install Dependencies (ignore platform)
+        if: ${{ matrix.php == '8.3' }}
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: composer update --no-interaction --no-progress --ignore-platform-req=php
 
       - name: Run test suite
         run: composer run-script tests
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: 1

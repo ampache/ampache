@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Album\Deletion;
 
@@ -96,18 +97,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
             }
         }
 
-        $deleted = $this->albumRepository->delete(
-            $albumId
-        );
-
-        if ($deleted === false) {
-            $this->logger->critical(
-                sprintf('Error when deleting the album `%d`.', $albumId),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-
-            throw new AlbumDeletionException();
-        }
+        $this->albumRepository->delete($album);
 
         Art::garbage_collection('album', $albumId);
         Userflag::garbage_collection('album', $albumId);

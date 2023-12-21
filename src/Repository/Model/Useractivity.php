@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
@@ -32,32 +33,30 @@ class Useractivity extends database_object
     protected const DB_TABLENAME = 'user_activity';
 
     /* Variables from DB */
-    public $id;
-    public $user;
-    public $object_type;
-    public $object_id;
-    public $action;
-    public $activity_date;
+    public int $id = 0;
+    public int $user;
+    public string $action;
+    public int $object_id;
+    public string $object_type;
+    public int $activity_date;
 
     /**
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
-     * @param integer $useract_id
+     * @param int|null $useract_id
      */
-    public function __construct($useract_id)
+    public function __construct($useract_id = 0)
     {
         if (!$useract_id) {
-            return false;
+            return;
         }
 
         $info = $this->get_info($useract_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
-    } // Constructor
+    }
 
     public function getId(): int
     {
@@ -66,10 +65,9 @@ class Useractivity extends database_object
 
     /**
      * this attempts to build a cache of the data from the passed activities all in one query
-     * @param integer[] $ids
-     * @return boolean
+     * @param int[] $ids
      */
-    public static function build_cache($ids)
+    public static function build_cache($ids): bool
     {
         if (empty($ids)) {
             return false;
@@ -89,9 +87,9 @@ class Useractivity extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

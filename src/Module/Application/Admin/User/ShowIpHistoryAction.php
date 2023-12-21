@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,18 +23,22 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders a users ip history
+ */
 final class ShowIpHistoryAction extends AbstractUserAction
 {
+    /** @var string */
     public const REQUEST_KEY = 'show_ip_history';
 
     private UiInterface $ui;
@@ -40,42 +47,56 @@ final class ShowIpHistoryAction extends AbstractUserAction
 
     private IpHistoryRepositoryInterface $ipHistoryRepository;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        IpHistoryRepositoryInterface $ipHistoryRepository
+        IpHistoryRepositoryInterface $ipHistoryRepository,
+        ConfigContainerInterface $configContainer
     ) {
         $this->ui                  = $ui;
         $this->modelFactory        = $modelFactory;
         $this->ipHistoryRepository = $ipHistoryRepository;
+        $this->configContainer     = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
         $queryParams = $request->getQueryParams();
+        $userId      = (int) ($queryParams['user_id'] ?? 0);
+        $showAll     = isset($queryParams['all']);
 
-        $userId = (int)($queryParams['user_id'] ?? 0);
-        if ($userId < 1) {
-            echo T_('You have requested an object that does not exist');
+        $user = $this->modelFactory->createUser($userId);
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
+        }
+
+        if ($showAll === false) {
+            $history = $this->ipHistoryRepository->getHistory(
+                $user,
+                (int) $this->configContainer->get('user_ip_cardinality'),
+                true,
+            );
         } else {
-            /* get the user and their history */
-            $working_user = $this->modelFactory->createUser($userId);
-
-            if (!isset($queryParams['all'])) {
-                $history = $this->ipHistoryRepository->getHistory($userId, 0, true);
-            } else {
-                $history = $this->ipHistoryRepository->getHistory($userId);
-            }
-
-            $this->ui->showHeader();
-            $this->ui->show(
-                'show_ip_history.inc.php',
-                [
-                    'working_user' => $working_user,
-                    'history' => $history
-                ]
+            $history = $this->ipHistoryRepository->getHistory(
+                $user,
             );
         }
+
+        $this->ui->showHeader();
+        $this->ui->showBoxTop(sprintf(T_('%s IP History'), $user->get_fullname()));
+        $this->ui->show(
+            'show_ip_history.inc.php',
+            [
+                'workingUser' => $user,
+                'history' => $history,
+                'showAll' => $showAll,
+                'webPath' => $this->configContainer->getWebPath(),
+            ]
+        );
+        $this->ui->showBoxBottom();
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

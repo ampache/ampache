@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,12 +20,12 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Dba;
 
@@ -52,7 +55,7 @@ final class UserRepository implements UserRepositoryInterface
             return 0;
         }
         $db_results = Dba::read(
-            'SELECT `id` FROM `user` WHERE `username`= ?',
+            'SELECT `id` FROM `user` WHERE `username` = ?',
             [$username]
         );
 
@@ -72,7 +75,7 @@ final class UserRepository implements UserRepositoryInterface
     public function idByEmail(string $email): int
     {
         $db_results = Dba::read(
-            'SELECT `id` FROM `user` WHERE `email`= ?',
+            'SELECT `id` FROM `user` WHERE `email` = ?',
             [$email]
         );
 
@@ -103,6 +106,7 @@ final class UserRepository implements UserRepositoryInterface
 
         return 0;
     }
+
     /**
      * This returns all valid users in database.
      *
@@ -133,9 +137,6 @@ final class UserRepository implements UserRepositoryInterface
 
     /**
      * This returns all valid users in an array (id => name).
-     *
-     * @param bool $includeDisabled
-     * @return array
      */
     public function getValidArray(bool $includeDisabled = false): array
     {
@@ -199,6 +200,8 @@ final class UserRepository implements UserRepositoryInterface
             $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` IS NOT NULL AND `user` != -1 AND `user` NOT IN (SELECT `id` FROM `user`);";
             Dba::write($sql);
         }
+        $sql = "UPDATE `song` SET `user_upload` = NULL WHERE `user_upload` IS NOT NULL AND `user_upload` != -1 AND `user_upload` NOT IN (SELECT `id` FROM `user`);";
+        Dba::write($sql);
 
         // Clean up the playlist data table
         $sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL";
@@ -285,7 +288,9 @@ final class UserRepository implements UserRepositoryInterface
                 return new User((int) $results['id']);
             }
             // check for api sessions
-            $sql        = "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND type = 'api'";
+            $sql = (AmpConfig::get('perpetual_api_session'))
+                ? "SELECT `username` FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ?) AND type = 'api'"
+                : "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND type = 'api'";
             $db_results = Dba::read($sql, array($apikey, time()));
             $results    = Dba::fetch_assoc($db_results);
 
@@ -409,7 +414,7 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * Updates a users api key
      */
-    public function updateApiKey(string $userId, string $apikey): void
+    public function updateApiKey(int $userId, string $apikey): void
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
 
@@ -426,5 +431,38 @@ final class UserRepository implements UserRepositoryInterface
         $row        = Dba::fetch_assoc($db_results);
 
         return $row['password'] ?? '';
+    }
+
+    /**
+     * Returns statistical data related to user accounts and active users
+     *
+     * @param int $timePeriod Time period to consider sessions `active` (in seconds)
+     *
+     * @return array{users: int, connected: int}
+     */
+    public function getStatistics(int $timePeriod = 1200): array
+    {
+        $userResult = Dba::fetch_single_column(
+            'SELECT COUNT(`id`) FROM `user`'
+        );
+
+        $time = time();
+
+        $sessionResult = Dba::fetch_single_column(
+            <<<SQL
+                SELECT
+                COUNT(DISTINCT `session`.`username`)
+                FROM `session`
+                INNER JOIN `user`
+                ON `session`.`username` = `user`.`username`
+                WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?;
+            SQL,
+            [$time, $time - $timePeriod]
+        );
+
+        return [
+            'users' => (int) $userResult,
+            'connected' => (int) $sessionResult,
+        ];
     }
 }

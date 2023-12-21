@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,14 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
-use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -63,24 +62,22 @@ final class AlbumsMethod implements MethodInterface
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
      * @param array $input
+     *  filter  = (string) Alpha-numeric search term //optional
+     *  exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     *  add     = Api::set_filter(date) //optional
+     *  update  = Api::set_filter(date) //optional
+     *  offset  = (integer) //optional
+     *  limit   = (integer) //optional
+     *  include = (array|string) 'songs' //optional
      * @param User $user
-     * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add     = Api::set_filter(date) //optional
-     * update  = Api::set_filter(date) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
-     * include = (array|string) 'songs' //optional
      * @return ResponseInterface
-     *
-     * @throws ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        User  $user
+        User $user
     ): ResponseInterface {
         $browse = $this->modelFactory->createBrowse(null, false);
         $browse->reset_filters();
@@ -99,6 +96,7 @@ final class AlbumsMethod implements MethodInterface
 
         ob_end_clean();
 
+        /** @var string $result */
         $result = $output->albums(
             $results,
             $include,

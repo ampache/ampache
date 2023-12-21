@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -51,12 +52,9 @@ final class CatalogFile4Method
      * Single file versions of catalog add, clean and verify.
      * Make sure you remember to urlencode those file names!
      *
-     * @param array $input
-     * @param User $user
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add'|'clean'|'verify'|'remove'
      * catalog = (integer) $catalog_id
-     * @return boolean
      */
     public static function catalog_file(array $input, User $user): bool
     {
@@ -86,7 +84,7 @@ final class CatalogFile4Method
         }
         $catalog_id = (int) $input['catalog'];
         $catalog    = Catalog::create_from_id($catalog_id);
-        if ($catalog->id < 1) {
+        if ($catalog === null) {
             Api4::message('error', T_('Catalog not found') . ' ' . $catalog_id, '404', $input['api_format']);
 
             return false;
@@ -141,7 +139,7 @@ final class CatalogFile4Method
         }
 
         return true;
-    } // catalog_file
+    }
 
     /**
      * @deprecated

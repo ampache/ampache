@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Song;
 
@@ -56,16 +57,16 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $song_id = (string) scrub_in($_REQUEST['song_id']);
+        $songId = (int) ($request->getQueryParams()['song_id'] ?? 0);
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Song will be deleted'),
             sprintf(
-                '%s/song.php?action=confirm_delete&song_id=%s',
+                '%s/song.php?action=confirm_delete&song_id=%d',
                 $this->configContainer->getWebPath(),
-                $song_id
+                $songId
             ),
             1,
             'delete_song'

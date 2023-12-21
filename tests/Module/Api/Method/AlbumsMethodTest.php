@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,17 +23,14 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\Api\Authentication\GatekeeperInterface;
-use Ampache\Module\Api\Method\Exception\ResultEmptyException;
-use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -45,10 +45,9 @@ class AlbumsMethodTest extends MockeryTestCase
     /** @var MockInterface|ModelFactoryInterface|null */
     private MockInterface $modelFactory;
 
-    /** @var AlbumsMethod|null */
     private AlbumsMethod $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->streamFactory = $this->mock(StreamFactoryInterface::class);
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
@@ -61,14 +60,19 @@ class AlbumsMethodTest extends MockeryTestCase
 
     public function testHandleThrowExceptionIfListIsEmpty(): void
     {
-        $this->expectException(ResultEmptyException::class);
-        $this->expectExceptionMessage('No Results');
+        ob_start();
 
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $browse     = $this->mock(Browse::class);
         $user       = $this->mock(User::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $result  = '';
+        $include = [];
+        $limit   = 0;
+        $offset  = 0;
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->with(null, false)
@@ -89,14 +93,43 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
-        $this->subject->handle(
-            $gatekeeper,
+        $output->shouldReceive('albums')
+            ->with(
+                [],
+                $include,
+                $user,
+                true,
+                true,
+                $limit,
+                $offset
+            )
+            ->once()
+            ->andReturn($result);
+
+        $this->streamFactory->shouldReceive('createStream')
+            ->with($result)
+            ->once()
+            ->andReturn($stream);
+
+        $response->shouldReceive('withBody')
+            ->with($stream)
+            ->once()
+            ->andReturnSelf();
+
+        $this->assertSame(
             $response,
-            $output,
-            [
-                'exact' => true
-            ],
-            $user
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                [
+                    'exact' => true,
+                    'include' => $include,
+                    'limit' => $limit,
+                    'offset' => $offset,
+                ],
+                $user
+            )
         );
     }
 

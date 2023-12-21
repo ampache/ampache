@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -37,18 +40,18 @@ use Ampache\Module\Util\Ui;
 
 /** @var Video $video */
 
-$web_path = AmpConfig::get('web_path');
-
-Ui::show_box_top($video->get_fullname(), 'box box_video_details'); ?>
+$web_path = (string)AmpConfig::get('web_path', '');
+$fullname = $video->get_fullname() ?? '';
+Ui::show_box_top($fullname, 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
 $gart = false;
 // The release type is not the video itself, we probably want preview
 if (get_class($video) != Movie::class) {
-    $gart = Art::display('video', $video->id, $video->f_name, 8, null, false, 'preview');
+    $gart = Art::display('video', $video->id, $fullname, 8, null, false, 'preview');
 }
 if (!$gart) {
-    $gart = Art::display('video', $video->id, $video->f_name, 7);
+    $gart = Art::display('video', $video->id, $fullname, 7);
 } ?>
 <?php if (AmpConfig::get('encode_srt')) { ?>
 <div class="subtitles">
@@ -114,19 +117,19 @@ if (!$gart) {
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php } ?>
-            <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo addslashes(T_('Video Edit')) ?>', '')">
+            <a onclick="showEditDialog('video_row', '<?php echo $video->id; ?>', '<?php echo 'edit_video_' . $video->id; ?>', '<?php echo addslashes(T_('Video Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php } ?>
         <?php if (Catalog::can_remove($video)) { ?>
-            <a id="<?php echo 'delete_video_' . $video->id ?>" href="<?php echo $web_path; ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
+            <a id="<?php echo 'delete_video_' . $video->id; ?>" href="<?php echo $web_path; ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
         <?php } ?>
     </dd>
 <?php
-$videoprops[T_('Title')]   = scrub_out($video->f_name);
-$videoprops[T_('Length')]  = scrub_out($video->f_time);
+$videoprops[T_('Title')]  = scrub_out($fullname);
+$videoprops[T_('Length')] = scrub_out($video->f_time);
 if (get_class($video) != Video::class) {
     require Ui::find_template('show_partial_' . ObjectTypeToClassNameMapper::reverseMap(get_class($video)) . '.inc.php');
 }
@@ -137,19 +140,21 @@ $videoprops[T_('Display')]       = scrub_out($video->f_display);
 $videoprops[T_('Audio Bitrate')] = scrub_out($video->f_bitrate);
 $videoprops[T_('Video Bitrate')] = scrub_out($video->f_video_bitrate);
 $videoprops[T_('Frame Rate')]    = scrub_out($video->f_frame_rate);
-$videoprops[T_('Channels')]      = scrub_out($video->channels);
+$videoprops[T_('Channels')]      = scrub_out((string)$video->channels);
 if (Access::check('interface', 75)) {
     $data                       = pathinfo($video->file);
-    $videoprops[T_('Path')]     = scrub_out((string)$data['dirname'] ?? '');
-    $videoprops[T_('Filename')] = scrub_out((string)($data['filename'] . "." . $data['extension']) ?? '');
+    $videoprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));
+    $videoprops[T_('Filename')] = (isset($data['extension']))
+        ? scrub_out($data['filename'] . "." . $data['extension'])
+        : '';
     $videoprops[T_('Size')]     = $video->f_size;
 }
 if ($video->update_time) {
-    $videoprops[T_('Last Updated')]   = get_datetime((int) $video->update_time);
+    $videoprops[T_('Last Updated')] = get_datetime((int) $video->update_time);
 }
-$videoprops[T_('Added')]   = get_datetime((int) $video->addition_time);
+$videoprops[T_('Added')] = get_datetime((int) $video->addition_time);
 if (AmpConfig::get('show_played_times')) {
-    $videoprops[T_('Played')]   = scrub_out($video->total_count);
+    $videoprops[T_('Played')] = scrub_out((string)$video->total_count);
 }
 
 foreach ($videoprops as $key => $value) {

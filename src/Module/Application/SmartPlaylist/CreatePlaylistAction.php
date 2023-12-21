@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\SmartPlaylist;
 
@@ -68,7 +69,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         }
 
         $playlist                 = $this->modelFactory->createSearch(null);
-        $playlist->name           = scrub_in((string)($_REQUEST['playlist_name'] ?? ''));
+        $playlist->name           = (isset($_REQUEST['playlist_name'])) ? (string)$_REQUEST['playlist_name'] : '';
         $playlist->logic_operator = (isset($_REQUEST['operator']) && $_REQUEST['operator'] == 'or')
             ? 'OR'
             : 'AND';

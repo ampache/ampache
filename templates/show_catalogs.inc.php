@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -29,7 +32,7 @@ use Ampache\Module\Util\Ui;
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="catalog">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="catalog">
     <thead>
         <tr class="th-top">
             <th class="cel_catalog essential persist"><?php echo T_('Name'); ?></th>
@@ -43,9 +46,12 @@ if ($browse->is_show_header()) {
     <tbody>
         <?php
             foreach ($object_ids as $catalog_id) {
-                $libitem = Catalog::create_from_id($catalog_id);
-                $libitem->format(); ?>
-        <tr id="catalog_<?php echo $libitem->id; ?>">
+                $catalog = Catalog::create_from_id($catalog_id);
+                if ($catalog === null) {
+                    continue;
+                }
+                $catalog->format(); ?>
+        <tr id="catalog_<?php echo $catalog->id; ?>">
             <?php require Ui::find_template('show_catalog_row.inc.php'); ?>
         </tr>
         <?php

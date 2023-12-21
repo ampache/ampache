@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Localplay\Vlc;
 
@@ -42,14 +43,14 @@ class VlcPlayer
      * i would change this to another value then standard 8080, it gets used by more things
      * @param string $host
      * @param string $password
-     * @param integer $port
+     * @param int $port
      */
     public function __construct($host = 'localhost', $password = '', $port = 8080)
     {
         $this->host     = $host;
         $this->port     = $port;
         $this->password = $password;
-    } // VlcPlayer
+    }
 
     /**
      * add
@@ -58,9 +59,8 @@ class VlcPlayer
      * $url        URL of the song
      * @param string $name
      * @param $url
-     * @return boolean
      */
-    public function add($name, $url)
+    public function add($name, $url): bool
     {
         $aurl = urlencode($url);
         $aurl .= "&";
@@ -73,26 +73,26 @@ class VlcPlayer
         }
 
         return true;
-    } // add
+    }
 
     /**
      * version
      * No version returned in the standard xml file, just need to check for xml returned
      */
-    public function version()
+    public function version(): bool
     {
         $args    = array();
         $results = $this->sendCommand('status.xml', $args);
 
         return ($results !== null);
-    } // version
+    }
 
     /**
      * clear
      * clear the playlist
      * Every command returns status.xml no other way
      */
-    public function clear()
+    public function clear(): ?bool
     {
         $args    = array('command' => 'pl_empty');
         $results = $this->sendCommand('status.xml?', $args);
@@ -101,13 +101,13 @@ class VlcPlayer
         }
 
         return true;
-    } // clear
+    }
 
     /**
      * next
      * go to next song
      */
-    public function next()
+    public function next(): ?bool
     {
         $args    = array('command' => 'pl_next');
         $results = $this->sendCommand('status.xml?', $args);
@@ -116,13 +116,13 @@ class VlcPlayer
         }
 
         return true;
-    } // next
+    }
 
     /**
      * prev
      * go to previous song
      */
-    public function prev()
+    public function prev(): ?bool
     {
         $args    = array('command' => 'pl_previous');
         $results = $this->sendCommand("status.xml?", $args);
@@ -131,15 +131,15 @@ class VlcPlayer
         }
 
         return true;
-    } // prev
+    }
 
     /**
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return boolean|null
+     * @return bool|null
      */
-    public function skip($pos)
+    public function skip($pos): ?bool
     {
         $args    = array('command' => 'pl_play', '&id' => $pos);
         $results = $this->sendCommand('status.xml?', $args);
@@ -150,13 +150,13 @@ class VlcPlayer
         // Works but if user clicks next afterwards player goes to first song our last song played before
 
         return true;
-    } // skip
+    }
 
     /**
      * play
      * play the current song
      */
-    public function play()
+    public function play(): ?bool
     {
         $args    = array('command' => 'pl_play');
         $results = $this->sendCommand("status.xml?", $args);
@@ -165,13 +165,13 @@ class VlcPlayer
         }
 
         return true;
-    } // play
+    }
 
     /**
      * pause
      * toggle pause mode on current song
      */
-    public function pause()
+    public function pause(): ?bool
     {
         $args    = array('command' => 'pl_pause');
         $results = $this->sendCommand("status.xml?", $args);
@@ -180,13 +180,13 @@ class VlcPlayer
         }
 
         return true;
-    } // pause
+    }
 
     /**
      * stop
      * stops the current song amazing!
      */
-    public function stop()
+    public function stop(): ?bool
     {
         $args    = array('command' => 'pl_stop');
         $results = $this->sendCommand('status.xml?', $args);
@@ -195,15 +195,15 @@ class VlcPlayer
         }
 
         return true;
-    } // stop
+    }
 
     /**
      * repeat
      * This toggles the repeat state of VLC
      * @param $value
-     * @return boolean|null
+     * @return bool|null
      */
-    public function repeat($value)
+    public function repeat($value): ?bool
     {
         $args    = array('command' => 'pl_repeat');
         $results = $this->sendCommand('status.xml?', $args);
@@ -212,15 +212,14 @@ class VlcPlayer
         }
 
         return true;
-    } // repeat
+    }
 
     /**
      * random
      * this toggles the random state of VLC
      * @param $value
-     * @return boolean
      */
-    public function random($value)
+    public function random($value): bool
     {
         $args    = array('command' => 'pl_random');
         $results = $this->sendCommand('status.xml?', $args);
@@ -229,15 +228,14 @@ class VlcPlayer
         }
 
         return true;
-    } // random
+    }
 
     /**
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return boolean
      */
-    public function delete_pos($track)
+    public function delete_pos($track): bool
     {
         $args    = array('command' => 'pl_delete', '&id' => $track);
         $results = $this->sendCommand('status.xml?', $args);
@@ -246,13 +244,13 @@ class VlcPlayer
         }
 
         return true;
-    } // delete_pos
+    }
 
     /**
      * state
      * This returns the current state of the VLC player
      */
-    public function state()
+    public function state(): string
     {
         $args = array();
 
@@ -271,11 +269,10 @@ class VlcPlayer
         }
 
         return $state;
-    } // state
+    }
 
     /**
      * extract the full state from the xml file and send to status in vlccontroller for further parsing.
-     *
      */
     public function fullstate()
     {
@@ -287,13 +284,13 @@ class VlcPlayer
         }
 
         return $results;
-    } // fullstate
+    }
 
     /**
      * volume_up
      * This increases the volume of VLC, set to +20 can be changed to your preference
      */
-    public function volume_up()
+    public function volume_up(): bool
     {
         $args    = array('command' => 'volume', '&val' => '%2B20');
         $results = $this->sendCommand('status.xml?', $args);
@@ -302,13 +299,13 @@ class VlcPlayer
         }
 
         return true;
-    } // volume_up
+    }
 
     /**
      * volume_down
      * This decreases the volume of VLC, can be set to your preference
      */
-    public function volume_down()
+    public function volume_down(): bool
     {
         $args    = array('command' => 'volume', '&val' => '-20');
         $results = $this->sendCommand('status.xml?', $args);
@@ -317,15 +314,14 @@ class VlcPlayer
         }
 
         return true;
-    } // volume_down
+    }
 
     /**
      * set_volume
      * This sets the volume as best it can, i think it's from 0 to 400, need more testing'
      * @param $value
-     * @return boolean
      */
-    public function set_volume($value)
+    public function set_volume($value): bool
     {
         // Convert it to base 400
         $value   = $value * 4;
@@ -336,13 +332,13 @@ class VlcPlayer
         }
 
         return true;
-    } // set_volume
+    }
 
     /**
      * clear_playlist
      * this flushes the playlist cache (I hope this means clear)
      */
-    public function clear_playlist()
+    public function clear_playlist(): bool
     {
         $args    = array('command' => 'pl_empty');
         $results = $this->sendcommand('status.xml?', $args);
@@ -351,7 +347,7 @@ class VlcPlayer
         }
 
         return true;
-    } // clear_playlist
+    }
 
     /**
      * get_tracks
@@ -369,7 +365,7 @@ class VlcPlayer
         }
 
         return $results;
-    } // get_tracks
+    }
 
     /**
      * sendCommand
@@ -377,9 +373,8 @@ class VlcPlayer
      * request to the VLC server and getting the response
      * @param $cmd
      * @param $args
-     * @return array|null
      */
-    private function sendCommand($cmd, $args)
+    private function sendCommand($cmd, $args): ?array
     {
         $fsock = fsockopen($this->host, (int)$this->port, $errno, $errstr);
 
@@ -426,16 +421,16 @@ class VlcPlayer
 
         // send to xml parser and make an array
         return $this->xmltoarray($data);
-    } // sendCommand
+    }
 
     /**
      * xmltoarray
      * this function parses the xml page into an array thx to bin-co
      * warning VLC returns it's complete media lib if asked for playlist
      * @param $contents
-     * @param integer $get_attributes
+     * @param int $get_attributes
      * @param string $priority
-     * @return array|void
+     * @return array
      */
     private function xmltoarray($contents, $get_attributes = 1, $priority = 'attribute')
     {
@@ -450,15 +445,18 @@ class VlcPlayer
 
         // Get the XML parser of PHP - PHP must have this module for the parser to work
         $parser = xml_parser_create('');
-        xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING,
-            "UTF-8"); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
+        xml_parser_set_option(
+            $parser,
+            XML_OPTION_TARGET_ENCODING,
+            "UTF-8"
+        ); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
         xml_parse_into_struct($parser, trim($contents), $xml_values);
         xml_parser_free($parser);
 
         if (!$xml_values) {
-            return;
+            return array();
         } // Hmm...
 
         // Initializations
@@ -583,5 +581,5 @@ class VlcPlayer
         }
 
         return ($bigxml_array);
-    }   // xml parser
+    }
 }

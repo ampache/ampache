@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -36,10 +39,11 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 /** @var array $hide_columns */
 /** @var string $argument_param */
 
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = true;
+$is_group     = (AmpConfig::get('album_group'));
 // hide columns you don't always need
 $hide_artist  = in_array('cel_artist', $hide_columns);
 $hide_album   = in_array('cel_album', $hide_columns);
@@ -90,6 +94,9 @@ $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper(
 
 foreach ($object_ids as $song_id) {
     $libitem = new Song($song_id);
+    if ($libitem->isNew()) {
+        continue;
+    }
     $libitem->format(); ?>
 
             <tr id="song_<?php echo $libitem->id; ?>">
@@ -102,7 +109,8 @@ foreach ($object_ids as $song_id) {
                 ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
                 ->setContext('ARGUMENT_PARAM', '')
                 ->setContext('IS_TABLE_VIEW', $is_table)
-                ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
+                ->setContext('IS_ALBUM_GROUP', $is_group)
+                ->setContext('IS_SHOW_TRACK', !empty($argument))
                 ->setContext('IS_SHOW_LICENSE', $show_license)
                 ->setContext('IS_HIDE_GENRE', $hide_genres)
                 ->setContext('IS_HIDE_ARTIST', $hide_artist)

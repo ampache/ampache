@@ -1,6 +1,7 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,6 +22,9 @@
  */
 
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
+
+/** @var Catalog $this */
 
 Ui::show_box_top(T_('Starting New Media Search'), 'box box_adds_catalog');
 /* HINT: Catalog Name */

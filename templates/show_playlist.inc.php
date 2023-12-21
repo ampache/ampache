@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -47,12 +50,12 @@ use Ampache\Module\Util\ZipHandlerInterface;
 ob_start();
 echo $playlist->get_fullname();
 $title    = ob_get_contents();
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <div class="item_right_info">
 <?php $thumb = Ui::is_grid_view('playlist') ? 32 : 11;
-$playlist->display_art($thumb, false, false) ?>
+$playlist->display_art($thumb, false, false); ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
@@ -69,7 +72,7 @@ $playlist->display_art($thumb, false, false) ?>
 <?php if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(50)) || $playlist->user == Core::get_global('user')->id) { ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
-                                            '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY ?>')">
+                                            '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY; ?>')">
                 <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
                 <?php echo T_('Save Track Order'); ?>
             </a>
@@ -128,7 +131,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist
             <?php echo Ajax::button_with_text('?action=basket&type=playlist_random&id=' . $playlist->id, 'random', T_('Random All to Temporary Playlist'), 'play_playlist_random'); ?>
         </li>
     <?php if ($playlist->has_access()) { ?>
-        <?php $search_id = $playlist->has_search($playlist->user);
+        <?php $search_id = $playlist->has_search((int)$playlist->user);
         if ($search_id > 0) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/playlist.php?action=refresh_playlist&type=playlist&user_id=<?php echo $playlist->user; ?>&playlist_id=<?php echo $playlist->id; ?>&search_id=<?php echo $search_id; ?>">
@@ -138,7 +141,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist
             </li>
         <?php } ?>
         <li>
-            <a id="<?php echo 'edit_playlist_' . $playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_' . $playlist->id ?>', '<?php echo addslashes(T_('Playlist Edit')) ?>', '')">
+            <a id="<?php echo 'edit_playlist_' . $playlist->id; ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id; ?>', '<?php echo 'edit_playlist_' . $playlist->id; ?>', '<?php echo addslashes(T_('Playlist Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit'); ?>
             </a>
@@ -157,6 +160,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist
 <?php
     $browse = new Browse();
 $browse->set_type('playlist_media');
+$browse->set_use_filters(false);
 $browse->add_supplemental_object('playlist', $playlist->id);
 $browse->set_static_content(true);
 $browse->duration = Search::get_total_duration($object_ids);

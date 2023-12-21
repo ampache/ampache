@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,13 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Image;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -52,6 +54,8 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_ACTION = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private AuthenticationManagerInterface $authenticationManager;
 
     private ConfigContainerInterface $configContainer;
@@ -65,6 +69,7 @@ final class ShowAction implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         AuthenticationManagerInterface $authenticationManager,
         ConfigContainerInterface $configContainer,
         Horde_Browser $horde_browser,
@@ -72,6 +77,7 @@ final class ShowAction implements ApplicationActionInterface
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger
     ) {
+        $this->requestParser         = $requestParser;
         $this->authenticationManager = $authenticationManager;
         $this->configContainer       = $configContainer;
         $this->horde_browser         = $horde_browser;
@@ -88,21 +94,25 @@ final class ShowAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_AUTH) === true &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION) === true
         ) {
+            $auth  = $this->requestParser->getFromRequest('auth');
+            $user  = $this->requestParser->getFromRequest('u');
+            $token = $this->requestParser->getFromRequest('t');
+            $salt  = $this->requestParser->getFromRequest('s');
             // Check to see if they've got an interface session or a valid API session
             $token_check = $this->authenticationManager->tokenLogin(
-                Core::get_request('u'),
-                Core::get_request('t'),
-                Core::get_request('s')
+                $user,
+                $token,
+                $salt
             );
 
             $cookie = $_COOKIE[AmpConfig::get('session_name')] ?? '';
 
             if (
                 !Session::exists('interface', $cookie) &&
-                !Session::exists('api', Core::get_request('auth')) &&
+                !Session::exists('api', $auth) &&
                 !empty($token_check)
             ) {
-                $auth = (Core::get_request('auth') !== '') ? Core::get_request('auth') : Core::get_request('t');
+                $auth = ($auth !== '') ? $auth : $token;
                 $this->logger->warning(
                     sprintf('Access denied, checked cookie session:%s and auth:%s', $cookie, $auth),
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -135,7 +145,7 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         /* Decide what size this image is */
-        $thumb = filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
+        $thumb = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
         $size  = Art::get_thumb_size($thumb);
         $kind  = (array_key_exists('kind', $_GET) && $_GET['kind'] == 'preview')
             ? 'preview'
@@ -156,7 +166,7 @@ final class ShowAction implements ApplicationActionInterface
                     Session::check();
                     // If we need to pull the data out of the session
                     if (array_key_exists('form', $_SESSION)) {
-                        $filename    = scrub_in($_REQUEST['image_index']);
+                        $filename    = $this->requestParser->getFromRequest('image_index');
                         $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
                         $mime        = $_SESSION['form']['images'][$filename]['mime'];
                         $typeManaged = true;
@@ -165,11 +175,13 @@ final class ShowAction implements ApplicationActionInterface
             }
         }
         if (!$typeManaged) {
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            $object_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-            $item       = new $class_name($object_id);
-            if ($item instanceof Song || $item instanceof Video || $item instanceof Podcast || $item instanceof Podcast_Episode) {
+            $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+            $className = ObjectTypeToClassNameMapper::map($type);
+            $item      = new $className($object_id);
+            if ($item instanceof Song || $item instanceof Video || $item instanceof Podcast_Episode) {
                 $filename = $item->title;
+            } elseif ($item instanceof Podcast) {
+                $filename = $item->getTitle();
             } elseif ($item instanceof User) {
                 $filename = $item->username;
             } else {
@@ -200,7 +212,7 @@ final class ShowAction implements ApplicationActionInterface
                         if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
                             $defaultimg = $rootimg . "blankmovie.png";
                         }
-                        $etag="EmptyMediaMovie";
+                        $etag = "EmptyMediaMovie";
                         break;
                     default:
                         $mime       = 'image/png';
@@ -208,7 +220,7 @@ final class ShowAction implements ApplicationActionInterface
                         if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
                             $defaultimg = $rootimg . "blankalbum.png";
                         }
-                        $etag="EmptyMediaAlbum";
+                        $etag = "EmptyMediaAlbum";
                         break;
                 }
                 $image = file_get_contents($defaultimg);
@@ -249,7 +261,7 @@ final class ShowAction implements ApplicationActionInterface
             $reqheaders = getallheaders();
             if (is_array($reqheaders) && array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
                 if (!array_key_exists('Cache-Control', $reqheaders) || (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache')) {
-                    $cetag  = str_replace('"','', $reqheaders['If-None-Match']);
+                    $cetag = str_replace('"', '', $reqheaders['If-None-Match']);
                     // Same image than the cached one? Use the cache.
                     if ($cetag == $etag) {
                         return $response->withStatus(304);

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\User;
 
@@ -75,16 +76,16 @@ final class UpdateUserAction extends AbstractUserAction
 
         /* Clean up the variables */
         $user_id              = (int) filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
-        $username             = (string) scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $fullname             = (string) scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $email                = (string) scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website              = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $access               = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $catalog_filter_group = (int) scrub_in(filter_input(INPUT_POST, 'catalog_filter_group', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $username             = scrub_in((string) filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $fullname             = scrub_in((string) filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+        $website              = scrub_in((string) filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $access               = (int)filter_input(INPUT_POST, 'access', FILTER_SANITIZE_NUMBER_INT);
+        $catalog_filter_group = (int)filter_input(INPUT_POST, 'catalog_filter_group', FILTER_SANITIZE_NUMBER_INT);
         $pass1                = Core::get_post('password_1');
         $pass2                = Core::get_post('password_2');
-        $state                = scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $city                 = scrub_in(filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $state                = scrub_in((string) filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $city                 = scrub_in((string) filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $fullname_public      = isset($_POST['fullname_public']);
 
         /* Setup the temp user */
@@ -159,8 +160,11 @@ final class UpdateUserAction extends AbstractUserAction
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions (2000x3000) */
-                sprintf(T_('Please check your image is within the minimum %1$s and maximum %2$s dimensions'),
-                    $mindimension, $maxdimension),
+                sprintf(
+                    T_('Please check your image is within the minimum %1$s and maximum %2$s dimensions'),
+                    $mindimension,
+                    $maxdimension
+                ),
                 sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
             );
         } else {

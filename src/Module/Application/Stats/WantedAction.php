@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,11 +23,8 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Stats;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -42,19 +42,15 @@ final class WantedAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private ConfigContainerInterface $configContainer;
-
     private WantedRepositoryInterface $wantedRepository;
 
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
         WantedRepositoryInterface $wantedRepository
     ) {
         $this->ui               = $ui;
         $this->modelFactory     = $modelFactory;
-        $this->configContainer  = $configContainer;
         $this->wantedRepository = $wantedRepository;
     }
 

@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,6 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Repository\Model\Metadata;
@@ -40,7 +42,7 @@ trait Metadata
 
     /**
      * Determines if the functionality is enabled or not.
-     * @var boolean
+     * @var bool
      */
     protected $enableCustomMetadata;
 
@@ -100,7 +102,7 @@ trait Metadata
      */
     public function updateOrInsertMetadata(MetadataField $field, $data)
     {
-        /* @var Model\Metadata $metadata */
+        /** @var Model\Metadata $metadata */
         $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, ucfirst(ObjectTypeToClassNameMapper::reverseMap(get_class($this))));
         if ($metadata) {
             $object = reset($metadata);
@@ -114,7 +116,7 @@ trait Metadata
     /**
      *
      * @param string $name
-     * @param boolean $public
+     * @param bool $public
      * @return MetadataField
      * @throws ReflectionException
      */
@@ -133,7 +135,7 @@ trait Metadata
     /**
      *
      * @param string $propertie
-     * @param boolean $public
+     * @param bool $public
      * @return MetadataField
      * @throws ReflectionException
      */
@@ -150,12 +152,11 @@ trait Metadata
     }
 
     /**
-     *
-     * @return boolean
+     * isCustomMetadataEnabled
      */
-    public static function isCustomMetadataEnabled()
+    public static function isCustomMetadataEnabled(): bool
     {
-        return (boolean) AmpConfig::get('enable_custom_metadata');
+        return (bool) AmpConfig::get('enable_custom_metadata');
     }
 
     /**
@@ -174,7 +175,8 @@ trait Metadata
                 }
             }
             $this->disabledMetadataFields = array_merge(
-                $fields, explode(',', AmpConfig::get('disabled_custom_metadata_fields_input'))
+                $fields,
+                explode(',', AmpConfig::get('disabled_custom_metadata_fields_input'))
             );
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,38 +23,37 @@
  *
  */
 
-declare(strict_types=1);
-
 use Ampache\Module\Application\Admin\User\AddUserAction;
 use Ampache\Module\Application\Admin\User\ConfirmDeleteAction;
 use Ampache\Module\Application\Admin\User\ConfirmDisableAction;
 use Ampache\Module\Application\Admin\User\ConfirmEnableAction;
-use Ampache\Module\Application\Admin\User\DeleteAction;
-use Ampache\Module\Application\Admin\User\DeleteApikeyAction;
+use Ampache\Module\Application\Admin\User\GenerateRssTokenAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteAction;
+use Ampache\Module\Application\Admin\User\DeleteApiKeyAction;
 use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
-use Ampache\Module\Application\Admin\User\DeleteRsstokenAction;
-use Ampache\Module\Application\Admin\User\DeleteStreamtokenAction;
+use Ampache\Module\Application\Admin\User\DeleteRssTokenAction;
+use Ampache\Module\Application\Admin\User\DeleteStreamTokenAction;
 use Ampache\Module\Application\Admin\User\DisableAction;
 use Ampache\Module\Application\Admin\User\EnableAction;
-use Ampache\Module\Application\Admin\User\GenerateApikeyAction;
-use Ampache\Module\Application\Admin\User\GenerateRsstokenAction;
-use Ampache\Module\Application\Admin\User\GenerateStreamtokenAction;
+use Ampache\Module\Application\Admin\User\GenerateApiKeyAction;
+use Ampache\Module\Application\Admin\User\GenerateStreamTokenAction;
 use Ampache\Module\Application\Admin\User\ShowAction;
 use Ampache\Module\Application\Admin\User\ShowAddUserAction;
-use Ampache\Module\Application\Admin\User\ShowDeleteApikeyAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteApiKeyAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteAvatarAction;
-use Ampache\Module\Application\Admin\User\ShowDeleteRsstokenAction;
-use Ampache\Module\Application\Admin\User\ShowDeleteStreamtokenAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteRssTokenAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteStreamTokenAction;
 use Ampache\Module\Application\Admin\User\ShowEditAction;
-use Ampache\Module\Application\Admin\User\ShowGenerateApikeyAction;
-use Ampache\Module\Application\Admin\User\ShowGenerateRsstokenAction;
-use Ampache\Module\Application\Admin\User\ShowGenerateStreamtokenAction;
+use Ampache\Module\Application\Admin\User\ShowGenerateApiKeyAction;
+use Ampache\Module\Application\Admin\User\ShowGenerateRssTokenAction;
+use Ampache\Module\Application\Admin\User\ShowGenerateStreamTokenAction;
 use Ampache\Module\Application\Admin\User\ShowIpHistoryAction;
 use Ampache\Module\Application\Admin\User\ShowPreferencesAction;
 use Ampache\Module\Application\Admin\User\UpdateUserAction;
 use Ampache\Module\Application\ApplicationRunner;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
+
 use function DI\autowire;
 
 /** @var ContainerInterface $dic */
@@ -65,21 +66,21 @@ $dic->get(ApplicationRunner::class)->run(
         ShowPreferencesAction::REQUEST_KEY => ShowPreferencesAction::class,
         ShowAddUserAction::REQUEST_KEY => ShowAddUserAction::class,
         ShowIpHistoryAction::REQUEST_KEY => ShowIpHistoryAction::class,
-        GenerateRsstokenAction::REQUEST_KEY => GenerateRsstokenAction::class,
-        GenerateStreamtokenAction::REQUEST_KEY => GenerateStreamtokenAction::class,
-        ShowGenerateRsstokenAction::REQUEST_KEY => ShowGenerateRsstokenAction::class,
-        ShowGenerateStreamtokenAction::REQUEST_KEY => ShowGenerateStreamtokenAction::class,
-        DeleteRsstokenAction::REQUEST_KEY => DeleteRsstokenAction::class,
-        ShowDeleteRsstokenAction::REQUEST_KEY => ShowDeleteRsstokenAction::class,
-        DeleteStreamtokenAction::REQUEST_KEY => DeleteStreamtokenAction::class,
-        ShowDeleteStreamtokenAction::REQUEST_KEY => ShowDeleteStreamtokenAction::class,
-        GenerateApikeyAction::REQUEST_KEY => GenerateApikeyAction::class,
-        ShowGenerateApikeyAction::REQUEST_KEY => ShowGenerateApikeyAction::class,
-        DeleteApikeyAction::REQUEST_KEY => DeleteApikeyAction::class,
-        ShowDeleteApikeyAction::REQUEST_KEY => ShowDeleteApikeyAction::class,
+        GenerateApiKeyAction::REQUEST_KEY => GenerateApiKeyAction::class,
+        GenerateStreamTokenAction::REQUEST_KEY => GenerateStreamTokenAction::class,
+        ShowGenerateRssTokenAction::REQUEST_KEY => ShowGenerateRssTokenAction::class,
+        ShowGenerateStreamTokenAction::REQUEST_KEY => ShowGenerateStreamTokenAction::class,
+        DeleteRssTokenAction::REQUEST_KEY => DeleteRssTokenAction::class,
+        ShowDeleteRssTokenAction::REQUEST_KEY => ShowDeleteRssTokenAction::class,
+        DeleteStreamTokenAction::REQUEST_KEY => DeleteStreamTokenAction::class,
+        ShowDeleteStreamTokenAction::REQUEST_KEY => ShowDeleteStreamTokenAction::class,
+        GenerateRssTokenAction::REQUEST_KEY => GenerateRssTokenAction::class,
+        ShowGenerateApiKeyAction::REQUEST_KEY => ShowGenerateApiKeyAction::class,
+        DeleteApiKeyAction::REQUEST_KEY => DeleteApiKeyAction::class,
+        ShowDeleteApiKeyAction::REQUEST_KEY => ShowDeleteApiKeyAction::class,
         DeleteAvatarAction::REQUEST_KEY => DeleteAvatarAction::class,
         ShowDeleteAvatarAction::REQUEST_KEY => ShowDeleteAvatarAction::class,
-        DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ShowDeleteAction::REQUEST_KEY => ShowDeleteAction::class,
         ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
         ShowEditAction::REQUEST_KEY => ShowEditAction::class,
         DisableAction::REQUEST_KEY => DisableAction::class,

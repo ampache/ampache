@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -31,6 +31,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -54,8 +55,8 @@ final class TagAjaxHandler implements AjaxHandlerInterface
     {
         $results   = array();
         $action    = $this->requestParser->getFromRequest('action');
-        $type      = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
-        $object_id = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+        $type      = (string)filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
         // Switch on the actions
         switch ($action) {
@@ -136,11 +137,10 @@ final class TagAjaxHandler implements AjaxHandlerInterface
     /**
      * can_edit_tag_map
      * @param string $object_type
-     * @param integer $object_id
-     * @param string|boolean $user
-     * @return boolean
+     * @param int $object_id
+     * @param string|bool $user
      */
-    private static function can_edit_tag_map($object_type, $object_id, $user = true)
+    private static function can_edit_tag_map($object_type, $object_id, $user = true): bool
     {
         if ($user === true) {
             $uid = (int)(Core::get_global('user')->id);
@@ -157,11 +157,12 @@ final class TagAjaxHandler implements AjaxHandlerInterface
         }
 
         if (InterfaceImplementationChecker::is_library_item($object_type)) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $libitem    = new $class_name($object_id);
-            $owner      = $libitem->get_user_owner();
+            $className = ObjectTypeToClassNameMapper::map($object_type);
+            /** @var class-string<library_item> $className */
+            $libitem  = new $className($object_id);
+            $owner_id = $libitem->get_user_owner();
 
-            return ($owner !== null && $owner == $uid);
+            return ($owner_id !== null && $owner_id == $uid);
         }
 
         return false;

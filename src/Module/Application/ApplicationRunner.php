@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application;
 
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
@@ -115,7 +116,7 @@ final class ApplicationRunner
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '"%s" for "%s"',
                         __CLASS__,
-                        $e->getFile()
+                        get_class($handler)
                     )
                 ]
             );
@@ -123,6 +124,20 @@ final class ApplicationRunner
             $this->ui->accessDenied($message);
 
             return;
+        } catch (ObjectNotFoundException $e) {
+            $this->logger->warning(
+                'Requested an object that does not exist',
+                [
+                    LegacyLogger::CONTEXT_TYPE => sprintf(
+                        '"%s" for "%s"',
+                        __CLASS__,
+                        get_class($handler)
+                    ),
+                    'objectId' => $e->getObjectId()
+                ]
+            );
+
+            $this->ui->showObjectNotFound();
         } catch (Throwable $e) {
             $this->logger->critical(
                 $e->getMessage(),
