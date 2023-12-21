@@ -370,6 +370,9 @@ class User extends database_object
             $className = ObjectTypeToClassNameMapper::map($type);
             /** @var Song|Album|Artist $data */
             $data = new $className($row['object_id']);
+            if ($data->isNew()) {
+                continue;
+            }
             $data->format();
             if ($type == 'song') {
                 /** @var Song $data */
