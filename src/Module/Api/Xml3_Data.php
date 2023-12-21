@@ -427,6 +427,9 @@ class Xml3_Data
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
             $playlist = new Playlist($playlist_id);
+            if ($playlist->isNew()) {
+                continue;
+            }
             $playlist->format();
             $item_total = $playlist->get_media_count('song');
 
@@ -516,6 +519,9 @@ class Xml3_Data
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
+            if ($video->isNew()) {
+                continue;
+            }
             $video->format();
 
             $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->f_resolution . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->tags) . "\t<url><![CDATA[" . $video->play_url('', 'api') . "]]></url>\n</video>\n";

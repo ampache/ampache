@@ -672,6 +672,9 @@ class Xml4_Data
 
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
+            if ($episode->isNew()) {
+                continue;
+            }
             $episode->format();
             $rating      = new Rating($episode_id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -760,6 +763,9 @@ class Xml4_Data
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
+            if ($video->isNew()) {
+                continue;
+            }
             $video->format();
             $rating      = new Rating($video_id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());

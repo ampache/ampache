@@ -351,6 +351,9 @@ class Json_Data
         $JSON = [];
         foreach ($objects as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
+            if ($live_stream->isNew()) {
+                continue;
+            }
             $live_stream->format();
             $JSON[] = array(
                 "id" => (string)$live_stream_id,
@@ -426,6 +429,9 @@ class Json_Data
         $JSON = [];
         foreach ($objects as $label_id) {
             $label = new Label($label_id);
+            if ($label->isNew()) {
+                continue;
+            }
             $label->format();
             $JSON[] = array(
                 "id" => (string)$label_id,
@@ -1041,6 +1047,9 @@ class Json_Data
         $JSON = [];
         foreach ($objects as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
+            if ($episode->isNew()) {
+                continue;
+            }
             $episode->format();
             $rating      = new Rating($episode_id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -1259,6 +1268,9 @@ class Json_Data
         $JSON = [];
         foreach ($objects as $video_id) {
             $video = new Video($video_id);
+            if ($video->isNew()) {
+                continue;
+            }
             $video->format();
             $rating      = new Rating($video_id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());

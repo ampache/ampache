@@ -448,6 +448,9 @@ class Xml5_Data
 
         foreach ($labels as $label_id) {
             $label = new Label($label_id);
+            if ($label->isNew()) {
+                continue;
+            }
             $label->format();
 
             $string .= "<license id=\"$label_id\">\n\t<name><![CDATA[" . $label->get_fullname() . "]]></name>\n\t<artists><![CDATA[" . $label->artist_count . "]]></artists>\n\t<summary><![CDATA[" . $label->summary . "]]></summary>\n\t<external_link><![CDATA[" . $label->get_link() . "]]></external_link>\n\t<address><![CDATA[" . $label->address . "]]></address>\n\t<category><![CDATA[" . $label->category . "]]></category>\n\t<email><![CDATA[" . $label->email . "]]></email>\n\t<website><![CDATA[" . $label->website . "]]></website>\n\t<user><![CDATA[" . $label->user . "]]></user>\n</license>\n";
@@ -473,6 +476,9 @@ class Xml5_Data
 
         foreach ($live_streams as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
+            if ($live_stream->isNew()) {
+                continue;
+            }
             $live_stream->format();
 
             $string .= "<live_stream id=\"" . $live_stream_id . "\">\n\t<name><![CDATA[" . $live_stream->get_fullname() . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n\t<catalog>" . $live_stream->catalog . "</catalog>\n\t<site_url><![CDATA[" . $live_stream->site_url . "]]></site_url>\n</live_stream>\n";
@@ -796,6 +802,9 @@ class Xml5_Data
 
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
+            if ($episode->isNew()) {
+                continue;
+            }
             $episode->format();
             $rating      = new Rating($episode_id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -893,6 +902,9 @@ class Xml5_Data
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
+            if ($video->isNew()) {
+                continue;
+            }
             $video->format();
             $rating      = new Rating($video_id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
