@@ -42,7 +42,7 @@ use Psr\Log\LoggerInterface;
  * set_memory_limit
  * This function attempts to change the php memory limit using init_set.
  * Will never reduce it below the current setting.
- * @param $new_limit
+ * @param int|string $new_limit
  */
 function set_memory_limit($new_limit): void
 {
@@ -348,7 +348,7 @@ function get_languages()
 /**
  * is_rtl
  * This checks whether to be a Right-To-Left language.
- * @param $locale
+ * @param string $locale
  */
 function is_rtl($locale): bool
 {
@@ -673,8 +673,8 @@ function debug_event($type, $message, $level, $username = ''): bool
 }
 
 /**
- * @param $action
- * @param $catalogs
+ * @param string $action
+ * @param array|null $catalogs
  * @param array $options
  */
 function catalog_worker($action, $catalogs = null, $options = null): void
@@ -883,7 +883,7 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
 
 /**
  * @param string $name
- * @param $season_id
+ * @param int $season_id
  * @param bool $allow_add
  * @param int $video_id
  * @param bool $allow_none
@@ -1141,7 +1141,7 @@ function show_table_render($render = false, $force = false): void
  */
 function load_gettext(): bool
 {
-    $lang   = AmpConfig::get('lang');
+    $lang   = AmpConfig::get('lang', 'en_US');
     $mopath = __DIR__ . '/../../locale/' . $lang . '/LC_MESSAGES/messages.mo';
 
     $gettext = new Translator();
@@ -1168,15 +1168,15 @@ function T_(string $msgid): string
 }
 
 /**
- * @param $original
- * @param $plural
- * @param $value
- * @return mixed
+ * @param string $original
+ * @param string $plural
+ * @param int|string $value
+ * @return string
  */
 function nT_($original, $plural, $value)
 {
     if (function_exists('n__')) {
-        return n__($original, $plural, $value);
+        return n__($original, $plural, (string)$value);
     }
 
     return $plural;

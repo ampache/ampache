@@ -119,7 +119,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * build_map_cache
      * This builds a cache of the mappings for the specified object, no limit is given
      * @param string $type
-     * @param $ids
+     * @param array $ids
      * @return bool
      * @params array $ids
      */
@@ -596,7 +596,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      * @param string $type
-     * @param $tag_id
+     * @param int $tag_id
      * @param int $count
      * @param int $offset
      * @return int[]
@@ -606,8 +606,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();
         }
-        $tag_sql   = ((int) $tag_id == 0) ? "" : "`tag_map`.`tag_id` = ? AND";
-        $sql_param = ($tag_sql == "") ? array($type) : array($tag_id, $type);
+        $tag_sql   = ($tag_id === 0) ? "" : "`tag_map`.`tag_id` = ? AND";
+        $sql_param = ($tag_sql === "") ? array($type) : array($tag_id, $type);
         $limit_sql = "";
         if ($count) {
             $limit_sql = " LIMIT ";

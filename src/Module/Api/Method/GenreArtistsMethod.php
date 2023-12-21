@@ -51,7 +51,7 @@ final class GenreArtistsMethod
      */
     public static function genre_artists(array $input, User $user): bool
     {
-        $results = Tag::get_tag_objects('artist', ($input['filter'] ?? ''));
+        $results = Tag::get_tag_objects('artist', (int)($input['filter'] ?? 0));
         if (empty($results)) {
             Api::empty('artist', $input['api_format']);
 

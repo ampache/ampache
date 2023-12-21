@@ -1081,7 +1081,7 @@ class Update
      * _set_db_version
      *
      * This updates the 'update_info' which is used by the updater.
-     * @param $value
+     * @param string $value
      */
     private static function _set_db_version($value)
     {

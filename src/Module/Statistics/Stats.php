@@ -404,8 +404,8 @@ class Stats
 
     /**
      * get_cached_place_name
-     * @param $latitude
-     * @param $longitude
+     * @param float $latitude
+     * @param float $longitude
      * @return mixed|null
      */
     public static function get_cached_place_name($latitude, $longitude)
@@ -919,7 +919,7 @@ class Stats
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             if (empty($row['geo_name']) && array_key_exists('latitude', $row) && array_key_exists('longitude', $row)) {
-                $row['geo_name'] = Stats::get_cached_place_name($row['latitude'], $row['longitude']);
+                $row['geo_name'] = Stats::get_cached_place_name((float)$row['latitude'], (float)$row['longitude']);
             }
             $results[] = $row;
         }

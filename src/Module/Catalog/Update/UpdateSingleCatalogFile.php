@@ -136,7 +136,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                         if (!$art->has_db_info()) {
                             Catalog::gather_art_item($art_type, $art_id, true);
                         }
-                        if (!$artist->has_db_info()) {
+                        if ($media->artist && !$artist->has_db_info()) {
                             Catalog::gather_art_item('artist', $media->artist, true);
                         }
                     }

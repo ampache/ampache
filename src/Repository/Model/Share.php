@@ -93,7 +93,7 @@ class Share extends database_object
 
     /**
      * delete_share
-     * @param $share_id
+     * @param int $share_id
      * @param User $user
      * @return PDOStatement|bool
      */
@@ -385,8 +385,8 @@ class Share extends database_object
 
     /**
      * is_valid
-     * @param $secret
-     * @param $action
+     * @param string $secret
+     * @param string $action
      */
     public function is_valid($secret, $action): bool
     {

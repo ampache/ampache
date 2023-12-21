@@ -46,7 +46,7 @@ class Upload
         define('CLI', true);
 
         $can_upload = Access::check('interface', AmpConfig::get('upload_access_level', 25));
-        $catalog_id = AmpConfig::get('upload_catalog');
+        $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
         if ($catalog !== null) {
             debug_event(self::class, 'Uploading to catalog ID ' . $catalog_id, 4);
@@ -141,11 +141,12 @@ class Upload
     /**
      * check
      * Can you even upload?
-     * @param $catalog_id
-     * @return Catalog|null
      */
-    public static function check($catalog_id): ?Catalog
+    public static function check(int $catalog_id): ?Catalog
     {
+        if ($catalog_id === 0) {
+            return null;
+        }
         $allowed   = explode('|', AmpConfig::get('catalog_file_pattern'));
         $extension = strtolower((string) pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION));
 

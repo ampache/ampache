@@ -424,7 +424,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param array $location
      * @param int $date
      */
-    public function set_played($user_id, $agent, $location, $date = null): bool
+    public function set_played($user_id, $agent, $location, $date): bool
     {
         // Do nothing
         unset($user_id, $agent, $location, $date);

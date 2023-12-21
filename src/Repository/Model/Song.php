@@ -60,7 +60,7 @@ class Song extends database_object implements
     public int $album;
     public ?int $disk;
     public int $year;
-    public int $artist;
+    public ?int $artist;
     public ?string $title;
     public int $bitrate;
     public int $rate;
@@ -123,7 +123,7 @@ class Song extends database_object implements
     public $f_album;
     /** @var null|string $f_artist_full */
     public $f_artist_full;
-    /** @var int $albumartist */
+    /** @var int|null $albumartist */
     public $albumartist;
     /** @var null|string $f_albumartist_full */
     public $f_albumartist_full;
@@ -928,7 +928,7 @@ class Song extends database_object implements
      */
     public function get_album_disk(): ?int
     {
-        if (isset($this->album_disk)) {
+        if ($this->album_disk) {
             return $this->album_disk;
         }
         $sql        = "SELECT DISTINCT `id` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ?;";
@@ -951,7 +951,7 @@ class Song extends database_object implements
      * @param array $location
      * @param int $date
      */
-    public function set_played($user_id, $agent, $location, $date = null): bool
+    public function set_played($user_id, $agent, $location, $date): bool
     {
         // ignore duplicates or skip the last track
         if (!$this->check_play_history($user_id, $agent, $date)) {
@@ -1027,8 +1027,8 @@ class Song extends database_object implements
 
     /**
      * compare_media_information
-     * @param $media
-     * @param $new_media
+     * @param Song|Video $media
+     * @param Song|Video $new_media
      * @param string[] $string_array
      * @param string[] $skip_array
      * @return array
@@ -1395,14 +1395,14 @@ class Song extends database_object implements
      * updates the artist field
      * @param int $new_artist
      * @param int $song_id
-     * @param int $old_artist
+     * @param int|null $old_artist
      * @param bool $update_counts
      */
     public static function update_artist($new_artist, $song_id, $old_artist, $update_counts = true): bool
     {
         if ($old_artist != $new_artist) {
             if (self::_update_item('artist', $new_artist, $song_id, 50) !== false) {
-                if ($update_counts) {
+                if ($update_counts && $old_artist) {
                     self::migrate_artist($new_artist, $old_artist);
                     Artist::update_table_counts();
                 }
@@ -1934,7 +1934,7 @@ class Song extends database_object implements
                 $object_id = $this->album;
                 $type      = 'album';
             } else {
-                if (Art::has_db($this->artist, 'artist') || $force) {
+                if ($this->artist && Art::has_db($this->artist, 'artist') || $force) {
                     $object_id = $this->artist;
                     $type      = 'artist';
                 }

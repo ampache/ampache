@@ -394,13 +394,13 @@ class Label extends database_object implements library_item
     /**
      * get_display
      * This returns a csv formatted version of the labels that we are given
-     * @param $labels
+     * @param array $labels
      * @param bool $link
      * @return string
      */
     public static function get_display($labels, $link = false): string
     {
-        if (!is_array($labels)) {
+        if (empty($labels)) {
             return '';
         }
 

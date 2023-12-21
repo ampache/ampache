@@ -527,7 +527,7 @@ class User extends database_object
     /**
      * update_username
      * updates their username
-     * @param $new_username
+     * @param string $new_username
      */
     public function update_username($new_username)
     {
@@ -544,7 +544,7 @@ class User extends database_object
      * This is used by the registration mumbojumbo
      * Use this function to update the validation key
      * NOTE: crap this doesn't have update_item the humanity of it all
-     * @param $new_validation
+     * @param string $new_validation
      * @return PDOStatement|bool
      */
     public function update_validation($new_validation)
@@ -559,7 +559,7 @@ class User extends database_object
     /**
      * update_fullname
      * updates their fullname
-     * @param $new_fullname
+     * @param string $new_fullname
      */
     public function update_fullname($new_fullname)
     {
@@ -601,7 +601,7 @@ class User extends database_object
     /**
      * update_website
      * updates their website address
-     * @param $new_website
+     * @param string $new_website
      */
     public function update_website($new_website)
     {
@@ -616,7 +616,7 @@ class User extends database_object
     /**
      * update_state
      * updates their state
-     * @param $new_state
+     * @param string $new_state
      */
     public function update_state($new_state)
     {
@@ -630,7 +630,7 @@ class User extends database_object
     /**
      * update_city
      * updates their city
-     * @param $new_city
+     * @param string $new_city
      */
     public function update_city($new_city)
     {

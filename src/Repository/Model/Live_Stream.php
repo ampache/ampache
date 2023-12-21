@@ -442,7 +442,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * @param array $location
      * @param int $date
      */
-    public function set_played($user_id, $agent, $location, $date = null): bool
+    public function set_played($user_id, $agent, $location, $date): bool
     {
         // Do nothing
         unset($user_id, $agent, $location, $date);

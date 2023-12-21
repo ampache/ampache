@@ -711,7 +711,7 @@ final class Session implements SessionInterface
         ];
 
         setcookie($session_name . '_user', $username, $cookie_options);
-        setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_options);
+        setcookie($session_name . '_lang', AmpConfig::get('lang', 'en_US'), $cookie_options);
     }
 
     /**

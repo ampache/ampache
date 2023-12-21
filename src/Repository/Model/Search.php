@@ -1786,8 +1786,8 @@ class Search extends playlist_object
      * year_search
      *
      * Build search rules for year -> year album searches for subsonic.
-     * @param $fromYear
-     * @param $toYear
+     * @param int $fromYear
+     * @param int $toYear
      * @param int $size
      * @param int $offset
      * @return array

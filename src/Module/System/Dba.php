@@ -185,7 +185,7 @@ class Dba
      * We force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
-     * @param $resource
+     * @param false|PDOStatement $resource
      * @param bool $finish
      * @return array
      */
@@ -215,7 +215,7 @@ class Dba
      * we force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
-     * @param $resource
+     * @param false|PDOStatement $resource
      * @param bool $finish
      * @return array
      */
@@ -306,7 +306,7 @@ class Dba
      * This emulates the mysql_num_rows function which is really
      * just a count of rows returned by our select statement, this
      * doesn't work for updates or inserts.
-     * @param $resource
+     * @param false|PDOStatement $resource
      */
     public static function num_rows($resource): int
     {
@@ -324,7 +324,7 @@ class Dba
      * finish
      *
      * This closes a result handle and clears the memory associated with it
-     * @param $resource
+     * @param false|PDOStatement $resource
      */
     public static function finish($resource): void
     {
@@ -337,7 +337,7 @@ class Dba
      * affected_rows
      *
      * This emulates the mysql_affected_rows function
-     * @param $resource
+     * @param false|PDOStatement $resource
      */
     public static function affected_rows($resource): int
     {
@@ -562,7 +562,7 @@ class Dba
      * translate_to_mysqlcharset
      *
      * This translates the specified charset to a mysql charset.
-     * @param $charset
+     * @param string|null $charset
      * @return array
      */
     public static function translate_to_mysqlcharset($charset)

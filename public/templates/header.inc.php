@@ -41,7 +41,7 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 $web_path          = (string)AmpConfig::get('web_path', '');
 $access100         = Access::check('interface', 100);
 $access25          = ($access100 || Access::check('interface', 25));
-$site_lang         = AmpConfig::get('lang');
+$site_lang         = AmpConfig::get('lang', 'en_US');
 $site_title        = scrub_out(AmpConfig::get('site_title'));
 $site_social       = AmpConfig::get('sociable');
 $site_ajax         = AmpConfig::get('ajax_load');

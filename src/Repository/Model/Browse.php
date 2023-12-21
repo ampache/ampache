@@ -163,7 +163,7 @@ class Browse extends Query
             $name = 'browse_current_' . $this->get_type();
             if (array_key_exists($name, $_SESSION) && array_key_exists('start', $_SESSION[$name]) && $_SESSION[$name]['start'] > 0) {
                 // Checking if value is suitable
-                $start = (int)($_SESSION[$name]['start'] ?? 0);
+                $start = (int)$_SESSION[$name]['start'];
                 if ($this->get_offset() > 0) {
                     $set_page = floor($start / $this->get_offset());
                     if ($this->get_total() > $this->get_offset()) {

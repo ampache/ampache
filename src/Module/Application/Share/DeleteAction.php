@@ -70,7 +70,7 @@ final class DeleteAction implements ApplicationActionInterface
         $share_id = $this->requestParser->getFromRequest('id');
 
         $this->ui->showHeader();
-        if (Share::delete_share($share_id, Core::get_global('user'))) {
+        if (Share::delete_share((int)$share_id, Core::get_global('user'))) {
             $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
             $this->ui->showConfirmation(
                 T_('No Problem'),

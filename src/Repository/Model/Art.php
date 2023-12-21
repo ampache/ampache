@@ -161,7 +161,7 @@ class Art extends database_object
     /**
      * extension
      * This returns the file extension for the currently loaded art
-     * @param string $mime
+     * @param string|null $mime
      */
     public static function extension($mime): string
     {
@@ -605,8 +605,8 @@ class Art extends database_object
      * @param string $sizetext
      * @param string $type
      * @param int $uid
-     * @param $kind
-     * @param $mime
+     * @param string $kind
+     * @param string|null $mime
      */
     private static function write_to_dir($source, $sizetext, $type, $uid, $kind, $mime): bool
     {

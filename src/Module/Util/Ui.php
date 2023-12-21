@@ -232,7 +232,7 @@ class Ui implements UiInterface
      * unformat_bytes
      *
      * Parses a human-readable size
-     * @param $value
+     * @param string|int $value
      * @return string
      * @noinspection PhpMissingBreakStatementInspection
      */

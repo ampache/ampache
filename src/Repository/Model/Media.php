@@ -85,7 +85,7 @@ interface Media
      * @param array $location
      * @param int $date
      */
-    public function set_played($user_id, $agent, $location, $date = null): bool;
+    public function set_played($user_id, $agent, $location, $date): bool;
 
     /**
      * @param int $user

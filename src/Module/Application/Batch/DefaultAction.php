@@ -206,7 +206,7 @@ final class DefaultAction implements ApplicationActionInterface
                 $media = $this->modelFactory->createSong((int) $element);
             }
             if ($media->enabled) {
-                $total_size = $total_size + (int)$media->size;
+                $total_size = ((int)$total_size) + ($media->size ?? 0);
                 $dirname    = '';
                 $parent     = $media->get_parent();
                 if ($parent != null) {

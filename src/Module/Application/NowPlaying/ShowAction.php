@@ -83,7 +83,7 @@ final class ShowAction implements ApplicationActionInterface
         $refreshLimit           = '';
         $nowPlayingCssFile      = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_CSS_FILE) ?? "templates/now-playing.css";
         $nowPlayingRefreshLimit = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_REFRESH_LIMIT);
-        $language               = $this->configContainer->get(ConfigurationKeyEnum::LANG);
+        $language               = $this->configContainer->get(ConfigurationKeyEnum::LANG) ?? 'en-US';
 
         if ($nowPlayingCssFile) {
             $css = sprintf(

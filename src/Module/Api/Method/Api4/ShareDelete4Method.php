@@ -57,7 +57,7 @@ final class ShareDelete4Method
         }
         $object_id = $input['filter'];
         if (in_array($object_id, Share::get_share_list($user))) {
-            if (Share::delete_share($object_id, $user)) {
+            if (Share::delete_share((int)$object_id, $user)) {
                 Api4::message('success', 'share ' . $object_id . ' deleted', null, $input['api_format']);
             } else {
                 Api4::message('error', 'share ' . $object_id . ' was not deleted', '401', $input['api_format']);

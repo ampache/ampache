@@ -372,20 +372,20 @@ abstract class Catalog extends database_object
         if (!$type) {
             return null;
         }
-        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $controller */
-        $controller = self::CATALOG_TYPES[$type] ?? null;
 
+        $controller = self::CATALOG_TYPES[$type] ?? null;
         if ($controller === null) {
             /* Throw Error Here */
             debug_event(__CLASS__, 'Unable to load ' . $type . ' catalog type', 2);
 
             return null;
         } // include
-        if ($catalog_id > 0) {
-            $catalog = new $controller($catalog_id);
-        } else {
-            $catalog = new $controller();
-        }
+
+        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $controller */
+        $catalog = ($catalog_id > 0)
+            ? new $controller($catalog_id)
+            : new $controller();
+
         if (!($catalog instanceof Catalog)) {
             debug_event(__CLASS__, $type . ' not an instance of Catalog abstract, unable to load', 1);
 
@@ -1088,7 +1088,7 @@ abstract class Catalog extends database_object
         $counts['formatted_size'] = Ui::format_bytes($counts['size'], 2, 2);
 
         $hours = floor((int) $counts['time'] / 3600);
-        $days  = floor($hours / 24);
+        $days  = (int)floor($hours / 24);
         $hours = $hours % 24;
 
         $time_text = "$days ";
@@ -2071,7 +2071,7 @@ abstract class Catalog extends database_object
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $object_id) {
-                self::gather_art_item($key, $object_id, $db_art_first);
+                self::gather_art_item($key, (int)$object_id, $db_art_first);
 
                 // Stupid little cutesie thing
                 $search_count++;
@@ -2538,7 +2538,7 @@ abstract class Catalog extends database_object
             $new_song->license = null;
         }
         $new_song->label = isset($results['publisher']) ? self::check_length($results['publisher'], 128) : null;
-        if ($song->label && AmpConfig::get('label')) {
+        if (!empty($song->label) && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $new_song->label)) as $label_name) {
                 Label::helper($label_name);
@@ -2561,7 +2561,7 @@ abstract class Catalog extends database_object
             // check if this thing has been renamed into something else
             foreach ($results['genre'] as $tagName) {
                 $merged = Tag::construct_from_name($tagName);
-                if ($merged && $merged->is_hidden) {
+                if ($merged->isNew() === false && $merged->is_hidden) {
                     foreach ($merged->get_merged_tags() as $merged_tag) {
                         $tag_array[] = $merged_tag['name'];
                     }
@@ -2617,7 +2617,7 @@ abstract class Catalog extends database_object
             }
         }
         $is_upload_albumartist = false;
-        if ($song->album) {
+        if ($song->album && $song->albumartist) {
             $is_upload_albumartist = Artist::is_upload($song->albumartist);
             if ($is_upload_albumartist) {
                 debug_event(__CLASS__, "$song->albumartist : is an uploaded album artist", 4);
@@ -2683,19 +2683,19 @@ abstract class Catalog extends database_object
         }
         // map every song artist we've found
         foreach ($songArtist_array as $songArtist_id) {
-            if (!in_array($songArtist_id, $artist_map_song)) {
+            if ((int)$songArtist_id > 0 && !in_array($songArtist_id, $artist_map_song)) {
                 $artist_map_song[] = (int)$songArtist_id;
                 Artist::add_artist_map($songArtist_id, 'song', $song->id);
                 if ($song->played) {
-                    Stats::duplicate_map('song', $song->id, 'artist', $songArtist_id);
+                    Stats::duplicate_map('song', $song->id, 'artist', (int)$songArtist_id);
                 }
                 $map_change = true;
             }
-            if (!in_array($songArtist_id, $album_map_songArtist)) {
-                $album_map_songArtist[] = $songArtist_id;
-                Album::add_album_map($new_song->album, 'song', $songArtist_id);
+            if ((int)$songArtist_id > 0 && !in_array($songArtist_id, $album_map_songArtist)) {
+                $album_map_songArtist[] = (int)$songArtist_id;
+                Album::add_album_map($new_song->album, 'song', (int)$songArtist_id);
                 if ($song->played) {
-                    Stats::duplicate_map('song', $song->id, 'artist', $songArtist_id);
+                    Stats::duplicate_map('song', $song->id, 'artist', (int)$songArtist_id);
                 }
                 $map_change = true;
             }
@@ -2711,14 +2711,14 @@ abstract class Catalog extends database_object
         }
         // map every album artist we've found
         foreach ($albumArtist_array as $albumArtist_id) {
-            if (!in_array($albumArtist_id, $artist_map_album)) {
-                $artist_map_album[] = $albumArtist_id;
+            if ((int)$albumArtist_id > 0 && !in_array($albumArtist_id, $artist_map_album)) {
+                $artist_map_album[] = (int)$albumArtist_id;
                 Artist::add_artist_map($albumArtist_id, 'album', $new_song->album);
                 $map_change = true;
             }
-            if (!in_array($albumArtist_id, $album_map_albumArtist)) {
-                $album_map_albumArtist[] = $albumArtist_id;
-                Album::add_album_map($new_song->album, 'album', $albumArtist_id);
+            if ((int)$albumArtist_id > 0 && !in_array($albumArtist_id, $album_map_albumArtist)) {
+                $album_map_albumArtist[] = (int)$albumArtist_id;
+                Album::add_album_map($new_song->album, 'album', (int)$albumArtist_id);
                 $map_change = true;
             }
         }
@@ -2824,7 +2824,7 @@ abstract class Catalog extends database_object
                 if ((int)$label_id > 0) {
                     $label   = new Label((int)$label_id);
                     $artists = $label->get_artists();
-                    if (!in_array($song->artist, $artists)) {
+                    if ($song->artist && !in_array($song->artist, $artists)) {
                         debug_event(__CLASS__, "$song->artist: adding association to $label->name", 4);
                         $labelRepository->addArtistAssoc($label->id, $song->artist);
                     }
@@ -2890,7 +2890,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param $results
+     * @param array $results
      * @param Video $video
      * @return array
      */
@@ -2941,7 +2941,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param $results
+     * @param array $results
      * @param Podcast_Episode $podcast_episode
      * @return array
      */
@@ -3427,7 +3427,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param $year
+     * @param int|string|null $year
      */
     public static function normalize_year($year): int
     {
@@ -4054,7 +4054,7 @@ abstract class Catalog extends database_object
     /**
      * process_action
      * @param string $action
-     * @param $catalogs
+     * @param array|null $catalogs
      * @param array $options
      * @noinspection PhpMissingBreakStatementInspection
      */
@@ -4173,22 +4173,24 @@ abstract class Catalog extends database_object
                 }
                 break;
             case 'update_from':
-                $catalog_id = 0;
+                $catalog_id  = 0;
+                $update_path = (string)($options['update_path'] ?? '/');
                 // update_from_tags
-                if ($options['update_path'] != '/' && strlen((string)$options['update_path'])) {
-                    if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
-                        $songs = self::get_ids_from_folder($options['update_path'], 'song');
+                if (strlen($update_path) && $update_path != '/') {
+                    if (is_int(Catalog_local::get_from_path($update_path))) {
+                        $songs = self::get_ids_from_folder($update_path, 'song');
                         foreach ($songs as $song_id) {
                             self::update_single_item('song', $song_id);
                         }
                     }
                 }
                 // add new files
-                if ($options['add_path'] != '/' && strlen((string)$options['add_path'])) {
-                    $catalog_id = (int)Catalog_local::get_from_path($options['add_path']);
-                    if ($catalog_id > 0) {
+                $add_path = (string)($options['add_path'] ?? '/');
+                if (strlen($add_path) && $add_path != '/') {
+                    $catalog_id = Catalog_local::get_from_path($add_path);
+                    if (is_int($catalog_id)) {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => $options['add_path']))) {
+                        if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => strlen($add_path)))) {
                             self::update_catalog_map($catalog->gather_types);
                         }
                     }
@@ -4226,17 +4228,19 @@ abstract class Catalog extends database_object
                     true
                 );
 
-                $songTagWriter = static::getSongTagWriter();
-                set_time_limit(0);
-                foreach ($catalogs as $catalog_id) {
-                    $catalog = self::create_from_id($catalog_id);
-                    if ($catalog !== null) {
-                        $song_ids = $catalog->get_song_ids();
-                        foreach ($song_ids as $song_id) {
-                            $song = new Song($song_id);
-                            $song->format();
+                if (!empty($catalogs)) {
+                    $songTagWriter = static::getSongTagWriter();
+                    set_time_limit(0);
+                    foreach ($catalogs as $catalog_id) {
+                        $catalog = self::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            $song_ids = $catalog->get_song_ids();
+                            foreach ($song_ids as $song_id) {
+                                $song = new Song($song_id);
+                                $song->format();
 
-                            $songTagWriter->write($song);
+                                $songTagWriter->write($song);
+                            }
                         }
                     }
                 }
@@ -4249,22 +4253,24 @@ abstract class Catalog extends database_object
                 debug_event(__CLASS__, 'Run Garbage collection', 5);
                 static::getCatalogGarbageCollector()->collect();
                 $catalog_media_types = array();
-                foreach ($catalogs as $catalog_id) {
-                    $catalog = self::create_from_id($catalog_id);
-                    if ($catalog !== null && !in_array($catalog->gather_types, $catalog_media_types)) {
-                        $catalog_media_types[] = $catalog_media_types;
+                if (!empty($catalogs)) {
+                    foreach ($catalogs as $catalog_id) {
+                        $catalog = self::create_from_id($catalog_id);
+                        if ($catalog !== null && !in_array($catalog->gather_types, $catalog_media_types)) {
+                            $catalog_media_types[] = $catalog_media_types;
+                        }
                     }
-                }
-                foreach ($catalog_media_types as $catalog_media_type) {
-                    if ($catalog_media_types == 'music') {
-                        self::clean_empty_albums();
-                        Album::update_album_artist();
+                    foreach ($catalog_media_types as $catalog_media_type) {
+                        if ($catalog_media_types == 'music') {
+                            self::clean_empty_albums();
+                            Album::update_album_artist();
+                        }
+                        self::update_catalog_map($catalog_media_type);
                     }
-                    self::update_catalog_map($catalog_media_type);
+                    self::garbage_collect_mapping();
+                    self::garbage_collect_filters();
+                    self::update_counts();
                 }
-                self::garbage_collect_mapping();
-                self::garbage_collect_filters();
-                self::update_counts();
         }
     }
 
@@ -4272,8 +4278,8 @@ abstract class Catalog extends database_object
      * Get the directory for this file from the catalog and the song info using the sort_pattern
      * takes into account various artists and the alphabet_prefix
      * @param Song $song
-     * @param $sort_pattern
-     * @param $base
+     * @param string $sort_pattern
+     * @param string|null $base
      * @param string $various_artist
      * @param bool $windowsCompat
      */
@@ -4325,7 +4331,7 @@ abstract class Catalog extends database_object
         // Replace non-critical search patterns
         $post_replace_array = array('%Y', '%c', '%C', '%r', '%R', '%g', '%b', ' []', ' ()');
         $post_content_array = array('', '', '', '', '', '', '', '', '', '');
-        $sort_pattern       = str_replace($post_replace_array, $post_content_array, $sort_pattern);
+        $sort_pattern       = str_replace($post_replace_array, $post_content_array, (string)$sort_pattern);
 
         $home .= "/$sort_pattern";
 

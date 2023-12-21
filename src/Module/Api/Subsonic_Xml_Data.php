@@ -180,9 +180,9 @@ class Subsonic_Xml_Data
      * addIndexes
      * @param SimpleXMLElement $xml
      * @param array $artists
-     * @param $lastModified
+     * @param int|null $lastModified
      */
-    public static function addIndexes($xml, $artists, $lastModified): void
+    public static function addIndexes($xml, $artists, $lastModified = 0): void
     {
         $xindexes = self::addChildToResultXml($xml, 'indexes');
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
@@ -344,7 +344,7 @@ class Subsonic_Xml_Data
     /**
      * addAlbumList
      * @param SimpleXMLElement $xml
-     * @param $albums
+     * @param array $albums
      */
     public static function addAlbumList($xml, $albums): void
     {
@@ -358,7 +358,7 @@ class Subsonic_Xml_Data
     /**
      * addAlbumList2
      * @param SimpleXMLElement $xml
-     * @param $albums
+     * @param array $albums
      */
     public static function addAlbumList2($xml, $albums): void
     {
@@ -466,7 +466,7 @@ class Subsonic_Xml_Data
             $xsong->addAttribute('album', (string)self::_checkName($song->get_album_fullname()));
             // $artist = new Artist($song->artist);
             // $artist->format();
-            $xsong->addAttribute('artistId', (string)self::_getArtistId($song->artist));
+            $xsong->addAttribute('artistId', ($song->artist) ? (string)self::_getArtistId($song->artist) : '');
             $xsong->addAttribute('artist', (string)self::_checkName($song->get_artist_fullname()));
             if ($song->has_art()) {
                 $xsong->addAttribute('coverArt', $sub_id);
@@ -1177,9 +1177,9 @@ class Subsonic_Xml_Data
     /**
      * addLyrics
      * @param SimpleXMLElement $xml
-     * @param $artist
-     * @param $title
-     * @param $song_id
+     * @param string $artist
+     * @param string $title
+     * @param int $song_id
      */
     public static function addLyrics($xml, $artist, $title, $song_id): void
     {

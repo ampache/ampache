@@ -124,7 +124,7 @@ class Subsonic_Api
         if (empty($input[$parameter])) {
             ob_end_clean();
             if ($addheader) {
-                self::_setHeader($input['f'] ?? 'xml');
+                self::_setHeader((string)($input['f'] ?? 'xml'));
             }
             self::_apiOutput(
                 $input,
@@ -251,7 +251,7 @@ class Subsonic_Api
     }
 
     /**
-     * @param $filetype
+     * @param string $filetype
      */
     public static function _setHeader($filetype): void
     {
@@ -963,13 +963,10 @@ class Subsonic_Api
         $type     = self::_check_parameter($input, 'type');
         $response = Subsonic_Xml_Data::addSubsonicResponse($elementName);
         if ($type) {
-            $errorOccured = false;
-            $albums       = self::_albumList($input, $user, (string)$type);
+            $albums = self::_albumList($input, $user, (string)$type);
             if ($albums === false) {
                 $response     = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, $elementName);
-                $errorOccured = true;
-            }
-            if (!$errorOccured) {
+            } else {
                 switch ($elementName) {
                     case 'albumList':
                         Subsonic_Xml_Data::addAlbumList($response, $albums);
@@ -1335,17 +1332,17 @@ class Subsonic_Api
             $songIdList = explode(',', $input['songId']);
         }
 
-        if ($playlistId) {
-            self::_updatePlaylist($playlistId, $name, $songIdList, array(), true, true);
+        if ($playlistId !== null) {
+            self::_updatePlaylist((string)$playlistId, $name, $songIdList, array(), true, true);
             $response = Subsonic_Xml_Data::addSubsonicResponse('createplaylist');
         } elseif (!empty($name)) {
             $playlistId = Playlist::create($name, 'public', $user->id);
-            if (count($songIdList) > 0) {
-                self::_updatePlaylist($playlistId, "", $songIdList, array(), true, true);
-            }
-            if (!empty($playlistId)) {
+            if ($playlistId !== null) {
+                if (count($songIdList) > 0) {
+                    self::_updatePlaylist($playlistId, "", $songIdList, array(), true, true);
+                }
                 $response = Subsonic_Xml_Data::addSubsonicResponse('createplaylist');
-                $playlist = new Playlist(Subsonic_Xml_Data::_getAmpacheId((string)$playlistId));
+                $playlist = new Playlist($playlistId);
                 Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
             } else {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'createplaylist');
@@ -1372,14 +1369,20 @@ class Subsonic_Api
         $songIdToAdd       = $input['songIdToAdd'] ?? array();
         $songIndexToRemove = $input['songIndexToRemove'] ?? array();
 
-        if (!Subsonic_Xml_Data::_isSmartPlaylist($playlistId)) {
+        if ($playlistId === false) {
+            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'playlistId');
+            self::_apiOutput($input, $response);
+
+            return;
+        }
+        if (Subsonic_Xml_Data::_isPlaylist((string)$playlistId)) {
             if (is_string($songIdToAdd)) {
                 $songIdToAdd = explode(',', $songIdToAdd);
             }
             if (is_string($songIndexToRemove)) {
                 $songIndexToRemove = explode(',', $songIndexToRemove);
             }
-            self::_updatePlaylist(Subsonic_Xml_Data::_getAmpacheId($playlistId), $name, $songIdToAdd, $songIndexToRemove, $public);
+            self::_updatePlaylist(Subsonic_Xml_Data::_getAmpacheId((string)$playlistId), $name, $songIdToAdd, $songIndexToRemove, $public);
 
             $response = Subsonic_Xml_Data::addSubsonicResponse('updateplaylist');
         } else {
@@ -1562,7 +1565,7 @@ class Subsonic_Api
     {
         $sub_id = self::_check_parameter($input, 'id');
         if (!$sub_id) {
-            self::_setHeader($input['f'] ?? 'xml');
+            self::_setHeader((string)($input['f'] ?? 'xml'));
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getcoverart');
             self::_apiOutput($input, $response);
 
@@ -1583,7 +1586,7 @@ class Subsonic_Api
         $size = $input['size'] ?? false;
         $type = Subsonic_Xml_Data::_getAmpacheType($sub_id);
         if ($type == "") {
-            self::_setHeader($input['f'] ?? 'xml');
+            self::_setHeader((string)($input['f'] ?? 'xml'));
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getcoverart');
             self::_apiOutput($input, $response);
 
@@ -1624,7 +1627,7 @@ class Subsonic_Api
             }
         }
         if (!$art || $art->get(false, true) == '') {
-            self::_setHeader($input['f'] ?? 'xml');
+            self::_setHeader((string)($input['f'] ?? 'xml'));
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getcoverart');
             self::_apiOutput($input, $response);
 
@@ -1662,10 +1665,10 @@ class Subsonic_Api
      */
     public static function getlyrics($input, $user): void
     {
-        $artist = $input['artist'] ?? false;
-        $title  = $input['title'] ?? false;
+        $artist = (string)($input['artist'] ?? '');
+        $title  = (string)($input['title'] ?? '');
 
-        if (!$artist && !$title) {
+        if (empty($artist) || empty($title)) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'getlyrics');
         } else {
             $data           = array();
@@ -1673,18 +1676,12 @@ class Subsonic_Api
             $data['offset'] = 0;
             $data['type']   = "song";
 
-            $count = 0;
-            if ($artist) {
-                $data['rule_' . $count . '_input']    = $artist;
-                $data['rule_' . $count . '_operator'] = 4;
-                $data['rule_' . $count]               = "artist";
-                ++$count;
-            }
-            if ($title) {
-                $data['rule_' . $count . '_input']    = $title;
-                $data['rule_' . $count . '_operator'] = 4;
-                $data['rule_' . $count]               = "title";
-            }
+            $data['rule_0_input']    = $artist;
+            $data['rule_0_operator'] = 4;
+            $data['rule_0']          = "artist";
+            $data['rule_1_input']    = $title;
+            $data['rule_1_operator'] = 4;
+            $data['rule_1']          = "title";
 
             $songs    = Search::run($data, $user);
             $response = Subsonic_Xml_Data::addSubsonicResponse('getlyrics');
@@ -1819,7 +1816,7 @@ class Subsonic_Api
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
             foreach ($object_ids as $subsonic_id) {
-                $time      = isset($input['time']) ? ((int)$input['time']) / 1000 : time();
+                $time      = isset($input['time']) ? (int)(((int)$input['time']) / 1000) : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?? 0;
                 $prev_date = $previous['date'] ?? 0;
@@ -1990,7 +1987,7 @@ class Subsonic_Api
             return;
         }
         if (AmpConfig::get('share')) {
-            if (Share::delete_share((int) $share_id, $user)) {
+            if (Share::delete_share((int)$share_id, $user)) {
                 $response = Subsonic_Xml_Data::addSubsonicResponse('deleteshare');
             } else {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deleteshare');
@@ -2915,8 +2912,8 @@ class Subsonic_Api
                 $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
             case "byYear":
-                $fromYear = min($input['fromYear'], $input['toYear']);
-                $toYear   = max($input['fromYear'], $input['toYear']);
+                $fromYear = (int)min($input['fromYear'], $input['toYear']);
+                $toYear   = (int)max($input['fromYear'], $input['toYear']);
 
                 if ($fromYear || $toYear) {
                     $data   = Search::year_search($fromYear, $toYear, $size, $offset);
@@ -2937,7 +2934,7 @@ class Subsonic_Api
 
     /**
      * _updatePlaylist
-     * @param $playlist_id
+     * @param int|string $playlist_id
      * @param string $name
      * @param array $songsIdToAdd
      * @param array $songIndexToRemove
@@ -2952,7 +2949,11 @@ class Subsonic_Api
         $public = true,
         $clearFirst = false
     ): void {
-        $playlist           = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlist_id));
+        // If it's a string it probably needs a clean up
+        if (is_string($playlist_id)) {
+            $playlist_id = Subsonic_Xml_Data::_getAmpacheId($playlist_id);
+        }
+        $playlist           = new Playlist($playlist_id);
         $songsIdToAdd_count = count($songsIdToAdd);
         $newdata            = array();
         $newdata['name']    = (!empty($name)) ? $name : $playlist->name;

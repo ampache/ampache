@@ -42,7 +42,7 @@ final class TagArtists3Method
      */
     public static function tag_artists(array $input, User $user): void
     {
-        $results = Tag::get_tag_objects('artist', $input['filter']);
+        $results = Tag::get_tag_objects('artist', (int)($input['filter'] ?? 0));
         if (!empty($results)) {
             Xml3_Data::set_offset($input['offset'] ?? 0);
             Xml3_Data::set_limit($input['limit'] ?? 0);

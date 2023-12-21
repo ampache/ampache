@@ -346,7 +346,7 @@ class Core
     /**
      * get_filesize
      * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
-     * @param $filename
+     * @param string|null $filename
      */
     public static function get_filesize($filename): int
     {

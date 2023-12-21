@@ -183,8 +183,7 @@ class Xml4_Data
      * tags_string
      *
      * This returns the formatted 'tags' string for an xml document
-     * @input array $tags
-     * @param $tags
+     * @param array $tags
      */
     private static function tags_string($tags): string
     {

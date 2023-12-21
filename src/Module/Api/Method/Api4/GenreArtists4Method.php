@@ -53,7 +53,7 @@ final class GenreArtists4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $results = Tag::get_tag_objects('artist', $input['filter']);
+        $results = Tag::get_tag_objects('artist', (int)($input['filter'] ?? 0));
         if (!empty($results)) {
             ob_end_clean();
             switch ($input['api_format']) {

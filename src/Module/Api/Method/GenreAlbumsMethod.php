@@ -51,7 +51,7 @@ final class GenreAlbumsMethod
      */
     public static function genre_albums(array $input, User $user): bool
     {
-        $results = Tag::get_tag_objects('album', ($input['filter'] ?? ''));
+        $results = Tag::get_tag_objects('album', (int)($input['filter'] ?? 0));
         if (empty($results)) {
             Api::empty('album', $input['api_format']);
 

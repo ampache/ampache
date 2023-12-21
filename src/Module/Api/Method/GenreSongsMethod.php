@@ -51,7 +51,7 @@ final class GenreSongsMethod
      */
     public static function genre_songs(array $input, User $user): bool
     {
-        $results = Tag::get_tag_objects('song', ($input['filter'] ?? ''));
+        $results = Tag::get_tag_objects('song', (int)($input['filter'] ?? 0));
         if (empty($results)) {
             Api::empty('song', $input['api_format']);
 

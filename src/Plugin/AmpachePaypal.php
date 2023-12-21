@@ -97,7 +97,7 @@ class AmpachePaypal implements AmpachePluginInterface
     public function display_user_field(library_item $libitem = null): void
     {
         $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
-        $lang = substr(AmpConfig::get('lang'), 0, 2);
+        $lang = substr(AmpConfig::get('lang', 'en_US'), 0, 2);
         if (empty($lang)) {
             $lang = 'US';
         }

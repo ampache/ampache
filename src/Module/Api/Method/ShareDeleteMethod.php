@@ -60,7 +60,7 @@ final class ShareDeleteMethod
         }
         $object_id = $input['filter'];
         if (in_array($object_id, Share::get_share_list($user))) {
-            if (Share::delete_share($object_id, $user)) {
+            if (Share::delete_share((int)$object_id, $user)) {
                 Api::message('share ' . $object_id . ' deleted', $input['api_format']);
                 Catalog::count_table('share');
             } else {

@@ -96,7 +96,7 @@ class AmpConfig
      *
      * This sets config values.
      * @param string $name
-     * @param $value
+     * @param mixed $value
      * @param bool $clobber
      */
     public static function set($name, $value, $clobber = false): bool

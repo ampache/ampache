@@ -30,7 +30,7 @@ use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Ui;
 
-$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
+$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
 $web_path = (string)AmpConfig::get('web_path', '');
 
 $display_fields   = (array) AmpConfig::get('registration_display_fields');

@@ -26,7 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-$htmllang          = str_replace("_", "-", AmpConfig::get('lang'));
+$htmllang          = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
 $web_path          = (string)AmpConfig::get('web_path', '');
 $_SESSION['login'] = true; ?>
 <!DOCTYPE html>

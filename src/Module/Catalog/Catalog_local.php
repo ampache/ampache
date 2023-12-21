@@ -57,9 +57,9 @@ class Catalog_local extends Catalog
     private string $description = 'Local Catalog';
 
     private int $catalog_id;
-    private $count;
-    private $songs_to_gather;
-    private $videos_to_gather;
+    private int $count              = 0;
+    private array $songs_to_gather  = array();
+    private array $videos_to_gather = array();
 
     public string $path = '';
 
@@ -171,8 +171,8 @@ class Catalog_local extends Catalog
      * Try to figure out which catalog path most closely resembles this one.
      * This is useful when creating a new catalog to make sure we're not
      * doubling up here.
-     * @param $path
-     * @return int|bool
+     * @param string $path
+     * @return int|null
      */
     public static function get_from_path($path)
     {
@@ -195,10 +195,13 @@ class Catalog_local extends Catalog
 
             // Keep going until the path stops changing
             $old_path       = $component_path;
-            $component_path = realpath($component_path . '/../');
+            $parent_path    = realpath($component_path . '/../');
+            $component_path = ($parent_path === false)
+                ? $component_path
+                : $parent_path;
         } while (strcmp($component_path, $old_path) != 0);
 
-        return false;
+        return null;
     }
 
     /**
@@ -325,7 +328,7 @@ class Catalog_local extends Catalog
     /**
      * add_file
      *
-     * @param $full_file
+     * @param string $full_file
      * @param array $options
      * @param int $counter
      * @return bool
@@ -404,7 +407,6 @@ class Catalog_local extends Catalog
 
             // Check to make sure the filename is of the expected charset
             if (function_exists('iconv')) {
-                $convok       = false;
                 $site_charset = AmpConfig::get('site_charset');
                 $lc_charset   = $site_charset;
                 if (AmpConfig::get('lc_charset')) {
@@ -412,23 +414,25 @@ class Catalog_local extends Catalog
                 }
 
                 $enc_full_file = iconv($lc_charset, $site_charset, $full_file);
-                if ($lc_charset != $site_charset) {
-                    $convok = (strcmp($full_file, iconv($site_charset, $lc_charset, $enc_full_file)) == 0);
-                } else {
-                    $convok = (strcmp($enc_full_file, $full_file) == 0);
-                }
-                if (!$convok) {
-                    debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
-                    /* HINT: FullFile */
-                    AmpError::add('catalog_add', sprintf(T_('"%s" does not match site charset'), $full_file));
+                if ($enc_full_file !== false) {
+                    if ($lc_charset != $site_charset) {
+                        $convok = (iconv($site_charset, $lc_charset, $enc_full_file) && strcmp($full_file, iconv($site_charset, $lc_charset, $enc_full_file)) == 0);
+                    } else {
+                        $convok = (strcmp($enc_full_file, $full_file) == 0);
+                    }
+                    if (!$convok) {
+                        debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
+                        /* HINT: FullFile */
+                        AmpError::add('catalog_add', sprintf(T_('"%s" does not match site charset'), $full_file));
 
-                    return false;
-                }
-                $full_file = $enc_full_file;
+                        return false;
+                    }
+                    $full_file = $enc_full_file;
 
-                // Check again with good encoding
-                if (isset($this->_filecache[strtolower($full_file)])) {
-                    return false;
+                    // Check again with good encoding
+                    if (isset($this->_filecache[strtolower($full_file)])) {
+                        return false;
+                    }
                 }
             } // end if iconv
 
@@ -1001,7 +1005,9 @@ class Catalog_local extends Catalog
             // Extended metadata loading is not deferred, retrieve it now
             if (!AmpConfig::get('deferred_ext_metadata')) {
                 $song = new Song($song_id);
-                Recommendation::get_artist_info($song->artist);
+                if ($song->artist) {
+                    Recommendation::get_artist_info($song->artist);
+                }
             }
             if (Song::isCustomMetadataEnabled()) {
                 $song    = new Song($song_id);
@@ -1025,13 +1031,13 @@ class Catalog_local extends Catalog
      * This inserts a video file into the video file table the tag
      * information we can get is super sketchy so it's kind of a crap shoot
      * here
-     * @param $file
+     * @param string $file
      * @param array $options
      * @return int
      * @throws Exception
      * @throws Exception
      */
-    public function insert_local_video($file, $options = array()): int
+    private function insert_local_video($file, $options = array()): int
     {
         /* Create the vainfo object and get info */
         $gtypes = $this->get_gather_types('video');
@@ -1122,7 +1128,7 @@ class Catalog_local extends Catalog
         }
 
         // Make sure that there isn't a catalog with a directory above this one
-        if (self::get_from_path($path)) {
+        if (is_int(self::get_from_path($path))) {
             AmpError::add('general', T_('Specified path is inside an existing catalog'));
 
             return false;
@@ -1312,7 +1318,7 @@ class Catalog_local extends Catalog
         foreach ($results as $song_id) {
             $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id, $path, $target);
             $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $song_id . '.' . $target;
-            if (is_file($old_target_file)) {
+            if ($target_file !== false && is_file($old_target_file)) {
                 // check for the old path first
                 rename($old_target_file, $target_file);
                 debug_event('local.catalog', 'Moved: ' . $song_id . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);

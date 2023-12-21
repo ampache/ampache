@@ -66,7 +66,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (empty($action)) {
             $action = strtolower($_REQUEST['action'] ?? '');
         }
-        $format   = ($_REQUEST['f']) ?? 'xml';
+        $format   = (string)($_REQUEST['f'] ?? 'xml');
         $callback = $_REQUEST['callback'] ?? $format;
         /* Set the correct default headers */
         if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {

@@ -42,7 +42,7 @@ final class TagSongs3Method
      */
     public static function tag_songs(array $input, User $user): void
     {
-        $results = Tag::get_tag_objects('song', $input['filter']);
+        $results = Tag::get_tag_objects('song', (int)($input['filter'] ?? 0));
 
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);

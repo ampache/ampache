@@ -27,7 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-$htmllang = str_replace("_", "-", AmpConfig::get('lang')); ?>
+$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US')); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>

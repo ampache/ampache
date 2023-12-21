@@ -491,7 +491,7 @@ class Podcast_Episode extends database_object implements
      * @param array $location
      * @param int $date
      */
-    public function set_played($user_id, $agent, $location, $date = null): bool
+    public function set_played($user_id, $agent, $location, $date): bool
     {
         // ignore duplicates or skip the last track
         if (!$this->check_play_history($user_id, $agent, $date)) {

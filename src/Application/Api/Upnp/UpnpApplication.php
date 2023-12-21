@@ -40,7 +40,7 @@ final class UpnpApplication implements ApplicationInterface
             return;
         }
 
-        $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
+        $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
         if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
             $msIP = 1;
             Upnp_Api::sddpSend($msIP);

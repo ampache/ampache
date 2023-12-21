@@ -195,8 +195,8 @@ final class SongSorter implements SongSorterInterface
      * worked by doing a filesize() before unlinking.
      * @param Interactor $interactor
      * @param Song $song
-     * @param $fullname
-     * @param $test_mode
+     * @param string $fullname
+     * @param bool $test_mode
      * @param bool $windowsCompat
      * @return bool
      */
