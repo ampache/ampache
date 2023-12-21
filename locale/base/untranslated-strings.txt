@@ -151,10 +151,6 @@ msgstr ""
 msgid "Flickr"
 msgstr ""
 
-#: ./untranslated-strings.txt:128
-msgid "Friends Timeline"
-msgstr ""
-
 #: ./untranslated-strings.txt:129
 msgid "GoogleAnalytics"
 msgstr ""
@@ -193,10 +189,6 @@ msgstr ""
 
 #: ./untranslated-strings.txt:138
 msgid "Matomo"
-msgstr ""
-
-#: ./untranslated-strings.txt:139
-msgid "MusicBrainz"
 msgstr ""
 
 #: ./untranslated-strings.txt:140
