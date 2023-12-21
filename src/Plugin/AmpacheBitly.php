@@ -36,13 +36,13 @@ class AmpacheBitly implements AmpachePluginInterface
     public string $categories  = 'shortener';
     public string $description = 'URL shorteners on shared links with Bit.ly';
     public string $url         = 'http://bitly.com';
-    public string $version     = '000002';
+    public string $version     = '000003';
     public string $min_ampache = '360037';
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $bitly_username;
-    private $bitly_api_key;
+    private $bitly_token;
+    private $bitly_group_guid;
 
     /**
      * Constructor
@@ -58,10 +58,11 @@ class AmpacheBitly implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('bitly_username') && !Preference::insert('bitly_username', T_('Bit.ly Username'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::exists('bitly_token') && !Preference::insert('bitly_token', T_('Bit.ly Token'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('bitly_api_key') && !Preference::insert('bitly_api_key', T_('Bit.ly API key'), '', 75, 'string', 'plugins', $this->name)) {
+
+        if (!Preference::exists('bitly_group_guid') && !Preference::insert('bitly_group_guid', T_('Bit.ly Group GUID'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -75,8 +76,8 @@ class AmpacheBitly implements AmpachePluginInterface
     public function uninstall(): bool
     {
         return (
-            Preference::delete('bitly_username') &&
-            Preference::delete('bitly_api_key')
+            Preference::delete('bitly_token') &&
+            Preference::delete('bitly_group_guid')
         );
     }
 
@@ -86,6 +87,12 @@ class AmpacheBitly implements AmpachePluginInterface
      */
     public function upgrade(): bool
     {
+        // Remove v3 preferences
+        Preference::delete('bitly_username');
+        Preference::delete('bitly_api_key');
+
+        $this->install();
+
         return true;
     }
 
@@ -95,18 +102,42 @@ class AmpacheBitly implements AmpachePluginInterface
      */
     public function shortener($url)
     {
-        if (empty($this->bitly_username) || empty($this->bitly_api_key)) {
-            debug_event('bitly.plugin', 'Bit.ly username or api key missing', 3);
+        if (empty($this->bitly_token) || empty($this->bitly_group_guid)) {
+            debug_event('bitly.plugin', 'Bit.ly Token or Group GUID missing', 3);
 
             return '';
         }
 
-        $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
-        try {
-            debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
-            $request = Requests::get($apiurl, array(), Core::requests_options());
+        $headers = array(
+            'Authorization' => 'Bearer ' . $this->bitly_token,
+            'Content-Type' => 'application/json'
+        );
+        $data = array(
+            'group_guid' => $this->bitly_group_guid,
+            'long_url' => $url,
+        );
+        $apiurl = 'https://api-ssl.bitly.com/v4/shorten';
 
-            return json_decode($request->body)->data->url;
+        try {
+            debug_event('bitly.plugin', 'Bit.ly api call made', 4);
+            $request = Requests::post($apiurl, $headers, json_encode($data), Core::requests_options());
+
+            $result = json_decode($request->body);
+
+            if ($result->errors) {
+                if ($result->message === "INVALID_ARG_LONG_URL") {
+                    debug_event('bitly.plugin', 'Bit.ly does not like that URL (if it is a localhost/127.0.0.1 URL that could be why)', 4);
+                } else {
+                    debug_event('bitly.plugin', 'Bit.ly returned an error: ' . $result->message, 4);
+                }
+            }
+
+            if ($result->link) {
+                debug_event('bitly.plugin', 'Bit.ly success: ' . $result->link, 4);
+                return $result->link;
+            }
+
+            return false;
         } catch (Exception $error) {
             debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
 
@@ -124,23 +155,23 @@ class AmpacheBitly implements AmpachePluginInterface
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['bitly_username'])) || !strlen(trim($data['bitly_api_key']))) {
+        if (!strlen(trim($data['bitly_token'])) || !strlen(trim($data['bitly_group_guid']))) {
             $data                   = array();
-            $data['bitly_username'] = Preference::get_by_user(-1, 'bitly_username');
-            $data['bitly_api_key']  = Preference::get_by_user(-1, 'bitly_api_key');
+            $data['bitly_token'] = Preference::get_by_user(-1, 'bitly_token');
+            $data['bitly_group_guid']  = Preference::get_by_user(-1, 'bitly_group_guid');
         }
 
-        if (strlen(trim($data['bitly_username']))) {
-            $this->bitly_username = trim($data['bitly_username']);
+        if (strlen(trim($data['bitly_token']))) {
+            $this->bitly_token = trim($data['bitly_token']);
         } else {
-            debug_event('bitly.plugin', 'No Bit.ly username, shortener skipped', 3);
+            debug_event('bitly.plugin', 'No Bit.ly Token, shortener skipped', 3);
 
             return false;
         }
-        if (strlen(trim($data['bitly_api_key']))) {
-            $this->bitly_api_key = trim($data['bitly_api_key']);
+        if (strlen(trim($data['bitly_group_guid']))) {
+            $this->bitly_group_guid = trim($data['bitly_group_guid']);
         } else {
-            debug_event('bitly.plugin', 'No Bit.ly api key, shortener skipped', 3);
+            debug_event('bitly.plugin', 'No Bit.ly Group GUID, shortener skipped', 3);
 
             return false;
         }
