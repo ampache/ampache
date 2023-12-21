@@ -6,34 +6,42 @@ This release has been all about static typing and crushing bugs related to that.
 
 Updates from an Ampache 3.9.0 database to now have been tested successfully.
 
-Hundreds of static analysis bugs have been fixed. (A drop of about 30%)
+Hundreds of static analysis bugs have been fixed. (A drop of about 50%)
 
 There has been a big focus on making sure everything does what it says it does.
 
+As an end of year bonus you can access your own Ampache Wrapped from the user page when enabled
+
 ### Added
 
-* Translations 2023-11
+* Translations 2023-12
 * Allow translations for plugin names
-* GitHub action to lint all master and develop wih php7.4
+* GitHub action to lint master and develop branches for php7.4
 * Lots of code test coverage
 * Allow sharing `podcast_episode` objects
 * Add refresh button to the rightbar and some of the ajax index modules
 * Hide the filterbox when your browse can't use it
-* Database 600044
+* Database 600048
   * Set correct preference type for `use_play2`
   * Add user preference `jp_volume`, Default webplayer volume
-  * Add system preference `perpetual_api_session`, endless api sessions. (AT YOUR OWN RISK)
-
+  * Add system preference `perpetual_api_session`, endless api sessions. (**AT YOUR OWN RISK**)
+  * Add column `last_update` and `date`to search table
+  * Add user preference `home_recently_played_all`, Show everything in the now playing box
+  * Add user preference `show_wrapped`, Access your personal "Spotify Wrapped" from your user page
+  * Add `date` column to rating table
 
 ### Changed
 
 * Upgrade phpunit to version 10
 * Updated codestyle rules to PSR12
+* Update php_codesniffer to 3.8
 * Static typing to all database fields
 * Update composer for ampache/ampacheapi-php dev-master
 * Allow range header on transcode streams
 * 404 error on invalid media streams
 * Use curl instead of fopen for podcast episode downloads
+* Track the date of ratings in `user_activity` table
+* Add a confirmation to the Clear Stats button on the catalog page
 
 ### Removed
 
@@ -63,6 +71,7 @@ There has been a big focus on making sure everything does what it says it does.
 * Remote catalogs coudln't import song data correctly
 * Podcast episode downloads would be blocked from some redirects
 * get_recently_played SQL was really slow
+* Add missing properties on public users. (-1)
 * Subsonic
   * Url protocol checks not compared correctly for setServer
 
@@ -82,6 +91,10 @@ There has been a big focus on making sure everything does what it says it does.
 
 ### Fixed
 
+* ALL
+  * UrlToSong couldn't handle encoded urls
+* API3
+  * Video data would get an incorrect stream url
 * API5
   * bookmark_create: type is mandatory
 * API6
