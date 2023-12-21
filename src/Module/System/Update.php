@@ -927,6 +927,9 @@ class Update
         $update_string = "* Add `date` column to rating table";
         $version[]     = array('version' => '600048', 'description' => $update_string);
 
+        $update_string = "* Update link for `FMPL` license";
+        $version[]     = array('version' => '600049', 'description' => $update_string);
+
         return $version;
     }
 
