@@ -3441,6 +3441,11 @@ parameters:
 			path: src/Module/Api/Output/XmlOutput.php
 
 		-
+			message: "#^PHPDoc tag @var for variable \\$catalogs has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/SseApiApplication.php
+
+		-
 			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Subsonic_Api', non\\-falsy\\-string\\} given\\.$#"
 			count: 1
 			path: src/Module/Api/SubsonicApiApplication.php
@@ -4631,7 +4636,7 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:tags_string\\(\\) has parameter \\$tags with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:tags_string\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
 
