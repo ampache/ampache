@@ -48,11 +48,12 @@ interface DatabaseConnectionInterface
      * Useful e.g. for counting-queries
      *
      * @param list<mixed> $params
+     * @return mixed
      */
     public function fetchOne(
         string $sql,
         array $params = []
-    ): mixed;
+    );
 
     /**
      * Returns the most recent inserted id

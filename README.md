@@ -8,7 +8,7 @@
 
 ## News
 
-Ampache6 is [HERE!](https://github.com/ampache/ampache/releases/tag/6.1.0)
+Ampache6 is [HERE!](https://github.com/ampache/ampache/releases/tag/6.2.0)
 
 ## Basics
 
