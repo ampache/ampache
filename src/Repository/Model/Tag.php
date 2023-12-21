@@ -125,22 +125,19 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function build_map_cache($type, $ids): bool
     {
-        if (!is_array($ids) || !count($ids)) {
+        if (empty($ids)) {
             return false;
         }
 
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return false;
         }
-
-        $idlist = '(' . implode(',', $ids) . ')';
-
-        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
-
-        $db_results = Dba::read($sql);
-
         $tags    = array();
         $tag_map = array();
+
+        $idlist     = '(' . implode(',', $ids) . ')';
+        $sql        = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
+        $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $tags[$row['object_id']][$row['tag_id']] = array(
                 'user' => $row['user'],

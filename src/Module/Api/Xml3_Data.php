@@ -175,12 +175,13 @@ class Xml3_Data
      * tags_string
      *
      * This returns the formatted 'tags' string for an xml document
+     * @param array $tags
      */
     private static function tags_string($tags): string
     {
         $string = '';
 
-        if (is_array($tags)) {
+        if (!empty($tags)) {
             $atags = array();
             foreach ($tags as $tag) {
                 if (array_key_exists($tag['id'], $atags)) {

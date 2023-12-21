@@ -189,7 +189,7 @@ class Xml4_Data
     {
         $string = '';
 
-        if (is_array($tags)) {
+        if (!empty($tags)) {
             $atags = array();
             foreach ($tags as $tag) {
                 if (array_key_exists($tag['id'], $atags)) {

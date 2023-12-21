@@ -911,7 +911,7 @@ class Song extends database_object implements
         if ($album_artist_id) {
             return self::get_artist_fullname($album_artist_id);
         }
-        if ($this->albumartist == null) {
+        if (!$this->albumartist) {
             return '';
         }
         if (!isset($this->albumartist)) {
@@ -1934,7 +1934,7 @@ class Song extends database_object implements
                 $object_id = $this->album;
                 $type      = 'album';
             } else {
-                if ($this->artist && Art::has_db($this->artist, 'artist') || $force) {
+                if (($this->artist && Art::has_db($this->artist, 'artist')) || $force) {
                     $object_id = $this->artist;
                     $type      = 'artist';
                 }
