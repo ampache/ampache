@@ -250,7 +250,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
     {
         $downloadLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
 
-        if ($downloadLimit !== 0) {
+        if ($downloadLimit > 0) {
             $query = <<<SQL
             SELECT
                 `id`
