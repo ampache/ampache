@@ -42,6 +42,16 @@ Then gather the new messages
 
 This will generate the pot file for upload to the repo. This is needed to allow Transifex users time to translate things.
 
+## Find duplicate strings
+
+Because updating untranslated-strings.txt is a manual process there is room for mistakes
+
+check for dupes using grep.
+
+```shell
+grep -E '^msgid "[^"]+"$' messages.pot | sort | uniq -d -w 100 | awk '{print "Duplicate entry:", $0}'
+```
+
 ## Transifex Client
 
 To configure and use translations you need to have access tothe project and an API token to use for the client.
