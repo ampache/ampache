@@ -71,6 +71,10 @@ As an end of year bonus you can access your own Ampache Wrapped from the user pa
 * Remote catalogs coudln't import song data correctly
 * Podcast episode downloads would be blocked from some redirects
 * get_recently_played SQL was really slow
+* Bitly plugin updated to v4 API
+  * Requires a [Bitly](bitly.com) account
+  * Generate a `token` at [(https://app.bitly.com/settings/api)]
+  * Get your `group_guid` from `https://app.bitly.com/{GROUP_GUID}` or Account Settings > Groups (the GUID is in the URL)
 * Add missing properties on public users. (-1)
 * Subsonic
   * Url protocol checks not compared correctly for setServer
