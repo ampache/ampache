@@ -5190,4 +5190,19 @@ class Update
 
         return (self::_write($interactor, "ALTER TABLE `rating` ADD COLUMN `date` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `rating`;") !== false);
     }
+
+    /**
+     * _update_600049
+     *
+     * Update link for `FMPL` license
+     */
+    private static function _update_600049(Interactor $interactor = null): bool
+    {
+        $sql = "UPDATE `license` SET `external_link` = 'http://www.ram.org/ramblings/philosophy/fmp/fmpl/fmpl.html' WHERE `name` = 'FMPL'";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+
+        return true;
+    }
 }

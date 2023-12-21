@@ -585,7 +585,7 @@ INSERT INTO `license` (`id`, `name`, `description`, `external_link`) VALUES
 (10, 'Green OpenMusic', NULL, 'http://openmusic.linuxtag.org/green.html'),
 (11, 'Gnu GPL Art', NULL, 'http://gnuart.org/english/gnugpl.html'),
 (12, 'WTFPL', NULL, 'https://en.wikipedia.org/wiki/WTFPL'),
-(13, 'FMPL', NULL, 'http://www.fmpl.org/fmpl.html'),
+(13, 'FMPL', NULL, 'http://www.ram.org/ramblings/philosophy/fmp/fmpl/fmpl.html'),
 (14, 'C Reaction', NULL, 'http://morne.free.fr/Necktar7/creaction.htm');
 
 -- --------------------------------------------------------
