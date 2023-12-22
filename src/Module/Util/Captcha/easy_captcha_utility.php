@@ -64,9 +64,8 @@ class easy_captcha_utility
      */
     public static function API()
     {
-
         #-- load data
-        if ($id = Core::get_get(CAPTCHA_PARAM_ID)) {
+        if ($id = Core::get_get(easy_captcha::CAPTCHA_PARAM_ID)) {
             #-- special case
             if ($id == 'base.js') {
                 easy_captcha_utility::js_base();
@@ -75,7 +74,7 @@ class easy_captcha_utility
                 $expired = !$c->is_valid();
 
                 #-- JS-RPC request, check entered solution on the fly
-                if ($test = $_REQUEST[CAPTCHA_PARAM_INPUT]) {
+                if ($test = $_REQUEST[easy_captcha::CAPTCHA_PARAM_INPUT]) {
                     #-- check
                     if ($expired || empty($c->image)) {
                         die(easy_captcha_utility::js_header('alert("captcha error: request invalid (wrong storage id) / or expired");'));
@@ -125,10 +124,10 @@ class easy_captcha_utility
     public function js_base()
     {
         $captcha_new_urls = $_GET["captcha_new_urls"] ? 0 : 1;
-        $BASE_URL         = CAPTCHA_BASE_URL;
-        $PARAM_ID         = CAPTCHA_PARAM_ID;
-        $PARAM_INPUT      = CAPTCHA_PARAM_INPUT;
-        $COLOR_CALC       = CAPTCHA_INVERSE ? "32 +" : "224 -";
+        $BASE_URL         = easy_captcha::CAPTCHA_BASE_URL;
+        $PARAM_ID         = easy_captcha::CAPTCHA_PARAM_ID;
+        $PARAM_INPUT      = easy_captcha::CAPTCHA_PARAM_INPUT;
+        $COLOR_CALC       = "32 +";
         easy_captcha_utility::js_header();
         print<<<END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END
 
@@ -232,7 +231,7 @@ END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
     public function js_rpc($yes)
     {
         $yes         = $yes ? 1 : 0;
-        $PARAM_INPUT = CAPTCHA_PARAM_INPUT;
+        $PARAM_INPUT = easy_captcha::CAPTCHA_PARAM_INPUT;
         easy_captcha_utility::js_header();
         print<<<END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END
 

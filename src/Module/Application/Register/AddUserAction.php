@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Register;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -52,14 +53,18 @@ final class AddUserAction implements ApplicationActionInterface
 
     private UserRepositoryInterface $userRepository;
 
+    private UiInterface $ui;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
         $this->userRepository  = $userRepository;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,21 +76,6 @@ final class AddUserAction implements ApplicationActionInterface
             throw new AccessDeniedException('Error attempted registration');
         }
 
-        /* Don't even include it if we aren't going to use it */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
-            define('CAPTCHA_INVERSE', 1);
-            /**
-             * @todo broken, the path does not exist anylonger
-             */
-            define(
-                'CAPTCHA_BASE_URL',
-                sprintf(
-                    '%s/modules/captcha/captcha.php',
-                    $this->configContainer->getWebPath()
-                )
-            );
-            require_once __DIR__ . '/../../Util/Captcha/init.php';
-        }
         /**
          * User information has been entered
          * we need to check the database for possible existing username first
@@ -162,7 +152,9 @@ final class AddUserAction implements ApplicationActionInterface
 
         // If we've hit an error anywhere up there break!
         if (AmpError::occurred()) {
-            require_once Ui::find_template('show_user_registration.inc.php');
+            $this->ui->show(
+                'show_user_registration.inc.php',
+            );
 
             return null;
         }

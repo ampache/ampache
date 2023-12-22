@@ -9671,11 +9671,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha.php
 
 		-
-			message: "#^Constant CAPTCHA_BASE_URL not found\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha.php
@@ -9953,11 +9948,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$img\\.$#"
 			count: 4
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Constant CAPTCHA_INVERSE not found\\.$#"
-			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic.php
 
 		-
@@ -10334,16 +10324,6 @@ parameters:
 			message: "#^Variable \\$calc might not be defined\\.$#"
 			count: 2
 			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Constant CAPTCHA_BASE_URL not found\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
-			message: "#^Constant CAPTCHA_INVERSE not found\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:canonical_path\\(\\) has parameter \\$url with no type specified\\.$#"

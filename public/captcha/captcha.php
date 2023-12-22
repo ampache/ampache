@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,32 +20,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Util\Captcha;
+use Ampache\Module\Util\Captcha\easy_captcha_utility;
 
-/**
- * Class captcha
- */
-class captcha
-{
-    public static function solved(): bool
-    {
-        $c = new easy_captcha();
+define('NO_SESSION', 1);
 
-        return $c->solved();
-    }
+$dic = require __DIR__ . '/../../src/Config/Init.php';
 
-    /**
-     * @param string $text
-     * @return string
-     */
-    public static function form(
-        string $text = ''
-    ): string {
-        $c = new easy_captcha();
+ini_set('display_errors', '1');
 
-        return $c->form("$text");
-    }
-}
+easy_captcha_utility::API();
