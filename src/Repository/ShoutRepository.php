@@ -201,7 +201,7 @@ final class ShoutRepository implements ShoutRepositoryInterface
     {
         $result = $this->connection->query('SELECT * FROM `user_shout` WHERE `sticky` = 1 ORDER BY `date` DESC');
 
-        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class);
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, [$this]);
 
         while ($shout = $result->fetch()) {
             /** @var Shoutbox $shout */
@@ -246,7 +246,7 @@ final class ShoutRepository implements ShoutRepositoryInterface
             $params
         );
 
-        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class);
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, [$this]);
 
         while ($shout = $result->fetch()) {
             /** @var Shoutbox $shout */
