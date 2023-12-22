@@ -12186,12 +12186,12 @@ parameters:
 			path: src/Plugin/AmpacheAmazon.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$bitly_api_key has no type specified\\.$#"
+			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$bitly_group_guid has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheBitly.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$bitly_username has no type specified\\.$#"
+			message: "#^Property Ampache\\\\Plugin\\\\AmpacheBitly\\:\\:\\$bitly_token has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheBitly.php
 
