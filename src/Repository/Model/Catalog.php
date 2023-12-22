@@ -1313,15 +1313,18 @@ abstract class Catalog extends database_object
         $column = ($type == 'song')
             ? 'user_upload'
             : 'user';
+        $table = ($type == 'album')
+            ? 'artist'
+            : $type;
         $where_sql = ($user_id > 0)
-            ? "WHERE `$type`.`$column` = '" . $user_id . "'"
-            : "WHERE `$type`.`$column` IS NOT NULL";
+            ? "WHERE `$table`.`$column` = '" . $user_id . "'"
+            : "WHERE `$table`.`$column` IS NOT NULL";
         switch ($type) {
             case 'song':
                 $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql";
                 break;
             case 'album':
-                $sql = "SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `artist` on `album`.`album_artist` = `artist`.`id` ";
+                $sql = "SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `artist` on `album`.`album_artist` = `artist`.`id` $where_sql";
                 break;
             case 'artist':
                 $sql = "SELECT DISTINCT `id` FROM `artist` $where_sql";
