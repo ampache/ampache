@@ -23,7 +23,7 @@ As an end of year bonus you can access your own Ampache Wrapped from the user pa
 * Allow sharing `podcast_episode` objects
 * Add refresh button to the rightbar and some of the ajax index modules
 * Hide the filterbox when your browse can't use it
-* Database 600048
+* Database 600049
   * Set correct preference type for `use_play2`
   * Add user preference `jp_volume`, Default webplayer volume
   * Add system preference `perpetual_api_session`, endless api sessions. (**AT YOUR OWN RISK**)
@@ -31,6 +31,7 @@ As an end of year bonus you can access your own Ampache Wrapped from the user pa
   * Add user preference `home_recently_played_all`, Show everything in the now playing box
   * Add user preference `show_wrapped`, Access your personal "Spotify Wrapped" from your user page
   * Add `date` column to rating table
+  * Update link for FMPL license 
 
 ### Changed
 
