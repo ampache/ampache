@@ -74,7 +74,7 @@ class ShoutRepositoryTest extends TestCase
 
         $statement->expects(static::once())
             ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Shoutbox::class);
+            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject]);
         $statement->expects(static::exactly(2))
             ->method('fetch')
             ->willReturn($shoutBox, false);
@@ -382,14 +382,14 @@ class ShoutRepositoryTest extends TestCase
 
         $result1->expects(static::once())
             ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Shoutbox::class);
+            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject]);
         $result1->expects(static::once())
             ->method('fetch')
             ->willReturn($shout1, false);
 
         $result2->expects(static::once())
             ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Shoutbox::class);
+            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject]);
         $result2->expects(static::exactly(2))
             ->method('fetch')
             ->willReturn($shout2, false);
