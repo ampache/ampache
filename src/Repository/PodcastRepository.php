@@ -249,6 +249,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
     public function getEpisodesEligibleForDownload(Podcast $podcast): Generator
     {
         $downloadLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
+        $query         = '';
 
         if ($downloadLimit > 0) {
             $query = <<<SQL
@@ -264,7 +265,22 @@ final class PodcastRepository implements PodcastRepositoryInterface
                 `pubdate`
             DESC LIMIT %d
             SQL;
-
+        }
+        if ($downloadLimit === -1) {
+            $query = <<<SQL
+            SELECT
+                `id`
+            FROM
+                `podcast_episode`
+            WHERE
+                `podcast` = ?
+                AND
+                (`addition_time` > ? OR `state` = ?)
+            ORDER BY
+                `pubdate`
+            SQL;
+        }
+        if (!empty($query)) {
             $result = $this->connection->query(
                 sprintf(
                     $query,
