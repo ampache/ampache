@@ -136,10 +136,6 @@ class ShowActionTest extends TestCase
             ->with(0)
             ->willReturn($podcast);
 
-        $podcast->expects(static::once())
-            ->method('get_fullname')
-            ->willReturn($name);
-
         $this->podcastRepository->expects(static::once())
             ->method('getEpisodes')
             ->with($podcast)
