@@ -1328,7 +1328,7 @@ class Subsonic_Api
         $playlistId = $input['playlistId'] ?? null;
         $name       = $input['name'] ?? '';
         $songIdList = $input['songId'] ?? array();
-        if (is_string($input['songId'])) {
+        if (isset($input['songId']) && is_string($input['songId'])) {
             $songIdList = explode(',', $input['songId']);
         }
 
