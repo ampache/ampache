@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,10 +44,7 @@ final class License4Method
      *
      * This returns a single license based on UID
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of license
-     * @return boolean
      */
     public static function license(array $input, User $user): bool
     {
@@ -60,7 +57,7 @@ final class License4Method
             return false;
         }
         unset($user);
-        $results = array((int) scrub_in($input['filter']));
+        $results = array((int) scrub_in((string) $input['filter']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
@@ -71,5 +68,5 @@ final class License4Method
         }
 
         return true;
-    } // license
+    }
 }

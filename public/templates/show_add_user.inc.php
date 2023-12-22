@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -31,11 +34,11 @@ use Ampache\Repository\Model\Catalog;
 $max_upload_size = AmpConfig::get('max_upload_size'); ?>
 <?php Ui::show_box_top(T_('Add User'), 'box box_add_user'); ?>
 <?php echo AmpError::display('general'); ?>
-<form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php?action=add_user"; ?>">
+<form name="add_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php?action=add_user"; ?>">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Username'); ?>: *</td>
-            <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
+            <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out((string)filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
                 <?php echo AmpError::display('username'); ?>
             </td>
         </tr>
@@ -57,7 +60,7 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
         </tr>
         <tr>
             <td><?php echo T_('E-mail'); ?>: *</td>
-            <td><input type="text" name="email" value="<?php echo scrub_out(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); ?>" />
+            <td><input type="text" name="email" value="<?php echo scrub_out((string)filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); ?>" />
                 <?php echo AmpError::display('email'); ?>
             </td>
         </tr>

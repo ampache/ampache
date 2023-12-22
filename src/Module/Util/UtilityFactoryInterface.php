@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -22,6 +23,8 @@
 
 namespace Ampache\Module\Util;
 
+use Curl\Curl;
+
 interface UtilityFactoryInterface
 {
     public function createMailer(): MailerInterface;
@@ -35,4 +38,9 @@ interface UtilityFactoryInterface
         string $filePattern = '',
         bool $isLocal = true
     ): VaInfoInterface;
+
+    /**
+     * Returns a new Curl instance
+     */
+    public function createCurl(): Curl;
 }

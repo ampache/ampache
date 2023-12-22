@@ -31,8 +31,6 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_graphic_image_waved extends easy_captcha_graphic
 {
-
-
     /* returns jpeg file stream with unscannable letters encoded
        in front of colorful disturbing background
     */
@@ -61,8 +59,14 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     {
         $img = imagecreatetruecolor($this->width, $this->height);
         // imagealphablending($img, TRUE);
-        imagefilledrectangle($img, 0, 0, $this->width, $this->height,
-            $this->inverse ? $this->bg ^ 0xFFFFFF : $this->bg); //$this->rgb(255,255,255)
+        imagefilledrectangle(
+            $img,
+            0,
+            0,
+            $this->width,
+            $this->height,
+            $this->inverse ? $this->bg ^ 0xFFFFFF : $this->bg
+        ); //$this->rgb(255,255,255)
         if (function_exists("imageantialias")) {
             imageantialias($img, true);
         }
@@ -81,8 +85,16 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         $LEN  = strlen($this->solution);
         $left = $w - $LEN * 25;
         $top  = ($h - $SIZE - abs($DEG * 2));
-        imagettftext($this->img, $SIZE, $DEG, rand(5, $left - 5), $h - rand(3, $top - 3), $this->rgb(0, 0, 0),
-            $this->font(), $this->solution);
+        imagettftext(
+            $this->img,
+            $SIZE,
+            $DEG,
+            rand(5, $left - 5),
+            $h - rand(3, $top - 3),
+            $this->rgb(0, 0, 0),
+            $this->font(),
+            $this->solution
+        );
     }
 
     #-- to visualize the sinus waves
@@ -103,9 +115,14 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         $s   = rand(0, 270);
         for ($n = 0; $n < $num; $n++) {
             imagesetthickness($this->img, rand(1, 2));
-            imagearc($this->img, rand(0.1 * $x, 0.9 * $x), rand(0.1 * $y, 0.9 * $y),  // x,y
-                rand(0.1 * $x, 0.3 * $x), rand(0.1 * $y, 0.3 * $y),  // w,h
-                $s, rand($s + 5, $s + 90),     // s,e
+            imagearc(
+                $this->img,
+                rand(0.1 * $x, 0.9 * $x),
+                rand(0.1 * $y, 0.9 * $y),  // x,y
+                rand(0.1 * $x, 0.3 * $x),
+                rand(0.1 * $y, 0.3 * $y),  // w,h
+                $s,
+                rand($s + 5, $s + 90),     // s,e
                 rand(0, 1) ? 0xFFFFFF : 0x000000   // col
             );
         }

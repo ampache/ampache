@@ -9,7 +9,7 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
-        '@PSR2' => true,
+        '@PSR12' => true,
         'binary_operator_spaces' => [
             'operators' => ['=' => 'align']
         ],
@@ -17,26 +17,36 @@ return $config->setRules([
         'blank_line_before_statement' => [
             'statements' => ['declare', 'return']
         ],
+        'blank_line_between_import_groups' => true,
         'concat_space' => [
             'spacing' => 'one'
         ],
+        'constant_case' => true,
         'curly_braces_position' => [
             'functions_opening_brace' => 'next_line_unless_newline_at_signature_end',
             'allow_single_line_empty_anonymous_classes' => true,
             'allow_single_line_anonymous_functions' => true
         ],
-        'constant_case' => true,
+        'declare_equal_normalize' => [
+            'space' => 'none'
+        ],
         'elseif' => true,
         'encoding' => true,
         'full_opening_tag' => true,
         'line_ending' => true,
-        'method_argument_space' => false,
+        'lowercase_cast' => true,
+        'method_argument_space' => true,
+        'multiline_comment_opening_closing' => true,
         'no_break_comment' => false,
         'no_trailing_whitespace' => true,
+        'no_trailing_whitespace_in_comment' => true,
         'no_whitespace_in_blank_line' => true,
+        'return_type_declaration' => [
+            'space_before' => 'none',
+        ],
         'single_blank_line_at_eof' => true,
         'strict_param' => false,
-        'visibility_required' => false,
+        'visibility_required' => true,
     ])
     ->setIndent("    ")
     ->setUsingCache(false)

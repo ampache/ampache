@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -30,67 +32,61 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-class Ampachelistenbrainz
+class Ampachelistenbrainz implements AmpachePluginInterface
 {
-    public $name        = 'ListenBrainz';
-    public $categories  = 'scrobbling';
-    public $description = 'Records your played songs to your ListenBrainz Account';
-    public $url;
-    public $version     = '000002';
-    public $min_ampache = '380004';
-    public $max_ampache = '999999';
+    public string $name        = 'ListenBrainz';
+    public string $categories  = 'scrobbling';
+    public string $description = 'Records your played songs to your ListenBrainz Account';
+    public string $url         = '';
+    public string $version     = '000002';
+    public string $min_ampache = '380004';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $token;
     private $api_host;
-    private $scheme   = 'https';
-    private $host     = 'listenbrainz.org';
+    private $scheme = 'https';
+    private $host   = 'listenbrainz.org';
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Scrobble songs you play to your ListenBrainz Account');
         $this->url         = $this->scheme . '://' . $this->host;
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
-        // Check and see if it's already installed (they've just hit refresh, those dorks)
-        if (Preference::exists('listenbrainz_token')) {
+        if (!Preference::exists('listenbrainz_token') && !Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('listenbrainz_api_url') && !Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name);
-        Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name);
-
         return true;
-    } // install
+    }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('listenbrainz_token');
-    } // uninstall
+        return Preference::delete('listenbrainz_token');
+    }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version == 0) {
@@ -101,15 +97,14 @@ class Ampachelistenbrainz
         }
 
         return true;
-    } // upgrade
+    }
 
     /**
      * save_mediaplay
      * This takes care of queuing and then submitting the tracks.
      * @param Song $song
-     * @return boolean
      */
-    public function save_mediaplay($song)
+    public function save_mediaplay($song): bool
     {
         // Only support songs
         if (get_class($song) != Song::class) {
@@ -170,14 +165,14 @@ class Ampachelistenbrainz
         debug_event('listenbrainz.plugin', "Submission Successful", 5);
 
         return true;
-    } // submit
+    }
 
     /**
      * post_json_url
      * This is a generic poster for HTTP requests
      * @param string $url
      * @param string $content
-     * @return false|string
+     * @return string|false
      */
     private function post_json_url($url, $content)
     {
@@ -197,28 +192,24 @@ class Ampachelistenbrainz
         $target  = $this->scheme . '://' . $this->api_host . $url;
 
         return file_get_contents($target, false, $context);
-    } // call_url
+    }
 
     /**
      * set_flag
      * This takes care of spreading your love on ListenBrainz
      * @param Song $song
-     * @param boolean $flagged
-     * @return boolean
+     * @param bool $flagged
      */
-    public function set_flag($song, $flagged)
+    public function set_flag($song, $flagged): void
     {
-        return true;
-    } // set_flag
+    }
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -233,5 +224,5 @@ class Ampachelistenbrainz
         $this->api_host = $data['listenbrainz_api_url'] ?? 'api.listenbrainz.org';
 
         return true;
-    } // load
+    }
 }

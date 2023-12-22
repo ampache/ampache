@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -29,7 +32,7 @@ $logo_url = AmpConfig::get('custom_login_logo', '');
 if (empty($logo_url)) {
     $logo_url = Ui::get_logo_url('dark');
 }
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <!DOCTYPE html>
 <html lang="en-US">
     <head>

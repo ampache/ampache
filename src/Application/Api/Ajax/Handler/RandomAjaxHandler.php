@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
@@ -64,7 +64,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'song':
-                $songs = Random::get_default(null, Core::get_global('user'));
+                $songs = Random::get_default((int)AmpConfig::get('offset_limit', 50), Core::get_global('user'));
 
                 if (!count($songs)) {
                     $results['rfc3514'] = '0x1';
@@ -121,7 +121,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                     break;
                 }
 
-                $songs  = $this->songRepository->getByArtist($artist_id);
+                $songs = $this->songRepository->getByArtist($artist_id);
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }

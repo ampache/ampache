@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -29,15 +31,15 @@ use Ampache\Repository\Model\Wanted;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheHeadphones
+class AmpacheHeadphones implements AmpachePluginInterface
 {
-    public $name        = 'Headphones';
-    public $categories  = 'wanted';
-    public $description = 'Automatically download accepted Wanted List albums with Headphones';
-    public $url         = 'https://github.com/rembo10/headphones/';
-    public $version     = '000001';
-    public $min_ampache = '360030';
-    public $max_ampache = '999999';
+    public string $name        = 'Headphones';
+    public string $categories  = 'wanted';
+    public string $description = 'Automatically download accepted Wanted List albums with Headphones';
+    public string $url         = 'https://github.com/rembo10/headphones/';
+    public string $version     = '000001';
+    public string $min_ampache = '360030';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $api_url;
@@ -45,92 +47,80 @@ class AmpacheHeadphones
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Automatically download accepted Wanted List albums with Headphones');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
-        // Check and see if it's already installed (they've just hit refresh, those dorks)
-        if (Preference::exists('headphones_api_url')) {
+        if (!Preference::exists('headphones_api_url') && !Preference::insert('headphones_api_url', T_('Headphones URL'), '', 25, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('headphones_api_key') && !Preference::insert('headphones_api_key', T_('Headphones API key'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        Preference::insert('headphones_api_url', T_('Headphones URL'), '', 25, 'string', 'plugins', $this->name);
-        Preference::insert('headphones_api_key', T_('Headphones API key'), '', 25, 'string', 'plugins', $this->name);
-
         return true;
-    } // install
+    }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('headphones_api_url');
-        Preference::delete('headphones_api_key');
-
-        return true;
-    } // uninstall
+        return (
+            Preference::delete('headphones_api_url') &&
+            Preference::delete('headphones_api_key')
+        );
+    }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * process_wanted
      * This takes care of auto-download accepted Wanted List albums
      * @param Wanted $wanted
-     * @return boolean
      */
-    public function process_wanted($wanted)
+    public function process_wanted($wanted): bool
     {
         set_time_limit(0);
 
-        $headartist = json_decode($this->headphones_call('getArtist', array(
-            'id' => $wanted->artist_mbid
-        )));
+        $headartist = json_decode(
+            $this->headphones_call('getArtist', array('id' => $wanted->artist_mbid))
+        );
 
         // No artist info, need to add artist to Headphones first. Can be long!
         if (!$headartist->artist) {
-            $this->headphones_call('addArtist', array(
-                'id' => $wanted->artist_mbid
-            ));
+            $this->headphones_call('addArtist', array('id' => $wanted->artist_mbid));
         }
 
-        return ($this->headphones_call('queueAlbum', array(
-                'id' => $wanted->mbid
-            )) == 'OK');
-    } // process_wanted
+        return ($this->headphones_call('queueAlbum', array('id' => $wanted->mbid)) == 'OK');
+    }
 
     /**
-     * @param $command
-     * @param $params
-     * @return boolean
+     * @param string $command
+     * @param array $params
      */
-    protected function headphones_call($command, $params)
+    protected function headphones_call($command, $params): string
     {
         if (empty($this->api_url) || empty($this->api_key)) {
             debug_event(self::class, 'Headphones url or api key missing', 3);
 
-            return false;
+            return '';
         }
 
         $url = $this->api_url . '/api?apikey=' . $this->api_key . '&cmd=' . $command;
@@ -147,7 +137,7 @@ class AmpacheHeadphones
         } catch (Exception $error) {
             debug_event(self::class, 'Headphones api http exception: ' . $error->getMessage(), 1);
 
-            return false;
+            return '';
         }
 
         return $request->body;
@@ -155,12 +145,10 @@ class AmpacheHeadphones
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -187,5 +175,5 @@ class AmpacheHeadphones
         }
 
         return true;
-    } // load
+    }
 }

@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -43,8 +43,6 @@ final class Albums4Method
      *
      * This returns albums based on the provided search filters
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = Api::set_filter(date) //optional
@@ -53,7 +51,7 @@ final class Albums4Method
      * limit   = (integer) //optional
      * include = (array) 'songs' //optional
      */
-    public static function albums(array $input, User $user)
+    public static function albums(array $input, User $user): void
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -82,5 +80,5 @@ final class Albums4Method
                 Xml4_Data::set_limit($input['limit'] ?? 0);
                 echo Xml4_Data::albums($results, $include, $user);
         }
-    } // albums
+    }
 }

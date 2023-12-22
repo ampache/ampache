@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
@@ -83,10 +84,10 @@ final class ShareAction implements ApplicationActionInterface
             T_('Clean Expired Shared Objects')
         );
         $user       = Core::get_global('user');
-        $object_ids = ($user->id)
+        $object_ids = (!empty($user))
             ? Share::get_share_list($user)
             : array();
-        if ($user->id && !empty($object_ids)) {
+        if (!empty($object_ids)) {
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type('share');
             $browse->set_static_content(true);

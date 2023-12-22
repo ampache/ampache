@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\MockeryTestCase;
@@ -39,7 +40,7 @@ class ActivityTypeHandlerMapperTest extends MockeryTestCase
 
     private ?ActivityTypeHandlerMapper $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
         $this->modelFactory           = $this->mock(ModelFactoryInterface::class);

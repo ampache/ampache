@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Repository\Model\User;
@@ -44,15 +45,12 @@ final class Share5Method
      *
      * Get the share from it's id.
      *
-     * @param array $input
-     * @param User $user
      * filter = (integer) Share ID number
-     * @return boolean
      */
     public static function share(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api5::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

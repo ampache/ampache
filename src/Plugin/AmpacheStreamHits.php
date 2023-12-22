@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -28,75 +30,71 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
 
-class AmpacheStreamHits
+class AmpacheStreamHits implements AmpachePluginInterface
 {
-    public $name        = 'Stream Hits';
-    public $categories  = 'stream_control';
-    public $description = 'Control hits per user';
-    public $url         = '';
-    public $version     = '000001';
-    public $min_ampache = '370024';
-    public $max_ampache = '999999';
+    public string $name        = 'Stream Hits';
+    public string $categories  = 'stream_control';
+    public string $description = 'Control hits per user';
+    public string $url         = '';
+    public string $version     = '000001';
+    public string $min_ampache = '370024';
+    public string $max_ampache = '999999';
 
+    // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
     private $hits_days;
     private $hits_max;
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Control hits per user');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('stream_control_hits_max')) {
+        if (!Preference::exists('stream_control_hits_max') && !Preference::insert('stream_control_hits_max', T_('Stream control maximal hits'), -1, 50, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        Preference::insert('stream_control_hits_max', T_('Stream control maximal hits'), -1, 50, 'integer', 'plugins', $this->name);
-        Preference::insert('stream_control_hits_days', T_('Stream control hits history (days)'), 30, 50, 'integer', 'plugins', $this->name);
+        if (!Preference::exists('stream_control_hits_days') && Preference::insert('stream_control_hits_days', T_('Stream control hits history (days)'), 30, 50, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('stream_control_hits_max');
-        Preference::delete('stream_control_hits_days');
-
-        return true;
-    } // uninstall
+        return (
+            Preference::delete('stream_control_hits_max') &&
+            Preference::delete('stream_control_hits_days')
+        );
+    }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * Check stream control
      * @param array $media_ids
-     * @return boolean
      */
-    public function stream_control($media_ids)
+    public function stream_control($media_ids): bool
     {
         // No check if unlimited hits (= -1)
         if ($this->hits_max < 0) {
@@ -122,12 +120,10 @@ class AmpacheStreamHits
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -145,5 +141,5 @@ class AmpacheStreamHits
         }
 
         return true;
-    } // load
+    }
 }

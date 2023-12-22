@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
@@ -36,7 +36,7 @@ use Ampache\Module\Api\Xml4_Data;
  */
 final class Playlists4Method
 {
-    const ACTION = 'playlists';
+    public const ACTION = 'playlists';
 
     /**
      * playlists
@@ -44,8 +44,6 @@ final class Playlists4Method
      *
      * This returns playlists based on the specified filter
      *
-     * @param array $input
-     * @param User $user
      * filter       = (string) Alpha-numeric search term (match all if missing) //optional
      * exact        = (integer) 0,1, if true filter is exact rather than fuzzy //optional
      * add          = Api::set_filter(date) //optional
@@ -55,7 +53,7 @@ final class Playlists4Method
      * hide_search  = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * show_dupes   = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
      */
-    public static function playlists(array $input, User $user)
+    public static function playlists(array $input, User $user): void
     {
         $like       = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
@@ -82,5 +80,5 @@ final class Playlists4Method
                 Xml4_Data::set_limit($input['limit'] ?? 0);
                 echo Xml4_Data::playlists($results, $user);
         }
-    } // playlists
+    }
 }

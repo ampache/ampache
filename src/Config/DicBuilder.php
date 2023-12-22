@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -26,6 +26,7 @@ declare(strict_types=1);
 /**
  * This file creates and initializes the central DI-Container
  */
+
 namespace Ampache\Config;
 
 use DI\ContainerBuilder;
@@ -58,6 +59,8 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Module/Artist/service_definition.php',
     require_once __DIR__ . '/../Module/Wanted/service_definition.php',
     require_once __DIR__ . '/../Module/Share/service_definition.php',
+    require_once __DIR__ . '/../Module/Shout/service_definition.php',
+    require_once __DIR__ . '/../Module/Podcast/service_definition.php',
 );
 
 return $builder->build();

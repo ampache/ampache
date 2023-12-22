@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,20 +23,22 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Podcast\Exception\FeedNotLoadableException;
+use Ampache\Module\Podcast\Exception\InvalidCatalogException;
+use Ampache\Module\Podcast\Exception\InvalidFeedUrlException;
+use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,12 +50,16 @@ final class CreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private PodcastCreatorInterface $podcastCreator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        PodcastCreatorInterface $podcastCreator
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->podcastCreator  = $podcastCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,16 +76,39 @@ final class CreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
+        $data = $request->getParsedBody();
 
-        if (!Podcast::create($_POST)) {
-            require_once Ui::find_template('show_add_podcast.inc.php');
+        $catalog = Catalog::create_from_id((int) ($data['catalog'] ?? 0));
+        if ($catalog === null) {
+            AmpError::add('catalog', T_('Catalog not found'));
         } else {
-            $title  = T_('No Problem');
-            $body   = T_('Subscribed to the Podcast');
+            try {
+                $this->podcastCreator->create(
+                    $data['feed'] ?? '',
+                    $catalog
+                );
+            } catch (InvalidFeedUrlException $e) {
+                AmpError::add('feed', T_('Feed URL is invalid'));
+            } catch (InvalidCatalogException $e) {
+                AmpError::add('catalog', T_('Wrong target Catalog type'));
+            } catch (FeedNotLoadableException $e) {
+                AmpError::add('feed', T_('Can not read the feed'));
+            }
+        }
+
+        $this->ui->showHeader();
+        if (AmpError::occurred()) {
+            $this->ui->show(
+                'show_add_podcast.inc.php',
+                [
+                    'catalog_id' => (int)($data['catalog'] ?? 0),
+                    'feed' => ($data['feed'] ?? '')
+                ]
+            );
+        } else {
             $this->ui->showConfirmation(
-                $title,
-                $body,
+                T_('No Problem'),
+                T_('Subscribed to the Podcast'),
                 sprintf(
                     '%s/browse.php?action=podcast',
                     $this->configContainer->getWebPath()

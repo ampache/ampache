@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
@@ -39,17 +40,15 @@ final class Following3Method
     /**
      * following
      * This get the user list followed by a user
-     * @param array $input
-     * @param User $user
      */
-    public static function following(array $input, User $user)
+    public static function following(array $input, User $user): void
     {
         unset($user);
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             if (!empty($username)) {
                 $user = User::get_from_username($username);
-                if ($user !== null) {
+                if ($user instanceof User) {
                     $results = static::getUserFollowerRepository()->getFollowing($user->id);
                     ob_end_clean();
                     echo Xml3_Data::users($results);
@@ -62,7 +61,7 @@ final class Following3Method
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    } // following
+    }
 
     /**
      * @deprecated Inject by constructor

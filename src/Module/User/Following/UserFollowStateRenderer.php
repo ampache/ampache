@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -38,8 +39,8 @@ final class UserFollowStateRenderer implements UserFollowStateRendererInterface
     /**
      * Get html code to display the follow/unfollow link
      *
-     * @param integer $userId
-     * @param integer $foreignUserId
+     * @param int $userId
+     * @param int $foreignUserId
      * @return string
      */
     public function render(

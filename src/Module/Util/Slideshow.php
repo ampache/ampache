@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Util;
 
 use Ampache\Module\Statistics\Stats;
@@ -40,9 +41,6 @@ final class Slideshow implements SlideshowInterface
         $this->modelFactory = $modelFactory;
     }
 
-    /**
-     * @return array
-     */
     public function getCurrentSlideshow(): array
     {
         $user_id = Core::get_global('user')->id ?? -1;
@@ -63,7 +61,7 @@ final class Slideshow implements SlideshowInterface
 
         foreach (Plugin::get_plugins('get_photos') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                 $images += $plugin->_plugin->get_photos($song->f_artist);
             }
         }

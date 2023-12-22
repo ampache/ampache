@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Song;
 
@@ -55,10 +56,9 @@ class ShowSongActionTest extends MockeryTestCase
     /** @var LoggerInterface|MockInterface|null */
     private MockInterface $logger;
 
-    /** @var ShowSongAction|null */
     private ShowSongAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);
         $this->modelFactory = $this->mock(ModelFactoryInterface::class);
@@ -80,7 +80,11 @@ class ShowSongActionTest extends MockeryTestCase
         $request = $this->mock(ServerRequestInterface::class);
         $song    = $this->mock(Song::class);
 
-        $song_id = 666;
+        $song_id = 0;
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -92,20 +96,15 @@ class ShowSongActionTest extends MockeryTestCase
             ->once()
             ->andReturn($song);
 
-        $this->ui->shouldReceive('showHeader')
+        $song->shouldReceive('isNew')
             ->withNoArgs()
-            ->once();
+            ->once()
+            ->andReturn(true);
+
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
         $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $song->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $song->shouldReceive('fill_ext_info')
             ->withNoArgs()
             ->once();
 
@@ -138,9 +137,12 @@ class ShowSongActionTest extends MockeryTestCase
         $title   = 'some-song-title';
         $content = 'some-content';
 
-        $song->id      = $song_id;
-        $song->f_name  = $title;
+        $song->id     = $song_id;
+        $song->f_name = $title;
 
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
@@ -151,9 +153,18 @@ class ShowSongActionTest extends MockeryTestCase
             ->once()
             ->andReturn($song);
 
-        $this->ui->shouldReceive('showHeader')
+        $song->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(false);
+
+        $song->shouldReceive('format')
             ->withNoArgs()
             ->once();
+        $song->shouldReceive('fill_ext_info')
+            ->withNoArgs()
+            ->once();
+
         $this->ui->shouldReceive('showBoxTop')
             ->with(
                 $title,
@@ -167,13 +178,6 @@ class ShowSongActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
         $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $song->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $song->shouldReceive('fill_ext_info')
             ->withNoArgs()
             ->once();
 

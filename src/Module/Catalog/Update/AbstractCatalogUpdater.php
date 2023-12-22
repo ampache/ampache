@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Catalog\Update;
 
 abstract class AbstractCatalogUpdater
@@ -31,7 +32,7 @@ abstract class AbstractCatalogUpdater
         $string = str_replace('<br />', "\n", $string);
         $string = strip_tags($string);
         $string = html_entity_decode($string);
-        $string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/","\n",$string);
+        $string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/", "\n", $string);
         $string = trim($string);
 
         return $string;

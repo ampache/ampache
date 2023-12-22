@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -41,8 +42,9 @@ abstract class AbstractArtAction implements ApplicationActionInterface
             return null;
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $item       = new $class_name($object_id);
+        $className = ObjectTypeToClassNameMapper::map($object_type);
+        /** @var library_item $item */
+        $item = new $className($object_id);
 
         // If not a content manager user then kick em out
         if (

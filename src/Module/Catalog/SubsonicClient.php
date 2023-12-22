@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 namespace Ampache\Module\Catalog;
 
@@ -94,8 +95,8 @@ class SubsonicClient
     /**
      * @param $action
      * @param array $object
-     * @param boolean $rawAnswer
-     * @return array|boolean|object|string
+     * @param bool $rawAnswer
+     * @return array|bool|object|string
      */
     public function querySubsonic($action, $object = array(), $rawAnswer = false)
     {
@@ -105,9 +106,8 @@ class SubsonicClient
     /**
      * @param $url
      * @param array $object
-     * @return string
      */
-    public function parameterize($url, $object = array())
+    public function parameterize($url, $object = array()): string
     {
         $params = array_merge($this->_creds, $object);
 
@@ -117,27 +117,27 @@ class SubsonicClient
     /**
      * @param $action
      * @param array $object
-     * @param boolean $rawAnswer
-     * @return array|boolean|object|string
+     * @param bool $rawAnswer
+     * @return array|bool|object|string
      */
     protected function _querySubsonic($action, $object = array(), $rawAnswer = false)
     {
         // Make sure the command is in the list of commands
         if ($this->isCommand($action)) {
-            $url = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $object);
-
-            $options = array(
-                CURLOPT_URL => $url,
-                CURLOPT_HEADER => 0,
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_CONNECTTIMEOUT => 8,
-                CURLOPT_SSL_VERIFYPEER => 0,
-                CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_PORT => (int)($this->_serverPort)
-            );
-            $curl = curl_init();
+            $url  = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $object);
+            $curl = curl_init($url);
             if ($curl) {
-                curl_setopt_array($curl, $options);
+                curl_setopt_array(
+                    $curl,
+                    array(
+                        CURLOPT_HEADER => 0,
+                        CURLOPT_RETURNTRANSFER => 1,
+                        CURLOPT_CONNECTTIMEOUT => 8,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_PORT => (int)($this->_serverPort)
+                    )
+                );
                 $answer = curl_exec($curl);
                 curl_close($curl);
                 if ($rawAnswer) {
@@ -154,10 +154,10 @@ class SubsonicClient
     }
 
     /**
-     * @param $server
-     * @param $port
+     * @param string $server
+     * @param string $port
      */
-    public function setServer($server, $port = null)
+    public function setServer($server, $port = null): void
     {
         $protocol = "";
         if (preg_match("/^https\:\/\//", $server)) {
@@ -171,24 +171,24 @@ class SubsonicClient
         }
         preg_match("/\:\d{1,6}$/", $server, $matches);
         if (count($matches)) {
-            // If theres a port on the url, remove it and save it for later use.
+            // If there's a port on the url, remove it and save it for later use.
             $server = str_replace($matches[0], "", $server);
             $_port  = str_replace(":", "", $matches[0]);
         }
-        if ($port == null && isset($_port)) {
+        if (empty($port) && isset($_port)) {
             // If port parameter not set but there was one on the url, use the one from the url.
             $port = $_port;
-        } elseif ($port == null) {
-            $port = ($protocol == "https") ? '443' : '80';
+        } elseif (empty($port)) {
+            $port = ($protocol === "https://") ? '443' : '80';
         }
         $this->_serverUrl  = $server;
         $this->_serverPort = $port;
     }
 
     /**
-     * @return string
+     * getServer
      */
-    public function getServer()
+    public function getServer(): string
     {
         return $this->_serverUrl . ":" . $this->_serverPort;
     }
@@ -216,7 +216,10 @@ class SubsonicClient
             $response = (array)$arr['subsonic-response'];
             $data     = $response;
 
-            return array("success" => ($response['status'] == "ok"), "data" => $data);
+            return array(
+                "success" => ($response['status'] == "ok"),
+                "data" => $data
+            );
         } else {
             return $this->error("Invalid response from server!");
         }
@@ -224,9 +227,8 @@ class SubsonicClient
 
     /**
      * @param $command
-     * @return boolean
      */
-    public function isCommand($command)
+    public function isCommand($command): bool
     {
         return in_array($command, $this->_commands);
     }
@@ -234,7 +236,7 @@ class SubsonicClient
     /**
      * @param $action
      * @param $arguments
-     * @return array|boolean|object|string
+     * @return array|bool|object|string
      */
     public function __call($action, $arguments)
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -123,7 +123,7 @@ final class ControlReplyApplication implements ApplicationInterface
                 debug_event('control-reply', 'Searchcriteria: ' . $upnpRequest['searchcriteria'], 5);
                 debug_event('control-reply', 'Search filter : ' . $filter, 5);
                 $responseType             = 'u:SearchResponse';
-                list($totMatches, $items) = Upnp_Api::_callSearch($upnpRequest['searchcriteria'],$filter,$upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                list($totMatches, $items) = Upnp_Api::_callSearch($upnpRequest['searchcriteria'], $filter, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                 break;
             case 'browse':
                 $responseType = 'u:BrowseResponse';
@@ -207,7 +207,7 @@ final class ControlReplyApplication implements ApplicationInterface
             } else {
                 $domDIDL = Upnp_Api::createDIDL($items, $filter);
                 if ($numRet == 0) {
-                    $numRet  = count($items);
+                    $numRet = count($items);
                 }
             }
             $xmlDIDL  = $domDIDL->saveXML();

@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -69,11 +70,14 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
     protected function getCatalogIds(): ?array
     {
         $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT) : array();
+        if (!is_array($catalogs)) {
+            return null;
+        }
         // If only one catalog, check it is ready.
-        if (is_array($catalogs) && count($catalogs) == 1) {
+        if (count($catalogs) == 1) {
             // If not ready, display the data to make it ready / stop the action.
-            $catalog = Catalog::create_from_id($catalogs[0]);
-            if (!$catalog->isReady()) {
+            $catalog = Catalog::create_from_id((int)$catalogs[0]);
+            if ($catalog !== null && !$catalog->isReady()) {
                 if (!isset($_REQUEST['perform_ready'])) {
                     $catalog->show_ready_process();
 

@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Repository\Model\Artist;
@@ -37,10 +37,8 @@ final class ArtistAlbums3Method
     /**
      * artist_albums
      * This returns the albums of an artist
-     * @param array $input
-     * @param User $user
      */
-    public static function artist_albums(array $input, User $user)
+    public static function artist_albums(array $input, User $user): void
     {
         $artist  = new Artist($input['filter']);
         $results = array();
@@ -53,7 +51,7 @@ final class ArtistAlbums3Method
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
         echo Xml3_Data::albums($results, array(), $user);
-    } // artist_albums
+    }
 
     /**
      * @deprecated Inject by constructor

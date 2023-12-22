@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -43,18 +43,15 @@ final class Album4Method
      *
      * This returns a single album based on the UID provided
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) UID of Album
      * include = (array) 'songs' //optional
-     * @return boolean
      */
     public static function album(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid     = (int) scrub_in($input['filter']);
+        $uid     = (int) scrub_in((string) $input['filter']);
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
@@ -68,5 +65,5 @@ final class Album4Method
         }
 
         return true;
-    } // album
+    }
 }

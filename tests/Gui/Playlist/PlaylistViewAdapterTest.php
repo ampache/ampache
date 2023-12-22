@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Gui\Playlist;
 
@@ -57,10 +58,9 @@ class PlaylistViewAdapterTest extends MockeryTestCase
     /** @var Playlist|MockInterface|null */
     private MockInterface $playlist;
 
-    /** @var PlaylistViewAdapter|null */
     private PlaylistViewAdapter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
@@ -117,7 +117,7 @@ class PlaylistViewAdapterTest extends MockeryTestCase
             ->andReturn($averageRating);
 
         $this->assertSame(
-            (string) $averageRating,
+            $averageRating,
             $this->subject->getAverageRating()
         );
     }
@@ -176,11 +176,14 @@ class PlaylistViewAdapterTest extends MockeryTestCase
     public function testCanBeRefreshedReturnsTrueIfConditionsAreMet(): void
     {
         $searchId = 1;
+        $userId   = 1;
 
         $this->playlist->shouldReceive('has_access')
             ->withNoArgs()
             ->once()
             ->andReturnTrue();
+
+        $this->playlist->user = $userId;
 
         $this->playlist->shouldReceive('has_search')
             ->with($this->playlist->user)
@@ -200,11 +203,14 @@ class PlaylistViewAdapterTest extends MockeryTestCase
     public function testCanBeRefreshedReturnsFalseIfNotAccessible(): void
     {
         $searchId = 1;
+        $userId   = 1;
 
         $this->playlist->shouldReceive('has_access')
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
+
+        $this->playlist->user = $userId;
 
         $this->playlist->shouldReceive('has_search')
             ->with($this->playlist->user)
@@ -224,11 +230,14 @@ class PlaylistViewAdapterTest extends MockeryTestCase
     public function testCanBeRefreshedReturnsFalseIfHasNoSearch(): void
     {
         $searchId = 0;
+        $userId   = 1;
 
         $this->playlist->shouldReceive('has_access')
             ->withNoArgs()
             ->once()
             ->andReturnTrue();
+
+        $this->playlist->user = $userId;
 
         $this->playlist->shouldReceive('has_search')
             ->with($this->playlist->user)

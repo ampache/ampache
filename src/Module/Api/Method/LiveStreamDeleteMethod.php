@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\User;
@@ -44,10 +45,7 @@ final class LiveStreamDeleteMethod
      *
      * Delete an existing live_stream (radio station). (if it exists)
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) object_id to delete
-     * @return boolean
      */
     public static function live_stream_delete(array $input, User $user): bool
     {
@@ -60,16 +58,16 @@ final class LiveStreamDeleteMethod
         unset($user);
         $object_id = (int)$input['filter'];
         $item      = new Live_Stream($object_id);
-        if (!$item->id) {
+        if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
         $live_stream = static::getLiveStreamRepository()->delete($item->id);
         if (!$live_stream) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -77,7 +75,7 @@ final class LiveStreamDeleteMethod
         Api::message('Deleted live_stream: ' . $object_id, $input['api_format']);
 
         return true;
-    } // live_stream_delete
+    }
 
     private static function getLiveStreamRepository(): LiveStreamRepositoryInterface
     {

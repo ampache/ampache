@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -46,11 +47,8 @@ final class GetArt4Method
      *
      * Get an art image.
      *
-     * @param array $input
-     * @param User $user
      * id   = (string) $object_id
      * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast'
-     * @return boolean
      */
     public static function get_art(array $input, User $user): bool
     {
@@ -114,7 +112,7 @@ final class GetArt4Method
             header('Content-type: ' . $art->raw_mime);
             header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
-            Session::extend($input['auth']);
+            Session::extend($input['auth'], 'api');
 
             return true;
         }
@@ -122,5 +120,5 @@ final class GetArt4Method
         http_response_code(404);
 
         return false;
-    } // get_art
+    }
 }

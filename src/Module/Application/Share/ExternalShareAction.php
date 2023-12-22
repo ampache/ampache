@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\AmpConfig;
@@ -38,7 +38,6 @@ use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,8 +51,6 @@ final class ExternalShareAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private UiInterface $ui;
-
     private PasswordGeneratorInterface $passwordGenerator;
 
     private ResponseFactoryInterface $responseFactory;
@@ -63,14 +60,12 @@ final class ExternalShareAction implements ApplicationActionInterface
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
         PasswordGeneratorInterface $passwordGenerator,
         ResponseFactoryInterface $responseFactory,
         FunctionCheckerInterface $functionChecker
     ) {
         $this->requestParser     = $requestParser;
         $this->configContainer   = $configContainer;
-        $this->ui                = $ui;
         $this->passwordGenerator = $passwordGenerator;
         $this->responseFactory   = $responseFactory;
         $this->functionChecker   = $functionChecker;
@@ -87,7 +82,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         }
 
         $plugin = new Plugin(Core::get_get('plugin'));
-        if (!$plugin) {
+        if ($plugin->_plugin === null) {
             throw new AccessDeniedException('Access Denied - Unknown external share plugin');
         }
         $plugin->load(Core::get_global('user'));
@@ -101,7 +96,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         $share_id = Share::create_share(
             Core::get_global('user')->id,
             $type,
-            $share_id,
+            (int)$share_id,
             true,
             $allow_download,
             AmpConfig::get('share_expire', 7),

@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -35,7 +38,7 @@ if (!Core::is_session_started()) {
 $browse_type     = $browse->get_type();
 $browse_filters  = Browse::get_allowed_filters($browse_type);
 $allowed_filters = array('starts_with', 'minimum_count', 'rated', 'unplayed', 'playlist_type', 'object_type', 'catalog', 'show_art');
-if (!empty($browse_filters) && array_diff($allowed_filters, $browse_filters)) { ?>
+if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_filters))) { ?>
 <li>
     <h4><?php echo T_('Filters'); ?></h4>
     <div class="sb3">
@@ -57,40 +60,26 @@ if (!empty($browse_filters) && array_diff($allowed_filters, $browse_filters)) { 
         <?php echo Ajax::observe('ratedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=rated&value=1', ''));
     }
     if (in_array('unplayed', $browse_filters)) { ?>
-        <input id="unplayedCB" type="checkbox" <?php echo $string = ($browse->get_filter('unplayed')) ? 'checked="checked"' : ''; ?>/>
+        <input id="unplayedCB" type="checkbox" <?php echo ($browse->get_filter('unplayed')) ? 'checked="checked"' : ''; ?>/>
         <label id="unplayedLabel" for="unplayedCB"><?php echo T_('Unplayed'); ?></label><br />
         <?php echo Ajax::observe('unplayedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=unplayed&value=1', ''));
     }
     if (in_array('playlist_type', $browse_filters)) { ?>
-        <input id="show_allplCB" type="checkbox" <?php echo $string = ($browse->get_filter('playlist_type')) ? 'checked="checked"' : ''; ?>/>
-        <label id="show_allplLabel" for="showallplCB"><?php echo T_('All Playlists'); ?></label><br />
+        <input id="show_allplCB" type="checkbox" value="1" <?php echo (bool)($browse->get_filter('playlist_type')) ? 'checked="checked"' : ''; ?>/>
+        <label id="show_allplLabel" for="show_allplCB"><?php echo T_('All Playlists'); ?></label><br />
         <?php echo Ajax::observe('show_allplCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=playlist_type&value=1', ''));
-    }
-    if (in_array('object_type', $browse_filters)) {
-        $string       = 'otype_' . $browse->get_filter('object_type');
-        ${$string}    = 'selected="selected"'; ?>
-        <input id="typeSongRadio" type="radio" name="object_type" value="1" <?php echo $otype_song; ?>/>
-        <label id="typeSongLabel" for="typeSongRadio"><?php echo T_('Song Title'); ?></label><br />
-        <?php echo Ajax::observe('typeSongRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=song', '')); ?>
-        <input id="typeAlbumRadio" type="radio" name="object_type" value="1" />
-        <label id="typeAlbumLabel" for="typeAlbumRadio"><?php echo T_('Albums'); ?></label><br />
-        <?php echo Ajax::observe('typeAlbumRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=album', '')); ?>
-        <input id="typeArtistRadio" type="radio" name="object_type" value="1" />
-        <label id="typeArtistLabel" for="typeArtistRadio"><?php echo T_('Artist'); ?></label><br />
-        <?php echo Ajax::observe('typeArtistRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=artist', ''));
     }
     if (in_array('catalog', $browse_filters)) { ?>
         <form method="post" id="catalog_choice" action="javascript.void(0);">
-            <?php //TODO: FIX THIS <input type="hidden" name="hide" value="cel_you" /> each type needs a hide value if the object_type has hidden columns?>
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
-                <?php $results  = array();
-        $catalogs               = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
+                <?php $results = array();
+        $catalogs              = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
         if (!empty($catalogs)) {
             // Only show the catalogs this user is allowed to access
-            $sql               = 'SELECT `id`, `name` FROM `catalog` WHERE `id` IN (' . $catalogs . ') ORDER BY `name`';
-            $db_results        = Dba::read($sql);
+            $sql        = 'SELECT `id`, `name` FROM `catalog` WHERE `id` IN (' . $catalogs . ') ORDER BY `name`';
+            $db_results = Dba::read($sql);
             while ($data = Dba::fetch_assoc($db_results)) {
                 $results[] = $data;
             }

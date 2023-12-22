@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Authentication\Authenticator;
 
@@ -56,7 +57,8 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                 if ($auth_request) {
                     $sreg_request = Auth_OpenID_SRegRequest::build(// Required
                         array('nickname'), // Optional
-                        array('fullname', 'email'));
+                        array('fullname', 'email')
+                    );
                     if ($sreg_request) {
                         $auth_request->addExtension($sreg_request);
                     }
@@ -71,8 +73,10 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                     // For OpenID 1, send a redirect.  For OpenID 2, use a Javascript
                     // form to send a POST request to the server.
                     if ($auth_request->shouldSendRedirect()) {
-                        $redirect_url = $auth_request->redirectURL(AmpConfig::get('web_path'),
-                            Openid::get_return_url());
+                        $redirect_url = $auth_request->redirectURL(
+                            AmpConfig::get('web_path'),
+                            Openid::get_return_url()
+                        );
                         if (Auth_OpenID::isFailure($redirect_url)) {
                             $results['success'] = false;
                             $results['error']   = 'Could not redirect to server: ' . $redirect_url->message;
@@ -84,8 +88,12 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                     } else {
                         // Generate form markup and render it.
                         $form_id   = 'openid_message';
-                        $form_html = $auth_request->htmlMarkup(AmpConfig::get('web_path'), Openid::get_return_url(),
-                            false, array('id' => $form_id));
+                        $form_html = $auth_request->htmlMarkup(
+                            AmpConfig::get('web_path'),
+                            Openid::get_return_url(),
+                            false,
+                            array('id' => $form_id)
+                        );
 
                         if (Auth_OpenID::isFailure($form_html)) {
                             $results['success'] = false;
@@ -153,9 +161,9 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                         $users = $this->userRepository->findByWebsite($result['website']);
                         if (count($users) > 0) {
                             if (count($users) == 1) {
-                                $user                = new User($users[0]);
-                                $result['success']   = true;
-                                $result['username']  = $user->username;
+                                $user               = new User($users[0]);
+                                $result['success']  = true;
+                                $result['username'] = $user->username;
                             } else {
                                 // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
                                 // Should we make website field unique?
@@ -170,7 +178,7 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                         } else {
                             // Don't return success if a user already exists for this username but don't have this openid identity as website
                             $user = User::get_from_username($result['username']);
-                            if ($user->id) {
+                            if ($user instanceof User) {
                                 $result['success'] = false;
                                 $result['error']   = 'No user associated to this OpenID and username already taken.';
                             } else {

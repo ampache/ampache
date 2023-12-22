@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,14 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\SearchData;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -38,6 +39,8 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private ResponseFactoryInterface $responseFactory;
 
     private StreamFactoryInterface $streamFactory;
@@ -45,10 +48,12 @@ final class ShowAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ModelFactoryInterface $modelFactory
     ) {
+        $this->requestParser   = $requestParser;
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->modelFactory    = $modelFactory;
@@ -58,7 +63,7 @@ final class ShowAction implements ApplicationActionInterface
     {
         $search = $this->modelFactory->createSearch(
             null,
-            Core::get_request('type')
+            $this->requestParser->getFromRequest('type')
         );
 
         $content = 'var types = ';
@@ -66,7 +71,7 @@ final class ShowAction implements ApplicationActionInterface
         $content .= 'var basetypes = ';
         $content .= $this->arrayToJSON($search->basetypes) . ";\n";
         $content .= sprintf(
-            'removeIcon = \'<a href="javascript: void(0)">%s</a>\';',
+            'removeIcon = \'<a href="javascript:void(0)">%s</a>\';',
             Ui::get_icon('disable', T_('Remove'))
         );
 
@@ -83,12 +88,12 @@ final class ShowAction implements ApplicationActionInterface
 
     /**
      * @deprecated json_encode should do the trick here
-     *
-     * @param $array
-     * @return string
      */
     private function arrayToJSON($array): string
     {
+        if (function_exists('json_encode') && is_string(json_encode($array))) {
+            return json_encode($array) ?: '';
+        }
         $json = '{ ';
         foreach ($array as $key => $value) {
             $json .= '"' . $key . '" : ';

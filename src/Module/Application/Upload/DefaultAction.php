@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -40,19 +41,12 @@ final class DefaultAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
-    /**
-     * @var ConfigContainerInterface
-     */
     private ConfigContainerInterface $configContainer;
 
-    /**
-     * @var UiInterface
-     */
     private UiInterface $ui;
-    /**
-     * @var AjaxUriRetrieverInterface
-     */
+
     private AjaxUriRetrieverInterface $ajaxUriRetriever;
+
 
     public function __construct(
         ConfigContainerInterface $configContainer,
@@ -77,6 +71,7 @@ final class DefaultAction implements ApplicationActionInterface
 
         $upload_max = return_bytes(ini_get('upload_max_filesize'));
         $post_max   = return_bytes(ini_get('post_max_size'));
+        $ajaxfs     = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
         if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
             $upload_max = $post_max;
         }
@@ -104,7 +99,13 @@ final class DefaultAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         if ($this->configContainer->get(ConfigurationKeyEnum::UPLOAD_CATALOG) > 0) {
-            require Ui::find_template('show_add_upload.inc.php');
+            $this->ui->show(
+                'show_add_upload.inc.php',
+                [
+                    'upload_max' => $upload_max,
+                    'ajaxfs' => $ajaxfs
+                ]
+            );
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '&nbsp' . "<a href=\"https://github.com/ampache/ampache/wiki/upload-catalogs\" target=\"_blank\">" . T_('Help') . "</a>";

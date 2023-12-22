@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,13 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -47,7 +47,7 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        require_once Ui::find_template('show_form_search.inc.php');
+        $this->ui->show('show_form_search.inc.php');
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

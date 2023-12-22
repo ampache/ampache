@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Gui\System;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -36,7 +37,7 @@ class UpdateViewAdapterTest extends MockeryTestCase
 
     private ?UpdateViewAdapter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
 

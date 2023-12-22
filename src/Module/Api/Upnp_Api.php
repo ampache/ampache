@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api;
 
 use Ampache\Repository\Model\Album;
@@ -33,6 +34,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
 use DOMDocument;
@@ -72,12 +74,12 @@ class Upnp_Api
      * object.item.textItem
      * object.container
      */
-    const SSDP_DEBUG = false;
+    public const SSDP_DEBUG = false;
 
     /**
-     * @return string
+     * get_uuidStr
      */
-    public static function get_uuidStr()
+    public static function get_uuidStr(): string
     {
         // Create uuid based on host
         $key  = 'ampache_' . AmpConfig::get('http_host');
@@ -90,34 +92,36 @@ class Upnp_Api
 
     /**
      * @param string $buf
-     * @param integer $delay
+     * @param int $delay
      * @param string $host
-     * @param integer $port
+     * @param int $port
      */
-    private static function udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900)
+    private static function udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900): void
     {
         usleep($delay * 1000); // we are supposed to delay before sending
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-        // when broadcast, set broadcast socket option
-        if ($host == "239.255.255.250") {
-            socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
+        if ($socket !== false) {
+            // when broadcast, set broadcast socket option
+            if ($host == "239.255.255.250") {
+                socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
+            }
+            socket_sendto($socket, $buf, strlen((string)$buf), 0, $host, $port);
+            socket_close($socket);
         }
-        socket_sendto($socket, $buf, strlen((string) $buf), 0, $host, $port);
-        socket_close($socket);
     }
 
     /**
-     * @param integer $delay
+     * @param int $delay
      * @param string $host
-     * @param integer $port
+     * @param int $port
      * @param string $prefix
-     * @param boolean $alive
+     * @param bool $alive
      */
-    public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT", $alive = true)
+    public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT", $alive = true): void
     {
         $strHeader = 'NOTIFY * HTTP/1.1' . "\r\n";
         $strHeader .= 'HOST: ' . $host . ':' . $port . "\r\n";
-        $strHeader .= 'LOCATION: http://' . gethostbyname(AmpConfig::get('http_host')) . ':' . AmpConfig::get('http_port') . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
+        $strHeader .= 'LOCATION: http://' . gethostbyname(AmpConfig::get('http_host')) . ':' . AmpConfig::get('http_port', 80) . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
         $strHeader .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/' . AmpConfig::get('version') . "\r\n";
         $strHeader .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
         //$strHeader .= 'NTS: ssdp:alive' . "\r\n";
@@ -161,7 +165,7 @@ class Upnp_Api
      * @param $address
      * @throws Exception
      */
-    public static function sendResponse($delaytime, $actst, $address)
+    public static function sendResponse($delaytime, $actst, $address): void
     {
         $response  = 'HTTP/1.1 200 OK' . "\r\n";
         $response .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
@@ -170,7 +174,7 @@ class Upnp_Api
         $response .= 'EXT:' . "\r\n";
         // Note that quite a few devices are unable to resolve a URL into an IP address. Therefore we have to use a
         // local IP address - resolve http_host into IP address
-        $response .= 'LOCATION: http://' . gethostbyname(AmpConfig::get('http_host')) . ':' . AmpConfig::get('http_port') . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
+        $response .= 'LOCATION: http://' . gethostbyname(AmpConfig::get('http_host')) . ':' . AmpConfig::get('http_port', 80) . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
         $response .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/' . AmpConfig::get('version') . "\r\n";
         $response .= 'ST: ' . $actst . "\r\n";
         $response .= 'USN: ' . 'uuid:' . self::get_uuidStr() . '::' . $actst . "\r\n";
@@ -182,7 +186,7 @@ class Upnp_Api
         // Delay in ms
         $delay = random_int(15, $delaytime * 1000);
 
-        $addr=explode(":", $address);
+        $addr = explode(":", $address);
         if (self::SSDP_DEBUG) {
             debug_event(self::class, 'Sending response to: ' . $addr[0] . ':' . $addr[1] . PHP_EOL . $response, 5);
         }
@@ -197,7 +201,7 @@ class Upnp_Api
      * @param $unpacked
      * @param $remote
      */
-    public static function notify_request($unpacked, $remote)
+    public static function notify_request($unpacked, $remote): void
     {
         $headers = self::get_headers($unpacked);
         $str     = 'Notify ' . $remote . ' ' . $headers['nts'] . ' for ' . $headers['nt'];
@@ -238,7 +242,7 @@ class Upnp_Api
      * @param $address
      * @throws Exception
      */
-    public static function discovery_request($data, $address)
+    public static function discovery_request($data, $address): void
     {
         // Process a discovery request.  The response must be sent to the address specified by $remote
         $headers = self::get_headers($data);
@@ -291,9 +295,9 @@ class Upnp_Api
     {
         $retArr = array();
         $reader = new XMLReader();
-        $result = XMLReader::XML($prmRequest);
+        $result = $reader->XML($prmRequest);
         if (!$result) {
-            debug_event(self::class, 'XML reader failed', 5);
+            debug_event(self::class, 'XML reader class setup failed', 5);
         }
 
         while ($reader->read()) {
@@ -363,16 +367,15 @@ class Upnp_Api
         } // end while
 
         return $retArr;
-    } // end function
+    }
 
     /**
      * @param $filterValue
      * @param $keyisRes
      * @param $keytoCheck
      * Checks whether key is in filter string, taking account of allowable filter wildcards and null strings
-     * @return bool
      */
-    public static function isinFilter($filterValue, $keyisRes, $keytoCheck)
+    public static function isinFilter($filterValue, $keyisRes, $keytoCheck): bool
     {
         if ($filterValue == null || $filterValue == '') {
             return true;
@@ -397,7 +400,7 @@ class Upnp_Api
      * @param $filterValue
      * @return DOMDocument
      */
-    public static function createDIDL($prmItems, $filterValue)
+    public static function createDIDL($prmItems, $filterValue): DOMDocument
     {
         $xmlDoc               = new DOMDocument('1.0' /*, 'utf-8'*/);
         $xmlDoc->formatOutput = true; // Note: other players don't seem to do this
@@ -425,10 +428,12 @@ class Upnp_Api
                 continue;
             }
 
-            if ($item['upnp:class'] == 'object.container' ||
+            if (
+                $item['upnp:class'] == 'object.container' ||
                 $item['upnp:class'] == 'object.container.album.musicAlbum' ||
                 $item['upnp:class'] == 'object.container.person.musicArtist' ||
-                $item['upnp:class'] == 'object.container.storageFolder') {
+                $item['upnp:class'] == 'object.container.storageFolder'
+            ) {
                 $ndItem = $xmlDoc->createElement('container');
             } else {
                 $ndItem = $xmlDoc->createElement('item');
@@ -518,7 +523,7 @@ class Upnp_Api
                             $ndItem->appendChild($ndTag);
                             // check if string is already utf-8 encoded
                             $xvalue     = str_replace("&", "&amp;", $value);
-                            $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($xvalue, 'auto') == 'UTF-8')?$xvalue:utf8_encode($xvalue));
+                            $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($xvalue, 'auto') == 'UTF-8') ? $xvalue : utf8_encode($xvalue));
                             $ndTag->appendChild($ndTag_text);
                         }
                 }
@@ -546,7 +551,7 @@ class Upnp_Api
         $prmTotMatches,
         $prmResponseType = 'u:BrowseResponse',
         $prmUpdateID = '0'
-    ) {
+    ): DOMDocument {
         /*
          * $prmDIDL is DIDL XML string
          * XML-Layout:
@@ -583,9 +588,8 @@ class Upnp_Api
 
     /**
      * @param string $prmPath
-     * @return array|null
      */
-    public static function _musicMetadata($prmPath)
+    public static function _musicMetadata($prmPath): ?array
     {
         $root    = 'amp://music';
         $pathreq = explode('/', $prmPath);
@@ -610,8 +614,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $artist = new Artist($pathreq[1]);
-                        if ($artist->id) {
+                        $artist = new Artist((int)$pathreq[1]);
+                        if ($artist->isNew() === false) {
                             $artist->format();
                             $meta = self::_itemArtist($artist, $root . '/artists');
                         }
@@ -631,8 +635,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $album = new Album($pathreq[1]);
-                        if (isset($album->id)) {
+                        $album = new Album((int)$pathreq[1]);
+                        if ($album->isNew() === false) {
                             $album->format();
                             $meta = self::_itemAlbum($album, $root . '/albums');
                         }
@@ -652,8 +656,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $song = new Song($pathreq[1]);
-                        if ($song->id) {
+                        $song = new Song((int)$pathreq[1]);
+                        if ($song->isNew() === false) {
                             $song->format();
                             $meta = self::_itemSong($song, $root . '/songs');
                         }
@@ -673,8 +677,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $playlist = new Playlist($pathreq[1]);
-                        if ($playlist->id) {
+                        $playlist = new Playlist((int)$pathreq[1]);
+                        if ($playlist->isNew() === false) {
                             $playlist->format();
                             $meta = self::_itemPlaylist($playlist, $root . '/playlists');
                         }
@@ -694,8 +698,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $playlist = new Search($pathreq[1], 'song');
-                        if ($playlist->id) {
+                        $playlist = new Search((int)$pathreq[1], 'song');
+                        if ($playlist->isNew() === false) {
                             $playlist->format();
                             $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
                         }
@@ -715,8 +719,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $radio = new Live_Stream($pathreq[1]);
-                        if ($radio->id) {
+                        $radio = new Live_Stream((int)$pathreq[1]);
+                        if ($radio->isNew() === false) {
                             $radio->format();
                             $meta = self::_itemLiveStream($radio, $root . '/live_streams');
                         }
@@ -736,14 +740,13 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $podcast = new Podcast($pathreq[1]);
-                        if ($podcast->id) {
-                            $podcast->format();
+                        $podcast = self::getPodcastRepository()->findById((int)$pathreq[1]);
+                        if ($podcast !== null) {
                             $meta = self::_itemPodcast($podcast, $root . '/podcasts');
                         }
                         break;
                     case 3:
-                        $episode = new Podcast_Episode($pathreq[2]);
+                        $episode = new Podcast_Episode((int)$pathreq[2]);
                         if (isset($episode->id)) {
                             $episode->format();
                             $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
@@ -779,7 +782,10 @@ class Upnp_Api
         $maxCount = count($items);
         //debug_event(self::class, 'slice: ' . $maxCount . "   " . $start . "    " . $count, 5);
 
-        return array($maxCount, array_slice($items, $start, ($count == 0 ? $maxCount - $start : $count)));
+        return array(
+            $maxCount,
+            array_slice($items, $start, (($count == 0) ? $maxCount - $start : $count))
+        );
     }
 
     /**
@@ -818,12 +824,15 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get artist's albums list
-                        $artist = new Artist($pathreq[1]);
-                        if ($artist->id) {
+                        $artist = new Artist((int)$pathreq[1]);
+                        if ($artist->isNew() === false) {
                             $album_ids              = static::getAlbumRepository()->getAlbumByArtist($artist->id);
                             [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);
+                                if ($album->isNew()) {
+                                    continue;
+                                }
                                 $album->format();
                                 $mediaItems[] = self::_itemAlbum($album, $parent);
                             }
@@ -838,12 +847,15 @@ class Upnp_Api
                         [$maxCount, $album_ids] = array($counts['album'], $album_ids);
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
+                            if ($album->isNew()) {
+                                continue;
+                            }
                             $album->format();
                             $mediaItems[] = self::_itemAlbum($album, $parent);
                         }
                         break;
                     case 2: // Get album's songs list
-                        $album = new Album($pathreq[1]);
+                        $album = new Album((int)$pathreq[1]);
                         if (isset($album->id)) {
                             $song_ids              = static::getSongRepository()->getByAlbum($album->id);
                             [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
@@ -861,7 +873,10 @@ class Upnp_Api
                 if (count($pathreq) == 1) {
                     $catalogs = Catalog::get_catalogs();
                     foreach ($catalogs as $catalog_id) {
-                        $catalog            = Catalog::create_from_id($catalog_id);
+                        $catalog = Catalog::create_from_id($catalog_id);
+                        if ($catalog === null) {
+                            break;
+                        }
                         $songs              = $catalog->get_songs();
                         [$maxCount, $songs] = self::_slice($songs, $start, $count);
                         foreach ($songs as $song) {
@@ -883,8 +898,8 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get playlist's songs list
-                        $playlist = new Playlist($pathreq[1]);
-                        if ($playlist->id) {
+                        $playlist = new Playlist((int)$pathreq[1]);
+                        if ($playlist->isNew() === false) {
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
@@ -909,8 +924,8 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get playlist's songs list
-                        $playlist = new Search($pathreq[1], 'song');
-                        if ($playlist->id) {
+                        $playlist = new Search((int)$pathreq[1], 'song');
+                        if ($playlist->isNew() === false) {
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
@@ -942,14 +957,14 @@ class Upnp_Api
                         $podcasts              = Catalog::get_podcasts();
                         [$maxCount, $podcasts] = self::_slice($podcasts, $start, $count);
                         foreach ($podcasts as $podcast) {
-                            $podcast->format();
                             $mediaItems[] = self::_itemPodcast($podcast, $parent);
                         }
                         break;
                     case 2: // Get podcast episodes list
-                        $podcast = new Podcast($pathreq[1]);
-                        if ($podcast->id) {
-                            $episodes              = $podcast->get_episodes();
+                        $podcast = self::getPodcastRepository()->findById((int)$pathreq[1]);
+                        if ($podcast !== null) {
+                            $episodes = self::getPodcastRepository()->getEpisodes($podcast);
+
                             [$maxCount, $episodes] = self::_slice($episodes, $start, $count);
                             foreach ($episodes as $episode_id) {
                                 $episode = new Podcast_Episode($episode_id);
@@ -980,14 +995,16 @@ class Upnp_Api
             $maxCount = count($mediaItems);
         }
 
-        return array($maxCount, $mediaItems);
+        return array(
+            $maxCount,
+            $mediaItems
+        );
     }
 
     /**
      * @param string $prmPath
-     * @return array|null
      */
-    public static function _videoMetadata($prmPath)
+    public static function _videoMetadata($prmPath): ?array
     {
         $root    = 'amp://video';
         $pathreq = explode('/', $prmPath);
@@ -1011,22 +1028,22 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $tvshow = new TvShow($pathreq[1]);
-                        if ($tvshow->id) {
+                        $tvshow = new TvShow((int)$pathreq[1]);
+                        if ($tvshow->isNew() === false) {
                             $tvshow->format();
                             $meta = self::_itemTVShow($tvshow, $root . '/tvshows');
                         }
                         break;
                     case 3:
-                        $season = new TVShow_Season($pathreq[2]);
-                        if ($season->id) {
+                        $season = new TVShow_Season((int)$pathreq[2]);
+                        if ($season->isNew() === false) {
                             $season->format();
                             $meta = self::_itemTVShowSeason($season, $root . '/tvshows/' . $pathreq[1]);
                         }
                         break;
                     case 4:
-                        $video = new TVShow_Episode($pathreq[3]);
-                        if ($video->id) {
+                        $video = new TVShow_Episode((int)$pathreq[3]);
+                        if ($video->isNew() === false) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/tvshows/' . $pathreq[1] . '/' . $pathreq[2]);
                         }
@@ -1047,8 +1064,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $video = new Clip($pathreq[1]);
-                        if ($video->id) {
+                        $video = new Clip((int)$pathreq[1]);
+                        if ($video->isNew() === false) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/clips');
                         }
@@ -1069,8 +1086,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $video = new Movie($pathreq[1]);
-                        if ($video->id) {
+                        $video = new Movie((int)$pathreq[1]);
+                        if ($video->isNew() === false) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/movies');
                         }
@@ -1091,8 +1108,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $video = new Personal_Video($pathreq[1]);
-                        if ($video->id) {
+                        $video = new Personal_Video((int)$pathreq[1]);
+                        if ($video->isNew() === false) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/personal_videos');
                         }
@@ -1148,8 +1165,8 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get season list
-                        $tvshow = new TvShow($pathreq[1]);
-                        if ($tvshow->id) {
+                        $tvshow = new TvShow((int)$pathreq[1]);
+                        if ($tvshow->isNew() === false) {
                             $season_ids                  = $tvshow->get_seasons();
                             [$maxCount, $season_ids]     = self::_slice($season_ids, $start, $count);
                             foreach ($season_ids as $season_id) {
@@ -1160,8 +1177,8 @@ class Upnp_Api
                         }
                         break;
                     case 3: // Get episode list
-                        $season = new TVShow_Season($pathreq[2]);
-                        if ($season->id) {
+                        $season = new TVShow_Season((int)$pathreq[2]);
+                        if ($season->isNew() === false) {
                             $episode_ids                  = $season->get_episodes();
                             [$maxCount, $episode_ids]     = self::_slice($episode_ids, $start, $count);
                             foreach ($episode_ids as $episode_id) {
@@ -1218,7 +1235,10 @@ class Upnp_Api
             $maxCount = count($mediaItems);
         }
 
-        return array($maxCount, $mediaItems);
+        return array(
+            $maxCount,
+            $mediaItems
+        );
     }
 
     /**
@@ -1242,8 +1262,8 @@ class Upnp_Api
 
         // trim spaces around tokens and discard those which have only spaces in them
         $index = 0;
-        for ($i=0; $i < $actualsize; $i++) {
-            $actualtokens[$i]=trim($actualtokens[$i]);
+        for ($i = 0; $i < $actualsize; $i++) {
+            $actualtokens[$i] = trim($actualtokens[$i]);
             if ($actualtokens[$i] != "") {
                 $nospacetokens[$index++] = $actualtokens[$i];
             }
@@ -1253,7 +1273,7 @@ class Upnp_Api
         $onetoken    = "";
         $index       = 0;
         $nospacesize = sizeof($nospacetokens);
-        for ($i=0; $i < $nospacesize; $i++) {
+        for ($i = 0; $i < $nospacesize; $i++) {
             $token = $nospacetokens[$i];
             switch ($token) {
                 case "not":
@@ -1292,7 +1312,7 @@ class Upnp_Api
     {
         //echo "Search term ", $query, "\n";
         $tok = str_getcsv($query, ' ');
-        //for ($i=0; $i<sizeof($tok); $i++) {
+        //for ($i = 0; $i<sizeof($tok); $i++) {
         //    echo $i, $tok[$i];
         //    echo "\n";
         //}
@@ -1349,9 +1369,8 @@ class Upnp_Api
     /**
      * Cannot be very precious about this as filtering capability ATM just relates to the kind of search we end up doing
      * @param $filter
-     * @return string
      */
-    private static function parse_upnp_filter($filter)
+    private static function parse_upnp_filter($filter): string
     {
         // TODO patched out for now: creates problems in search results
         unset($filter);
@@ -1382,15 +1401,15 @@ class Upnp_Api
 
         $tokens = self::gettokens($query);
         $size   = sizeof($tokens);
-        // for ($i=0; $i<sizeof($tokens); $i++) {
+        // for ($i = 0; $i<sizeof($tokens); $i++) {
         //     echo $tokens[$i]."|";
         // }
         // echo "\n";
 
         // Go through all the tokens and transform anything we recognize
         // If any translation goes to NUL then must remove previous token provided it is AND or OR
-        for ($i=0; $i < $size; $i++) {
-            for ($j=0; $j < 7; $j++) {
+        for ($i = 0; $i < $size; $i++) {
+            for ($j = 0; $j < 7; $j++) {
                 if ($tokens[$i] == $upnp_translations[$j][0]) {
                     $tokens[$i] = $upnp_translations[$j][1];
                     if ($upnp_translations[$j][1] == '' && $i > 1 && ($tokens[$i - 1] == "and" || $tokens[$i - 1] == "or")) {
@@ -1399,7 +1418,7 @@ class Upnp_Api
                 }
             }
         }
-        //for ($i=0; $i<sizeof($tokens); $i++) {
+        //for ($i = 0; $i<sizeof($tokens); $i++) {
         //   echo $tokens[$i]."|";
         //}
         // Start to construct the Ampache Search data array
@@ -1430,7 +1449,7 @@ class Upnp_Api
         $num_and = 0;
         $num_or  = 0;
         $size    = sizeof($tokens);
-        for ($i=0; $i < $size; $i++) {
+        for ($i = 0; $i < $size; $i++) {
             if ($tokens[$i] == 'and') {
                 $num_and++;
                 $tokens[$i] = '';
@@ -1459,7 +1478,7 @@ class Upnp_Api
 
         $rule_num = 1;
         $size     = sizeof($tokens);
-        for ($i=0; $i < $size; $i++) {
+        for ($i = 0; $i < $size; $i++) {
             if ($tokens[$i] != '') {
                 $rule = 'rule_' . (string) $rule_num;
                 $term = self::parse_upnp_search_term($tokens[$i], $data['type']);
@@ -1492,25 +1511,31 @@ class Upnp_Api
      */
     public static function _callSearch($criteria, $filter, $start, $count)
     {
-        $mediaItems   = array();
-        $maxCount     = 0;
-        $type         = self::parse_upnp_filter($filter);
-        $data         = self::parse_upnp_searchcriteria($criteria, $type);
+        $type = self::parse_upnp_filter($filter);
+        $data = self::parse_upnp_searchcriteria($criteria, $type);
         debug_event(self::class, 'Dumping search data: ' . var_export($data, true), 5);
         $ids = Search::run($data); // return a list of IDs
         if (count($ids) == 0) {
             debug_event(self::class, 'Search returned no hits', 5);
 
-            return array(0, $mediaItems);
+            return array(
+                0,
+                array()
+            );
         }
         //debug_event(self::class, 'Dumping $search results: '.var_export( $ids, true ), 5);
         debug_event(self::class, ' ' . (string) count($ids) . ' ids looking for type ' . $data['type'], 5);
 
+        $mediaItems = array();
+        $maxCount   = 0;
         switch ($data['type']) {
             case 'artist':
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $artist_id) {
                     $artist = new Artist($artist_id);
+                    if ($artist->isNew()) {
+                        continue;
+                    }
                     $artist->format();
                     $mediaItems[] = self::_itemArtist($artist, "amp://music/artists");
                 }
@@ -1528,6 +1553,9 @@ class Upnp_Api
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $album_id) {
                     $album = new Album($album_id);
+                    if ($album->isNew()) {
+                        continue;
+                    }
                     $album->format();
                     //debug_event(self::class, $album->get_fullname(), 5);
                     $mediaItems[] = self::_itemAlbum($album, "amp://music/albums");
@@ -1554,7 +1582,10 @@ class Upnp_Api
             $maxCount = count($mediaItems);
         }
 
-        return array($maxCount, $mediaItems);
+        return array(
+            $maxCount,
+            $mediaItems
+        );
     }
 
     /**
@@ -1950,5 +1981,15 @@ class Upnp_Api
         global $dic;
 
         return $dic->get(LiveStreamRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

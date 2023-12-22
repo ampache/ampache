@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
@@ -38,14 +38,12 @@ final class Video3Method
     /**
      * video
      * This returns a single video
-     * @param array $input
-     * @param User $user
      */
-    public static function video(array $input, User $user)
+    public static function video(array $input, User $user): void
     {
         unset($user);
-        $video_id = scrub_in($input['filter']);
+        $video_id = scrub_in((string) $input['filter']);
 
         echo Xml3_Data::videos(array($video_id));
-    } // video
+    }
 }

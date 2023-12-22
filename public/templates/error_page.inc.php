@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -29,12 +32,12 @@ $t_ampache = T_('Ampache');
 $htmllang  = $htmllang ?? 'en_US';
 $dir       = $dir ?? 'ltr'; ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir;?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
 <head>
 <!-- Propelled by Ampache | ampache.org -->
-<meta http-equiv="refresh" content="10;URL=<?php echo $redirect_url;?>" />
+<meta http-equiv="refresh" content="10;URL=<?php echo $redirect_url; ?>" />
 <?php Ui::show_custom_style(); ?>
-<title><?php echo T_('Ampache Error Page');?></title>
+<title><?php echo T_('Ampache Error Page'); ?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
@@ -55,7 +58,7 @@ $dir       = $dir ?? 'ltr'; ?>
             <h1><?php echo T_('Error'); ?></h1>
             <p><?php echo(T_("The following error has occurred, you will be automatically redirected in 10 seconds.")); ?></p>
         </div>
-        <h2><?php echo(T_("Error Messages"));?>:</h2>
+        <h2><?php echo(T_("Error Messages")); ?>:</h2>
         <?php echo AmpError::display('general'); ?>
     </div>
 </body>

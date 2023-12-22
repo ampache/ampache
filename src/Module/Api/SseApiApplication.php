@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
@@ -68,7 +69,8 @@ final class SseApiApplication implements ApiApplicationInterface
             $options = null;
         }
         if (array_key_exists('catalogs', $_REQUEST)) {
-            $catalogs = scrub_in(json_decode(urldecode($_REQUEST['catalogs']), true));
+            /** @var array $catalogs */
+            $catalogs = scrub_in((array) json_decode(urldecode($_REQUEST['catalogs']), true));
         } else {
             $catalogs = null;
         }

@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -74,7 +75,7 @@ class Ldap
      * array_filter_key
      *
      * @param array $array
-     * @param string $callback
+     * @param callable-string $callback
      * @return array
      */
     private static function array_filter_key($array, $callback)
@@ -123,7 +124,7 @@ class Ldap
      * @param string $password
      * @throws LdapException
      */
-    private static function bind($link, $username = null, $password = null)
+    private static function bind($link, $username = null, $password = null): void
     {
         if ($username === null && $password === null) {
             $username = AmpConfig::get('ldap_username', '');
@@ -140,7 +141,7 @@ class Ldap
      * Unbinds from the LDAP
      * @param $link
      */
-    private static function unbind($link)
+    private static function unbind($link): void
     {
         ldap_unbind($link);
     }
@@ -175,7 +176,7 @@ class Ldap
      * @param $link
      * @param $base_dn
      * @param string $filter
-     * @param boolean $only_one_result
+     * @param bool $only_one_result
      * @return array
      * @throws LdapException
      */

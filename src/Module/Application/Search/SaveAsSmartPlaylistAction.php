@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,17 +23,15 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -65,8 +66,6 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
 
         $playlist = $this->modelFactory->createSearch();
         $playlist->set_rules($_REQUEST);
-        $playlist->limit  = (int) Core::get_request('limit');
-        $playlist->random = (int) Core::get_request('random');
         $playlist->create();
 
         $this->ui->showConfirmation(
@@ -77,7 +76,8 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
                 $playlist->name
             ),
             sprintf(
-                '%s/browse.php?action=smartplaylist', $this->configContainer->getWebPath()
+                '%s/browse.php?action=smartplaylist',
+                $this->configContainer->getWebPath()
             )
         );
 

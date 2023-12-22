@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -32,10 +35,10 @@ use Ampache\Module\Util\Ui;
 <td class="cel_to_user"><?php echo $libitem->getRecipientUserLink(); ?></td>
 <td class="cel_creation_date"><?php echo $libitem->getCreationDateFormatted(); ?></td>
 <td class="cel_action">
-<a id="<?php echo 'reply_pvmsg_' . $libitem->getId() ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $libitem->getId(); ?>">
+<a id="<?php echo 'reply_pvmsg_' . $libitem->getId(); ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $libitem->getId(); ?>">
     <?php echo Ui::get_icon('mail', T_('Reply')); ?>
 </a>
-<a id="<?php echo 'delete_pvmsg_' . $libitem->getId() ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=<?php echo $libitem->getId(); ?>">
+<a id="<?php echo 'delete_pvmsg_' . $libitem->getId(); ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=<?php echo $libitem->getId(); ?>">
     <?php echo Ui::get_icon('delete', T_('Delete')); ?>
 </a>
 </td>

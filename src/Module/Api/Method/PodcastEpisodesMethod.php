@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,76 +23,103 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class PodcastEpisodesMethod
- * @package Lib\ApiMethods
- */
-final class PodcastEpisodesMethod
+final class PodcastEpisodesMethod implements MethodInterface
 {
     public const ACTION = 'podcast_episodes';
 
+    private PodcastRepositoryInterface $podcastRepository;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        PodcastRepositoryInterface $podcastRepository,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->podcastRepository = $podcastRepository;
+        $this->configContainer   = $configContainer;
+    }
+
     /**
-     * podcast_episodes
      * MINIMUM_API_VERSION=420000
      *
      * This returns the episodes for a podcast
      *
-     * @param array $input
-     * @param User $user
-     * filter = (string) UID of podcast
+     * filter = (string) ID of the podcast
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @param array{
+     *  filter?: string,
+     *  offset?: string,
+     *  limit?: string
+     * } $input
      */
-    public static function podcast_episodes(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('podcast')) {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
+            $response->getBody()->write(
+                $output->error(
+                    ErrorCodeEnum::ACCESS_DENIED,
+                    T_('Enable: podcast'),
+                    self::ACTION,
+                    'system'
+                )
+            );
 
-            return false;
+            return $response;
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
-        if (!$podcast->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
-            return false;
+        $podcastId = (int) ($input['filter'] ?? 0);
+        $offset    = (int) ($input['offset'] ?? 0);
+        $limit     = (int) ($input['limit'] ?? 0);
+
+        if ($podcastId === 0) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        $results = $podcast->get_episodes();
+
+        $podcast = $this->podcastRepository->findById($podcastId);
+        if ($podcast === null) {
+            throw new ResultEmptyException(
+                (string) $podcastId
+            );
+        }
+
+        $results = $this->podcastRepository->getEpisodes($podcast);
         if (empty($results)) {
-            Api::empty('podcast_episode', $input['api_format']);
+            $response->getBody()->write(
+                $output->writeEmpty('podcast_episode')
+            );
 
-            return false;
+            return $response;
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
-                Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::podcast_episodes($results, $user);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
-                Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::podcast_episodes($results, $user);
-        }
+        $output->setOffset($offset);
+        $output->setLimit($limit);
 
-        return true;
+        $response->getBody()->write(
+            $output->podcastEpisodes($results, $user)
+        );
+
+        return $response;
     }
 }

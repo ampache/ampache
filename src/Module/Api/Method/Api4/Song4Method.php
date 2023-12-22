@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -43,17 +43,14 @@ final class Song4Method
      *
      * return a single song
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of song
-     * @return boolean
      */
     public static function song(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $song_id = scrub_in($input['filter']);
+        $song_id = scrub_in((string) $input['filter']);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -65,5 +62,5 @@ final class Song4Method
         }
 
         return true;
-    } // song
+    }
 }

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,23 +23,20 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache;
 
 use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 
-abstract class MockeryTestCase extends TestCase
+abstract class MockeryTestCase extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @param string|string[] $className
+     * @template TClassName
+     *
+     * @param class-string<TClassName> $className
+     * @return MockInterface&TClassName
      */
-    public function mock($className): MockInterface
+    public function mock($className)
     {
         return Mockery::mock($className);
     }

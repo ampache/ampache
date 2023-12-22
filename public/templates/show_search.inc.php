@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -34,9 +37,10 @@ use Ampache\Module\Util\ZipHandlerInterface;
 ob_start();
 echo $playlist->get_fullname();
 $title    = ob_get_contents();
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $browse   = new Browse();
 $browse->set_type('playlist_media');
+$browse->set_use_filters(false);
 $browse->add_supplemental_object('search', $playlist->id);
 $browse->set_static_content(false);
 ob_end_clean();
@@ -61,7 +65,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('search')
         </li>
 <?php if ($playlist->has_access()) { ?>
         <li>
-            <a id="<?php echo 'edit_playlist_' . $playlist->id ?>" onclick="showEditDialog('search_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_' . $playlist->id ?>', '<?php echo addslashes(T_('Smart Playlist Edit')) ?>', '')">
+            <a id="<?php echo 'edit_playlist_' . $playlist->id; ?>" onclick="showEditDialog('search_row', '<?php echo $playlist->id; ?>', '<?php echo 'edit_playlist_' . $playlist->id; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit'); ?>
             </a>
@@ -76,7 +80,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('search')
     </ul>
 </div>
 
-<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/smartplaylist.php?action=show_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
+<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/smartplaylist.php?action=show&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
     <?php require Ui::find_template('show_rules.inc.php'); ?>
     <div class="formValidation">
         <input class="button" type="submit" value="<?php echo T_('Refresh'); ?>" onClick="$('#hiddenaction').val('refresh_playlist');" />&nbsp;&nbsp;
@@ -84,8 +88,9 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('search')
         <input class="button" type="submit" value="<?php echo T_('Save as Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
         <input type="hidden" id="hiddenaction" name="action" value="search" />
         <input type="hidden" name="browse_id" value="<?php echo $browse->id; ?>" />
-        <input type="hidden" name="browse_type" value="<?php echo $playlist->type; ?>" />
-        <input type="hidden" name="browse_name" value="<?php echo $playlist->name; ?>" />
+        <input type="hidden" name="playlist_id" value="<?php echo $playlist->id; ?>" />
+        <input type="hidden" name="playlist_type" value="<?php echo $playlist->type; ?>" />
+        <input type="hidden" name="playlist_name" value="<?php echo $playlist->name; ?>" />
     </div>
 </form>
 

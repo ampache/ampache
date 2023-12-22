@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,9 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 namespace Ampache\Module\Playback\Localplay\Mpd;
 
@@ -51,114 +51,114 @@ class mpd
 {
     // Command names
     // Status queries
-    const COMMAND_CLEARERROR  = 'clearerror';
-    const COMMAND_CURRENTSONG = 'currentsong';
-    const COMMAND_IDLE        = 'idle';
-    const COMMAND_STATUS      = 'status';
-    const COMMAND_STATISTICS  = 'stats';
+    public const COMMAND_CLEARERROR  = 'clearerror';
+    public const COMMAND_CURRENTSONG = 'currentsong';
+    public const COMMAND_IDLE        = 'idle';
+    public const COMMAND_STATUS      = 'status';
+    public const COMMAND_STATISTICS  = 'stats';
 
     // Playback options
-    const COMMAND_CONSUME            = 'consume';
-    const COMMAND_CROSSFADE          = 'crossfade';
-    const COMMAND_RANDOM             = 'random';
-    const COMMAND_REPEAT             = 'repeat';
-    const COMMAND_SETVOL             = 'setvol';
-    const COMMAND_SINGLE             = 'single';
-    const COMMAND_REPLAY_GAIN_MODE   = 'replay_gain_mode';
-    const COMMAND_REPLAY_GAIN_STATUS = 'replay_gain_status';
+    public const COMMAND_CONSUME            = 'consume';
+    public const COMMAND_CROSSFADE          = 'crossfade';
+    public const COMMAND_RANDOM             = 'random';
+    public const COMMAND_REPEAT             = 'repeat';
+    public const COMMAND_SETVOL             = 'setvol';
+    public const COMMAND_SINGLE             = 'single';
+    public const COMMAND_REPLAY_GAIN_MODE   = 'replay_gain_mode';
+    public const COMMAND_REPLAY_GAIN_STATUS = 'replay_gain_status';
 
     // Playback control
-    const COMMAND_NEXT     = 'next';
-    const COMMAND_PAUSE    = 'pause';
-    const COMMAND_PLAY     = 'play';
-    const COMMAND_PLAYID   = 'playid';
-    const COMMAND_PREVIOUS = 'previous';
-    const COMMAND_SEEK     = 'seek';
-    const COMMAND_SEEKID   = 'seekid';
-    const COMMAND_STOP     = 'stop';
+    public const COMMAND_NEXT     = 'next';
+    public const COMMAND_PAUSE    = 'pause';
+    public const COMMAND_PLAY     = 'play';
+    public const COMMAND_PLAYID   = 'playid';
+    public const COMMAND_PREVIOUS = 'previous';
+    public const COMMAND_SEEK     = 'seek';
+    public const COMMAND_SEEKID   = 'seekid';
+    public const COMMAND_STOP     = 'stop';
 
     // Current playlist control
-    const COMMAND_ADD            = 'add';
-    const COMMAND_ADDID          = 'addid';
-    const COMMAND_CLEAR          = 'clear';
-    const COMMAND_DELETE         = 'delete';
-    const COMMAND_DELETEID       = 'deleteid';
-    const COMMAND_MOVETRACK      = 'move';
-    const COMMAND_MOVEID         = 'moveid';
-    const COMMAND_PLFIND         = 'playlistfind';
-    const COMMAND_PLID           = 'playlistid';
-    const COMMAND_PLINFO         = 'playlistinfo';
-    const COMMAND_PLSEARCH       = 'playlistsearch';
-    const COMMAND_PLCHANGES      = 'plchanges';
-    const COMMAND_PLCHANGESPOSID = 'plchangesposid';
-    const COMMAND_PLSHUFFLE      = 'shuffle';
-    const COMMAND_PLSWAPTRACK    = 'swap';
-    const COMMAND_PLSWAPID       = 'swapid';
+    public const COMMAND_ADD            = 'add';
+    public const COMMAND_ADDID          = 'addid';
+    public const COMMAND_CLEAR          = 'clear';
+    public const COMMAND_DELETE         = 'delete';
+    public const COMMAND_DELETEID       = 'deleteid';
+    public const COMMAND_MOVETRACK      = 'move';
+    public const COMMAND_MOVEID         = 'moveid';
+    public const COMMAND_PLFIND         = 'playlistfind';
+    public const COMMAND_PLID           = 'playlistid';
+    public const COMMAND_PLINFO         = 'playlistinfo';
+    public const COMMAND_PLSEARCH       = 'playlistsearch';
+    public const COMMAND_PLCHANGES      = 'plchanges';
+    public const COMMAND_PLCHANGESPOSID = 'plchangesposid';
+    public const COMMAND_PLSHUFFLE      = 'shuffle';
+    public const COMMAND_PLSWAPTRACK    = 'swap';
+    public const COMMAND_PLSWAPID       = 'swapid';
 
     // Stored playlists
-    const COMMAND_LISTPL        = 'listplaylist';
-    const COMMAND_LISTPLINFO    = 'listplaylistinfo';
-    const COMMAND_LISTPLAYLISTS = 'listplaylists';
-    const COMMAND_PLLOAD        = 'load';
-    const COMMAND_PLADD         = 'playlistadd';
-    const COMMAND_PLCLEAR       = 'playlistclear';
-    const COMMAND_PLDELETE      = 'playlistdelete';
-    const COMMAND_PLMOVE        = 'playlistmove';
-    const COMMAND_RENAME        = 'rename';
-    const COMMAND_RM            = 'rm';
-    const COMMAND_PLSAVE        = 'save';
+    public const COMMAND_LISTPL        = 'listplaylist';
+    public const COMMAND_LISTPLINFO    = 'listplaylistinfo';
+    public const COMMAND_LISTPLAYLISTS = 'listplaylists';
+    public const COMMAND_PLLOAD        = 'load';
+    public const COMMAND_PLADD         = 'playlistadd';
+    public const COMMAND_PLCLEAR       = 'playlistclear';
+    public const COMMAND_PLDELETE      = 'playlistdelete';
+    public const COMMAND_PLMOVE        = 'playlistmove';
+    public const COMMAND_RENAME        = 'rename';
+    public const COMMAND_RM            = 'rm';
+    public const COMMAND_PLSAVE        = 'save';
 
     // Music database
-    const COMMAND_COUNT       = 'count';
-    const COMMAND_FIND        = 'find';
-    const COMMAND_FINDADD     = 'findadd';
-    const COMMAND_TABLE       = 'list';
-    const COMMAND_LISTALL     = 'listall';
-    const COMMAND_LISTALLINFO = 'listallinfo';
-    const COMMAND_LSDIR       = 'lsinfo';
-    const COMMAND_SEARCH      = 'search';
-    const COMMAND_REFRESH     = 'update';
-    const COMMAND_RESCAN      = 'rescan';
+    public const COMMAND_COUNT       = 'count';
+    public const COMMAND_FIND        = 'find';
+    public const COMMAND_FINDADD     = 'findadd';
+    public const COMMAND_TABLE       = 'list';
+    public const COMMAND_LISTALL     = 'listall';
+    public const COMMAND_LISTALLINFO = 'listallinfo';
+    public const COMMAND_LSDIR       = 'lsinfo';
+    public const COMMAND_SEARCH      = 'search';
+    public const COMMAND_REFRESH     = 'update';
+    public const COMMAND_RESCAN      = 'rescan';
 
     // Stickers
-    const COMMAND_STICKER = 'sticker';
-    const STICKER_GET     = 'get';
-    const STICKER_SET     = 'set';
-    const STICKER_DELETE  = 'delete';
-    const STICKER_LIST    = 'list';
-    const STICKER_FIND    = 'find';
+    public const COMMAND_STICKER = 'sticker';
+    public const STICKER_GET     = 'get';
+    public const STICKER_SET     = 'set';
+    public const STICKER_DELETE  = 'delete';
+    public const STICKER_LIST    = 'list';
+    public const STICKER_FIND    = 'find';
 
     // Connection
-    const COMMAND_CLOSE    = 'close';
-    const COMMAND_KILL     = 'kill';
-    const COMMAND_PASSWORD = 'password';
-    const COMMAND_PING     = 'ping';
-    const COMMAND_SHUTDOWN = 'shutdown';
+    public const COMMAND_CLOSE    = 'close';
+    public const COMMAND_KILL     = 'kill';
+    public const COMMAND_PASSWORD = 'password';
+    public const COMMAND_PING     = 'ping';
+    public const COMMAND_SHUTDOWN = 'shutdown';
 
     // Deprecated commands
-    const COMMAND_VOLUME = 'volume';
+    public const COMMAND_VOLUME = 'volume';
 
     // Bulk commands
-    const COMMAND_START_BULK = 'command_list_begin';
-    const COMMAND_END_BULK   = 'command_list_end';
+    public const COMMAND_START_BULK = 'command_list_begin';
+    public const COMMAND_END_BULK   = 'command_list_end';
 
     // Predefined MPD Response messages
-    const RESPONSE_ERR = 'ACK';
-    const RESPONSE_OK  = 'OK';
+    public const RESPONSE_ERR = 'ACK';
+    public const RESPONSE_OK  = 'OK';
 
     // MPD State Constants
-    const STATE_PLAYING = 'play';
-    const STATE_STOPPED = 'stop';
-    const STATE_PAUSED  = 'pause';
+    public const STATE_PLAYING = 'play';
+    public const STATE_STOPPED = 'stop';
+    public const STATE_PAUSED  = 'pause';
 
     // MPD Searching Constants
-    const SEARCH_ARTIST = 'artist';
-    const SEARCH_TITLE  = 'title';
-    const SEARCH_ALBUM  = 'album';
+    public const SEARCH_ARTIST = 'artist';
+    public const SEARCH_TITLE  = 'title';
+    public const SEARCH_ALBUM  = 'album';
 
     // MPD Cache Tables
-    const TABLE_ARTIST = 'artist';
-    const TABLE_ALBUM  = 'album';
+    public const TABLE_ARTIST = 'artist';
+    public const TABLE_ALBUM  = 'album';
 
     // Table holding version compatibility information
     private static $_COMPATIBILITY_TABLE = array(
@@ -198,6 +198,7 @@ class mpd
 
     private $_debug_callback = null; // Optional callback to be run on debug
     public $debugging        = false;
+    private $current_track_id;
 
     /**
      * Constructor
@@ -224,14 +225,14 @@ class mpd
         if (empty($this->host)) {
             $this->_error('construct', 'Host is empty');
 
-            return false;
+            return;
         }
 
         $response = $this->Connect();
         if (!$response) {
             $this->_error('construct', 'Could not connect');
 
-            return false;
+            return;
         }
 
         $version           = sscanf($response, self::RESPONSE_OK . " MPD %s\n");
@@ -242,19 +243,13 @@ class mpd
                 // bad password or command
                 $this->connected = false;
                 $this->_error('construct', 'Password supplied is incorrect or Invalid Command');
-
-                return false;
             }
         } elseif (!$this->RefreshInfo()) {
             // no read access, might as well be disconnected
             $this->connected = false;
             $this->_error('construct', 'Password required to access server');
-
-            return false;
         }
-
-        return true;
-    } // constructor
+    }
 
     /**
      * Connect
@@ -263,7 +258,7 @@ class mpd
      *
      * NOTE: This is called automatically upon object instantiation; you
      * should not need to call this directly.
-     * @return false|string
+     * @return string|false
      */
     public function connect()
     {
@@ -301,7 +296,7 @@ class mpd
         $this->_error('Connect', "Connection not available");
 
         return false;
-    } // connect
+    }
 
     /**
      * SendCommand
@@ -310,7 +305,7 @@ class mpd
      * are pre-defined for use (see self::COMMAND_* constant definitions above).
      * @param $command
      * @param $arguments
-     * @param boolean $refresh_info
+     * @param bool $refresh_info
      * @return string|bool
      */
     public function SendCommand($command, $arguments = null, $refresh_info = true)
@@ -376,9 +371,8 @@ class mpd
      * method. The syntax for queueing commands is identical to SendCommand.
      * @param $command
      * @param string $arguments
-     * @return boolean
      */
-    public function QueueCommand($command, $arguments = '')
+    public function QueueCommand($command, $arguments = ''): bool
     {
         $this->_debug('QueueCommand', "start; cmd: $command args: " . json_encode($arguments), 5);
         if (!$this->connected) {
@@ -440,9 +434,8 @@ class mpd
      *
      * Updates all class properties with the values from the MPD server.
      * NOTE: This function is automatically called on Connect()
-     * @return boolean
      */
-    public function RefreshInfo()
+    public function RefreshInfo(): bool
     {
         $stats  = $this->SendCommand(self::COMMAND_STATISTICS, null, false);
         $status = $this->SendCommand(self::COMMAND_STATUS, null, false);
@@ -470,7 +463,7 @@ class mpd
      * Adjusts the mixer volume on the MPD by <value>, which can be a
      * positive (volume increase) or negative (volume decrease) value.
      * @param $value
-     * @return boolean|string
+     * @return bool|string
      */
     public function AdjustVolume($value)
     {
@@ -495,7 +488,7 @@ class mpd
      *
      * Sets the mixer volume to <value>, which should be between 1 - 100.
      * @param $value
-     * @return boolean|string
+     * @return bool|string
      */
     public function SetVolume($value)
     {
@@ -542,7 +535,7 @@ class mpd
      * places the results into a multidimensional array. If no directory is
      * specified the directory listing is at the base of the MPD music path.
      * @param string $dir
-     * @return array|boolean
+     * @return array|bool
      */
     public function GetDir($dir = '')
     {
@@ -561,7 +554,7 @@ class mpd
      * contains filenames of tracks to add to the end of the playlist. This
      * is used to add many, many tracks to the playlist in one swoop.
      * @param $trackArray
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLAddBulk($trackArray)
     {
@@ -582,7 +575,7 @@ class mpd
      * Adds the file <file> to the end of the playlist. <file> must be a
      * track in the MPD database.
      * @param string $filename
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLAdd($filename)
     {
@@ -593,13 +586,14 @@ class mpd
         return $response;
     }
 
-    /**PLMoveTrack
+    /**
+     * PLMoveTrack
      *
      * Moves track number <current_position> to position <new_position> in
      * the playlist. This is used to reorder the songs in the playlist.
      * @param $current_position
      * @param $new_position
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLMoveTrack($current_position, $new_position)
     {
@@ -624,10 +618,11 @@ class mpd
         return $response;
     }
 
-    /**PLShuffle
+    /**
+     * PLShuffle
      *
      * Randomly reorders the songs in the playlist.
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLShuffle()
     {
@@ -638,12 +633,13 @@ class mpd
         return $response;
     }
 
-    /**PLLoad
+    /**
+     * PLLoad
      *
      * Retrieves the playlist from <file>.m3u and loads it into the current
      * playlist.
      * @param $file
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLLoad($file)
     {
@@ -654,12 +650,13 @@ class mpd
         return $response;
     }
 
-    /**PLSave
+    /**
+     * PLSave
      *
      * Saves the playlist to <file>.m3u for later retrieval. The file is
      * saved in the MPD playlist directory.
      * @param $file
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLSave($file)
     {
@@ -674,7 +671,7 @@ class mpd
      * PLClear
      *
      * Empties the playlist.
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLClear()
     {
@@ -690,7 +687,7 @@ class mpd
      *
      * Removes track <id> from the playlist.
      * @param $id
-     * @return boolean|string
+     * @return bool|string
      */
     public function PLRemove($id)
     {
@@ -703,7 +700,7 @@ class mpd
         $this->_debug('PLRemove', "return: $response", 5);
 
         return $response;
-    } // PLRemove
+    }
 
     /**
      * SetRepeat
@@ -711,7 +708,7 @@ class mpd
      * Enables 'loop' mode -- tells MPD continually loop the playlist. The
      * <repVal> parameter is either 1 (on) or 0 (off).
      * @param $value
-     * @return boolean|string
+     * @return bool|string
      */
     public function SetRepeat($value)
     {
@@ -729,7 +726,7 @@ class mpd
      * Enables 'randomize' mode -- tells MPD to play songs in the playlist
      * in random order. The parameter is either 1 (on) or 0 (off).
      * @param $value
-     * @return boolean|string
+     * @return bool|string
      */
     public function SetRandom($value)
     {
@@ -747,7 +744,7 @@ class mpd
      * Shuts down the MPD server (aka sends the KILL command). This closes
      * the current connection and prevents future communication with the
      * server.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Shutdown()
     {
@@ -770,7 +767,7 @@ class mpd
      * Tells MPD to rescan the music directory for new tracks and refresh
      * the Database. Tracks cannot be played unless they are in the MPD
      * database.
-     * @return boolean|string
+     * @return bool|string
      */
     public function DBRefresh()
     {
@@ -785,7 +782,7 @@ class mpd
      * Play
      *
      * Begins playing the songs in the MPD playlist.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Play()
     {
@@ -800,7 +797,7 @@ class mpd
      * Stop
      *
      * Stops playback.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Stop()
     {
@@ -815,7 +812,7 @@ class mpd
      * Pause
      *
      * Toggles pausing.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Pause()
     {
@@ -831,7 +828,7 @@ class mpd
      *
      * Skips directly to the <idx> song in the MPD playlist.
      * @param $idx
-     * @return boolean
+     * @return bool
      */
     public function SkipTo($idx)
     {
@@ -856,8 +853,8 @@ class mpd
      * the playlist. If <track> is not specified, the current track is
      * assumed.
      * @param $pos
-     * @param integer $track
-     * @return boolean
+     * @param int $track
+     * @return bool
      */
     public function SeekTo($pos, $track = -1)
     {
@@ -887,7 +884,7 @@ class mpd
      *
      * Skips to the next song in the MPD playlist. If not playing, returns
      * an error.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Next()
     {
@@ -903,7 +900,7 @@ class mpd
      *
      * Skips to the previous song in the MPD playlist. If not playing,
      * returns an error.
-     * @return boolean|string
+     * @return bool|string
      */
     public function Previous()
     {
@@ -924,7 +921,7 @@ class mpd
      * that contains <string> will be returned in the results.
      * @param string $type
      * @param string $string
-     * @return array|boolean
+     * @return array|bool
      */
     public function Search($type, $string)
     {
@@ -958,7 +955,7 @@ class mpd
      * exactly matches <string> will be returned in the results.
      * @param string $type
      * @param string $string
-     * @return array|boolean
+     * @return array|bool
      */
     public function Find($type, $string)
     {
@@ -1002,7 +999,7 @@ class mpd
      * GetArtists
      *
      * Returns the list of artists in the database in an associative array.
-     * @return array|boolean
+     * @return array|bool
      */
     public function GetArtists()
     {
@@ -1032,7 +1029,7 @@ class mpd
      * Optional parameter is an artist Name which will list all albums by a
      * particular artist.
      * @param $artist
-     * @return array|boolean
+     * @return array|bool
      */
     public function GetAlbums($artist = null)
     {
@@ -1067,7 +1064,7 @@ class mpd
      * Computes numeric value from a version string
      *
      * @param string $string
-     * @return float|integer
+     * @return float|int
      */
     private static function _computeVersionValue($string)
     {
@@ -1083,9 +1080,8 @@ class mpd
      * incompatibilities.
      * @param $cmd
      * @param $mpd_version
-     * @return boolean
      */
-    private function _checkCompatibility($cmd, $mpd_version)
+    private function _checkCompatibility($cmd, $mpd_version): bool
     {
         $mpd = self::_computeVersionValue($mpd_version);
 
@@ -1096,8 +1092,10 @@ class mpd
             if ($min_version) {
                 $min = self::_computeVersionValue($min_version);
                 if ($mpd < $min) {
-                    $this->_error('compatibility',
-                        "Command '$cmd' is not compatible with this version of MPD, version $min_version required");
+                    $this->_error(
+                        'compatibility',
+                        "Command '$cmd' is not compatible with this version of MPD, version $min_version required"
+                    );
 
                     return false;
                 }
@@ -1107,8 +1105,10 @@ class mpd
                 $max = self::_computeVersionValue($max_version);
 
                 if ($mpd >= $max) {
-                    $this->_error('compatibility',
-                        "Command '$cmd' has been deprecated in this version of MPD.  Last compatible version: $max_version");
+                    $this->_error(
+                        'compatibility',
+                        "Command '$cmd' has been deprecated in this version of MPD.  Last compatible version: $max_version"
+                    );
 
                     return false;
                 }
@@ -1123,7 +1123,7 @@ class mpd
      *
      * Builds a multidimensional array with MPD response lists.
      * @param $response
-     * @return array|boolean
+     * @return array|bool
      */
     private static function _parseFileListResponse($response)
     {
@@ -1150,7 +1150,7 @@ class mpd
      * _parseResponse
      * Turns a response into an array
      * @param $response
-     * @return array|boolean
+     * @return array|bool
      */
     private static function _parseResponse($response)
     {
@@ -1175,7 +1175,7 @@ class mpd
      * Set error state
      * @param string $source
      * @param string $message
-     * @param integer $level
+     * @param int $level
      */
     private function _error($source, $message, $level = 1)
     {
@@ -1201,4 +1201,4 @@ class mpd
             call_user_func($this->_debug_callback, 'MPD', "$source / $message", $level);
         }
     }
-}   // end class mpd
+}

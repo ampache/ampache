@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,15 +23,13 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Playlist;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -37,21 +38,26 @@ final class RemoveDuplicatesAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'remove_duplicates';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->requestParser = $requestParser;
+        $this->ui            = $ui;
+        $this->modelFactory  = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
+        $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
+        $playlist    = $this->modelFactory->createPlaylist($playlist_id);
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
             throw new AccessDeniedException();
@@ -77,7 +83,13 @@ final class RemoveDuplicatesAction implements ApplicationActionInterface
             $playlist->delete_track($track_id);
         }
         $object_ids = $playlist->get_items();
-        require_once Ui::find_template('show_playlist.inc.php');
+        $this->ui->show(
+            'show_playlist.inc.php',
+            [
+                'playlist' => $playlist,
+                'object_ids' => $object_ids
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -27,8 +30,11 @@ use Ampache\Module\System\Core;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 
+/** @var string $web_path */
 /** @var UserFollowStateRendererInterface $userFollowStateRenderer */
 /** @var User $libitem */
+/** @var string $last_seen */
+/** @var string $create_date */
 ?>
     <td class="cel_username">
         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $libitem->id; ?>">
@@ -63,7 +69,7 @@ if ($libitem->fullname_public || Access::check('interface', 100)) {
     <td class="cel_action">
     <?php
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $libitem->username; ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $libitem->username; ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>

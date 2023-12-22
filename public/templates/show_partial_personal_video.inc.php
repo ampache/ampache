@@ -1,6 +1,7 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -20,5 +21,7 @@
  *
  */
 
-$videoprops[T_('Location')]   = $video->f_location;
-$videoprops[T_('Summary')]    = scrub_out($video->summary);
+/** @var Ampache\Repository\Model\Personal_Video $video */
+
+$videoprops[T_('Location')] = $video->f_location;
+$videoprops[T_('Summary')]  = scrub_out($video->summary);

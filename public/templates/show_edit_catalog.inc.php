@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -60,7 +63,7 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' .
         </tr>
         <tr>
             <td><?php echo T_('Catalog Type'); ?></td>
-            <td><?php echo scrub_out(ucfirst($catalog->catalog_type)); ?></td>
+            <td><?php echo scrub_out(ucfirst((string)$catalog->catalog_type)); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Catalog Media Type'); ?>:</td>
@@ -72,11 +75,11 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' .
         </tr>
         <tr>
             <td><?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?></td>
-            <td><input type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern);?>" /></td>
+            <td><input type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern); ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">
-        <input type="hidden" name="catalog_id" value="<?php echo scrub_out($catalog->id); ?>" />
+        <input type="hidden" name="catalog_id" value="<?php echo scrub_out((string)$catalog->id); ?>" />
         <input type="hidden" name="action" value="update_catalog_settings" />
         <input class="button" type="submit" value="<?php echo T_('Save Catalog Settings'); ?>" />
     </div>

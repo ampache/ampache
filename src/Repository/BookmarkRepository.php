@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,9 +20,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Repository;
 
@@ -61,11 +63,6 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
         return $ids;
     }
 
-    /**
-     * @param int $bookmarkId
-     * @param int $userId
-     * @return int
-     */
     public function getBookmark(int $bookmarkId, int $userId): int
     {
         $sql        = "SELECT `id` FROM `bookmark` WHERE `id` = ? AND `user` = ?";

@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -32,13 +35,14 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
-/* @var string $object_type */
-/* @var Ampache\Repository\Model\TVShow $tvshow */
-/* @var array $object_ids */
+/** @var Ampache\Repository\Model\TVShow $tvshow */
+/** @var array $object_ids */
+/** @var string $object_type */
 
-$web_path = AmpConfig::get('web_path');
+$web_path = (string)AmpConfig::get('web_path', '');
 $browse   = new Browse();
 $browse->set_type($object_type);
+$browse->set_use_filters(false);
 
 Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
 <div class="item_right_info">
@@ -81,7 +85,7 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
         <?php } ?>
         <?php if (Access::check('interface', 50)) { ?>
         <li>
-            <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo addslashes(T_('TV Show Edit')) ?>', '')">
+            <a id="<?php echo 'edit_tvshow_' . $tvshow->id; ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id; ?>', '<?php echo 'edit_tvshow_' . $tvshow->id; ?>', '<?php echo addslashes(T_('TV Show Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit TV Show'); ?>
             </a>
@@ -89,7 +93,7 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
         <?php } ?>
         <?php if (Catalog::can_remove($tvshow)) { ?>
         <li>
-            <a id="<?php echo 'delete_tvshow_' . $tvshow->id ?>" href="<?php echo $web_path; ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
+            <a id="<?php echo 'delete_tvshow_' . $tvshow->id; ?>" href="<?php echo $web_path; ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>

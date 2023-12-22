@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,9 +20,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Authorization\Check;
 
@@ -28,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 
 final class PrivilegeChecker implements PrivilegeCheckerInterface
 {
@@ -68,7 +71,7 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
             : Core::get_global('user');
 
         // an empty string is an empty global
-        if ($user == '' || $user == null || $user->id === 0) {
+        if (!$user instanceof User || $user == '' || $user->id === 0) {
             return false;
         }
 

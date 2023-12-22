@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,12 +23,11 @@
  *
  */
 
-declare(strict_types=1);
-
 use Ampache\Module\Application\Admin\Upload\ShowAction;
 use Ampache\Module\Application\ApplicationRunner;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
+
 use function DI\autowire;
 
 /** @var ContainerInterface $dic */

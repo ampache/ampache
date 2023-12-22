@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
@@ -62,9 +63,9 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
         /* Update the catalog */
         Catalog::update_settings($_POST);
 
-        $url       = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
-        $title     = T_('No Problem');
-        $body      = T_('The Catalog has been updated');
+        $url   = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
+        $title = T_('No Problem');
+        $body  = T_('The Catalog has been updated');
 
         $this->ui->showConfirmation($title, $body, $url);
 

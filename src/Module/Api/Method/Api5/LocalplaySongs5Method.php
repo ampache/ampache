@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Repository\Model\User;
@@ -42,10 +44,6 @@ final class LocalplaySongs5Method
      * MINIMUM_API_VERSION=5.0.0
      *
      * get the list of songs in your localplay instance
-     *
-     * @param array $input
-     * @param User $user
-     * @return boolean
      */
     public static function localplay_songs(array $input, User $user): bool
     {
@@ -57,12 +55,12 @@ final class LocalplaySongs5Method
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api5::error(T_('Unable to connect to localplay controller'), '4710', self::ACTION, 'account', $input['api_format']);
+            Api5::error(T_('Unable to connect to localplay controller'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
         // Pull the current playlist and return the objects
-        $songs        = $localplay->get();
+        $songs = $localplay->get();
         if (empty($songs)) {
             Api5::empty('localplay_songs', $input['api_format']);
 

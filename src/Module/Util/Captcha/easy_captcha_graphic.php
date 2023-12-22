@@ -31,6 +31,13 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_graphic extends easy_captcha_fuzzy
 {
+    public $width;
+    public $height;
+    public $inverse;
+    public $bg;
+    public $maxsize;
+    public $quality;
+    public $solution;
 
     #-- config
     /**
@@ -82,8 +89,11 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
             $string .= chr(rand(0, 255));
         }
         $string = base64_encode($string);   // base64-set, but filter out unwanted chars
-        $string = preg_replace("/[+\/=IG0ODQR]/i", "",
-            $string);  // strips hard to discern letters, depends on used font type
+        $string = preg_replace(
+            "/[+\/=IG0ODQR]/i",
+            "",
+            $string
+        );  // strips hard to discern letters, depends on used font type
         $string = substr($string, 0, rand(CAPTCHA_MIN_CHARS, CAPTCHA_MAX_CHARS));
 
         return ($string);

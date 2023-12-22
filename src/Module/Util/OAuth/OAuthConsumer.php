@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -59,9 +60,9 @@ class OAuthConsumer
     }
 
     /**
-     * @return string
+     * __toString
      */
-    public function __toString()
+    public function __toString(): string
     {
         return "OAuthConsumer[key=$this->key,secret=$this->secret]";
     }

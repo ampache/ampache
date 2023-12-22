@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -40,24 +41,19 @@ use Psr\Log\LoggerInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
+    private ModelFactoryInterface&MockInterface $modelFactory;
 
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface&MockInterface $ui;
 
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
+    private LoggerInterface&MockInterface $logger;
 
-    /** @var PrivilegeCheckerInterface|MockInterface|null */
-    private MockInterface $privilegeChecker;
+    private PrivilegeCheckerInterface&MockInterface $privilegeChecker;
 
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
+    private ConfigContainerInterface&MockInterface $configContainer;
 
-    private ?ShowAction $subject;
+    private ShowAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
         $this->ui               = $this->mock(UiInterface::class);
@@ -92,9 +88,6 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturn($album);
 
-        $album->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
         $album->shouldReceive('isNew')
             ->withNoArgs()
             ->once()
@@ -155,6 +148,10 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
+        $album->shouldReceive('getDiskCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(2);
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -190,12 +187,20 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
-        $album->album_artist = '';
+        $album->shouldReceive('getDiskCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(2);
+        $album->shouldReceive('getAlbumArtist')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(0);
 
         $this->createExpectations(
             $album,
             $gatekeeper,
-            false
+            false,
+            'show_album_group_disks.inc.php'
         );
     }
 
@@ -214,12 +219,20 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
-        $album->album_artist = 'some-artist';
+        $album->shouldReceive('getDiskCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(2);
+        $album->shouldReceive('getAlbumArtist')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(123);
 
         $this->createExpectations(
             $album,
             $gatekeeper,
-            false
+            false,
+            'show_album_group_disks.inc.php'
         );
     }
 
@@ -240,12 +253,18 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $album->album_artist = 'some-artist';
-
         $album->shouldReceive('get_user_owner')
             ->withNoArgs()
             ->once()
             ->andReturn($userId);
+        $album->shouldReceive('getDiskCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(2);
+        $album->shouldReceive('getAlbumArtist')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(123);
 
         $gatekeeper->shouldReceive('getUserId')
             ->withNoArgs()
@@ -255,7 +274,8 @@ class ShowActionTest extends MockeryTestCase
         $this->createExpectations(
             $album,
             $gatekeeper,
-            true
+            true,
+            'show_album_group_disks.inc.php'
         );
     }
 
@@ -269,19 +289,69 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
+        $album->shouldReceive('getDiskCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(2);
+
         $this->createExpectations(
             $album,
             $gatekeeper,
-            true
+            true,
+            'show_album_group_disks.inc.php',
+        );
+    }
+
+    public function testRunShowsAlbumEditabbleWithSingleDisc(): void
+    {
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $album      = $this->mock(Album::class);
+
+        $userId = 42;
+
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+            ->once()
+            ->andReturnTrue();
+
+        $album->shouldReceive('get_user_owner')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+        $album->shouldReceive('getDiskCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(1);
+        $album->shouldReceive('getAlbumArtist')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(123);
+
+        $gatekeeper->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
+        $this->createExpectations(
+            $album,
+            $gatekeeper,
+            true,
+            'show_album.inc.php'
         );
     }
 
     private function createExpectations(
         MockInterface $album,
         GuiGatekeeperInterface $gatekeeper,
-        bool $isEditAble
+        bool $isEditAble,
+        string $templateName
     ): void {
-        $request    = $this->mock(ServerRequestInterface::class);
+        $request = $this->mock(ServerRequestInterface::class);
 
         $albumId = 42;
 
@@ -314,7 +384,7 @@ class ShowActionTest extends MockeryTestCase
             ->once();
         $this->ui->shouldReceive('show')
             ->with(
-                'show_album_group_disks.inc.php',
+                $templateName,
                 [
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,

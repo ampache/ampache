@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -30,6 +33,8 @@ use Ampache\Config\AmpConfig;
 ?>
 <ul class="subnavside">
 <?php
+/** @var array $items */
+if (!(empty($items))) {
     foreach ($items as $item) {
         $li_class = '';
         if ($item['url'] == $item['active']) {
@@ -39,5 +44,6 @@ use Ampache\Config\AmpConfig;
         <li <?php echo $li_class;
         echo $li_id; ?>><a href="<?php echo AmpConfig::get('web_path') . '/' . $item['url']; ?>"><?php echo $item['title']; ?></a></li>
     <?php unset($li_id);
-    } // END foreach ($items as $item)?>
+    }
+}?>
 </ul>

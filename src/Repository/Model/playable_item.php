@@ -1,7 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
 
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -36,36 +38,34 @@ interface playable_item
      * format
      *
      * Creates member variables for output
-     * @param boolean $details
+     * @param bool $details
      */
-    public function format($details = true);
+    public function format($details = true): void;
 
     /**
      * get_fullname
      *
      * Get the item full name.
      */
-    public function get_fullname();
+    public function get_fullname(): ?string;
 
     /**
      * get_link
      *
      * Get the item link.
      */
-    public function get_link();
+    public function get_link(): string;
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link();
+    public function get_f_link(): string;
 
     /**
      * get_parent
-     *
-     * Get parent. Return parent `object_type`, `object_id` ; null otherwise.
+     * Return parent `object_type`, `object_id`; null otherwise.
      */
-    public function get_parent();
+    public function get_parent(): ?array;
 
     /**
      * get_childrens
@@ -91,11 +91,11 @@ interface playable_item
      */
     public function get_medias($filter_type = null);
 
-    /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return integer[]
-     */
-    public function get_catalogs();
-} // end playable_item.interface
+    public function getId(): int;
+
+    public function has_art(): bool;
+
+    public function get_description(): string;
+
+    public function get_user_owner(): ?int;
+}

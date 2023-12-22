@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public Label, version 3 (AGPL-3.0-or-later)
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -45,16 +46,13 @@ final class LabelArtists5Method
      *
      * This returns all artists attached to a label ID
      *
-     * @param array $input
-     * @param User $user
      * filter  = (string) UID of label
      * include = (array|string) 'albums', 'songs' //optional
-     * @return boolean
      */
     public static function label_artists(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
-            Api5::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: label'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -65,7 +63,7 @@ final class LabelArtists5Method
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
-        $label   = new Label((int) scrub_in($input['filter']));
+        $label   = new Label((int) scrub_in((string) $input['filter']));
         $results = $label->get_artists();
         if (empty($results)) {
             Api5::empty('artist', $input['api_format']);

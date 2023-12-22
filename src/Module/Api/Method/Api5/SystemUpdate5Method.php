@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\System\Update;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -44,10 +46,6 @@ final class SystemUpdate5Method
      * MINIMUM_API_VERSION=400001
      *
      * Check Ampache for updates and run the update if there is one.
-     *
-     * @param array $input
-     * @param User $user
-     * @return boolean
      */
     public static function system_update(array $input, User $user): bool
     {
@@ -62,8 +60,8 @@ final class SystemUpdate5Method
             Preference::translate_db();
             // check that the update completed or failed failed.
             if (AutoUpdate::is_update_available(true)) {
-                Api5::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
-                Session::extend($input['auth']);
+                Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+                Session::extend($input['auth'], 'api');
 
                 return false;
             }
@@ -78,7 +76,7 @@ final class SystemUpdate5Method
         if ($updated) {
             // there was an update and it was successful
             Api5::message('update successful', $input['api_format']);
-            Session::extend($input['auth']);
+            Session::extend($input['auth'], 'api');
 
             return true;
         }

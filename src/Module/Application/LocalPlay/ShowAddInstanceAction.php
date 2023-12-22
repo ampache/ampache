@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\LocalPlay;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -30,7 +31,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -47,7 +47,7 @@ final class ShowAddInstanceAction extends AbstractLocalPlayAction
         ConfigContainerInterface $configContainer,
         UiInterface $ui
     ) {
-        parent::__construct($configContainer, $ui);
+        parent::__construct($configContainer);
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
@@ -68,7 +68,10 @@ final class ShowAddInstanceAction extends AbstractLocalPlayAction
         // Get the current Localplay fields
         $localplay = new LocalPlay($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER));
         $fields    = $localplay->get_instance_fields();
-        require_once Ui::find_template('show_localplay_add_instance.inc.php');
+        $this->ui->show(
+            'show_localplay_add_instance.inc.php',
+            ['fields' => $fields]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

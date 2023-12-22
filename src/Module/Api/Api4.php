@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -124,15 +125,8 @@ class Api4
         'videos' => Method\Api4\Videos4Method::class
     ];
 
-    /**
-     * @var string $auth_version
-     */
-    public static $auth_version = '350001';
-
-    /**
-     * @var string $version
-     */
-    public static $version = '443000'; // AMPACHE_VERSION
+    public static string $auth_version = '350001';
+    public static string $version      = '443000'; // AMPACHE_VERSION
 
     /**
      * constructor
@@ -141,7 +135,7 @@ class Api4
     private function __construct()
     {
         // Rien a faire
-    } // constructor
+    }
 
     /**
      * message
@@ -151,7 +145,7 @@ class Api4
      * @param string $error_code
      * @param string $format
      */
-    public static function message($type, $message, $error_code = null, $format = 'xml')
+    public static function message($type, $message, $error_code = null, $format = 'xml'): void
     {
         if ($type === 'error') {
             switch ($format) {
@@ -171,7 +165,7 @@ class Api4
                     echo Xml4_Data::success($message);
             }
         }
-    } // message
+    }
 
     /**
      * check_parameter
@@ -182,9 +176,8 @@ class Api4
      * @param array $input
      * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
-     * @return boolean
      */
-    public static function check_parameter($input, $parameters, $method = '')
+    public static function check_parameter($input, $parameters, $method = ''): bool
     {
         foreach ($parameters as $parameter) {
             if ($input[$parameter] === 0 || $input[$parameter] === '0') {
@@ -199,7 +192,7 @@ class Api4
         }
 
         return true;
-    } // check_parameter
+    }
 
     /**
      * check_access
@@ -208,13 +201,12 @@ class Api4
      * 'interface', 100, $user->id
      *
      * @param string $type
-     * @param integer $level
-     * @param integer $user_id
+     * @param int $level
+     * @param int $user_id
      * @param string $method
      * @param string $format
-     * @return boolean
      */
-    public static function check_access($type, $level, $user_id, $method = '', $format = 'xml')
+    public static function check_access($type, $level, $user_id, $method = '', $format = 'xml'): bool
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type . " '" . $level . "' required on " . $method . " function call.", 2);
@@ -224,5 +216,5 @@ class Api4
         }
 
         return true;
-    } // check_access
-} // end api.class
+    }
+}

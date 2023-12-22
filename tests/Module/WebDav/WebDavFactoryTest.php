@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,26 +23,23 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\Server;
 
 class WebDavFactoryTest extends MockeryTestCase
 {
-    /** @var AuthenticationManagerInterface|MockInterface|null */
-    private $authenticationManager;
+    private AuthenticationManagerInterface&MockInterface $authenticationManager;
 
-    /** @var WebDavFactory|null */
-    private ?WebDavFactory $subject;
+    private WebDavFactory $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->authenticationManager = Mockery::mock(AuthenticationManagerInterface::class);
 
@@ -48,9 +48,7 @@ class WebDavFactoryTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @dataProvider methodDataProvider
-     */
+    #[DataProvider(methodName: 'methodDataProvider')]
     public function testFactoryMethods(string $method, string $expected_instance_name, array $params): void
     {
         static::assertInstanceOf(
@@ -59,7 +57,7 @@ class WebDavFactoryTest extends MockeryTestCase
         );
     }
 
-    public function methodDataProvider(): array
+    public static function methodDataProvider(): array
     {
         return [
             ['createWebDavAuth', WebDavAuth::class, []],

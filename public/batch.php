@@ -1,4 +1,5 @@
 <?php
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -25,10 +26,11 @@ use Ampache\Module\Application\Batch\DefaultAction;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\UiInterface;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
+use Psr\Container\ContainerInterface;
 
 if (array_key_exists('ssid', $_REQUEST)) {
     define('NO_SESSION', 1);
-    /** @var \Psr\Container\ContainerInterface $dic */
+    /** @var ContainerInterface $dic */
     $dic = require_once __DIR__ . '/../src/Config/Init.php';
     if (!Session::exists('stream', $_REQUEST['ssid'])) {
         $dic->get(UiInterface::class)->accessDenied();

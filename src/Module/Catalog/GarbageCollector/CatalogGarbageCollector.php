@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,9 +20,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
@@ -28,7 +30,6 @@ use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\LostPassword;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -31,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -40,10 +42,14 @@ final class ShowAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private UiInterface $ui;
+
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        UiInterface $ui
     ) {
-        $this->configContainer = $configContainer;
+        $this->configContainer   = $configContainer;
+        $this->ui                = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -55,7 +61,7 @@ final class ShowAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        require Ui::find_template('show_lostpassword_form.inc.php');
+        $this->ui->show('show_lostpassword_form.inc.php');
 
         return null;
     }

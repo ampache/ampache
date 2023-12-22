@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -43,12 +45,9 @@ final class Rate4Method
      *
      * This rates a library item
      *
-     * @param array $input
-     * @param User $user
      * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id     = (integer) $object_id
-     * rating = (integer) 0,1|2|3|4|5 $rating
-     * @return boolean
+     * rating = (integer) 0|1|2|3|4|5 $rating
      */
     public static function rate(array $input, User $user): bool
     {
@@ -81,17 +80,18 @@ final class Rate4Method
         if (!$className || !$object_id) {
             Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {
+            /** @var library_item $item */
             $item = new $className($object_id);
-            if (!$item->id) {
+            if ($item->getId() === 0) {
                 Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 
                 return false;
             }
             $rate = new Rating($object_id, $type);
-            $rate->set_rating($rating, $user->id);
+            $rate->set_rating((int)$rating, $user->id);
             Api4::message('success', 'rating set to ' . $rating . ' for ' . $object_id, null, $input['api_format']);
         }
 
         return true;
-    } // rate
+    }
 }

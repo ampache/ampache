@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
@@ -45,26 +46,28 @@ abstract class database_object
     /**
      * get_info
      * retrieves the info from the database and puts it in the cache
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $table_name
-     * @return array
      */
     public function get_info($object_id, $table_name = ''): array
     {
         $table     = $this->getTableName($table_name);
         $object_id = (int)$object_id;
 
-        // Make sure we've got a real id
-        if ($object_id < 1) {
+        // Make sure we've got a real id and table
+        if ($table === null || $object_id < 1) {
             return array();
         }
 
         if (self::is_cached($table, $object_id)) {
-            return self::get_from_cache($table, $object_id);
+            $info = self::get_from_cache($table, $object_id);
+            if (is_array($info)) {
+                return $info;
+            }
         }
 
         $params     = array($object_id);
-        $sql        = "SELECT * FROM `$table` WHERE `id`= ?";
+        $sql        = "SELECT * FROM `$table` WHERE `id` = ?";
         $db_results = Dba::read($sql, $params);
 
         if (!$db_results) {
@@ -76,14 +79,12 @@ abstract class database_object
         self::add_to_cache($table, $object_id, $row);
 
         return $row;
-    } // get_info
+    }
 
     /**
      * getTableName
-     * @param $table_name
-     * @return string
      */
-    private function getTableName($table_name): string
+    private function getTableName($table_name): ?string
     {
         if (!$table_name) {
             $table_name = static::DB_TABLENAME;
@@ -99,7 +100,7 @@ abstract class database_object
     /**
      * clear_cache
      */
-    public static function clear_cache()
+    public static function clear_cache(): void
     {
         self::$object_cache = array();
     }
@@ -108,10 +109,9 @@ abstract class database_object
      * is_cached
      * this checks the cache to see if the specified object is there
      * @param string $index
-     * @param string $object_id
-     * @return boolean
+     * @param int|string $object_id
      */
-    public static function is_cached($index, $object_id)
+    public static function is_cached(string $index, $object_id): bool
     {
         // Make sure we've got some parents here before we dive below
         if (!array_key_exists($index, self::$object_cache)) {
@@ -119,36 +119,35 @@ abstract class database_object
         }
 
         return array_key_exists($object_id, self::$object_cache[$index]);
-    } // is_cached
+    }
 
     /**
      * get_from_cache
      * This attempts to retrieve the specified object from the cache we've got here
      * @param string $index
-     * @param integer|string $object_id
+     * @param int|string $object_id
      * @return array
      */
     public static function get_from_cache($index, $object_id)
     {
         // Check if the object is set
-        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$object_id])) {
+        if (isset(self::$object_cache[$index][$object_id])) {
             self::$cache_hit++;
 
             return self::$object_cache[$index][$object_id];
         }
 
         return array();
-    } // get_from_cache
+    }
 
     /**
      * add_to_cache
      * This adds the specified object to the specified index in the cache
      * @param string $index
-     * @param integer|string $object_id
+     * @param int|string $object_id
      * @param array $data
-     * @return boolean
      */
-    public static function add_to_cache($index, $object_id, $data)
+    public static function add_to_cache($index, $object_id, $data): bool
     {
         /**
          * Lazy load the cache setting to avoid some magic auto_init logic
@@ -168,19 +167,19 @@ abstract class database_object
         self::$object_cache[$index][$object_id] = $value;
 
         return true;
-    } // add_to_cache
+    }
 
     /**
      * remove_from_cache
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
      * @param string $index
-     * @param integer $object_id
+     * @param int|null $object_id
      */
-    public static function remove_from_cache($index, $object_id = false)
+    public static function remove_from_cache($index, $object_id = null): void
     {
         if (isset(self::$object_cache[$index])) {
-            if ($object_id === false) {
+            if (is_null($object_id)) {
                 // unset the whole index
                 unset(self::$object_cache[$index]);
             } elseif (isset(self::$object_cache[$index][$object_id])) {
@@ -188,5 +187,5 @@ abstract class database_object
                 unset(self::$object_cache[$index][$object_id]);
             }
         }
-    } // remove_from_cache
+    }
 }

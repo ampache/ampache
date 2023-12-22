@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -37,7 +40,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $limit_threshold */
 /** @var bool $group_release */
 
-$web_path          = AmpConfig::get('web_path');
+$web_path          = (string)AmpConfig::get('web_path', '');
 $access25          = Access::check('interface', 25);
 $show_playlist_add = $access25;
 $show_direct_play  = AmpConfig::get('directplay');
@@ -75,7 +78,7 @@ $rating_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->i
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="album">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="album">
     <thead>
         <tr class="th-top">
             <div class="libitem_menu">
@@ -110,17 +113,20 @@ $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 if (AmpConfig::get('ratings')) {
-    Rating::build_cache('album', $object_ids);
-    Userflag::build_cache('album', $object_ids);
+    Rating::build_cache('album_disk', $object_ids);
+    Userflag::build_cache('album_disk', $object_ids);
 }
-/* Foreach through the albums */
+/* Foreach through the album_disks */
 foreach ($object_ids as $album_disk_id) {
     $libitem = new AlbumDisk($album_disk_id);
+    if ($libitem->isNew()) {
+        continue;
+    }
     $libitem->format(true, $limit_threshold);
     if ($directplay_limit > 0) {
         $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
     } ?>
-        <tr id="album_<?php echo $libitem->id ?>" class="libitem_menu">
+        <tr id="album_<?php echo $libitem->id; ?>" class="libitem_menu">
             <?php $content = $talFactory->createTalView()
                     ->setContext('USER_IS_REGISTERED', User::is_registered())
                     ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
@@ -140,7 +146,7 @@ foreach ($object_ids as $album_disk_id) {
     echo $content; ?>
         </tr>
         <?php
-}?>
+} ?>
 <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Album found'); ?></span></td>

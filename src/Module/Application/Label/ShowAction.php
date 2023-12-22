@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -36,6 +38,7 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class ShowAction implements ApplicationActionInterface
 {
@@ -44,6 +47,8 @@ final class ShowAction implements ApplicationActionInterface
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
+
+    private LoggerInterface $logger;
 
     private PrivilegeCheckerInterface $privilegeChecker;
 
@@ -54,12 +59,14 @@ final class ShowAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
+        LoggerInterface $logger,
         PrivilegeCheckerInterface $privilegeChecker,
         LabelRepositoryInterface $labelRepository,
         ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer  = $configContainer;
         $this->ui               = $ui;
+        $this->logger           = $logger;
         $this->privilegeChecker = $privilegeChecker;
         $this->labelRepository  = $labelRepository;
         $this->modelFactory     = $modelFactory;
@@ -77,6 +84,10 @@ final class ShowAction implements ApplicationActionInterface
             }
         }
         if ($label_id < 1) {
+            $this->logger->warning(
+                'Requested a label that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             echo T_('You have requested an object that does not exist');
             $this->ui->showFooter();
         } else {
@@ -86,9 +97,9 @@ final class ShowAction implements ApplicationActionInterface
             $this->ui->show(
                 'show_label.inc.php',
                 [
+                    'label' => $label,
                     'object_ids' => $label->get_artists(),
                     'object_type' => 'artist',
-                    'label' => $label,
                     'isLabelEditable' => $this->isEditable(
                         $gatekeeper->getUserId(),
                         $label

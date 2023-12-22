@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,14 +23,12 @@
  *
  */
 
-declare(strict_types=1);
-
-define('NO_SESSION', '1');
-
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\NowPlaying\ShowAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
+
+define('NO_SESSION', '1');
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';

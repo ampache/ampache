@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
@@ -42,23 +42,20 @@ final class UserUpdateMethod
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * @param array $input
-     * @param User $user
-     * username          = (string) $username
-     * password          = (string) hash('sha256', $password)) //optional
-     * fullname          = (string) $fullname //optional
-     * email             = (string) $email //optional
-     * website           = (string) $website //optional
-     * state             = (string) $state //optional
-     * city              = (string) $city //optional
-     * disable           = (integer) 0,1 true to disable, false to enable //optional
-     * group             = (integer) Catalog filter group for the new user //optional, default = 0
-     * maxbitrate        = (integer) $maxbitrate //optional
-     * fullname_public   = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
-     * reset_apikey      = (integer) 0,1 true to reset a user Api Key //optional
+     * username = (string) $username
+     * password = (string) hash('sha256', $password)) //optional
+     * fullname = (string) $fullname //optional
+     * email = (string) $email //optional
+     * website = (string) $website //optional
+     * state = (string) $state //optional
+     * city = (string) $city //optional
+     * disable = (integer) 0,1 true to disable, false to enable //optional
+     * group = (integer) Catalog filter group for the new user //optional, default = 0
+     * maxbitrate = (integer) $maxbitrate //optional
+     * fullname_public = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
+     * reset_apikey = (integer) 0,1 true to reset a user Api Key //optional
      * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
-     * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
-     * @return boolean
+     * clear_stats = (integer) 0,1 true reset all stats for this user //optional
      */
     public static function user_update(array $input, User $user): bool
     {
@@ -67,5 +64,5 @@ final class UserUpdateMethod
         }
 
         return UserEditMethod::user_edit($input, $user);
-    } // tag_albums
+    }
 }

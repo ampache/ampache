@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,16 +23,17 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 /**
  * Browse Class
@@ -77,17 +81,17 @@ class Browse extends Query
     );
 
     /**
-     * @var integer $duration
+     * @var int $duration
      */
     public $duration;
 
     /**
      * Constructor.
      *
-     * @param integer|null $browse_id
-     * @param boolean $cached
+     * @param int|null $browse_id
+     * @param bool $cached
      */
-    public function __construct($browse_id = null, $cached = true)
+    public function __construct($browse_id = 0, $cached = true)
     {
         parent::__construct($browse_id, $cached);
 
@@ -107,49 +111,38 @@ class Browse extends Query
      * set_simple_browse
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
-     *
-     * @param boolean $value
      */
-    public function set_simple_browse($value)
+    public function set_simple_browse(bool $value): void
     {
         $this->set_is_simple($value);
-    } // set_simple_browse
+    }
 
     /**
      * is_valid_type
      * Validate the browse is a type of object you can actually browse
-     *
-     * @param string $type
-     * @return bool
      */
-    public function is_valid_type($type)
+    public function is_valid_type(string $type): bool
     {
         return in_array($type, self::BROWSE_TYPES);
-    } // set_simple_browse
+    }
 
     /**
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
-     *
-     * @param string $class
-     * @param integer $uid
-     * @return boolean
      */
-    public function add_supplemental_object($class, $uid)
+    public function add_supplemental_object(string $class, int $uid): bool
     {
-        $_SESSION['browse']['supplemental'][$this->id][$class] = (int)($uid);
+        $_SESSION['browse']['supplemental'][$this->id][$class] = $uid;
 
         return true;
-    } // add_supplemental_object
+    }
 
     /**
      * get_supplemental_objects
      * This returns an array of 'class', 'id' for additional objects that
      * need to be created before we start this whole browsing thing.
-     *
-     * @return array
      */
-    public function get_supplemental_objects()
+    public function get_supplemental_objects(): array
     {
         $objects = $_SESSION['browse']['supplemental'][$this->id] ?? '';
 
@@ -158,19 +151,19 @@ class Browse extends Query
         }
 
         return $objects;
-    } // get_supplemental_objects
+    }
 
     /**
      * update_browse_from_session
      * Restore the previous start index from something saved into the current session.
      */
-    public function update_browse_from_session()
+    public function update_browse_from_session(): void
     {
         if ($this->is_simple() && $this->get_start() == 0) {
             $name = 'browse_current_' . $this->get_type();
             if (array_key_exists($name, $_SESSION) && array_key_exists('start', $_SESSION[$name]) && $_SESSION[$name]['start'] > 0) {
                 // Checking if value is suitable
-                $start = (int)($_SESSION[$name]['start'] ?? 0);
+                $start = (int)$_SESSION[$name]['start'];
                 if ($this->get_offset() > 0) {
                     $set_page = floor($start / $this->get_offset());
                     if ($this->get_total() > $this->get_offset()) {
@@ -194,9 +187,9 @@ class Browse extends Query
      * type that we are currently browsing
      *
      * @param array $object_ids
-     * @param boolean|array|string $argument
+     * @param bool|array|string $argument
      */
-    public function show_objects($object_ids = array(), $argument = false)
+    public function show_objects($object_ids = array(), $argument = false): void
     {
         if ($this->is_simple() || !is_array($object_ids) || empty($object_ids)) {
             $object_ids = $this->get_saved();
@@ -216,9 +209,9 @@ class Browse extends Query
         $extra_objects = $this->get_supplemental_objects();
         $browse        = $this;
 
-        foreach ($extra_objects as $type => $id) {
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            ${$type}    = new $class_name($id);
+        foreach ($extra_objects as $type => $extra_id) {
+            $className = ObjectTypeToClassNameMapper::map($type);
+            ${$type}   = new $className($extra_id);
         }
 
         $match = '';
@@ -230,7 +223,9 @@ class Browse extends Query
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
             $catalog = Catalog::create_from_id((int)((string)$filter_value));
-            $match   = ' (' . $catalog->name . ')';
+            if ($catalog !== null) {
+                $match = ' (' . $catalog->name . ')';
+            }
         }
 
         $type = $this->get_type();
@@ -342,7 +337,17 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_catalogs.inc.php');
                 break;
             case 'shoutbox':
-                $box_title = $this->get_title(T_('Shoutbox Records'));
+                $shoutObjectLoader = $this->getShoutObjectLoader();
+                $shoutRepository   = $this->getShoutRepository();
+                $box_title         = $this->get_title(T_('Shoutbox Records'));
+                $shouts            = [];
+                foreach ($object_ids as $shoutId) {
+                    $shout = $shoutRepository->findById($shoutId);
+                    if ($shout !== null) {
+                        // used within the template
+                        $shouts[] = $shout;
+                    }
+                }
                 $box_req   = Ui::find_template('show_manage_shoutbox.inc.php');
                 break;
             case 'tag':
@@ -422,8 +427,9 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_pvmsgs.inc.php');
                 break;
             case 'podcast':
-                $box_title = $this->get_title(T_('Podcasts'));
-                $box_req   = Ui::find_template('show_podcasts.inc.php');
+                $podcastRepository = $this->getPodcastRepository();
+                $box_title         = $this->get_title(T_('Podcasts'));
+                $box_req           = Ui::find_template('show_podcasts.inc.php');
                 break;
             case 'podcast_episode':
                 $box_title = $this->get_title(T_('Podcast Episodes'));
@@ -447,19 +453,27 @@ class Browse extends Query
             if (isset($box_req)) {
                 Ui::show_box_bottom();
             }
-            echo '<script>';
-            echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
-            echo ';</script>';
+            if ($this->is_use_filters()) {
+                echo '<script>';
+                echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
+                echo ';</script>';
+            }
         } elseif (!$this->is_use_pages()) {
             $this->show_next_link($argument);
         }
+        // hide the filter box on some pages
+        if (!$this->is_use_filters()) {
+            echo '<script>';
+            echo Ajax::action('?page=browse&action=hide_filters', '');
+            echo ';</script>';
+        }
         Ajax::end_container();
-    } // show_object
+    }
 
     /**
      * @param $argument
      */
-    public function show_next_link($argument = null)
+    public function show_next_link($argument = null): void
     {
         // FIXME Can be removed if Browse gets instantiated by the factory
         global $dic;
@@ -474,11 +488,11 @@ class Browse extends Query
     }
 
     /**
-     *
+     * This sets the type of object that we want to browse by
      * @param string $type
      * @param string $custom_base
      */
-    public function set_type($type, $custom_base = '')
+    public function set_type($type, $custom_base = ''): void
     {
         if ($type === 'album_artist') {
             $this->set_type('artist', $custom_base);
@@ -501,8 +515,10 @@ class Browse extends Query
             if ((isset($_COOKIE[$name]))) {
                 $this->set_use_alpha(Core::get_cookie($name) == 'true');
             } else {
-                $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",",
-                    AmpConfig::get('libitem_browse_alpha'));
+                $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(
+                    ",",
+                    AmpConfig::get('libitem_browse_alpha')
+                );
                 if (in_array($type, $default_alpha)) {
                     $this->set_use_alpha(true, false);
                 }
@@ -523,7 +539,7 @@ class Browse extends Query
      * @param string $option
      * @param string $value
      */
-    public function save_cookie_params($option, $value)
+    public function save_cookie_params($option, $value): void
     {
         if ($this->get_type()) {
             $remember_length = time() + 31536000;
@@ -540,10 +556,27 @@ class Browse extends Query
 
     /**
      *
-     * @param boolean $use_pages
-     * @param boolean $savecookie
+     * @param bool $use_filters
      */
-    public function set_use_pages($use_pages, $savecookie = true)
+    public function set_use_filters($use_filters): void
+    {
+        $this->_state['use_filters'] = $use_filters;
+    }
+
+    /**
+     * is_mashup
+     */
+    public function is_use_filters(): bool
+    {
+        return make_bool($this->_state['use_filters'] ?? true);
+    }
+
+    /**
+     *
+     * @param bool $use_pages
+     * @param bool $savecookie
+     */
+    public function set_use_pages($use_pages, $savecookie = true): void
     {
         if ($savecookie) {
             $this->save_cookie_params('pages', $use_pages ? 'true' : 'false');
@@ -552,90 +585,70 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @return boolean
+     * is_use_pages
      */
-    public function is_use_pages()
+    public function is_use_pages(): bool
     {
-        if (array_key_exists('use_pages', $this->_state)) {
-            return make_bool($this->_state['use_pages']);
-        }
-
-        return false;
+        return make_bool($this->_state['use_pages'] ?? false);
     }
 
     /**
      *
-     * @param boolean $mashup
+     * @param bool $mashup
      */
-    public function set_mashup($mashup)
+    public function set_mashup($mashup): void
     {
         $this->_state['mashup'] = $mashup;
     }
 
     /**
-     *
-     * @return boolean
+     * is_mashup
      */
-    public function is_mashup()
+    public function is_mashup(): bool
     {
-        if (array_key_exists('mashup', $this->_state)) {
-            return make_bool($this->_state['mashup']);
-        }
-
-        return false;
+        return make_bool($this->_state['mashup'] ?? false);
     }
 
     /**
      *
-     * @param boolean $album_artist
+     * @param bool $album_artist
      */
-    public function set_album_artist($album_artist)
+    public function set_album_artist($album_artist): void
     {
         $this->_state['album_artist'] = $album_artist;
     }
 
     /**
      *
-     * @param boolean $song_artist
+     * @param bool $song_artist
      */
-    public function set_song_artist($song_artist)
+    public function set_song_artist($song_artist): void
     {
         $this->_state['song_artist'] = $song_artist;
     }
 
     /**
-     *
-     * @return boolean
+     * is_album_artist
      */
-    public function is_album_artist()
+    public function is_album_artist(): bool
     {
-        if (array_key_exists('album_artist', $this->_state)) {
-            return make_bool($this->_state['album_artist']);
-        }
+        return make_bool($this->_state['album_artist'] ?? false);
+    }
 
-        return false;
+    /**
+     * is_song_artist
+     */
+    public function is_song_artist(): bool
+    {
+        return make_bool($this->_state['song_artist'] ?? false);
     }
 
     /**
      *
-     * @return boolean
+     * @param bool $grid_view
+     * @param bool $savecookie
      */
-    public function is_song_artist()
-    {
-        if (array_key_exists('song_artist', $this->_state)) {
-            return make_bool($this->_state['song_artist']);
-        }
-
-        return false;
-    }
-
-    /**
-     *
-     * @param boolean $grid_view
-     * @param boolean $savecookie
-     */
-    public function set_grid_view($grid_view, $savecookie = true)
+    public function set_grid_view($grid_view, $savecookie = true): void
     {
         if ($savecookie) {
             $this->save_cookie_params('grid_view', $grid_view ? 'true' : 'false');
@@ -644,24 +657,19 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @return boolean
+     * is_grid_view
      */
-    public function is_grid_view()
+    public function is_grid_view(): bool
     {
-        if (array_key_exists('grid_view', $this->_state)) {
-            return make_bool($this->_state['grid_view']);
-        }
-
-        return false;
+        return make_bool($this->_state['grid_view'] ?? false);
     }
 
     /**
      *
-     * @param boolean $use_alpha
-     * @param boolean $savecookie
+     * @param bool $use_alpha
+     * @param bool $savecookie
      */
-    public function set_use_alpha($use_alpha, $savecookie = true)
+    public function set_use_alpha($use_alpha, $savecookie = true): void
     {
         if ($savecookie) {
             $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
@@ -678,63 +686,51 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @return boolean
+     * is_use_alpha
      */
-    public function is_use_alpha()
+    public function is_use_alpha(): bool
     {
-        if (array_key_exists('use_alpha', $this->_state)) {
-            return make_bool($this->_state['use_alpha']);
-        }
-
-        return false;
+        return make_bool($this->_state['use_alpha'] ?? false);
     }
-
-    /**
-     *
-     * @param boolean $show_header
-     */
-    public function set_show_header($show_header)
-    {
-        $this->_state['show_header'] = $show_header;
-    }
-
     /**
      * Allow the current page to be save into the current session
-     * @param boolean $update_session
+     * @param bool $update_session
      */
-    public function set_update_session($update_session)
+    public function set_update_session($update_session): void
     {
         $this->_state['update_session'] = $update_session;
     }
 
     /**
      *
-     * @return boolean
+     * @param bool $show_header
      */
-    public function is_show_header()
+    public function set_show_header($show_header): void
+    {
+        $this->_state['show_header'] = $show_header;
+    }
+
+    /**
+     * is_show_header
+     */
+    public function is_show_header(): bool
     {
         return $this->_state['show_header'];
     }
 
     /**
-     *
-     * @return boolean
+     * is_update_session
      */
-    public function is_update_session()
+    public function is_update_session(): bool
     {
-        if (array_key_exists('update_session', $this->_state)) {
-            return make_bool($this->_state['update_session']);
-        }
-
-        return false;
+        return make_bool($this->_state['update_session'] ?? false);
     }
 
     /**
      *
      * @param string $threshold
      */
-    public function set_threshold($threshold)
+    public function set_threshold($threshold): void
     {
         $this->_state['threshold'] = $threshold;
     }
@@ -743,43 +739,31 @@ class Browse extends Query
      *
      * @param string $title
      */
-    public function set_title($title)
+    public function set_title($title): void
     {
         $this->_state['title'] = $title;
     }
 
     /**
-     *
-     * @return string
+     * get_threshold
      */
-    public function get_threshold()
+    public function get_threshold(): string
     {
-        if (array_key_exists('threshold', $this->_state)) {
-            return (string)$this->_state['threshold'];
-        }
-
-        return '';
+        return (string)($this->_state['threshold'] ?? '');
     }
 
     /**
-     *
      * @param string $default
-     * @return string
      */
-    public function get_title($default)
+    public function get_title($default): string
     {
-        if ($this->_state['title'] !== null) {
-            return (string)$this->_state['title'];
-        }
-
-        return $default;
+        return (string)($this->_state['title'] ?? $default);
     }
 
     /**
-     *
-     * @return string
+     * get_css_class
      */
-    public function get_css_class()
+    public function get_css_class(): string
     {
         $css = '';
         if (!$this->_state['grid_view']) {
@@ -787,5 +771,35 @@ class Browse extends Query
         }
 
         return $css;
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private function getShoutObjectLoader(): ShoutObjectLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutObjectLoaderInterface::class);
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

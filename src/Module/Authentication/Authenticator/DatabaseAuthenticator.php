@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Authentication\Authenticator;
 
@@ -43,12 +44,17 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
                 // FIXME: Break things in the future.
                 $hashed_password   = [];
                 $hashed_password[] = hash('sha256', $password);
-                $hashed_password[] = hash('sha256', Dba::escape(stripslashes(htmlspecialchars(strip_tags($password)))));
+                $escaped_password  = Dba::escape(stripslashes(htmlspecialchars(strip_tags($password))));
+                if ($escaped_password) {
+                    $hashed_password[] = hash('sha256', $escaped_password);
+                }
 
                 // Automagically update the password if it's old and busted.
-                if ($row['password'] == $hashed_password[1] && $hashed_password[0] != $hashed_password[1]) {
+                if (isset($hashed_password[1]) && $row['password'] == $hashed_password[1] && $hashed_password[0] != $hashed_password[1]) {
                     $user = User::get_from_username($username);
-                    $user->update_password($password);
+                    if ($user instanceof User) {
+                        $user->update_password($password);
+                    }
                 }
 
                 if (in_array($row['password'], $hashed_password)) {

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
@@ -30,6 +31,8 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Catalog;
 use Exception;
+
+use function PHPStan\dumpType;
 
 final class PrintTagsCommand extends Command
 {
@@ -62,6 +65,9 @@ final class PrintTagsCommand extends Command
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
         $catalog    = Catalog::create_from_id($row['id']);
+        if ($catalog === null) {
+            return;
+        }
 
         $dir_pattern  = $catalog->sort_pattern;
         $file_pattern = $catalog->rename_pattern;
@@ -74,7 +80,8 @@ final class PrintTagsCommand extends Command
             $dir_pattern,
             $file_pattern
         );
-        if (isset($dir_pattern) || isset($file_pattern)) {
+
+        if ($dir_pattern !== '' || $file_pattern !== '') {
             /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
             $interactor->info(
                 sprintf(T_('Using: %1$s AND %2$s for file pattern matching'), $dir_pattern, $file_pattern),

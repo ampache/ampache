@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
@@ -30,61 +31,54 @@ class License
 {
     protected const DB_TABLENAME = 'license';
 
-    /**
-     * @var integer $id
-     */
-    public $id;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var string $description
-     */
-    public $description;
-    /**
-     * @var string $external_link
-     */
-    public $external_link;
+    public int $id = 0;
+    public ?string $name;
+    public ?string $description;
+    public ?string $external_link;
 
     /**
      * Constructor
      * This pulls the license information from the database and returns
      * a constructed object
-     * @param integer $license_id
+     * @param int|null $license_id
      */
-    public function __construct($license_id)
+    public function __construct($license_id = 0)
     {
-        // Load the data from the database
+        if (!$license_id) {
+            return;
+        }
         $this->has_info($license_id);
-
-        return true;
-    } // Constructor
+    }
 
     public function getId(): int
     {
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * has_info
      * does the db call, reads from the license table
-     * @param integer $license_id
-     * @return boolean
+     * @param int $license_id
      */
-    private function has_info($license_id)
+    private function has_info($license_id): bool
     {
         $sql        = "SELECT * FROM `license` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($license_id));
-
-        $data = Dba::fetch_assoc($db_results);
-
+        $data       = Dba::fetch_assoc($db_results);
+        if (empty($data)) {
+            return false;
+        }
         foreach ($data as $key => $value) {
             $this->$key = $value;
         }
 
         return true;
-    } // has_info
+    }
 
     public function getLinkFormatted(): string
     {

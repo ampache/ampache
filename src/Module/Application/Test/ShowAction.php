@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Test;
 
@@ -74,12 +75,12 @@ final class ShowAction implements ApplicationActionInterface
         if (empty($results)) {
             $link = __DIR__ . '/../../public/test.php?action=config';
         }
-        /* Temp Fixes */
-        $results = Preference::fix_preferences($results);
-
-        $this->configContainer->updateConfig($results);
+        if (is_array($results)) {
+            /* Temp Fixes */
+            $results = Preference::fix_preferences($results);
+            $this->configContainer->updateConfig($results);
+        }
         unset($results);
-
         // Try to load localization from cookie
         $session_name = $this->configContainer->getSessionName();
 

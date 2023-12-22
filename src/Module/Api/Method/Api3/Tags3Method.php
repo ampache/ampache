@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
@@ -39,10 +39,8 @@ final class Tags3Method
     /**
      * tags
      * This returns the tags based on the specified filter
-     * @param array $input
-     * @param User $user
      */
-    public static function tags(array $input, User $user)
+    public static function tags(array $input, User $user): void
     {
         unset($user);
         $browse = Api::getBrowse();
@@ -60,5 +58,5 @@ final class Tags3Method
 
         ob_end_clean();
         echo Xml3_Data::tags($results);
-    } // tags
+    }
 }

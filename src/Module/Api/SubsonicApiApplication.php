@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
@@ -65,7 +66,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (empty($action)) {
             $action = strtolower($_REQUEST['action'] ?? '');
         }
-        $format   = ($_REQUEST['f']) ?? 'xml';
+        $format   = (string)($_REQUEST['f'] ?? 'xml');
         $callback = $_REQUEST['callback'] ?? $format;
         /* Set the correct default headers */
         if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {
@@ -121,7 +122,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if ($auth === []) {
             $auth = $this->authenticationManager->login($userName, $password, true);
         }
-        if (!$auth['success']) {
+        $user = User::get_from_username($userName);
+        if ($user === null || !$auth['success']) {
             $this->logger->warning(
                 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -132,7 +134,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             return;
         }
 
-        $user = User::get_from_username($userName);
         Session::createGlobalUser($user);
 
         if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $user->id, AccessLevelEnum::LEVEL_GUEST)) {
@@ -162,25 +163,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
         Preference::init();
 
-        // Define list of internal functions that should be skipped
-        $internal_functions = array(
-            '_albumList',
-            '_apiOutput',
-            '_apiOutput2',
-            '_check_parameter',
-            '_decrypt_password',
-            '_follow_stream',
-            '_hasNestedArray',
-            '_output_body',
-            '_output_header',
-            '_setHeader',
-            '_setStar',
-            '_updatePlaylist',
-            '_xml2json'
-        );
-
         // Get the list of possible methods for the Ampache API
-        $methods = array_diff(get_class_methods(Subsonic_Api::class), $internal_functions);
+        $methods = array_diff(get_class_methods(Subsonic_Api::class), Subsonic_Api::SYSTEM_LIST);
 
         // We do not use $_GET because of multiple parameters with the same name
         $query_string = $_SERVER['QUERY_STRING'];
@@ -199,7 +183,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $decname        = urldecode($name);
                 $decvalue       = urldecode($value);
             }
-            if (!$decname && !$decvalue) {
+            if (!$decname || !$decvalue) {
                 continue;
             }
 
@@ -207,7 +191,12 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             // see https://github.com/clementine-player/Clementine/issues/6080
             $matches = array();
             if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
-                $calc = (($matches[1] << 24) + ($matches[2] << 16) + ($matches[3] << 8) + $matches[4]);
+                $calc = (
+                    (((int)$matches[1]) << 24) +
+                    (((int)$matches[2]) << 16) +
+                    (((int)$matches[3]) << 8) +
+                    ((int)$matches[4])
+                );
                 if ($calc) {
                     $this->logger->notice(
                         "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc",
@@ -223,7 +212,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             }
 
             if (array_key_exists($decname, $input)) {
-                if (!is_array($input[$decname])) {
+                if (is_array($input[$decname]) === false) {
                     $oldvalue          = $input[$decname];
                     $input[$decname]   = array();
                     $input[$decname][] = $oldvalue;
@@ -238,6 +227,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         // Call your function if it's valid
         if (in_array($action, $methods)) {
+            /** @see Subsonic_Api */
             call_user_func(array(Subsonic_Api::class, $action), $input, $user);
             // We only allow a single function to be called, and we assume it's cleaned up!
             return;

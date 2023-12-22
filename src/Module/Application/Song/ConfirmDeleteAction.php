@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -40,6 +42,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'confirm_delete';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
@@ -49,11 +53,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
     private SongDeleterInterface $songDeleter;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         SongDeleterInterface $songDeleter
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
@@ -67,8 +73,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;
         }
-
-        $song = $this->modelFactory->createSong((int) $_REQUEST['song_id']);
+        $song_id = (int)$this->requestParser->getFromRequest('song_id');
+        $song    = $this->modelFactory->createSong($song_id);
         if (!Catalog::can_remove($song)) {
             throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the song `%s`', $song->id),

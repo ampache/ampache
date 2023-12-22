@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
@@ -154,7 +155,7 @@ final class VaInfo implements VaInfoInterface
      * //TODO: where did this go? param string $encodingId3v2
      * @param string $dirPattern
      * @param string $filePattern
-     * @param boolean $islocal
+     * @param bool $islocal
      */
     public function __construct(
         UserRepositoryInterface $userRepository,
@@ -262,9 +263,9 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * @param $size
+     * forceSize
      */
-    public function forceSize($size)
+    public function forceSize(int $size): void
     {
         $this->_forcedSize = $size;
     }
@@ -276,9 +277,8 @@ final class VaInfo implements VaInfoInterface
      * encoding.
      * @param $tags
      * @param $mb_order
-     * @return string
      */
-    private static function _detect_encoding($tags, $mb_order)
+    private static function _detect_encoding($tags, $mb_order): string
     {
         if (!function_exists('mb_detect_encoding')) {
             return 'ISO-8859-1';
@@ -360,15 +360,14 @@ final class VaInfo implements VaInfoInterface
         }
 
         $this->_get_plugin_tags();
-    } // get_info
+    }
 
     /**
      * check_time
      * check a cached file is close to the expected time
      * @param int $time
-     * @return bool
      */
-    public function check_time($time)
+    public function check_time($time): bool
     {
         $this->gather_tags();
         foreach ($this->tags as $results) {
@@ -378,7 +377,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         return false;
-    } // check_time
+    }
 
     /**
      * write_id3
@@ -386,7 +385,7 @@ final class VaInfo implements VaInfoInterface
      * @param $tagData
      * @throws Exception
      */
-    public function write_id3($tagData)
+    public function write_id3($tagData): void
     {
         $TaggingFormat = 'UTF-8';
         $tagWriter     = new getid3_writetags();
@@ -460,7 +459,7 @@ final class VaInfo implements VaInfoInterface
                 );
             }
         }
-    } // write_id3
+    }
 
     /**
      * prepare_metadata_for_writing
@@ -485,7 +484,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $ndata;
-    } // prepare_id3_frames
+    }
 
     /**
      * read_id3
@@ -508,7 +507,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         return array();
-    } // read_id3
+    }
 
     /**
      * get_tag_type
@@ -529,20 +528,24 @@ final class VaInfo implements VaInfoInterface
             'getid3_tag_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
-        $order = array_map('strtolower', $tagorderMap[$configKey] ?? []);
+
+        $order = array();
+        foreach ($tagorderMap[$configKey] ?? [] as $source) {
+            //debug_event(__CLASS__, "source: " . $source, true, 5);
+            $order[] = strtolower($source);
+        }
 
         // Iterate through the defined key order adding them to an ordered array.
         $returned_keys = array();
-        foreach ($order as $key) {
-            if (array_key_exists($key, $results)) {
-                $returned_keys[] = $key;
+        foreach ($order as$value) {
+            if (array_key_exists($value, $results)) {
+                $returned_keys[] = $value;
             }
         }
 
         // If we didn't find anything then default to everything.
-        if (!isset($returned_keys)) {
-            $returned_keys = array_keys($results);
-            sort($returned_keys);
+        if (empty($returned_keys)) {
+            $returned_keys = $results;
         }
 
         // Unless they explicitly set it, add bitrate/mode/mime/etc.
@@ -551,6 +554,7 @@ final class VaInfo implements VaInfoInterface
                 $returned_keys[] = 'general';
             }
         }
+        //debug_event(__CLASS__, "get_tag_type: " . $configKey . print_r($returned_keys, true), 5);
 
         return $returned_keys;
     }
@@ -590,7 +594,7 @@ final class VaInfo implements VaInfoInterface
             $info['title']         = (!$info['title'] && array_key_exists('title', $tags)) ? stripslashes(trim((string)$tags['title'])) : $info['title'];
 
             // Not even sure if these can be negative, but better safe than llama.
-            $info['year'] = (!$info['year'] && array_key_exists('year', $tags)) ? Catalog::normalize_year((int) $tags['year']): $info['year'];
+            $info['year'] = (!$info['year'] && array_key_exists('year', $tags)) ? Catalog::normalize_year((int) $tags['year']) : $info['year'];
             $info['disk'] = (!$info['disk'] && array_key_exists('disk', $tags)) ? abs((int) $tags['disk']) : $info['disk'];
 
             $info['totaldisks']   = (!$info['totaldisks'] && array_key_exists('totaldisks', $tags)) ? (int) $tags['totaldisks'] : $info['totaldisks'];
@@ -616,7 +620,7 @@ final class VaInfo implements VaInfoInterface
             $info['mb_artistid']      = (!$info['mb_artistid'] && array_key_exists('mb_artistid', $tags)) ? trim((string)$tags['mb_artistid']) : $info['mb_artistid'];
             $info['mb_albumartistid'] = (!$info['mb_albumartistid'] && array_key_exists('mb_albumartistid', $tags)) ? trim((string)$tags['mb_albumartistid']) : $info['mb_albumartistid'];
             // groups of artists can be ID'd using their mbid easily
-            $info['mb_artistid_array']      = (!$info['mb_artistid_array'] && array_key_exists('mb_artistid_array', $tags) && !empty($tags['mb_artistid_array']))
+            $info['mb_artistid_array'] = (!$info['mb_artistid_array'] && array_key_exists('mb_artistid_array', $tags) && !empty($tags['mb_artistid_array']))
                 ? $tags['mb_artistid_array']
                 : $info['mb_artistid_array'];
             $info['mb_albumartistid_array'] = (!$info['mb_albumartistid_array'] && array_key_exists('mb_albumartistid_array', $tags) && !empty($tags['mb_albumartistid_array']))
@@ -672,7 +676,7 @@ final class VaInfo implements VaInfoInterface
             $info['tvshow_summary'] = (!$info['tvshow_summary'] && array_key_exists('tvshow_summary', $tags)) ? trim((string)$tags['tvshow_summary']) : $info['tvshow_summary'];
 
             $info['tvshow_art']        = (!$info['tvshow_art'] && array_key_exists('tvshow_art', $tags)) ? trim((string)$tags['tvshow_art']) : $info['tvshow_art'];
-            $info['tvshow_season_art'] = (!$info['tvshow_season_art'] && array_key_exists('tvshow_season_art', $tags))  ? trim((string)$tags['tvshow_season_art']): $info['tvshow_season_art'];
+            $info['tvshow_season_art'] = (!$info['tvshow_season_art'] && array_key_exists('tvshow_season_art', $tags)) ? trim((string)$tags['tvshow_season_art']) : $info['tvshow_season_art'];
             $info['art']               = (!$info['art'] && array_key_exists('art', $tags)) ? trim((string)$tags['art']) : $info['art'];
 
             if (static::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
@@ -710,9 +714,8 @@ final class VaInfo implements VaInfoInterface
      * parse_mbid
      * Get the first valid mbid. (if it's valid)
      * @param string|array $mbid
-     * @return string|null
      */
-    public static function parse_mbid($mbid)
+    public static function parse_mbid($mbid): ?string
     {
         if (empty($mbid)) {
             return null;
@@ -750,11 +753,13 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * is_mbid
-     * @param string $mbid
-     * @return bool
+     * @param null|string $mbid
      */
-    public static function is_mbid($mbid)
+    public static function is_mbid($mbid): bool
     {
+        if ($mbid === null) {
+            return false;
+        }
         if (preg_match(self::MBID_REGEX, $mbid)) {
             return true;
         }
@@ -766,9 +771,8 @@ final class VaInfo implements VaInfoInterface
      * _get_type
      *
      * This function takes the raw information and figures out what type of file we are dealing with.
-     * @return string|false
      */
-    private function _get_type()
+    private function _get_type(): ?string
     {
         // There are a few places that the file type can come from, in the end we trust the encoding type.
         if (array_key_exists('video', $this->_raw) && array_key_exists('dataformat', $this->_raw['video'])) {
@@ -786,7 +790,7 @@ final class VaInfo implements VaInfoInterface
             return $this->_clean_type($this->_raw['fileformat']);
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -807,10 +811,6 @@ final class VaInfo implements VaInfoInterface
                     case 'vorbiscomment':
                         //$this->logger->debug('Cleaning vorbis', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
-                        break;
-                    case 'id3v1':
-                        //$this->logger->debug('Cleaning id3v1', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-                        $parsed = $this->_cleanup_id3v1($tag_array);
                         break;
                     case 'id3v2':
                         //$this->logger->debug('Cleaning id3v2', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
@@ -841,6 +841,10 @@ final class VaInfo implements VaInfoInterface
                         //$this->logger->debug('Cleaning lyrics3', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_lyrics($tag_array);
                         break;
+                    case 'id3v1':
+                        //$this->logger->debug('Cleaning id3v1', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        $parsed = $this->_cleanup_id3v1($tag_array);
+                        break;
                     case 'ape':
                     case 'avi':
                     case 'flv':
@@ -865,9 +869,8 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * get_metadata_order_key
-     * @return string
      */
-    private function get_metadata_order_key()
+    private function get_metadata_order_key(): string
     {
         if (!in_array('music', $this->gatherTypes)) {
             return 'metadata_order_video';
@@ -901,20 +904,26 @@ final class VaInfo implements VaInfoInterface
     {
         $tag_order    = $this->get_metadata_order();
         $plugin_names = Plugin::get_plugins('get_metadata');
-        $user         = (!empty(Core::get_global('user')))
+        /** @var User $user */
+        $user = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
         // don't loop over getid3 and filename
-        $tag_order    = array_diff($tag_order, array('getid3','filename'));
+        $tag_order = array_diff($tag_order, array('getid3', 'filename'));
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
                 $plugin            = new Plugin($tag_source);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version > 0) {
-                    if ($plugin->load($user)) {
-                        $this->tags[$tag_source] = $plugin->_plugin->get_metadata($this->gatherTypes,
-                            self::clean_tag_info($this->tags,
-                                self::get_tag_type($this->tags, $this->get_metadata_order_key()), $this->filename));
+                    if ($plugin->_plugin !== null && $plugin->load($user)) {
+                        $this->tags[$tag_source] = $plugin->_plugin->get_metadata(
+                            $this->gatherTypes,
+                            self::clean_tag_info(
+                                $this->tags,
+                                self::get_tag_type($this->tags, $this->get_metadata_order_key()),
+                                $this->filename
+                            )
+                        );
                     }
                 }
             } elseif (!in_array($tag_source, array('filename', 'getid3'))) {
@@ -998,9 +1007,8 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * @param string $string
-     * @return string
      */
-    private function trimAscii($string)
+    private function trimAscii($string): string
     {
         return preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim((string)$string));
     }
@@ -1009,9 +1017,8 @@ final class VaInfo implements VaInfoInterface
      * _clean_type
      * This standardizes the type that we are given into a recognized type.
      * @param $type
-     * @return string
      */
-    private function _clean_type($type)
+    private function _clean_type($type): string
     {
         switch ($type) {
             case 'mp2':
@@ -1182,7 +1189,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['totaltracks'] = $data[0];
                     break;
                 case 'discnumber':
-                    $parsed['disk']       = $data[0];
+                    $parsed['disk'] = $data[0];
                     break;
                 case 'discsubtitle':
                     $parsed['disksubtitle'] = $data[0];
@@ -1268,7 +1275,12 @@ final class VaInfo implements VaInfoInterface
                 default:
                     // look for set ratings using email address
                     foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
-                        $rating_user = User::get_from_email(array_map('trim', preg_split("/^rating:/", $user_rating))[1] ?? false);
+                        /**
+                         * @todo check functionality; looks like an array is used for a string
+                         */
+                        $rating_user = $this->userRepository->findByEmail(
+                            array_map('trim', preg_split("/^rating:/", $user_rating))[1] ?? ''
+                        );
                         if ($rating_user !== null) {
                             $parsed['rating'][$rating_user->id] = floor($data[0] * 5 / 100);
                         }
@@ -1511,7 +1523,7 @@ final class VaInfo implements VaInfoInterface
                     array_key_exists('email', $popm) &&
                     $user = $this->userRepository->findByEmail($popm['email'])
                 ) {
-                    if ($user->id) {
+                    if ($user instanceof User) {
                         // Ratings are out of 255; scale it
                         $parsed['rating'][$user->id] = $popm['rating'] / 255 * 5;
                     }
@@ -1839,10 +1851,12 @@ final class VaInfo implements VaInfoInterface
                     preg_match("~\d+(?=[Xx])~", $file, $season);
                     preg_match("~(?<=[Xx])\d+~", $file, $episode);
                 } else {
-                    if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~",
-                        $file, $seasonEpisode)) {
-                        $temp = preg_split("~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",
-                            $file, 3);
+                    if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
+                        $temp = preg_split(
+                            "~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",
+                            $file,
+                            3
+                        );
                         preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
                         preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
                     } else {
@@ -1962,7 +1976,7 @@ final class VaInfo implements VaInfoInterface
 
             // Iterate over what we found
             foreach ($matches as $key => $value) {
-                $new_key = translate_pattern_code($elements['0'][$key]);
+                $new_key = self::translate_pattern_code($elements['0'][$key]);
                 if ($new_key !== false) {
                     $results[$new_key] = $value;
                 }
@@ -1977,9 +1991,8 @@ final class VaInfo implements VaInfoInterface
     /**
      * removeCommonAbbreviations
      * @param string $name
-     * @return string
      */
-    private function removeCommonAbbreviations($name)
+    private function removeCommonAbbreviations($name): string
     {
         $abbr         = explode(",", $this->configContainer->get(ConfigurationKeyEnum::COMMON_ABBR));
         $commonabbr   = preg_replace("~\n~", '', $abbr);
@@ -1997,12 +2010,13 @@ final class VaInfo implements VaInfoInterface
     /**
      * formatVideoName
      * @param string $name
-     * @return string
      */
-    private function formatVideoName($name)
+    private function formatVideoName($name): string
     {
-        return ucwords(trim((string)$this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name)),
-            "\s\t\n\r\0\x0B\.\_\-"));
+        return ucwords(trim(
+            (string)$this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name)),
+            "\s\t\n\r\0\x0B\.\_\-"
+        ));
     }
 
     /**
@@ -2030,7 +2044,7 @@ final class VaInfo implements VaInfoInterface
         $broken[$key]['artist'] = 'Unknown (Broken)';
 
         return $broken;
-    } // set_broken
+    }
 
     /**
      *
@@ -2098,7 +2112,7 @@ final class VaInfo implements VaInfoInterface
     public function splitSlashedlist($data, $doTrim = true)
     {
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
-        if (isset($data) && isset($delimiters)) {
+        if (!empty($data) && !empty($delimiters)) {
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
             $items   = preg_split($pattern, $data);
             $items   = array_map('trim', $items);
@@ -2107,12 +2121,47 @@ final class VaInfo implements VaInfoInterface
             }
             $data = $items;
         }
-        if ((isset($data) && isset($data[0])) && $doTrim) {
+        if (isset($data[0]) && $doTrim) {
             return $data[0];
         }
 
         return $data;
-    } // splitSlashedlist
+    }
+
+    /**
+     * translate_pattern_code
+     * This just contains a keyed array which it checks against to give you the
+     * 'tag' name that said pattern code corresponds to. It returns false if nothing
+     * is found.
+     * @return string|false
+     */
+    private static function translate_pattern_code(string $code)
+    {
+        $code_array = array(
+            '%a' => 'artist',
+            '%A' => 'album',
+            '%b' => 'barcode',
+            '%c' => 'comment',
+            '%C' => 'catalog_number',
+            '%d' => 'disk',
+            '%g' => 'genre',
+            '%l' => 'label',
+            '%t' => 'title',
+            '%T' => 'track',
+            '%r' => 'release_type',
+            '%R' => 'release_status',
+            '%s' => 'subtitle',
+            '%y' => 'year',
+            '%Y' => 'original_year',
+            '%o' => 'zz_other'
+        );
+
+        if (isset($code_array[$code])) {
+            return $code_array[$code];
+        }
+
+        return false;
+    }
 
     /**
      * @deprecated inject by constructor

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Util\Ui;
@@ -35,82 +36,66 @@ class Broadcast extends database_object implements library_item
 {
     protected const DB_TABLENAME = 'broadcast';
 
+    public int $id = 0;
+    public int $user;
+    public ?string $name;
+    public ?string $description;
+    public bool $is_private;
+    public int $song;
+    public bool $started;
+    public int $listeners;
+    public ?string $key;
+
+    public ?string $link = null;
     /**
-     * @var integer $id
-     */
-    public $id;
-    /**
-     * @var boolean $started
-     */
-    public $started;
-    /**
-     * @var integer $listeners
-     */
-    public $listeners;
-    /**
-     * @var integer $song
-     */
-    public $song;
-    /**
-     * @var integer $song_position
+     * @var int $song_position
      */
     public $song_position;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var integer $user
-     */
-    public $user;
-
     /**
      * @var array $tags
      */
     public $tags;
     /**
-     * @var string $f_name
+     * @var null|string $f_name
      */
     public $f_name;
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
     /**
-     * @var string $f_tags
+     * @var null|string $f_tags
      */
     public $f_tags;
-    /**
-     * @var boolean $is_private
-     */
-    public $is_private;
-    /**
-     * @var string $link
-     */
-    public $link;
 
     /**
      * Constructor
-     * @param integer $broadcast_id
+     * @param int|null $broadcast_id
      */
-    public function __construct($broadcast_id)
+    public function __construct($broadcast_id = 0)
     {
+        if (!$broadcast_id) {
+            return;
+        }
         $info = $this->get_info($broadcast_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
-    } // constructor
+    }
 
     public function getId(): int
     {
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * Update broadcast state.
-     * @param boolean $started
+     * @param bool $started
      * @param string $key
      */
     public function update_state($started, $key = '')
@@ -123,7 +108,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast listeners.
-     * @param integer $listeners
+     * @param int $listeners
      */
     public function update_listeners($listeners)
     {
@@ -134,7 +119,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast current song.
-     * @param integer $song_id
+     * @param int $song_id
      */
     public function update_song($song_id)
     {
@@ -146,7 +131,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Delete the broadcast.
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public function delete()
     {
@@ -159,16 +144,15 @@ class Broadcast extends database_object implements library_item
      * Create a broadcast
      * @param string $name
      * @param string $description
-     * @return integer
      */
-    public static function create($name, $description = '')
+    public static function create($name, $description = ''): int
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
             $params = array(Core::get_global('user')->id, $name, $description);
             Dba::write($sql, $params);
 
-            return Dba::insert_id();
+            return (int)Dba::insert_id();
         }
 
         return 0;
@@ -177,9 +161,8 @@ class Broadcast extends database_object implements library_item
     /**
      * Update a broadcast from data array.
      * @param array $data
-     * @return integer
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         if (isset($data['edit_tags'])) {
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
@@ -196,9 +179,9 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * @param boolean $details
+     * @param bool $details
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         $this->get_f_link();
         if ($details) {
@@ -218,9 +201,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item fullname.
-     * @return string
      */
-    public function get_fullname()
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->name;
@@ -231,14 +213,13 @@ class Broadcast extends database_object implements library_item
 
     /**
      * get_link
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
-            $this->link = $web_path . '/broadcast.php?id=' . scrub_out($this->id);
+            $this->link = $web_path . '/broadcast.php?id=' . $this->id;
         }
 
         return $this->link;
@@ -246,9 +227,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -259,10 +239,10 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * Get parent item description.
-     * @return array|null
+     * get_parent
+     * Return parent `object_type`, `object_id`; null otherwise.
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         return null;
     }
@@ -308,59 +288,51 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return integer[]
-     */
-    public function get_catalogs()
-    {
-        return array();
-    }
-
-    /**
      * Get item's owner.
-     * @return integer|null
+     * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return $this->user;
     }
 
     /**
      * Get default art kind for this item.
-     * @return string
      */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }
 
     /**
-     * @return mixed|null
+     * get_description
      */
-    public function get_description()
+    public function get_description(): string
     {
-        return null;
+        return '';
     }
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
-    public function display_art($thumb = 2, $force = false)
+    public function display_art($thumb = 2, $force = false): void
     {
-        if (Art::has_db($this->id, 'broadcast') || $force) {
-            Art::display('broadcast', $this->id, $this->get_fullname(), $thumb);
+        if ($this->has_art() || $force) {
+            Art::display('broadcast', $this->id, (string)$this->get_fullname(), $thumb);
         }
+    }
+
+    public function has_art(): bool
+    {
+        return Art::has_db($this->id, 'broadcast');
     }
 
     /**
      * Generate a new broadcast key.
-     * @return string
      */
-    public static function generate_key()
+    public static function generate_key(): string
     {
         // Should be improved for security reasons!
         return md5(uniqid((string)rand(), true));
@@ -371,7 +343,7 @@ class Broadcast extends database_object implements library_item
      * @param string $key
      * @return Broadcast|null
      */
-    public static function get_broadcast($key)
+    public static function get_broadcast($key): ?Broadcast
     {
         $sql        = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
         $db_results = Dba::read($sql, array($key));
@@ -398,9 +370,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get broadcast link.
-     * @return string
      */
-    public static function get_broadcast_link()
+    public static function get_broadcast_link(): string
     {
         $link = "<div class=\"broadcast-action\">";
         $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_icon('broadcast', T_('Broadcast')) . "</a>";
@@ -411,14 +382,17 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get unbroadcast link.
-     * @param integer $broadcast_id
-     * @return string
+     * @param int $broadcast_id
      */
-    public static function get_unbroadcast_link($broadcast_id)
+    public static function get_unbroadcast_link($broadcast_id): string
     {
         $link = "<div class=\"broadcast-action\">";
-        $link .= Ajax::button('?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id, 'broadcast',
-            T_('Unbroadcast'), 'broadcast_action');
+        $link .= Ajax::button(
+            '?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id,
+            'broadcast',
+            T_('Unbroadcast'),
+            'broadcast_action'
+        );
         $link .= "</div>";
         $link .= "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
 
@@ -427,8 +401,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get broadcasts from a user.
-     * @param integer $user_id
-     * @return integer[]
+     * @param int $user_id
+     * @return int[]
      */
     public static function get_broadcasts($user_id)
     {
@@ -448,13 +422,12 @@ class Broadcast extends database_object implements library_item
      *
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
-     * @return integer
+     * @param bool $local
      */
-    public function play_url($additional_params = '', $player = '', $local = false)
+    public function play_url($additional_params = '', $player = '', $local = false): string
     {
         unset($additional_params, $player, $local);
 
-        return $this->id;
+        return (string)$this->id;
     }
 }

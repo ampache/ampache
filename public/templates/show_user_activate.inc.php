@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -23,8 +26,10 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-$web_path = AmpConfig::get('web_path'); ?>
+/** @var bool $validationResult */
+
+$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
     <head>
@@ -44,15 +49,13 @@ $web_path = AmpConfig::get('web_path'); ?>
             <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
             <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
             <div>
-<?php
-    if ($validationResult) {
-        ?>
+<?php if ($validationResult) { ?>
 <h3><?php echo T_('User Activated'); ?></h3>
 <p>
     <?php echo(T_('This User ID is activated and can be used') . ' <a href="' . $web_path . '/login.php">' . T_('Login') . '</a>'); ?>
 </p>
 <?php
-    } else { ?>
+} else { ?>
 <h3><?php echo T_('Validation Failed'); ?></h3>
 <p><?php echo T_("The validation key used isn't correct"); ?></p>
 <?php } ?>

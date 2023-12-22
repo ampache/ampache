@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Playback;
 
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
@@ -46,20 +47,19 @@ class Stream
      * set_session
      *
      * This overrides the normal session value, without adding another session into the database, should be called with care
-     * @param integer|string $sid
+     * @param int|string $sid
      */
-    public static function set_session($sid)
+    public static function set_session($sid): void
     {
         if (!empty($sid)) {
             self::$session = $sid;
         }
-    } // set_session
+    }
 
     /**
      * get_session
-     * @return string
      */
-    public static function get_session()
+    public static function get_session(): string
     {
         if (!self::$session) {
             // Generate the session ID.  This is slightly wasteful.
@@ -106,7 +106,7 @@ class Stream
         $target = null,
         $player = null,
         $media_type = 'song'
-    ) {
+    ): ?string {
         // check if we've done this before
         $format = self::get_output_cache($source, $target, $player, $media_type);
         if (!empty($format)) {
@@ -161,9 +161,8 @@ class Stream
 
     /**
      * get_allowed_bitrate
-     * @return integer
      */
-    public static function get_allowed_bitrate()
+    public static function get_allowed_bitrate(): int
     {
         $max_bitrate = AmpConfig::get('max_bit_rate');
         $min_bitrate = AmpConfig::get('min_bit_rate', 8);
@@ -190,7 +189,7 @@ class Stream
             $bit_rate = floor($max_bitrate / $active_streams);
 
             // Exit if this would be insane
-            if ($bit_rate < ($min_bitrate ?: 8)) {
+            if ($bit_rate < ($min_bitrate ?? 8)) {
                 debug_event(self::class, 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
                 header('HTTP/1.1 503 Service Temporarily Unavailable');
 
@@ -210,11 +209,9 @@ class Stream
 
     /**
      * Get stream types for media type.
-     * @param string $type
-     * @param string $player
-     * @return array
+     * @return list<string>
      */
-    public static function get_stream_types_for_type($type, $player = 'webplayer')
+    public static function get_stream_types_for_type(string $type, ?string $player = 'webplayer'): array
     {
         $types     = array();
         $transcode = AmpConfig::get('transcode_' . $type);
@@ -261,7 +258,7 @@ class Stream
         $options = array()
     ) {
         $target = self::get_transcode_format($source, $target, $player, $media_type);
-        $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
+        $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?? AmpConfig::get('transcode_cmd');
         if (empty($cmd)) {
             debug_event(self::class, 'A valid transcode_cmd is required to transcode', 5);
 
@@ -292,7 +289,10 @@ class Stream
 
         debug_event(self::class, 'Command: ' . $cmd . ' Arguments:' . $args, 5);
 
-        return array('format' => $target, 'command' => $cmd . $args);
+        return array(
+            'format' => $target,
+            'command' => $cmd . $args
+        );
     }
 
     /**
@@ -301,9 +301,8 @@ class Stream
      * @param string $target
      * @param string $player
      * @param string $media_type
-     * @return string
      */
-    public static function get_output_cache($source, $target = null, $player = null, $media_type = 'song')
+    public static function get_output_cache($source, $target = null, $player = null, $media_type = 'song'): string
     {
         if (!empty(Core::get_global('transcode'))) {
             return Core::get_global('transcode')[$source][$target][$player][$media_type] ?? '';
@@ -319,7 +318,7 @@ class Stream
      * @param string $player
      * @param string $media_type
      */
-    public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song')
+    public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song'): void
     {
         if (Core::get_global('transcode') == '') {
             $GLOBALS['transcode'] = array();
@@ -392,7 +391,7 @@ class Stream
         }
         if ($out_file) {
             // when running cache_catalog_proc redirect to the file path instead of piping
-            $command = str_replace("pipe:1", $out_file, $command);
+            $command = (string)str_replace("pipe:1", $out_file, (string)$command);
             debug_event(self::class, 'Final command is ' . $command, 4);
             shell_exec($command);
 
@@ -405,9 +404,8 @@ class Stream
     /**
      * This function behaves like escapeshellarg, but isn't broken
      * @param $arg
-     * @return string
      */
-    private static function scrub_arg($arg)
+    private static function scrub_arg($arg): string
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             return '"' . str_replace(array('"', '%'), array('', ''), $arg) . '"';
@@ -422,9 +420,8 @@ class Stream
      * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
      * @param Song|Podcast_Episode|Video $media
      * @param array $transcode_settings
-     * @return integer
      */
-    public static function get_max_bitrate($media, $transcode_settings)
+    public static function get_max_bitrate($media, $transcode_settings): int
     {
         // don't ignore user bitrates
         $bit_rate = (int)self::get_allowed_bitrate();
@@ -451,7 +448,7 @@ class Stream
      * @param Video $media
      * @return string
      */
-    public static function get_image_preview($media)
+    public static function get_image_preview($media): ?string
     {
         $image = null;
         $sec   = ($media->time >= 30) ? 30 : (int) ($media->time / 2);
@@ -513,7 +510,7 @@ class Stream
                 'handle' => null
             );
         } else {
-            $parray  = array(
+            $parray = array(
                 'process' => $process,
                 'handle' => $pipes[1],
                 'stderr' => $pipes[2]
@@ -531,7 +528,7 @@ class Stream
      * kill_process
      * @param $transcoder
      */
-    public static function kill_process($transcoder)
+    public static function kill_process($transcoder): void
     {
         $status = proc_get_status($transcoder['process']);
         if ($status['running']) {
@@ -550,9 +547,8 @@ class Stream
      * validate_bitrate
      * this function takes a bitrate and returns a valid one
      * @param $bitrate
-     * @return integer
      */
-    public static function validate_bitrate($bitrate)
+    public static function validate_bitrate($bitrate): int
     {
         /* Round to standard bitrates */
         return (int) (16 * (floor((int) $bitrate / 16)));
@@ -564,7 +560,7 @@ class Stream
      * This will garbage collect the Now Playing data,
      * this is done on every play start.
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         // Remove any Now Playing entries for sessions that have been GC'd
         $sql = "DELETE FROM `now_playing` USING `now_playing` LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
@@ -575,14 +571,14 @@ class Stream
      * insert_now_playing
      *
      * This will insert the Now Playing data.
-     * @param integer $object_id
-     * @param integer $uid
-     * @param integer $length
+     * @param int $object_id
+     * @param int $uid
+     * @param int $length
      * @param string $sid
      * @param string $type
-     * @param integer $previous
+     * @param int $previous
      */
-    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null)
+    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null): void
     {
         if (!$previous) {
             $previous = time();
@@ -597,9 +593,8 @@ class Stream
      *
      * There really isn't anywhere else for this function, shouldn't have
      * deleted it in the first place.
-     * @return boolean
      */
-    public static function clear_now_playing()
+    public static function clear_now_playing(): bool
     {
         $sql = 'TRUNCATE `now_playing`';
         Dba::write($sql);
@@ -612,15 +607,14 @@ class Stream
      *
      * This returns the Now Playing information
      * @param int $user_id
-     * @return array
-     * <array{
-     *  media: \Ampache\Repository\Model\library_item,
-     *  client: \Ampache\Repository\Model\User,
+     * @return list<array{
+     *  media: library_item,
+     *  client: User,
      *  agent: string,
      *  expire: int
      * }>
      */
-    public static function get_now_playing($user_id = 0)
+    public static function get_now_playing($user_id = 0): array
     {
         $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
 
@@ -643,9 +637,10 @@ class Stream
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
-            $media      = new $class_name($row['object_id']);
-            if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->catalog, (int)$row['user'])) {
+            $className = ObjectTypeToClassNameMapper::map($row['object_type']);
+            /** @var Song|Video $media */
+            $media     = new $className($row['object_id']);
+            if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->getCatalogId(), (int)$row['user'])) {
                 $client = new User($row['user']);
                 $media->format();
                 $client->format();
@@ -653,23 +648,22 @@ class Stream
                     'media' => $media,
                     'client' => $client,
                     'agent' => $row['agent'],
-                    'expire' => $row['expire']
+                    'expire' => (int) $row['expire']
                 );
             }
         } // end while
 
         return $results;
-    } // get_now_playing
+    }
 
     /**
      * check_lock_media
      *
      * This checks to see if the media is already being played.
-     * @param integer $media_id
+     * @param int $media_id
      * @param string $type
-     * @return boolean
      */
-    public static function check_lock_media($media_id, $type)
+    public static function check_lock_media($media_id, $type): bool
     {
         $sql        = "SELECT `object_id` FROM `now_playing` WHERE `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($media_id, $type));
@@ -690,9 +684,8 @@ class Stream
      * reason this is here is because it deals with streaming rather than
      * playlist mojo. If something needs to happen this will echo the
      * javascript required to cause a reload of the iframe.
-     * @return boolean
      */
-    public static function run_playlist_method()
+    public static function run_playlist_method(): bool
     {
         // If this wasn't ajax included run away
         if (!defined('AJAX_INCLUDE')) {
@@ -718,16 +711,15 @@ class Stream
         echo "</script>";
 
         return true;
-    } // run_playlist_method
+    }
 
     /**
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
-     * @param boolean $local
-     * @param string $streamToken
-     * @return string
+     * @param bool $local
+     * @param null|string $streamToken
      */
-    public static function get_base_url($local = false, $streamToken = null)
+    public static function get_base_url($local = false, $streamToken = null): string
     {
         $base_url = '/play/index.php?';
         if (AmpConfig::get('use_play2')) {
@@ -763,5 +755,5 @@ class Stream
         }
 
         return $web_path . $base_url;
-    } // get_base_url
+    }
 }

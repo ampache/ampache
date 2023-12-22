@@ -1,6 +1,7 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -36,10 +37,13 @@ $user_id        = ($catalog_filter && !empty(Core::get_global('user')))
     : null;
 
 require_once Ui::find_template('show_form_mashup.inc.php');
-echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=newest_" . $object_type . "\">" . Ui::show_box_top(T_('Newest')) . "</a>";
+echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=newest_" . $object_type . "\">";
+Ui::show_box_top(T_('Newest'));
+echo "</a>";
 $object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user_id);
 $browse     = new Browse();
 $browse->set_type($object_type);
+$browse->set_use_filters(false);
 $browse->set_show_header(false);
 $browse->set_grid_view(false, false);
 $browse->set_mashup(true);
@@ -49,6 +53,7 @@ Ui::show_box_top(T_('Recent'));
 $object_ids = Stats::get_recent($object_type, $limit);
 $browse     = new Browse();
 $browse->set_type($object_type);
+$browse->set_use_filters(false);
 $browse->set_show_header(false);
 $browse->set_grid_view(false, false);
 $browse->set_mashup(true);
@@ -58,6 +63,7 @@ Ui::show_box_top(T_('Trending'));
 $object_ids = Stats::get_top($object_type, $limit, $threshold);
 $browse     = new Browse();
 $browse->set_type($object_type);
+$browse->set_use_filters(false);
 $browse->set_show_header(false);
 $browse->set_grid_view(false, false);
 $browse->set_mashup(true);
@@ -66,7 +72,9 @@ Ui::show_box_bottom();
 if ($object_type == 'podcast_episode') {
     Ui::show_box_top(T_('Popular'));
 } else {
-    echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=popular\">" . Ui::show_box_top(T_('Popular')) . "</a>";
+    echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=popular\">";
+    Ui::show_box_top(T_('Popular'));
+    echo "</a>";
 }
 $object_ids = Stats::get_top($object_type, 100, $threshold, 0, $user_id);
 shuffle($object_ids);

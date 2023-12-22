@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
@@ -43,10 +43,6 @@ final class Bookmarks5Method
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get information about bookmarked media this user is allowed to manage.
-     *
-     * @param array $input
-     * @param User $user
-     * @return boolean
      */
     public static function bookmarks(array $input, User $user): bool
     {

@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -56,9 +59,9 @@ use Ampache\Module\Util\Ui;
 </td>
 <?php
 if ($is_mashup) {
-    $name = scrub_out($libitem->get_fullname()); ?>
+    $name = scrub_out((string)$libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
-        <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
+        <?php $thumb = ($browse->is_grid_view()) ? 1 : 11;
     Art::display('podcast_episode', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $libitem->id); ?>
     </td>
 <?php
@@ -69,7 +72,7 @@ if ($is_mashup) {
 <?php
     echo Ajax::button('?action=basket&type=podcast_episode&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $libitem->id);
 if (Access::check('interface', 25)) { ?>
-        <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id ?>')">
+        <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id; ?>')">
             <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
     <?php } ?>
@@ -106,13 +109,13 @@ if (Access::check('interface', 50)) { ?>
     <span id="button_sync_<?php echo $libitem->id; ?>">
         <?php echo Ajax::button('?page=podcast&action=sync&podcast_episode_id=' . $libitem->id, 'file_refresh', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
     </span>
-    <a id="<?php echo 'edit_podcast_episode_' . $libitem->id ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id ?>', '<?php echo addslashes(T_('Podcast Episode Edit')) ?>', 'podcast_episode_')">
+    <a id="<?php echo 'edit_podcast_episode_' . $libitem->id; ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id; ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', 'podcast_episode_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php
 }
 if (Catalog::can_remove($libitem)) { ?>
-    <a id="<?php echo 'delete_podcast_episode_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id; ?>">
+    <a id="<?php echo 'delete_podcast_episode_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
     <?php } ?>

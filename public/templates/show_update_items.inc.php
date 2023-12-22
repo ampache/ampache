@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -23,13 +26,12 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Util\Ui;
 
-/** @var string $type */
 /** @var int $object_id */
-/** @var array|null $catalog_id */
+/** @var int|null $catalog_id */
+/** @var string $type */
+/** @var string $target_url */
 
-Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
 $return_id = Catalog::update_single_item($type, $object_id)['object_id'];
 //The target URL has changed so it needs to be updated
 if ($object_id != $return_id) {
@@ -44,8 +46,7 @@ if ($object_id != $return_id) {
 // gather art for this item
 $art = new Art($object_id, $type);
 if (!$art->has_db_info() && !AmpConfig::get('art_order') == 'db') {
-    if (is_array($catalog_id) && $catalog_id[0] != '') {
+    if ($catalog_id !== null) {
         Catalog::gather_art_item($type, $object_id);
     }
 } ?>
-<?php Ui::show_box_bottom(); ?>

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
@@ -32,7 +33,6 @@ use CpChart;
 use CpChart\Data;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\User;
 
 class Graph
 {
@@ -49,9 +49,8 @@ class Graph
     /**
      * @param string $field
      * @param string $zoom
-     * @return string
      */
-    protected function get_sql_date_format($field, $zoom)
+    protected function get_sql_date_format($field, $zoom): string
     {
         switch ($zoom) {
             case 'hour':
@@ -75,9 +74,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @return string
      */
     protected function get_user_sql_where(
@@ -86,7 +85,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null
-    ) {
+    ): string {
         $start_date = (int)($start_date);
         $end_date   = (int)($end_date);
         if ($end_date == 0) {
@@ -101,7 +100,6 @@ class Graph
             $sql .= " AND `object_count`.`user` = " . $user_id;
         }
 
-        $object_id = (int)($object_id);
         if (InterfaceImplementationChecker::is_library_item($object_type)) {
             $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
             if ($object_id > 0) {
@@ -114,19 +112,19 @@ class Graph
 
     /**
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $catalog
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $catalog_id
+     * @param int $start_date
+     * @param int $end_date
      * @return string
      */
     protected function get_catalog_sql_where(
         $object_type = 'song',
         $object_id = 0,
-        $catalog = 0,
+        $catalog_id = 0,
         $start_date = null,
         $end_date = null
-    ) {
+    ): string {
         $start_date = (int)($start_date);
         $end_date   = (int)($end_date);
         if ($end_date == 0) {
@@ -137,9 +135,8 @@ class Graph
         }
 
         $sql = "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date;
-        if ($catalog > 0) {
-            $catalog = (int)($catalog);
-            $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog;
+        if ($catalog_id > 0) {
+            $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog_id;
         }
 
         $object_id = (int)$object_id;
@@ -152,11 +149,11 @@ class Graph
 
     /**
      * @param string $fct
-     * @param integer $id
+     * @param int $id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -198,11 +195,11 @@ class Graph
      * @param Data $MyData
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
-     * @param boolean $show_total
+     * @param bool $show_total
      * @return array
      */
     protected function get_all_pts(
@@ -233,9 +230,9 @@ class Graph
      * @param Data $MyData
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      */
     protected function get_user_all_pts(
@@ -248,14 +245,23 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ) {
+        $userRepository = $this->getUserRepository();
+
         $values = $this->get_all_pts($fct, $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-        $ustats = User::count();
+        $ustats = $userRepository->getStatistics();
         // Only display other users if the graph is not for a specific user and user count is small
         if ($user_id < 1 && $ustats['users'] < 10) {
-            $userArray = $this->getUserRepository()->getValidArray();
+            $userArray = $userRepository->getValidArray();
             foreach ($userArray as $validUser) {
-                $user_values = $this->get_all_type_pts($fct, $validUser['id'], $object_type, $object_id, $start_date, $end_date,
-                    $zoom);
+                $user_values = $this->get_all_type_pts(
+                    $fct,
+                    $validUser['id'],
+                    $object_type,
+                    $object_id,
+                    $start_date,
+                    $end_date,
+                    $zoom
+                );
                 foreach ($values as $date => $value) {
                     if (array_key_exists($date, $user_values)) {
                         $value = $user_values[$date];
@@ -271,40 +277,41 @@ class Graph
     /**
      * @param string $fct
      * @param Data $MyData
-     * @param integer $catalog
+     * @param int $catalog_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      */
     protected function get_catalog_all_pts(
         $fct,
         Data $MyData,
-        $catalog = 0,
+        $catalog_id = 0,
         $object_type = null,
         $object_id = 0,
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
     ) {
-        $values = $this->get_all_pts($fct, $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom,
-            false);
+        $values = $this->get_all_pts($fct, $MyData, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom, false);
 
         // Only display other users if the graph is not for a specific catalog
-        if (!$catalog) {
+        if (!$catalog_id) {
             $catalogs = Catalog::get_catalogs();
             foreach ($catalogs as $catalog_id) {
-                $catalog        = Catalog::create_from_id($catalog_id);
-                $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date,
-                    $end_date, $zoom);
+                $catalog = Catalog::create_from_id($catalog_id);
+                if ($catalog === null) {
+                    break;
+                }
+                $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom);
                 foreach ($values as $date => $value) {
                     if (array_key_exists($date, $catalog_values)) {
                         $value = $catalog_values[$date];
                     } else {
                         $value = 0;
                     }
-                    $MyData->addPoints($value, $catalog->name);
+                    $MyData->addPoints($value, (string)$catalog->name);
                 }
             }
         }
@@ -313,9 +320,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -343,9 +350,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @param string $column
      * @return array
@@ -375,9 +382,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -389,9 +396,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -407,25 +414,25 @@ class Graph
     }
 
     /**
-     * @param integer $catalog
+     * @param int $catalog_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
     protected function get_catalog_files_pts(
-        $catalog = 0,
+        $catalog_id = 0,
         $object_type = 'song',
         $object_id = 0,
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
     ) {
-        $start_date = $start_date ?: ($end_date ?: time()) - 864000;
+        $start_date = $start_date ?? ($end_date ?? time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
-        $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog, $start_date, $end_date);
+        $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT COUNT(`t2`.`id`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $object_type . "`.`id`)) AS `files` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
@@ -438,26 +445,28 @@ class Graph
     }
 
     /**
-     * @param integer $catalog
+     * @param int $catalog_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
     protected function get_catalog_size_pts(
-        $catalog = 0,
+        $catalog_id = 0,
         $object_type = 'song',
         $object_id = 0,
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
     ) {
-        $start_date = $start_date ?: ($end_date ?: time()) - 864000;
+        $start_date = $start_date ?? ($end_date ?? time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
-        $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog, $start_date, $end_date);
-        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
+        $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
+        $sql        = ($object_type == 'album')
+            ? "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT SUM(`song`.`size`) AS `size` FROM `album` `t2` LEFT JOIN `song` ON `t2`.`id` = `song`.`id` WHERE `t2`.`addition_time` < `zoom_date`)) AS `storage` FROM `album` " . $where . " GROUP BY " . $dateformat
+            : "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
         $values = array();
@@ -471,9 +480,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      * @return array
      */
@@ -510,8 +519,8 @@ class Graph
      * @param string $title
      * @param Data $MyData
      * @param string $zoom
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      */
     protected function render_graph($title, Data $MyData, $zoom, $width = 0, $height = 0)
     {
@@ -615,15 +624,15 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      */
     public function render_user_hits(
-        $user,
+        $user_id,
         $object_type,
         $object_id,
         $start_date = null,
@@ -633,8 +642,16 @@ class Graph
         $height = 0
     ) {
         $MyData = new Data();
-        $this->get_user_all_pts('get_user_hits_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date,
-            $zoom);
+        $this->get_user_all_pts(
+            'get_user_hits_pts',
+            $MyData,
+            $user_id,
+            $object_type,
+            $object_id,
+            $start_date,
+            $end_date,
+            $zoom
+        );
 
         $MyData->setAxisName(0, "Hits");
         $MyData->setAxisDisplay(0, AXIS_FORMAT_METRIC);
@@ -645,12 +662,12 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      */
     public function render_user_bandwidth(
         $user_id = 0,
@@ -673,11 +690,10 @@ class Graph
 
     /**
      * @param int $user_id
-     * @param integer $start_date
-     * @param integer $end_date
-     * @return integer
+     * @param int $start_date
+     * @param int $end_date
      */
-    public function get_total_bandwidth($user_id = 0, $start_date = null, $end_date = null)
+    public function get_total_bandwidth($user_id = 0, $start_date = null, $end_date = null): int
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_bandwidth_pts', $user_id, null, 0, $start_date, $end_date, 'month');
@@ -690,11 +706,10 @@ class Graph
 
     /**
      * @param int $user_id
-     * @param integer $start_date
-     * @param integer $end_date
-     * @return integer
+     * @param int $start_date
+     * @param int $end_date
      */
-    public function get_total_time($user_id = 0, $start_date = null, $end_date = null)
+    public function get_total_time($user_id = 0, $start_date = null, $end_date = null): int
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_time_pts', $user_id, null, 0, $start_date, $end_date, 'month');
@@ -707,11 +722,10 @@ class Graph
 
     /**
      * @param int $user_id
-     * @param integer $start_date
-     * @param integer $end_date
-     * @return integer
+     * @param int $start_date
+     * @param int $end_date
      */
-    public function get_total_hits($user_id = 0, $start_date = null, $end_date = null)
+    public function get_total_hits($user_id = 0, $start_date = null, $end_date = null): int
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_hits_pts', $user_id, null, 0, $start_date, $end_date, 'month');
@@ -723,17 +737,17 @@ class Graph
     }
 
     /**
-     * @param integer $catalog
+     * @param int $catalog_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      */
     public function render_catalog_files(
-        $catalog = 0,
+        $catalog_id = 0,
         $object_type = null,
         $object_id = 0,
         $start_date = null,
@@ -743,8 +757,16 @@ class Graph
         $height = 0
     ) {
         $MyData = new Data();
-        $this->get_catalog_all_pts('get_catalog_files_pts', $MyData, $catalog, $object_type, $object_id, $start_date,
-            $end_date, $zoom);
+        $this->get_catalog_all_pts(
+            'get_catalog_files_pts',
+            $MyData,
+            $catalog_id,
+            $object_type,
+            $object_id,
+            $start_date,
+            $end_date,
+            $zoom
+        );
 
         $MyData->setAxisName(0, "Files");
         $MyData->setAxisDisplay(0, AXIS_FORMAT_METRIC);
@@ -753,17 +775,17 @@ class Graph
     }
 
     /**
-     * @param integer $catalog
+     * @param int $catalog_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      */
     public function render_catalog_size(
-        $catalog = 0,
+        $catalog_id = 0,
         $object_type = null,
         $object_id = 0,
         $start_date = null,
@@ -773,8 +795,16 @@ class Graph
         $height = 0
     ) {
         $MyData = new Data();
-        $this->get_catalog_all_pts('get_catalog_size_pts', $MyData, $catalog, $object_type, $object_id, $start_date,
-            $end_date, $zoom);
+        $this->get_catalog_all_pts(
+            'get_catalog_size_pts',
+            $MyData,
+            $catalog_id,
+            $object_type,
+            $object_id,
+            $start_date,
+            $end_date,
+            $zoom
+        );
 
         $MyData->setAxisName(0, "Size");
         $MyData->setAxisUnit(0, "B");
@@ -786,9 +816,9 @@ class Graph
     /**
      * @param int $user_id
      * @param string $object_type
-     * @param integer $object_id
-     * @param integer $start_date
-     * @param integer $end_date
+     * @param int $object_id
+     * @param int $start_date
+     * @param int $end_date
      * @param string $zoom
      */
     public function display_map(
@@ -803,7 +833,7 @@ class Graph
 
         foreach (Plugin::get_plugins('display_map') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                 if ($plugin->_plugin->display_map($pts)) {
                     break;
                 }

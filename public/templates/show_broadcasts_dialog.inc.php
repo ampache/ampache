@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -23,8 +26,8 @@
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 
+/** @var string $ajaxUri */
 ?>
-
 <ul>
 <?php
     $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);
@@ -32,13 +35,13 @@ foreach ($broadcasts as $broadcast_id) {
     $broadcast = new Broadcast($broadcast_id);
     $broadcast->format(); ?>
     <li>
-        <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id; ?>" onclick="handleBroadcastAction('<?php echo $this->ajaxUriRetriever->getAjaxUri() . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id; ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id; ?>');">
+        <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id; ?>" onclick="handleBroadcastAction('<?php echo $ajaxUri . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id; ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id; ?>');">
             <?php echo $broadcast->get_fullname(); ?>
         </a>
     </li>
 <?php
 } ?>
 </ul><br />
-<a href="javascript:void(0);" id="rb_append_dbroadcast_new" onclick="handleBroadcastAction('<?php echo $this->ajaxUriRetriever->getAjaxUri() . '?page=player&action=broadcast'; ?>', 'rb_append_dbroadcast_new');">
+<a href="javascript:void(0);" id="rb_append_dbroadcast_new" onclick="handleBroadcastAction('<?php echo $ajaxUri . '?page=player&action=broadcast'; ?>', 'rb_append_dbroadcast_new');">
     <?php echo T_('New broadcast'); ?>
 </a>

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,45 +23,129 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Dba;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\User;
+use DateTimeImmutable;
+use DateTimeInterface;
+use Generator;
+use PDO;
 
+/**
+ * Manages ip-history related database access
+ *
+ * Table: `ip_history`
+ */
 final class IpHistoryRepository implements IpHistoryRepositoryInterface
 {
+    private DatabaseConnectionInterface $connection;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        DatabaseConnectionInterface $connection,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->connection      = $connection;
+        $this->configContainer = $configContainer;
+    }
+
     /**
-     * This returns the ip_history from the last AmpConfig::get('user_ip_cardinality') days
+     * This returns the ip_history for the provided user
      *
-     * @param int $userId
-     * @param int $count
-     * @param bool $distinct
-     * @return array
+     * @return Generator<array{ip: string, date: DateTimeInterface}>
      */
     public function getHistory(
-        int $userId,
-        int $count = 1,
+        User $user,
+        int $limit = 1,
         bool $distinct = false
-    ): array {
-        $count     = $count ? (int)($count) : (int)(AmpConfig::get('user_ip_cardinality'));
-        $limit_sql = ($count > 0) ? " LIMIT " . (string)($count) : '';
+    ): Generator {
+        $group_sql = '';
+        $limit_sql = '';
 
-        $group_sql = "";
-        if ($distinct) {
-            $group_sql = "GROUP BY `ip`, `date`";
+        if ($limit > 0) {
+            $limit_sql = sprintf('LIMIT %d', $limit);
         }
 
-        /* Select ip history */
-        $sql = "SELECT `ip`, `date` FROM `ip_history` WHERE `user`='$userId' $group_sql ORDER BY `date` DESC$limit_sql";
-
-        $db_results = Dba::read($sql);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row;
+        if ($distinct === true) {
+            $group_sql = 'GROUP BY ip, date';
         }
 
-        return $results;
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT ip, date FROM ip_history WHERE user = ? %s ORDER BY date DESC %s',
+                $group_sql,
+                $limit_sql,
+            ),
+            [
+                $user->getId(),
+            ]
+        );
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            yield [
+                'ip' => (string) inet_ntop($row['ip']),
+                'date' => new DateTimeImmutable(sprintf('@%d', $row['date']))
+            ];
+        }
+    }
+
+    /**
+     * Returns the most recent ip-address used by the provided user
+     */
+    public function getRecentIpForUser(User $user): ?string
+    {
+        $result = $this->connection->fetchOne(
+            'SELECT ip FROM ip_history WHERE user = ? ORDER BY date DESC LIMIT 1',
+            [
+                $user->getId(),
+            ]
+        );
+
+        if ($result !== false) {
+            return (string) inet_ntop($result);
+        }
+
+        return null;
+    }
+
+    /**
+     * Deletes outdated records
+     */
+    public function collectGarbage(): void
+    {
+        $this->connection->query(
+            'DELETE FROM `ip_history` WHERE `date` < `date` - ?',
+            [
+                86400 * (int) $this->configContainer->get('user_ip_cardinality')
+            ]
+        );
+    }
+
+    /**
+     * Inserts a new row into the database
+     */
+    public function create(
+        User $user,
+        string $ipAddress,
+        string $userAgent,
+        DateTimeInterface $date
+    ): void {
+        if ($ipAddress !== '') {
+            $ipAddress = inet_pton($ipAddress);
+        }
+
+        $this->connection->query(
+            'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES (?, ?, ?, ?)',
+            [
+                $ipAddress,
+                $user->getId(),
+                $date->getTimestamp(),
+                $userAgent
+            ]
+        );
     }
 }

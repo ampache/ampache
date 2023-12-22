@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -98,7 +99,7 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
         try {
             $streamtoken = bin2hex(random_bytes(20));
             $userId      = $user->getId();
-            $userName    = $user->username;
+            $userName    = (string)$user->username;
 
             $this->userRepository->updateStreamToken(
                 $userId,

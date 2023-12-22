@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
@@ -47,7 +48,7 @@ class AlbumMethodTest extends MockeryTestCase
 
     private ?AlbumMethod $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
         $this->streamFactory = $this->mock(StreamFactoryInterface::class);

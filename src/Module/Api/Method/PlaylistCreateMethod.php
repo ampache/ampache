@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -46,11 +47,8 @@ final class PlaylistCreateMethod
      *
      * Create a new playlist and return it
      *
-     * @param array $input
-     * @param User $user
      * name = (string) Playlist name
      * type = (string) 'public', 'private'
-     * @return boolean
      */
     public static function playlist_create(array $input, User $user): bool
     {
@@ -65,7 +63,7 @@ final class PlaylistCreateMethod
 
         $object_id = Playlist::create($name, $type, $user->id, false);
         if (!$object_id) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
 
             return false;
         }

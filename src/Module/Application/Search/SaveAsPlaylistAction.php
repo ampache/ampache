@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -40,6 +42,8 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'save_as_playlist';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -47,10 +51,12 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
@@ -63,16 +69,16 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $browse  = $this->modelFactory->createBrowse((int)$_REQUEST['browse_id']);
+        $browse  = $this->modelFactory->createBrowse((int)$this->requestParser->getFromRequest('browse_id'));
         $objects = $browse->get_saved();
 
         // Make sure we have a unique name
-        $playlist_name = (isset($_POST['browse_name']))
-            ? (string) Core::get_request('browse_name')
+        $playlist_name = (isset($_POST['playlist_name']))
+            ? $this->requestParser->getFromPost('playlist_name')
             : Core::get_global('user')->username . ' - ' . get_datetime(time());
         // keep the same public/private type as the search
-        $playlist_type = (isset($_POST['browse_type']))
-            ? (string) Core::get_request('browse_type')
+        $playlist_type = (isset($_POST['playlist_type']))
+            ? $this->requestParser->getFromPost('playlist_type')
             : 'public';
 
         if (!empty($objects)) {
@@ -95,7 +101,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
                     $playlist_name
                 ),
                 sprintf(
-                    '%1$s/playlist.php?action=show_playlist&playlist_id=%2$s',
+                    '%1$s/playlist.php?action=show&playlist_id=%2$s',
                     $this->configContainer->getWebPath(),
                     $playlist_id
                 )

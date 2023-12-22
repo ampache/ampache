@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -32,6 +33,7 @@ namespace Ampache\Repository\Model;
 interface library_item extends playable_item
 {
     public function getId(): int;
+    public function isNew(): bool;
 
     /**
      * Get item keywords for metadata searches.
@@ -40,30 +42,27 @@ interface library_item extends playable_item
     public function get_keywords();
 
     /**
-     * @return mixed
+     * @return int|null
      */
-    public function get_user_owner();
+    public function get_user_owner(): ?int;
+
+    public function get_default_art_kind(): string;
 
     /**
-     * @return mixed
+     * get_description
      */
-    public function get_default_art_kind();
-
-    /**
-     * @return mixed
-     */
-    public function get_description();
+    public function get_description(): string;
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
-    public function display_art($thumb = 2, $force = false);
+    public function display_art($thumb = 2, $force = false): void;
 
     /**
      * @param array $data
-     * @return mixed
+     * @return int|false
      */
     public function update(array $data);
-} // end library_item.interface
+}

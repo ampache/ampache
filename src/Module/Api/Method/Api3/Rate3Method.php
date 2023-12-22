@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,13 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 
@@ -40,28 +42,27 @@ final class Rate3Method
     /**
      * rate
      * This rate a library item
-     * @param array $input
-     * @param User $user
      */
-    public static function rate(array $input, User $user)
+    public static function rate(array $input, User $user): void
     {
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $rating    = (string) $input['rating'];
+        $rating    = (int) $input['rating'];
 
         if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
-            echo Xml3_Data::error('401', T_('Wrong library item type.'));
+            echo Xml3_Data::error(401, T_('Wrong library item type.'));
         } else {
             $className = ObjectTypeToClassNameMapper::map($type);
-            $item      = new $className($object_id);
-            if (!$item->id) {
-                echo Xml3_Data::error('404', T_('Library item not found.'));
+            /** @var library_item $item */
+            $item = new $className($object_id);
+            if ($item->getId() === 0) {
+                echo Xml3_Data::error(404, T_('Library item not found.'));
             } else {
                 $rate = new Rating($object_id, $type);
                 $rate->set_rating($rating, $user->id);
                 echo Xml3_Data::single_string('success');
             }
         }
-    } // rate
+    }
 }

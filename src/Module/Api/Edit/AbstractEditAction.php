@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -34,6 +35,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\library_item;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -93,6 +95,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $object_id,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
+        /** @var library_item $libitem */
         $libitem = new $className($object_id);
         if (method_exists($libitem, 'format')) {
             $libitem->format();

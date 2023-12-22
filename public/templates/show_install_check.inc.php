@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -62,6 +65,6 @@ require __DIR__ . '/install_header.inc.php'; ?>
     </tr>
 </table>
 <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=init"; ?>" enctype="multipart/form-data" >
-    <input type="hidden" name="htmllang" value="<?php echo $htmllang ?>"/>
+    <input type="hidden" name="htmllang" value="<?php echo $htmllang; ?>"/>
     <button type="submit" class="btn btn-warning"><?php echo T_('Continue'); ?></button>
 </form>

@@ -1,7 +1,7 @@
 <?php
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -39,16 +39,15 @@ abstract class Handler
     private $handlerCommand;
 
     /**
-     * @param $command
-     * @return mixed
+     * Starts a command
      */
-    abstract public function start($command);
+    abstract public function start(string $command): void;
 
     /**
      * @param Catalog $handler
      * @param string $command
      */
-    public function setHandler(Catalog $handler, $command)
+    public function setHandler(Catalog $handler, $command): void
     {
         $this->handler        = $handler;
         $this->handlerCommand = $command;
@@ -85,10 +84,9 @@ abstract class Handler
      * For example: 'ls added:2014-10-02..'
      * @param string $command
      * @param string $tag
-     * @param integer $time
-     * @return string
+     * @param int $time
      */
-    public function getTimedCommand($command, $tag, $time)
+    public function getTimedCommand($command, $tag, $time): string
     {
         $commandParts = array(
             $command

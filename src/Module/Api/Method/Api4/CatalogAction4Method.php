@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,11 +45,8 @@ final class CatalogAction4Method
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
      *
-     * @param array $input
-     * @param User $user
      * task    = (string) 'add_to_catalog'|'clean_catalog'
      * catalog = (integer) $catalog_id
-     * @return boolean
      */
     public static function catalog_action(array $input, User $user): bool
     {
@@ -67,7 +65,7 @@ final class CatalogAction4Method
         }
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
-        if ($catalog) {
+        if ($catalog !== null) {
             if (defined('SSE_OUTPUT')) {
                 unset($SSE_OUTPUT);
             }
@@ -105,5 +103,5 @@ final class CatalogAction4Method
         }
 
         return true;
-    } // catalog_action
+    }
 }

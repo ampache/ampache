@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -42,7 +43,7 @@ abstract class localplay_controller
 
     /**
      * Takes a single object_id and removes it from the playlist
-     * @param integer $object_id
+     * @param int $object_id
      * @return mixed
      */
     abstract public function delete_track($object_id);
@@ -57,7 +58,7 @@ abstract class localplay_controller
 
     abstract public function get_version(); // Returns the version of this plugin
 
-    abstract public function get_description(); // Returns the description
+    abstract public function get_description(): string; // Returns the description
 
     abstract public function is_installed(); // Returns an boolean t/f
 
@@ -65,9 +66,6 @@ abstract class localplay_controller
 
     abstract public function uninstall();
 
-    /**
-     * @return array
-     */
     abstract public function status(): array;
 
     // For display we need the following 'instance' functions
@@ -120,7 +118,7 @@ abstract class localplay_controller
         $class = get_class($object);
 
         return call_user_func(array($class, 'play_url'), $object->id);
-    } // get_url
+    }
 
     /**
      * get_file
@@ -132,7 +130,7 @@ abstract class localplay_controller
      */
     public function get_file($object)
     {
-    } // get_file
+    }
 
     /**
      * parse_url
@@ -186,5 +184,5 @@ abstract class localplay_controller
         }
 
         return $data;
-    } // parse_url
-} // end localplay_controller.abstract
+    }
+}

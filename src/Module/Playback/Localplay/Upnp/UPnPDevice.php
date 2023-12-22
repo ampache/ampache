@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
@@ -49,9 +50,8 @@ class UPnPDevice
     /**
      * Reads description URL from session
      * @param $descriptionUrl
-     * @return boolean
      */
-    private function restoreDescriptionUrl($descriptionUrl)
+    private function restoreDescriptionUrl($descriptionUrl): bool
     {
         debug_event('upnpdevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
         $this->_settings = json_decode(Session::read('upnp_dev_' . $descriptionUrl), true);
@@ -107,9 +107,8 @@ class UPnPDevice
      * @param string $method Method name
      * @param array $arguments Key-Value array
      * @param string $type
-     * @return string
      */
-    public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl')
+    public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl'): string
     {
         if (!array_key_exists('host', $this->_settings) || !array_key_exists('controlURLs', $this->_settings)) {
             return '';
@@ -167,10 +166,9 @@ class UPnPDevice
      * helper function for calls that require only an instance id
      * @param $command
      * @param string $type
-     * @param integer $instance_id
-     * @return string
+     * @param int $instance_id
      */
-    public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0)
+    public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0): string
     {
         $args = array('InstanceID' => $instance_id);
         //$response = \Format::forge($response, 'xml:ns')->to_array();

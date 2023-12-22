@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -26,8 +29,8 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\library_item $item */
-/** @var string $object_type */
 /** @var int $object_id */
+/** @var string $object_type */
 /** @var string $burl */
 
 $keywords  = $item->get_keywords();
@@ -62,8 +65,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
                              if ($object_type == 'artist') {
                                  echo 'required';
                              }
-                         }
-                ?>
+                         } ?>
                     />
                   </td>
                 </tr>
@@ -94,7 +96,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
         <tr>
            <td>
                 <label id="gatherYear" for="yearFilter"><?php echo T_('Year'); ?> </label>
-                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?" value="<?php echo $year_str; ?>">
+                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?" value="<?php echo $year_str ?? ''; ?>">
                 <label><?php echo T_("(e.g. '2001', '2001-2005')"); ?></label>
            </td>
           </tr>

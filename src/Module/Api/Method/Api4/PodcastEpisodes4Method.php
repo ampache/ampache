@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class PodcastEpisodes4Method
@@ -45,12 +46,9 @@ final class PodcastEpisodes4Method
      *
      * This returns the episodes for a podcast
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of podcast
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function podcast_episodes(array $input, User $user): bool
     {
@@ -62,10 +60,18 @@ final class PodcastEpisodes4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $podcast_id = (int) scrub_in($input['filter']);
+        $podcast_id = (int) $input['filter'];
         debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
-        $podcast = new Podcast($podcast_id);
-        $results = $podcast->get_episodes();
+        $podcastRepository = self::getPodcastRepository();
+        $podcast           = $podcastRepository->findById($podcast_id);
+
+        if ($podcast === null) {
+            Api4::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['api_format']);
+
+            return false;
+        }
+
+        $results = self::getPodcastRepository()->getEpisodes($podcast);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -81,5 +87,15 @@ final class PodcastEpisodes4Method
         }
 
         return true;
-    } // podcast_episodes
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
+    }
 }

@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,6 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Repository\Model;
@@ -58,9 +60,9 @@ abstract class DatabaseObject
     //}
 
     /**
-     * @return boolean
+     * isDirty
      */
-    public function isDirty()
+    public function isDirty(): bool
     {
         return true;
     }
@@ -118,9 +120,9 @@ abstract class DatabaseObject
     {
         foreach ($this->fieldClassRelations as $field => $repositoryName) {
             if (class_exists($repositoryName)) {
-                /* @var Repository $repository */
-                $class_name   = ObjectTypeToClassNameMapper::map($repositoryName);
-                $repository   = new $class_name();
+                $className = ObjectTypeToClassNameMapper::map($repositoryName);
+                /** @var Repository $repository */
+                $repository   = new $className();
                 $this->$field = $repository->findById($this->$field);
             }
         }

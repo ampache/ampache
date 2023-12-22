@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
@@ -61,7 +61,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
      * results set is returned
      *
      * @param Art $art
-     * @param integer $limit
+     * @param int $limit
      * @param array $data
      *
      * @return array
@@ -81,7 +81,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
         $processed = [];
 
         /* See if we are looking for a specific filename */
-        $preferred_filename = ($this->configContainer->get('album_art_preferred_filename')) ?: 'folder.jpg';
+        $preferred_filename = ($this->configContainer->get('album_art_preferred_filename')) ?? 'folder.jpg';
         $artist_filename    = $this->configContainer->get('artist_art_preferred_filename');
         $artist_art_folder  = $this->configContainer->get('artist_art_folder');
 
@@ -91,14 +91,14 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $songs = $this->songRepository->getByAlbum((int) $media->id);
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
-                $dirs[] = Core::conv_lc_file(dirname($song->file));
+                $dirs[] = Core::conv_lc_file(dirname((string)$song->file));
             }
         } elseif ($art->type == 'video') {
             $media  = new Video($art->uid);
             $dirs[] = Core::conv_lc_file(dirname($media->file));
         } elseif ($art->type == 'artist') {
             $media              = new Artist($art->uid);
-            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->get_fullname());
+            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', (string)$media->get_fullname());
             if ($artist_art_folder) {
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
             }
@@ -107,9 +107,9 @@ final class FolderCollectorModule implements CollectorModuleInterface
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 // look in the directory name of the files (e.g. /mnt/Music/%artistName%/%album%)
-                $dirs[] = Core::conv_lc_file(dirname($song->file));
+                $dirs[] = Core::conv_lc_file(dirname((string)$song->file));
                 // look one level up (e.g. /mnt/Music/%artistName%)
-                $dirs[] = Core::conv_lc_file(dirname($song->file, 2));
+                $dirs[] = Core::conv_lc_file(dirname((string)$song->file, 2));
             }
         }
 
@@ -170,7 +170,8 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 if (
                     (
                         $file == $preferred_filename ||
-                        pathinfo($file, PATHINFO_FILENAME) == $preferred_filename) ||
+                        pathinfo($file, PATHINFO_FILENAME) == $preferred_filename
+                    ) ||
                         (
                             $file == $artist_filename ||
                             pathinfo($file, PATHINFO_FILENAME) == $artist_filename

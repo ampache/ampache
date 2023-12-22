@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
@@ -35,107 +36,86 @@ use Ampache\Module\System\AmpError;
  * this can include podcasts or what-have-you
  *
  */
-class Live_Stream extends database_object implements Media, library_item
+class Live_Stream extends database_object implements Media, library_item, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'live_stream';
 
     /* DB based variables */
+    public int $id = 0;
+    public ?string $name;
+    public ?string $site_url;
+    public ?string $url;
+    public int $genre;
+    public int $catalog;
+    public ?string $codec;
 
+    public ?string $link = null;
     /**
-     * @var integer $id
-     */
-    public $id;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var string $site_url
-     */
-    public $site_url;
-    /**
-     * @var string $url
-     */
-    public $url;
-    /**
-     * @var string $link
-     */
-    public $link;
-    /**
-     * @var int $genre
-     */
-    public $genre;
-    /**
-     * @var string $codec
-     */
-    public $codec;
-    /**
-     * @var integer $catalog
-     */
-    public $catalog;
-
-    /**
-     * @var string $f_name
+     * @var null|string $f_name
      */
     public $f_name;
 
     /**
-     * @var string $f_link
+     * @var null|string $f_link
      */
     public $f_link;
     /**
-     * @var string $f_name_link
+     * @var null|string $f_name_link
      */
     public $f_name_link;
     /**
-     * @var string $f_url_link
+     * @var null|string $f_url_link
      */
     public $f_url_link;
     /**
-     * @var string $f_site_url_link
+     * @var null|string $f_site_url_link
      */
     public $f_site_url_link;
 
     /**
      * Constructor
      * This takes a flagged. id and then pulls in the information for said flag entry
-     * @param integer $stream_id
+     * @param int|null $stream_id
      */
-    public function __construct($stream_id)
+    public function __construct($stream_id = 0)
     {
+        if (!$stream_id) {
+            return;
+        }
         $info = $this->get_info($stream_id, static::DB_TABLENAME);
         if (empty($info)) {
-            return false;
+            return;
         }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
-    } // constructor
+    }
 
     public function getId(): int
     {
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * format
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
-     * @param boolean $details
-     * @return true
+     *
+     * @param bool $details
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         unset($details);
         $this->get_f_link();
         $this->f_name_link     = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->get_fullname() . "</a>";
         $this->f_url_link      = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
         $this->f_site_url_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->site_url . "</a>";
-
-        return true;
-    } // format
+    }
 
     /**
      * Get item keywords for metadata searches.
@@ -147,9 +127,9 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @return string
+     * get_fullname
      */
-    public function get_fullname()
+    public function get_fullname(): ?string
     {
         if (!isset($this->f_name)) {
             $this->f_name = $this->name;
@@ -160,14 +140,13 @@ class Live_Stream extends database_object implements Media, library_item
 
     /**
      * Get item link.
-     * @return string
      */
-    public function get_link()
+    public function get_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->link)) {
+        if ($this->link === null) {
             $web_path   = AmpConfig::get('web_path');
-            $this->link = $web_path . '/radio.php?action=show&radio=' . scrub_out($this->id);
+            $this->link = $web_path . '/radio.php?action=show&radio=' . $this->id;
         }
 
         return $this->link;
@@ -175,9 +154,8 @@ class Live_Stream extends database_object implements Media, library_item
 
     /**
      * Get item f_link.
-     * @return string
      */
-    public function get_f_link()
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if (!isset($this->f_link)) {
@@ -189,36 +167,33 @@ class Live_Stream extends database_object implements Media, library_item
 
     /**
      * get_f_artist_link
-     *
-     * @return string
      */
-    public function get_f_artist_link()
+    public function get_f_artist_link(): ?string
     {
         return '';
     }
 
     /**
      * Get item get_f_album_link.
-     * @return string
      */
-    public function get_f_album_link()
+    public function get_f_album_link(): string
     {
         return '';
     }
 
     /**
      * Get item get_f_album_disk_link.
-     * @return string
      */
-    public function get_f_album_disk_link()
+    public function get_f_album_disk_link(): string
     {
         return '';
     }
 
     /**
-     * @return null
+     * get_parent
+     * Return parent `object_type`, `object_id`; null otherwise.
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         return null;
     }
@@ -261,50 +236,48 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return integer[]
+     * Returns the id of the catalog the item is associated to
      */
-    public function get_catalogs()
+    public function getCatalogId(): int
     {
-        return array($this->catalog);
+        return $this->catalog;
     }
 
     /**
-     * @return null
+     * @return int|null
      */
-    public function get_user_owner()
+    public function get_user_owner(): ?int
     {
         return null;
     }
 
-    /**
-     * @return string
-     */
-    public function get_default_art_kind()
+    public function get_default_art_kind(): string
     {
         return 'default';
     }
 
     /**
-     * @return null
      */
-    public function get_description()
+    public function get_description(): string
     {
-        return null;
+        return '';
     }
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
-    public function display_art($thumb = 2, $force = false)
+    public function display_art($thumb = 2, $force = false): void
     {
-        if (Art::has_db($this->id, 'live_stream') || $force) {
-            Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->get_link());
+        if ($this->has_art() || $force) {
+            Art::display('live_stream', $this->id, (string)$this->get_fullname(), $thumb, $this->get_link());
         }
+    }
+
+    public function has_art(): bool
+    {
+        return Art::has_db($this->id, 'live_stream');
     }
 
     /**
@@ -313,7 +286,7 @@ class Live_Stream extends database_object implements Media, library_item
      * it depends on a ID element to determine which radio element it
      * should be updating
      * @param array $data
-     * @return boolean|integer
+     * @return int|false
      */
     public function update(array $data)
     {
@@ -340,8 +313,9 @@ class Live_Stream extends database_object implements Media, library_item
             return false;
         }
 
-        $sql = "UPDATE `live_stream` SET `name` = ?,`site_url` = ?,`url` = ?, codec = ? WHERE `id` = ?";
-        Dba::write($sql,
+        $sql = "UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, codec = ? WHERE `id` = ?";
+        Dba::write(
+            $sql,
             array(
                 $data['name'] ?? $this->name,
                 $data['site_url'] ?? null,
@@ -352,16 +326,15 @@ class Live_Stream extends database_object implements Media, library_item
         );
 
         return $this->id;
-    } // update
+    }
 
     /**
      * create
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
      * @param array $data
-     * @return string|null
      */
-    public static function create(array $data)
+    public static function create(array $data): ?string
     {
         // Make sure we've got a name and codec
         if (!strlen((string)$data['name'])) {
@@ -388,7 +361,7 @@ class Live_Stream extends database_object implements Media, library_item
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($data['catalog']);
-        if (!$catalog->name) {
+        if ($catalog === null) {
             AmpError::add('catalog', T_('Catalog is invalid'));
         }
 
@@ -400,10 +373,13 @@ class Live_Stream extends database_object implements Media, library_item
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));
         $insert_id = Dba::insert_id();
+        if (!$insert_id) {
+            return null;
+        }
         Catalog::count_table('live_stream');
 
         return $insert_id;
-    } // create
+    }
 
     /**
      * get_stream_types
@@ -414,29 +390,28 @@ class Live_Stream extends database_object implements Media, library_item
     public function get_stream_types($player = null)
     {
         return array('native');
-    } // native_stream
+    }
 
     /**
      * play_url
      * This is needed by the media interface
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
+     * @param bool $local
      * @param string $sid
      * @param string $force_http
-     * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $sid = '', $force_http = '')
+    public function play_url($additional_params = '', $player = '', $local = false, $sid = '', $force_http = ''): string
     {
         return $this->url . $additional_params;
-    } // play_url
+    }
 
     /**
-     * @return string
+     * get_stream_name
      */
-    public function get_stream_name()
+    public function get_stream_name(): string
     {
-        return $this->get_fullname();
+        return (string)$this->get_fullname();
     }
 
     /**
@@ -454,13 +429,20 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @param integer $user_id
+     * getYear
+     */
+    public function getYear(): string
+    {
+        return '';
+    }
+
+    /**
+     * @param int $user_id
      * @param string $agent
      * @param array $location
-     * @param integer $date
-     * @return boolean
+     * @param int $date
      */
-    public function set_played($user_id, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date): bool
     {
         // Do nothing
         unset($user_id, $agent, $location, $date);
@@ -469,12 +451,11 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @param integer $user
+     * @param int $user
      * @param string $agent
-     * @param integer $date
-     * @return boolean
+     * @param int $date
      */
-    public function check_play_history($user, $agent, $date)
+    public function check_play_history($user, $agent, $date): bool
     {
         // Do nothing
         unset($user, $agent, $date);
@@ -482,7 +463,7 @@ class Live_Stream extends database_object implements Media, library_item
         return false;
     }
 
-    public function remove()
+    public function remove(): bool
     {
         return true;
     }

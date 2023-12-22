@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\System\Session;
@@ -47,7 +49,7 @@ final class Ping5Method
      * auth    = (string) //optional
      * version = (string) $version //optional
      */
-    public static function ping(array $input)
+    public static function ping(array $input): void
     {
         $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
         Api5::$version = ((int)$version >= 350001) ? Api5::$version_numeric : Api5::$version;
@@ -59,12 +61,21 @@ final class Ping5Method
         );
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
-        if (Session::exists('api', $input['auth'])) {
-            Session::extend($input['auth']);
-            if (in_array($data_version, array(3, 4, 5))) {
-                Session::write($input['auth'], $data_version);
+        if (array_key_exists('auth', $input) && Session::exists('api', $input['auth'])) {
+            Session::extend($input['auth'], 'api');
+            // perpetual sessions do not expire
+            $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+            $session_expire = ($perpetual)
+                ? 0
+                : date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60);
+            if (in_array($data_version, Api::API_VERSIONS)) {
+                Session::write($input['auth'], $data_version, $perpetual);
             }
-            $results = array_merge(array('session_expire' => date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60)), $results, Api5::server_details($input['auth']));
+            $results = array_merge(
+                array('session_expire' => $session_expire),
+                $results,
+                Api5::server_details($input['auth'])
+            );
         }
 
         debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
@@ -77,5 +88,5 @@ final class Ping5Method
             default:
                 echo Xml5_Data::keyed_array($results);
         }
-    } // ping
+    }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -97,7 +97,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($artist->get_fullname()),
                             'value' => scrub_out($artist->get_fullname()),
                             'rels' => '',
-                            'image' => Art::url($artist->id, 'artist', null, 10),
+                            'image' => (string)Art::url($artist->id, 'artist', null, 10),
                         );
                     }
                 }
@@ -125,7 +125,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($album->get_fullname()),
                             'value' => scrub_out($album->get_fullname()),
                             'rels' => scrub_out($album->get_artist_fullname()),
-                            'image' => Art::url($album->id, 'album', null, 10),
+                            'image' => (string)Art::url($album->id, 'album', null, 10),
                         );
                     }
                 }
@@ -153,7 +153,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($albumdisk->get_fullname()),
                             'value' => scrub_out($albumdisk->get_fullname()),
                             'rels' => scrub_out($albumdisk->get_artist_fullname()),
-                            'image' => Art::url($albumdisk->album_id, 'album', null, 10),
+                            'image' => (string)Art::url($albumdisk->album_id, 'album', null, 10),
                         );
                     }
                 }
@@ -185,7 +185,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($song->title),
                             'value' => scrub_out($song->title),
                             'rels' => scrub_out($song->get_artist_fullname()),
-                            'image' => Art::url($art_object, $art_type, null, 10),
+                            'image' => (string)Art::url($art_object, $art_type, null, 10),
                         );
                     }
                 }
@@ -209,7 +209,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $playlist  = new Playlist($playlistid);
                         $results[] = array(
                             'type' => T_('Playlists'),
-                            'link' => $web_path . '/playlist.php?action=show_playlist&playlist_id=' . $playlistid,
+                            'link' => $web_path . '/playlist.php?action=show&playlist_id=' . $playlistid,
                             'label' => $playlist->name,
                             'value' => $playlist->get_fullname(),
                             'rels' => '',
@@ -242,14 +242,14 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => $label->name,
                             'value' => $label->name,
                             'rels' => '',
-                            'image' => Art::url($label->id, 'label', null, 10),
+                            'image' => (string)Art::url($label->id, 'label', null, 10),
                         );
                     }
                 }
 
                 if ($target == 'missing_artist' && AmpConfig::get('wanted')) {
-                    $sres     = $this->missingArtistFinder->find($search);
-                    $count    = 0;
+                    $sres  = $this->missingArtistFinder->find($search);
+                    $count = 0;
                     foreach ($sres as $artist) {
                         $results[] = array(
                             'type' => T_('Missing Artists'),

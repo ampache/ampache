@@ -1,7 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
 
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -49,9 +51,15 @@ interface Media
      * Returns the url to stream the specified object
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
+     * @param bool $local
      */
-    public function play_url($additional_params = '', $player = '', $local = false);
+    public function play_url($additional_params = '', $player = '', $local = false): string;
+
+    /**
+     * get_stream_name
+     * Get the complete name to display for the stream.
+     */
+    public function get_stream_name(): string;
 
     /**
      * get_transcode_settings
@@ -68,32 +76,28 @@ interface Media
     public function get_transcode_settings($target = null, $player = null, $options = array());
 
     /**
-     * get_stream_name
-     * Get the complete name to display for the stream.
+     * getYear
      */
-    public function get_stream_name();
+    public function getYear(): string;
 
     /**
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $agent
      * @param array $location
-     * @param integer $date
-     * @return boolean
+     * @param int $date
      */
-    public function set_played($user_id, $agent, $location, $date = null);
+    public function set_played($user_id, $agent, $location, $date): bool;
 
     /**
-     * @param integer $user
+     * @param int $user
      * @param string $agent
-     * @param integer $date
-     * @return boolean
+     * @param int $date
      */
-    public function check_play_history($user, $agent, $date);
+    public function check_play_history($user, $agent, $date): bool;
 
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove();
+    public function remove(): bool;
 }

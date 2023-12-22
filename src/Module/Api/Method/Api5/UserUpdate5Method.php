@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -46,8 +47,6 @@ final class UserUpdate5Method
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * @param array $input
-     * @param User $user
      * username   = (string) $username
      * password   = (string) hash('sha256', $password)) //optional
      * fullname   = (string) $fullname //optional
@@ -57,7 +56,6 @@ final class UserUpdate5Method
      * city       = (string) $city //optional
      * disable    = (integer) 0,1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
-     * @return boolean
      */
     public static function user_update(array $input, User $user): bool
     {
@@ -79,17 +77,21 @@ final class UserUpdate5Method
 
         // identify the user to modify
         $update_user = User::get_from_username($username);
-        $user_id     = $update_user->getId();
-
-        if ($password && $update_user->access == 100) {
+        if ($update_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
 
-        $userStateToggler = static::getUserStateToggler();
+        if ($password && $update_user->access == 100) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
+            return false;
+        }
+
+        $user_id = $update_user->getId();
         if ($user_id > 0) {
             if ($password && !AmpConfig::get('simple_user_mode')) {
                 $update_user->update_password('', $password);
@@ -97,7 +99,7 @@ final class UserUpdate5Method
             if ($fullname) {
                 $update_user->update_fullname($fullname);
             }
-            if (Mailer::validate_address($email)) {
+            if ($email && Mailer::validate_address($email)) {
                 $update_user->update_email($email);
             }
             if ($website) {
@@ -109,6 +111,7 @@ final class UserUpdate5Method
             if ($city) {
                 $update_user->update_city($city);
             }
+            $userStateToggler = static::getUserStateToggler();
             if ($disable === '1') {
                 $userStateToggler->disable($update_user);
             } elseif ($disable === '0') {
@@ -122,7 +125,7 @@ final class UserUpdate5Method
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+        Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

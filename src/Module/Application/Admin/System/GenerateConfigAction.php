@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\System;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -32,7 +33,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\Util\Horde_Browser;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -48,8 +48,6 @@ final class GenerateConfigAction implements ApplicationActionInterface
 
     private InstallationHelperInterface $installationHelper;
 
-    private UiInterface $ui;
-
     private ResponseFactoryInterface $responseFactory;
 
     private StreamFactoryInterface $streamFactory;
@@ -58,14 +56,12 @@ final class GenerateConfigAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         Horde_Browser $browser,
         InstallationHelperInterface $installationHelper,
-        UiInterface $ui,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory
     ) {
         $this->configContainer    = $configContainer;
         $this->browser            = $browser;
         $this->installationHelper = $installationHelper;
-        $this->ui                 = $ui;
         $this->responseFactory    = $responseFactory;
         $this->streamFactory      = $streamFactory;
     }

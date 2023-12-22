@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
@@ -74,7 +74,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * itself
      *
      * @param Art $art
-     * @param integer $limit
+     * @param int $limit
      * @param array $data
      *
      * @return array
@@ -83,7 +83,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         Art $art,
         int $limit = 5,
         array $data = []
-    ):array {
+    ): array {
         if (!$limit) {
             $limit = 5;
         }
@@ -103,9 +103,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Calculate the priority for the given art type.
-     * @param string $type
-     * @param array $priorities
-     * @return int
      */
     private static function getArtTypePriority(string $type, array $priorities): int
     {
@@ -151,7 +148,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from audio files.
      * @param Art $art
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     private function gatherSongTags(Art $art, int $limit = 5): array
@@ -160,10 +157,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if ($art->type == 'album') {
             $songs = $this->songRepository->getByAlbum($art->uid);
         } else {
-            $songs  = $this->songRepository->getByArtist($art->uid);
+            $songs = $this->songRepository->getByArtist($art->uid);
         }
 
-        $data  = [];
+        $data = [];
 
         // Foreach songs in this album
         foreach ($songs as $song_id) {
@@ -205,7 +202,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
             $image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
             if (array_key_exists('data', $image)) {
-                $images[]    = array(
+                $images[] = array(
                     'raw' => $image['data'],
                     'mime' => $image['mime'],
                     'title' => 'ID3 asf'
@@ -217,8 +214,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
                 if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                    $type        = self::getPictureType((int)$image['picturetypeid']);
-                    $images[]    = [
+                    $type     = self::getPictureType((int)$image['picturetypeid']);
+                    $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['mime'],
                         'title' => 'ID3 ' . $type
@@ -231,8 +228,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['PIC'] as $image) {
                 if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                    $type        = self::getPictureType((int)$image['picturetypeid']);
-                    $images[]    = [
+                    $type     = self::getPictureType((int)$image['picturetypeid']);
+                    $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $type
@@ -245,8 +242,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['flac']['PICTURE'] as $image) {
                 if (isset($image['typeid']) && array_key_exists('data', $image)) {
-                    $type        = self::getPictureType((int)$image['typeid']);
-                    $images[]    = [
+                    $type     = self::getPictureType((int)$image['typeid']);
+                    $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $type
@@ -259,14 +256,14 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['comments']['picture'] as $image) {
                 if (isset($image['picturetype']) && array_key_exists('data', $image)) {
-                    $images[]    = [
+                    $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $image['picturetype']
                     ];
                 }
                 if (isset($image['description']) && array_key_exists('data', $image)) {
-                    $images[]    = [
+                    $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $image['description']
@@ -287,7 +284,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     private function gatherMediaTags($media, $data)
     {
         $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
-        $images = self::gatherFileArt($media->file);
+        $images = self::gatherFileArt((string)$media->file);
 
         // stop collecting dupes for each album
         $raw_array = array();
@@ -309,7 +306,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from single song instead of full album
      * (taken from function gather_song_tags with some changes)
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function gatherSongTagsSingle(Art $art, $limit = 5)
@@ -330,10 +327,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Get the type of picture being returned (https://id3.org/id3v2.3.0#Attached_picture)
      * Flac also uses the id3.org specs.
-     * @param int $picture_type
-     * @return string
      */
-    public static function getPictureType(int $picture_type)
+    public static function getPictureType(int $picture_type): string
     {
         switch ($picture_type) {
             case 1:

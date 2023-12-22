@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -31,6 +32,26 @@ use PHPMailer\PHPMailer\PHPMailer;
 interface MailerInterface
 {
     /**
+     * Set the actual mail body/message
+     */
+    public function setMessage(string $message): MailerInterface;
+
+    /**
+     * Set the mail subject
+     */
+    public function setSubject(string $subject): MailerInterface;
+
+    /**
+     * Set recipient email and -name
+     */
+    public function setRecipient(string $recipientEmail, string $recipientName = ''): MailerInterface;
+
+    /**
+     * Set sender email and -name
+     */
+    public function setSender(string $senderEmail, string $senderName = ''): MailerInterface;
+
+    /**
      * Check that the mail feature is enabled
      */
     public function isMailEnabled(): bool;
@@ -41,21 +62,21 @@ interface MailerInterface
      * Does the config magic to figure out the "system" email sender and
      * sets it as the sender.
      */
-    public function set_default_sender();
+    public function set_default_sender(): MailerInterface;
 
     /**
      * send
      * This actually sends the mail, how amazing
      * @param PHPMailer $phpmailer
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
-    public function send($phpmailer = null);
+    public function send($phpmailer = null): bool;
 
     /**
      * @param $group_name
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
-    public function send_to_group($group_name);
+    public function send_to_group($group_name): bool;
 }

@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,6 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Repository\Model\Metadata\Repository;
@@ -29,7 +31,7 @@ class Metadata extends Repository
 {
     protected $modelClassName = \Ampache\Repository\Model\Metadata\Model\Metadata::class;
 
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         Dba::write("DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL;");
     }
@@ -37,9 +39,9 @@ class Metadata extends Repository
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

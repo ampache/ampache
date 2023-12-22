@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -46,13 +46,10 @@ final class PlaylistRemoveSong4Method
      * Pre-400001 the api required 'track' instead of 'song'.
      * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
      * song   = (string) UID of song to remove from the playlist //optional
      * track  = (string) track number to remove from the playlist //optional
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
-     * @return boolean
      */
     public static function playlist_remove_song(array $input, User $user): bool
     {
@@ -68,7 +65,7 @@ final class PlaylistRemoveSong4Method
                 $playlist->delete_all();
                 Api4::message('success', 'all songs removed from playlist', null, $input['api_format']);
             } elseif (array_key_exists('song', $input)) {
-                $track = (int) scrub_in($input['song']);
+                $track = (int) scrub_in((string) $input['song']);
                 if (!$playlist->has_item($track)) {
                     Api4::message('error', T_('Song not found in playlist'), '404', $input['api_format']);
 
@@ -78,7 +75,7 @@ final class PlaylistRemoveSong4Method
                 $playlist->regenerate_track_numbers();
                 Api4::message('success', 'song removed from playlist', null, $input['api_format']);
             } elseif (array_key_exists('track', $input)) {
-                $track = (int) scrub_in($input['track']);
+                $track = (int) scrub_in((string) $input['track']);
                 if (!$playlist->has_item(null, $track)) {
                     Api4::message('error', T_('Track ID not found in playlist'), '404', $input['api_format']);
 
@@ -91,5 +88,5 @@ final class PlaylistRemoveSong4Method
         }
 
         return true;
-    } // playlist_remove_song
+    }
 }

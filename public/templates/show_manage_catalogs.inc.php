@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,12 +24,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Browse;
-use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
-<?php Ui::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs') ?>
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>
@@ -51,7 +50,7 @@ $web_path = AmpConfig::get('web_path'); ?>
             <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_stats"><?php echo T_('Clear Stats'); ?></a>
+            <a class="option-list" href="javascript:NavigateTo('<?php echo $web_path; ?>/admin/catalog.php?action=clear_stats');" onclick="return confirm('<?php echo T_('Are you sure?'); ?>');"><?php echo T_('Clear Stats'); ?></a>
         </li>
     </ul>
     <form style="padding-left: 250px;" method="post" action="<?php echo $web_path; ?>/admin/catalog.php?action=update_from">
@@ -70,11 +69,3 @@ $web_path = AmpConfig::get('web_path'); ?>
         </table>
     </form>
 </div>
-<?php Ui::show_box_bottom();
-$catalogs = Catalog::get_catalogs();
-$browse   = new Browse();
-$browse->set_type('catalog');
-$browse->set_static_content(true);
-$browse->save_objects($catalogs);
-$browse->show_objects($catalogs);
-$browse->store(); ?>

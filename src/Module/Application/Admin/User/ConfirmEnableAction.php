@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,23 +23,27 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\User\UserStateTogglerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\System\Core;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
+use Ampache\Module\User\UserStateTogglerInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Activates a user
+ */
 final class ConfirmEnableAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'confirm_enable';
+
+    private RequestParserInterface $requestParser;
 
     private UiInterface $ui;
 
@@ -47,11 +54,13 @@ final class ConfirmEnableAction extends AbstractUserAction
     private UserStateTogglerInterface $userStateToggler;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
         UserStateTogglerInterface $userStateToggler
     ) {
+        $this->requestParser    = $requestParser;
         $this->ui               = $ui;
         $this->modelFactory     = $modelFactory;
         $this->configContainer  = $configContainer;
@@ -64,22 +73,25 @@ final class ConfirmEnableAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('enable_user')) {
+        if ($this->requestParser->verifyForm('enable_user') === false) {
             throw new AccessDeniedException();
         }
-        $this->ui->showHeader();
 
-        $user = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
+        $user   = $this->modelFactory->createUser($userId);
+
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
+        }
 
         $this->userStateToggler->enable($user);
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
-            /* HINT: Username and fullname together: Username (fullname) */
-            sprintf(T_('%s (%s) has been enabled'), $user->username, $user->fullname),
+            sprintf(T_('%s has been enabled'), $user->getFullDisplayName()),
             'admin/users.php'
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

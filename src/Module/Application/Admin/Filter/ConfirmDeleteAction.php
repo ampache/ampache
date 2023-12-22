@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Filter;
 
@@ -60,7 +61,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
 
         $filter_id   = (int)($request->getQueryParams()['filter_id'] ?? 0);
         $filter_name = $request->getQueryParams()['filter_name'];
-        if (Catalog::delete_catalog_filter($filter_id)) {
+        if (Catalog::delete_catalog_filter($filter_id) !== false) {
             Catalog::reset_user_filter($filter_id);
             $this->ui->showConfirmation(
                 T_('No Problem'),

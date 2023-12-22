@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,9 +31,11 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
+/** @var PodcastRepositoryInterface $podcastRepository */
 
 $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
@@ -57,7 +62,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="podcast">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="podcast">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -85,10 +90,13 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                     Userflag::build_cache('podcast', $object_ids);
                 }
 
-                foreach ($object_ids as $podcast_id) {
-                    $libitem = new Podcast($podcast_id);
+                foreach ($object_ids as $podcastId) {
+                    $libitem = $podcastRepository->findById($podcastId);
+                    if ($libitem === null) {
+                        continue;
+                    }
                     $libitem->format(); ?>
-        <tr id="podcast_<?php echo $libitem->id; ?>">
+        <tr id="podcast_<?php echo $libitem->getId(); ?>">
             <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
         </tr>
         <?php

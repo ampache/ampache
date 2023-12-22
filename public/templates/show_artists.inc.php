@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -35,7 +38,7 @@ use Ampache\Module\Util\Ui;
 
 session_start();
 
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $thcount      = 8;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
@@ -58,7 +61,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="artist">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="artist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -98,6 +101,9 @@ $directplay_limit                     = AmpConfig::get('direct_play_limit');
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) {
     $libitem = new Artist($artist_id, $_SESSION['catalog'] ?? 0);
+    if ($libitem->isNew()) {
+        continue;
+    }
     $libitem->format(true, $limit_threshold);
     $show_direct_play  = $show_direct_play_cfg;
     $show_playlist_add = Access::check('interface', 25);
@@ -107,12 +113,12 @@ foreach ($object_ids as $artist_id) {
             $show_direct_play = $show_playlist_add;
         }
     } ?>
-        <tr id="artist_<?php echo $libitem->id ?>" class="libitem_menu">
+        <tr id="artist_<?php echo $libitem->id; ?>" class="libitem_menu">
             <?php require Ui::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php
-} // end foreach ($artists as $artist)?>
-        <?php if (!count($object_ids)) { ?>
+}
+if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Artist found'); ?></span></td>
         </tr>
@@ -124,7 +130,7 @@ foreach ($object_ids as $artist_id) {
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="<?php echo $cel_artist; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
-            <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
+            <th class="cel_songs optional"><?php echo T_('Songs'); ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
             <th class="<?php echo $cel_time; ?> essential"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>

@@ -44,5 +44,3 @@ else
     echo -e "\e[1;33m$PHPCS $PHPCSARGS .\e[00m"
     exit 1
 fi
-
-exit 0

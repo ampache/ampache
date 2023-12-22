@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class Podcast4Method
@@ -45,11 +46,8 @@ final class Podcast4Method
      *
      * Get the podcast from it's id.
      *
-     * @param array $input
-     * @param User $user
      * filter  = (integer) Podcast ID number
      * include = (string) 'episodes' (include episodes in the response) //optional
-     * @return boolean
      */
     public static function podcast(array $input, User $user): bool
     {
@@ -62,8 +60,9 @@ final class Podcast4Method
             return false;
         }
         $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
+        $podcast   = self::getPodcastRepository()->findById($object_id);
+
+        if ($podcast !== null) {
             $episodes = (array_key_exists('include', $input) && $input['include'] == 'episodes');
 
             ob_end_clean();
@@ -79,5 +78,15 @@ final class Podcast4Method
         }
 
         return true;
-    } // podcast
+    }
+
+    /**
+     * @todo inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
+    }
 }

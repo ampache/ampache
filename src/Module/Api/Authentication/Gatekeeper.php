@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,13 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Authentication;
 
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
@@ -38,6 +39,8 @@ use Psr\Log\LoggerInterface;
  */
 final class Gatekeeper implements GatekeeperInterface
 {
+    private UserRepositoryInterface $userRepository;
+
     private ServerRequestInterface $request;
 
     private LoggerInterface $logger;
@@ -45,28 +48,32 @@ final class Gatekeeper implements GatekeeperInterface
     private ?string $auth = null;
 
     public function __construct(
+        UserRepositoryInterface $userRepository,
         ServerRequestInterface $request,
         LoggerInterface $logger
     ) {
-        $this->logger  = $logger;
-        $this->request = $request;
+        $this->userRepository = $userRepository;
+        $this->logger         = $logger;
+        $this->request        = $request;
     }
 
     public function getUser(): ?User
     {
-        return (isset($this->request->getQueryParams()['user']))
-            ? User::get_from_username($this->request->getQueryParams()['user'])
-            : User::get_from_apikey($this->getAuth());
+        $userName = $this->request->getQueryParams()['user'] ?? null;
+
+        return $userName !== null
+            ? $this->userRepository->findByUsername((string) $userName)
+            : $this->userRepository->findByApiKey($this->getAuth());
     }
 
-    public function sessionExists(): bool
+    public function sessionExists(string $auth): bool
     {
-        return Session::exists('api', $this->getAuth());
+        return Session::exists('api', $auth);
     }
 
-    public function extendSession(): void
+    public function extendSession(string $auth): void
     {
-        Session::extend($this->getAuth());
+        Session::extend($auth, 'api');
     }
 
     public function getUserName(): string

@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -42,23 +43,20 @@ final class Goodbye4Method
      *
      * Destroy session for auth key.
      *
-     * @param array $input
-     * @param User $user
      * auth = (string)
-     * @return boolean
      */
     public static function goodbye(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
         }
-        unset($user);
+        debug_event(self::class, 'Goodbye Received from ' . $user->id . ' ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
+
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";
             Dba::write($sql, array($input['auth']));
 
-            debug_event(self::class, 'Goodbye Received from ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
             ob_end_clean();
             Api4::message('success', 'goodbye: ' . $input['auth'], null, $input['api_format']);
 
@@ -68,5 +66,5 @@ final class Goodbye4Method
         Api4::message('error', 'failed to end session: ' . $input['auth'], '400', $input['api_format']);
 
         return false;
-    } // goodbye
+    }
 }

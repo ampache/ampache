@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,8 +45,6 @@ final class Scrobble4Method
      * Search for a song using text info and then record a play if found.
      * This allows other sources to record play history to Ampache
      *
-     * @param array $input
-     * @param User $user
      * song       = (string)  $song_name
      * artist     = (string)  $artist_name
      * album      = (string)  $album_name
@@ -54,7 +53,6 @@ final class Scrobble4Method
      * albummbid  = (string)  $album_mbid //optional
      * date       = (integer) UNIXTIME() //optional
      * client     = (string)  $agent //optional
-     * @return boolean
      */
     public static function scrobble(array $input, User $user): bool
     {
@@ -69,7 +67,7 @@ final class Scrobble4Method
         $song_mbid   = html_entity_decode(scrub_out($input['song_mbid'] ?? $input['songmbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $artist_mbid = html_entity_decode(scrub_out($input['artist_mbid'] ?? $input['artistmbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $album_mbid  = html_entity_decode(scrub_out($input['album_mbid'] ?? $input['albummbid'] ?? ''), ENT_QUOTES, $charset); //optional
-        $date        = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
+        $date        = (array_key_exists('date', $input) && is_numeric(scrub_in((string) $input['date']))) ? (int) scrub_in((string) $input['date']) : time(); //optional
         $user_id     = $user->id;
         $valid       = in_array($user->id, static::getUserRepository()->getValid());
 
@@ -100,7 +98,7 @@ final class Scrobble4Method
             Api4::message('error', T_('Failed to scrobble: No item found!'), '401', $input['api_format']);
         } else {
             $item = new Song((int) $scrobble_id);
-            if (!$item->id) {
+            if ($item->isNew()) {
                 Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 
                 return false;
@@ -117,7 +115,7 @@ final class Scrobble4Method
         }
 
         return true;
-    } // scrobble
+    }
 
     /**
      * @deprecated inject dependency

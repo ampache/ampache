@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Authentication;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -40,10 +41,9 @@ class AuthenticationManagerTest extends MockeryTestCase
 
     private string $authenticatorName = 'some-authenticator';
 
-    /** @var AuthenticationManager|null */
     private ?AuthenticationManager $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
         $this->authenticator   = Mockery::mock(AuthenticatorInterface::class);

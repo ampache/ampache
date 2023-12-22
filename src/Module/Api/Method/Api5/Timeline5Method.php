@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -45,17 +47,14 @@ final class Timeline5Method
      *
      * This gets a user timeline from their username
      *
-     * @param array $input
-     * @param User $user
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
-     * @return boolean
      */
     public static function timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api5::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: sociable'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -69,7 +68,7 @@ final class Timeline5Method
 
         if (!empty($username)) {
             $user = User::get_from_username($username);
-            if ($user !== null) {
+            if ($user instanceof User) {
                 if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
                     $results = static::getUseractivityRepository()->getActivities(
                         $user->getId(),

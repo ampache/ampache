@@ -32,7 +32,6 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_dxy_wave
 {
-
     #-- init params
     /**
      * easy_captcha_dxy_wave constructor.

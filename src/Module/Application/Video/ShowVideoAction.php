@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,14 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Video;
 
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -51,7 +51,10 @@ final class ShowVideoAction implements ApplicationActionInterface
         $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $video->format();
 
-        require_once Ui::find_template('show_video.inc.php');
+        $this->ui->show(
+            'show_video.inc.php',
+            ['video' => $video]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

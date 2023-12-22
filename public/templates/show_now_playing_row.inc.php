@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -69,7 +72,7 @@ if ($np_user->f_avatar_medium) {
     </div>
     <?php
         if (!empty($media->f_tags)) { ?>
-            <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_left">
+            <div id="np_song_tags_<?php echo $media->id; ?>" class="np_cell cel_left">
                 <label><?php echo T_('Genres'); ?></label>
                 <?php echo $media->f_tags; ?>
             </div>
@@ -77,7 +80,7 @@ if ($np_user->f_avatar_medium) {
 </div>
 
 <div class="np_group" id="np_group_3">
-  <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
+  <div id="album_<?php echo $media->album; ?>" class="np_cell cel_albumart libitem_menu">
       <?php
       if (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) {
           $playing = new Song($media->id);
@@ -86,7 +89,7 @@ if ($np_user->f_avatar_medium) {
       } else {
           $playing = new AlbumDisk($media->get_album_disk());
       }
-      if ($playing->id) {
+      if ($playing->isNew() === false) {
           $playing->format();
           $playing->display_art(1);
       } ?>

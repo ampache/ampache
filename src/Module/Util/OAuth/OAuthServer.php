@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Util\OAuth;
 
@@ -119,7 +120,10 @@ class OAuthServer
         $token    = $this->get_token($request, $consumer);
         $this->check_signature($request, $consumer, $token);
 
-        return array($consumer, $token);
+        return array(
+            $consumer,
+            $token
+        );
     }
 
     // Internals from here
@@ -130,7 +134,7 @@ class OAuthServer
      * @return string
      * @throws OAuthException
      */
-    private function get_version(&$request)
+    private function get_version(&$request): string
     {
         $version = $request->get_parameter("oauth_version");
         if (!$version) {

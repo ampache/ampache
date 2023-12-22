@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -45,11 +47,8 @@ final class DemocraticMethod
      *
      * This is for controlling democratic play
      *
-     * @param array $input
-     * @param User $user
      * method = (string) 'vote', 'devote', 'playlist', 'play'
      * oid    = (integer) //optional
-     * @return boolean
      */
     public static function democratic(array $input, User $user): bool
     {
@@ -65,9 +64,9 @@ final class DemocraticMethod
                 $type      = 'song';
                 $object_id = (int)($input['oid'] ?? 0);
                 $media     = new Song($object_id);
-                if (!$media->id) {
+                if ($media->isNew()) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'oid', $input['api_format']);
+                    Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
                     break;
                 }
                 $democratic->add_vote(array(
@@ -94,9 +93,9 @@ final class DemocraticMethod
                 $type      = 'song';
                 $object_id = (int)($input['oid'] ?? 0);
                 $media     = new Song($object_id);
-                if (!$media->id) {
+                if ($media->isNew()) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'oid', $input['api_format']);
+                    Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
                     break;
                 }
 
@@ -142,7 +141,7 @@ final class DemocraticMethod
                 }
                 break;
             default:
-                Api::error(T_('Invalid Request'), '4710', self::ACTION, 'method', $input['api_format']);
+                Api::error(T_('Invalid Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'method', $input['api_format']);
                 break;
         }
 

@@ -1,5 +1,112 @@
 # CHANGELOG
 
+## Ampache 6.2.0
+
+Builds for PHP 8.3 are now available!
+
+This release has been all about static typing and crushing bugs related to that.
+
+Hundreds of static analysis bugs have been fixed. (A drop of about 50%)
+
+There has been a big focus on making sure everything does what it says it does.
+
+For older servers we've tested updates from an Ampache 3.9.0 database to 6.2.0 successfully!
+
+As an end of year bonus you can access your own Ampache Wrapped from the user page when enabled
+
+### Added
+
+* Translations 2023-12
+* Allow translations for plugin names
+* GitHub action to lint master and develop branches for php7.4
+* Lots of code test coverage
+* Allow sharing `podcast_episode` objects
+* Add refresh button to the rightbar and some of the ajax index modules
+* Hide the filterbox when your browse can't use it
+* Database 600049
+  * Set correct preference type for `use_play2`
+  * Add user preference `jp_volume`, Default webplayer volume
+  * Add system preference `perpetual_api_session`, endless api sessions. (**AT YOUR OWN RISK**)
+  * Add column `last_update` and `date` to search table
+  * Add user preference `home_recently_played_all`, Show everything in the now playing box
+  * Add user preference `show_wrapped`, Access your personal "Spotify Wrapped" from your user page
+  * Add `date` column to rating table
+  * Update link for FMPL license 
+
+### Changed
+
+* Upgrade phpunit to version 10
+* Updated codestyle rules to PSR12
+* Update php_codesniffer to 3.8
+* Static typing to all database fields
+* Update composer for ampache/ampacheapi-php dev-master
+* Allow range header on transcode streams
+* 404 error on invalid media streams
+* Use curl instead of fopen for podcast episode downloads
+* Track the date of ratings in `user_activity` table
+* Add a confirmation to the Clear Stats button on the catalog page
+
+### Removed
+
+* Duplicate `show_playlist` UI actions
+
+### Fixed
+
+* Empty global error on index page
+* Check the file/url before importing with `import_playlist`
+* Large docstring cleanup: remove unneeded tags and trim names
+* Correct ip history rendering in case of a invalid user
+* Make sure something is also unplayed when total_count is 0
+* Thousands of phpstan code issues
+* Can't uninstall catalog modules
+* Database updates tested from ampache-3.9.0 -> develop
+* Missing AND in play_count update SQL
+* Undefined variable and query spacing in SQL for get_uploads
+* Share options not checked correctly when creating a share
+* Dynamic properties on Tmp_Playlist and Captcha
+* Lots of checks for valid and invalid objects
+* Do not fail on plugin reinstall (just install missing preferences)
+* Failures on nullable valuse with static typing
+* Errors on user_data checks that didn't exist yet
+* Use your default album sort on browses and set it correctly
+* Filterbox bugs with playlists and labels
+* Update from tags didn't respect your tag order
+* Remote catalogs couldn't import song data correctly
+* Podcast episode downloads would be blocked from some redirects
+* get_recently_played SQL was really slow
+* Bitly plugin updated to v4 API
+  * Requires a [Bitly](bitly.com) account
+  * Generate a `token` at [(https://app.bitly.com/settings/api)]
+  * Get your `group_guid` from `https://app.bitly.com/{GROUP_GUID}` or Account Settings > Groups (the GUID is in the URL)
+* Add missing properties on public users. (-1)
+* Subsonic
+  * Url protocol checks not compared correctly for setServer
+
+## API 6.2.0
+
+### Added
+
+* API: Allow non-expiring user sessions when using a header token
+* Allow endless api sessions. (You should start using http header auth to hide these)
+
+### Changed
+
+* Set default API version to 6 (was 5)
+* Allow raising and lowering response version on ping to **any** version
+* API6
+  * Return error on handshake version failure
+
+### Fixed
+
+* ALL
+  * UrlToSong couldn't handle encoded urls
+* API3
+  * Video data would get an incorrect stream url
+* API5
+  * bookmark_create: type is mandatory
+* API6
+  * bookmark_create: type is mandatory
+
 ## Ampache 6.1.0
 
 First up, AutoUpdate notifications are fixed

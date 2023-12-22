@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Song;
 
 use Ampache\Gui\GuiFactoryInterface;
@@ -31,6 +32,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Song;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -70,16 +72,16 @@ final class ShowSongAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $song = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
-        $song->format();
-        $song->fill_ext_info();
 
-        if (!$song->id) {
+        if ($song->isNew()) {
             $this->logger->warning(
                 'Requested a song that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             echo T_('You have requested an object that does not exist');
         } else {
+            $song->format();
+            $song->fill_ext_info();
             $this->ui->showBoxTop(
                 scrub_out($song->get_fullname()),
                 'box box_song_details'

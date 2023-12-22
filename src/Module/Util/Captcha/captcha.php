@@ -27,7 +27,6 @@ namespace Ampache\Module\Util\Captcha;
  */
 class captcha
 {
-
     #-- tests submitted CAPTCHA solution against tracking data
     /**
      * @return boolean

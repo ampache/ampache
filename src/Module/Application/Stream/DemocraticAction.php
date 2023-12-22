@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -37,18 +38,19 @@ final class DemocraticAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'democratic';
 
-    private LoggerInterface $logger;
+    private RequestParserInterface $requestParser;
 
     private ConfigContainerInterface $configContainer;
 
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->logger          = $logger;
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
 
@@ -61,10 +63,13 @@ final class DemocraticAction extends AbstractStreamAction
             return null;
         }
 
-        $democratic  = $this->modelFactory->createDemocratic((int) $_REQUEST['democratic_id']);
-        $urls        = [$democratic->play_url()];
-        $play_type   = $this->configContainer->get(ConfigurationKeyEnum::PLAY_TYPE);
-        $stream_type = ($play_type == 'democratic') ? $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_TYPE) : $play_type;
+        $democratic_id = (int)$this->requestParser->getFromRequest('democratic_id');
+        $democratic    = $this->modelFactory->createDemocratic($democratic_id);
+        $urls          = [$democratic->play_url()];
+        $play_type     = $this->configContainer->get(ConfigurationKeyEnum::PLAY_TYPE);
+        $stream_type   = ($play_type == 'democratic')
+            ? $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_TYPE)
+            : $play_type;
 
         return $this->stream(
             [],

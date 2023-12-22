@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
@@ -82,10 +83,9 @@ final class AddCatalogAction extends AbstractCatalogAction
         // If an error hasn't occurred
         if (!AmpError::occurred()) {
             $catalog_id = Catalog::create($_POST);
-            $users      = static::getUserRepository()->getValidArray();
 
             if (!$catalog_id) {
-                require Ui::find_template('show_add_catalog.inc.php');
+                $this->ui->show('show_add_catalog.inc.php');
 
                 return null;
             }
@@ -96,7 +96,8 @@ final class AddCatalogAction extends AbstractCatalogAction
             $catalogIds[] = $catalog_id;
             catalog_worker('add_to_catalog', $catalogIds, $_POST);
 
-            $this->ui->showConfirmation(T_('No Problem'),
+            $this->ui->showConfirmation(
+                T_('No Problem'),
                 T_('The Catalog creation process has started'),
                 sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
                 0,
@@ -104,19 +105,9 @@ final class AddCatalogAction extends AbstractCatalogAction
                 false
             );
         } else {
-            require Ui::find_template('show_add_catalog.inc.php');
+            $this->ui->show('show_add_catalog.inc.php');
         }
 
         return null;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

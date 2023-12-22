@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Modules;
 
 use Ampache\Repository\Model\Catalog;
@@ -29,7 +30,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,15 +53,12 @@ final class ShowCatalogTypesAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        $catalogs = Catalog::get_catalog_types();
-
         $this->ui->showBoxTop(T_('Catalog Types'), 'box box_catalog_types');
-
-        require_once Ui::find_template('show_catalog_types.inc.php');
-
+        $this->ui->show(
+            'show_catalog_types.inc.php',
+            ['catalog_types' => Catalog::CATALOG_TYPES]
+        );
         $this->ui->showBoxBottom();
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

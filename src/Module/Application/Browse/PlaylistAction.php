@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Browse;
 
@@ -43,8 +44,8 @@ final class PlaylistAction implements ApplicationActionInterface
         ModelFactoryInterface $modelFactory,
         UiInterface $ui
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
+        $this->modelFactory = $modelFactory;
+        $this->ui           = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,7 +63,7 @@ final class PlaylistAction implements ApplicationActionInterface
 
         $browse->set_sort('name', 'ASC');
         $browse->set_sort('last_update', 'DESC');
-        $browse->set_filter('playlist_type', '1');
+        $browse->set_filter('playlist_type', 1);
         $browse->update_browse_from_session();
         $browse->show_objects();
 

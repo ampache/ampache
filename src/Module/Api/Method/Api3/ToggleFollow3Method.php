@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
@@ -39,16 +40,14 @@ final class ToggleFollow3Method
     /**
      * toggle_follow
      * This follow/unfollow a user
-     * @param array $input
-     * @param User $user
      */
-    public static function toggle_follow(array $input, User $user)
+    public static function toggle_follow(array $input, User $user): void
     {
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             if (!empty($username)) {
                 $leader = User::get_from_username($username);
-                if ($leader !== null) {
+                if ($leader instanceof User) {
                     static::getUserFollowToggler()->toggle(
                         $leader->id,
                         $user->id
@@ -62,7 +61,7 @@ final class ToggleFollow3Method
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    } // toggle_follow
+    }
 
     private static function getUserFollowToggler(): UserFollowTogglerInterface
     {

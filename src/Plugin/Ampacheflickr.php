@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -28,64 +30,57 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
-class Ampacheflickr
+class Ampacheflickr implements AmpachePluginInterface
 {
-    public $name        = 'Flickr';
-    public $categories  = 'slideshow';
-    public $description = 'Artist photos from Flickr';
-    public $url         = 'http://www.flickr.com';
-    public $version     = '000001';
-    public $min_ampache = '360045';
-    public $max_ampache = '999999';
+    public string $name        = 'Flickr';
+    public string $categories  = 'slideshow';
+    public string $description = 'Artist photos from Flickr';
+    public string $url         = 'http://www.flickr.com';
+    public string $version     = '000001';
+    public string $min_ampache = '360045';
+    public string $max_ampache = '999999';
 
+    // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Artist photos from Flickr');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('flickr_api_key')) {
+        if (!Preference::exists('flickr_api_key') && !Preference::insert('flickr_api_key', T_('Flickr API key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        Preference::insert('flickr_api_key', T_('Flickr API key'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('flickr_api_key');
-
-        return true;
-    } // uninstall
+        return Preference::delete('flickr_api_key');
+    }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * @param string $search
@@ -116,7 +111,7 @@ class Ampacheflickr
     /**
      * @param $type
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function gather_arts($type, $options = array(), $limit = 5)
@@ -148,12 +143,10 @@ class Ampacheflickr
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -172,5 +165,5 @@ class Ampacheflickr
         }
 
         return true;
-    } // load
+    }
 }

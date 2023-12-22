@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -23,14 +24,18 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
+use Generator;
+use Traversable;
 
 interface SongRepositoryInterface
 {
     /**
      * gets the songs for an album takes an optional limit
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByAlbum(int $albumId, int $limit = 0): array;
 
@@ -57,6 +62,15 @@ interface SongRepositoryInterface
      */
     public function getRandomByArtist(
         Artist $artist
+    ): array;
+
+    /**
+     * Gets the songs from a genre in a random order
+     *
+     * @return int[]
+     */
+    public function getRandomByGenre(
+        Tag $genre
     ): array;
 
     /**
@@ -97,4 +111,11 @@ interface SongRepositoryInterface
     public function delete(int $songId): bool;
 
     public function collectGarbage(Song $song): void;
+
+    /**
+     * Returns all song ids linked to the provided catalog (or all)
+     *
+     * @return Traversable<int>
+     */
+    public function getByCatalog(?Catalog $catalog = null): Traversable;
 }

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\WebDav;
 
@@ -47,9 +48,8 @@ class WebDavFile extends DAV\File
 
     /**
      * getName
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         $nameinfo = pathinfo($this->libitem->file);
 
@@ -66,7 +66,7 @@ class WebDavFile extends DAV\File
         // Only media associated to a local catalog is supported
         if ($this->libitem->catalog) {
             $catalog = Catalog::create_from_id($this->libitem->catalog);
-            if ($catalog->get_type() === 'local') {
+            if ($catalog !== null && $catalog->get_type() === 'local') {
                 $filepointer = fopen(Core::conv_lc_file($this->libitem->file), 'r');
 
                 if (!is_resource($filepointer)) {
@@ -88,18 +88,16 @@ class WebDavFile extends DAV\File
 
     /**
      * getSize
-     * @return integer
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->libitem->size;
     }
 
     /**
      * getETag
-     * @return string
      */
-    public function getETag()
+    public function getETag(): string
     {
         return md5(ObjectTypeToClassNameMapper::reverseMap(get_class($this->libitem)) . "_" . $this->libitem->id . "_" . $this->libitem->update_time);
     }

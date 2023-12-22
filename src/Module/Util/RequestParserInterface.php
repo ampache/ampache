@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -25,7 +26,20 @@ namespace Ampache\Module\Util;
 interface RequestParserInterface
 {
     /**
-     * Return a $REQUEST variable instead of calling directly
+     * Return a $_REQUEST variable instead of calling directly
      */
     public function getFromRequest(string $variable): string;
+
+    /**
+     * Return a $_POST variable instead of calling directly
+     */
+    public function getFromPost(string $variable): string;
+
+    /**
+     * Check if the form-submit is valid
+     *
+     * If the application expects a form-submit, check if it's actually
+     * a valid submit (by validating a session token).
+     */
+    public function verifyForm(string $formName): bool;
 }

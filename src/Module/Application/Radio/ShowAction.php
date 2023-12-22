@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,13 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Radio;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -41,6 +43,8 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
@@ -50,11 +54,13 @@ final class ShowAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LoggerInterface $logger,
         ModelFactoryInterface $modelFactory
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->logger          = $logger;
@@ -68,16 +74,20 @@ final class ShowAction implements ApplicationActionInterface
         }
         $this->ui->showHeader();
 
-        $radio = $this->modelFactory->createLiveStream((int)($_REQUEST['radio'] ?? 0));
-        if (!isset($radio->id)) {
+        $radio_id = (int)$this->requestParser->getFromRequest('radio');
+        $radio    = $this->modelFactory->createLiveStream($radio_id);
+        if ($radio->isNew()) {
             $this->logger->warning(
-                'Requested a live stream that does not exist',
+                'Requested a live_stream that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             echo T_('You have requested an object that does not exist');
         } else {
             $radio->format();
-            require Ui::find_template('show_live_stream.inc.php');
+            $this->ui->show(
+                'show_live_stream.inc.php',
+                ['radio' => $radio]
+            );
         }
         $this->ui->showQueryStats();
         $this->ui->showFooter();

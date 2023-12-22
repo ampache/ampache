@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -43,10 +45,7 @@ final class UpdateArtistInfo5Method
      * Update artist information and fetch similar artists from last.fm
      * Make sure lastfm_api_key is set in your configuration file
      *
-     * @param array $input
-     * @param User $user
      * id = (integer) $artist_id
-     * @return boolean
      */
     public static function update_artist_info(array $input, User $user): bool
     {
@@ -59,9 +58,9 @@ final class UpdateArtistInfo5Method
         }
         $object_id = (int) $input['id'];
         $item      = new Artist($object_id);
-        if (!$item->id) {
+        if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
+            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
@@ -73,7 +72,7 @@ final class UpdateArtistInfo5Method
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
+        Api5::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
         return true;
     }

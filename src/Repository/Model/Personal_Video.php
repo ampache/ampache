@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
@@ -30,33 +31,39 @@ class Personal_Video extends Video
 {
     protected const DB_TABLENAME = 'personal_video';
 
-    public $location;
-    public $summary;
-    public $video;
+    public ?string $location;
+    public ?string $summary;
 
+    public $video;
     public $f_location;
 
     /**
      * Constructor
      * This pulls the personal video information from the database and returns
      * a constructed object
-     * @param integer $object_id
+     * @param int|null $object_id
      */
-    public function __construct($object_id)
+    public function __construct($object_id = 0)
     {
+        if (!$object_id) {
+            return;
+        }
         parent::__construct($object_id);
 
         $info = $this->get_info($object_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
-    } // Constructor
+    }
 
     public function getId(): int
     {
         return (int)($this->id ?? 0);
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
     }
 
     /**
@@ -64,7 +71,7 @@ class Personal_Video extends Video
      *
      * This cleans out unused personal videos
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = "DELETE FROM `personal_video` USING `personal_video` LEFT JOIN `video` ON `video`.`id` = `personal_video`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
@@ -73,26 +80,21 @@ class Personal_Video extends Video
     /**
      * create
      * This takes a key'd array of data as input and inserts a new personal video entry, it returns the record id
-     * @param array $data
-     * @param array $gtypes
-     * @param array $options
-     * @return mixed
      */
-    public static function insert(array $data, $gtypes = array(), $options = array())
+    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
     {
         $sql = "INSERT INTO `personal_video` (`id`, `location`, `summary`) VALUES (?, ?, ?)";
         Dba::write($sql, array($data['id'], $data['location'], $data['summary']));
 
-        return $data['id'];
-    } // create
+        return (int)$data['id'];
+    }
 
     /**
      * update
      * This takes a key'd array of data as input and updates a personal video entry
      * @param array $data
-     * @return integer
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         parent::update($data);
 
@@ -100,30 +102,27 @@ class Personal_Video extends Video
         Dba::write($sql, array($data['location'], $data['summary'], $this->id));
 
         return $this->id;
-    } // update
+    }
 
     /**
      * format
      * this function takes the object and formats some values
-     * @param boolean $details
-     * @return boolean
+     *
+     * @param bool $details
      */
 
-    public function format($details = true)
+    public function format($details = true): void
     {
         parent::format($details);
 
         $this->f_location = $this->location;
-
-        return true;
-    } // format
+    }
 
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         $deleted = parent::remove();
         if ($deleted) {

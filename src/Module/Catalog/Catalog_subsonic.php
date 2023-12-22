@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -41,9 +42,9 @@ use Exception;
  */
 class Catalog_subsonic extends Catalog
 {
-    private $version     = '000002';
-    private $type        = 'subsonic';
-    private $description = 'Subsonic Remote Catalog';
+    private string $version     = '000002';
+    private string $type        = 'subsonic';
+    private string $description = 'Subsonic Remote Catalog';
 
     private int $catalog_id;
 
@@ -55,64 +56,64 @@ class Catalog_subsonic extends Catalog
      * get_description
      * This returns the description of this catalog
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->description;
-    } // get_description
+    }
 
     /**
      * get_version
      * This returns the current version
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
-    } // get_version
+    }
 
     /**
      * get_path
      * This returns the current catalog path/uri
      */
-    public function get_path()
+    public function get_path(): string
     {
         return $this->uri;
-    } // get_path
+    }
 
     /**
      * get_type
      * This returns the current catalog type
      */
-    public function get_type()
+    public function get_type(): string
     {
         return $this->type;
-    } // get_type
+    }
 
     /**
      * get_create_help
      * This returns hints on catalog creation
      */
-    public function get_create_help()
+    public function get_create_help(): string
     {
         return "";
-    } // get_create_help
+    }
 
     /**
      * is_installed
      * This returns true or false if remote catalog is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE 'catalog_subsonic'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } // is_installed
+    }
 
     /**
      * install
      * This function installs the remote catalog
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -122,7 +123,7 @@ class Catalog_subsonic extends Catalog
         Dba::query($sql);
 
         return true;
-    } // install
+    }
 
     /**
      * @return array
@@ -142,7 +143,7 @@ class Catalog_subsonic extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param integer $catalog_id
+     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -163,9 +164,8 @@ class Catalog_subsonic extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return boolean
      */
-    public static function create_type($catalog_id, $data)
+    public static function create_type($catalog_id, $data): bool
     {
         $uri      = $data['uri'];
         $username = $data['username'];
@@ -206,9 +206,8 @@ class Catalog_subsonic extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return int
      */
-    public function add_to_catalog($options = null)
+    public function add_to_catalog($options = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -222,24 +221,22 @@ class Catalog_subsonic extends Catalog
         }
 
         return $songsadded;
-    } // add_to_catalog
+    }
 
     /**
-     * @return SubsonicClient
+     * createClient
      */
-    public function createClient()
+    public function createClient(): SubsonicClient
     {
-        return (new SubsonicClient($this->username, $this->password, $this->uri, null));
+        return (new SubsonicClient($this->username, $this->password, $this->uri, 'Ampache'));
     }
 
     /**
      * update_remote_catalog
      *
-     * Pulls the data from a remote catalog and adds any missing songs to the
-     * database.
-     * @return int
+     * Pulls the data from a remote catalog and adds any missing songs to the database.
      */
-    public function update_remote_catalog()
+    public function update_remote_catalog(): int
     {
         debug_event('subsonic.catalog', 'Updating remote catalog...', 5);
 
@@ -249,8 +246,10 @@ class Catalog_subsonic extends Catalog
         // Get all albums
         $offset = 0;
         while (true) {
-            $albumList = $subsonic->querySubsonic('getAlbumList',
-                ['type' => 'alphabeticalByName', 'size' => 500, 'offset' => $offset]);
+            $albumList = $subsonic->querySubsonic(
+                'getAlbumList',
+                ['type' => 'alphabeticalByName', 'size' => 500, 'offset' => $offset]
+            );
             $offset += 500;
             if ($albumList['success']) {
                 if (count($albumList['data']['albumList']) == 0) {
@@ -306,9 +305,14 @@ class Catalog_subsonic extends Catalog
             }
         }
 
-        Ui::update_text(T_("Updated"),
-            T_('Completed updating Subsonic Catalog(s)') . " " . /* HINT: Number of songs */ sprintf(nT_('%s Song added',
-                '%s Songs added', $songsadded), $songsadded));
+        Ui::update_text(
+            T_("Updated"),
+            T_('Completed updating Subsonic Catalog(s)') . " " . /* HINT: Number of songs */ sprintf(nT_(
+                '%s Song added',
+                '%s Songs added',
+                $songsadded
+            ), $songsadded)
+        );
 
         // Update the last update value
         $this->update_last_update();
@@ -319,9 +323,9 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @return int
+     * verify_catalog_proc
      */
-    public function verify_catalog_proc()
+    public function verify_catalog_proc(): int
     {
         return 0;
     }
@@ -329,9 +333,8 @@ class Catalog_subsonic extends Catalog
     /**
      * @param $data
      * @param $song_Id
-     * @return boolean
      */
-    public function insertArt($data, $song_Id)
+    public function insertArt($data, $song_Id): bool
     {
         $subsonic = $this->createClient();
         $song     = new Song($song_Id);
@@ -353,9 +356,8 @@ class Catalog_subsonic extends Catalog
      * clean_catalog_proc
      *
      * Removes subsonic songs that no longer exist.
-     * @return int
      */
-    public function clean_catalog_proc()
+    public function clean_catalog_proc(): int
     {
         $subsonic = $this->createClient();
 
@@ -400,17 +402,16 @@ class Catalog_subsonic extends Catalog
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
-     * @return boolean
      */
-    public function move_catalog_proc($new_path)
+    public function move_catalog_proc($new_path): bool
     {
         return false;
     }
 
     /**
-     * @return bool
+     * cache_catalog_proc
      */
-    public function cache_catalog_proc()
+    public function cache_catalog_proc(): bool
     {
         $remote = AmpConfig::get('cache_remote');
         $path   = (string)AmpConfig::get('cache_path', '');
@@ -428,7 +429,7 @@ class Catalog_subsonic extends Catalog
         if ($user_bit_rate > $max_bitrate) {
             $max_bitrate = $user_bit_rate;
         }
-        $options    = array(
+        $options = array(
             'format' => $target,
             'maxBitRate' => $max_bitrate
         );
@@ -451,15 +452,17 @@ class Catalog_subsonic extends Catalog
                 } else {
                     try {
                         $filehandle = fopen($target_file, 'w');
-                        $options    = array(
-                            CURLOPT_RETURNTRANSFER => 1,
-                            CURLOPT_FILE => $filehandle,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_PIPEWAIT => 1,
-                            CURLOPT_URL => $remote_url,
+                        $curl       = curl_init();
+                        curl_setopt_array(
+                            $curl,
+                            array(
+                                CURLOPT_RETURNTRANSFER => 1,
+                                CURLOPT_FILE => $filehandle,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_PIPEWAIT => 1,
+                                CURLOPT_URL => $remote_url,
+                            )
                         );
-                        $curl = curl_init();
-                        curl_setopt_array($curl, $options);
                         curl_exec($curl);
                         curl_close($curl);
                         fclose($filehandle);
@@ -480,7 +483,7 @@ class Catalog_subsonic extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param array $song
-     * @return boolean|mixed
+     * @return int|bool
      */
     public function check_remote_song($song)
     {
@@ -490,7 +493,7 @@ class Catalog_subsonic extends Catalog
         $db_results = Dba::read($sql, array($url));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['id'];
+            return (int)$results['id'];
         }
 
         return false;
@@ -498,9 +501,8 @@ class Catalog_subsonic extends Catalog
 
     /**
      * @param string $file_path
-     * @return string|string[]
      */
-    public function get_rel_path($file_path)
+    public function get_rel_path($file_path): string
     {
         $catalog_path = rtrim($this->uri, "/");
 
@@ -509,9 +511,8 @@ class Catalog_subsonic extends Catalog
 
     /**
      * @param $url
-     * @return integer
      */
-    public function url_to_songid($url)
+    public function url_to_songid($url): int
     {
         $song_id = 0;
         preg_match('/\?id=([0-9]*)&/', $url, $matches);
@@ -527,7 +528,7 @@ class Catalog_subsonic extends Catalog
      *
      * This makes the object human-readable.
      */
-    public function format()
+    public function format(): void
     {
         parent::format();
         $this->f_info      = $this->uri;
@@ -535,17 +536,28 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return Media|null
+     * @param Song|Podcast_Episode|Video $media
+     * @return null|array{
+     *  file_path: string,
+     *  file_name: string,
+     *  file_size: int,
+     *  file_type: string
+     * }
      */
-    public function prepare_media($media)
+    public function prepare_media($media): ?array
+    {
+        return null;
+    }
+
+    /**
+     * Returns the remote streaming-url if supported
+     *
+     * @param Song|Podcast_Episode|Video $media
+     */
+    public function getRemoteStreamingUrl($media): ?string
     {
         $subsonic = $this->createClient();
-        $url      = $subsonic->parameterize($media->file . '&');
 
-        header('Location: ' . $url);
-        debug_event('subsonic.catalog', 'Started remote stream - ' . $url, 5);
-
-        return null;
+        return $subsonic->parameterize($media->file . '&');
     }
 }

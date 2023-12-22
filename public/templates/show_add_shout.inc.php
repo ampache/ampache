@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -22,12 +25,16 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Shoutbox;
 
 /** @var string $data */
-/** @var  Ampache\Repository\Model\library_item $object */
+/** @var Ampache\Repository\Model\library_item $object */
 /** @var string $object_type */
+/** @var Traversable<Shoutbox> $shouts */
+/** @var ShoutRendererInterface $shoutRenderer */
 ?>
 <div>
 <?php if (Access::check('interface', 25)) { ?>
@@ -54,7 +61,7 @@ $boxtitle = T_('Post to Shoutbox');
 <tr>
     <td>
         <?php echo Core::form_register('add_shout'); ?>
-        <input type="hidden" name="object_id" value="<?php echo $object->id; ?>" />
+        <input type="hidden" name="object_id" value="<?php echo $object->getId(); ?>" />
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="data" value="<?php echo $data; ?>" />
         <input type="submit" value="<?php echo T_('Create'); ?>" /></td>
@@ -69,7 +76,9 @@ $boxtitle = T_('Post to Shoutbox');
 $boxtitle = $object->get_fullname() . ' ' . T_('Shoutbox');
 Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <?php
-if (count($shouts)) {
+$shouts = iterator_to_array($shouts);
+
+if ($shouts !== []) {
     require_once Ui::find_template('show_shoutbox.inc.php');
 } ?>
 <?php Ui::show_box_bottom(); ?>

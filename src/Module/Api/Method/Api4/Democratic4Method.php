@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,11 +45,8 @@ final class Democratic4Method
      *
      * This is for controlling democratic play
      *
-     * @param array $input
-     * @param User $user
      * method = (string) 'vote', 'devote', 'playlist', 'play'
      * oid    = (integer) //optional
-     * @return boolean
      */
     public static function democratic(array $input, User $user): bool
     {
@@ -64,7 +62,7 @@ final class Democratic4Method
                 $type      = 'song';
                 $object_id = (int)($input['oid'] ?? 0);
                 $media     = new Song($object_id);
-                if (!$media->id) {
+                if ($media->isNew()) {
                     Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
                     break;
                 }
@@ -92,7 +90,7 @@ final class Democratic4Method
                 $type      = 'song';
                 $object_id = (int)($input['oid'] ?? 0);
                 $media     = new Song($object_id);
-                if (!$media->id) {
+                if ($media->isNew()) {
                     Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
                     break;
                 }
@@ -144,5 +142,5 @@ final class Democratic4Method
         } // switch on method
 
         return true;
-    } // democratic
+    }
 }

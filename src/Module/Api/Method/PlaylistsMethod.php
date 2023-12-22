@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
@@ -38,7 +38,7 @@ use Ampache\Module\Api\Xml_Data;
  */
 final class PlaylistsMethod
 {
-    const ACTION = 'playlists';
+    public const ACTION = 'playlists';
 
     /**
      * playlists
@@ -46,8 +46,6 @@ final class PlaylistsMethod
      *
      * This returns playlists based on the specified filter
      *
-     * @param array $input
-     * @param User $user
      * filter      = (string) Alpha-numeric search term (match all if missing) //optional
      * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
      * add         = Api::set_filter(date) //optional
@@ -56,7 +54,6 @@ final class PlaylistsMethod
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
-     * @return boolean
      */
     public static function playlists(array $input, User $user): bool
     {

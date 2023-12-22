@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -26,7 +29,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Catalog;
 
-/** @var Ampache\Repository\Model\User $client */
+/** @var string $filter_name */
 
 Ui::show_box_top(T_('Add Catalog Filter'), 'box box_add_filter');
 
@@ -37,11 +40,11 @@ if (!AmpConfig::get('catalog_filter')) {
   <p><?php echo T_("If you do not tick a catalog, it will be hidden from users that you assign to this filter"); ?></p>
 &nbsp;
   <?php echo AmpError::display('general'); ?>
-  <form name="add_filter" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/filter.php?action=add_filter"; ?>">
+  <form name="add_filter" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/filter.php?action=add_filter"; ?>">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Filter Name'); ?>:</td>
-            <td><input type="text" name="name" maxlength="128" value="<?php echo $filtername ?? scrub_out(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
+            <td><input type="text" name="name" maxlength="128" value="<?php echo $filter_name; ?>" />
                 <?php echo AmpError::display('name'); ?>
             </td>
         </tr>

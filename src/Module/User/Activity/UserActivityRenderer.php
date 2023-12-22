@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -16,16 +19,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with useractivity program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\User\Activity;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Useractivity;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -51,15 +52,15 @@ final class UserActivityRenderer implements UserActivityRendererInterface
         Useractivity $useractivity
     ): string {
         // If user flags aren't enabled don't do anything
-        if (!AmpConfig::get('ratings') || !$useractivity->id) {
+        if (!$this->configContainer->get('ratings') || !$useractivity->id) {
             return '';
         }
 
-        $user       = $this->modelFactory->createUser((int) $useractivity->user);
-        $class_name = ObjectTypeToClassNameMapper::map($useractivity->object_type);
+        $user      = $this->modelFactory->createUser((int) $useractivity->user);
+        $className = ObjectTypeToClassNameMapper::map($useractivity->object_type);
 
-        /** @var \Ampache\Repository\Model\library_item $libitem */
-        $libitem = new $class_name($useractivity->object_id);
+        /** @var library_item $libitem */
+        $libitem = new $className($useractivity->object_id);
         $descr   = $user->get_f_link() . ' ';
         switch ($useractivity->action) {
             case 'shout':
@@ -76,6 +77,9 @@ final class UserActivityRenderer implements UserActivityRendererInterface
                 break;
             case 'follow':
                 $descr .= T_('started to follow');
+                break;
+            case 'rating':
+                $descr .= T_('rated');
                 break;
             default:
                 $descr .= T_('did something on');

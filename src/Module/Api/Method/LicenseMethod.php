@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\License;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -46,15 +47,12 @@ final class LicenseMethod
      *
      * This returns a single license based on UID
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of license
-     * @return boolean
      */
     public static function license(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
-            Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: licensing'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -63,9 +61,9 @@ final class LicenseMethod
         }
         $object_id = (int) $input['filter'];
         $license   = new License($object_id);
-        if (!$license->id) {
+        if ($license->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

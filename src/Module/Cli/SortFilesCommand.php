@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
@@ -36,7 +37,7 @@ final class SortFilesCommand extends Command
     ) {
         parent::__construct('cleanup:sortSongs', T_('Sort songs files'));
 
-        $this->songSorter      = $songSorter;
+        $this->songSorter = $songSorter;
 
         $this
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)

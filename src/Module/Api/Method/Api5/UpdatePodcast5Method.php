@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,14 +23,15 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\System\Session;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class UpdatePodcast5Method
@@ -42,10 +46,7 @@ final class UpdatePodcast5Method
      *
      * Sync and download new podcast episodes
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of podcast
-     * @return boolean
      */
     public static function update_podcast(array $input, User $user): bool
     {
@@ -57,19 +58,39 @@ final class UpdatePodcast5Method
             return false;
         }
         $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
-            if ($podcast->sync_episodes(true)) {
+        $podcast   = self::getPodcastRepository()->findById($object_id);
+        if ($podcast !== null) {
+            if (static::getPodcastSyncer()->sync($podcast, true)) {
                 Api5::message('Synced episodes for podcast: ' . (string) $object_id, $input['api_format']);
-                Session::extend($input['auth']);
+                Session::extend($input['auth'], 'api');
             } else {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'podcast', $input['api_format']);
+                Api5::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'podcast', $input['api_format']);
             }
         } else {
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

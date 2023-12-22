@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -29,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessListManagerInterface;
+use Ampache\Module\Authorization\Exception\AclItemDuplicationException;
 use Ampache\Module\Authorization\Exception\InvalidEndIpException;
 use Ampache\Module\Authorization\Exception\InvalidIpRangeException;
 use Ampache\Module\Authorization\Exception\InvalidStartIpException;
@@ -37,7 +39,6 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use PHPUnit\Framework\MockObject\DuplicateMethodException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -99,7 +100,7 @@ final class AddHostAction implements ApplicationActionInterface
             AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
         } catch (InvalidEndIpException $e) {
             AmpError::add('end', T_('An Invalid IPv4 / IPv6 Address was entered'));
-        } catch (DuplicateMethodException $e) {
+        } catch (AclItemDuplicationException $e) {
             $this->logger->critical(
                 'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $startIp . ' - ' . $endIp,
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

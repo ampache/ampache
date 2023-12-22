@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -43,12 +46,9 @@ final class UpdateArt4Method
      * updates a single album, artist, song running the gather_art process
      * Doesn't overwrite existing art by default.
      *
-     * @param array $input
-     * @param User $user
      * type      = (string) 'artist'|'album'
      * id        = (integer) $artist_id, $album_id
      * overwrite = (integer) 0,1 //optional
-     * @return boolean
      */
     public static function update_art(array $input, User $user): bool
     {
@@ -69,8 +69,9 @@ final class UpdateArt4Method
             return true;
         }
         $className = ObjectTypeToClassNameMapper::map($type);
+        /** @var Artist|Album $item */
         $item      = new $className($object_id);
-        if (!$item->id) {
+        if ($item->isNew()) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
             return true;
@@ -84,5 +85,5 @@ final class UpdateArt4Method
         Api4::message('error', T_('Failed to update_art for ' . (string) $object_id), '400', $input['api_format']);
 
         return true;
-    } // update_art
+    }
 }

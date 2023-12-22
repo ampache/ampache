@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -45,10 +45,7 @@ final class PodcastEpisode4Method
      *
      * Get the podcast_episode from it's id.
      *
-     * @param array $input
-     * @param User $user
-     * filter  = (integer) podcast_episode ID number
-     * @return boolean
+     * filter = (integer) podcast_episode ID number
      */
     public static function podcast_episode(array $input, User $user): bool
     {
@@ -62,8 +59,7 @@ final class PodcastEpisode4Method
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
-
-        if (!isset($episode->id)) {
+        if ($episode->isNew()) {
             Api4::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
 
             return false;
@@ -78,5 +74,5 @@ final class PodcastEpisode4Method
         }
 
         return true;
-    } // podcast_episode
+    }
 }

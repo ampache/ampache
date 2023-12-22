@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -29,15 +31,15 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheOmdb
+class AmpacheOmdb implements AmpachePluginInterface
 {
-    public $name        = 'Omdb';
-    public $categories  = 'metadata';
-    public $description = 'OMDb metadata integration';
-    public $url         = 'http://www.omdbapi.com';
-    public $version     = '000001';
-    public $min_ampache = '370009';
-    public $max_ampache = '999999';
+    public string $name        = 'Omdb';
+    public string $categories  = 'metadata';
+    public string $description = 'OMDb metadata integration';
+    public string $url         = 'http://www.omdbapi.com';
+    public string $version     = '000001';
+    public string $min_ampache = '370009';
+    public string $max_ampache = '999999';
 
     /**
      * Constructor
@@ -46,41 +48,47 @@ class AmpacheOmdb
     public function __construct()
     {
         $this->description = T_('OMDb metadata integration');
-
-        return true;
     }
 
     /**
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
         return true;
-    } // install
+    }
 
     /**
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         return true;
-    } // uninstall
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
+    }
 
     /**
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
 
         return true;
-    } // load
+    }
 
     /**
      * @param string $title
@@ -108,7 +116,7 @@ class AmpacheOmdb
         $rtime = explode(' ', $runtime, 2);
         if (count($rtime) == 2) {
             if ($rtime[1] == 'min') {
-                $time = (int)($rtime[0]) * 60;
+                $time = ((int)$rtime[0]) * 60;
             }
         }
 
@@ -120,9 +128,8 @@ class AmpacheOmdb
      * Returns song metadata for what we're passed in.
      * @param array $gather_types
      * @param array $media_info
-     * @return array|null
      */
-    public function get_metadata($gather_types, $media_info)
+    public function get_metadata($gather_types, $media_info): ?array
     {
         debug_event('omdb.plugin', 'Getting metadata from OMDb...', 5);
 
@@ -187,12 +194,12 @@ class AmpacheOmdb
         }
 
         return $results;
-    } // get_metadata
+    }
 
     /**
      * @param string $type
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function gather_arts($type, $options = array(), $limit = 5)

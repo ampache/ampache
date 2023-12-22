@@ -1,7 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
 
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,8 +30,8 @@ use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Ui;
 
-$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-$web_path = AmpConfig::get('web_path');
+$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
+$web_path = (string)AmpConfig::get('web_path', '');
 
 $display_fields   = (array) AmpConfig::get('registration_display_fields');
 $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
@@ -80,7 +82,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                             </div>
                         </div>
                     <?php
-            } // end if user_agreement?>
+            } ?>
 
                     <div class="registerInformation">
                         <p><span class="require">* </span><?php echo T_('Required fields'); ?></p>

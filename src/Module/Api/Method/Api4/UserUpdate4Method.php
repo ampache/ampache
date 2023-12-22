@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -46,8 +46,6 @@ final class UserUpdate4Method
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * @param array $input
-     * @param User $user
      * username   = (string) $username
      * password   = (string) hash('sha256', $password)) //optional
      * fullname   = (string) $fullname //optional
@@ -57,7 +55,6 @@ final class UserUpdate4Method
      * city       = (string) $city //optional
      * disable    = (integer) 0,1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
-     * @return boolean
      */
     public static function user_update(array $input, User $user): bool
     {
@@ -67,8 +64,22 @@ final class UserUpdate4Method
         if (!Api4::check_parameter($input, array('username'), 'user_update')) {
             return false;
         }
-        $username   = $input['username'];
+
+        $username    = $input['username'];
+        $update_user = User::get_from_username($username);
+        if ($update_user === null) {
+            Api4::message('error', 'failed to update: ' . $username, '400', $input['api_format']);
+
+            return false;
+        }
+
         $password   = $input['password'] ?? null;
+        if ($password && $update_user->access == 100) {
+            Api4::message('error', 'Do not update passwords for admin users! ' . $username, '400', $input['api_format']);
+
+            return false;
+        }
+
         $fullname   = $input['fullname'] ?? null;
         $email      = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
         $website    = $input['website'] ?? null;
@@ -77,18 +88,7 @@ final class UserUpdate4Method
         $disable    = $input['disable'] ?? null;
         $maxbitrate = (int)($input['maxBitRate'] ?? 0);
 
-        // identify the user to modify
-        $update_user = User::get_from_username($username);
-        $user_id     = $update_user->id;
-
-        if ($password && $update_user->access == 100) {
-            Api4::message('error', 'Do not update passwords for admin users! ' . $username, '400', $input['api_format']);
-
-            return false;
-        }
-
-        $userStateToggler = static::getUserStateToggler();
-
+        $user_id = $update_user->id;
         if ($user_id > 0) {
             if ($password && !AmpConfig::get('simple_user_mode')) {
                 $update_user->update_password('', $password);
@@ -96,7 +96,7 @@ final class UserUpdate4Method
             if ($fullname) {
                 $update_user->update_fullname($fullname);
             }
-            if (Mailer::validate_address($email)) {
+            if ($email && Mailer::validate_address($email)) {
                 $update_user->update_email($email);
             }
             if ($website) {
@@ -108,6 +108,7 @@ final class UserUpdate4Method
             if ($city) {
                 $update_user->update_city($city);
             }
+            $userStateToggler = static::getUserStateToggler();
             if ($disable === '1') {
                 $userStateToggler->disable($update_user);
             } elseif ($disable === '0') {
@@ -123,7 +124,7 @@ final class UserUpdate4Method
         Api4::message('error', 'failed to update: ' . $username, '400', $input['api_format']);
 
         return false;
-    } // user_update
+    }
 
     /**
      * @deprecated Inject by constructor

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,17 +23,19 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders the user-enable confirmation
+ */
 final class EnableAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'enable';
@@ -57,25 +62,25 @@ final class EnableAction extends AbstractUserAction
             return null;
         }
 
-        $this->ui->showHeader();
-
         $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
-        if ($userId < 1) {
-            echo T_('You have requested an object that does not exist');
-        } else {
-            $user = $this->modelFactory->createUser($userId);
-            $this->ui->showConfirmation(
-                T_('Are You Sure?'),
-                /* HINT: User Fullname */
-                sprintf(T_('This will enable the user "%s"'), $user->fullname),
-                sprintf(
-                    'admin/users.php?action=confirm_enable&amp;user_id=%s',
-                    $userId
-                ),
-                1,
-                'enable_user'
-            );
+        $user   = $this->modelFactory->createUser($userId);
+
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
         }
+
+        $this->ui->showHeader();
+        $this->ui->showConfirmation(
+            T_('Are You Sure?'),
+            /* HINT: User Fullname */
+            sprintf(T_('This will enable the user "%s"'), $user->getFullDisplayName()),
+            sprintf(
+                'admin/users.php?action=confirm_enable&amp;user_id=%s',
+                $userId
+            ),
+            1,
+            'enable_user'
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

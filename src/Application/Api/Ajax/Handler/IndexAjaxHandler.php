@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
@@ -94,9 +94,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'top_tracks':
-                $artist       = new Artist($this->requestParser->getFromRequest('artist'));
+                $artist       = new Artist((int)$this->requestParser->getFromRequest('artist'));
                 $object_ids   = $this->songRepository->getTopSongsByArtist($artist, (int)AmpConfig::get('popular_threshold', 10));
-                $browse       = new Browse();
                 $hide_columns = array('cel_artist');
                 ob_start();
                 require_once Ui::find_template('show_top_tracks.inc.php');
@@ -107,7 +106,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $user->id,
                     $moment
                 );
-                if (count($albums) && is_array($albums)) {
+                if (count($albums)) {
                     ob_start();
                     require_once Ui::find_template('show_random_albums.inc.php');
                     $results['random_selection'] = ob_get_clean();
@@ -128,7 +127,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $user->id,
                     $moment
                 );
-                if (count($albumDisks) && is_array($albumDisks)) {
+                if (count($albumDisks)) {
                     ob_start();
                     require_once Ui::find_template('show_random_album_disks.inc.php');
                     $results['random_selection'] = ob_get_clean();
@@ -149,7 +148,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $user->id,
                     $moment
                 );
-                if (count($videos) && is_array($videos)) {
+                if (count($videos)) {
                     ob_start();
                     require_once Ui::find_template('show_random_videos.inc.php');
                     $results['random_video_selection'] = ob_get_clean();
@@ -160,8 +159,10 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'artist_info':
                 if (AmpConfig::get('lastfm_api_key') && (array_key_exists('artist', $_REQUEST) || array_key_exists('fullname', $_REQUEST))) {
                     if (array_key_exists('artist', $_REQUEST)) {
-                        $artist = new Artist($this->requestParser->getFromRequest('artist'));
-                        $artist->format();
+                        $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
+                        if ($artist->isNew() === false) {
+                            $artist->format();
+                        }
                         $biography = Recommendation::get_artist_info($artist->id);
                     } else {
                         $fullname  = $this->requestParser->getFromRequest('fullname');
@@ -175,7 +176,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'similar_artist':
                 if (AmpConfig::get('show_similar') && array_key_exists('artist', $_REQUEST)) {
-                    $artist = new Artist($this->requestParser->getFromRequest('artist'));
+                    $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
                     $artist->format();
                     $limit_threshold = AmpConfig::get('stats_threshold', 7);
                     $object_ids      = array();
@@ -195,7 +196,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'similar_songs':
-                $artist     = new Artist($this->requestParser->getFromRequest('artist'));
+                $artist     = new Artist((int)$this->requestParser->getFromRequest('artist'));
                 $similars   = Recommendation::get_artists_like($artist->id);
                 $object_ids = array();
                 if (!empty($similars)) {
@@ -217,8 +218,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 $results['similar_songs'] = ob_get_clean();
                 break;
             case 'similar_now_playing':
-                $media_id = $this->requestParser->getFromRequest('media_id');
-                if (AmpConfig::get('show_similar') && isset($media_id) && array_key_exists('media_artist', $_REQUEST)) {
+                $media_id = (int)$this->requestParser->getFromRequest('media_id');
+                if (AmpConfig::get('show_similar') && $media_id > 0 && array_key_exists('media_artist', $_REQUEST)) {
                     $artists = Recommendation::get_artists_like($this->requestParser->getFromRequest('media_artist'), 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
                     ob_start();
@@ -316,28 +317,42 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'delete_play':
-                Stats::delete((int)$_REQUEST['activity_id']);
-                ob_start();
-                show_now_playing();
-                $results['now_playing'] = ob_get_clean();
+                if (isset($_REQUEST['activity_id'])) {
+                    Stats::delete((int)$_REQUEST['activity_id']);
+                }
                 ob_start();
                 $user_id   = $user->id ?? -1;
-                $data      = Stats::get_recently_played($user_id, 'stream', 'song');
                 $ajax_page = 'index';
-                Song::build_cache(array_keys($data));
-                require_once Ui::find_template('show_recently_played.inc.php');
+                if (AmpConfig::get('home_recently_played_all')) {
+                    $data = Stats::get_recently_played($user_id);
+                    require_once Ui::find_template('show_recently_played_all.inc.php');
+                } else {
+                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
+                    Song::build_cache(array_keys($data));
+                    require Ui::find_template('show_recently_played.inc.php');
+                }
                 $results['recently_played'] = ob_get_clean();
                 break;
-            case 'reloadnp':
+            case 'refresh_now_playing':
+                ob_start();
+                show_now_playing();
+                $results['now_playing'] = ob_get_clean();
+                break;
+            case 'refresh_index':
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
                 $user_id   = $user->id ?? -1;
-                $data      = Stats::get_recently_played($user_id, 'stream', 'song');
                 $ajax_page = 'index';
-                Song::build_cache(array_keys($data));
-                require_once Ui::find_template('show_recently_played.inc.php');
+                if (AmpConfig::get('home_recently_played_all')) {
+                    $data = Stats::get_recently_played($user_id);
+                    require_once Ui::find_template('show_recently_played_all.inc.php');
+                } else {
+                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
+                    Song::build_cache(array_keys($data));
+                    require Ui::find_template('show_recently_played.inc.php');
+                }
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'sidebar':
@@ -400,7 +415,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 if ($label_id > 0) {
                     $label      = new Label($label_id);
-                    $object_ids = $this->songRepository->getByLabel($label->name);
+                    $object_ids = $this->songRepository->getByLabel((string)$label->name);
 
                     $browse = new Browse();
                     $browse->set_type('song');

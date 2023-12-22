@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Song;
 
 use Ahc\Cli\IO\Interactor;
@@ -31,7 +32,6 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -42,16 +42,12 @@ final class SongSorter implements SongSorterInterface
 
     private LoggerInterface $logger;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory
+        LoggerInterface $logger
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
-        $this->modelFactory    = $modelFactory;
     }
 
     public function sort(
@@ -63,7 +59,7 @@ final class SongSorter implements SongSorterInterface
         ?string $various_artist_override = null,
         ?string $catalogName = null
     ): void {
-        $various_artist = 'Various Artists';
+        $various_artist = T_('Various Artists');
 
         if ($various_artist_override !== null) {
             $interactor->info(
@@ -71,7 +67,7 @@ final class SongSorter implements SongSorterInterface
                 true
             );
 
-            $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $various_artist_override));
+            $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $various_artist_override)) ?? $various_artist;
         }
         $move_count = 0;
 
@@ -85,9 +81,12 @@ final class SongSorter implements SongSorterInterface
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
+            if ($catalog === null) {
+                break;
+            }
             /* HINT: Catalog Name */
             $interactor->info(
-                sprintf(T_('Starting Catalog: %s'), stripslashes($catalog->name)),
+                sprintf(T_('Starting Catalog: %s'), stripslashes((string)$catalog->name)),
                 true
             );
 
@@ -113,7 +112,7 @@ final class SongSorter implements SongSorterInterface
                         return;
                     }
                     // Check for file existence
-                    if (!file_exists($song->file)) {
+                    if (empty($song->file) || !file_exists($song->file)) {
                         $this->logger->critical(
                             sprintf('Missing: %s', $song->file),
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -139,9 +138,9 @@ final class SongSorter implements SongSorterInterface
 
                     // sort_find_home will replace the % with the correct values.
                     $directory = ($filesOnly)
-                        ? dirname($song->file)
+                        ? dirname((string)$song->file)
                         : $catalog->sort_find_home($song, $catalog->sort_pattern, $catalog->get_path(), $various_artist, $windowsCompat);
-                    if ($directory === false) {
+                    if ($directory === null) {
                         /* HINT: $sort_pattern after replacing %x values */
                         $interactor->info(
                             sprintf(T_('The sort_pattern has left over variables. %s'), $catalog->sort_pattern),
@@ -149,17 +148,17 @@ final class SongSorter implements SongSorterInterface
                         );
                     }
                     $filename = $catalog->sort_find_home($song, $catalog->rename_pattern, null, $various_artist, $windowsCompat);
-                    if ($filename === false) {
+                    if ($filename === null) {
                         /* HINT: $sort_pattern after replacing %x values */
                         $interactor->info(
                             sprintf(T_('The sort_pattern has left over variables. %s'), $catalog->rename_pattern),
                             true
                         );
                     }
-                    if ($directory === false || $filename === false) {
-                        $fullpath = $song->file;
+                    if ($directory === null || $filename === null) {
+                        $fullpath = (string)$song->file;
                     } else {
-                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION) ?? '');
+                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo((string)$song->file, PATHINFO_EXTENSION));
                     }
 
                     /* We need to actually do the moving (fake it if we are testing)
@@ -196,8 +195,8 @@ final class SongSorter implements SongSorterInterface
      * worked by doing a filesize() before unlinking.
      * @param Interactor $interactor
      * @param Song $song
-     * @param $fullname
-     * @param $test_mode
+     * @param string $fullname
+     * @param bool $test_mode
      * @param bool $windowsCompat
      * @return bool
      */
@@ -207,8 +206,8 @@ final class SongSorter implements SongSorterInterface
         $fullname,
         $test_mode,
         $windowsCompat = false
-    ) {
-        $old_dir   = dirname($song->file);
+    ): bool {
+        $old_dir   = dirname((string)$song->file);
         $info      = pathinfo($fullname);
         $directory = $info['dirname'];
         $file      = $info['basename'];
@@ -276,7 +275,7 @@ final class SongSorter implements SongSorterInterface
                 true
             );
 
-            if (!copy($song->file, $fullname)) {
+            if (empty($song->file) || !copy($song->file, $fullname)) {
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to copy file to "%s"'), $fullname),

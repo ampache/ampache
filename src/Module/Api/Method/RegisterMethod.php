@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,15 +23,15 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\User\Registration;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class RegisterMethod
@@ -51,12 +53,11 @@ final class RegisterMethod
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password)
      * email    = (string) $email
-     * @return boolean
      */
     public static function register(array $input): bool
     {
         if (!AmpConfig::get('allow_public_registration', false)) {
-            Api::error(T_('Enable: allow_public_registration'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: allow_public_registration'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -70,7 +71,7 @@ final class RegisterMethod
         $disable              = (bool)AmpConfig::get('admin_enable_required');
         $access               = User::access_name_to_level(AmpConfig::get('auto_user') ?? 'guest');
         $catalog_filter_group = 0;
-        $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
+        $user_id              = User::create($username, $fullname, $email, '', $password, $access, $catalog_filter_group, '', '', $disable, true);
 
         if ($user_id > 0) {
             if (!AmpConfig::get('user_no_email_confirm', false)) {
@@ -79,7 +80,7 @@ final class RegisterMethod
                 $client->update_validation($validation);
 
                 // Notify user and/or admins
-                Registration::send_confirmation($username, $fullname, $email, null, $validation);
+                Registration::send_confirmation($username, $fullname, $email, '', $validation);
             }
             $text = 'successfully created: ' . $username;
             if (AmpConfig::get('admin_enable_required')) {
@@ -91,20 +92,32 @@ final class RegisterMethod
             return true;
         }
 
-        if (User::id_from_username($username) > 0) {
+        $userRepository = static::getUserRepository();
+
+        if ($userRepository->idByUsername($username) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'username', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
-        if (User::id_from_email($email) > 0) {
+        if ($userRepository->idByEmail($email) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $email), '4710', self::ACTION, 'email', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $email), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
 
             return false;
         }
-        Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
         return false;
+    }
+
+    /**
+     * @todo Inject by constructor
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

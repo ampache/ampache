@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\MockeryTestCase;
@@ -38,7 +39,7 @@ class ShowActionTest extends MockeryTestCase
 
     private ShowAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui = $this->mock(UiInterface::class);
 

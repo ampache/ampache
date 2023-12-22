@@ -1,8 +1,9 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,9 +27,11 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class DeleteAction implements ApplicationActionInterface
 {
@@ -38,12 +41,16 @@ final class DeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        LoggerInterface $logger
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -56,6 +63,10 @@ final class DeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         if ($tvshow_season_id < 1) {
+            $this->logger->warning(
+                'Requested a tvshow_season that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             echo T_('You have requested an object that does not exist');
         } else {
             $this->ui->showConfirmation(

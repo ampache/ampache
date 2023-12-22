@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Authentication;
 
@@ -64,9 +65,9 @@ class Openid
     }
 
     /**
-     * @return string
+     * get_return_url
      */
-    public static function get_return_url()
+    public static function get_return_url(): string
     {
         return AmpConfig::get('web_path') . '/login.php?auth_mod=openid&step=2';
     }

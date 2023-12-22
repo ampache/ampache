@@ -18,7 +18,7 @@
         <dt i18n:translate="">Waveform</dt>
         <dd>
             <div id="waveform_${song_id}">
-                <img tal:attributes="src SONG/getWaveformUrl" />
+                <img tal:attributes="src SONG/getWaveformUrl" title="Waveform" alt="Waveform" i18n:attributes="title; alt" />
             </div>
         </dd>
     </tal:block>

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Config\Init;
 
 use Ampache\Config\AmpConfig;
@@ -33,7 +34,7 @@ use DateTimeZone;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '6.1.0'; // AMPACHE_VERSION
+    private const VERSION        = '6.2.0'; // AMPACHE_VERSION
     private const CONFIG_VERSION = '69';
     private const STRUCTURE      = 'public';  // Project release is using either the public html folder or squashed structure
 
@@ -61,7 +62,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             throw new ConfigFileNotParsableException();
         }
 
-        /** This is the version.... fluff nothing more... **/
+        /** This is the version.... fluff nothing more... */
         $results['version']            = static::VERSION;
         $results['int_config_version'] = static::CONFIG_VERSION;
         $results['structure']          = static::STRUCTURE;

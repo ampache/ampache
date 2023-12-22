@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,13 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
  * Class UserPreferences5Method
@@ -41,19 +41,16 @@ final class UserPreferences5Method
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your user preferences
-     *
-     * @param array $input
-     * @param User $user
      */
-    public static function user_preferences(array $input, User $user)
+    public static function user_preferences(array $input, User $user): void
     {
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $preferences = Preference::get_all($user->id);
-        $results     = array(
-            'preference' => $preferences
-        );
+        $results = [
+            'preference' => self::getPreferenceRepository()->getAll($user)
+        ];
+
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);
@@ -61,5 +58,15 @@ final class UserPreferences5Method
             default:
                 echo Xml5_Data::object_array($results['preference'], 'preference');
         }
+    }
+
+    /**
+     * @todo Replace by constructor injection
+     */
+    private static function getPreferenceRepository(): PreferenceRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PreferenceRepositoryInterface::class);
     }
 }

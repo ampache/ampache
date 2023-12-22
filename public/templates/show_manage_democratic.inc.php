@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,7 +31,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var array $playlists */
 
-Ui::show_box_top(T_('Manage'));  ?>
+Ui::show_box_top(T_('Manage')); ?>
 <table class="tabledata striped-rows">
     <tr class="th-top">
         <th class="cel_number"><?php echo T_('Playlist'); ?></th>
@@ -54,7 +57,7 @@ Ui::show_box_top(T_('Manage'));  ?>
         <td><?php echo $democratic->count_items(); ?></td>
         <td>
         <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic'); ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out((string)$democratic->id); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
         </td>
     </tr>
     <?php

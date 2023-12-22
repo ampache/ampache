@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Repository\Model\User;
@@ -36,7 +36,7 @@ use Ampache\Module\Api\Xml5_Data;
  */
 final class Artists5Method
 {
-    const ACTION = 'artists';
+    public const ACTION = 'artists';
 
     /**
      * artists
@@ -45,8 +45,6 @@ final class Artists5Method
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
      *
-     * @param array $input
-     * @param User $user
      * filter       = (string) Alpha-numeric search term //optional
      * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add          = Api::set_filter(date) //optional
@@ -55,7 +53,6 @@ final class Artists5Method
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
      * offset       = (integer) //optional
      * limit        = (integer) //optional
-     * @return boolean
      */
     public static function artists(array $input, User $user): bool
     {

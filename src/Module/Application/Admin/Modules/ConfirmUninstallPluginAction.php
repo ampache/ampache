@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Modules;
 
@@ -57,14 +58,14 @@ final class ConfirmUninstallPluginAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $plugin = (string) scrub_in($_REQUEST['plugin']);
+        $plugin = scrub_in((string) $_REQUEST['plugin']);
         $url    = sprintf(
             '%s/admin/modules.php?action=uninstall_plugin&amp;plugin=%s',
             $this->configContainer->getWebPath(),
             $plugin
         );
-        $title  = T_('Are You Sure?');
-        $body   = T_('This will disable the Plugin and remove your settings');
+        $title = T_('Are You Sure?');
+        $body  = T_('This will disable the Plugin and remove your settings');
 
         $this->ui->showConfirmation($title, $body, $url, 1);
 

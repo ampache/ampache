@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
@@ -43,8 +44,8 @@ use Ampache\Repository\Model\Tag;
  */
 class Daap_Api
 {
-    const AMPACHEID_SMARTPL = 400000000;
-    const BASE_LIBRARY      = 0;
+    public const AMPACHEID_SMARTPL = 400000000;
+    public const BASE_LIBRARY      = 0;
 
     public static $metas = array(
         'dmap.itemid',
@@ -88,7 +89,7 @@ class Daap_Api
      * follow_stream
      * @param string $url
      */
-    public static function follow_stream($url)
+    public static function follow_stream($url): void
     {
         set_time_limit(0);
         ob_end_clean();
@@ -102,25 +103,28 @@ class Daap_Api
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             $curl = curl_init($url);
             if ($curl) {
-                curl_setopt_array($curl, array(
-                    CURLOPT_HTTPHEADER => $reqheaders,
-                    CURLOPT_HEADER => false,
-                    CURLOPT_RETURNTRANSFER => false,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_WRITEFUNCTION => array(
-                        'Ampache\Module\Api\Daap_Api',
-                        'output_body'
-                    ),
-                    CURLOPT_HEADERFUNCTION => array(
-                        'Ampache\Module\Api\Daap_Api',
-                        'output_header'
-                    ),
-                    // Ignore invalid certificate
-                    // Default trusted chain is crap anyway and currently no custom CA option
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_SSL_VERIFYHOST => false,
-                    CURLOPT_TIMEOUT => 0
-                ));
+                curl_setopt_array(
+                    $curl,
+                    array(
+                        CURLOPT_HTTPHEADER => $reqheaders,
+                        CURLOPT_HEADER => false,
+                        CURLOPT_RETURNTRANSFER => false,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_WRITEFUNCTION => array(
+                            'Ampache\Module\Api\Daap_Api',
+                            'output_body'
+                        ),
+                        CURLOPT_HEADERFUNCTION => array(
+                            'Ampache\Module\Api\Daap_Api',
+                            'output_header'
+                        ),
+                        // Ignore invalid certificate
+                        // Default trusted chain is crap anyway and currently no custom CA option
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_TIMEOUT => 0
+                    )
+                );
                 curl_exec($curl);
                 curl_close($curl);
             }
@@ -133,9 +137,8 @@ class Daap_Api
     /**
      * @param $curl
      * @param $data
-     * @return integer
      */
-    public static function output_body($curl, $data)
+    public static function output_body($curl, $data): int
     {
         echo $data;
         ob_flush();
@@ -146,9 +149,8 @@ class Daap_Api
     /**
      * @param $curl
      * @param $header
-     * @return integer
      */
-    public static function output_header($curl, $header)
+    public static function output_header($curl, $header): int
     {
         $rheader = trim((string)$header);
         $rhpart  = explode(':', $rheader);
@@ -165,7 +167,7 @@ class Daap_Api
      * server_info (Based on the server_info part of the forkedd-daapd project)
      * @param $input
      */
-    public static function server_info($input)
+    public static function server_info($input): void
     {
         $output = self::tlv('dmap.status', 200);
         $output .= self::tlv('dmap.protocolversion', '0.2.0.0');
@@ -204,7 +206,7 @@ class Daap_Api
      * content_codes
      * @param $input
      */
-    public static function content_codes($input)
+    public static function content_codes($input): void
     {
         $output = self::tlv('dmap.status', 200);
         foreach (self::$tags as $name => $tag) {
@@ -224,7 +226,7 @@ class Daap_Api
      * login
      * @param $input
      */
-    public static function login($input)
+    public static function login($input): void
     {
         self::check_auth('dmap.loginresponse');
 
@@ -245,7 +247,7 @@ class Daap_Api
     /**
      * @param string $code
      */
-    private static function check_session($code)
+    private static function check_session($code): void
     {
         // Purge expired sessions
         $sql = "DELETE FROM `daap_session` WHERE `creationdate` < ?";
@@ -264,7 +266,7 @@ class Daap_Api
             ));
 
             if (Dba::num_rows($db_results) == 0) {
-                debug_event(self::class, 'Unknown session id `' . Core::get_get('session-id') . '`.',4);
+                debug_event(self::class, 'Unknown session id `' . Core::get_get('session-id') . '`.', 4);
             }
         }
     }
@@ -272,7 +274,7 @@ class Daap_Api
     /**
      * @param string $code
      */
-    private static function check_auth($code = '')
+    private static function check_auth($code = ''): void
     {
         $authenticated = false;
         $pass          = AmpConfig::get('daap_pass');
@@ -305,7 +307,7 @@ class Daap_Api
      * logout
      * @param $input
      */
-    public static function logout($input)
+    public static function logout($input): void
     {
         self::check_auth();
 
@@ -322,7 +324,7 @@ class Daap_Api
      * update
      * @param $input
      */
-    public static function update($input)
+    public static function update($input): void
     {
         self::check_session('dmap.updateresponse');
 
@@ -334,9 +336,9 @@ class Daap_Api
     }
 
     /**
-     * @return string
+     * catalog_songs
      */
-    private static function catalog_songs()
+    private static function catalog_songs(): string
     {
         // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
         $meta   = explode(',', strtolower(Core::get_get('meta')));
@@ -347,7 +349,10 @@ class Daap_Api
         $catalogs = Catalog::get_catalogs();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
-            $songs   = array_merge($songs, $catalog->get_songs());
+            if ($catalog === null) {
+                break;
+            }
+            $songs = array_merge($songs, $catalog->get_songs());
         }
 
         $output .= self::tlv('dmap.specifiedtotalcount', count($songs));
@@ -360,9 +365,8 @@ class Daap_Api
     /**
      * databases
      * @param array $input
-     * @return boolean
      */
-    public static function databases($input)
+    public static function databases($input): bool
     {
         $output = '';
         // Database list
@@ -458,7 +462,9 @@ class Daap_Api
                         $playlist = new Playlist($object_id);
                     }
 
-                    if ($playlist->id) {
+                    if ($playlist->isNew()) {
+                        self::createApiError('daap.playlistsongs', 500, 'Invalid playlist id: ' . $object_id);
+                    } else {
                         $meta   = explode(',', strtolower(Core::get_get('meta')));
                         $output = self::tlv('dmap.status', 200);
                         $output .= self::tlv('dmap.updatetype', 0);
@@ -481,8 +487,6 @@ class Daap_Api
                         $output .= self::tlv('dmap.listing', self::tlv_songs($songs, $meta));
 
                         $output = self::tlv('daap.playlistsongs', $output);
-                    } else {
-                        self::createApiError('daap.playlistsongs', 500, 'Invalid playlist id: ' . $object_id);
                     }
                 }
             }
@@ -495,9 +499,8 @@ class Daap_Api
     /**
      * @param $songs
      * @param $meta
-     * @return string
      */
-    private static function tlv_songs($songs, $meta)
+    private static function tlv_songs($songs, $meta): string
     {
         if (array_search('all', $meta) > -1) {
             $meta = self::$metas;
@@ -577,9 +580,9 @@ class Daap_Api
     }
 
     /**
-     * @return string
+     * base_library
      */
-    public static function base_library()
+    public static function base_library(): string
     {
         $library = self::tlv('dmap.itemid', Daap_Api::BASE_LIBRARY);
         $library .= self::tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
@@ -594,9 +597,8 @@ class Daap_Api
     /**
      * @param Playlist|Search $playlist
      * @param bool $isSmart
-     * @return string
      */
-    public static function tlv_playlist($playlist, $isSmart = false)
+    public static function tlv_playlist($playlist, $isSmart = false): string
     {
         $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
         $plist = self::tlv('dmap.itemid', $pl_id);
@@ -613,9 +615,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv($tag, $value)
+    private static function tlv($tag, $value): string
     {
         if (array_key_exists($tag, self::$tags)) {
             $code = self::$tags[$tag]['code'];
@@ -652,9 +653,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_string($tag, $value)
+    private static function tlv_string($tag, $value): string
     {
         return $tag . pack("N", strlen((string)$value)) . $value;
     }
@@ -662,9 +662,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_long($tag, $value)
+    private static function tlv_long($tag, $value): string
     {
         // Really?! PHP...
         // Need to split value into two 32-bit integer because php pack function doesn't support 64-bit integer...
@@ -679,9 +678,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_int($tag, $value)
+    private static function tlv_int($tag, $value): string
     {
         return $tag . "\x00\x00\x00\x04" . pack("N", $value);
     }
@@ -689,9 +687,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_short($tag, $value)
+    private static function tlv_short($tag, $value): string
     {
         return $tag . "\x00\x00\x00\x02" . pack("n", $value);
     }
@@ -699,9 +696,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_byte($tag, $value)
+    private static function tlv_byte($tag, $value): string
     {
         return $tag . "\x00\x00\x00\x01" . pack("C", $value);
     }
@@ -709,9 +705,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_version($tag, $value)
+    private static function tlv_version($tag, $value): string
     {
         $values = explode('.', $value);
         if (count($values) == 4) {
@@ -726,9 +721,8 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_date($tag, $value)
+    private static function tlv_date($tag, $value): string
     {
         return self::tlv_int($tag, $value);
     }
@@ -736,21 +730,23 @@ class Daap_Api
     /**
      * @param $tag
      * @param $value
-     * @return string
      */
-    private static function tlv_list($tag, $value)
+    private static function tlv_list($tag, $value): string
     {
         return self::tlv_string($tag, $value);
     }
 
-    public static function create_dictionary()
+    public static function create_dictionary(): void
     {
         self::add_dict('mdcl', 'list', 'dmap.dictionary'); // a dictionary entry
         self::add_dict('mstt', 'int', 'dmap.status'); // the response status code, these appear to be http status codes
         self::add_dict('miid', 'int', 'dmap.itemid'); // an item's id
         self::add_dict('minm', 'string', 'dmap.itemname'); // an items name
-        self::add_dict('mikd', 'byte',
-            'dmap.itemkind'); // the kind of item. So far, only '2' has been seen, an audio file?
+        self::add_dict(
+            'mikd',
+            'byte',
+            'dmap.itemkind'
+        ); // the kind of item. So far, only '2' has been seen, an audio file?
         self::add_dict('mper', 'long', 'dmap.persistentid'); // a persistent id
         self::add_dict('mcon', 'list', 'dmap.container'); // an arbitrary container
         self::add_dict('mcti', 'int', 'dmap.containeritemid'); // the id of an item in its container
@@ -845,7 +841,7 @@ class Daap_Api
      * @param string $type
      * @param string $name
      */
-    private static function add_dict($code, $type, $name)
+    private static function add_dict($code, $type, $name): void
     {
         self::$tags[$name] = array(
             'type' => $type,
@@ -855,9 +851,8 @@ class Daap_Api
 
     /**
      * @param $type
-     * @return integer
      */
-    private static function get_type_id($type)
+    private static function get_type_id($type): int
     {
         switch ($type) {
             case 'byte':
@@ -891,7 +886,7 @@ class Daap_Api
         }
     }
 
-    private static function setHeaders()
+    private static function setHeaders(): void
     {
         header("Content-Type: application/x-dmap-tagged");
         header("DAAP-Server: Ampache");
@@ -903,7 +898,7 @@ class Daap_Api
     /**
      * @param string $string
      */
-    public static function apiOutput($string)
+    public static function apiOutput($string): void
     {
         self::setHeaders();
 
@@ -918,9 +913,8 @@ class Daap_Api
 
     /**
      * @param $code
-     * @return boolean
      */
-    public static function createError($code)
+    public static function createError($code): bool
     {
         $error = "";
         switch ($code) {
@@ -942,11 +936,10 @@ class Daap_Api
 
     /**
      * @param string $tag
-     * @param integer $code
+     * @param int $code
      * @param string $msg
-     * @return boolean
      */
-    public static function createApiError($tag, $code, $msg = '')
+    public static function createApiError($tag, $code, $msg = ''): bool
     {
         $output = self::tlv('dmap.status', $code);
         if (!empty($msg)) {

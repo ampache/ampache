@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Util\OAuth;
 
 /**
@@ -37,9 +38,9 @@ namespace Ampache\Module\Util\OAuth;
 abstract class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
 {
     /**
-     * @return string
+     * get_name
      */
-    public function get_name()
+    public function get_name(): string
     {
         return "RSA-SHA1";
     }
@@ -70,9 +71,8 @@ abstract class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
      * @param OAuthRequest $request
      * @param OAuthConsumer $consumer
      * @param OAuthToken $token
-     * @return string
      */
-    public function build_signature($request, $consumer, $token)
+    public function build_signature($request, $consumer, $token): string
     {
         $base_string          = $request->get_signature_base_string();
         $request->base_string = $base_string;
@@ -97,9 +97,8 @@ abstract class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
      * @param OAuthConsumer $consumer
      * @param OAuthToken $token
      * @param string $signature
-     * @return boolean
      */
-    public function check_signature($request, $consumer, $token, $signature)
+    public function check_signature($request, $consumer, $token, $signature): bool
     {
         $decoded_sig = base64_decode($signature);
 

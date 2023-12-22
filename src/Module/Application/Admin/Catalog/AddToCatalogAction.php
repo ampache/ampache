@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
@@ -59,12 +60,14 @@ final class AddToCatalogAction extends AbstractCatalogAction
         }
 
         catalog_worker('add_to_catalog', $catalogIds);
-        $this->ui->showConfirmation(T_('Catalog update process has started'),
+        $this->ui->showConfirmation(
+            T_('Catalog update process has started'),
             '',
             sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
             0,
             'confirmation',
-            false);
+            false
+        );
 
         return null;
     }

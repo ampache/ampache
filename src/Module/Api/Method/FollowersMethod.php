@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -47,28 +49,23 @@ final class FollowersMethod
      * This gets followers of the user
      * Error when user not found or no followers
      *
-     * @param array $input
-     * @param User $user
-     * username = (string) $username
-     * @return boolean
+     * username = (string) $username //optional
      */
     public static function followers(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: sociable'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
-        }
-        unset($user);
-        $username = $input['username'];
+        $username = (isset($input['username']))
+            ? $input['username']
+            : $user->username;
         $leadUser = User::get_from_username($username);
-        if (!$leadUser->id) {
+        if ($leadUser === null) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);
 
             return false;
         }

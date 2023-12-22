@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -34,12 +36,15 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserFollowerRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class ShowUserAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_user';
 
     private UiInterface $ui;
+
+    private LoggerInterface $logger;
 
     private ModelFactoryInterface $modelFactory;
 
@@ -53,6 +58,7 @@ final class ShowUserAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
+        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory,
         UserActivityRepositoryInterface $useractivityRepository,
         UserActivityRendererInterface $userActivityRenderer,
@@ -60,6 +66,7 @@ final class ShowUserAction implements ApplicationActionInterface
         UserFollowStateRendererInterface $userFollowStateRenderer
     ) {
         $this->ui                      = $ui;
+        $this->logger                  = $logger;
         $this->modelFactory            = $modelFactory;
         $this->useractivityRepository  = $useractivityRepository;
         $this->userActivityRenderer    = $userActivityRenderer;
@@ -77,10 +84,14 @@ final class ShowUserAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
-        if ($userId < 1) {
+        $client = $this->modelFactory->createUser($userId);
+        if ($client->id === 0) {
+            $this->logger->warning(
+                'Requested a user that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             echo T_('You have requested an object that does not exist');
         } else {
-            $client = $this->modelFactory->createUser($userId);
             $this->ui->show(
                 'show_user.inc.php',
                 [

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\StatisticGraph;
 
@@ -67,7 +68,8 @@ final class ShowAction implements ApplicationActionInterface
             $this->logger->warning(
                 sprintf(
                     'Access denied, checked cookie session:%s and auth:%s',
-                    $_COOKIE[$this->configContainer->getSessionName()], $_REQUEST['auth']
+                    $_COOKIE[$this->configContainer->getSessionName()],
+                    $_REQUEST['auth']
                 ),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
@@ -87,21 +89,30 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        $action_type = $this->requestParser->getFromRequest('type');
         $object_type = $this->requestParser->getFromRequest('object_type');
-        $user_id     = (int)$this->requestParser->getFromRequest('user_id');
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             $object_type = null;
         }
-        $object_id  = (int) ($_REQUEST['object_id']);
-        $start_date = (int) scrub_in($_REQUEST['start_date']);
-        $end_date   = (int) scrub_in($_REQUEST['end_date']);
-        $zoom       = (string) scrub_in($_REQUEST['zoom']);
+        $graph     = new Graph();
+        $user_id   = (int)$this->requestParser->getFromRequest('user_id');
+        $object_id = (int)$this->requestParser->getFromRequest('object_id');
+        $end_date  = (!empty($this->requestParser->getFromRequest('end_date')))
+            ? (int)$this->requestParser->getFromRequest('end_date')
+            : time();
+        $start_date = (!empty($this->requestParser->getFromRequest('start_date')))
+            ? (int)$this->requestParser->getFromRequest('start_date')
+            : ($end_date - 864000);
+        $zoom = (!empty($this->requestParser->getFromRequest('zoom')))
+            ? $this->requestParser->getFromRequest('zoom')
+            : 'day';
+        $width = ((int)$this->requestParser->getFromRequest('width') !== 0)
+            ? (int)$this->requestParser->getFromRequest('width')
+            : 700;
+        $height = ((int)$this->requestParser->getFromRequest('height') !== 0)
+            ? (int)$this->requestParser->getFromRequest('height')
+            : 260;
 
-        $width  = (int) ($_REQUEST['width']);
-        $height = (int) ($_REQUEST['height']);
-        $graph  = new Graph();
-
+        $action_type = $this->requestParser->getFromRequest('type');
         switch ($action_type) {
             case 'user_hits':
                 $graph->render_user_hits($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);

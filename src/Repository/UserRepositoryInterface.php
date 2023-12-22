@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,6 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Repository;
@@ -54,9 +56,6 @@ interface UserRepositoryInterface
 
     /**
      * This returns all valid users in an array (id => name).
-     *
-     * @param bool $includeDisabled
-     * @return array
      */
     public function getValidArray(bool $includeDisabled = false): array;
 
@@ -129,10 +128,19 @@ interface UserRepositoryInterface
     /**
      * Updates a users api key
      */
-    public function updateApiKey(string $userId, string $apikey): void;
+    public function updateApiKey(int $userId, string $apikey): void;
 
     /**
      * Get the current hashed user password
      */
     public function retrievePasswordFromUser(int $userId): string;
+
+    /**
+     * Returns statistical data related to user accounts and active users
+     *
+     * @param int $timePeriod Time period to consider sessions `active` (in seconds)
+     *
+     * @return array{users: int, connected: int}
+     */
+    public function getStatistics(int $timePeriod = 1200): array;
 }

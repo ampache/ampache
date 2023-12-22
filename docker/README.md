@@ -23,7 +23,7 @@ After you're up and running you should be able to install as normal. (MySQL is n
 
 If you use Linux, the permissions can be set up by running the setup script from the docker directory
 
-```
+```shell
 cd ./docker
 sh ./docker-setup.sh
 ```

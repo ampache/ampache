@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Gui;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -37,10 +38,9 @@ class TalFactoryTest extends MockeryTestCase
     /** @var MockInterface|GuiFactoryInterface|null */
     private MockInterface $guiFactory;
 
-    /** @var TalFactory|null */
     private TalFactory $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->guiFactory      = $this->mock(GuiFactoryInterface::class);

@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -26,25 +29,28 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var bool $has_failed */
 /** @var string $message */
-/** @var Ampache\Repository\Model\Song|Ampache\Repository\Model\Album|Ampache\Repository\Model\AlbumDisk|Ampache\Repository\Model\Playlist|Ampache\Repository\Model\Video $object */
+/** @var Ampache\Repository\Model\Song|Ampache\Repository\Model\Album|Ampache\Repository\Model\AlbumDisk|Ampache\Repository\Model\Playlist|Ampache\Repository\Model\Video|Ampache\Repository\Model\Podcast_Episode $object */
+/** @var string $object_type */
+/** @var string $token */
+/** @var bool $isZipable */
 
-$has_failed     = $message ?? false;
 $allow_stream   = $_REQUEST['allow_stream'] ?? false;
 $allow_download = $_REQUEST['allow_download'] ?? false;
 
 Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=create">
-<input type="hidden" name="type" value="<?php echo scrub_out(Core::get_request('type')); ?>" />
-<input type="hidden" name="id" value="<?php echo scrub_out(Core::get_request('id')); ?>" />
+<input type="hidden" name="type" value="<?php echo scrub_out($object_type); ?>" />
+<input type="hidden" name="id" value="<?php echo $object->getId(); ?>" />
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Share'); ?></td>
-    <td><?php echo $object->get_f_link() ?? '' ?></td>
+    <td><?php echo $object->get_f_link(); ?></td>
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>
-    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?? $this->passwordGenerator->generate_token()); ?>" />
+    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?? $token); ?>" />
         <?php echo AmpError::display('secret'); ?>
     </td>
 </tr>
@@ -62,13 +68,13 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
     <td><?php echo T_('Allow Stream'); ?></td>
     <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($allow_stream || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
-<?php if (((Core::get_request('type') == 'song' || Core::get_request('type') == 'video') && (Access::check_function('download')) || Access::check_function('batch_download'))) { ?>
+<?php if ((in_array($object_type, array('song', 'video', 'podcast_episode')) && (Access::check_function('download'))) || (Access::check_function('batch_download') && $isZipable)) { ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
-    <td><input type="checkbox" name="allow_download" value="1" <?php echo ($allow_stream || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
+    <td><input type="checkbox" name="allow_download" value="1" <?php echo ($allow_download || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
 <?php } ?>
-<?php if ($has_failed) { ?>
+<?php if ($has_failed !== false) { ?>
 <tr>
     <td>&nbsp;</td>
     <td><p class="alert alert-danger"><?php echo $message; ?></p></td>

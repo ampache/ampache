@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\User;
 
 final class PasswordGenerator implements PasswordGeneratorInterface
@@ -38,9 +39,9 @@ final class PasswordGenerator implements PasswordGeneratorInterface
         if ($length === null) {
             $length = rand(14, 20);
         }
-        $strong   = true;
-        $string   = openssl_random_pseudo_bytes((int) ceil($length * 0.67), $strong);
-        $encode   = str_replace('=', '', base64_encode($string));
+        $strong = true;
+        $string = openssl_random_pseudo_bytes((int) ceil($length * 0.67), $strong);
+        $encode = str_replace('=', '', base64_encode($string));
 
         return strtr($encode, '+/', '^*');
     }

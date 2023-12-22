@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
@@ -39,20 +39,18 @@ final class PlaylistAddSong3Method
     /**
      * playlist_add_song
      * This add a song to a playlist
-     * @param array $input
-     * @param User $user
      */
-    public static function playlist_add_song(array $input, User $user)
+    public static function playlist_add_song(array $input, User $user): void
     {
         unset($user);
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = (int)$input['song'];
         if (!$playlist->has_access()) {
-            echo Xml3_Data::error('401', T_('Access denied to this playlist.'));
+            echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
         } else {
             $playlist->add_songs(array($song));
             echo Xml3_Data::single_string('success');
         }
-    } // playlist_add_song
+    }
 }

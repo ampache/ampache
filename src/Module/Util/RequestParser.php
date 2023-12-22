@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,21 +23,52 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Util;
+
+use Ampache\Module\System\Core;
 
 final class RequestParser implements RequestParserInterface
 {
     /**
-     * Return a $REQUEST variable instead of calling directly
+     * Return a $_REQUEST variable instead of calling directly
      */
     public function getFromRequest(string $variable): string
     {
-        if (!array_key_exists($variable, $_REQUEST)) {
+        $variable = (string) ($_REQUEST[$variable] ?? '');
+        if ($variable === '') {
             return '';
         }
 
-        return scrub_in($_REQUEST[$variable]);
+        return scrub_in($variable);
+    }
+
+    /**
+     * Return a $_POST variable instead of calling directly
+     */
+    public function getFromPost(string $variable): string
+    {
+        $variable = (string) ($_POST[$variable] ?? '');
+        if ($variable === '') {
+            return '';
+        }
+
+        return scrub_in($variable);
+    }
+
+    /**
+     * Check if the form-submit is valid
+     *
+     * If the application expects a form-submit, check if it's actually
+     * a valid submit (by validating a session token).
+     * This method currently proxies the verification to a static method within
+     * the core-class to make it testable.
+     *
+     * @return bool True, if the form-submit is considered valid
+     *
+     * @see Core::form_verify()
+     */
+    public function verifyForm(string $formName): bool
+    {
+        return Core::form_verify($formName);
     }
 }

@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -25,9 +28,9 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
-/** @var array $fields */
-/** @var array $instances */
 /** @var LocalPlay $localplay */
+/** @var array $instances */
+/** @var array $fields */
 
 Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table class="tabledata striped-rows">

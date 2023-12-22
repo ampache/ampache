@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
@@ -38,7 +38,7 @@ use Ampache\Module\Api\Xml4_Data;
  */
 final class PlaylistGenerate4Method
 {
-    const ACTION = 'playlist_generate';
+    public const ACTION = 'playlist_generate';
 
     /**
      * playlist_generate
@@ -50,8 +50,6 @@ final class PlaylistGenerate4Method
      * 'forgotten' will search for tracks played before 'Statistics Day Threshold' days
      * 'unplayed' added in 400002 for searching unplayed tracks.
      *
-     * @param array $input
-     * @param User $user
      * mode   = (string)  'recent'|'forgotten'|'unplayed'|'random' //optional, default = 'random'
      * filter = (string)  $filter                       //optional, LIKE matched to song title
      * album  = (integer) $album_id                     //optional
@@ -61,10 +59,10 @@ final class PlaylistGenerate4Method
      * offset = (integer)                               //optional
      * limit  = (integer)                               //optional
      */
-    public static function playlist_generate(array $input, User $user)
+    public static function playlist_generate(array $input, User $user): void
     {
         // parameter defaults
-        $mode   = (array_key_exists('mode', $input) && in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true))
+        $mode = (array_key_exists('mode', $input) && in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true))
             ? $input['mode']
             : 'random';
         $format = (array_key_exists('format', $input) && in_array($input['format'], array('song', 'index', 'id'), true))
@@ -183,5 +181,5 @@ final class PlaylistGenerate4Method
                         echo Xml4_Data::songs($results, $user);
                 }
         }
-    } // playlist_generate
+    }
 }

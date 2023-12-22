@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,19 +23,19 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders the catalog-filters list
+ */
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
@@ -52,11 +55,10 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        require_once Ui::find_template('show_manage_filters.inc.php');
-
+        $this->ui->showBoxTop('Show Catalog Filters', 'box box_manage_filter');
+        $this->ui->show('show_manage_filters.inc.php');
+        $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
-        //$this->ui->showFooter();
 
         return null;
     }

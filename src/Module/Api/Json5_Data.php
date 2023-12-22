@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
@@ -52,7 +53,9 @@ use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Traversable;
 
 /**
  * Json5_Data Class
@@ -64,28 +67,27 @@ use Ampache\Repository\SongRepositoryInterface;
 class Json5_Data
 {
     // This is added so that we don't pop any webservers
-    private static $limit  = 5000;
-    private static $offset = 0;
+    private static ?int $limit = 5000;
+    private static int $offset = 0;
 
     /**
      * set_offset
      *
      * This takes an int and changes the offset
      *
-     * @param integer $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
+     * @param int $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
      */
-    public static function set_offset($offset)
+    public static function set_offset($offset): void
     {
         self::$offset = (int)$offset;
-    } // set_offset
+    }
 
     /**
      * set_limit
      *
      * This sets the limit for any ampache transactions
      *
-     * @param  integer $limit Set a limit on your results
-     * @return boolean
+     * @param int|string $limit Set a limit on your results
      */
     public static function set_limit($limit): bool
     {
@@ -93,10 +95,10 @@ class Json5_Data
             return false;
         }
 
-        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
+        self::$limit = (strtolower((string) $limit) == "none") ? null : (int)$limit;
 
         return true;
-    } // set_limit
+    }
 
     /**
      * error
@@ -104,18 +106,17 @@ class Json5_Data
      * This generates a JSON Error message
      * nothing fancy here...
      *
-     * @param  string $code Error code
-     * @param  string $string Error message
-     * @param  string $action Error method
-     * @param  string $type Error type
-     * @return string return error message JSON
+     * @param int|string $code Error code
+     * @param string $string Error message
+     * @param string $action Error method
+     * @param string $type Error type
      */
     public static function error($code, $string, $action, $type): string
     {
         $message = array("error" => array("errorCode" => (string) $code, "errorAction" => $action, "errorType" => $type, "errorMessage" => $string));
 
         return json_encode($message, JSON_PRETTY_PRINT);
-    } // error
+    }
 
     /**
      * success
@@ -123,9 +124,8 @@ class Json5_Data
      * This generates a standard JSON Success message
      * nothing fancy here...
      *
-     * @param  string $string success message
-     * @param  array  $return_data
-     * @return string return success message JSON
+     * @param string $string success message
+     * @param array $return_data
      */
     public static function success($string, $return_data = array()): string
     {
@@ -135,7 +135,7 @@ class Json5_Data
         }
 
         return json_encode($message, JSON_PRETTY_PRINT);
-    } // success
+    }
 
     /**
      * empty
@@ -143,20 +143,18 @@ class Json5_Data
      * This generates a JSON empty object
      * nothing fancy here...
      *
-     * @param  string $type object type
-     * @return string return empty JSON message
+     * @param string $type object type
      */
     public static function empty($type): string
     {
         return json_encode(array($type => array()), JSON_PRETTY_PRINT);
-    } // empty
+    }
 
     /**
      * genre_array
      *
      * This returns the formatted 'genre' array for a JSON document
-     * @param  array $tags
-     * @return array
+     * @param array $tags
      */
     private static function genre_array($tags): array
     {
@@ -184,17 +182,17 @@ class Json5_Data
         }
 
         return $JSON;
-    } // genre_array
+    }
 
     /**
      * indexes
      *
      * This takes an array of object_ids and return JSON based on the type of object
      *
-     * @param  array   $objects Array of object_ids (Mixed string|int)
-     * @param  string  $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param array $objects Array of object_ids (Mixed string|int)
+     * @param string $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param User $user
-     * @param  boolean $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
+     * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
     public static function indexes($objects, $type, $user, $include = false)
@@ -227,16 +225,15 @@ class Json5_Data
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
         }
-    } // indexes
+    }
 
     /**
      * live_streams
      *
      * This returns live_streams to the user, in a pretty JSON document with the information
      *
-     * @param  integer[] $live_streams
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "live_stream"
+     * @param int[] $live_streams
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function live_streams($live_streams, $object = true): string
     {
@@ -247,6 +244,9 @@ class Json5_Data
         $JSON = [];
         foreach ($live_streams as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
+            if ($live_stream->isNew()) {
+                continue;
+            }
             $live_stream->format();
             $JSON[] = array(
                 "id" => (string)$live_stream_id,
@@ -260,16 +260,15 @@ class Json5_Data
         $output = ($object) ? array("live_stream" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // live_streams
+    }
 
     /**
      * licenses
      *
      * This returns licenses to the user, in a pretty JSON document with the information
      *
-     * @param  integer[] $licenses Licence id's assigned to songs and artists
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "license"
+     * @param int[] $licenses Licence id's assigned to songs and artists
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function licenses($licenses, $object = true): string
     {
@@ -290,16 +289,15 @@ class Json5_Data
         $output = ($object) ? array("license" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // licenses
+    }
 
     /**
      * labels
      *
      * This returns labels to the user, in a pretty JSON document with the information
      *
-     * @param  integer[] $labels
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "label"
+     * @param int[] $labels
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function labels($labels, $object = true): string
     {
@@ -310,6 +308,9 @@ class Json5_Data
         $JSON = [];
         foreach ($labels as $label_id) {
             $label = new Label($label_id);
+            if ($label->isNew()) {
+                continue;
+            }
             $label->format();
             $JSON[] = array(
                 "id" => (string)$label_id,
@@ -327,16 +328,15 @@ class Json5_Data
         $output = ($object) ? array("label" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // labels
+    }
 
     /**
      * genres
      *
      * This returns genres to the user, in a pretty JSON document with the information
      *
-     * @param  integer[] $tags Genre id's to include
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "genre"
+     * @param int[] $tags Genre id's to include
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function genres($tags, $object = true): string
     {
@@ -362,7 +362,7 @@ class Json5_Data
         $output = ($object) ? array("genre" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // genres
+    }
 
     /**
      * artists
@@ -370,11 +370,11 @@ class Json5_Data
      * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
-     * @param  integer[]    $artists Artist id's to include
-     * @param  array        $include
-     * @param  User         $user
-     * @param  boolean      $encode
-     * @param  boolean      $object (whether to return as a named object array or regular array)
+     * @param int[] $artists Artist id's to include
+     * @param array $include
+     * @param User $user
+     * @param bool $encode
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "artist"
      */
     public static function artists($artists, $include, $user, $encode = true, $object = true)
@@ -388,7 +388,7 @@ class Json5_Data
         Rating::build_cache('artist', $artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
-            if (!isset($artist->id)) {
+            if ($artist->isNew()) {
                 continue;
             }
             $artist->format();
@@ -436,18 +436,18 @@ class Json5_Data
         }
 
         return $JSON;
-    } // artists
+    }
 
     /**
      * albums
      *
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
-     * @param  integer[]    $albums Album id's to include
-     * @param  array        $include
-     * @param  User         $user
-     * @param  boolean      $encode
-     * @param  boolean      $object (whether to return as a named object array or regular array)
+     * @param int[] $albums Album id's to include
+     * @param array|false $include
+     * @param User $user
+     * @param bool $encode
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
     public static function albums($albums, $include, $user, $encode = true, $object = true)
@@ -463,6 +463,9 @@ class Json5_Data
         $JSON = [];
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
             $album->format();
 
             $rating      = new Rating($album_id, 'album');
@@ -488,7 +491,7 @@ class Json5_Data
             }
 
             // Handle includes
-            $songs = (in_array("songs", $include))
+            $songs = ($include && in_array("songs", $include))
                 ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false)
                 : array();
 
@@ -516,18 +519,17 @@ class Json5_Data
         }
 
         return $JSON;
-    } // albums
+    }
 
     /**
      * playlists
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
-     * @param  array   $playlists Playlist id's to include
+     * @param array $playlists Playlist id's to include
      * @param User $user
-     * @param  boolean $songs
-     * @param  boolean $object (whether to return as a named object array or regular array)
-     * @return string  JSON Object "playlist"
+     * @param bool $songs
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function playlists($playlists, $user, $songs = false, $object = true): string
     {
@@ -601,16 +603,15 @@ class Json5_Data
         $output = ($object) ? array("playlist" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // playlists
+    }
 
     /**
      * shares
      *
      * This returns shares to the user, in a pretty json document with the information
      *
-     * @param  integer[] $shares Share id's to include
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "share"
+     * @param int[] $shares Share id's to include
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function shares($shares, $object = true): string
     {
@@ -657,16 +658,15 @@ class Json5_Data
         $output = ($object) ? array("share" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // shares
+    }
 
     /**
      * bookmarks
      *
      * This returns bookmarks to the user, in a pretty json document with the information
      *
-     * @param  integer[] $bookmarks Bookmark id's to include
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "bookmark"
+     * @param int[] $bookmarks Bookmark id's to include
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function bookmarks($bookmarks, $object = true): string
     {
@@ -699,16 +699,15 @@ class Json5_Data
         $output = ($object) ? array("bookmark" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // bookmarks
+    }
 
     /**
      * catalogs
      *
      * This returns catalogs to the user, in a pretty json document with the information
      *
-     * @param  integer[] $catalogs group of catalog id's
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "catalog"
+     * @param int[] $catalogs group of catalog id's
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function catalogs($catalogs, $object = true): string
     {
@@ -719,6 +718,9 @@ class Json5_Data
         $JSON = [];
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
+            if ($catalog === null) {
+                break;
+            }
             $catalog->format();
             $catalog_name           = $catalog->name;
             $catalog_type           = $catalog->catalog_type;
@@ -748,18 +750,17 @@ class Json5_Data
         $output = ($object) ? array("catalog" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // catalogs
+    }
 
     /**
      * podcasts
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param  integer[] $podcasts Podcast id's to include
-     * @param  User      $user
-     * @param  boolean   $episodes include the episodes of the podcast
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "podcast"
+     * @param int[] $podcasts Podcast id's to include
+     * @param User $user
+     * @param bool $episodes include the episodes of the podcast
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function podcasts($podcasts, $user, $episodes = false, $object = true): string
     {
@@ -767,27 +768,33 @@ class Json5_Data
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
         }
 
+        $podcastRepository = self::getPodcastRepository();
+
         $JSON = [];
         foreach ($podcasts as $podcast_id) {
-            $podcast = new Podcast($podcast_id);
-            $podcast->format();
+            $podcast = $podcastRepository->findById($podcast_id);
+
+            if ($podcast === null) {
+                continue;
+            }
+
             $rating              = new Rating($podcast_id, 'podcast');
             $user_rating         = $rating->get_user_rating($user->getId());
             $flag                = new Userflag($podcast_id, 'podcast');
             $art_url             = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
             $podcast_name        = $podcast->get_fullname();
-            $podcast_description = $podcast->description;
-            $podcast_language    = $podcast->f_language;
-            $podcast_copyright   = $podcast->f_copyright;
-            $podcast_feed_url    = $podcast->feed;
-            $podcast_generator   = $podcast->f_generator;
-            $podcast_website     = $podcast->f_website;
-            $podcast_build_date  = $podcast->f_lastbuilddate;
-            $podcast_sync_date   = $podcast->f_lastsync;
+            $podcast_description = $podcast->get_description();
+            $podcast_language    = scrub_out($podcast->getLanguage());
+            $podcast_copyright   = scrub_out($podcast->getCopyright());
+            $podcast_feed_url    = $podcast->getFeedUrl();
+            $podcast_generator   = scrub_out($podcast->getGenerator());
+            $podcast_website     = scrub_out($podcast->getWebsite());
+            $podcast_build_date  = $podcast->getLastBuildDate()->format(DATE_ATOM);
+            $podcast_sync_date   = $podcast->getLastSyncDate()->format(DATE_ATOM);
             $podcast_public_url  = $podcast->get_link();
             $podcast_episodes    = array();
             if ($episodes) {
-                $results          = $podcast->get_episodes();
+                $results          = $podcastRepository->getEpisodes($podcast);
                 $podcast_episodes = self::podcast_episodes($results, $user, false);
             }
             // Build this element
@@ -814,17 +821,17 @@ class Json5_Data
         $output = ($object) ? array("podcast" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // podcasts
+    }
 
     /**
      * podcast_episodes
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param  integer[]    $podcast_episodes Podcast_Episode id's to include
-     * @param  User         $user
-     * @param  boolean      $encode
-     * @param  boolean      $object (whether to return as a named object array or regular array)
+     * @param int[] $podcast_episodes Podcast_Episode id's to include
+     * @param User $user
+     * @param bool $encode
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
     public static function podcast_episodes($podcast_episodes, $user, $encode = true, $object = true)
@@ -835,6 +842,9 @@ class Json5_Data
         $JSON = array();
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
+            if ($episode->isNew()) {
+                continue;
+            }
             $episode->format();
             $rating      = new Rating($episode_id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -875,17 +885,17 @@ class Json5_Data
         $output = ($object) ? array("podcast_episode" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // podcast_episodes
+    }
 
     /**
      * songs
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
-     * @param  int[]   $songs
-     * @param  User    $user
-     * @param  boolean $encode
-     * @param  boolean $object (whether to return as a named object array or regular array)
+     * @param int[] $songs
+     * @param User $user
+     * @param bool $encode
+     * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "song"
      */
     public static function songs($songs, $user, $encode = true, $object = true)
@@ -903,9 +913,8 @@ class Json5_Data
         // Foreach the ids!
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
-
             // If the song id is invalid/null
-            if (!$song->id) {
+            if ($song->isNew()) {
                 continue;
             }
             $song->format();
@@ -957,7 +966,7 @@ class Json5_Data
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();
             $objArray['playcount']             = (int)$song->total_count;
-            $objArray['catalog']               = (int)$song->catalog;
+            $objArray['catalog']               = $song->getCatalogId();
             $objArray['composer']              = $song->composer;
             $objArray['channels']              = $song->channels;
             $objArray['comment']               = $song->comment;
@@ -974,8 +983,11 @@ class Json5_Data
 
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
-                    $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_',
-                        $metadata->getField()->getName());
+                    $meta_name = str_replace(
+                        array(' ', '(', ')', '/', '\\', '#'),
+                        '_',
+                        $metadata->getField()->getName()
+                    );
                     $objArray[$meta_name] = $metadata->getData();
                 }
             }
@@ -989,17 +1001,16 @@ class Json5_Data
         }
 
         return $JSON;
-    } // songs
+    }
 
     /**
      * videos
      *
      * This builds the JSON document for displaying video objects
      *
-     * @param  integer[] $videos Video id's to include
-     * @param  User      $user
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "video"
+     * @param int[] $videos Video id's to include
+     * @param User $user
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function videos($videos, $user, $object = true): string
     {
@@ -1010,6 +1021,9 @@ class Json5_Data
         $JSON = [];
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
+            if ($video->isNew()) {
+                continue;
+            }
             $video->format();
             $rating      = new Rating($video_id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -1035,7 +1049,7 @@ class Json5_Data
         $output = ($object) ? array("video" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // videos
+    }
 
     /**
      * democratic
@@ -1043,10 +1057,9 @@ class Json5_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param  array        $object_ids Object IDs
-     * @param  User         $user
-     * @param  boolean      $object (whether to return as a named object array or regular array)
-     * @return string       JSON Object "song"
+     * @param array $object_ids Object IDs
+     * @param User $user
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function democratic($object_ids, $user, $object = true): string
     {
@@ -1057,9 +1070,12 @@ class Json5_Data
 
         $JSON = [];
         foreach ($object_ids as $row_id => $data) {
-            /** @var Song $song */
             $className = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song      = new $className($data['object_id']);
+            /** @var Song $song */
+            $song = new $className($data['object_id']);
+            if ($song->isNew()) {
+                continue;
+            }
             $song->format();
 
             $rating      = new Rating($song->id, 'song');
@@ -1082,7 +1098,7 @@ class Json5_Data
                 "art" => $art_url,
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => ($rating->get_average_rating() ?: null),
+                "averagerating" => ($rating->get_average_rating() ?? null),
                 "playcount" => (int)$song->total_count,
                 "vote" => $democratic->get_vote($row_id)
             );
@@ -1090,19 +1106,14 @@ class Json5_Data
         $output = ($object) ? array("song" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // democratic
+    }
 
     /**
      * user
      *
      * This handles creating an JSON document for a user
-     *
-     * @param  User    $user User Object
-     * @param  boolean $fullinfo
-     * @param  boolean $object (whether to return as a named object array or regular array)
-     * @return string  JSON Object "user"
      */
-    public static function user(User $user, $fullinfo, $object = true): string
+    public static function user(User $user, bool $fullinfo, ?bool $object = true): string
     {
         $user->format();
         if ($fullinfo) {
@@ -1139,16 +1150,15 @@ class Json5_Data
         $output = ($object) ? array("user" => $JSON) : $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // user
+    }
 
     /**
      * users
      *
      * This handles creating an JSON document for a user list
      *
-     * @param  integer[] $users User id list
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "user"
+     * @param int[] $users User id list
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function users($users, $object = true): string
     {
@@ -1163,47 +1173,46 @@ class Json5_Data
         $output = ($object) ? array("user" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // users
+    }
 
     /**
      * shouts
      *
      * This handles creating an JSON document for a shout list
      *
-     * @param  integer[] $shouts Shout id list
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "shout"
+     * @param Traversable<Shoutbox> $shouts Shout id list
+     * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function shouts($shouts, $object = true): string
+    public static function shouts(Traversable $shouts, $object = true): string
     {
         $JSON = [];
-        foreach ($shouts as $shout_id) {
-            $shout    = new Shoutbox($shout_id);
-            $user     = new User($shout->user);
-            $objArray = array(
-                "id" => (string)$shout_id,
-                "date" => $shout->date,
-                "text" => $shout->text,
+
+        /** @var Shoutbox $shout */
+        foreach ($shouts as $shout) {
+            $user = new User($shout->getUserId());
+
+            $JSON[] = [
+                "id" => (string) $shout->getId(),
+                "date" => $shout->getDate()->getTimestamp(),
+                "text" => $shout->getText(),
                 "user" => array(
-                    "id" => (string) $shout->user,
-                    "username" => $user->username
+                    "id" => (string) $user->getId(),
+                    "username" => $user->getUsername()
                 )
-            );
-            $JSON[] = $objArray;
+            ];
         }
         $output = ($object) ? array("shout" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // shouts
+    }
 
     /**
      * timeline
      *
      * This handles creating an JSON document for an activity list
      *
-     * @param  integer[] $activities Activity id list
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "activity"
+     * @param int[] $activities Activity id list
+     * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function timeline($activities, $object = true): string
     {
@@ -1227,16 +1236,15 @@ class Json5_Data
         $output = ($object) ? array("activity" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // timeline
+    }
 
     /**
      * deleted
      *
      * This handles creating a JSON document for deleted items
      *
-     * @param  string $object_type ('song', 'podcast_episode', 'video')
-     * @param  array  $objects deleted object list
-     * @return string JSON Object "deleted"
+     * @param string $object_type ('song', 'podcast_episode', 'video')
+     * @param array $objects deleted object list
      */
     public static function deleted($object_type, $objects): string
     {
@@ -1293,7 +1301,7 @@ class Json5_Data
         $output = array("deleted_" . $object_type => $JSON);
 
         return json_encode($output, JSON_PRETTY_PRINT);
-    } // deleted
+    }
 
     /**
      * @deprecated Inject by constructor
@@ -1313,5 +1321,15 @@ class Json5_Data
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

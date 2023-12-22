@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,15 +45,12 @@ final class Stream4Method
      * Streams a given media file.
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
      *
-     * @param array $input
-     * @param User $user
      * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song'|'podcast'
      * bitrate = (integer) max bitrate for transcoding
      * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding SONG ONLY
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
-     * @return boolean
      */
     public static function stream(array $input, User $user): bool
     {
@@ -92,7 +90,7 @@ final class Stream4Method
             $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
-            Session::extend($input['auth']);
+            Session::extend($input['auth'], 'api');
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;
@@ -100,5 +98,5 @@ final class Stream4Method
         Api4::message('error', 'failed to create: ' . $url, '400', $input['api_format']);
 
         return true;
-    } // stream
+    }
 }

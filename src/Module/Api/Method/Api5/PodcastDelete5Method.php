@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,15 +23,16 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class PodcastDelete5Method
@@ -44,15 +47,12 @@ final class PodcastDelete5Method
      *
      * Delete an existing podcast.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of podcast to delete
-     * @return boolean
      */
     public static function podcast_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api5::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -63,23 +63,39 @@ final class PodcastDelete5Method
             return false;
         }
         $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
+        $podcast   = self::getPodcastRepository()->findById($object_id);
 
-        if (!$podcast->id) {
+        if ($podcast === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
-        if ($podcast->remove()) {
-            Api5::message('podcast ' . $object_id . ' deleted', $input['api_format']);
-            Catalog::count_table('podcast');
-        } else {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'filter', $input['api_format']);
-        }
+        self::getPodcastDeleter()->delete($podcast);
+
+        Api5::message('podcast ' . $object_id . ' deleted', $input['api_format']);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastDeleter(): PodcastDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastDeleterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

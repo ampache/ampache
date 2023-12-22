@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
@@ -37,17 +37,13 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class UsersMethod
 {
-    const ACTION = 'users';
+    public const ACTION = 'users';
 
     /**
      * users
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get ids and usernames for your site
-     *
-     * @param array $input
-     * @param User $user
-     * @return boolean
      */
     public static function users(array $input, User $user): bool
     {

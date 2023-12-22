@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -43,10 +44,7 @@ final class CatalogDeleteMethod
      *
      * Delete an existing catalog. (if it exists)
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) catalog_id to delete
-     * @return boolean
      */
     public static function catalog_delete(array $input, User $user): bool
     {
@@ -58,15 +56,15 @@ final class CatalogDeleteMethod
         }
         $catalog_id = (int)$input['filter'];
         $catalog    = Catalog::create_from_id($catalog_id);
-        if (!$catalog) {
+        if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
         if (!Catalog::delete($catalog_id)) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -74,5 +72,5 @@ final class CatalogDeleteMethod
         Api::message('Deleted Catalog: ' . $catalog_id, $input['api_format']);
 
         return true;
-    } // catalog_delete
+    }
 }
