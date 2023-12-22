@@ -71,7 +71,7 @@ As an end of year bonus you can access your own Ampache Wrapped from the user pa
 * Use your default album sort on browses and set it correctly
 * Filterbox bugs with playlists and labels
 * Update from tags didn't respect your tag order
-* Remote catalogs coudln't import song data correctly
+* Remote catalogs couldn't import song data correctly
 * Podcast episode downloads would be blocked from some redirects
 * get_recently_played SQL was really slow
 * Bitly plugin updated to v4 API
