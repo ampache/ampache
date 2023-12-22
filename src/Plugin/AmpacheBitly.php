@@ -137,6 +137,7 @@ class AmpacheBitly implements AmpachePluginInterface
 
             if ($result->link) {
                 debug_event('bitly.plugin', 'Bit.ly success: ' . $result->link, 4);
+
                 return $result->link;
             }
 
@@ -159,9 +160,9 @@ class AmpacheBitly implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['bitly_token'])) || !strlen(trim($data['bitly_group_guid']))) {
-            $data                   = array();
-            $data['bitly_token'] = Preference::get_by_user(-1, 'bitly_token');
-            $data['bitly_group_guid']  = Preference::get_by_user(-1, 'bitly_group_guid');
+            $data                     = array();
+            $data['bitly_token']      = Preference::get_by_user(-1, 'bitly_token');
+            $data['bitly_group_guid'] = Preference::get_by_user(-1, 'bitly_group_guid');
         }
 
         if (strlen(trim($data['bitly_token']))) {
