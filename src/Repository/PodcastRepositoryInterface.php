@@ -34,6 +34,13 @@ use Traversable;
 interface PodcastRepositoryInterface
 {
     /**
+     * Retrieve all podcast objects and maintain db-order
+     *
+     * @return Traversable<Podcast>
+     */
+    public function findAll(): Traversable;
+
+    /**
      * Searches for an existing podcast object by the feed url
      */
     public function findByFeedUrl(string $feedUrl): ?Podcast;
