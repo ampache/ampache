@@ -79,6 +79,11 @@ final class ConfigContainer implements ConfigContainerInterface
         return $this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '';
     }
 
+    /**
+     * Return a list of types which are zip-able
+     *
+     * @return list<string>
+     */
     public function getTypesAllowedForZip(): array
     {
         $typeList = $this->configuration[ConfigurationKeyEnum::ALLOWED_ZIP_TYPES] ?? null;

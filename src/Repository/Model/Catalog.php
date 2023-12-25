@@ -1078,9 +1078,15 @@ abstract class Catalog extends database_object
      * objects that are associated with this catalog. This is used
      * to build the stats box, it also calculates time.
      * @param int|null $catalog_id
-     * @return array
+     * @return array{
+     *  tags: int,
+     *  formatted_size: string,
+     *  time_text: string,
+     *  users: int,
+     *  connected: int
+     * }
      */
-    public static function get_stats($catalog_id = 0)
+    public static function get_stats($catalog_id = 0): array
     {
         $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::get_server_counts(0);
         $counts         = array_merge(self::getUserRepository()->getStatistics(), $counts);
