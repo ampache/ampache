@@ -5,6 +5,12 @@
 	backupGlobals="true"
 	bootstrap="tests/bootstrap.php"
 	colors="true"
+	displayDetailsOnTestsThatTriggerDeprecations="true"
+	displayDetailsOnTestsThatTriggerErrors="true"
+	displayDetailsOnTestsThatTriggerNotices="true"
+	displayDetailsOnTestsThatTriggerWarnings="true"
+	displayDetailsOnIncompleteTests="true"
+	displayDetailsOnSkippedTests="true"
 >
 	<coverage cacheDirectory="build/coverageCache" />
 	<source>

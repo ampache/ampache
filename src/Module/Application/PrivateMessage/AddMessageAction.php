@@ -81,8 +81,8 @@ final class AddMessageAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $subject = trim(strip_tags(filter_var($data['subject'] ?? '', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
-        $message = trim(strip_tags(filter_var($data['message'] ?? '', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
+        $subject = trim(strip_tags(htmlspecialchars($data['subject'] ?? '', ENT_NOQUOTES)));
+        $message = trim(strip_tags(htmlspecialchars($data['message'] ?? '', ENT_NOQUOTES)));
         $to_user = User::get_from_username($data['to_user'] ?? '');
 
         if (!$to_user) {

@@ -72,20 +72,22 @@ final class UpdateUserAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
+        $body = $request->getParsedBody();
+
         $this->ui->showHeader();
 
         /* Clean up the variables */
-        $user_id              = (int) filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
-        $username             = scrub_in((string) filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $fullname             = scrub_in((string) filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $user_id              = (int) ($body['user_id'] ?? 0);
+        $username             = scrub_in(htmlspecialchars($body['username'] ?? '', ENT_NOQUOTES));
+        $fullname             = scrub_in(htmlspecialchars($body['fullname'] ?? '', ENT_NOQUOTES));
         $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website              = scrub_in((string) filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $access               = (int)filter_input(INPUT_POST, 'access', FILTER_SANITIZE_NUMBER_INT);
-        $catalog_filter_group = (int)filter_input(INPUT_POST, 'catalog_filter_group', FILTER_SANITIZE_NUMBER_INT);
+        $website              = scrub_in(htmlspecialchars($body['website'] ?? '', ENT_NOQUOTES));
+        $access               = (int) ($body['access'] ?? 0);
+        $catalog_filter_group = (int) ($body['catalog_filter_group'] ?? 0);
         $pass1                = Core::get_post('password_1');
         $pass2                = Core::get_post('password_2');
-        $state                = scrub_in((string) filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $city                 = scrub_in((string) filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $state                = scrub_in(htmlspecialchars($body['state'] ?? '', ENT_NOQUOTES));
+        $city                 = scrub_in(htmlspecialchars($body['city'] ?? '', ENT_NOQUOTES));
         $fullname_public      = isset($_POST['fullname_public']);
 
         /* Setup the temp user */
