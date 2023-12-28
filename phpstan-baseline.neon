@@ -13526,11 +13526,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:updateAlbumTags\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:updateArtistTags\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -13897,11 +13892,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$tmp_playlist has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$user_votes has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
 

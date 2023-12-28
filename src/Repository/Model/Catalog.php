@@ -1628,25 +1628,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * get_catalog_map
-     *
-     * This returns an id of artist that have songs in this catalog
-     * @param string $object_type
-     * @param string $object_id
-     */
-    public static function get_catalog_map($object_type, $object_id): int
-    {
-        $sql = "SELECT MIN(`catalog_map`.`catalog_id`) AS `catalog_id` FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
-
-        $db_results = Dba::read($sql, array($object_type, $object_id));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['catalog_id'];
-        }
-
-        return 0;
-    }
-
-    /**
      * get_id_from_file
      *
      * Get media id from the file path.
@@ -3947,16 +3928,6 @@ abstract class Catalog extends database_object
         $params = array($new_object_id, $object_type, $old_object_id);
 
         return Dba::write($sql, $params);
-    }
-
-    /**
-     * Updates album tags from given album id
-     * @param int $album_id
-     */
-    protected static function updateAlbumTags(int $album_id)
-    {
-        $tags = self::getSongTags('album', $album_id);
-        Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true);
     }
 
     /**
