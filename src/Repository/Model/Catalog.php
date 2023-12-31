@@ -2420,8 +2420,7 @@ abstract class Catalog extends database_object
         $gather_types = array('music'),
         $sort_pattern = '',
         $rename_pattern = ''
-    ): array
-    {
+    ): array {
         $array   = array();
         $catalog = self::create_from_id($media->catalog);
         if ($catalog === null) {

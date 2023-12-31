@@ -29,16 +29,30 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
+use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 
 final class AdminUpdateDatabaseCommand extends Command
 {
-    public function __construct()
-    {
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    private Update\UpdateHelperInterface $updateHelper;
+
+    private Update\UpdaterInterface $updater;
+
+    public function __construct(
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        Update\UpdateHelperInterface $updateHelper,
+        Update\UpdaterInterface $updater
+    ) {
         parent::__construct('admin:updateDatabase', T_('Update the database to the latest version'));
 
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
             ->usage('<bold>  admin:updateDatabase</end> <comment> ## ' . T_('Display database update information') . '</end><eol/>');
+        $this->updateInfoRepository = $updateInfoRepository;
+        $this->updateHelper         = $updateHelper;
+        $this->updater              = $updater;
     }
 
     public function execute(): void
@@ -70,38 +84,52 @@ final class AdminUpdateDatabaseCommand extends Command
         }
         /* HINT: db version string (e.g. 5.2.0 Build: 006) */
         $interactor->info(
-            sprintf(T_('Database version: %s'), Update::format_version()),
+            sprintf(T_('Database version: %s'), $this->retrieveVersion()),
             true
         );
 
         // check tables
-        $missing = Update::check_tables($execute);
-        if (!empty($missing)) {
-            $message = ($execute)
-                ? T_('Missing database tables have been created')
-                : T_('Your database is missing these tables. Use -e|--execute to recreate them');
-            $interactor->info(
-                $message,
-                true
-            );
-            foreach ($missing as $table_name) {
-                /* HINT: filename (File path) OR table name (podcast, clip, etc) */
+        try {
+            $missing = $this->updater->checkTables($execute);
+            if ($missing->valid()) {
+                $message = ($execute)
+                    ? T_('Missing database tables have been created')
+                    : T_('Your database is missing these tables. Use -e|--execute to recreate them');
                 $interactor->info(
-                    sprintf(T_('Missing: %s'), $table_name),
+                    $message,
                     true
                 );
+                foreach ($missing as $table_name) {
+                    /* HINT: filename (File path) OR table name (podcast, clip, etc) */
+                    $interactor->info(
+                        sprintf(T_('Missing: %s'), $table_name),
+                        true
+                    );
+                }
             }
+        } catch (Update\Exception\UpdateFailedException $e) {
+            $interactor->error(
+                sprintf(
+                    T_('Update failed! %s'),
+                    $e->getMessage()
+                ),
+                true
+            );
+
+            return;
         }
 
-        if (Update::need_update() && $execute) {
+        if ($this->updater->hasPendingUpdates() && $execute) {
             $interactor->info(
                 "\n" . T_('Update Now!'),
                 true
             );
             $interactor->eol();
             $updated = true;
-            if (!Update::run_update($interactor)) {
-                $interactor->info(
+            try {
+                $this->updater->update($interactor);
+            } catch (Update\Exception\UpdateException $e) {
+                $interactor->error(
                     "\n" . T_('Error'),
                     true
                 );
@@ -110,15 +138,16 @@ final class AdminUpdateDatabaseCommand extends Command
             }
         }
 
-        if (Update::need_update()) {
-            $interactor->info(
+        if ($this->updater->hasPendingUpdates()) {
+            $interactor->warn(
                 "\n" . T_('The following updates need to be performed:'),
                 true
             );
         }
 
-        $result = Update::display_update();
-        if ($result === []) {
+        $result = $this->updater->getPendingUpdates();
+
+        if ($result->valid() === false) {
             if ($updated) {
                 // tell the user that the database was updated and the version
                 $interactor->info(
@@ -127,7 +156,7 @@ final class AdminUpdateDatabaseCommand extends Command
                 );
                 /* HINT: db version string (e.g. 5.2.0 Build: 006) */
                 $interactor->info(
-                    sprintf(T_('Database version: %s'), Update::format_version()),
+                    sprintf(T_('Database version: %s'), $this->retrieveVersion()),
                     true
                 );
             } else {
@@ -138,15 +167,24 @@ final class AdminUpdateDatabaseCommand extends Command
             }
         } else {
             foreach ($result as $updateInfo) {
-                $interactor->info(
-                    "\n" . $updateInfo['version'],
+                $interactor->cyan(
+                    "\n" . $updateInfo['versionFormatted'],
                     true
                 );
-                $interactor->info(
-                    str_replace(array("<b>", "</b>"), "", (str_replace(array("<br />"), "\n", $updateInfo['description']))),
-                    true
-                );
+                foreach ($updateInfo['migration']->getChangelog() as $changelog) {
+                    $interactor->white(
+                        sprintf('* %s', $changelog),
+                        true
+                    );
+                }
             }
         }
+    }
+
+    private function retrieveVersion(): string
+    {
+        return $this->updateHelper->formatVersion(
+            (string) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION)
+        );
     }
 }

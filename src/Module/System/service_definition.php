@@ -34,4 +34,10 @@ return [
     SessionInterface::class => autowire(Session::class),
     InstallationHelperInterface::class => autowire(InstallationHelper::class),
     PreferencesFromRequestUpdaterInterface::class => autowire(PreferencesFromRequestUpdater::class),
+    Update\UpdateHelperInterface::class => autowire(Update\UpdateHelper::class),
+    Update\UpdaterInterface::class => autowire(Update\Updater::class)
+        ->constructorParameter(
+            'updateRunner',
+            autowire(Update\UpdateRunner::class)
+        ),
 ];
