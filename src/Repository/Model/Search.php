@@ -114,6 +114,7 @@ class Search extends playlist_object
                     $this->$key = $value;
                 }
             }
+            }
             // make sure saved rules match the correct names
             $rule_count = 0;
             foreach ($this->rules as $rule) {
