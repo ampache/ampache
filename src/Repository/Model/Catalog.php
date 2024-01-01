@@ -4194,7 +4194,7 @@ abstract class Catalog extends database_object
                     $catalog_id = Catalog_local::get_from_path($add_path);
                     if (is_int($catalog_id)) {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => strlen($add_path)))) {
+                        if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => $add_path))) {
                             self::update_catalog_map($catalog->gather_types);
                         }
                     }
