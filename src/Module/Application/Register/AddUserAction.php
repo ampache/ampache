@@ -81,21 +81,6 @@ final class AddUserAction implements ApplicationActionInterface
             throw new AccessDeniedException('Error attempted registration');
         }
 
-        /* Don't even include it if we aren't going to use it */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
-            define('CAPTCHA_INVERSE', 1);
-            /**
-             * @todo broken, the path does not exist anylonger
-             */
-            define(
-                'CAPTCHA_BASE_URL',
-                sprintf(
-                    '%s/modules/captcha/captcha.php',
-                    $this->configContainer->getWebPath()
-                )
-            );
-            require_once __DIR__ . '/../../Util/Captcha/init.php';
-        }
         /**
          * User information has been entered
          * we need to check the database for possible existing username first

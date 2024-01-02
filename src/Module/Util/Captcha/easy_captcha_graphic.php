@@ -48,15 +48,15 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     public function __construct($x = null, $y = null)
     {
         if (!$y) {
-            $x = strtok(CAPTCHA_IMAGE_SIZE, "x,|/*;:");
+            $x = strtok(easy_captcha::CAPTCHA_IMAGE_SIZE, "x,|/*;:");
             $y = strtok(",.");
             $x = rand((int)$x * 0.9, (int)$x * 1.2);
             $y = rand((int)$y - 5, (int)$y + 15);
         }
         $this->width    = $x;
         $this->height   = $y;
-        $this->inverse  = CAPTCHA_INVERSE;
-        $this->bg       = CAPTCHA_BGCOLOR;
+        $this->inverse  = 1;
+        $this->bg       = self::CAPTCHA_BGCOLOR;
         $this->maxsize  = 0xFFFFF;
         $this->quality  = 66;
         $this->solution = $this->mkpass();
@@ -71,7 +71,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     public function font()
     {
         $fonts = array(/*"FreeMono.ttf"*/);
-        $fonts += glob(CAPTCHA_FONT_DIR . "/*.ttf");
+        $fonts += glob(__DIR__ . '/../../../../resources/fonts/*.ttf');
 
         return $fonts[rand(0, count($fonts) - 1)];
     }
@@ -94,7 +94,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
             "",
             $string
         );  // strips hard to discern letters, depends on used font type
-        $string = substr($string, 0, rand(CAPTCHA_MIN_CHARS, CAPTCHA_MAX_CHARS));
+        $string = substr($string, 0, rand(easy_captcha::CAPTCHA_MIN_CHARS, self::CAPTCHA_MAX_CHARS));
 
         return ($string);
     }

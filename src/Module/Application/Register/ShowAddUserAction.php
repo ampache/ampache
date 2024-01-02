@@ -60,7 +60,6 @@ final class ShowAddUserAction implements ApplicationActionInterface
      * @param ServerRequestInterface $request
      * @param GuiGatekeeperInterface $gatekeeper
      * @return ResponseInterface|null
-     * @todo drop copy/paste code from register action after fixing the captcha problem
      */
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
