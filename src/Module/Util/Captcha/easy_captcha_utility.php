@@ -39,8 +39,8 @@ class easy_captcha_utility
      */
     public static function tmp()
     {
-        return current(array_filter(// filter by writability
-            array_filter(// filter empty entries
+        return current(array_filter( // filter by writability
+            array_filter( // filter empty entries
                 array(
                     $_SERVER['TMPDIR'] ?? null,
                     $_SERVER['REDIRECT_TMPDIR'] ?? null,
@@ -121,7 +121,7 @@ class easy_captcha_utility
     }
 
     #-- send base javascript
-    public function js_base()
+    public static function js_base()
     {
         $captcha_new_urls = $_GET["captcha_new_urls"] ? 0 : 1;
         $BASE_URL         = easy_captcha::CAPTCHA_BASE_URL;
@@ -209,7 +209,7 @@ END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
      * @param string $print
      * @return string
      */
-    public function js_header($print = '')
+    public static function js_header($print = '')
     {
         header("Pragma: no-cache");
         header("Cache-Control: no-cache, no-store, must-revalidate, private");
@@ -228,7 +228,7 @@ END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
     /**
      * @param $yes
      */
-    public function js_rpc($yes)
+    public static function js_rpc($yes)
     {
         $yes         = $yes ? 1 : 0;
         $PARAM_INPUT = easy_captcha::CAPTCHA_PARAM_INPUT;
