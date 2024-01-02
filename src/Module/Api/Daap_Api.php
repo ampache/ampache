@@ -47,7 +47,8 @@ class Daap_Api
     public const AMPACHEID_SMARTPL = 400000000;
     public const BASE_LIBRARY      = 0;
 
-    public static $metas = array(
+    /** @var list<string> */
+    public static array $metas = [
         'dmap.itemid',
         'dmap.itemname',
         'dmap.itemkind',
@@ -81,9 +82,12 @@ class Daap_Api
         'daap.songdatakind',
         'daap.songdataurl',
         'com.apple.itunes.norm-volume'
-    );
+    ];
 
-    public static $tags = array();
+    /**
+     * @var array<string, array{type: string, code: string}>
+     */
+    public static array $tags = [];
 
     /**
      * follow_stream
@@ -135,8 +139,8 @@ class Daap_Api
     }
 
     /**
-     * @param $curl
-     * @param $data
+     * @param resource $curl
+     * @param string $data
      */
     public static function output_body($curl, $data): int
     {
@@ -147,8 +151,8 @@ class Daap_Api
     }
 
     /**
-     * @param $curl
-     * @param $header
+     * @param resource $curl
+     * @param string $header
      */
     public static function output_header($curl, $header): int
     {
@@ -165,7 +169,7 @@ class Daap_Api
 
     /**
      * server_info (Based on the server_info part of the forkedd-daapd project)
-     * @param $input
+     * @param array<mixed> $input
      */
     public static function server_info($input): void
     {
@@ -204,7 +208,7 @@ class Daap_Api
 
     /**
      * content_codes
-     * @param $input
+     * @param array<mixed> $input
      */
     public static function content_codes($input): void
     {
@@ -224,7 +228,7 @@ class Daap_Api
 
     /**
      * login
-     * @param $input
+     * @param array<mixed> $input
      */
     public static function login($input): void
     {
@@ -305,7 +309,7 @@ class Daap_Api
 
     /**
      * logout
-     * @param $input
+     * @param array<mixed> $input
      */
     public static function logout($input): void
     {
@@ -322,7 +326,7 @@ class Daap_Api
 
     /**
      * update
-     * @param $input
+     * @param array<mixed> $input
      */
     public static function update($input): void
     {
@@ -364,7 +368,7 @@ class Daap_Api
 
     /**
      * databases
-     * @param array $input
+     * @param array<mixed> $input
      */
     public static function databases($input): bool
     {

@@ -27,5 +27,6 @@ namespace Ampache\Config\Init\Exception;
 
 final class GetTextNotAvailableException extends InitializationException
 {
+    /** @var string */
     protected $message = 'Gettext extension is not installed';
 }

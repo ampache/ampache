@@ -27,5 +27,6 @@ namespace Ampache\Config\Init\Exception;
 
 final class ConfigFileNotParsableException extends InitializationException
 {
+    /** @var string */
     protected $message = 'Config file read error';
 }

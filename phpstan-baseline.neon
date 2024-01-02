@@ -91,11 +91,6 @@ parameters:
 			path: src/Config/ConfigContainer.php
 
 		-
-			message: "#^Method Ampache\\\\Config\\\\ConfigContainer\\:\\:getTypesAllowedForZip\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/ConfigContainer.php
-
-		-
 			message: "#^Method Ampache\\\\Config\\\\ConfigContainer\\:\\:updateConfig\\(\\) has parameter \\$configuration with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/ConfigContainer.php
@@ -111,39 +106,9 @@ parameters:
 			path: src/Config/ConfigContainerInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Config\\\\ConfigContainerInterface\\:\\:getTypesAllowedForZip\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/ConfigContainerInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Config\\\\ConfigContainerInterface\\:\\:updateConfig\\(\\) has parameter \\$configuration with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/ConfigContainerInterface.php
-
-		-
-			message: "#^Property Ampache\\\\Config\\\\Init\\\\Exception\\\\ConfigFileNotFoundException\\:\\:\\$message has no type specified\\.$#"
-			count: 1
-			path: src/Config/Init/Exception/ConfigFileNotFoundException.php
-
-		-
-			message: "#^Property Ampache\\\\Config\\\\Init\\\\Exception\\\\ConfigFileNotParsableException\\:\\:\\$message has no type specified\\.$#"
-			count: 1
-			path: src/Config/Init/Exception/ConfigFileNotParsableException.php
-
-		-
-			message: "#^Property Ampache\\\\Config\\\\Init\\\\Exception\\\\DatabaseOutdatedException\\:\\:\\$message has no type specified\\.$#"
-			count: 1
-			path: src/Config/Init/Exception/DatabaseOutdatedException.php
-
-		-
-			message: "#^Property Ampache\\\\Config\\\\Init\\\\Exception\\\\EnvironmentNotSuitableException\\:\\:\\$message has no type specified\\.$#"
-			count: 1
-			path: src/Config/Init/Exception/EnvironmentNotSuitableException.php
-
-		-
-			message: "#^Property Ampache\\\\Config\\\\Init\\\\Exception\\\\GetTextNotAvailableException\\:\\:\\$message has no type specified\\.$#"
-			count: 1
-			path: src/Config/Init/Exception/GetTextNotAvailableException.php
 
 		-
 			message: "#^Method Ampache\\\\Config\\\\Init\\\\Init\\:\\:__construct\\(\\) has parameter \\$initializationHandler with no value type specified in iterable type array\\.$#"
@@ -231,16 +196,6 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Method Ampache\\\\Gui\\\\GuiFactory\\:\\:createCatalogStats\\(\\) has parameter \\$stats with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Gui/GuiFactory.php
-
-		-
-			message: "#^Method Ampache\\\\Gui\\\\GuiFactoryInterface\\:\\:createCatalogStats\\(\\) has parameter \\$stats with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Gui/GuiFactoryInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Gui\\\\Playlist\\\\NewPlaylistDialogAdapterInterface\\:\\:getPlaylists\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Gui/Playlist/NewPlaylistDialogAdapterInterface.php
@@ -254,16 +209,6 @@ parameters:
 			message: "#^Method Ampache\\\\Gui\\\\Song\\\\SongViewAdapterInterface\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Gui/Song/SongViewAdapterInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Gui\\\\Stats\\\\CatalogStats\\:\\:__construct\\(\\) has parameter \\$stats with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Gui/Stats/CatalogStats.php
-
-		-
-			message: "#^Property Ampache\\\\Gui\\\\Stats\\\\CatalogStats\\:\\:\\$stats type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Gui/Stats/CatalogStats.php
 
 		-
 			message: "#^Method Ampache\\\\Gui\\\\System\\\\UpdateViewAdapter\\:\\:getUpdateInfo\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -391,57 +336,12 @@ parameters:
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:content_codes\\(\\) has parameter \\$input with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:createError\\(\\) has parameter \\$code with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:databases\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:get_type_id\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:login\\(\\) has parameter \\$input with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:logout\\(\\) has parameter \\$input with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:output_body\\(\\) has parameter \\$curl with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:output_body\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:output_header\\(\\) has parameter \\$curl with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:output_header\\(\\) has parameter \\$header with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:server_info\\(\\) has parameter \\$input with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Daap_Api.php
 
@@ -546,21 +446,6 @@ parameters:
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:update\\(\\) has parameter \\$input with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:\\$metas has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:\\$tags has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
 			message: "#^Parameter \\#1 \\$instance of static method Ampache\\\\Module\\\\Util\\\\InterfaceImplementationChecker\\:\\:is_library_item\\(\\) expects string, string\\|false\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/AbstractEditAction.php
@@ -579,21 +464,6 @@ parameters:
 			message: "#^Parameter \\#4 \\$libitem of method Ampache\\\\Module\\\\Api\\\\Edit\\\\AbstractEditAction\\:\\:handle\\(\\) expects Ampache\\\\Repository\\\\Model\\\\database_object, Ampache\\\\Repository\\\\Model\\\\library_item given\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/AbstractEditAction.php
-
-		-
-			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Edit\\\\EditObjectAction\\:\\:clean_to_existing\\(\\) has parameter \\$labels with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Edit\\\\EditObjectAction\\:\\:clean_to_existing\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/EditObjectAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, string\\|false\\|null given\\.$#"
@@ -13421,7 +13291,7 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_stats\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_stats\\(\\) should return array\\{tags\\: int, formatted_size\\: string, time_text\\: string, users\\: int, connected\\: int\\} but returns non\\-empty\\-array\\<int\\|string\\>\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
