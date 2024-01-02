@@ -390,7 +390,7 @@ class Catalog_local extends Catalog
             /* Now that we're sure its a file get filesize  */
             $file_size = Core::get_filesize($full_file);
 
-            if (!$file_size) {
+            if ($file_size === 0) {
                 debug_event('local.catalog', "Unable to get filesize for $full_file", 2);
                 /* HINT: FullFile */
                 AmpError::add('catalog_add', sprintf(T_('Unable to get the filesize for "%s"'), $full_file));
