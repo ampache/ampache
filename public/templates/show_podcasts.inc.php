@@ -24,7 +24,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -33,10 +33,11 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\PodcastRepositoryInterface;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Browse $browse */
 /** @var list<int> $object_ids */
 /** @var PodcastRepositoryInterface $podcastRepository */
 
+$webPath      = AmpConfig::get('web_path');
 $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_table     = $browse->is_grid_view();
@@ -51,12 +52,18 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     <ul>
         <?php if (Access::check('interface', 75)) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=show_create">
+            <a href="<?php echo $webPath; ?>/podcast.php?action=show_create">
                 <?php echo Ui::get_icon('add', T_('Add')); ?>
                 <?php echo T_('Subscribe to Podcast'); ?>
             </a>
         </li>
         <?php } ?>
+        <li>
+            <a href="<?php echo $webPath; ?>/podcast.php?action=export_podcasts" target="_blank">
+                <?php echo Ui::get_icon('download', T_('Export')); ?>
+                <?php echo T_('Export'); ?>
+            </a>
+        </li>
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {

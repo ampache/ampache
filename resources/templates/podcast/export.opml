@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+    <head>
+        <title tal:content="TITLE">TITLE</title>
+        <dateCreated tal:content="CREATION_DATE">CREATION-DATE</dateCreated>
+    </head>
+    <body>
+        <outline tal:repeat="podcast PODCASTS" tal:attributes="text podcast/title; language podcast/language; description podcast/description; xmlUrl podcast/feedUrl; htmlUrl podcast/website" />
+    </body>
+</opml>

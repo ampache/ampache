@@ -65,6 +65,35 @@ class PodcastRepositoryTest extends TestCase
         );
     }
 
+    public function testFindAllReturnsAllItems(): void
+    {
+        $result  = $this->createMock(PDOStatement::class);
+        $podcast = $this->createMock(Podcast::class);
+
+        $podcastId = 666;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `podcast`',
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $podcastId, false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcast')
+            ->with($podcastId)
+            ->willReturn($podcast);
+
+        static::assertSame(
+            [$podcast],
+            iterator_to_array($this->subject->findAll())
+        );
+    }
+
     public function testFindByFeedUrlReturnsNullIfNothingWasFound(): void
     {
         $feedUrl = 'some-url';

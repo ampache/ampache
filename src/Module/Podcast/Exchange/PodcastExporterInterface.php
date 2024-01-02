@@ -20,22 +20,19 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Podcast;
+namespace Ampache\Module\Podcast\Exchange;
 
-use Ampache\Module\Podcast\Feed\FeedLoader;
-use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
+interface PodcastExporterInterface
+{
+    /**
+     * Exports all podcasts-subscriptions and returns the result
+     */
+    public function export(): string;
 
-use function DI\autowire;
-
-return [
-    PodcastSyncerInterface::class => autowire(PodcastSyncer::class),
-    PodcastCreatorInterface::class => autowire(PodcastCreator::class),
-    FeedLoaderInterface::class => autowire(FeedLoader::class),
-    PodcastFolderProviderInterface::class => autowire(PodcastFolderProvider::class),
-    PodcastEpisodeDownloaderInterface::class => autowire(PodcastEpisodeDownloader::class),
-    PodcastDeleterInterface::class => autowire(PodcastDeleter::class),
-    Exchange\PodcastExporterInterface::class => autowire(Exchange\PodcastOpmlExporter::class),
-];
+    /**
+     * Returns the content-type of the export result
+     */
+    public function getContentType(): string;
+}
