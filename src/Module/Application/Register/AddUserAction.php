@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Register;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -52,14 +53,22 @@ final class AddUserAction implements ApplicationActionInterface
 
     private UserRepositoryInterface $userRepository;
 
+    private Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer;
+
+    private UiInterface $ui;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer,
+        UiInterface $ui
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->userRepository  = $userRepository;
+        $this->configContainer               = $configContainer;
+        $this->modelFactory                  = $modelFactory;
+        $this->userRepository                = $userRepository;
+        $this->registrationAgreementRenderer = $registrationAgreementRenderer;
+        $this->ui                            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -162,7 +171,12 @@ final class AddUserAction implements ApplicationActionInterface
 
         // If we've hit an error anywhere up there break!
         if (AmpError::occurred()) {
-            require_once Ui::find_template('show_user_registration.inc.php');
+            $this->ui->show(
+                'show_user_registration.inc.php',
+                [
+                    'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
+                ]
+            );
 
             return null;
         }
@@ -196,7 +210,13 @@ final class AddUserAction implements ApplicationActionInterface
 
         if ($userId <= 0) {
             AmpError::add('duplicate_user', T_("Failed to create user"));
-            require_once Ui::find_template('show_user_registration.inc.php');
+
+            $this->ui->show(
+                'show_user_registration.inc.php',
+                [
+                    'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
+                ]
+            );
 
             return null;
         }
