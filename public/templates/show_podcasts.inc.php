@@ -37,8 +37,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
 /** @var list<int> $object_ids */
 /** @var PodcastRepositoryInterface $podcastRepository */
 
-$webPath = AmpConfig::get('web_path');
-;
+$webPath      = AmpConfig::get('web_path');
 $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_table     = $browse->is_grid_view();
@@ -61,8 +60,8 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <?php } ?>
         <li>
             <a href="<?php echo $webPath; ?>/podcast.php?action=export_podcasts" target="_blank">
-                <?php echo Ui::get_icon('download', T_('Export subscriptions')); ?>
-                <?php echo T_('Export subscriptions'); ?>
+                <?php echo Ui::get_icon('download', T_('Export')); ?>
+                <?php echo T_('Export'); ?>
             </a>
         </li>
     </ul>
