@@ -134,8 +134,8 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     {
 
         #-- init
-        $single_pixel = (CAPTCHA_PIXEL <= 1);   // very fast
-        $greyscale2x2 = (CAPTCHA_PIXEL <= 2);   // quicker than exact smooth 2x2 copy
+        $single_pixel = (self::CAPTCHA_PIXEL <= 1);   // very fast
+        $greyscale2x2 = (self::CAPTCHA_PIXEL <= 2);   // quicker than exact smooth 2x2 copy
         $width        = $this->width;
         $height       = $this->height;
         $image        = &$this->img;

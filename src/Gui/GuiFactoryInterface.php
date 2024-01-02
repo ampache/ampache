@@ -73,6 +73,15 @@ interface GuiFactoryInterface
         Catalog $catalog
     ): CatalogDetailsInterface;
 
+    /**
+     * @param array{
+     *  tags: int,
+     *  formatted_size: string,
+     *  time_text: string,
+     *  users: int,
+     *  connected: int
+     * } $stats
+     */
     public function createCatalogStats(array $stats): CatalogStatsInterface;
 
     public function createUpdateViewAdapter(): UpdateViewAdapterInterface;

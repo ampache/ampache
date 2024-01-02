@@ -28,7 +28,6 @@ namespace Ampache\Module\Wanted;
 use MusicBrainz\Exception;
 use MusicBrainz\Filters\ArtistFilter;
 use MusicBrainz\MusicBrainz;
-use stdClass;
 
 final class MissingArtistFinder implements MissingArtistFinderInterface
 {

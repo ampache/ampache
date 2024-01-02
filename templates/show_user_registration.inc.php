@@ -30,6 +30,8 @@ use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Ui;
 
+/** @var Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer */
+
 $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
 $web_path = (string)AmpConfig::get('web_path', '');
 
@@ -78,7 +80,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                         <h3><?php echo T_('User Agreement'); ?></h3>
                         <div class="registrationAgreement">
                             <div class="agreementContent">
-                                <?php Registration::show_agreement(); ?>
+                                <?php echo $registrationAgreementRenderer->render(); ?>
                             </div>
                         </div>
                     <?php

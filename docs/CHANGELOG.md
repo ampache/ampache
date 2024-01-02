@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## Ampache 6.2.1
+
+### Added
+
+* Add podcast opml export to the podcasts page
+
+### Changed
+
+* Replace all remaining occurrences of FILTER_SANITIZE_STRING
+
+### Fixed
+
+* Skipping non-songs would create a runtime error
+* db update_600005 shouldn't use get_fullname which changed in update_600027
+* Upload page showing non-uploads
+* Showing extra title for podcasts
+* Captcha image generation
+* Don't show registration page when mail enabled
+* Search error loading empty rules
+* Add from path on the catalog admin page
+* Reading tags on bad files would load the bad tags
+* Stop trying to read bad files before loading tags
+
+## API 6.2.1
+
+**NO CHANGE**
+
 ## Ampache 6.2.0
 
 Builds for PHP 8.3 are now available!

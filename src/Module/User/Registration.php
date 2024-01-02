@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\User;
 
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Config\AmpConfig;
 
@@ -95,33 +94,6 @@ class Registration
             $mailer->setMessage($message);
             $mailer->send_to_group('admins');
         }
-
-        return true;
-    }
-
-    /**
-     * show_agreement
-     * This shows the registration agreement, /config/registration_agreement.php
-     */
-    public static function show_agreement(): bool
-    {
-        $filename = __DIR__ . '/../../../config/registration_agreement.php';
-
-        if (!file_exists($filename)) {
-            return false;
-        }
-
-        /* Check for existence */
-        $filepointer = fopen($filename, 'r');
-
-        if (!$filepointer) {
-            return false;
-        }
-
-        $data = fread($filepointer, Core::get_filesize($filename));
-
-        /* Scrub and show */
-        echo $data;
 
         return true;
     }

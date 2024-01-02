@@ -27,8 +27,43 @@ namespace Ampache\Gui\Stats;
 
 final class CatalogStats implements CatalogStatsInterface
 {
+    /** @var array{
+     *  tags: int,
+     *  formatted_size: string,
+     *  time_text: string,
+     *  users: int,
+     *  connected: int,
+     *  album?: int,
+     *  album_disk?: int,
+     *  artist?: int,
+     *  song?: int,
+     *  podcast?: int,
+     *  podcast_episode?: int,
+     *  items?: int,
+     *  video?: int,
+     *  user?: int
+     * } $stats
+     */
     private array $stats;
 
+    /**
+     * @param array{
+     *  tags: int,
+     *  formatted_size: string,
+     *  time_text: string,
+     *  users: int,
+     *  connected: int,
+     *  album?: int,
+     *  album_disk?: int,
+     *  artist?: int,
+     *  song?: int,
+     *  podcast?: int,
+     *  podcast_episode?: int,
+     *  items?: int,
+     *  video?: int,
+     *  user?: int
+     * } $stats
+     */
     public function __construct(
         array $stats
     ) {

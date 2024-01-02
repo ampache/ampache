@@ -27,13 +27,11 @@ namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -68,11 +66,13 @@ final class AddCatalogAction extends AbstractCatalogAction
 
         ob_end_flush();
 
+        $body = $request->getParsedBody();
+
         if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'none') {
             AmpError::add('general', T_('Please select a Catalog type'));
         }
 
-        if (!strlen(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) {
+        if (!strlen(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES))) {
             AmpError::add('general', T_('Please enter a Catalog name'));
         }
 

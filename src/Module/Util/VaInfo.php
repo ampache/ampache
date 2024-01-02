@@ -537,15 +537,20 @@ final class VaInfo implements VaInfoInterface
 
         // Iterate through the defined key order adding them to an ordered array.
         $returned_keys = array();
-        foreach ($order as$value) {
+        foreach ($order as $value) {
             if (array_key_exists($value, $results)) {
                 $returned_keys[] = $value;
             }
         }
 
-        // If we didn't find anything then default to everything.
+        // return a default list of items (if you get here this is probably a bad file)
         if (empty($returned_keys)) {
-            $returned_keys = $results;
+            debug_event(__CLASS__, "get_tag_type: Couln't find tags, this is probably a bad file", 5);
+            $returned_keys = array(
+                'getid3',
+                'filename',
+                'general'
+            );
         }
 
         // Unless they explicitly set it, add bitrate/mode/mime/etc.

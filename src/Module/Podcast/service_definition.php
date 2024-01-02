@@ -37,4 +37,5 @@ return [
     PodcastFolderProviderInterface::class => autowire(PodcastFolderProvider::class),
     PodcastEpisodeDownloaderInterface::class => autowire(PodcastEpisodeDownloader::class),
     PodcastDeleterInterface::class => autowire(PodcastDeleter::class),
+    Exchange\PodcastExporterInterface::class => autowire(Exchange\PodcastOpmlExporter::class),
 ];

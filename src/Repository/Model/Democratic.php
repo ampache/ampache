@@ -32,7 +32,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
-use PDOStatement;
 
 /**
  * This class handles democratic play, which is a fancy
@@ -55,7 +54,6 @@ class Democratic extends Tmp_Playlist
     public $tmp_playlist;
     public $object_ids = array();
     public $vote_ids   = array();
-    public $user_votes = array();
 
     /**
      * constructor

@@ -60,6 +60,22 @@ final class PodcastRepository implements PodcastRepositoryInterface
     }
 
     /**
+     * Retrieve all podcast objects and maintain db-order
+     *
+     * @return Generator<Podcast>
+     */
+    public function findAll(): Generator
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `podcast`',
+        );
+
+        while ($podcastId = $result->fetchColumn()) {
+            yield $this->modelFactory->createPodcast((int) $podcastId);
+        }
+    }
+
+    /**
      * Searches for an existing podcast object by the feed url
      */
     public function findByFeedUrl(

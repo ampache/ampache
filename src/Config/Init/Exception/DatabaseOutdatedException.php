@@ -27,5 +27,6 @@ namespace Ampache\Config\Init\Exception;
 
 final class DatabaseOutdatedException extends InitializationException
 {
+    /** @var string */
     protected $message = 'Database outdated - please update';
 }
