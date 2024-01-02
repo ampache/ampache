@@ -78,16 +78,16 @@ final class EditAction implements ApplicationActionInterface
             if ($license->isNew() === false) {
                 $this->licenseRepository->update(
                     $licenseId,
-                    (array_key_exists('name', $data)) ? (string)filter_var($data['name'], FILTER_SANITIZE_STRING) : '',
-                    (array_key_exists('description', $data)) ? (string)filter_var($data['description'], FILTER_SANITIZE_STRING) : '',
+                    (array_key_exists('name', $data)) ? htmlspecialchars($data['name']) : '',
+                    (array_key_exists('description', $data)) ? htmlspecialchars($data['description']) : '',
                     (array_key_exists('external_link', $data)) ? (string)filter_var($data['external_link'], FILTER_SANITIZE_URL) : ''
                 );
             }
             $text = T_('The License has been updated');
         } else {
             $this->licenseRepository->create(
-                (array_key_exists('name', $data)) ? (string)filter_var($data['name'], FILTER_SANITIZE_STRING) : '',
-                (array_key_exists('description', $data)) ? (string)filter_var($data['description'], FILTER_SANITIZE_STRING) : '',
+                (array_key_exists('name', $data)) ? htmlspecialchars($data['name']) : '',
+                (array_key_exists('description', $data)) ? htmlspecialchars($data['description']) : '',
                 (array_key_exists('external_link', $data)) ? (string)filter_var($data['external_link'], FILTER_SANITIZE_URL) : ''
             );
             $text = T_('A new License has been created');

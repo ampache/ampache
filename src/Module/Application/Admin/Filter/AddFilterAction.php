@@ -40,6 +40,7 @@ final class AddFilterAction extends AbstractFilterAction
     public const REQUEST_KEY = 'add_filter';
 
     private UiInterface $ui;
+
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
@@ -60,9 +61,11 @@ final class AddFilterAction extends AbstractFilterAction
             throw new AccessDeniedException();
         }
 
+        $body = $request->getParsedBody();
+
         $this->ui->showHeader();
 
-        $filter_name = scrub_in((string) filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $filter_name = scrub_in(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES));
         if (empty($filter_name)) {
             AmpError::add('name', T_('A filter name is required'));
         }

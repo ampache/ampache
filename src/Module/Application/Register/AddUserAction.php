@@ -91,7 +91,7 @@ final class AddUserAction implements ApplicationActionInterface
          * and 'click here to login' would just be a link back to index.php
          */
         $fullname = (string) scrub_in(Core::get_post('fullname'));
-        $username = (string) scrub_in(Core::get_post('username'));
+        $username = trim(scrub_in(Core::get_post('username')));
         $email    = (string) scrub_in(Core::get_post('email'));
         $pass1    = Core::get_post('password_1');
         $pass2    = Core::get_post('password_2');
@@ -120,7 +120,7 @@ final class AddUserAction implements ApplicationActionInterface
             }
         } // if they have to agree to something
 
-        if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
+        if ($username === '') {
             AmpError::add('username', T_('You must enter a Username'));
         }
 

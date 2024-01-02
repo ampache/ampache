@@ -52,13 +52,16 @@ final class ShowEditAction extends AbstractFilterAction
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;
         }
-        $filter_id   = (int) filter_input(INPUT_GET, 'filter_id', FILTER_SANITIZE_NUMBER_INT);
+
+        $body = $request->getParsedBody();
+
+        $filter_id = (int) ($body['filter_id'] ?? 0);
+
         $filter_name = $filter_id === 0
             ? 'DEFAULT'
-            : scrub_in((string) filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            : scrub_in(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES));
 
         $this->ui->showHeader();
-
         $this->ui->show(
             'show_edit_filter.inc.php',
             [
