@@ -84,7 +84,6 @@ final class ShowAddUserAction implements ApplicationActionInterface
                     $this->configContainer->getWebPath()
                 )
             );
-            require_once __DIR__ . '/../../Util/Captcha/init.php';
         }
 
         $this->ui->show(
