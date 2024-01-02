@@ -135,7 +135,12 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             return;
         }
         foreach ($info as $key => $value) {
-            $this->$key = $value;
+            if ($key == 'subtitle') {
+                /* @see Update::_update_600027 */
+                $this->version = $value;
+            } else {
+                $this->$key = $value;
+            }
         }
 
         // Little bit of formatting here
