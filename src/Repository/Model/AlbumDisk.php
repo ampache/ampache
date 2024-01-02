@@ -365,25 +365,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
-     * get_song_count_disk
-     *
-     * Returns the song_count id for an album disk
-     * @param int $album_id
-     * @param int $disk_id
-     */
-    public static function get_song_count_disk($album_id, $disk_id): int
-    {
-        $sql        = "SELECT `song_count` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ?;";
-        $db_results = Dba::read($sql, array($album_id, $disk_id));
-        $results    = Dba::fetch_assoc($db_results);
-        if (empty($results)) {
-            return 0;
-        }
-
-        return (int)$results['song_count'];
-    }
-
-    /**
      * Get item album_artist fullname.
      */
     public function get_artist_fullname(): ?string
