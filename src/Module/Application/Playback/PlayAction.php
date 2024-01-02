@@ -1069,7 +1069,7 @@ final class PlayAction implements ApplicationActionInterface
         $buf_all = '';
         $r_arr   = array($filepointer);
         $w_arr   = $e_arr = array();
-        $status  = stream_select($r_arr, $w_arr, $e_arr, 2);
+        $status  = stream_select($r_arr, $w_arr, $e_arr, null, null);
         if ($status === false) {
             $this->logger->error(
                 'stream_select failed.',
