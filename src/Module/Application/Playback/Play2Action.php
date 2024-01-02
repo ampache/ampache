@@ -958,7 +958,7 @@ final class Play2Action implements ApplicationActionInterface
         $end          = 0;
         $range_values = sscanf(Core::get_server('HTTP_RANGE'), "bytes=%d-%d", $start, $end);
 
-        if ($range_values > 0 && ($start > 0 || $end > 0)) {
+        if (!$transcode && $range_values > 0 && ($start > 0 || $end > 0)) {
             // Calculate stream size from byte range
             if ($range_values >= 2) {
                 $end = (int)min($end, $streamConfiguration['file_size'] - 1);
@@ -972,7 +972,7 @@ final class Play2Action implements ApplicationActionInterface
                     'Content-Range header received, which we cannot fulfill due to unknown final length (transcoding?)',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-            } elseif (!$transcode) {
+            } else {
                 $this->logger->debug(
                     'Content-Range header received, skipping ' . $start . ' bytes out of ' . $streamConfiguration['file_size'],
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -1030,7 +1030,7 @@ final class Play2Action implements ApplicationActionInterface
             }
         }
 
-        if ($random || $demo_id) {
+        if ($transcode || $random || $demo_id) {
             header('Accept-Ranges: none');
         } else {
             header('Accept-Ranges: bytes');
