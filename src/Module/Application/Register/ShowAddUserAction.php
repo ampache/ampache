@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,14 +42,18 @@ final class ShowAddUserAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private RegistrationAgreementRendererInterface $registrationAgreementRenderer;
+
     private UiInterface $ui;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
+        RegistrationAgreementRendererInterface $registrationAgreementRenderer,
         UiInterface $ui
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->configContainer               = $configContainer;
+        $this->registrationAgreementRenderer = $registrationAgreementRenderer;
+        $this->ui                            = $ui;
     }
 
     /**
@@ -60,14 +65,33 @@ final class ShowAddUserAction implements ApplicationActionInterface
     {
         /* Check Perms */
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === false &&
-            !Mailer::is_mail_enabled()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === false ||
+            ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === true && !Mailer::is_mail_enabled())
         ) {
             throw new AccessDeniedException('Error attempted registration');
         }
 
+        /* Don't even include it if we aren't going to use it */
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
+            define('CAPTCHA_INVERSE', 1);
+            /**
+             * @todo broken, the path does not exist any longer
+             */
+            define(
+                'CAPTCHA_BASE_URL',
+                sprintf(
+                    '%s/modules/captcha/captcha.php',
+                    $this->configContainer->getWebPath()
+                )
+            );
+            require_once __DIR__ . '/../../Util/Captcha/init.php';
+        }
+
         $this->ui->show(
             'show_user_registration.inc.php',
+            [
+                'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
+            ]
         );
 
         return null;

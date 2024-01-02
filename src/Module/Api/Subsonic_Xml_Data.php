@@ -447,7 +447,10 @@ class Subsonic_Xml_Data
      */
     public static function addSong($xml, $song_id, $elementName = 'song'): SimpleXMLElement
     {
-        $song        = new Song($song_id);
+        $song = new Song($song_id);
+        if ($song->isNew()) {
+            return $xml;
+        }
         $catalogData = self::_getCatalogData($song->getCatalogId(), (string)$song->file);
 
         // Don't create entries for disabled songs

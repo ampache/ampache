@@ -25,6 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User;
 
+use Ampache\Module\User\Registration\RegistrationAgreementRenderer;
+use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
+
 use function DI\autowire;
 
 return [
@@ -39,4 +42,5 @@ return [
     Authorization\UserKeyGeneratorInterface::class => autowire(Authorization\UserKeyGenerator::class),
     PrivateMessage\PrivateMessageCreatorInterface::class => autowire(PrivateMessage\PrivateMessageCreator::class),
     Tracking\UserTrackerInterface::class => autowire(Tracking\UserTracker::class),
+    RegistrationAgreementRendererInterface::class => autowire(RegistrationAgreementRenderer::class),
 ];
