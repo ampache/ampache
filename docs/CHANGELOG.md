@@ -12,6 +12,8 @@
 
 ### Fixed
 
+* Skipping non-songs would create a runtime error
+* db update_600005 shouldn't use get_fullname which changed in update_600027
 * Upload page showing non-uploads
 * Showing extra title for podcasts
 * Captcha image generation
