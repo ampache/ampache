@@ -9,15 +9,16 @@
 ### Changed
 
 * Replace all remaining occurrences of FILTER_SANITIZE_STRING
+* Enable `user_no_email_confirm` to disable email requirements for user registration. (When `mail_enable` is false registration was blocked)
 
 ### Fixed
 
 * Skipping non-songs would create a runtime error
-* db update_600005 shouldn't use get_fullname which changed in update_600027
+* db update_600005 shouldn't use `$album->get_fullname` which changed in update_600027
 * Upload page showing non-uploads
 * Showing extra title for podcasts
 * Captcha image generation
-* Don't show registration page when mail enabled
+* Registration check logic
 * Search error loading empty rules
 * Add from path on the catalog admin page
 * Reading tags on bad files would load the bad tags
