@@ -59,12 +59,11 @@ final class ValidateAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        /* Check Perms */
+        // Check allow_public_registration
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === false ||
-            ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === true && !Mailer::is_mail_enabled())
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === false
         ) {
-            throw new AccessDeniedException('Error attempted registration');
+            throw new AccessDeniedException('Error `allow_public_registration` disabled');
         }
 
         $username           = trim(scrub_in(Core::get_get('username')));
