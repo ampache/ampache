@@ -26,7 +26,7 @@ use Ampache\Module\Util\Captcha\easy_captcha_utility;
 
 define('NO_SESSION', 1);
 
-$dic = require __DIR__ . '/../../src/Config/Init.php';
+$dic = require __DIR__ . '/../src/Config/Init.php';
 
 ini_set('display_errors', '1');
 
