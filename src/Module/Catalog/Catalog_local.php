@@ -606,16 +606,16 @@ class Catalog_local extends Catalog
 
         $catalog_media_type = $this->gather_types;
         if ($catalog_media_type == 'music') {
+            Album::clear_cache();
             $media_type  = 'album';
-            $media_class = Album::class;
             $total       = self::count_table($media_type, $this->catalog_id);
         } elseif ($catalog_media_type == 'podcast') {
+            Podcast_Episode::clear_cache();
             $media_type  = 'podcast_episode';
-            $media_class = Podcast_Episode::class;
             $total       = self::count_table($media_type, $this->catalog_id);
         } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            Video::clear_cache();
             $media_type  = 'video';
-            $media_class = Video::class;
             $total       = self::count_table($media_type, $this->catalog_id);
         } else {
             return $total_updated;
@@ -626,7 +626,6 @@ class Catalog_local extends Catalog
         if ($total > 1000) {
             $chunks = floor($total / 1000) + 1;
         }
-        $media_class::clear_cache();
         while ($chunk < $chunks) {
             debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
             $total_updated += $this->_verify_chunk($media_type, $chunk, 1000);
