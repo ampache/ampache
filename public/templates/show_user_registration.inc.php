@@ -150,7 +150,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                     </div>
 
                     <?php if (AmpConfig::get('captcha_public_reg')) {
-                        echo captcha::form("&rarr;&nbsp;");
+                        echo captcha::form("&nbsp;");
                         echo AmpError::display('captcha');
                     } ?>
                     <div class="submit-registration">
