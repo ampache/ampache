@@ -5761,11 +5761,6 @@ parameters:
 			path: src/Module/Broadcast/Broadcast_Server.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:\\$tags\\.$#"
-			count: 3
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
@@ -5921,11 +5916,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_beetsremote.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:\\$tags\\.$#"
-			count: 6
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:add_file\\(\\) has parameter \\$dropbox with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_dropbox.php
@@ -6039,11 +6029,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:\\$videos_to_gather has no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:\\$tags\\.$#"
-			count: 4
-			path: src/Module/Catalog/Catalog_local.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:_check_chunk\\(\\) has parameter \\$chunk with no type specified\\.$#"
@@ -6669,11 +6654,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$interactor of method Ampache\\\\Module\\\\Playlist\\\\PlaylistExporterInterface\\:\\:export\\(\\) expects Ahc\\\\Cli\\\\IO\\\\Interactor, Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor given\\.$#"
 			count: 1
 			path: src/Module/Cli/ExportPlaylistCommand.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:\\$tags\\.$#"
-			count: 1
-			path: src/Module/Cli/PrintTagsCommand.php
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:eol\\(\\)\\.$#"
@@ -10206,21 +10186,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_utility.php
 
 		-
-			message: "#^Static call to instance method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:js_base\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
-			message: "#^Static call to instance method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:js_header\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
-			message: "#^Static call to instance method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:js_rpc\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Util/Environment.php
@@ -13146,11 +13111,6 @@ parameters:
 			path: src/Repository/Model/Browse.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:\\$tags\\.$#"
-			count: 2
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Access to an undefined static property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$aliases\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -13396,11 +13356,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_last_update\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_map\\(\\) has parameter \\$catalog with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -13528,11 +13483,6 @@ parameters:
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 3
 			path: src/Repository/Model/Catalog.php
 
 		-
@@ -14967,11 +14917,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:update_track\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:update_utime\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
