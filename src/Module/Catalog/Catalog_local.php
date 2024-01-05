@@ -624,12 +624,12 @@ class Catalog_local extends Catalog
         $chunks = 1;
         $chunk  = 0;
         if ($total > 10000) {
-            $chunks = floor($total / 10000) + 1;
+            $chunks = (int)floor($total / 10000) + 1;
         }
         debug_event('local.catalog', 'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")", 5);
         while ($chunk < $chunks) {
             debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
-            $this->count += $this->_verify_chunk($media_type, $chunk, 10000);
+            $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), 10000);
             $chunk++;
             $count++;
         }
