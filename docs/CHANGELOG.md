@@ -2,9 +2,14 @@
 
 ## Ampache 6.2.1
 
+The catalog verify process has been reworked a little. there were some bugs that would prevent you being able to 'finish' a catalog.
+
+Definitely set `catalog_verify_by_time` if you have a large catalog. This will allow you to do a verify in small batches over time and not repeat the same songs.
+
 ### Added
 
 * Add podcast opml export to the podcasts page
+* Advertise WebPlayer song info via MediaSession API / MPRIS
 
 ### Changed
 
