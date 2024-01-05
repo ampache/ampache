@@ -64,7 +64,7 @@ final class UtilityFactory implements UtilityFactoryInterface
         string $dirPattern = '',
         string $filePattern = '',
         bool $isLocal = true
-    ): VaInfoInterface {
+    ): VaInfo {
         return new VaInfo(
             $this->userRepository,
             $this->configContainer,
