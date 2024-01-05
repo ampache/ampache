@@ -8,6 +8,7 @@ Definitely set `catalog_verify_by_time` if you have a large catalog. This will a
 
 ### Added
 
+* Translations 2024-01
 * Add podcast opml export to the podcasts page
 * Advertise WebPlayer song info via MediaSession API / MPRIS
 
