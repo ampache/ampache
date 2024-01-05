@@ -1101,7 +1101,8 @@ class Video extends database_object implements
             $time = time();
         }
 
-        self::_update_item('update_time', $time, $video_id, 75);
+        $sql = "UPDATE `video` SET `update_time` = ? WHERE `id` = ?;";
+        Dba::write($sql, array($time, $video_id));
     }
 
     /**

@@ -1445,13 +1445,14 @@ class Song extends database_object implements
      * @param int $song_id
      * @param int $time
      */
-    public static function update_utime($song_id, $time = 0)
+    public static function update_utime($song_id, $time = 0): void
     {
         if (!$time) {
             $time = time();
         }
 
-        self::_update_item('update_time', $time, $song_id, 75, true);
+        $sql = "UPDATE `song` SET `update_time` = ? WHERE `id` = ?;";
+        Dba::write($sql, array($time, $song_id));
     }
 
     /**

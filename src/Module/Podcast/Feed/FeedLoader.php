@@ -66,7 +66,7 @@ final class FeedLoader implements FeedLoaderInterface
     public function load(
         string $feedUrl
     ): array {
-        $lastBuildDate = null;
+        $lastBuildDate = 0;
         $artUrl        = null;
 
         try {
