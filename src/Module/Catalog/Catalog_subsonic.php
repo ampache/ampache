@@ -242,6 +242,7 @@ class Catalog_subsonic extends Catalog
 
         $subsonic = $this->createClient();
 
+        $date       = time();
         $songsadded = 0;
         // Get all albums
         $offset = 0;
@@ -315,7 +316,7 @@ class Catalog_subsonic extends Catalog
         );
 
         // Update the last update value
-        $this->update_last_update();
+        $this->update_last_update($date);
 
         debug_event('subsonic.catalog', 'Catalog updated.', 4);
 

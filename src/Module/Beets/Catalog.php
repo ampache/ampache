@@ -251,12 +251,13 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         debug_event(self::class, 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
 
+        $date = time();
         /** @var Handler $parser */
         $parser = $this->getParser();
         $parser->setHandler($this, 'verifySong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'mtime', $this->last_update));
         $this->updateUi('verify', $this->verifiedSongs, null, true);
-        $this->update_last_update();
+        $this->update_last_update($date);
 
         return $this->verifiedSongs;
     }

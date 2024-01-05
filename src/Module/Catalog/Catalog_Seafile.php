@@ -449,6 +449,7 @@ class Catalog_Seafile extends Catalog
     {
         set_time_limit(0);
 
+        $date    = time();
         $results = 0;
         if ($this->seafile->prepare()) {
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
@@ -479,7 +480,7 @@ class Catalog_Seafile extends Catalog
                 }
             }
 
-            $this->update_last_update();
+            $this->update_last_update($date);
         }
 
         return $results;

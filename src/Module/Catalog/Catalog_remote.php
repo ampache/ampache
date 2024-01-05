@@ -292,6 +292,7 @@ class Catalog_remote extends Catalog
             sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info->songs), $remote_catalog_info->songs)
         );
 
+        $date = time();
         // Hardcoded for now
         $step       = 500;
         $current    = 0;
@@ -368,7 +369,7 @@ class Catalog_remote extends Catalog
         Ui::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));
 
         // Update the last update value
-        $this->update_last_update();
+        $this->update_last_update($date);
 
         return $songsadded;
     }

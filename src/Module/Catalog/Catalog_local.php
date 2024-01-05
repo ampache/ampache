@@ -601,8 +601,8 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $total_updated = 0;
-        $this->count   = 0;
+        $date        = time();
+        $this->count = 0;
 
         $catalog_media_type = $this->gather_types;
         if ($catalog_media_type == 'music') {
@@ -634,6 +634,7 @@ class Catalog_local extends Catalog
         }
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
         $this->update_last_update();
+        $this->update_last_update($date);
 
         return $total_updated;
     }

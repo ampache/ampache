@@ -2221,9 +2221,8 @@ abstract class Catalog extends database_object
      * update_last_update
      * updates the last_update of the catalog
      */
-    protected function update_last_update()
+    protected function update_last_update(int $date): void
     {
-        $date = time();
         self::_update_item('last_update', $date, $this->id);
     }
 
