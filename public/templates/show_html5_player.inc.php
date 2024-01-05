@@ -147,6 +147,12 @@ echo implode(',', $solutions); ?>",
             <?php } ?>
         });
 
+        // Allow control from the OS via e.g. MPRIS D-Bus interface on Linux
+        if ("mediaSession" in navigator) {
+            navigator.mediaSession.setActionHandler("nexttrack", () => { jplaylist.next(); });
+            navigator.mediaSession.setActionHandler("previoustrack", () => { jplaylist.previous(); });
+        }
+
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
             if (replaygainPersist === 'true' && replaygainEnabled === false) {
                 ToggleReplayGain();
@@ -176,6 +182,15 @@ echo implode(',', $solutions); ?>",
                         <?php if (AmpConfig::get('browser_notify')) { ?>
                         NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
                         <?php } ?>
+                        if ("mediaSession" in navigator) {
+                            // Allow the browser to expose what's playing the the OS via e.g. MPRIS on Linux
+                            navigator.mediaSession.metadata = new MediaMetadata({
+                                title: obj.title,
+                                artist: obj.artist,
+                                artwork: [{ src: currentjpitem.attr("data-poster") }]
+                            });
+                            navigator.mediaSession.playbackState = "playing";
+                        }
                         ApplyReplayGain();
                     }
                     if (brkey != '') {
@@ -299,6 +314,9 @@ echo implode(',', $solutions); ?>",
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
             if (brkey != '') {
                 sendBroadcastMessage('PLAYER_PLAY', 0);
+            }
+            if ("mediaSession" in navigator) {
+                navigator.mediaSession.playbackState = "paused";
             }
         });
 
