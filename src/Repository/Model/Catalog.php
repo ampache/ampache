@@ -1253,15 +1253,24 @@ abstract class Catalog extends database_object
      * count_table
      *
      * Count and/or Update a table count when adding/removing from the server
-     * @param string $table
-     * @param int $catalog_id
      */
-    public static function count_table($table, $catalog_id = 0): int
+    public static function count_table(string $table, ?int $catalog_id = 0, ?int $update_time = 0): int
     {
-        $sql = ($catalog_id > 0)
-            ? "SELECT COUNT(`id`) FROM `$table` WHERE `catalog` = $catalog_id;"
-            : "SELECT COUNT(`id`) FROM `$table`;";
-        $db_results = Dba::read($sql);
+        $sql       = "SELECT COUNT(`id`) FROM `$table` ";
+        $params    = array();
+        $where_sql = 'WHERE';
+        if ($catalog_id > 0) {
+            $sql .= $where_sql . " `catalog` = ? ";
+            $params[]  = $catalog_id;
+            $where_sql = 'AND';
+        }
+        if ($update_time > 0) {
+            $sql .= $where_sql . " `update_time` <= ? ";
+            $params[] = $update_time;
+        }
+        $sql = rtrim($sql, ';');
+        //debug_event(self::class, 'count_table ' . $sql . ' ' . print_r($params, true), 5);
+        $db_results = Dba::read($sql, $params);
         $row        = Dba::fetch_row($db_results);
         if (empty($row)) {
             return 0;
@@ -2376,17 +2385,19 @@ abstract class Catalog extends database_object
             $genres = self::getSongTags('artist', $libitem->id);
             Tag::update_tag_list(implode(',', $genres), 'artist', $libitem->id, true);
         }
-        // check counts
-        if ($album || $maps) {
-            Album::update_table_counts();
-        }
-        if ($artist || $maps) {
-            Artist::update_table_counts();
-        }
-        // collect the garbage too
-        if ($album || $artist || $maps) {
-            Artist::garbage_collection();
-            static::getAlbumRepository()->collectGarbage();
+        if ($type !== 'song') {
+            // check counts
+            if ($album || $maps) {
+                Album::update_table_counts();
+            }
+            if ($artist || $maps) {
+                Artist::update_table_counts();
+            }
+            // collect the garbage too
+            if ($album || $artist || $maps) {
+                Artist::garbage_collection();
+                static::getAlbumRepository()->collectGarbage();
+            }
         }
 
         return array(
@@ -2855,6 +2866,9 @@ abstract class Catalog extends database_object
             if ($song->license != $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
             }
+        } else {
+            // always update the time when you update
+            Song::update_utime($song->id);
         }
 
         // If song rating tag exists and is well formed (array user=>rating), update it
@@ -2866,9 +2880,6 @@ abstract class Catalog extends database_object
                 $o_rating->set_rating((int)$rating, $user);
             }
         }
-        // lets always update the time when you update
-        $update_time = time();
-        Song::update_utime($song->id, $update_time);
         if ($map_change) {
             $info['change'] = true;
             $info['maps']   = true;
@@ -2922,10 +2933,10 @@ abstract class Catalog extends database_object
                 Tag::update_tag_list(implode(',', $new_video->tags), 'video', $video->id, true);
             }
             Video::update_video_counts($video->id);
+        } else {
+            // always update the time when you update
+            Video::update_utime($video->id);
         }
-        // lets always update the time when you update
-        $update_time = time();
-        Video::update_utime($video->id, $update_time);
 
         return $info;
     }
@@ -4396,7 +4407,7 @@ abstract class Catalog extends database_object
     /**
      * @deprecated
      */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
+    protected static function getAlbumRepository(): AlbumRepositoryInterface
     {
         global $dic;
 
