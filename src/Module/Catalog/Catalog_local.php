@@ -673,7 +673,7 @@ class Catalog_local extends Catalog
             case 'video':
             default:
                 $sql = ($verify_by_time)
-                    ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->catalog_id . " AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`file` LIMIT $count, $chunk_size"
+                    ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->catalog_id . " AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`update_time` LIMIT $count, $chunk_size"
                     : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->catalog_id . " ORDER BY `$tableName`.`file` LIMIT $count, $chunk_size";
                 break;
         }
