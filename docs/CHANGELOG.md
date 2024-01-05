@@ -10,6 +10,9 @@
 
 * Replace all remaining occurrences of FILTER_SANITIZE_STRING
 * Enable `user_no_email_confirm` to disable email requirements for user registration. (When `mail_enable` is false registration was blocked)
+* Verify catalog by song instead of album
+* Verify by file since `last_update` (verify was going through all albums in order of `update_time`)
+* Don't update counts and collect garbage after updating individual songs
 
 ### Fixed
 
@@ -23,6 +26,9 @@
 * Add from path on the catalog admin page
 * Reading tags on bad files would load the bad tags
 * Stop trying to read bad files before loading tags
+* Catalog update dates were set when the process was finished which negates `update_time` checks
+* Song `update_time` wasn't allowed to update
+* Check `update_time` in Catalog::count_table sql so you only verify what you need to
 
 ## API 6.2.1
 
