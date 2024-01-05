@@ -11,7 +11,7 @@
 * Replace all remaining occurrences of FILTER_SANITIZE_STRING
 * Enable `user_no_email_confirm` to disable email requirements for user registration. (When `mail_enable` is false registration was blocked)
 * Verify catalog by song instead of album
-* Verify by file since `last_update` (verify was going through all albums in order of `update_time`)
+* Catalog verify will now use the config option `catalog_verify_by_time` and only check songs not updated since the last full verify
 * Don't update counts and collect garbage after updating individual songs
 
 ### Fixed
