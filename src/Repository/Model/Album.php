@@ -152,9 +152,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $this->artist_name   = T_('Various');
             $this->f_artist_name = T_('Various');
         }
-
-        // finally; set up your formatted name
-        $this->f_name = $this->get_fullname();
     }
 
     public function getId(): int
