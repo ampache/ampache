@@ -1194,49 +1194,59 @@ class Subsonic_Api
             }
         }
 
-        $artistCount  = $input['artistCount'] ?? 20;
-        $artistOffset = $input['artistOffset'] ?? 0;
-        $albumCount   = $input['albumCount'] ?? 20;
-        $albumOffset  = $input['albumOffset'] ?? 0;
-        $songCount    = $input['songCount'] ?? 20;
-        $songOffset   = $input['songOffset'] ?? 0;
+        $artistCount   = $input['artistCount'] ?? 20;
+        $artistOffset  = $input['artistOffset'] ?? 0;
+        $albumCount    = $input['albumCount'] ?? 20;
+        $albumOffset   = $input['albumOffset'] ?? 0;
+        $songCount     = $input['songCount'] ?? 20;
+        $songOffset    = $input['songOffset'] ?? 0;
+        $musicFolderId = $input['musicFolderId'] ?? 0;
 
-        $data          = array();
-        $data['limit'] = $artistCount;
-        if ($artistOffset) {
-            $data['offset'] = $artistOffset;
-        }
-        $data['rule_1_input']    = $query;
-        $data['rule_1_operator'] = $operator;
-        $data['rule_1']          = 'title';
-        $data['type']            = 'artist';
         if ($artistCount > 0) {
+            $data                    = array();
+            $data['limit']           = $artistCount;
+            $data['offset']          = $artistOffset;
+            $data['type']            = 'artist';
+            $data['rule_1_input']    = $query;
+            $data['rule_1_operator'] = $operator;
+            $data['rule_1']          = 'title';
+            if ($musicFolderId > 0) {
+                $data['rule_2_input']    = $musicFolderId;
+                $data['rule_2_operator'] = 0;
+                $data['rule_2']          = 'catalog';
+            }
             $artists = Search::run($data, $user);
         }
 
-        $data          = array();
-        $data['limit'] = $albumCount;
-        if ($albumOffset) {
-            $data['offset'] = $albumOffset;
-        }
-        $data['rule_1_input']    = $query;
-        $data['rule_1_operator'] = $operator;
-        $data['rule_1']          = 'title';
-        $data['type']            = 'album';
         if ($albumCount > 0) {
+            $data                    = array();
+            $data['limit']           = $albumCount;
+            $data['offset']          = $albumOffset;
+            $data['type']            = 'album';
+            $data['rule_1_input']    = $query;
+            $data['rule_1_operator'] = $operator;
+            $data['rule_1']          = 'title';
+            if ($musicFolderId > 0) {
+                $data['rule_2_input']    = $musicFolderId;
+                $data['rule_2_operator'] = 0;
+                $data['rule_2']          = 'catalog';
+            }
             $albums = Search::run($data, $user);
         }
 
-        $data          = array();
-        $data['limit'] = $songCount;
-        if ($songOffset) {
-            $data['offset'] = $songOffset;
-        }
-        $data['rule_1_input']    = $query;
-        $data['rule_1_operator'] = $operator;
-        $data['rule_1']          = 'title';
-        $data['type']            = 'song';
         if ($songCount > 0) {
+            $data                    = array();
+            $data['limit']           = $songCount;
+            $data['offset']          = $songOffset;
+            $data['type']            = 'song';
+            $data['rule_1_input']    = $query;
+            $data['rule_1_operator'] = $operator;
+            $data['rule_1']          = 'title';
+            if ($musicFolderId > 0) {
+                $data['rule_2_input']    = $musicFolderId;
+                $data['rule_2_operator'] = 0;
+                $data['rule_2']          = 'catalog';
+            }
             $songs = Search::run($data, $user);
         }
 
