@@ -337,7 +337,7 @@ class Stats
         $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int)($results['total_count']??0);
+        return (int)($results['total_count'] ?? 0);
     }
 
     /**
