@@ -35,6 +35,9 @@ Definitely set `catalog_verify_by_time` if you have a large catalog. This will a
 * Catalog update dates were set when the process was finished which negates `update_time` checks
 * Song `update_time` wasn't allowed to update
 * Check `update_time` in Catalog::count_table sql so you only verify what you need to
+* Empty result error on Stats::get_object_count
+* Subsonic
+  * Search2 and Search3 ignored musicFolderId
 
 ## API 6.2.1
 
