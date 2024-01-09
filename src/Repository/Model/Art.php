@@ -779,7 +779,7 @@ class Art extends database_object
      * @param array{width: int, height: int} $size
      * @return array{thumb?: string, thumb_mime?: string}
      */
-    public function get_thumb($size)
+    public function get_thumb($size): array
     {
         $sizetext   = $size['width'] . 'x' . $size['height'];
         $sql        = "SELECT `image`, `mime` FROM `image` WHERE `size` = ? AND `object_type` = ? AND `object_id` = ? AND `kind` = ?";
@@ -830,7 +830,7 @@ class Art extends database_object
      * @param string $mime
      * @return array{thumb?: string, thumb_mime?: string}
      */
-    public function generate_thumb($image, $size, $mime)
+    public function generate_thumb($image, $size, $mime): array
     {
         $data = explode('/', (string) $mime);
         $type = ((string)($data[1] ?? '') !== '') ? strtolower((string) $data[1]) : 'jpg';

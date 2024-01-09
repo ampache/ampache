@@ -152,7 +152,7 @@ class AmpacheXbmc extends localplay_controller
      * This returns a key'd array of the instance information with
      * [UID]=>[NAME]
      */
-    public function get_instances()
+    public function get_instances(): array
     {
         $sql        = "SELECT * FROM `localplay_xbmc` ORDER BY `name`";
         $db_results = Dba::query($sql);
@@ -202,7 +202,7 @@ class AmpacheXbmc extends localplay_controller
      * @param string $instance
      * @return array
      */
-    public function get_instance($instance = '')
+    public function get_instance($instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('xbmc_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";

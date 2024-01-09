@@ -139,7 +139,7 @@ abstract class localplay_controller
      * @param $url
      * @return array
      */
-    public function parse_url($url)
+    public function parse_url($url): array
     {
         // Define possible 'primary' keys
         $primary_array = array('oid', 'demo_id', 'random');

@@ -271,7 +271,7 @@ class Core
      * @param string $image_data
      * @return array{width: int, height: int}
      */
-    public static function image_dimensions($image_data)
+    public static function image_dimensions($image_data): array
     {
         $empty = array(
             'width' => 0,
@@ -429,7 +429,7 @@ class Core
      * @param array $options
      * @return array
      */
-    public static function requests_options($options = array())
+    public static function requests_options($options = array()): array
     {
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {

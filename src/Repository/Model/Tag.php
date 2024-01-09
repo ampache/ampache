@@ -328,7 +328,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * Get merged tags to this tag.
      * @return array
      */
-    public function get_merged_tags()
+    public function get_merged_tags(): array
     {
         $sql = "SELECT `tag`.`id`, `tag`.`name`FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
 
@@ -541,7 +541,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param int $limit
      * @return array
      */
-    public static function get_top_tags($type, $object_id, $limit = 10)
+    public static function get_top_tags($type, $object_id, $limit = 10): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();
@@ -598,7 +598,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param int $offset
      * @return int[]
      */
-    public static function get_tag_objects($type, $tag_id, $count = 0, $offset = 0)
+    public static function get_tag_objects($type, $tag_id, $count = 0, $offset = 0): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();
@@ -638,7 +638,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $offset
      * @return int[]
      */
-    public static function get_tag_ids($type, $count = '', $offset = '')
+    public static function get_tag_ids($type, $count = '', $offset = ''): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();
@@ -678,7 +678,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $order
      * @return array
      */
-    public static function get_tags($type = '', $limit = 0, $order = 'count')
+    public static function get_tags($type = '', $limit = 0, $order = 'count'): array
     {
         if (parent::is_cached('tags_list', 'no_name')) {
             //debug_event(self::class, 'Tags list found into cache memory!', 5);
@@ -860,7 +860,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param int $user_id
      * @return array
      */
-    public function count($type = '', $user_id = 0)
+    public function count($type = '', $user_id = 0): array
     {
         $params = array($this->id);
 
@@ -939,7 +939,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords        = [];
         $keywords['tag'] = [
@@ -987,7 +987,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array();
     }
@@ -997,7 +997,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -1009,7 +1009,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if ($filter_type) {

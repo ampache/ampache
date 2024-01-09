@@ -50,7 +50,7 @@ class Ldap
      * @param array $searchresult
      * @return array
      */
-    private static function clean_search_results($searchresult)
+    private static function clean_search_results($searchresult): array
     {
         $sr_clean = [];
 
@@ -78,7 +78,7 @@ class Ldap
      * @param callable-string $callback
      * @return array
      */
-    private static function array_filter_key($array, $callback)
+    private static function array_filter_key($array, $callback): array
     {
         return array_filter($array, $callback, ARRAY_FILTER_USE_KEY);
     }
@@ -180,7 +180,7 @@ class Ldap
      * @return array
      * @throws LdapException
      */
-    private static function search($link, $base_dn, $filter, $only_one_result = true)
+    private static function search($link, $base_dn, $filter, $only_one_result = true): array
     {
         debug_event(self::class, "searching in `$base_dn` for `$filter`", 5);
 
@@ -216,7 +216,7 @@ class Ldap
      * @param string $password
      * @return array
      */
-    public static function auth($username, $password)
+    public static function auth($username, $password): array
     {
         try {
             $link = self::connect();

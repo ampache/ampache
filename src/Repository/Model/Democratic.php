@@ -150,7 +150,7 @@ class Democratic extends Tmp_Playlist
      * This returns all of the current valid 'Democratic' Playlists that have been created.
      * @return int[]
      */
-    public static function get_playlists()
+    public static function get_playlists(): array
     {
         $sql = "SELECT `id` FROM `democratic` ORDER BY `name`";
 
@@ -197,7 +197,7 @@ class Democratic extends Tmp_Playlist
      * @param int $limit
      * @return array
      */
-    public function get_items($limit = null)
+    public function get_items($limit = null): array
     {
         // Remove 'unconnected' users votes
         if (AmpConfig::get('demo_clear_sessions')) {
@@ -306,7 +306,7 @@ class Democratic extends Tmp_Playlist
      * This returns all of the song_ids for songs that have happened within
      * the last 'cooldown' for this user.
      */
-    public function get_cool_songs()
+    public function get_cool_songs(): array
     {
         // Convert cooldown time to a timestamp in the past
         $cool_time = time() - ($this->cooldown * 60);

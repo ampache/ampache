@@ -163,7 +163,7 @@ trait Metadata
      * Get all disabled Metadata field names
      * @return array
      */
-    public function getDisabledMetadataFields()
+    public function getDisabledMetadataFields(): array
     {
         if (empty($this->disabledMetadataFields)) {
             $fields = array();

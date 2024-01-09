@@ -45,7 +45,7 @@ class Repository
      * @param $values
      * @return array
      */
-    protected function findBy($fields, $values)
+    protected function findBy($fields, $values): array
     {
         $table = $this->getTableName();
 
@@ -56,7 +56,7 @@ class Repository
      *
      * @return DatabaseObject[]
      */
-    public function findAll()
+    public function findAll(): array
     {
         $table = $this->getTableName();
 
@@ -80,7 +80,7 @@ class Repository
      * @param array|string $value
      * @return array
      */
-    private function getRecords($table, $field = array(), $value = null)
+    private function getRecords($table, $field = array(), $value = null): array
     {
         $data = array();
         $sql  = $this->assembleQuery($table, $field);
@@ -209,7 +209,7 @@ class Repository
      * @param $properties
      * @return array
      */
-    protected function getKeyValuePairs($properties)
+    protected function getKeyValuePairs($properties): array
     {
         $pairs = array();
         foreach ($properties as $property => $value) {
@@ -240,7 +240,7 @@ class Repository
      * @param array $properties
      * @return array
      */
-    protected function resolveObjects(array $properties)
+    protected function resolveObjects(array $properties): array
     {
         foreach ($properties as $property => $value) {
             if (is_object($value)) {

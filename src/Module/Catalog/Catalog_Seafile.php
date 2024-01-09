@@ -148,7 +148,7 @@ class Catalog_Seafile extends Catalog
      * Return the necessary settings fields for creating a new Seafile catalog
      * @return array
      */
-    public function catalog_fields()
+    public function catalog_fields(): array
     {
         $fields = array();
 
@@ -384,7 +384,7 @@ class Catalog_Seafile extends Catalog
      * @return array
      * @throws Exception
      */
-    private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null, $keep = false)
+    private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null, $keep = false): array
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {
@@ -585,7 +585,7 @@ class Catalog_Seafile extends Catalog
     /**
      * @return array
      */
-    public function check_catalog_proc()
+    public function check_catalog_proc(): array
     {
         return array();
     }

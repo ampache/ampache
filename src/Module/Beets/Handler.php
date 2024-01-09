@@ -68,7 +68,7 @@ abstract class Handler
      * @param array $song
      * @return array
      */
-    protected function mapFields($song)
+    protected function mapFields($song): array
     {
         foreach ($this->fieldMapping as $from => $to) {
             list($key, $format) = $to;

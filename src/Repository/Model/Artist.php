@@ -247,7 +247,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param array $catalogs
      * @return array
      */
-    public static function get_id_arrays($catalogs = array())
+    public static function get_id_arrays($catalogs = array()): array
     {
         $results = array();
         // if you have no catalogs set, just grab it all
@@ -277,7 +277,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int $artist_id
      * @return array
      */
-    public static function get_id_array($artist_id)
+    public static function get_id_array($artist_id): array
     {
         $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id`, `image`.`object_id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = (SELECT MIN(`catalog_map`.`catalog_id`) FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id`) LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
         $db_results = Dba::read($sql, array($artist_id));
@@ -291,7 +291,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Get each album id for the artist
      * @return int[]
      */
-    public function get_songs()
+    public function get_songs(): array
     {
         $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, array($this->id));
@@ -371,7 +371,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords                = array();
         $keywords['mb_artistid'] = array(
@@ -420,7 +420,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int|string|null $artist_id
      * @return array
      */
-    public static function get_name_array_by_id($artist_id)
+    public static function get_name_array_by_id($artist_id): array
     {
         if ($artist_id === 0) {
             return array(
@@ -509,7 +509,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Get item childrens.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         $medias = array();
         $albums = $this->getAlbumRepository()->getAlbumByArtist($this->id);
@@ -529,7 +529,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         $childrens  = array();
         $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album' AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?);";
@@ -549,7 +549,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song') {
@@ -798,7 +798,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int $object_id
      * @return int[]
      */
-    public static function get_artist_map($object_type, $object_id)
+    public static function get_artist_map($object_type, $object_id): array
     {
         $results    = array();
         $sql        = "SELECT `artist_id` AS `artist_id` FROM `artist_map` WHERE `object_type` = ? AND `object_id` = ?";
@@ -818,7 +818,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param string $mbid
      * @return array
      */
-    public static function update_name_from_mbid($new_name, $mbid)
+    public static function update_name_from_mbid($new_name, $mbid): array
     {
         $trimmed = Catalog::trim_prefix(trim((string)$new_name));
         $name    = $trimmed['string'];

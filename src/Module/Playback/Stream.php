@@ -256,7 +256,8 @@ class Stream
         $player = null,
         $media_type = 'song',
         $options = array()
-    ) {
+    ): array
+    {
         $target = self::get_transcode_format($source, $target, $player, $media_type);
         $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?? AmpConfig::get('transcode_cmd');
         if (empty($cmd)) {
@@ -488,7 +489,7 @@ class Stream
      * @param array $settings
      * @return array
      */
-    private static function start_process($command, $settings = array())
+    private static function start_process($command, $settings = array()): array
     {
         debug_event(self::class, "Transcode command: " . $command, 3);
 

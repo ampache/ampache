@@ -189,7 +189,7 @@ class Dba
      * @param bool $finish
      * @return array
      */
-    public static function fetch_assoc($resource, $finish = true)
+    public static function fetch_assoc($resource, $finish = true): array
     {
         if (!$resource) {
             return array();
@@ -219,7 +219,7 @@ class Dba
      * @param bool $finish
      * @return array
      */
-    public static function fetch_row($resource, $finish = true)
+    public static function fetch_row($resource, $finish = true): array
     {
         if (!$resource) {
             return array();
@@ -281,7 +281,7 @@ class Dba
      * @param bool $finish
      * @return array
      */
-    public static function fetch_object($resource, $class = 'stdClass', $finish = true)
+    public static function fetch_object($resource, $class = 'stdClass', $finish = true): array
     {
         if (!$resource) {
             return array();
@@ -565,7 +565,7 @@ class Dba
      * @param string|null $charset
      * @return array
      */
-    public static function translate_to_mysqlcharset($charset)
+    public static function translate_to_mysqlcharset($charset): array
     {
         // Translate real charset names into fancy MySQL land names
         switch (strtoupper((string)$charset)) {

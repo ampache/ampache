@@ -95,7 +95,7 @@ interface InstallationHelperInterface
      * get transcode modes available on this machine.
      * @return array
      */
-    public function install_get_transcode_modes();
+    public function install_get_transcode_modes(): array;
 
     /**
      * @param $mode

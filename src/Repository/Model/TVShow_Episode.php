@@ -198,7 +198,7 @@ class TVShow_Episode extends Video
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords           = parent::get_keywords();
         $keywords['tvshow'] = array(
@@ -243,7 +243,7 @@ class TVShow_Episode extends Video
      * get_release_item_art
      * @return array
      */
-    public function get_release_item_art()
+    public function get_release_item_art(): array
     {
         return array(
             'object_type' => 'tvshow_season',

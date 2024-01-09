@@ -208,7 +208,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * do it
      * @return array
      */
-    private function _get_extra_info()
+    private function _get_extra_info(): array
     {
         if ($this->isNew()) {
             return array();
@@ -463,7 +463,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords               = array();
         $keywords['mb_albumid'] = array(
@@ -583,7 +583,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get item album_artists array
      * @return array
      */
-    public function get_artists()
+    public function get_artists(): array
     {
         if (empty($this->album_artist)) {
             return array();
@@ -666,7 +666,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Returns the disk ids for an album
      * @return int[]
      */
-    public function get_album_disk_ids()
+    public function get_album_disk_ids(): array
     {
         $sql        = "SELECT DISTINCT `id`, `disk` FROM `album_disk` WHERE `album_id` = ? ORDER BY `disk`;";
         $db_results = Dba::read($sql, array($this->id));
@@ -700,7 +700,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param int $primary_id
      * @return array
      */
-    public static function get_parent_array($album_id, $primary_id)
+    public static function get_parent_array($album_id, $primary_id): array
     {
         $results    = array();
         $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;";
@@ -720,7 +720,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get item children.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return $this->get_medias();
     }
@@ -730,7 +730,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         $childrens  = array();
         $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE song.album = ? AND `song`.`file` LIKE ?;";
@@ -750,7 +750,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param string $filter_type
      * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if (!$filter_type || $filter_type == 'song') {
@@ -803,7 +803,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get each song id for the album
      * @return list<int>
      */
-    public function get_songs()
+    public function get_songs(): array
     {
         $results = array();
         $params  = array($this->id);

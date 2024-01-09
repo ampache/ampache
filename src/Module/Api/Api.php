@@ -361,7 +361,7 @@ class Api
      * @param string $token
      * @return array
      */
-    public static function server_details($token = '')
+    public static function server_details($token = ''): array
     {
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
         $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';

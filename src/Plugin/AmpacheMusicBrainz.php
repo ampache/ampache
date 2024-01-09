@@ -131,7 +131,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
      * @param array $media_info
      * @return array
      */
-    public function get_metadata($gather_types, $media_info)
+    public function get_metadata($gather_types, $media_info): array
     {
         // Music metadata only
         if (!in_array('music', $gather_types)) {
@@ -276,7 +276,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
      * @param string $mbid
      * @return array
      */
-    public function get_artist(string $mbid)
+    public function get_artist(string $mbid): array
     {
         //debug_event(self::class, "get_artist: {{$mbid}}", 4);
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());

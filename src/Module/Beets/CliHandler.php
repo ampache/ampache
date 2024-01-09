@@ -173,7 +173,7 @@ class CliHandler extends Handler
      * @param string $item
      * @return array
      */
-    protected function parse($item)
+    protected function parse($item): array
     {
         $item               = str_replace($this->itemEnd, '', $item);
         $values             = explode($this->seperator, $item);
@@ -201,7 +201,7 @@ class CliHandler extends Handler
      *
      * @return array
      */
-    protected function getFields()
+    protected function getFields(): array
     {
         $fields          = null;
         $processedFields = array();

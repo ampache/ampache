@@ -432,7 +432,7 @@ class Stats
      * @param int $date
      * @return array
      */
-    public static function get_last_play($user_id = 0, $agent = '', $date = 0)
+    public static function get_last_play($user_id = 0, $agent = '', $date = 0): array
     {
         if ($user_id === 0) {
             $user    = Core::get_global('user');
@@ -618,7 +618,7 @@ class Stats
      * @param bool $newest
      * @return array
      */
-    public static function get_object_history($user_id, $time, $newest = true)
+    public static function get_object_history($user_id, $time, $newest = true): array
     {
         if (!in_array((string)$user_id, static::getUserRepository()->getValid())) {
             $user    = Core::get_global('user');
@@ -772,7 +772,7 @@ class Stats
      * @param int $before
      * @return array
      */
-    public static function get_top($input_type, $count, $threshold, $offset = 0, $user_id = null, $random = false, $since = 0, $before = 0)
+    public static function get_top($input_type, $count, $threshold, $offset = 0, $user_id = null, $random = false, $since = 0, $before = 0): array
     {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -860,7 +860,7 @@ class Stats
      * @param bool $newest
      * @return array
      */
-    public static function get_recent($input_type, $count = 0, $offset = 0, $newest = true)
+    public static function get_recent($input_type, $count = 0, $offset = 0, $newest = true): array
     {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -898,7 +898,7 @@ class Stats
      * @param bool $user_only
      * @return array
      */
-    public static function get_recently_played($user_id, $count_type = 'stream', $object_type = null, $user_only = false)
+    public static function get_recently_played($user_id, $count_type = 'stream', $object_type = null, $user_only = false): array
     {
         $personal_info_recent = 91;
         $personal_info_time   = 92;
@@ -943,7 +943,7 @@ class Stats
      * @param int $full
      * @return array
      */
-    public static function get_user($count, $input_type, $user, $full = 0)
+    public static function get_user($count, $input_type, $user, $full = 0): array
     {
         $type = self::validate_type($input_type);
 
@@ -1091,7 +1091,7 @@ class Stats
      * @param int $user_id
      * @return int[]
      */
-    public static function get_newest($input_type, $count = 0, $offset = 0, $catalog_id = 0, $user_id = null)
+    public static function get_newest($input_type, $count = 0, $offset = 0, $catalog_id = 0, $user_id = null): array
     {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);

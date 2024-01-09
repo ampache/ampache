@@ -172,7 +172,7 @@ class AmpacheAmazon implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5)
+    public function gather_arts($type, $options = array(), $limit = 5): array
     {
         $images        = array();
         $final_results = array();

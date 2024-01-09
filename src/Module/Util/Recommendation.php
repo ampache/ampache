@@ -86,7 +86,7 @@ class Recommendation
      * @param bool $get_items
      * @return array
      */
-    protected static function get_recommendation_cache($type, $object_id, $get_items = false)
+    protected static function get_recommendation_cache($type, $object_id, $get_items = false): array
     {
         if (!AmpConfig::get('cron_cache')) {
             self::garbage_collection();
@@ -162,7 +162,7 @@ class Recommendation
      * @param bool $local_only
      * @return array
      */
-    public static function get_songs_like($song_id, $limit = 5, $local_only = true)
+    public static function get_songs_like($song_id, $limit = 5, $local_only = true): array
     {
         if (!AmpConfig::get('lastfm_api_key')) {
             return array();
@@ -253,7 +253,7 @@ class Recommendation
      * @param bool $local_only
      * @return array
      */
-    public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
+    public static function get_artists_like($artist_id, $limit = 10, $local_only = true): array
     {
         if (!AmpConfig::get('lastfm_api_key')) {
             return array();
@@ -353,7 +353,7 @@ class Recommendation
      * @param string $fullname
      * @return array
      */
-    public static function get_artist_info_by_name($fullname)
+    public static function get_artist_info_by_name($fullname): array
     {
         $query = 'artist=' . rawurlencode($fullname);
 
@@ -383,7 +383,7 @@ class Recommendation
      * @param int $artist_id
      * @return array
      */
-    public static function get_artist_info($artist_id)
+    public static function get_artist_info($artist_id): array
     {
         $artist = new Artist($artist_id);
         $query  = ($artist->mbid)
@@ -445,7 +445,7 @@ class Recommendation
      * @param int $album_id
      * @return array
      */
-    public static function get_album_info($album_id)
+    public static function get_album_info($album_id): array
     {
         $album = new Album($album_id);
         $query = ($album->mbid)

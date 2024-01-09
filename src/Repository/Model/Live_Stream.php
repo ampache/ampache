@@ -121,7 +121,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         return array();
     }
@@ -201,7 +201,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array();
     }
@@ -211,7 +211,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -222,7 +222,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'live_stream') {
@@ -387,7 +387,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * @param string $player
      * @return array
      */
-    public function get_stream_types($player = null)
+    public function get_stream_types($player = null): array
     {
         return array('native');
     }
@@ -423,7 +423,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array())
+    public function get_transcode_settings($target = null, $player = null, $options = array()): array
     {
         return array();
     }

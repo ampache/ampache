@@ -258,7 +258,7 @@ class User extends database_object
      * @param string $filter
      * @return int[]
      */
-    public static function get_user_catalogs($user_id, $filter = '')
+    public static function get_user_catalogs($user_id, $filter = ''): array
     {
         if (parent::is_cached('user_catalog' . $filter, $user_id)) {
             return parent::get_from_cache('user_catalog' . $filter, $user_id);
@@ -276,7 +276,7 @@ class User extends database_object
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return int[]
      */
-    public function get_catalogs($filter)
+    public function get_catalogs($filter): array
     {
         if (!isset($this->catalogs[$filter])) {
             $this->catalogs[$filter] = self::get_user_catalogs($this->id, $filter);
@@ -297,7 +297,7 @@ class User extends database_object
      * @param bool $system
      * @return array
      */
-    public function get_preferences($type = 0, $system = false)
+    public function get_preferences($type = 0, $system = false): array
     {
         $user_limit = "";
         if (!$system) {
@@ -360,7 +360,7 @@ class User extends database_object
      * @param string $type
      * @return array
      */
-    public function get_favorites($type)
+    public function get_favorites($type): array
     {
         $items   = array();
         $count   = AmpConfig::get('popular_threshold', 10);
@@ -464,7 +464,7 @@ class User extends database_object
      * @param string|int|null $default
      * @return array
      */
-    public static function get_user_data($user_id, $key = null, $default = null)
+    public static function get_user_data($user_id, $key = null, $default = null): array
     {
         $sql    = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?";
         $params = array($user_id);
@@ -1143,7 +1143,7 @@ class User extends database_object
      * @param bool $newest
      * @return array
      */
-    public function get_recently_played($type, $count, $offset = 0, $newest = true, $count_type = 'stream')
+    public function get_recently_played($type, $count, $offset = 0, $newest = true, $count_type = 'stream'): array
     {
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $limit    = ($offset < 1) ? $count : $offset . "," . $count;
@@ -1222,7 +1222,7 @@ class User extends database_object
      * @param bool $local
      * @return array
      */
-    public function get_avatar($local = false)
+    public function get_avatar($local = false): array
     {
         $avatar          = array();
         $avatar['title'] = T_('User avatar');

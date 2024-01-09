@@ -72,7 +72,7 @@ abstract class DatabaseObject
      * TODO: we get all properties for now...need more logic here...
      * @return array
      */
-    public function getDirtyProperties()
+    public function getDirtyProperties(): array
     {
         $properties = get_object_vars($this);
         unset($properties['id']);
@@ -101,7 +101,7 @@ abstract class DatabaseObject
      * @param $properties
      * @return array
      */
-    protected function fromCamelCase($properties)
+    protected function fromCamelCase($properties): array
     {
         $data = array();
         foreach ($properties as $propertie => $value) {

@@ -186,7 +186,7 @@ final class DefaultAction implements ApplicationActionInterface
      * @param array $media_ids Media IDs.
      * @return array
      */
-    private function getMediaFiles(array $media_ids)
+    private function getMediaFiles(array $media_ids): array
     {
         $media_files = [];
         $total_size  = 0;

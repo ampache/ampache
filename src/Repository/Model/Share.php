@@ -265,7 +265,7 @@ class Share extends database_object
      * @param User $user
      * @return int[]
      */
-    public static function get_share_list(User $user)
+    public static function get_share_list(User $user): array
     {
         $sql        = self::get_share_list_sql($user);
         $db_results = Dba::read($sql);

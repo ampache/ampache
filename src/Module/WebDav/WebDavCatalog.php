@@ -47,7 +47,7 @@ class WebDavCatalog extends DAV\Collection
      * getChildren
      * @return array
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         $children = array();
         $catalogs = null;

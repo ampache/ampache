@@ -110,7 +110,7 @@ class Wanted extends database_object
      * @param string $mbid
      * @return array
      */
-    public static function get_missing_albums($artist, $mbid = '')
+    public static function get_missing_albums($artist, $mbid = ''): array
     {
         $lookupId = $artist->mbid ?? $mbid;
         $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());

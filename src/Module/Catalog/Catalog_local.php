@@ -139,7 +139,7 @@ class Catalog_local extends Catalog
     /**
      * @return array
      */
-    public function catalog_fields()
+    public function catalog_fields(): array
     {
         $fields = array();
 
@@ -792,7 +792,7 @@ class Catalog_local extends Catalog
      * @param $chunk_size
      * @return array
      */
-    private function _clean_chunk($media_type, $chunk, $chunk_size)
+    private function _clean_chunk($media_type, $chunk, $chunk_size): array
     {
         $dead  = array();
         $count = $chunk * $chunk_size;
@@ -825,7 +825,7 @@ class Catalog_local extends Catalog
      * @param $chunk_size
      * @return array
      */
-    private function _check_chunk($media_type, $chunk, $chunk_size)
+    private function _check_chunk($media_type, $chunk, $chunk_size): array
     {
         $missing = array();
         $count   = $chunk * $chunk_size;
@@ -1162,7 +1162,7 @@ class Catalog_local extends Catalog
     /**
      * @return array
      */
-    public function check_catalog_proc()
+    public function check_catalog_proc(): array
     {
         if (!Core::is_readable($this->path)) {
             // First sanity check; no point in proceeding with an unreadable catalog root.

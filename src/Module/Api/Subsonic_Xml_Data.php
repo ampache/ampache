@@ -1648,7 +1648,7 @@ class Subsonic_Xml_Data
      * @param array $object_ids
      * @return array
      */
-    public static function _getAmpacheIdArrays($object_ids)
+    public static function _getAmpacheIdArrays($object_ids): array
     {
         $ampidarrays = array();
         $track       = 1;
@@ -1796,7 +1796,7 @@ class Subsonic_Xml_Data
      * @param string $file_Path
      * @return array
      */
-    private static function _getCatalogData($catalogId, $file_Path)
+    private static function _getCatalogData($catalogId, $file_Path): array
     {
         $results     = array();
         $sqllook     = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?;';

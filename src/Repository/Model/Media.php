@@ -43,7 +43,7 @@ interface Media
      * @param string $player
      * @return array
      */
-    public function get_stream_types($player = null);
+    public function get_stream_types($player = null): array;
 
     /**
      * play_url
@@ -73,7 +73,7 @@ interface Media
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array());
+    public function get_transcode_settings($target = null, $player = null, $options = array()): array;
 
     /**
      * getYear

@@ -1050,7 +1050,7 @@ class Search extends playlist_object
      * @param array $data
      * @return array
      */
-    private static function _filter_request($data)
+    private static function _filter_request($data): array
     {
         $request = array();
         foreach ($data as $key => $value) {
@@ -1120,7 +1120,7 @@ class Search extends playlist_object
      * @param int $user_id
      * @return array
      */
-    public static function get_searches($user_id = null)
+    public static function get_searches($user_id = null): array
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -1157,7 +1157,7 @@ class Search extends playlist_object
      * @param int $user_id
      * @return array
      */
-    public static function get_search_array($user_id = null)
+    public static function get_search_array($user_id = null): array
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -1198,7 +1198,7 @@ class Search extends playlist_object
      * @param User $user
      * @return int[]
      */
-    public static function run($data, $user = null)
+    public static function run($data, $user = null): array
     {
         $limit  = (int)($data['limit'] ?? 0);
         $offset = (int)($data['offset'] ?? 0);
@@ -1273,7 +1273,7 @@ class Search extends playlist_object
      * (part of the playlist interface).
      * @return array
      */
-    public function get_items()
+    public function get_items(): array
     {
         $results = array();
         if ($this->isNew()) {
@@ -1320,7 +1320,7 @@ class Search extends playlist_object
      * get SQL for an item subsearch
      * @return array
      */
-    public function get_subsearch($table)
+    public function get_subsearch($table): array
     {
         $sqltbl = $this->to_sql();
         $sql    = "SELECT DISTINCT(`$table`.`id`) FROM `$table` " . $sqltbl['table_sql'];
@@ -1369,7 +1369,7 @@ class Search extends playlist_object
      * @param string|null $limit
      * @return array
      */
-    public function get_random_items($limit = '')
+    public function get_random_items($limit = ''): array
     {
         $results = array();
         $sqltbl  = $this->to_sql();
@@ -1715,7 +1715,7 @@ class Search extends playlist_object
      * Call the appropriate real function.
      * @return array
      */
-    public function to_sql()
+    public function to_sql(): array
     {
         return $this->searchType->getSql($this);
     }
@@ -1798,7 +1798,7 @@ class Search extends playlist_object
      * @param int $offset
      * @return array
      */
-    public static function year_search($fromYear, $toYear, $size, $offset)
+    public static function year_search($fromYear, $toYear, $size, $offset): array
     {
         $search           = array();
         $search['limit']  = $size;

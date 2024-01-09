@@ -293,7 +293,7 @@ class Video extends database_object implements
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords          = array();
         $keywords['title'] = array(
@@ -382,7 +382,7 @@ class Video extends database_object implements
      * Get item childrens.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array();
     }
@@ -392,7 +392,7 @@ class Video extends database_object implements
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -404,7 +404,7 @@ class Video extends database_object implements
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'video') {
@@ -490,7 +490,7 @@ class Video extends database_object implements
      * @param string $player
      * @return array
      */
-    public function get_stream_types($player = null)
+    public function get_stream_types($player = null): array
     {
         return Stream::get_stream_types_for_type($this->type, $player);
     }
@@ -549,7 +549,7 @@ class Video extends database_object implements
      * @param string $player
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array())
+    public function get_transcode_settings($target = null, $player = null, $options = array()): array
     {
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
     }
@@ -747,7 +747,7 @@ class Video extends database_object implements
      * Get release item art.
      * @return array
      */
-    public function get_release_item_art()
+    public function get_release_item_art(): array
     {
         return array(
             'object_type' => 'video',
@@ -815,7 +815,7 @@ class Video extends database_object implements
      * Get existing subtitles list for this video
      * @return array
      */
-    public function get_subtitles()
+    public function get_subtitles(): array
     {
         $subtitles = array();
         $pinfo     = pathinfo($this->file);
@@ -1150,7 +1150,7 @@ class Video extends database_object implements
      * get items from the deleted_videos table
      * @return int[]
      */
-    public static function get_deleted()
+    public static function get_deleted(): array
     {
         $deleted    = array();
         $sql        = "SELECT * FROM `deleted_video`";
@@ -1172,7 +1172,7 @@ class Video extends database_object implements
      * @param Video $new_video
      * @return array
      */
-    public static function compare_video_information(Video $video, Video $new_video)
+    public static function compare_video_information(Video $video, Video $new_video): array
     {
         // Remove some stuff we don't care about
         unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);

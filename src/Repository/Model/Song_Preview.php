@@ -308,7 +308,7 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array();
     }
@@ -318,7 +318,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -329,7 +329,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song_preview') {
@@ -383,7 +383,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param $player
      * @return array
      */
-    public function get_stream_types($player = null)
+    public function get_stream_types($player = null): array
     {
         return array('native');
     }
@@ -405,7 +405,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array())
+    public function get_transcode_settings($target = null, $player = null, $options = array()): array
     {
         return array();
     }
@@ -449,7 +449,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param string $album_mbid
      * @return array
      */
-    public static function get_song_previews($album_mbid)
+    public static function get_song_previews($album_mbid): array
     {
         $songs = array();
 

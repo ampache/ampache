@@ -119,7 +119,7 @@ class Random
      * @param User $user
      * @return int[]
      */
-    public static function get_default($limit, $user = null)
+    public static function get_default($limit, $user = null): array
     {
         $results = array();
 
@@ -153,7 +153,7 @@ class Random
      * @param User $user
      * @return int[]
      */
-    public static function get_artist($limit, $user = null)
+    public static function get_artist($limit, $user = null): array
     {
         $results = array();
 
@@ -190,7 +190,7 @@ class Random
      * @param int $playlist_id
      * @return int[]
      */
-    public static function get_playlist($user, $playlist_id = 0)
+    public static function get_playlist($user, $playlist_id = 0): array
     {
         $results  = array();
         $playlist = new Playlist($playlist_id);
@@ -210,7 +210,7 @@ class Random
      * @param int $search_id
      * @return int[]
      */
-    public static function get_search(User $user, $search_id = 0)
+    public static function get_search(User $user, $search_id = 0): array
     {
         $results = array();
         $search  = new Search($search_id, 'song', $user);
@@ -234,7 +234,7 @@ class Random
      * @param array $data
      * @return array
      */
-    public static function advanced($type, $data)
+    public static function advanced($type, $data): array
     {
         /* Figure out our object limit */
         $limit     = (int)($data['limit'] ?? -1);
@@ -283,7 +283,7 @@ class Random
      * @param array $data
      * @return array
      */
-    private static function advanced_results($sql_query, $sql_params, $data)
+    private static function advanced_results($sql_query, $sql_params, $data): array
     {
         // Run the query generated above so we can while it
         $db_results = Dba::read($sql_query, $sql_params);
@@ -361,7 +361,7 @@ class Random
      * @param string $limit_sql
      * @return array
      */
-    private static function advanced_sql($data, $type, $limit_sql)
+    private static function advanced_sql($data, $type, $limit_sql): array
     {
         $search = new Search(0, $type);
         $search->set_rules($data);

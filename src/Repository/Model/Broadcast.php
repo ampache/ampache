@@ -194,7 +194,7 @@ class Broadcast extends database_object implements library_item
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         return array();
     }
@@ -251,7 +251,7 @@ class Broadcast extends database_object implements library_item
      * Get item childrens.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array();
     }
@@ -261,7 +261,7 @@ class Broadcast extends database_object implements library_item
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -273,7 +273,7 @@ class Broadcast extends database_object implements library_item
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         // Not a media, shouldn't be that
         $medias = array();
@@ -404,7 +404,7 @@ class Broadcast extends database_object implements library_item
      * @param int $user_id
      * @return int[]
      */
-    public static function get_broadcasts($user_id)
+    public static function get_broadcasts($user_id): array
     {
         $sql        = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
         $db_results = Dba::read($sql, array($user_id));

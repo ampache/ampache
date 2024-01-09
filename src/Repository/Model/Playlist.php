@@ -114,7 +114,7 @@ class Playlist extends playlist_object
      * @param bool $includeHidden
      * @return int[]
      */
-    public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true)
+    public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true): array
     {
         if (!$user_id) {
             $user    = Core::get_global('user');
@@ -173,7 +173,7 @@ class Playlist extends playlist_object
      * @param int|null $user_id
      * @return int[]
      */
-    public static function get_playlist_array($user_id = 0)
+    public static function get_playlist_array($user_id = 0): array
     {
         if (!$user_id) {
             $user_id = Core::get_global('user')->id ?? 0;
@@ -211,7 +211,7 @@ class Playlist extends playlist_object
      * @param int $user_id
      * @return array
      */
-    public static function get_details($type = 'playlist', $user_id = null)
+    public static function get_details($type = 'playlist', $user_id = null): array
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -237,7 +237,7 @@ class Playlist extends playlist_object
      * @param bool $includeHidden
      * @return array
      */
-    public static function get_smartlists($user_id = null, $playlist_name = '', $like = true, $includeHidden = true)
+    public static function get_smartlists($user_id = null, $playlist_name = '', $like = true, $includeHidden = true): array
     {
         if (!$user_id) {
             $user    = Core::get_global('user');
@@ -310,7 +310,7 @@ class Playlist extends playlist_object
      *  track_id: int
      * }>
      */
-    public function get_items()
+    public function get_items(): array
     {
         $results = array();
         $user    = Core::get_global('user');
@@ -367,7 +367,7 @@ class Playlist extends playlist_object
      * @param string|null $limit
      * @return array
      */
-    public function get_random_items($limit = '')
+    public function get_random_items($limit = ''): array
     {
         $results = array();
         $user    = Core::get_global('user');
@@ -421,7 +421,7 @@ class Playlist extends playlist_object
      * This is called by the batch script, because we can't pass in Dynamic objects they pulled once and then their
      * target song.id is pushed into the array
      */
-    public function get_songs()
+    public function get_songs(): array
     {
         $results = array();
         $user    = Core::get_global('user');

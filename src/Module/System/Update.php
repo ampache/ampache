@@ -92,7 +92,7 @@ class Update
      * @return array
      * @throws EnvironmentNotSuitableException
      */
-    public static function check_tables(bool $execute = false)
+    public static function check_tables(bool $execute = false): array
     {
         $db_version = (int)self::_get_db_version();
         $missing    = array();

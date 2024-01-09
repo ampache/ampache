@@ -146,7 +146,7 @@ class Tmp_Playlist extends database_object
      * Returns an array of all object_ids currently in this Tmp_Playlist.
      * @return array
      */
-    public function get_items()
+    public function get_items(): array
     {
         $session_name = AmpConfig::get('session_name');
         $sql          = "SELECT `tmp_playlist_data`.`object_type`, `tmp_playlist_data`.`id`, `tmp_playlist_data`.`object_id` FROM `tmp_playlist_data` ";

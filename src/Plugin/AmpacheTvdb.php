@@ -118,7 +118,7 @@ class AmpacheTvdb implements AmpachePluginInterface
      * @param $media_info
      * @return array
      */
-    public function get_metadata($gather_types, $media_info)
+    public function get_metadata($gather_types, $media_info): array
     {
         debug_event('tvdb.plugin', 'Getting metadata from TVDb...', 5);
 
@@ -216,7 +216,7 @@ class AmpacheTvdb implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5)
+    public function gather_arts($type, $options = array(), $limit = 5): array
     {
         debug_event('tvdb.plugin', 'gather_arts for type `' . $type . '`', 5);
 

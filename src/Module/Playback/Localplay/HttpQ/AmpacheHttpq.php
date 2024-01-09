@@ -151,7 +151,7 @@ class AmpacheHttpq extends localplay_controller
      * This returns a keyed array of the instance information with
      * [UID]=>[NAME]
      */
-    public function get_instances()
+    public function get_instances(): array
     {
         $sql = "SELECT * FROM `localplay_httpq` ORDER BY `name`";
 
@@ -206,7 +206,7 @@ class AmpacheHttpq extends localplay_controller
      * @param string $instance
      * @return array
      */
-    public function get_instance($instance = '')
+    public function get_instance($instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('httpq_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_httpq` WHERE `id` = ?" : "SELECT * FROM `localplay_httpq`";
@@ -439,7 +439,7 @@ class AmpacheHttpq extends localplay_controller
      * The songs that httpQ currently has in its playlist. This must be
      * done in a standardized fashion
      */
-    public function get()
+    public function get(): array
     {
         /* Get the Current Playlist */
         $list = $this->_httpq->get_tracks();

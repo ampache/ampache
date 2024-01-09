@@ -215,7 +215,7 @@ class Upnp_Api
      * @param $data
      * @return array
      */
-    public static function get_headers($data)
+    public static function get_headers($data): array
     {
         $lines  = explode(PHP_EOL, $data); // split into lines
         $keys   = array();
@@ -291,7 +291,7 @@ class Upnp_Api
      * @param $prmRequest
      * @return array
      */
-    public static function parseUPnPRequest($prmRequest)
+    public static function parseUPnPRequest($prmRequest): array
     {
         $retArr = array();
         $reader = new XMLReader();
@@ -777,7 +777,7 @@ class Upnp_Api
      * @param $count
      * @return array
      */
-    public static function _slice($items, $start, $count)
+    public static function _slice($items, $start, $count): array
     {
         $maxCount = count($items);
         //debug_event(self::class, 'slice: ' . $maxCount . "   " . $start . "    " . $count, 5);
@@ -795,7 +795,7 @@ class Upnp_Api
      * @param $count
      * @return array
      */
-    public static function _musicChilds($prmPath, $prmQuery, $start, $count)
+    public static function _musicChilds($prmPath, $prmQuery, $start, $count): array
     {
         $mediaItems = array();
         $maxCount   = 0;
@@ -1140,7 +1140,7 @@ class Upnp_Api
      * @param $count
      * @return array
      */
-    public static function _videoChilds($prmPath, $prmQuery, $start, $count)
+    public static function _videoChilds($prmPath, $prmQuery, $start, $count): array
     {
         $mediaItems = array();
         $maxCount   = 0;
@@ -1245,7 +1245,7 @@ class Upnp_Api
      * @param string $str
      * @return array
      */
-    private static function gettokens($str)
+    private static function gettokens($str): array
     {
         $tokens        = array();
         $nospacetokens = array();
@@ -1308,7 +1308,7 @@ class Upnp_Api
      * @param string $context
      * @return array
      */
-    private static function parse_upnp_search_term($query, $context)
+    private static function parse_upnp_search_term($query, $context): array
     {
         //echo "Search term ", $query, "\n";
         $tok = str_getcsv($query, ' ');
@@ -1386,7 +1386,7 @@ class Upnp_Api
      * @param $type
      * @return array
      */
-    private static function parse_upnp_searchcriteria($query, $type)
+    private static function parse_upnp_searchcriteria($query, $type): array
     {
         // Transforms a upnp search query into an Ampache search query
         $upnp_translations = array(
@@ -1509,7 +1509,7 @@ class Upnp_Api
      * @param $count
      * @return array
      */
-    public static function _callSearch($criteria, $filter, $start, $count)
+    public static function _callSearch($criteria, $filter, $start, $count): array
     {
         $type = self::parse_upnp_filter($filter);
         $data = self::parse_upnp_searchcriteria($criteria, $type);
@@ -1615,7 +1615,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    private static function _itemArtist($artist, $parent)
+    private static function _itemArtist($artist, $parent): array
     {
         return array(
             'id' => 'amp://music/artists/' . $artist->id,
@@ -1633,7 +1633,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    private static function _itemTag($tag, $parent)
+    private static function _itemTag($tag, $parent): array
     {
         return array(
             'id' => 'amp://music/tags/' . $tag->id,
@@ -1651,7 +1651,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    private static function _itemAlbum($album, $parent)
+    private static function _itemAlbum($album, $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
         $art_url     = Art::url($album->id, 'album', $api_session);
@@ -1674,7 +1674,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    private static function _itemPlaylist($playlist, $parent)
+    private static function _itemPlaylist($playlist, $parent): array
     {
         return array(
             'id' => 'amp://music/playlists/' . $playlist->id,
@@ -1691,7 +1691,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    private static function _itemSmartPlaylist($playlist, $parent)
+    private static function _itemSmartPlaylist($playlist, $parent): array
     {
         return array(
             'id' => 'amp://music/smartplaylists/' . $playlist->id,
@@ -1708,7 +1708,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    public static function _itemSong($song, $parent)
+    public static function _itemSong($song, $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
         $art_url     = Art::url($song->album, 'album', $api_session);
@@ -1757,7 +1757,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    public static function _itemLiveStream($radio, $parent)
+    public static function _itemLiveStream($radio, $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
         $art_url     = Art::url($radio->id, 'live_stream', $api_session);
@@ -1783,7 +1783,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    private static function _itemTVShow($tvshow, $parent)
+    private static function _itemTVShow($tvshow, $parent): array
     {
         return array(
             'id' => 'amp://video/tvshows/' . $tvshow->id,
@@ -1800,7 +1800,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    private static function _itemTVShowSeason($season, $parent)
+    private static function _itemTVShowSeason($season, $parent): array
     {
         return array(
             'id' => 'amp://video/tvshows/' . $season->tvshow . '/' . $season->id,
@@ -1817,7 +1817,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    private static function _itemVideo($video, $parent)
+    private static function _itemVideo($video, $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
         $art_url     = Art::url($video->id, 'video', $api_session);
@@ -1846,7 +1846,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    private static function _itemPodcast($podcast, $parent)
+    private static function _itemPodcast($podcast, $parent): array
     {
         return array(
             'id' => 'amp://music/podcasts/' . $podcast->id,
@@ -1863,7 +1863,7 @@ class Upnp_Api
      * @param string $parent
      * @return array
      */
-    private static function _itemPodcastEpisode($episode, $parent)
+    private static function _itemPodcastEpisode($episode, $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
         $art_url     = Art::url($episode->podcast, 'podcast', $api_session);
@@ -1893,7 +1893,7 @@ class Upnp_Api
     /**
      * @return array
      */
-    private static function _getFileTypes()
+    private static function _getFileTypes(): array
     {
         return array(
             'wav' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-wav:*',),

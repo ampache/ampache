@@ -67,7 +67,7 @@ class User_Playlist extends database_object
      * This returns the next object in the user_playlist.
      * @return array
      */
-    public function get_current_object()
+    public function get_current_object(): array
     {
         $items = array();
         // Select the current object for this user
@@ -227,7 +227,7 @@ class User_Playlist extends database_object
      * Returns an array of all object_ids currently in this User_Playlist.
      * @return array
      */
-    public function get_items()
+    public function get_items(): array
     {
         $items = array();
         // Select all objects from this user

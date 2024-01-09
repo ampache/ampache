@@ -89,7 +89,7 @@ class WebPlayer
      * @param array $transcode_cfg
      * @return array
      */
-    protected static function get_types($item, $urlinfo, $transcode_cfg, $force_type = '')
+    protected static function get_types($item, $urlinfo, $transcode_cfg, $force_type = ''): array
     {
         $types = array('real' => 'mp3', 'player' => '');
 
@@ -147,7 +147,7 @@ class WebPlayer
      * @param bool $transcode
      * @return array
      */
-    public static function get_media_types($urlinfo, $types, $file_type, $transcode)
+    public static function get_media_types($urlinfo, $types, $file_type, $transcode): array
     {
         $types['real'] = ($transcode)
             ? Stream::get_transcode_format($file_type, null, 'webplayer', $urlinfo['type'])

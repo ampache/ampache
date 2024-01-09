@@ -282,7 +282,7 @@ class Rating extends database_object
      * @param int $user_id
      * @return array
      */
-    public static function get_highest($input_type, $count = 0, $offset = 0, $user_id = null)
+    public static function get_highest($input_type, $count = 0, $offset = 0, $user_id = null): array
     {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);

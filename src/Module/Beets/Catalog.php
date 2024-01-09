@@ -208,7 +208,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * @param array $metadata
      * @return array
      */
-    protected function getCleanMetadata(library_item $libraryItem, $metadata)
+    protected function getCleanMetadata(library_item $libraryItem, $metadata): array
     {
         $tags = array_diff($metadata, get_object_vars($libraryItem));
         $keys = array_merge(
@@ -309,7 +309,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * @return array
      */
-    public function check_catalog_proc()
+    public function check_catalog_proc(): array
     {
         return array();
     }
@@ -377,7 +377,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Get all songs from the DB into a array
      * @return array array(id => file)
      */
-    public function getAllSongfiles()
+    public function getAllSongfiles(): array
     {
         $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?";
         $db_results = Dba::read($sql, array($this->id));

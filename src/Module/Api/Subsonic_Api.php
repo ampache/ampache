@@ -330,7 +330,7 @@ class Subsonic_Api
      * @param array $input_options
      * @return array
      */
-    private static function _xml2Json($xml, $input_options = array())
+    private static function _xml2Json($xml, $input_options = array()): array
     {
         $defaults = array(
             'namespaceSeparator' => ' :', // you may want this to be something other than a colon

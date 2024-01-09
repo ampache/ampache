@@ -193,7 +193,7 @@ class AmpacheDiscogs implements AmpachePluginInterface
      * @param array $media_info
      * @return array
      */
-    public function get_metadata($gather_types, $media_info)
+    public function get_metadata($gather_types, $media_info): array
     {
         debug_event(self::class, 'Getting metadata from Discogs...', 5);
 
@@ -238,7 +238,7 @@ class AmpacheDiscogs implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5)
+    public function gather_arts($type, $options = array(), $limit = 5): array
     {
         return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }

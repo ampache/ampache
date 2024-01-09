@@ -457,7 +457,7 @@ class Preference extends database_object
      * it ignores the 'internal' category
      * @return array
      */
-    public static function get_categories()
+    public static function get_categories(): array
     {
         $sql = "SELECT `preference`.`catagory` FROM `preference` GROUP BY `catagory` ORDER BY `catagory`";
 
@@ -479,7 +479,7 @@ class Preference extends database_object
      * @param int $user_id
      * @return array
      */
-    public static function get($pref_name, $user_id)
+    public static function get($pref_name, $user_id): array
     {
         $user_id    = Dba::escape($user_id);
         $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
@@ -610,7 +610,7 @@ class Preference extends database_object
      * @param array $results
      * @return array
      */
-    public static function fix_preferences($results)
+    public static function fix_preferences($results): array
     {
         $arrays = array(
             'allow_zip_types',

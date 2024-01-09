@@ -644,7 +644,7 @@ class Song extends database_object implements
      * @param string $select
      * @return array
      */
-    public function _get_ext_info($select = '')
+    public function _get_ext_info($select = ''): array
     {
         $song_id = (int) ($this->id);
         $columns = (!empty($select)) ? Dba::escape($select) : '*';
@@ -737,7 +737,7 @@ class Song extends database_object implements
      * @param int $count
      * @return Song[]
      */
-    public static function get_disabled($count = 0)
+    public static function get_disabled($count = 0): array
     {
         $results = array();
 
@@ -1002,7 +1002,7 @@ class Song extends database_object implements
      * @param Song $new_song
      * @return array
      */
-    public static function compare_song_information(Song $song, Song $new_song)
+    public static function compare_song_information(Song $song, Song $new_song): array
     {
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
@@ -1034,7 +1034,7 @@ class Song extends database_object implements
      * @param string[] $skip_array
      * @return array
      */
-    public static function compare_media_information($media, $new_media, $string_array, $skip_array)
+    public static function compare_media_information($media, $new_media, $string_array, $skip_array): array
     {
         $array            = array();
         $array['change']  = false;
@@ -1647,7 +1647,7 @@ class Song extends database_object implements
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords               = array();
         $keywords['mb_trackid'] = array(
@@ -1720,7 +1720,7 @@ class Song extends database_object implements
      * Get item album_artists array
      * @return array
      */
-    public function get_artists()
+    public function get_artists(): array
     {
         if (!isset($this->artists)) {
             $this->artists = self::get_parent_array($this->id);
@@ -1820,7 +1820,7 @@ class Song extends database_object implements
      * @param int $object_id
      * @return array
      */
-    public static function get_parent_array($object_id, $type = 'artist')
+    public static function get_parent_array($object_id, $type = 'artist'): array
     {
         $results = array();
         $sql     = ($type == 'album')
@@ -1839,7 +1839,7 @@ class Song extends database_object implements
      * Get item children.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array();
     }
@@ -1849,7 +1849,7 @@ class Song extends database_object implements
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -1861,7 +1861,7 @@ class Song extends database_object implements
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song') {
@@ -1954,7 +1954,7 @@ class Song extends database_object implements
      * want to present to a user, and add some that don't exist directly on the object but are related
      * @return array
      */
-    public static function get_fields()
+    public static function get_fields(): array
     {
         $fields = get_class_vars(Song::class);
 
@@ -2045,7 +2045,7 @@ class Song extends database_object implements
      * @param string $player
      * @return array
      */
-    public function get_stream_types($player = null)
+    public function get_stream_types($player = null): array
     {
         return Stream::get_stream_types_for_type($this->type, $player);
     }
@@ -2057,7 +2057,7 @@ class Song extends database_object implements
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array())
+    public function get_transcode_settings($target = null, $player = null, $options = array()): array
     {
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }
@@ -2074,7 +2074,7 @@ class Song extends database_object implements
      * Get lyrics.
      * @return array
      */
-    public function get_lyrics()
+    public function get_lyrics(): array
     {
         if ($this->lyrics) {
             return array('text' => $this->lyrics);
@@ -2104,7 +2104,7 @@ class Song extends database_object implements
      * @param string $codec
      * @return array
      */
-    public function run_custom_play_action($action_index, $codec = '')
+    public function run_custom_play_action($action_index, $codec = ''): array
     {
         $transcoder = array();
         $actions    = self::get_custom_play_actions();
@@ -2142,7 +2142,7 @@ class Song extends database_object implements
      * Get custom play actions.
      * @return array
      */
-    public static function get_custom_play_actions()
+    public static function get_custom_play_actions(): array
     {
         $actions = array();
         $count   = 0;
@@ -2179,7 +2179,7 @@ class Song extends database_object implements
      * get items from the deleted_songs table
      * @return int[]
      */
-    public static function get_deleted()
+    public static function get_deleted(): array
     {
         $deleted    = array();
         $sql        = "SELECT * FROM `deleted_song`";

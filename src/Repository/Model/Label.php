@@ -132,7 +132,7 @@ class Label extends database_object implements library_item
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         $medias  = array();
         $artists = $this->get_artists();
@@ -202,7 +202,7 @@ class Label extends database_object implements library_item
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords          = array();
         $keywords['label'] = array(
@@ -218,7 +218,7 @@ class Label extends database_object implements library_item
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song') {

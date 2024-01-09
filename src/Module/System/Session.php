@@ -583,7 +583,7 @@ final class Session implements SessionInterface
      * @param string $sid
      * @return array
      */
-    public static function get_geolocation($sid)
+    public static function get_geolocation($sid): array
     {
         $location = array();
 

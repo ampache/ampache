@@ -141,7 +141,7 @@ class Json4_Data
      * @param bool $simple
      * @return array
      */
-    private static function tags_array($tags, $simple = false)
+    private static function tags_array($tags, $simple = false): array
     {
         $JSON = array();
 

@@ -98,7 +98,7 @@ class TVShow_Season extends database_object implements
      * gets all episodes for this tv show season
      * @return array
      */
-    public function get_episodes()
+    public function get_episodes(): array
     {
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` WHERE `tvshow_episode`.`season`='" . Dba::escape($this->id) . "' AND `catalog`.`enabled` = '1' "
@@ -119,7 +119,7 @@ class TVShow_Season extends database_object implements
      * This returns the extra information for the tv show season, this means totals etc
      * @return array
      */
-    private function _get_extra_info()
+    private function _get_extra_info(): array
     {
         // Try to find it in the cache and save ourselves the trouble
         if (parent::is_cached('tvshow_extra', $this->id)) {
@@ -162,7 +162,7 @@ class TVShow_Season extends database_object implements
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords           = array();
         $keywords['tvshow'] = array(
@@ -240,7 +240,7 @@ class TVShow_Season extends database_object implements
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array('tvshow_episode' => $this->get_episodes());
     }
@@ -250,7 +250,7 @@ class TVShow_Season extends database_object implements
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -262,7 +262,7 @@ class TVShow_Season extends database_object implements
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'video') {

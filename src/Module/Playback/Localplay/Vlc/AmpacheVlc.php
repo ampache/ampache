@@ -146,7 +146,7 @@ class AmpacheVlc extends localplay_controller
      * This returns a key'd array of the instance information with
      * [UID]=>[NAME]
      */
-    public function get_instances()
+    public function get_instances(): array
     {
         $sql        = "SELECT * FROM `localplay_vlc` ORDER BY `name`";
         $db_results = Dba::query($sql);
@@ -195,7 +195,7 @@ class AmpacheVlc extends localplay_controller
      * @param string $instance
      * @return array
      */
-    public function get_instance($instance = '')
+    public function get_instance($instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
@@ -431,7 +431,7 @@ class AmpacheVlc extends localplay_controller
      * to, not to your browser but still this can take a lot of work for your server.
      * The xml files of VLC need work, not much documentation on them....
      */
-    public function get()
+    public function get(): array
     {
         /* Get the Current Playlist */
         $list = $this->_vlc->get_tracks();

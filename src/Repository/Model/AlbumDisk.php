@@ -247,7 +247,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords               = array();
         $keywords['mb_albumid'] = array(
@@ -396,7 +396,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * Get item children.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return $this->get_medias();
     }
@@ -406,7 +406,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -418,7 +418,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if (!$filter_type || $filter_type == 'song') {
@@ -471,7 +471,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * Get each song id for the album_disk
      * @return int[]
      */
-    public function get_songs()
+    public function get_songs(): array
     {
         $results = array();
         $params  = array($this->album_id, $this->disk);

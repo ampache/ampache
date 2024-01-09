@@ -50,7 +50,7 @@ class WebDavDirectory extends DAV\Collection
      * @return array
      * @throws DAV\Exception\NotFound
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         //debug_event(self::class, 'Directory getChildren', 5);
         $children = array();

@@ -165,7 +165,8 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
-    ) {
+    ): array
+    {
         $type = $object_type;
         if ($object_type === null) {
             $type = 'song';
@@ -212,7 +213,8 @@ class Graph
         $end_date = null,
         $zoom = 'day',
         $show_total = true
-    ) {
+    ): array
+    {
         $values = $this->get_all_type_pts($fct, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         foreach ($values as $date => $value) {
             if ($show_total) {
@@ -333,7 +335,8 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
-    ) {
+    ): array
+    {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, COUNT(`object_count`.`id`) AS `hits` FROM `object_count` " . $where . " GROUP BY " . $dateformat;
@@ -365,7 +368,8 @@ class Graph
         $end_date = null,
         $zoom = 'day',
         $column = 'size'
-    ) {
+    ): array
+    {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where . " GROUP BY " . $dateformat;
@@ -388,7 +392,7 @@ class Graph
      * @param string $zoom
      * @return array
      */
-    protected function get_user_bandwidth_pts($user_id = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    protected function get_user_bandwidth_pts($user_id = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day'): array
     {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
@@ -409,7 +413,8 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
-    ) {
+    ): array
+    {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, 'time');
     }
 
@@ -429,7 +434,8 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
-    ) {
+    ): array
+    {
         $start_date = $start_date ?? ($end_date ?? time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
@@ -460,7 +466,8 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
-    ) {
+    ): array
+    {
         $start_date = $start_date ?? ($end_date ?? time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
@@ -493,7 +500,8 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
-    ) {
+    ): array
+    {
         $pts = array();
 
         $where = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);

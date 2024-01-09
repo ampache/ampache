@@ -183,7 +183,7 @@ class AmazonSearch
      * Returning the array of proxy config options.
      * @return array
      */
-    public function getProxyConfig()
+    public function getProxyConfig(): array
     {
         $options = array();
         if ($this->_proxy_host) {
@@ -206,7 +206,7 @@ class AmazonSearch
      * @param string $type The type of result desired.
      * @return array
      */
-    public function search($terms, $type = 'Music')
+    public function search($terms, $type = 'Music'): array
     {
         $params = array();
 
@@ -269,7 +269,7 @@ class AmazonSearch
      * @param string $type The category of results desired from the web service.
      * @return array
      */
-    public function lookup($asin, $type = 'Music')
+    public function lookup($asin, $type = 'Music'): array
     {
         if (is_array($asin)) {
             foreach ($asin as $key => $value) {

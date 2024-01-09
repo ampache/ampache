@@ -98,7 +98,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * gets the tv show seasons
      * @return int[]
      */
-    public function get_seasons()
+    public function get_seasons(): array
     {
         $sql        = "SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
         $db_results = Dba::read($sql, array($this->id));
@@ -115,7 +115,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * gets all episodes for this tv show
      * @return int[]
      */
-    public function get_episodes()
+    public function get_episodes(): array
     {
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` WHERE `tvshow_season`.`tvshow`='" . Dba::escape($this->id) . "' AND `catalog`.`enabled` = '1' "
@@ -136,7 +136,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * This returns the extra information for the tv show, this means totals etc
      * @return array
      */
-    private function _get_extra_info()
+    private function _get_extra_info(): array
     {
         // Try to find it in the cache and save ourselves the trouble
         if (parent::is_cached('tvshow_extra', $this->id)) {
@@ -182,7 +182,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords           = array();
         $keywords['tvshow'] = array(
@@ -251,7 +251,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array('tvshow_season' => $this->get_seasons());
     }
@@ -261,7 +261,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -272,7 +272,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * @param string $filter_type
      * @return array
      */
-    public function get_medias($filter_type = null)
+    public function get_medias($filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'video') {
