@@ -96,6 +96,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     /**
      * get_seasons
      * gets the tv show seasons
+     * @return int[]
      */
     public function get_seasons()
     {
@@ -112,6 +113,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     /**
      * get_episodes
      * gets all episodes for this tv show
+     * @return int[]
      */
     public function get_episodes()
     {
@@ -469,7 +471,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * @param bool $add_to_childs
      * @param bool $force_update
      */
-    public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false): void
     {
         Tag::update_tag_list($tags_comma, 'tvshow', $this->id, $force_update ? true : $override_childs);
 

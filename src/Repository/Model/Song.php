@@ -1204,7 +1204,7 @@ class Song extends database_object implements
      * @param int $song_id
      * @param Song $new_song
      */
-    public static function update_song($song_id, Song $new_song)
+    public static function update_song($song_id, Song $new_song): void
     {
         $update_time = time();
 
@@ -1221,7 +1221,7 @@ class Song extends database_object implements
      * @param int $new_year
      * @param int $song_id
      */
-    public static function update_year($new_year, $song_id)
+    public static function update_year($new_year, $song_id): void
     {
         self::_update_item('year', $new_year, $song_id, 50, true);
     }
@@ -1232,7 +1232,7 @@ class Song extends database_object implements
      * @param string $new_value
      * @param int $song_id
      */
-    public static function update_label($new_value, $song_id)
+    public static function update_label($new_value, $song_id): void
     {
         self::_update_ext_item('label', $new_value, $song_id, 50, true);
     }
@@ -1243,7 +1243,7 @@ class Song extends database_object implements
      * @param string $new_lang
      * @param int $song_id
      */
-    public static function update_language($new_lang, $song_id)
+    public static function update_language($new_lang, $song_id): void
     {
         self::_update_ext_item('language', $new_lang, $song_id, 50, true);
     }
@@ -1254,7 +1254,7 @@ class Song extends database_object implements
      * @param string $new_comment
      * @param int $song_id
      */
-    public static function update_comment($new_comment, $song_id)
+    public static function update_comment($new_comment, $song_id): void
     {
         self::_update_ext_item('comment', $new_comment, $song_id, 50, true);
     }
@@ -1265,7 +1265,7 @@ class Song extends database_object implements
      * @param string $new_lyrics
      * @param int $song_id
      */
-    public static function update_lyrics($new_lyrics, $song_id)
+    public static function update_lyrics($new_lyrics, $song_id): void
     {
         self::_update_ext_item('lyrics', $new_lyrics, $song_id, 50, true);
     }
@@ -1276,7 +1276,7 @@ class Song extends database_object implements
      * @param string $new_title
      * @param int $song_id
      */
-    public static function update_title($new_title, $song_id)
+    public static function update_title($new_title, $song_id): void
     {
         self::_update_item('title', $new_title, $song_id, 50, true);
     }
@@ -1287,7 +1287,7 @@ class Song extends database_object implements
      * @param string $new_composer
      * @param int $song_id
      */
-    public static function update_composer($new_composer, $song_id)
+    public static function update_composer($new_composer, $song_id): void
     {
         self::_update_item('composer', $new_composer, $song_id, 50, true);
     }
@@ -1298,7 +1298,7 @@ class Song extends database_object implements
      * @param string $new_publisher
      * @param int $song_id
      */
-    public static function update_publisher($new_publisher, $song_id)
+    public static function update_publisher($new_publisher, $song_id): void
     {
         self::_update_item('publisher', $new_publisher, $song_id, 50, true);
     }
@@ -1309,7 +1309,7 @@ class Song extends database_object implements
      * @param int $new_bitrate
      * @param int $song_id
      */
-    public static function update_bitrate($new_bitrate, $song_id)
+    public static function update_bitrate($new_bitrate, $song_id): void
     {
         self::_update_item('bitrate', $new_bitrate, $song_id, 50, true);
     }
@@ -1320,7 +1320,7 @@ class Song extends database_object implements
      * @param int $new_rate
      * @param int $song_id
      */
-    public static function update_rate($new_rate, $song_id)
+    public static function update_rate($new_rate, $song_id): void
     {
         self::_update_item('rate', $new_rate, $song_id, 50, true);
     }
@@ -1331,7 +1331,7 @@ class Song extends database_object implements
      * @param string $new_mode
      * @param int $song_id
      */
-    public static function update_mode($new_mode, $song_id)
+    public static function update_mode($new_mode, $song_id): void
     {
         self::_update_item('mode', $new_mode, $song_id, 50, true);
     }
@@ -1342,7 +1342,7 @@ class Song extends database_object implements
      * @param int $new_size
      * @param int $song_id
      */
-    public static function update_size($new_size, $song_id)
+    public static function update_size($new_size, $song_id): void
     {
         self::_update_item('size', $new_size, $song_id, 50);
     }
@@ -1353,7 +1353,7 @@ class Song extends database_object implements
      * @param int $new_time
      * @param int $song_id
      */
-    public static function update_time($new_time, $song_id)
+    public static function update_time($new_time, $song_id): void
     {
         self::_update_item('time', $new_time, $song_id, 50, true);
     }
@@ -1364,7 +1364,7 @@ class Song extends database_object implements
      * @param int $new_track
      * @param int $song_id
      */
-    public static function update_track($new_track, $song_id)
+    public static function update_track($new_track, $song_id): void
     {
         self::_update_item('track', $new_track, $song_id, 50, true);
     }
@@ -1375,7 +1375,7 @@ class Song extends database_object implements
      * @param string $new_mbid
      * @param int $song_id
      */
-    public static function update_mbid($new_mbid, $song_id)
+    public static function update_mbid($new_mbid, $song_id): void
     {
         self::_update_item('mbid', $new_mbid, $song_id, 50);
     }
@@ -1386,7 +1386,7 @@ class Song extends database_object implements
      * @param int|null $new_license
      * @param int $song_id
      */
-    public static function update_license($new_license, $song_id)
+    public static function update_license($new_license, $song_id): void
     {
         self::_update_item('license', $new_license, $song_id, 50, true);
     }
@@ -1461,7 +1461,7 @@ class Song extends database_object implements
      * @param bool $new_played
      * @param int $song_id
      */
-    public static function update_played($new_played, $song_id)
+    public static function update_played($new_played, $song_id): void
     {
         self::_update_item('played', ($new_played ? 1 : 0), $song_id, 25);
     }
@@ -1472,7 +1472,7 @@ class Song extends database_object implements
      * @param bool $new_enabled
      * @param int $song_id
      */
-    public static function update_enabled($new_enabled, $song_id)
+    public static function update_enabled($new_enabled, $song_id): void
     {
         self::_update_item('enabled', ($new_enabled ? 1 : 0), $song_id, 75, true);
     }
@@ -2006,7 +2006,7 @@ class Song extends database_object implements
             $cache_path     = (string)AmpConfig::get('cache_path', '');
             $cache_target   = (string)AmpConfig::get('cache_target', '');
             $file_target    = Catalog::get_cache_path($this->id, $this->catalog, $cache_path, $cache_target);
-            $transcode_type = ($file_target && is_file($file_target))
+            $transcode_type = ($file_target !== null && is_file($file_target))
                 ? $cache_target
                 : Stream::get_transcode_format($this->type, null, $player);
             if (!empty($transcode_type) && $this->type !== $transcode_type) {

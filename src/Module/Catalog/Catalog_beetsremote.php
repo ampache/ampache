@@ -100,7 +100,7 @@ class Catalog_beetsremote extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param $catalog_id
+     * @param string $catalog_id
      * @param array $data
      */
     public static function create_type($catalog_id, $data): bool

@@ -53,7 +53,7 @@ final class PodcastEpisodeSearch implements SearchInterface
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
             $operator = array();
-            if (!$type) {
+            if ($type === null) {
                 continue;
             }
             foreach ($search->basetypes[$type] as $baseOperator) {

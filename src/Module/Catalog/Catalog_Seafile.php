@@ -179,7 +179,7 @@ class Catalog_Seafile extends Catalog
      * create_type
      *
      * This creates a new catalog type entry for a catalog
-     * @param $catalog_id
+     * @param string $catalog_id
      * @param array $data
      */
     public static function create_type($catalog_id, $data): bool

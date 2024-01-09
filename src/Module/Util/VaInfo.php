@@ -327,7 +327,7 @@ final class VaInfo implements VaInfoInterface
      *
      * This function runs the various steps to gathering the metadata. Filling $this->tags
      */
-    public function gather_tags()
+    public function gather_tags(): void
     {
         // If this is broken, don't waste time figuring it out a second time, just return their rotting carcass of a media file.
         if ($this->_broken) {
@@ -905,7 +905,7 @@ final class VaInfo implements VaInfoInterface
      *
      * Get additional metadata from plugins
      */
-    private function _get_plugin_tags()
+    private function _get_plugin_tags(): void
     {
         $tag_order    = $this->get_metadata_order();
         $plugin_names = Plugin::get_plugins('get_metadata');

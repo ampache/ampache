@@ -124,7 +124,7 @@ class Democratic extends Tmp_Playlist
      * set_parent
      * This returns the Tmp_Playlist for this democratic play instance
      */
-    public function set_parent()
+    public function set_parent(): void
     {
         $sql        = "SELECT * FROM `tmp_playlist` WHERE `session` = ?";
         $db_results = Dba::read($sql, array($this->id));
@@ -322,7 +322,7 @@ class Democratic extends Tmp_Playlist
      * already voted on any of these objects
      * @param $items
      */
-    public function add_vote($items)
+    public function add_vote($items): void
     {
         /* Iterate through the objects if no vote, add to playlist and vote */
         foreach ($items as $element) {

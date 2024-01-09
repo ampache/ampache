@@ -278,7 +278,7 @@ class Share extends database_object
         return $results;
     }
 
-    public function show_action_buttons()
+    public function show_action_buttons(): void
     {
         if ($this->isNew() === false) {
             if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) || $this->user == (int)Core::get_global('user')->id) {

@@ -152,7 +152,7 @@ class Horde_Browser
      * @param string $userAgent The browser string to parse.
      * @param string $accept The HTTP_ACCEPT settings to use.
      */
-    public function match($userAgent = null, $accept = null)
+    public function match($userAgent = null, $accept = null): void
     {
         // Set our agent string.
         if ($userAgent == null) {

@@ -86,7 +86,7 @@ abstract class DatabaseObject
      * This works in constructor because the properties are here from
      * fetch_object before the constructor get called.
      */
-    protected function remapCamelcase()
+    protected function remapCamelcase(): void
     {
         foreach (get_object_vars($this) as $key => $val) {
             if (strpos($key, '_') !== false) {
@@ -116,7 +116,7 @@ abstract class DatabaseObject
      * Adds child Objects based of the Model Information
      * TODO: Someday we might need lazy loading, but for now it should be ok.
      */
-    public function initializeChildObjects()
+    public function initializeChildObjects(): void
     {
         foreach ($this->fieldClassRelations as $field => $repositoryName) {
             if (class_exists($repositoryName)) {

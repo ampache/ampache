@@ -98,7 +98,7 @@ class Broadcast extends database_object implements library_item
      * @param bool $started
      * @param string $key
      */
-    public function update_state($started, $key = '')
+    public function update_state($started, $key = ''): void
     {
         $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
         Dba::write($sql, array($started, $key, $this->id));
@@ -110,7 +110,7 @@ class Broadcast extends database_object implements library_item
      * Update broadcast listeners.
      * @param int $listeners
      */
-    public function update_listeners($listeners)
+    public function update_listeners($listeners): void
     {
         $sql = "UPDATE `broadcast` SET `listeners` = ? WHERE `id` = ?";
         Dba::write($sql, array($listeners, $this->id));
@@ -121,7 +121,7 @@ class Broadcast extends database_object implements library_item
      * Update broadcast current song.
      * @param int $song_id
      */
-    public function update_song($song_id)
+    public function update_song($song_id): void
     {
         $sql = "UPDATE `broadcast` SET `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($song_id, $this->id));
@@ -358,7 +358,7 @@ class Broadcast extends database_object implements library_item
     /**
      * Show action buttons.
      */
-    public function show_action_buttons()
+    public function show_action_buttons(): void
     {
         if ($this->id) {
             if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {

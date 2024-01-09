@@ -38,7 +38,7 @@ interface VaInfoInterface
      *
      * This function runs the various steps to gathering the metadata. Filling $this->tags
      */
-    public function gather_tags();
+    public function gather_tags(): void;
 
     /**
      * check_time

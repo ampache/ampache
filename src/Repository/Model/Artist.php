@@ -1019,7 +1019,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int $old_object_id
      * @param int $new_object_id
      */
-    public static function migrate($old_object_id, $new_object_id)
+    public static function migrate($old_object_id, $new_object_id): void
     {
         if ((int)$new_object_id > 0) {
             // migrating to a new artist

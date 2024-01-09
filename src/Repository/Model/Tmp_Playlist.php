@@ -180,13 +180,16 @@ class Tmp_Playlist extends database_object
      * get_next_object
      * This returns the next object in the tmp_playlist.
      */
-    public function get_next_object()
+    public function get_next_object(): ?int
     {
         $sql        = "SELECT `object_id` FROM `tmp_playlist_data` WHERE `tmp_playlist` = ? ORDER BY `id` LIMIT 1";
         $db_results = Dba::read($sql, array($this->id));
-        $results    = Dba::fetch_assoc($db_results);
+        if (!$db_results) {
+            return null;
+        }
+        $results = Dba::fetch_assoc($db_results);
 
-        return $results['object_id'];
+        return (int)$results['object_id'];
     }
 
     /**
@@ -194,13 +197,13 @@ class Tmp_Playlist extends database_object
      * This returns a count of the total number of tracks that are in this
      * tmp playlist
      */
-    public function count_items()
+    public function count_items(): int
     {
         $sql        = "SELECT COUNT(`id`) FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?;";
         $db_results = Dba::read($sql, array($this->id));
         $row        = Dba::fetch_row($db_results);
 
-        return $row[0] ?? 0;
+        return (int)($row[0] ?? 0);
     }
 
     /**
@@ -307,7 +310,7 @@ class Tmp_Playlist extends database_object
     /**
      * @param $medias
      */
-    public function add_medias($medias)
+    public function add_medias($medias): void
     {
         foreach ($medias as $media) {
             $this->add_object($media['object_id'], $media['object_type']);

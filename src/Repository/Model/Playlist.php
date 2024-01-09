@@ -531,7 +531,7 @@ class Playlist extends playlist_object
      * This updates the playlist type, it calls the generic update_item function
      * @param string $new_type
      */
-    private function update_type($new_type)
+    private function update_type($new_type): void
     {
         if ($this->_update_item('type', $new_type)) {
             $this->type = $new_type;
@@ -543,7 +543,7 @@ class Playlist extends playlist_object
      * This updates the playlist type, it calls the generic update_item function
      * @param int $new_user
      */
-    private function update_user($new_user)
+    private function update_user($new_user): void
     {
         if ($this->_update_item('user', $new_user)) {
             $this->user     = $new_user;
@@ -558,7 +558,7 @@ class Playlist extends playlist_object
      * This updates the playlist name, it calls the generic update_item function
      * @param string $new_name
      */
-    private function update_name($new_name)
+    private function update_name($new_name): void
     {
         if ($this->_update_item('name', $new_name)) {
             $this->name = $new_name;
@@ -569,7 +569,7 @@ class Playlist extends playlist_object
      * update_last_update
      * This updates the playlist last update, it calls the generic update_item function
      */
-    private function update_last_update()
+    private function update_last_update(): void
     {
         $last_update = time();
         if ($this->_update_item('last_update', $last_update)) {
@@ -602,7 +602,7 @@ class Playlist extends playlist_object
      * @param int $track_id
      * @param int $index
      */
-    public function update_track_number($track_id, $index)
+    public function update_track_number($track_id, $index): void
     {
         $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
         Dba::write($sql, array($index, $track_id));
@@ -611,7 +611,7 @@ class Playlist extends playlist_object
     /**
      * Regenerate track numbers to fill gaps.
      */
-    public function regenerate_track_numbers()
+    public function regenerate_track_numbers(): void
     {
         $items = $this->get_items();
         $index = 1;
@@ -628,7 +628,7 @@ class Playlist extends playlist_object
      * @param array $song_ids
      * This takes an array of song_ids and then adds it to the playlist
      */
-    public function add_songs($song_ids = array())
+    public function add_songs($song_ids = array()): void
     {
         $medias = array();
         foreach ($song_ids as $song_id) {
@@ -754,7 +754,7 @@ class Playlist extends playlist_object
      * set_items
      * This calls the get_items function and sets it to $this->items which is an array in this object
      */
-    public function set_items()
+    public function set_items(): void
     {
         $this->items = $this->get_items();
     }
@@ -765,7 +765,7 @@ class Playlist extends playlist_object
      * @param int $count
      * @param string $column
      */
-    private function set_last($count, $column)
+    private function set_last($count, $column): void
     {
         if ($this->id && in_array($column, array('last_count', 'last_duration')) && $count >= 0) {
             $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = " . Dba::escape($this->id);

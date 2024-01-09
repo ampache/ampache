@@ -903,7 +903,7 @@ abstract class Catalog extends database_object
      * @param string $key
      * @param int|float $value
      */
-    public static function set_update_info($key, $value)
+    public static function set_update_info($key, $value): void
     {
         Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", array($key, $value));
     }
@@ -913,6 +913,7 @@ abstract class Catalog extends database_object
      * sets the enabled flag
      * @param bool $new_enabled
      * @param int $catalog_id
+     * @return PDOStatement|bool
      */
     public static function update_enabled($new_enabled, $catalog_id)
     {
@@ -2093,7 +2094,7 @@ abstract class Catalog extends database_object
      * including similar artists that exist in your catalog.
      * @param array $artist_list
      */
-    public function gather_artist_info($artist_list = array())
+    public function gather_artist_info($artist_list = array()): void
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -2129,7 +2130,7 @@ abstract class Catalog extends database_object
      * @param array $object_list
      * @param string $object_type
      */
-    public function update_from_external($object_list, $object_type)
+    public function update_from_external($object_list, $object_type): void
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -2239,7 +2240,7 @@ abstract class Catalog extends database_object
      * update_last_add
      * updates the last_add of the catalog
      */
-    public function update_last_add()
+    public function update_last_add(): void
     {
         $date = time();
         self::_update_item('last_add', $date, $this->id);
@@ -2249,7 +2250,7 @@ abstract class Catalog extends database_object
      * update_last_clean
      * This updates the last clean information
      */
-    public function update_last_clean()
+    public function update_last_clean(): void
     {
         $date = time();
         self::_update_item('last_clean', $date, $this->id);
@@ -2260,13 +2261,11 @@ abstract class Catalog extends database_object
      * This function updates the basic setting of the catalog
      * @param array $data
      */
-    public static function update_settings($data): bool
+    public static function update_settings($data): void
     {
         $sql    = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ? WHERE `id` = ?";
         $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['catalog_id']);
         Dba::write($sql, $params);
-
-        return true;
     }
 
     /**
@@ -3180,7 +3179,7 @@ abstract class Catalog extends database_object
      * @param library_item $libraryItem
      * @param array $metadata
      */
-    public static function add_metadata(library_item $libraryItem, $metadata)
+    public static function add_metadata(library_item $libraryItem, $metadata): void
     {
         $tags = self::get_clean_metadata($libraryItem, $metadata);
 
@@ -3850,7 +3849,7 @@ abstract class Catalog extends database_object
      * Update the catalog mapping for various types
      * @param string $table
      */
-    public static function update_mapping($table)
+    public static function update_mapping($table): void
     {
         // fill the data
         debug_event(__CLASS__, 'Update mapping for table: ' . $table, 5);
@@ -3950,7 +3949,7 @@ abstract class Catalog extends database_object
      * Updates artist tags from given song id
      * @param int $song_id
      */
-    protected static function updateArtistTags(int $song_id)
+    protected static function updateArtistTags(int $song_id): void
     {
         foreach (Song::get_parent_array($song_id) as $artist_id) {
             $tags = self::getSongTags('artist', $artist_id);
@@ -3962,7 +3961,7 @@ abstract class Catalog extends database_object
      * Updates artist tags from given song id
      * @param int $album_id
      */
-    protected static function updateAlbumArtistTags(int $album_id)
+    protected static function updateAlbumArtistTags(int $album_id): void
     {
         foreach (Song::get_parent_array($album_id, 'album') as $artist_id) {
             $tags = self::getSongTags('artist', $artist_id);
@@ -4021,13 +4020,12 @@ abstract class Catalog extends database_object
      * @param int $catalog_id
      * @param string $path
      * @param string $target
-     * @return string|false
      */
-    public static function get_cache_path($object_id, $catalog_id, $path = '', $target = '')
+    public static function get_cache_path($object_id, $catalog_id, $path = '', $target = ''): ?string
     {
         // need a destination and target filetype
         if (!is_dir($path) || empty($target)) {
-            return false;
+            return null;
         }
         // make a folder per catalog
         if (!is_dir(rtrim(trim($path), '/') . '/' . $catalog_id)) {

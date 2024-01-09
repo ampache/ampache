@@ -218,7 +218,7 @@ class Search extends playlist_object
      *
      * Function called during construction to set the different types and rules for search
      */
-    private function _set_basetypes()
+    private function _set_basetypes(): void
     {
         $this->basetypes['numeric'][] = array(
             'name' => 'gte',
@@ -504,7 +504,7 @@ class Search extends playlist_object
      * @param string $type
      * @param string $group
      */
-    private function _add_type_numeric($name, $label, $type = 'numeric', $group = '')
+    private function _add_type_numeric($name, $label, $type = 'numeric', $group = ''): void
     {
         $this->types[] = array(
             'name' => $name,
@@ -523,7 +523,7 @@ class Search extends playlist_object
      * @param string $label
      * @param string $group
      */
-    private function _add_type_date($name, $label, $group = '')
+    private function _add_type_date($name, $label, $group = ''): void
     {
         $this->types[] = array(
             'name' => $name,
@@ -542,7 +542,7 @@ class Search extends playlist_object
      * @param string $label
      * @param string $group
      */
-    private function _add_type_text($name, $label, $group = '')
+    private function _add_type_text($name, $label, $group = ''): void
     {
         $this->types[] = array(
             'name' => $name,
@@ -563,7 +563,7 @@ class Search extends playlist_object
      * @param array $array
      * @param string $group
      */
-    private function _add_type_select($name, $label, $type, $array, $group = '')
+    private function _add_type_select($name, $label, $type, $array, $group = ''): void
     {
         $this->types[] = array(
             'name' => $name,
@@ -583,7 +583,7 @@ class Search extends playlist_object
      * @param string $type
      * @param string $group
      */
-    private function _add_type_boolean($name, $label, $type = 'boolean', $group = '')
+    private function _add_type_boolean($name, $label, $type = 'boolean', $group = ''): void
     {
         $this->types[] = array(
             'name' => $name,
@@ -599,7 +599,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for songs are defined
      */
-    private function _set_types_song()
+    private function _set_types_song(): void
     {
         $this->_add_type_text('anywhere', T_('Any searchable text'));
 
@@ -746,7 +746,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for artists are defined
      */
-    private function _set_types_artist()
+    private function _set_types_artist(): void
     {
         $t_artist_data = T_('Artist Data');
         $this->_add_type_text('title', T_('Name'), $t_artist_data);
@@ -822,7 +822,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for albums are defined
      */
-    private function _set_types_album()
+    private function _set_types_album(): void
     {
         $t_album_data = T_('Album Data');
         $this->_add_type_text('title', T_('Title'), $t_album_data);
@@ -909,7 +909,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for videos are defined
      */
-    private function _set_types_video()
+    private function _set_types_video(): void
     {
         $this->_add_type_text('file', T_('Filename'));
     }
@@ -919,7 +919,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for playlists are defined
      */
-    private function _set_types_playlist()
+    private function _set_types_playlist(): void
     {
         $t_playlist = T_('Playlist');
         $this->_add_type_text('title', T_('Name'), $t_playlist);
@@ -937,7 +937,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for podcasts are defined
      */
-    private function _set_types_podcast()
+    private function _set_types_podcast(): void
     {
         $t_podcasts = T_('Podcast');
         $this->_add_type_text('title', T_('Name'), $t_podcasts);
@@ -978,7 +978,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for podcast_episodes are defined
      */
-    private function _set_types_podcast_episode()
+    private function _set_types_podcast_episode(): void
     {
         $t_podcast_episodes = T_('Podcast Episode');
         $this->_add_type_text('title', T_('Name'), $t_podcast_episodes);
@@ -1016,7 +1016,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for labels are defined
      */
-    private function _set_types_label()
+    private function _set_types_label(): void
     {
         $t_label = T_('Label');
         $this->_add_type_text('title', T_('Name'), $t_label);
@@ -1028,7 +1028,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for users are defined
      */
-    private function _set_types_user()
+    private function _set_types_user(): void
     {
         $this->_add_type_text('username', T_('Username'));
     }
@@ -1038,7 +1038,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for Genres are defined
      */
-    private function _set_types_tag()
+    private function _set_types_tag(): void
     {
         $this->_add_type_text('title', T_('Genre'));
     }
@@ -1352,7 +1352,7 @@ class Search extends playlist_object
      * @param int $count
      * @param string $column
      */
-    private function set_last($count, $column)
+    private function set_last($count, $column): void
     {
         if (in_array($column, array('last_count', 'last_duration'))) {
             $search_id = Dba::escape($this->id);
@@ -1585,9 +1585,8 @@ class Search extends playlist_object
      * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
      * @param string $name
-     * @return string|false
      */
-    public function get_rule_type($name)
+    public function get_rule_type($name): ?string
     {
         //debug_event(self::class, 'get_rule_type: ' . $name, 5);
         foreach ($this->types as $type) {
@@ -1596,7 +1595,7 @@ class Search extends playlist_object
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -1605,7 +1604,7 @@ class Search extends playlist_object
      * Takes an array of sanitized search data from the form and generates our real array from it.
      * @param array $data
      */
-    public function set_rules($data)
+    public function set_rules($data): void
     {
         if (isset($data['playlist_name'])) {
             $this->name = (string)$data['playlist_name'];
@@ -1629,8 +1628,11 @@ class Search extends playlist_object
         }
         // get the data for each rule group the user sent
         foreach ($user_rules as $ruleID) {
-            $rule_name     = $this->_get_rule_name($data["rule_" . $ruleID]);
-            $rule_type     = $this->get_rule_type($rule_name);
+            $rule_name = $this->_get_rule_name($data["rule_" . $ruleID]);
+            $rule_type = $this->get_rule_type($rule_name);
+            if ($rule_type === null) {
+                continue;
+            }
             $rule_input    = (string)($data['rule_' . $ruleID . '_input'] ?? '');
             $rule_operator = $this->basetypes[$rule_type][$data['rule_' . $ruleID . '_operator']]['name'] ?? '';
             // keep vertical bar in regular expression

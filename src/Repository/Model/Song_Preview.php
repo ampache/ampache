@@ -366,7 +366,7 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * stream
      */
-    public function stream()
+    public function stream(): void
     {
         foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
             $plugin = new Plugin($plugin_name);

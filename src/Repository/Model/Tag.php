@@ -309,7 +309,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param int $merge_to
      * @param bool $is_persistent
      */
-    public function merge($merge_to, $is_persistent)
+    public function merge($merge_to, $is_persistent): void
     {
         if ($this->id != $merge_to) {
             debug_event(self::class, 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
@@ -380,7 +380,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * remove_merges
      * Remove merged tags from this tag.
      */
-    public function remove_merges()
+    public function remove_merges(): void
     {
         $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?;";
         Dba::write($sql, array($this->id));
@@ -463,7 +463,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      *
      * Delete the tag and all maps
      */
-    public function delete()
+    public function delete(): void
     {
         $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?";
         Dba::write($sql, array($this->id));

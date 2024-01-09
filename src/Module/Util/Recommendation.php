@@ -119,7 +119,7 @@ class Recommendation
      * @param string $type
      * @param int $object_id
      */
-    protected static function delete_recommendation_cache($type, $object_id)
+    protected static function delete_recommendation_cache($type, $object_id): void
     {
         $cache = self::get_recommendation_cache($type, $object_id);
         if (array_key_exists('id', $cache)) {
@@ -134,7 +134,7 @@ class Recommendation
      * @param int $object_id
      * @param $recommendations
      */
-    protected static function update_recommendation_cache($type, $object_id, $recommendations)
+    protected static function update_recommendation_cache($type, $object_id, $recommendations): void
     {
         if (count($recommendations) > 0) {
             self::delete_recommendation_cache($type, $object_id);

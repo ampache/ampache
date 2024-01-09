@@ -508,7 +508,7 @@ class Subsonic_Xml_Data
                 $cache_path     = (string)AmpConfig::get('cache_path', '');
                 $cache_target   = (string)AmpConfig::get('cache_target', '');
                 $file_target    = Catalog::get_cache_path($song->getId(), $song->getCatalogId(), $cache_path, $cache_target);
-                $transcode_type = ($file_target && is_file($file_target))
+                $transcode_type = ($file_target !== null && is_file($file_target))
                     ? $cache_target
                     : Stream::get_transcode_format($song->type, null, 'api');
 

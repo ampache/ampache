@@ -162,7 +162,7 @@ class Catalog_subsonic extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param $catalog_id
+     * @param string $catalog_id
      * @param array $data
      */
     public static function create_type($catalog_id, $data): bool
@@ -441,7 +441,10 @@ class Catalog_subsonic extends Catalog
         $db_results   = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $target_file = Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target);
-            $file_exists = ($target_file !== false && is_file($target_file));
+            if ($target_file === null) {
+                continue;
+            }
+            $file_exists = is_file($target_file);
             $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
             if (!$file_exists || (int)Core::get_filesize($target_file) == 0) {
                 $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $target;

@@ -342,7 +342,7 @@ class User extends database_object
      * set_preferences
      * sets the prefs for this specific user
      */
-    public function set_preferences()
+    public function set_preferences(): void
     {
         $user_id    = Dba::escape($this->id);
         $sql        = "SELECT `preference`.`name`, `user_preference`.`value` FROM `preference`, `user_preference` WHERE `user_preference`.`user` = ? AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system';";
@@ -391,7 +391,7 @@ class User extends database_object
      * is_logged_in
      * checks to see if $this user is logged in returns their current IP if they are logged in
      */
-    public function is_logged_in()
+    public function is_logged_in(): ?string
     {
         $sql = (AmpConfig::get('perpetual_api_session'))
             ? "SELECT `id`, `ip` FROM `session` WHERE `username` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
@@ -402,7 +402,7 @@ class User extends database_object
             return $row['ip'] ?? null;
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -451,7 +451,7 @@ class User extends database_object
      * @param string $key
      * @param string|int $value
      */
-    public static function set_user_data(int $user_id, string $key, $value)
+    public static function set_user_data(int $user_id, string $key, $value): void
     {
         Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", array($user_id, $key, $value));
     }
@@ -517,7 +517,7 @@ class User extends database_object
      * Set a new filter group catalog filter
      * @param int $new_filter
      */
-    public function update_catalog_filter_group($new_filter)
+    public function update_catalog_filter_group($new_filter): void
     {
         $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
 
@@ -531,7 +531,7 @@ class User extends database_object
      * updates their username
      * @param string $new_username
      */
-    public function update_username($new_username)
+    public function update_username($new_username): void
     {
         $sql            = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
@@ -563,7 +563,7 @@ class User extends database_object
      * updates their fullname
      * @param string $new_fullname
      */
-    public function update_fullname($new_fullname)
+    public function update_fullname($new_fullname): void
     {
         $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
 
@@ -577,7 +577,7 @@ class User extends database_object
      * updates their fullname public
      * @param bool|string $new_fullname_public
      */
-    public function update_fullname_public($new_fullname_public)
+    public function update_fullname_public($new_fullname_public): void
     {
         $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
 
@@ -591,7 +591,7 @@ class User extends database_object
      * updates their email address
      * @param string $new_email
      */
-    public function update_email($new_email)
+    public function update_email($new_email): void
     {
         $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
 
@@ -605,7 +605,7 @@ class User extends database_object
      * updates their website address
      * @param string $new_website
      */
-    public function update_website($new_website)
+    public function update_website($new_website): void
     {
         $new_website = rtrim((string)$new_website, "/");
         $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
@@ -620,7 +620,7 @@ class User extends database_object
      * updates their state
      * @param string $new_state
      */
-    public function update_state($new_state)
+    public function update_state($new_state): void
     {
         $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
 
@@ -634,7 +634,7 @@ class User extends database_object
      * updates their city
      * @param string $new_city
      */
-    public function update_city($new_city)
+    public function update_city($new_city): void
     {
         $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
 
@@ -888,7 +888,7 @@ class User extends database_object
      * @param string $new_password
      * @param string $hashed_password
      */
-    public function update_password($new_password, $hashed_password = null)
+    public function update_password($new_password, $hashed_password = null): void
     {
         debug_event(self::class, 'Updating password', 1);
         if (!$hashed_password) {
@@ -1280,8 +1280,8 @@ class User extends database_object
         if (!empty($_FILES['avatar']['tmp_name']) && $_FILES['avatar']['size'] <= AmpConfig::get('max_upload_size')) {
             $path_info      = pathinfo($_FILES['avatar']['name']);
             $upload['file'] = $_FILES['avatar']['tmp_name'];
-            $upload['mime'] = 'image/' . $path_info['extension'];
-            if (!in_array(strtolower($path_info['extension']), Art::VALID_TYPES)) {
+            $upload['mime'] = 'image/' . ($path_info['extension'] ?? '');
+            if (!in_array(strtolower($path_info['extension'] ?? ''), Art::VALID_TYPES)) {
                 return false;
             }
 

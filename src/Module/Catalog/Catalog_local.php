@@ -210,7 +210,7 @@ class Catalog_local extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param $catalog_id
+     * @param string $catalog_id
      * @param array $data
      */
     public static function create_type($catalog_id, $data): bool
@@ -1331,12 +1331,12 @@ class Catalog_local extends Catalog
         foreach ($results as $song_id) {
             $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id, $path, $target);
             $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $song_id . '.' . $target;
-            if ($target_file !== false && is_file($old_target_file)) {
+            if ($target_file !== null && is_file($old_target_file)) {
                 // check for the old path first
                 rename($old_target_file, $target_file);
                 debug_event('local.catalog', 'Moved: ' . $song_id . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
             }
-            $file_exists = ($target_file !== false && is_file($target_file));
+            $file_exists = ($target_file !== null && is_file($target_file));
             $media       = new Song($song_id);
             // check the old path too
             if ($file_exists) {
