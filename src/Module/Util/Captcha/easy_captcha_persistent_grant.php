@@ -43,7 +43,7 @@ class easy_captcha_persistent_grant extends easy_captcha
      */
     public function solved($input = 0)
     {
-        if (CAPTCHA_PERSISTENT && isset($_COOKIE[$this->cookie()])) {
+        if (easy_captcha::CAPTCHA_PERSISTENT && isset($_COOKIE[$this->cookie()])) {
             return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
         }
 
@@ -55,7 +55,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     {
         if (!headers_sent()) {
             $cookie_options = [
-                'expires' => (int)(time() + 175 * CAPTCHA_TIMEOUT),
+                'expires' => (int)(time() + 175 * easy_captcha::CAPTCHA_TIMEOUT),
                 'path' => (string)AmpConfig::get('cookie_path'),
                 'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),

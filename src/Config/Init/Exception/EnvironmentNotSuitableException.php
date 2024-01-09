@@ -27,5 +27,6 @@ namespace Ampache\Config\Init\Exception;
 
 final class EnvironmentNotSuitableException extends InitializationException
 {
+    /** @var string */
     protected $message = 'Environment is not suitable - please refer to the installation guide';
 }

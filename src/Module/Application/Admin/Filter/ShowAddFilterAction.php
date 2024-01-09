@@ -52,15 +52,18 @@ final class ShowAddFilterAction extends AbstractFilterAction
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;
         }
-        $filter_name = scrub_in((string) filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+
+        $body = $request->getParsedBody();
+
+        $filter_name = scrub_in(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES));
 
         $this->ui->showHeader();
-
         $this->ui->show(
             'show_add_filter.inc.php',
-            ['filter_name' => $filter_name]
+            [
+                'filter_name' => $filter_name
+            ]
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

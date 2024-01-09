@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Register;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -52,40 +53,41 @@ final class AddUserAction implements ApplicationActionInterface
 
     private UserRepositoryInterface $userRepository;
 
+    private Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer;
+
+    private UiInterface $ui;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer,
+        UiInterface $ui
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->userRepository  = $userRepository;
+        $this->configContainer               = $configContainer;
+        $this->modelFactory                  = $modelFactory;
+        $this->userRepository                = $userRepository;
+        $this->registrationAgreementRenderer = $registrationAgreementRenderer;
+        $this->ui                            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        /* Check Perms */
+        // Check allow_public_registration
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === false
         ) {
-            throw new AccessDeniedException('Error attempted registration');
+            throw new AccessDeniedException('Error `allow_public_registration` disabled');
+        }
+        // Check for confirmation email requirements when mail is disabled
+        if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === true &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false &&
+            !Mailer::is_mail_enabled()
+        ) {
+            throw new AccessDeniedException('Error `mail_enable` failed. Enable `user_no_email_confirm` to disable mail requirements');
         }
 
-        /* Don't even include it if we aren't going to use it */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
-            define('CAPTCHA_INVERSE', 1);
-            /**
-             * @todo broken, the path does not exist anylonger
-             */
-            define(
-                'CAPTCHA_BASE_URL',
-                sprintf(
-                    '%s/modules/captcha/captcha.php',
-                    $this->configContainer->getWebPath()
-                )
-            );
-            require_once __DIR__ . '/../../Util/Captcha/init.php';
-        }
         /**
          * User information has been entered
          * we need to check the database for possible existing username first
@@ -96,7 +98,7 @@ final class AddUserAction implements ApplicationActionInterface
          * and 'click here to login' would just be a link back to index.php
          */
         $fullname = (string) scrub_in(Core::get_post('fullname'));
-        $username = (string) scrub_in(Core::get_post('username'));
+        $username = trim(scrub_in(Core::get_post('username')));
         $email    = (string) scrub_in(Core::get_post('email'));
         $pass1    = Core::get_post('password_1');
         $pass2    = Core::get_post('password_2');
@@ -125,7 +127,7 @@ final class AddUserAction implements ApplicationActionInterface
             }
         } // if they have to agree to something
 
-        if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
+        if ($username === '') {
             AmpError::add('username', T_('You must enter a Username'));
         }
 
@@ -162,7 +164,12 @@ final class AddUserAction implements ApplicationActionInterface
 
         // If we've hit an error anywhere up there break!
         if (AmpError::occurred()) {
-            require_once Ui::find_template('show_user_registration.inc.php');
+            $this->ui->show(
+                'show_user_registration.inc.php',
+                [
+                    'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
+                ]
+            );
 
             return null;
         }
@@ -196,7 +203,13 @@ final class AddUserAction implements ApplicationActionInterface
 
         if ($userId <= 0) {
             AmpError::add('duplicate_user', T_("Failed to create user"));
-            require_once Ui::find_template('show_user_registration.inc.php');
+
+            $this->ui->show(
+                'show_user_registration.inc.php',
+                [
+                    'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
+                ]
+            );
 
             return null;
         }

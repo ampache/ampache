@@ -1,5 +1,50 @@
 # CHANGELOG
 
+## Ampache 6.2.1
+
+The catalog verify process has been reworked a little. There were some bugs that would prevent you being able to 'finish' a catalog.
+
+Definitely set `catalog_verify_by_time` if you have a large catalog. This will allow you to do a verify in small batches over time and not repeat the same songs.
+
+### Added
+
+* Translations 2024-01
+* Add podcast opml export to the podcasts page
+* Advertise WebPlayer song info via MediaSession API / MPRIS
+
+### Changed
+
+* Replace all remaining occurrences of FILTER_SANITIZE_STRING
+* Enable `user_no_email_confirm` to disable email requirements for user registration. (When `mail_enable` is false registration was blocked)
+* Verify catalog by song instead of album
+* Catalog verify will now use the config option `catalog_verify_by_time` and only check songs not updated since the last full verify
+* Don't update counts and collect garbage after updating individual songs
+* PlayAction stream_select will now block until there is data
+
+### Fixed
+
+* Skipping non-songs would create a runtime error
+* db update_600005 shouldn't use `$album->get_fullname` which changed in update_600027
+* Upload page showing non-uploads
+* Showing extra title for podcasts
+* Captcha image generation
+* Registration check logic
+* Search error loading empty rules
+* Add from path on the catalog admin page
+* Reading tags on bad files would load the bad tags
+* Stop trying to read bad files before loading tags
+* Catalog update dates were set when the process was finished which negates `update_time` checks
+* Song `update_time` wasn't allowed to update
+* Check `update_time` in Catalog::count_table sql so you only verify what you need to
+* Transcode can't use range in headers
+* Empty result error on Stats::get_object_count
+* Subsonic
+  * Search2 and Search3 ignored musicFolderId
+
+## API 6.2.1
+
+**NO CHANGE**
+
 ## Ampache 6.2.0
 
 Builds for PHP 8.3 are now available!

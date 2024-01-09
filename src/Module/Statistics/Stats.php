@@ -337,7 +337,7 @@ class Stats
         $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int)$results['total_count'];
+        return (int)($results['total_count'] ?? 0);
     }
 
     /**
@@ -526,12 +526,18 @@ class Stats
 
         // update the total counts (and total_skip counts) as well
         if ($user_id > 0 && $agent !== 'debug') {
-            $song = new Song($object_id);
-            self::count('song', $song->id, 'down');
-            self::count('album', $song->album, 'down');
-            $artists = array_unique(array_merge(Song::get_parent_array($song->id), Song::get_parent_array($song->album, 'album')));
-            foreach ($artists as $artist_id) {
-                self::count('artist', $artist_id, 'down');
+            self::count($object_type, $object_id, 'down');
+            if ($object_type == 'song') {
+                $song = new Song($object_id);
+                self::count('album', $song->album, 'down');
+                $artists = array_unique(array_merge(Song::get_parent_array($song->id), Song::get_parent_array($song->album, 'album')));
+                foreach ($artists as $artist_id) {
+                    self::count('artist', $artist_id, 'down');
+                }
+            }
+            if ($object_type == 'podcast_episode') {
+                $podcast_episode = new Podcast_Episode($object_id);
+                self::count('podcast', $podcast_episode->podcast, 'down');
             }
             if (in_array($object_type, array('song', 'video', 'podcast_episode'))) {
                 $sql = "UPDATE `user_data`, (SELECT `$object_type`.`size` FROM `$object_type` WHERE `$object_type`.`id` = ?) AS `$object_type` SET `value` = `value` - `$object_type`.`size` WHERE `user` = ? AND `value` = 'play_size'";

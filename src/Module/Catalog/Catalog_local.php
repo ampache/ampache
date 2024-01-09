@@ -390,10 +390,12 @@ class Catalog_local extends Catalog
             /* Now that we're sure its a file get filesize  */
             $file_size = Core::get_filesize($full_file);
 
-            if (!$file_size) {
+            if ($file_size === 0) {
                 debug_event('local.catalog', "Unable to get filesize for $full_file", 2);
                 /* HINT: FullFile */
                 AmpError::add('catalog_add', sprintf(T_('Unable to get the filesize for "%s"'), $full_file));
+
+                return false;
             } // file_size check
 
             if (!Core::is_readable($full_file)) {
@@ -599,42 +601,51 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $total_updated = 0;
-        $this->count   = 0;
+        $date        = time();
+        $this->count = 0;
 
         $catalog_media_type = $this->gather_types;
+        $update_time        = ($catalog_media_type !== 'podcast' && AmpConfig::get('catalog_verify_by_time', false))
+            ? $this->last_update
+            : 0;
         if ($catalog_media_type == 'music') {
-            $media_type  = 'album';
-            $media_class = Album::class;
-            $total       = self::count_table($media_type, $this->catalog_id);
+            Song::clear_cache();
+            $media_type = 'song';
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time);
         } elseif ($catalog_media_type == 'podcast') {
-            $media_type  = 'podcast_episode';
-            $media_class = Podcast_Episode::class;
-            $total       = self::count_table($media_type, $this->catalog_id);
+            Podcast_Episode::clear_cache();
+            $media_type = 'podcast_episode';
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time);
         } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-            $media_type  = 'video';
-            $media_class = Video::class;
-            $total       = self::count_table($media_type, $this->catalog_id);
+            Video::clear_cache();
+            $media_type = 'video';
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time);
         } else {
-            return $total_updated;
+            return $this->count;
         }
         $count  = 1;
         $chunks = 1;
         $chunk  = 0;
-        if ($total > 1000) {
-            $chunks = floor($total / 1000) + 1;
+        if ($total > 10000) {
+            $chunks = (int)floor($total / 10000);
         }
-        $media_class::clear_cache();
-        while ($chunk < $chunks) {
+        debug_event('local.catalog', 'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")", 5);
+        while ($chunk <= $chunks) {
             debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
-            $total_updated += $this->_verify_chunk($media_type, $chunk, 1000);
+            $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), 10000);
             $chunk++;
             $count++;
         }
-        debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
-        $this->update_last_update();
+        if ($media_type === 'song') {
+            Album::update_table_counts();
+            Artist::update_table_counts();
+            Artist::garbage_collection();
+            $this->getAlbumRepository()->collectGarbage();
+        }
+        debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
+        $this->update_last_update($date);
 
-        return $total_updated;
+        return $this->count;
     }
 
     /**
@@ -650,16 +661,20 @@ class Catalog_local extends Catalog
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
+        $verify_by_time = ($tableName !== 'podcast_episode' && AmpConfig::get('catalog_verify_by_time', false));
         switch ($tableName) {
             case 'album':
-                $sql = "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->catalog_id . ") GROUP BY `song`.`album` ORDER BY `min_update_time` LIMIT $count, $chunk_size";
+                $sql = "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->catalog_id . ") GROUP BY `song`.`album` ORDER BY `min_update_time` DESC LIMIT $count, $chunk_size";
                 break;
             case 'podcast_episode':
-                $sql = "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = " . $this->catalog_id . " AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`pubdate` DESC, `podcast_episode`.`file` LIMIT $count, $chunk_size";
+                $sql = "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = " . $this->catalog_id . " AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`podcast`, `podcast_episode`.`pubdate` DESC LIMIT $count, $chunk_size";
                 break;
+            case 'song':
             case 'video':
             default:
-                $sql = "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->catalog_id . " AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `min_update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
+                $sql = ($verify_by_time)
+                    ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->catalog_id . " AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`update_time` LIMIT $count, $chunk_size"
+                    : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->catalog_id . " ORDER BY `$tableName`.`file` LIMIT $count, $chunk_size";
                 break;
         }
         $db_results = Dba::read($sql);
@@ -674,7 +689,6 @@ class Catalog_local extends Catalog
             $className::build_cache($media_ids);
             $db_results = Dba::read($sql);
         }
-        $verify_by_time = AmpConfig::get('catalog_verify_by_time', false) && $tableName !== 'podcast_episode';
         while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (Ui::check_ticker()) {
@@ -720,7 +734,6 @@ class Catalog_local extends Catalog
 
             return 0;
         }
-        $dead_total  = 0;
         $this->count = 0;
 
         $catalog_media_type = $this->gather_types;
@@ -732,7 +745,7 @@ class Catalog_local extends Catalog
         }
         $total = self::count_table($media_type, $this->catalog_id);
         if ($total == 0) {
-            return $dead_total;
+            return $this->count;
         }
         $dead   = array();
         $count  = 1;
@@ -756,11 +769,11 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', 'All files would be removed. Doing nothing.', 1);
                 AmpError::add('general', T_('All files would be removed. Doing nothing'));
 
-                return $dead_total;
+                return $this->count;
             }
         }
         if ($dead_count) {
-            $dead_total += $dead_count;
+            $this->count += $dead_count;
             $sql = "DELETE FROM `$media_type` WHERE `id` IN (" . implode(',', $dead) . ")";
             Dba::write($sql);
         }
@@ -768,7 +781,7 @@ class Catalog_local extends Catalog
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
 
-        return (int)$dead_total;
+        return $this->count;
     }
 
     /**

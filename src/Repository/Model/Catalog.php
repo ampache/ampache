@@ -1078,9 +1078,15 @@ abstract class Catalog extends database_object
      * objects that are associated with this catalog. This is used
      * to build the stats box, it also calculates time.
      * @param int|null $catalog_id
-     * @return array
+     * @return array{
+     *  tags: int,
+     *  formatted_size: string,
+     *  time_text: string,
+     *  users: int,
+     *  connected: int
+     * }
      */
-    public static function get_stats($catalog_id = 0)
+    public static function get_stats($catalog_id = 0): array
     {
         $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::get_server_counts(0);
         $counts         = array_merge(self::getUserRepository()->getStatistics(), $counts);
@@ -1247,15 +1253,24 @@ abstract class Catalog extends database_object
      * count_table
      *
      * Count and/or Update a table count when adding/removing from the server
-     * @param string $table
-     * @param int $catalog_id
      */
-    public static function count_table($table, $catalog_id = 0): int
+    public static function count_table(string $table, ?int $catalog_id = 0, ?int $update_time = 0): int
     {
-        $sql = ($catalog_id > 0)
-            ? "SELECT COUNT(`id`) FROM `$table` WHERE `catalog` = $catalog_id;"
-            : "SELECT COUNT(`id`) FROM `$table`;";
-        $db_results = Dba::read($sql);
+        $sql       = "SELECT COUNT(`id`) FROM `$table` ";
+        $params    = array();
+        $where_sql = 'WHERE';
+        if ($catalog_id > 0) {
+            $sql .= $where_sql . " `catalog` = ? ";
+            $params[]  = $catalog_id;
+            $where_sql = 'AND';
+        }
+        if ($update_time > 0) {
+            $sql .= $where_sql . " `update_time` <= ? ";
+            $params[] = $update_time;
+        }
+        $sql = rtrim($sql, ';');
+        //debug_event(self::class, 'count_table ' . $sql . ' ' . print_r($params, true), 5);
+        $db_results = Dba::read($sql, $params);
         $row        = Dba::fetch_row($db_results);
         if (empty($row)) {
             return 0;
@@ -1313,15 +1328,18 @@ abstract class Catalog extends database_object
         $column = ($type == 'song')
             ? 'user_upload'
             : 'user';
+        $table = ($type == 'album')
+            ? 'artist'
+            : $type;
         $where_sql = ($user_id > 0)
-            ? "WHERE `$type`.`$column` = '" . $user_id . "'"
-            : "WHERE `$type`.`$column` IS NOT NULL";
+            ? "WHERE `$table`.`$column` = '" . $user_id . "'"
+            : "WHERE `$table`.`$column` IS NOT NULL";
         switch ($type) {
             case 'song':
                 $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql";
                 break;
             case 'album':
-                $sql = "SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `artist` on `album`.`album_artist` = `artist`.`id` ";
+                $sql = "SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `artist` on `album`.`album_artist` = `artist`.`id` $where_sql";
                 break;
             case 'artist':
                 $sql = "SELECT DISTINCT `id` FROM `artist` $where_sql";
@@ -1622,25 +1640,6 @@ abstract class Catalog extends database_object
         }
 
         return $results;
-    }
-
-    /**
-     * get_catalog_map
-     *
-     * This returns an id of artist that have songs in this catalog
-     * @param string $object_type
-     * @param string $object_id
-     */
-    public static function get_catalog_map($object_type, $object_id): int
-    {
-        $sql = "SELECT MIN(`catalog_map`.`catalog_id`) AS `catalog_id` FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
-
-        $db_results = Dba::read($sql, array($object_type, $object_id));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['catalog_id'];
-        }
-
-        return 0;
     }
 
     /**
@@ -2231,9 +2230,8 @@ abstract class Catalog extends database_object
      * update_last_update
      * updates the last_update of the catalog
      */
-    protected function update_last_update()
+    protected function update_last_update(int $date): void
     {
-        $date = time();
         self::_update_item('last_update', $date, $this->id);
     }
 
@@ -2387,17 +2385,19 @@ abstract class Catalog extends database_object
             $genres = self::getSongTags('artist', $libitem->id);
             Tag::update_tag_list(implode(',', $genres), 'artist', $libitem->id, true);
         }
-        // check counts
-        if ($album || $maps) {
-            Album::update_table_counts();
-        }
-        if ($artist || $maps) {
-            Artist::update_table_counts();
-        }
-        // collect the garbage too
-        if ($album || $artist || $maps) {
-            Artist::garbage_collection();
-            static::getAlbumRepository()->collectGarbage();
+        if ($type !== 'song') {
+            // check counts
+            if ($album || $maps) {
+                Album::update_table_counts();
+            }
+            if ($artist || $maps) {
+                Artist::update_table_counts();
+            }
+            // collect the garbage too
+            if ($album || $artist || $maps) {
+                Artist::garbage_collection();
+                static::getAlbumRepository()->collectGarbage();
+            }
         }
 
         return array(
@@ -2866,6 +2866,9 @@ abstract class Catalog extends database_object
             if ($song->license != $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
             }
+        } else {
+            // always update the time when you update
+            Song::update_utime($song->id);
         }
 
         // If song rating tag exists and is well formed (array user=>rating), update it
@@ -2877,9 +2880,6 @@ abstract class Catalog extends database_object
                 $o_rating->set_rating((int)$rating, $user);
             }
         }
-        // lets always update the time when you update
-        $update_time = time();
-        Song::update_utime($song->id, $update_time);
         if ($map_change) {
             $info['change'] = true;
             $info['maps']   = true;
@@ -2933,10 +2933,10 @@ abstract class Catalog extends database_object
                 Tag::update_tag_list(implode(',', $new_video->tags), 'video', $video->id, true);
             }
             Video::update_video_counts($video->id);
+        } else {
+            // always update the time when you update
+            Video::update_utime($video->id);
         }
-        // lets always update the time when you update
-        $update_time = time();
-        Video::update_utime($video->id, $update_time);
 
         return $info;
     }
@@ -3947,16 +3947,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Updates album tags from given album id
-     * @param int $album_id
-     */
-    protected static function updateAlbumTags(int $album_id)
-    {
-        $tags = self::getSongTags('album', $album_id);
-        Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true);
-    }
-
-    /**
      * Updates artist tags from given song id
      * @param int $song_id
      */
@@ -4191,7 +4181,7 @@ abstract class Catalog extends database_object
                     $catalog_id = Catalog_local::get_from_path($add_path);
                     if (is_int($catalog_id)) {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => strlen($add_path)))) {
+                        if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => $add_path))) {
                             self::update_catalog_map($catalog->gather_types);
                         }
                     }
@@ -4417,7 +4407,7 @@ abstract class Catalog extends database_object
     /**
      * @deprecated
      */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
+    protected static function getAlbumRepository(): AlbumRepositoryInterface
     {
         global $dic;
 

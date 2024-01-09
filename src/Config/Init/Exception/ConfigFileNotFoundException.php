@@ -27,5 +27,6 @@ namespace Ampache\Config\Init\Exception;
 
 final class ConfigFileNotFoundException extends InitializationException
 {
+    /** @var string */
     protected $message = 'Config file not found';
 }

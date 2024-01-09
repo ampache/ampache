@@ -80,7 +80,6 @@ final class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->showBoxTop((string)$podcast->get_fullname(), 'info-box');
             $this->ui->show(
                 'show_podcast.inc.php',
                 [

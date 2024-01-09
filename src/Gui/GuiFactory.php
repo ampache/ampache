@@ -177,6 +177,15 @@ final class GuiFactory implements GuiFactoryInterface
         );
     }
 
+    /**
+     * @param array{
+     *  tags: int,
+     *  formatted_size: string,
+     *  time_text: string,
+     *  users: int,
+     *  connected: int
+     * } $stats
+     */
     public function createCatalogStats(array $stats): CatalogStatsInterface
     {
         return new CatalogStats($stats);

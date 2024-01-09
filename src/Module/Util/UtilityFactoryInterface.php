@@ -37,7 +37,7 @@ interface UtilityFactoryInterface
         string $dirPattern = '',
         string $filePattern = '',
         bool $isLocal = true
-    ): VaInfoInterface;
+    ): VaInfo;
 
     /**
      * Returns a new Curl instance

@@ -537,6 +537,7 @@ class Catalog_dropbox extends Catalog
     {
         set_time_limit(0);
 
+        $date           = time();
         $updated        = 0;
         $utilityFactory = $this->getUtilityFactory();
         $app            = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
@@ -585,7 +586,7 @@ class Catalog_dropbox extends Catalog
                 }
             }
 
-            $this->update_last_update();
+            $this->update_last_update($date);
         } catch (DropboxClientException $e) {
             AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
         }

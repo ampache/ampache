@@ -4507,7 +4507,7 @@ class Update
         // get all matching albums that will migrate into the base albums
         foreach ($album_list as $album_id) {
             $album  = new Album((int)$album_id);
-            $f_name = $album->get_fullname(true);
+            $f_name = trim(trim($album->prefix ?? '') . ' ' . trim($album->name ?? ''));
             $where  = " WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
             $params = array($f_name, $f_name);
             if ($album->mbid) {

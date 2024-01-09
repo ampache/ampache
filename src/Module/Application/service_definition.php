@@ -147,6 +147,7 @@ return [
     Podcast\DeleteAction::class => autowire(Podcast\DeleteAction::class),
     Podcast\ConfirmDeleteAction::class => autowire(Podcast\ConfirmDeleteAction::class),
     Podcast\ShowAction::class => autowire(Podcast\ShowAction::class),
+    Podcast\ExportPodcastsAction::class => autowire(),
     PodcastEpisode\DeleteAction::class => autowire(PodcastEpisode\DeleteAction::class),
     PodcastEpisode\ConfirmDeleteAction::class => autowire(PodcastEpisode\ConfirmDeleteAction::class),
     PodcastEpisode\ShowAction::class => autowire(PodcastEpisode\ShowAction::class),
