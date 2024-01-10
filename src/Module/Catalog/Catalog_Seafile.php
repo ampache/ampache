@@ -491,10 +491,10 @@ class Catalog_Seafile extends Catalog
      * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
-     * @return array|null
+     * @return array
      * @throws Exception
      */
-    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern): ?array
+    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern): array
     {
         // if you have the file it's all good
         /** @var Song $media */
@@ -511,7 +511,7 @@ class Catalog_Seafile extends Catalog
             }
         }
 
-        return null;
+        return array();
     }
 
     /**
