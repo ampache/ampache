@@ -89,7 +89,7 @@ interface playable_item
      * @param string $filter_type
      * @return mixed
      */
-    public function get_medias($filter_type = null);
+    public function get_medias($filter_type = null): array;
 
     public function getId(): int;
 
