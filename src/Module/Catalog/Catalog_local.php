@@ -174,7 +174,7 @@ class Catalog_local extends Catalog
      * @param string $path
      * @return int|null
      */
-    public static function get_from_path($path)
+    public static function get_from_path($path): ?int
     {
         // First pull a list of all of the paths for the different catalogs
         $sql        = "SELECT `catalog_id`, `path` FROM `catalog_local`";

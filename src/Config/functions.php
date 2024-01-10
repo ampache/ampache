@@ -1173,7 +1173,7 @@ function T_(string $msgid): string
  * @param int|string $value
  * @return string
  */
-function nT_($original, $plural, $value)
+function nT_($original, $plural, $value): string
 {
     if (function_exists('n__')) {
         return n__($original, $plural, (string)$value);
