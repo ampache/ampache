@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Tag;
@@ -62,7 +61,7 @@ final class EditObjectAction extends AbstractEditAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        database_object $libitem,
+        library_item $libitem,
         int $object_id
     ): ?ResponseInterface {
         // Scrub the data, walk recursive through array

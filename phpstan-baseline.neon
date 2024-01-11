@@ -461,11 +461,6 @@ parameters:
 			path: src/Module/Api/Edit/AbstractEditAction.php
 
 		-
-			message: "#^Parameter \\#4 \\$libitem of method Ampache\\\\Module\\\\Api\\\\Edit\\\\AbstractEditAction\\:\\:handle\\(\\) expects Ampache\\\\Repository\\\\Model\\\\database_object, Ampache\\\\Repository\\\\Model\\\\library_item given\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/AbstractEditAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, string\\|false\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/RefreshUpdatedAction.php
