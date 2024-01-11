@@ -53,7 +53,7 @@ final class ShowEditAction extends AbstractFilterAction
             return null;
         }
 
-        $body = $request->getParsedBody();
+        $body = $request->getQueryParams();
 
         $filter_id = (int) ($body['filter_id'] ?? 0);
 
