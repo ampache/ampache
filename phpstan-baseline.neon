@@ -15416,6 +15416,11 @@ parameters:
 			path: src/Repository/Model/playable_item.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_medias\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/playable_item.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playable_item.php
