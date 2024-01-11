@@ -1783,7 +1783,7 @@ class Subsonic_Xml_Data
             if (AmpConfig::get('ratings')) {
                 $starred = new Userflag($object_id, $objectType);
                 $result  = $starred->get_flag(null, true);
-                if (isset($result[1])) {
+                if (is_array($result) && isset($result[1])) {
                     $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int)$result[1]));
                 }
             }

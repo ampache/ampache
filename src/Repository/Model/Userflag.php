@@ -154,7 +154,7 @@ class Userflag extends database_object
      * @param bool $get_date
      * @return bool|array
      */
-    public function get_flag($user_id = null, $get_date = null)
+    public function get_flag($user_id = null, $get_date = false)
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -170,21 +170,20 @@ class Userflag extends database_object
             if (empty($object) || !$object[0]) {
                 return false;
             }
+            if ($get_date) {
+                return $object;
+            }
 
-            return $object;
+            return (bool)$object[0];
         }
 
+        $flagged    = false;
         $sql        = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
-
-        $flagged = false;
         if ($row = Dba::fetch_assoc($db_results)) {
-            if ($get_date) {
-                $flagged = array(1, $row['date']);
-            } else {
-                $flagged = array(1);
-            }
-            parent::add_to_cache($key, $this->id, $flagged);
+            $flagged = true;
+            // always cache the date in case it's called by subsonic
+            parent::add_to_cache($key, $this->id, array(true, $row['date']));
         }
 
         return $flagged;
