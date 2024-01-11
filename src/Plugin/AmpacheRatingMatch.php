@@ -223,7 +223,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
             if ($album->album_artist) {
                 foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
                     $fArtist = new Userflag($artist_id, 'artist');
-                    if (!$fArtist->get_flag($this->user->id, false)) {
+                    if (!$fArtist->get_flag($this->user->id)) {
                         $fArtist->set_flag($flagged, $this->user->id);
                     }
                 }
@@ -291,7 +291,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         if (!empty($this->flag_rule)) {
             if ($this->rule_process($this->flag_rule, $play_count, $skip_count)) {
                 $flag = new Userflag($song->id, 'song');
-                if (!$flag->get_flag($this->user->id, false)) {
+                if (!$flag->get_flag($this->user->id)) {
                     $flag->set_flag(true, $this->user->id);
                 }
             }

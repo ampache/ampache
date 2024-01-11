@@ -553,7 +553,7 @@ class Json_Data
                 "songcount" => $artist->song_count,
                 "genre" => self::genre_array($artist->tags),
                 "art" => $art_url,
-                "flag" => (bool)$flag->get_flag($user->getId(), false),
+                "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "mbid" => $artist->mbid,
@@ -652,7 +652,7 @@ class Json_Data
             $objArray['type']          = $album->release_type;
             $objArray['genre']         = self::genre_array($album->tags);
             $objArray['art']           = $art_url;
-            $objArray['flag']          = (bool)$flag->get_flag($user->getId(), false);
+            $objArray['flag']          = (bool)$flag->get_flag($user->getId());
             $objArray['rating']        = $user_rating;
             $objArray['averagerating'] = $rating->get_average_rating();
             $objArray['mbid']          = $album->mbid;
@@ -748,7 +748,7 @@ class Json_Data
                 "items" => $items,
                 "type" => $playlist_type,
                 "art" => $art_url,
-                "flag" => (bool)$flag->get_flag($user->getId(), false),
+                "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating()
             ];
@@ -1009,7 +1009,7 @@ class Json_Data
                 "sync_date" => $podcast_sync_date,
                 "public_url" => $podcast_public_url,
                 "art" => $art_url,
-                "flag" => (bool)$flag->get_flag($user->getId(), false),
+                "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "podcast_episode" => $podcast_episodes
@@ -1085,7 +1085,7 @@ class Json_Data
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
-                "flag" => (bool)$flag->get_flag($user->getId(), false),
+                "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int)$episode->total_count,
@@ -1201,7 +1201,7 @@ class Json_Data
             $objArray['size']                  = (int)$song->size;
             $objArray['mbid']                  = $song->mbid;
             $objArray['art']                   = $art_url;
-            $objArray['flag']                  = (bool)$flag->get_flag($user->getId(), false);
+            $objArray['flag']                  = (bool)$flag->get_flag($user->getId());
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();
             $objArray['playcount']             = (int)$song->total_count;
@@ -1286,7 +1286,7 @@ class Json_Data
                 "time" => (int)$video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
-                "flag" => (bool)$flag->get_flag($user->getId(), false),
+                "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int)$video->total_count
@@ -1392,7 +1392,7 @@ class Json_Data
                 "email" => $user->email,
                 "access" => (int)$user->access,
                 "streamtoken" => $user->streamtoken,
-                "fullname_public" => (int)$user->fullname_public,
+                "fullname_public" => (bool)$user->fullname_public,
                 "validation" => $user->validation,
                 "disabled" => (bool)$user->disabled,
                 "create_date" => (int)$user->create_date,
