@@ -181,9 +181,12 @@ class Userflag extends database_object
         $sql        = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
         if ($row = Dba::fetch_assoc($db_results)) {
-            $flagged = true;
             // always cache the date in case it's called by subsonic
             parent::add_to_cache($key, $this->id, array(true, $row['date']));
+            if ($get_date) {
+                return array(true, $row['date']);
+            }
+            $flagged = true;
         }
 
         return $flagged;
