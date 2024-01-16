@@ -46,7 +46,7 @@ final class Migration380001 extends AbstractMigration
         $this->updatePreferences('podcast_keep', 'Podcast: # latest episodes to keep', '10', 100, 'integer', 'system');
         $this->updatePreferences('podcast_new_download', 'Podcast: # episodes to download when new episodes are available', '1', 100, 'integer', 'system');
 
-        $this->updateDatabase("ALTER TABLE `rating` CHANGE `object_type` `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') NULL");
+        $this->updateDatabase("ALTER TABLE `rating` CHANGE COLUMN `object_type` `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') NULL");
     }
 
     public function getTableMigrations(

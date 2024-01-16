@@ -36,6 +36,6 @@ final class Migration360010 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `artist` CHANGE `mbid` `mbid` varchar(36);");
+        $this->updateDatabase("ALTER TABLE `artist` CHANGE COLUMN `mbid` `mbid` varchar(36);");
     }
 }

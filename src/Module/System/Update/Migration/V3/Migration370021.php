@@ -35,6 +35,6 @@ final class Migration370021 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `rating` CHANGE `object_type` `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season') NULL;");
+        $this->updateDatabase("ALTER TABLE `rating` CHANGE COLUMN `object_type` `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season') NULL;");
     }
 }

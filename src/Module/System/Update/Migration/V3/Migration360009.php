@@ -36,6 +36,6 @@ final class Migration360009 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `tmp_playlist` CHANGE `session` `session` varchar(64);");
+        $this->updateDatabase("ALTER TABLE `tmp_playlist` CHANGE COLUMN `session` `session` varchar(64);");
     }
 }

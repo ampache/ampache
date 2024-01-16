@@ -35,6 +35,6 @@ final class Migration360012 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `session` CHANGE `type` `type` varchar(16) DEFAULT NULL;");
+        $this->updateDatabase("ALTER TABLE `session` CHANGE COLUMN `type` `type` varchar(16) DEFAULT NULL;");
     }
 }

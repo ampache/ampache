@@ -41,7 +41,7 @@ final class Migration370009 extends AbstractMigration
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         $sql_array = array(
-            "ALTER TABLE `video` ADD COLUMN `release_date` date NULL AFTER `enabled`, ADD `played` tinyint(1) unsigned DEFAULT '0' NOT NULL AFTER `enabled`",
+            "ALTER TABLE `video` ADD COLUMN `release_date` date NULL AFTER `enabled`, ADD COLUMN `played` tinyint(1) unsigned DEFAULT '0' NOT NULL AFTER `enabled`",
             "CREATE TABLE IF NOT EXISTS `tvshow` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `summary` varchar(256) NULL, `year` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
             "CREATE TABLE IF NOT EXISTS `tvshow_season` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `season_number` int(11) unsigned NOT NULL, `tvshow` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
             "CREATE TABLE IF NOT EXISTS `tvshow_episode` (`id` int(11) unsigned NOT NULL, `original_name` varchar(80) NULL, `season` int(11) unsigned NOT NULL, `episode_number` int(11) unsigned NOT NULL, `summary` varchar(256) NULL, PRIMARY KEY (`id`)) ENGINE=$engine",

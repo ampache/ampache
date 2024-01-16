@@ -35,8 +35,8 @@ final class Migration360014 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `stream_playlist` CHANGE `sid` `sid` varchar(256);");
-        $this->updateDatabase("ALTER TABLE `tmp_playlist` CHANGE `session` `session` varchar(256);");
-        $this->updateDatabase("ALTER TABLE `session` CHANGE `id` `id` varchar(256) NOT NULL;");
+        $this->updateDatabase("ALTER TABLE `stream_playlist` CHANGE COLUMN `sid` `sid` varchar(256);");
+        $this->updateDatabase("ALTER TABLE `tmp_playlist` CHANGE COLUMN `session` `session` varchar(256);");
+        $this->updateDatabase("ALTER TABLE `session` CHANGE COLUMN `id` `id` varchar(256) NOT NULL;");
     }
 }

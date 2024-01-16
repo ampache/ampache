@@ -35,6 +35,6 @@ final class Migration370006 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `search` ADD COLUMN `random` tinyint(1) unsigned NOT NULL DEFAULT '0' AFTER `logic_operator`, ADD `limit` int(11) unsigned NOT NULL DEFAULT '0' AFTER `random`;");
+        $this->updateDatabase("ALTER TABLE `search` ADD COLUMN `random` tinyint(1) unsigned NOT NULL DEFAULT '0' AFTER `logic_operator`, ADD COLUMN `limit` int(11) unsigned NOT NULL DEFAULT '0' AFTER `random`;");
     }
 }

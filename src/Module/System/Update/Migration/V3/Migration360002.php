@@ -44,13 +44,13 @@ final class Migration360002 extends AbstractMigration
     {
         // Drop the key from catalog and ACL
         $sql_array = array(
-            "ALTER TABLE `catalog` DROP `key`",
-            "ALTER TABLE `access_list` DROP `key`",
+            "ALTER TABLE `catalog` DROP COLUMN `key`",
+            "ALTER TABLE `access_list` DROP COLUMN `key`",
             "ALTER TABLE `catalog` ADD COLUMN `remote_username` VARCHAR (255) AFTER `catalog_type`",
             "ALTER TABLE `catalog` ADD COLUMN `remote_password` VARCHAR (255) AFTER `remote_username`",
-            "ALTER TABLE `song` CHANGE `file` `file` VARCHAR (4096)",
-            "ALTER TABLE `video` CHANGE `file` `file` VARCHAR (4096)",
-            "ALTER TABLE `live_stream` CHANGE `url` `url` VARCHAR (4096)",
+            "ALTER TABLE `song` CHANGE COLUMN `file` `file` VARCHAR (4096)",
+            "ALTER TABLE `video` CHANGE COLUMN `file` `file` VARCHAR (4096)",
+            "ALTER TABLE `live_stream` CHANGE COLUMN `url` `url` VARCHAR (4096)",
             "ALTER TABLE `artist` ADD FULLTEXT(`name`)",
             "ALTER TABLE `album` ADD FULLTEXT(`name`)",
             "ALTER TABLE `song` ADD FULLTEXT(`title`)"

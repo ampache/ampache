@@ -39,7 +39,7 @@ final class Migration600027 extends AbstractMigration
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
 
         $this->updateDatabase(
-            sprintf('ALTER TABLE `album` CHANGE `subtitle` `version` varchar(64) COLLATE %s DEFAULT NULL', $collation)
+            sprintf('ALTER TABLE `album` CHANGE COLUMN `subtitle` `version` varchar(64) COLLATE %s DEFAULT NULL', $collation)
         );
     }
 }

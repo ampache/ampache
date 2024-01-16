@@ -58,7 +58,7 @@ final class Migration360020 extends AbstractMigration
         }
 
         $sql_array = array(
-            "ALTER TABLE `catalog` DROP `path`, DROP `remote_username`, DROP `remote_password`",
+            "ALTER TABLE `catalog` DROP COLUMN `path`, DROP COLUMN `remote_username`, DROP COLUMN `remote_password`",
             "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)",
             "UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = ''",
             "UPDATE `album` SET `mbid` = NULL WHERE `mbid` = ''",

@@ -65,7 +65,7 @@ final class Migration370004 extends AbstractMigration
             "INSERT INTO `license` (`name`, `external_link`) VALUES ('WTFPL', 'https://en.wikipedia.org/wiki/WTFPL')",
             "INSERT INTO `license` (`name`, `external_link`) VALUES ('FMPL', 'http://www.fmpl.org/fmpl.html')",
             "INSERT INTO `license` (`name`, `external_link`) VALUES ('C Reaction', 'http://morne.free.fr/Necktar7/creaction.htm')",
-            "ALTER TABLE `song` ADD COLUMN `user_upload` int(11) NULL AFTER `addition_time`, ADD `license` int(11) NULL AFTER `user_upload`"
+            "ALTER TABLE `song` ADD COLUMN `user_upload` int(11) NULL AFTER `addition_time`, ADD COLUMN `license` int(11) NULL AFTER `user_upload`"
         );
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);
