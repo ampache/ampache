@@ -454,7 +454,9 @@ class Subsonic_Xml_Data
             $xsong->addAttribute('artistId', (string)self::_getArtistId($song->artist));
             $xsong->addAttribute('artist', (string)self::_checkName($song->get_artist_fullname()));
             if ($song->has_art()) {
-                $xsong->addAttribute('coverArt', $sub_id);
+                $show_song_art = AmpConfig::get('show_song_art', false);
+                $art_id    = $show_song_art ? $sub_id : $subParent;
+                $xsong->addAttribute('coverArt', $art_id);
             }
             $xsong->addAttribute('duration', (string)$song->time);
             $xsong->addAttribute('bitRate', (string)((int)($song->bitrate / 1024)));
