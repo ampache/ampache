@@ -72,6 +72,9 @@ foreach ($data as $row) {
     $row_id   = ($row['user'] > 0) ? (int) $row['user'] : -1;
     $row_user = new User($row_id);
     $song     = new Song($row['object_id']);
+    if ($song->isNew()) {
+        continue;
+    }
 
     $agent              = ($is_admin) ? $row['agent'] : '';
     $time_string        = '-';
