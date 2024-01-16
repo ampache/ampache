@@ -54,8 +54,10 @@ final class Migration500013 extends AbstractMigration
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `deleted_podcast_episode` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `addition_time` int(11) UNSIGNED NOT NULL, `delete_time` int(11) UNSIGNED NOT NULL, `title` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `file` varchar(4096) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL, `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0', `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0', `podcast` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
 
         // add username to playlist and searches to stop calling the objects all the time
+        $this->updateDatabase("ALTER TABLE `playlist` DROP COLUMN `username`;");
         $this->updateDatabase("ALTER TABLE `playlist` ADD `username` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL;");
 
+        $this->updateDatabase("ALTER TABLE `search` DROP COLUMN `username`;");
         $this->updateDatabase("ALTER TABLE `search` ADD `username` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL;");
 
         // fill the data
