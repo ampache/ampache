@@ -61,8 +61,8 @@ final class Migration500013 extends AbstractMigration
         // fill the data
         $this->updateDatabase("UPDATE `playlist`, (SELECT `id`, `username` FROM `user`) AS `user` SET `playlist`.`username` = `user`.`username` WHERE `playlist`.`user` = `user`.`id`;");
         $this->updateDatabase("UPDATE `search`, (SELECT `id`, `username` FROM `user`) AS `user` SET `search`.`username` = `user`.`username` WHERE `search`.`user` = `user`.`id`;");
-        $this->updateDatabase("UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = -1;");
-        $this->updateDatabase("UPDATE `search` SET `search`.`username` = ? WHERE `search`.`user` = -1;");
+        $this->updateDatabase("UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = -1;", array(T_('System')));
+        $this->updateDatabase("UPDATE `search` SET `search`.`username` = ? WHERE `search`.`user` = -1;", array(T_('System')));
     }
 
     public function getTableMigrations(
