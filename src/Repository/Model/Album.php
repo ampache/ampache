@@ -871,7 +871,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $mbid_group     = $data['mbid_group'] ?? null;
         $release_type   = $data['release_type'] ?? null;
         $release_status = $data['release_status'] ?? null;
-        $original_year  = $data['original_year'] ?? null;
+        $original_year  = (!empty($data['original_year']))
+            ? (int)$data['original_year']
+            : null;
         $barcode        = $data['barcode'] ?? null;
         $catalog_number = $data['catalog_number'] ?? null;
         $version        = $data['version'] ?? null;
