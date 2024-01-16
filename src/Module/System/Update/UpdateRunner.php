@@ -93,6 +93,12 @@ final class UpdateRunner implements UpdateRunnerInterface
 
         foreach ($updates as $update) {
             $migration = $update['migration'];
+            if ($interactor !== null) {
+                $interactor->info(
+                    get_class($migration),
+                    true
+                );
+            }
 
             $migration->setInteractor($interactor);
 
