@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,7 @@ final class Migration600003 extends AbstractMigration
 
     public function migrate(): void
     {
+        Dba::write("ALTER TABLE `podcast` DROP COLUMN `total_skip`;");
         $this->updateDatabase("ALTER TABLE `podcast` ADD COLUMN `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `total_count`;");
         $this->updateDatabase("UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_skip`) AS `total_skip`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_skip` = `object_count`.`total_skip` WHERE `podcast`.`total_skip` != `object_count`.`total_skip` AND `podcast`.`id` = `object_count`.`podcast`;");
     }

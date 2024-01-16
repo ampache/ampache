@@ -50,6 +50,7 @@ final class Migration520001 extends AbstractMigration
         }
 
         $this->updateDatabase("DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` FROM `preference`);");
+        Dba::write("ALTER TABLE `preference` DROP KEY `preference_UN`;");
         $this->updateDatabase("ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);");
     }
 }

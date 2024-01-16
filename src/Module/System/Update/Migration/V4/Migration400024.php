@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V4;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -40,8 +41,11 @@ final class Migration400024 extends AbstractMigration
 
     public function migrate(): void
     {
+        Dba::write("ALTER TABLE `artist` DROP COLUMN `song_count`;");
         $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `song_count` smallint(5) unsigned DEFAULT 0 NULL;");
+        Dba::write("ALTER TABLE `artist` DROP COLUMN `album_count`;");
         $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `album_count` smallint(5) unsigned DEFAULT 0 NULL;");
+        Dba::write("ALTER TABLE `artist` DROP COLUMN `album_group_count`;");
         $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `album_group_count` smallint(5) unsigned DEFAULT 0 NULL;");
     }
 }

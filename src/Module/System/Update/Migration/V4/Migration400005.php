@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V4;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,7 @@ final class Migration400005 extends AbstractMigration
 
     public function migrate(): void
     {
+        Dba::write("ALTER TABLE `search` DROP COLUMN `last_count`;");
         $this->updateDatabase("ALTER TABLE `search` ADD COLUMN `last_count` INT(11) NULL;");
     }
 }

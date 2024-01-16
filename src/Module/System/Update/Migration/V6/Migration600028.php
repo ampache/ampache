@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,9 +36,13 @@ final class Migration600028 extends AbstractMigration
 
     public function migrate(): void
     {
+        Dba::write("ALTER TABLE `podcast_episode` DROP COLUMN `channels`;");
         $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `channels` mediumint(9) DEFAULT NULL AFTER `catalog`');
+        Dba::write("ALTER TABLE `podcast_episode` DROP COLUMN `mode`;");
         $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `mode` enum(\'abr\',\'vbr\',\'cbr\') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL AFTER `catalog`');
+        Dba::write("ALTER TABLE `podcast_episode` DROP COLUMN `rate`;");
         $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `rate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`');
+        Dba::write("ALTER TABLE `podcast_episode` DROP COLUMN `bitrate`;");
         $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `bitrate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`');
     }
 }

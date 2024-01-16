@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V4;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,7 @@ final class Migration400012 extends AbstractMigration
 
     public function migrate(): void
     {
+        Dba::write("ALTER TABLE `user` DROP COLUMN `rsstoken`;");
         $this->updateDatabase("ALTER TABLE `user` ADD COLUMN `rsstoken` varchar(255) NULL;");
     }
 }

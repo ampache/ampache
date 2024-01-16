@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,7 @@ final class Migration600015 extends AbstractMigration
 
     public function migrate(): void
     {
+        Dba::write("ALTER TABLE `user` DROP COLUMN `streamtoken`;");
         $this->updateDatabase('ALTER TABLE `user` ADD COLUMN `streamtoken` varchar(255) NULL AFTER `rsstoken`');
     }
 }
