@@ -86,7 +86,10 @@ abstract class AbstractMigration implements MigrationInterface
         $this->connection->query($sql, $params);
 
         if ($this->interactor !== null) {
-            $this->interactor->info($sql);
+            $this->interactor->info(
+                $sql,
+                true
+            );
         }
     }
 
@@ -109,7 +112,7 @@ abstract class AbstractMigration implements MigrationInterface
         if ($this->interactor !== null) {
             $this->interactor->info(
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                sprintf(T_('Bad Request: %s'), $name),
+                sprintf(T_('Updated: %s'), $name),
                 true
             );
         }
