@@ -35,8 +35,8 @@ final class Migration360033 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `song_data` ADD `waveform` MEDIUMBLOB NULL AFTER `language`");
+        $this->updateDatabase("ALTER TABLE `song_data` ADD COLUMN `waveform` MEDIUMBLOB NULL AFTER `language`");
 
-        $this->updateDatabase("ALTER TABLE `user_shout` ADD `data` varchar(256) NULL AFTER `object_type`");
+        $this->updateDatabase("ALTER TABLE `user_shout` ADD COLUMN `data` varchar(256) NULL AFTER `object_type`");
     }
 }

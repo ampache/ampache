@@ -40,8 +40,8 @@ final class Migration400024 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `artist` ADD `song_count` smallint(5) unsigned DEFAULT 0 NULL;");
-        $this->updateDatabase("ALTER TABLE `artist` ADD `album_count` smallint(5) unsigned DEFAULT 0 NULL;");
-        $this->updateDatabase("ALTER TABLE `artist` ADD `album_group_count` smallint(5) unsigned DEFAULT 0 NULL;");
+        $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `song_count` smallint(5) unsigned DEFAULT 0 NULL;");
+        $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `album_count` smallint(5) unsigned DEFAULT 0 NULL;");
+        $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `album_group_count` smallint(5) unsigned DEFAULT 0 NULL;");
     }
 }

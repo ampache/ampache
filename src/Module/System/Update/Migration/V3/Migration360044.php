@@ -40,7 +40,7 @@ final class Migration360044 extends AbstractMigration
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $this->updateDatabase("ALTER TABLE `artist` ADD `summary` TEXT CHARACTER SET $charset NULL, ADD `placeformed` varchar(64) NULL, ADD `yearformed` int(4) NULL, ADD `last_update` int(11) unsigned NOT NULL DEFAULT '0'");
+        $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `summary` TEXT CHARACTER SET $charset NULL, ADD `placeformed` varchar(64) NULL, ADD `yearformed` int(4) NULL, ADD `last_update` int(11) unsigned NOT NULL DEFAULT '0'");
 
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `recommendation` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `object_type` varchar(32) NOT NULL, `object_id` int(11) unsigned NOT NULL, `last_update` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=$engine");
 

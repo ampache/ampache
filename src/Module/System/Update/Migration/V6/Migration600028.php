@@ -35,9 +35,9 @@ final class Migration600028 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase('ALTER TABLE `podcast_episode` ADD `channels` mediumint(9) DEFAULT NULL AFTER `catalog`');
-        $this->updateDatabase('ALTER TABLE `podcast_episode` ADD `mode` enum(\'abr\',\'vbr\',\'cbr\') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL AFTER `catalog`');
-        $this->updateDatabase('ALTER TABLE `podcast_episode` ADD `rate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`');
-        $this->updateDatabase('ALTER TABLE `podcast_episode` ADD `bitrate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`');
+        $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `channels` mediumint(9) DEFAULT NULL AFTER `catalog`');
+        $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `mode` enum(\'abr\',\'vbr\',\'cbr\') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL AFTER `catalog`');
+        $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `rate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`');
+        $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `bitrate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`');
     }
 }

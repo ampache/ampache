@@ -40,7 +40,7 @@ final class Migration500008 extends AbstractMigration
     public function migrate(): void
     {
         Dba::write("ALTER TABLE `catalog` DROP COLUMN `filter_user`;");
-        $this->updateDatabase("ALTER TABLE `catalog` ADD `filter_user` int(11) unsigned DEFAULT 0 NOT NULL;");
+        $this->updateDatabase("ALTER TABLE `catalog` ADD COLUMN `filter_user` int(11) unsigned DEFAULT 0 NOT NULL;");
 
         $tables = ['podcast', 'live_stream'];
         foreach ($tables as $type) {

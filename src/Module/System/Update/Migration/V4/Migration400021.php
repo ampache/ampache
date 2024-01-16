@@ -35,6 +35,6 @@ final class Migration400021 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `song_data` ADD `r128_track_gain` smallint(5) DEFAULT NULL, ADD `r128_album_gain` smallint(5) DEFAULT NULL;");
+        $this->updateDatabase("ALTER TABLE `song_data` ADD COLUMN `r128_track_gain` smallint(5) DEFAULT NULL, ADD `r128_album_gain` smallint(5) DEFAULT NULL;");
     }
 }

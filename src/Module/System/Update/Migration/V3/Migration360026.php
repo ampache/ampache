@@ -35,6 +35,6 @@ final class Migration360026 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `object_count` ADD `agent` varchar(255) NULL AFTER `user`;");
+        $this->updateDatabase("ALTER TABLE `object_count` ADD COLUMN `agent` varchar(255) NULL AFTER `user`;");
     }
 }

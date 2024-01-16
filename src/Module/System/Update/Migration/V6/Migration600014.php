@@ -38,6 +38,6 @@ final class Migration600014 extends AbstractMigration
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
 
-        $this->updateDatabase("ALTER TABLE `album` ADD `subtitle` varchar(64) COLLATE $collation DEFAULT NULL AFTER `catalog_number`");
+        $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `subtitle` varchar(64) COLLATE $collation DEFAULT NULL AFTER `catalog_number`");
     }
 }

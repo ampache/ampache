@@ -35,6 +35,6 @@ final class Migration370005 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `song` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `artist`;");
+        $this->updateDatabase("ALTER TABLE `song` ADD COLUMN `album_artist` int(11) unsigned DEFAULT NULL AFTER `artist`;");
     }
 }

@@ -35,6 +35,6 @@ final class Migration370002 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `tag` ADD `merged_to` int(11) NULL AFTER `name`;");
+        $this->updateDatabase("ALTER TABLE `tag` ADD COLUMN `merged_to` int(11) NULL AFTER `name`;");
     }
 }

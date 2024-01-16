@@ -35,6 +35,6 @@ final class Migration400012 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `user` ADD `rsstoken` varchar(255) NULL;");
+        $this->updateDatabase("ALTER TABLE `user` ADD COLUMN `rsstoken` varchar(255) NULL;");
     }
 }

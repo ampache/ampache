@@ -38,11 +38,11 @@ final class Migration370012 extends AbstractMigration
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        $this->updateDatabase("ALTER TABLE `album` ADD `release_type` varchar(32) CHARACTER SET $charset NULL");
+        $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `release_type` varchar(32) CHARACTER SET $charset NULL");
 
-        $this->updateDatabase("ALTER TABLE `song` ADD `composer` varchar(256) CHARACTER SET $charset NULL, ADD `channels` MEDIUMINT NULL");
+        $this->updateDatabase("ALTER TABLE `song` ADD COLUMN `composer` varchar(256) CHARACTER SET $charset NULL, ADD `channels` MEDIUMINT NULL");
 
-        $this->updateDatabase("ALTER TABLE `video` ADD `channels` MEDIUMINT NULL, ADD `bitrate` MEDIUMINT(8) NULL, ADD `video_bitrate` MEDIUMINT(8) NULL, ADD `display_x` MEDIUMINT(8) NULL, ADD `display_y` MEDIUMINT(8) NULL, ADD `frame_rate` FLOAT NULL, ADD `mode` enum('abr','vbr','cbr') NULL DEFAULT 'cbr'");
+        $this->updateDatabase("ALTER TABLE `video` ADD COLUMN `channels` MEDIUMINT NULL, ADD `bitrate` MEDIUMINT(8) NULL, ADD `video_bitrate` MEDIUMINT(8) NULL, ADD `display_x` MEDIUMINT(8) NULL, ADD `display_y` MEDIUMINT(8) NULL, ADD `frame_rate` FLOAT NULL, ADD `mode` enum('abr','vbr','cbr') NULL DEFAULT 'cbr'");
 
         $this->updatePreferences('allow_video', 'Allow video features', '1', 75, 'integer', 'options');
     }

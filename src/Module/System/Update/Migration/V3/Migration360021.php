@@ -35,7 +35,7 @@ final class Migration360021 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `now_playing` ADD `insertion` INT (11) AFTER `expire`");
+        $this->updateDatabase("ALTER TABLE `now_playing` ADD COLUMN `insertion` INT (11) AFTER `expire`");
 
         $this->updatePreferences('song_page_title', 'Show current song in Web player page title', '1', 25, 'boolean', 'interface');
     }

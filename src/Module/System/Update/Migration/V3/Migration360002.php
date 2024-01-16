@@ -46,8 +46,8 @@ final class Migration360002 extends AbstractMigration
         $sql_array = array(
             "ALTER TABLE `catalog` DROP `key`",
             "ALTER TABLE `access_list` DROP `key`",
-            "ALTER TABLE `catalog` ADD `remote_username` VARCHAR (255) AFTER `catalog_type`",
-            "ALTER TABLE `catalog` ADD `remote_password` VARCHAR (255) AFTER `remote_username`",
+            "ALTER TABLE `catalog` ADD COLUMN `remote_username` VARCHAR (255) AFTER `catalog_type`",
+            "ALTER TABLE `catalog` ADD COLUMN `remote_password` VARCHAR (255) AFTER `remote_username`",
             "ALTER TABLE `song` CHANGE `file` `file` VARCHAR (4096)",
             "ALTER TABLE `video` CHANGE `file` `file` VARCHAR (4096)",
             "ALTER TABLE `live_stream` CHANGE `url` `url` VARCHAR (4096)",

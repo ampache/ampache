@@ -38,6 +38,6 @@ final class Migration380004 extends AbstractMigration
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        $this->updateDatabase("ALTER TABLE `preference` ADD `subcatagory` varchar(128) CHARACTER SET $charset DEFAULT NULL AFTER `catagory`;");
+        $this->updateDatabase("ALTER TABLE `preference` ADD COLUMN `subcatagory` varchar(128) CHARACTER SET $charset DEFAULT NULL AFTER `catagory`;");
     }
 }

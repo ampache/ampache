@@ -35,7 +35,7 @@ final class Migration500011 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `podcast` ADD `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';");
+        $this->updateDatabase("ALTER TABLE `podcast` ADD COLUMN `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';");
         $this->updateDatabase("UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_count`) AS `total_count`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_count` = `object_count`.`total_count` WHERE `podcast`.`total_count` != `object_count`.`total_count` AND `podcast`.`id` = `object_count`.`podcast`;");
     }
 }

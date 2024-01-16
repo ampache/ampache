@@ -35,6 +35,6 @@ final class Migration400005 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `search` ADD `last_count` INT(11) NULL;");
+        $this->updateDatabase("ALTER TABLE `search` ADD COLUMN `last_count` INT(11) NULL;");
     }
 }

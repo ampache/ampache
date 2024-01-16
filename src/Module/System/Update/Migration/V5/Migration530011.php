@@ -51,7 +51,7 @@ final class Migration530011 extends AbstractMigration
             }
         }
         if (!$rsstoken) {
-            $this->updateDatabase("ALTER TABLE `user` ADD `rsstoken` varchar(255) NULL;");
+            $this->updateDatabase("ALTER TABLE `user` ADD COLUMN `rsstoken` varchar(255) NULL;");
         }
         $this->updateDatabase("ALTER TABLE `user` MODIFY COLUMN `rsstoken` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;");
 

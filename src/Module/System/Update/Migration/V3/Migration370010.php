@@ -38,6 +38,6 @@ final class Migration370010 extends AbstractMigration
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        $this->updateDatabase("ALTER TABLE `album` ADD `mbid_group` varchar(36) CHARACTER SET $charset NULL;");
+        $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `mbid_group` varchar(36) CHARACTER SET $charset NULL;");
     }
 }

@@ -38,6 +38,6 @@ final class Migration360047 extends AbstractMigration
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        $this->updateDatabase("ALTER TABLE `user` ADD `apikey` varchar(255) CHARACTER SET $charset NULL AFTER `website`;");
+        $this->updateDatabase("ALTER TABLE `user` ADD COLUMN `apikey` varchar(255) CHARACTER SET $charset NULL AFTER `website`;");
     }
 }

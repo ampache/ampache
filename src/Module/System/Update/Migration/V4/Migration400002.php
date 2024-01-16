@@ -44,7 +44,7 @@ final class Migration400002 extends AbstractMigration
     {
         $this->updateDatabase("UPDATE `album` SET `album`.`disk` = 1 WHERE `album`.`disk` = 0;");
 
-        $this->updateDatabase("ALTER TABLE `album` ADD `original_year` INT(4) NULL, ADD `barcode` varchar(64) NULL, ADD `catalog_number` varchar(64) NULL;");
+        $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `original_year` INT(4) NULL, ADD `barcode` varchar(64) NULL, ADD `catalog_number` varchar(64) NULL;");
 
         $this->updateDatabase("ALTER TABLE `song_data` DROP `catalog_number`");
     }

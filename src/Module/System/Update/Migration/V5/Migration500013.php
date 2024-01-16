@@ -56,10 +56,10 @@ final class Migration500013 extends AbstractMigration
 
         // add username to playlist and searches to stop calling the objects all the time
         Dba::write("ALTER TABLE `playlist` DROP COLUMN `username`;");
-        $this->updateDatabase("ALTER TABLE `playlist` ADD `username` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL;");
+        $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `username` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL;");
 
         Dba::write("ALTER TABLE `search` DROP COLUMN `username`;");
-        $this->updateDatabase("ALTER TABLE `search` ADD `username` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL;");
+        $this->updateDatabase("ALTER TABLE `search` ADD COLUMN `username` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL;");
 
         // fill the data
         $this->updateDatabase("UPDATE `playlist`, (SELECT `id`, `username` FROM `user`) AS `user` SET `playlist`.`username` = `user`.`username` WHERE `playlist`.`user` = `user`.`id`;");

@@ -39,12 +39,12 @@ final class Migration370028 extends AbstractMigration
         $sql        = "SELECT `width` FROM `image`";
         $db_results = Dba::read($sql);
         if (!$db_results) {
-            $this->updateDatabase("ALTER TABLE `image` ADD `width` int(4) unsigned DEFAULT 0 AFTER `image`");
+            $this->updateDatabase("ALTER TABLE `image` ADD COLUMN `width` int(4) unsigned DEFAULT 0 AFTER `image`");
         }
         $sql        = "SELECT `height` FROM `image`";
         $db_results = Dba::read($sql);
         if (!$db_results) {
-            $this->updateDatabase("ALTER TABLE `image` ADD `height` int(4) unsigned DEFAULT 0 AFTER `width`");
+            $this->updateDatabase("ALTER TABLE `image` ADD COLUMN `height` int(4) unsigned DEFAULT 0 AFTER `width`");
         }
     }
 }
