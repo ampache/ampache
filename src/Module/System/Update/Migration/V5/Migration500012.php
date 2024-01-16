@@ -62,7 +62,7 @@ final class Migration500012 extends AbstractMigration
                 $total = $total + $results['size'];
             }
 
-            $this->updateDatabase("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;");
+            $this->updateDatabase("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", array($user_id, 'play_size', $total));
         }
     }
 }
