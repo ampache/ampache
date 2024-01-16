@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V6;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -48,7 +49,8 @@ final class Migration600004 extends AbstractMigration
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = 'MyISAM';
         // add disk to song table
-        $this->updateDatabase("ALTER TABLE `song` ADD `disk` smallint(5) UNSIGNED DEFAULT NULL AFTER `album`;");
+        Dba::write("ALTER TABLE `song` DROP COLUMN `disk`;");
+        $this->updateDatabase("ALTER TABLE `song` ADD COLUMN `disk` smallint(5) UNSIGNED DEFAULT NULL AFTER `album`;");
 
         // fill the data
         $this->updateDatabase("UPDATE `song`, (SELECT DISTINCT `id`, `disk` FROM `album`) AS `album` SET `song`.`disk` = `album`.`disk` WHERE (`song`.`disk` != `album`.`disk` OR `song`.`disk` IS NULL) AND `song`.`album` = `album`.`id`;");
