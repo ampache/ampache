@@ -83,14 +83,14 @@ abstract class AbstractMigration implements MigrationInterface
      */
     protected function updateDatabase(string $sql, array $params = []): void
     {
-        $this->connection->query($sql, $params);
-
         if ($this->interactor !== null) {
             $this->interactor->info(
-                $sql,
+                $sql . ' ' . json_encode($params),
                 true
             );
         }
+        $this->connection->query($sql, $params);
+
     }
 
     /**
