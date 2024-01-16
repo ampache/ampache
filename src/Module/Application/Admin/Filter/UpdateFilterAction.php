@@ -68,7 +68,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         $filter_id   = (int) ($body['filter_id'] ?? 0);
         $filter_name = ($filter_id === 0)
             ? 'DEFAULT'
-            : scrub_in(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES));
+            : scrub_in(htmlspecialchars($body['filter_name'] ?? '', ENT_NOQUOTES));
 
         if (empty($filter_name)) {
             AmpError::add('name', T_('A filter name is required'));
