@@ -52,7 +52,6 @@ if (!AmpConfig::get('catalog_filter')) {
             <?php } else { ?>
                 <td>
                     <input type="text" name="name" maxlength="128" value="<?php echo $filter_name; ?>" >
-                    <?php echo AmpError::display('name'); ?>
                     <input type="hidden" name="filter_id" value="<?php echo $filter_id; ?>" />
                 </td>
             <?php } ?>
