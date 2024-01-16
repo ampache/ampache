@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,16 +36,16 @@ final class Migration530012 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `object_count` DROP KEY `object_count_full_index`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_full_index`;");
         $this->updateDatabase("CREATE INDEX `object_count_full_index` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);");
 
-        $this->updateDatabase("ALTER TABLE `object_count` DROP KEY `object_count_type_IDX`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_type_IDX`;");
         $this->updateDatabase("CREATE INDEX `object_count_type_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`);");
 
-        $this->updateDatabase("ALTER TABLE `object_count` DROP KEY `object_count_date_IDX`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_date_IDX`;");
         $this->updateDatabase("CREATE INDEX `object_count_date_IDX` USING BTREE ON `object_count` (`date`, `count_type`);");
 
-        $this->updateDatabase("ALTER TABLE `object_count` DROP KEY `object_count_user_IDX`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_user_IDX`;");
         $this->updateDatabase("CREATE INDEX `object_count_user_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `user`, `count_type`);");
     }
 }

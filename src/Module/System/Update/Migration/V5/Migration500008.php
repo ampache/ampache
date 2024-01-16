@@ -47,7 +47,7 @@ final class Migration500008 extends AbstractMigration
             $this->updateDatabase("REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type`;");
         }
 
-        $this->updateDatabase("ALTER TABLE `user_data` DROP KEY `unique_data`;");
+        Dba::write("ALTER TABLE `user_data` DROP KEY `unique_data`;");
         $this->updateDatabase("ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`, `key`);");
     }
 }

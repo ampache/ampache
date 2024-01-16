@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,7 +36,7 @@ final class Migration540002 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `object_count` DROP KEY `object_type_date_IDX`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_type_date_IDX`;");
         $this->updateDatabase("CREATE INDEX `object_type_date_IDX` USING BTREE ON `object_count` (`object_type`, `date`);");
     }
 }

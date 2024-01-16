@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -38,25 +39,25 @@ final class Migration540001 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `album` DROP KEY `catalog_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `catalog_IDX`;");
         $this->updateDatabase("CREATE INDEX `catalog_IDX` USING BTREE ON `album` (`catalog`);");
 
-        $this->updateDatabase("ALTER TABLE `album` DROP KEY `album_artist_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `album_artist_IDX`;");
         $this->updateDatabase("CREATE INDEX `album_artist_IDX` USING BTREE ON `album` (`album_artist`);");
 
-        $this->updateDatabase("ALTER TABLE `album` DROP KEY `original_year_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `original_year_IDX`;");
         $this->updateDatabase("CREATE INDEX `original_year_IDX` USING BTREE ON `album` (`original_year`);");
 
-        $this->updateDatabase("ALTER TABLE `album` DROP KEY `release_type_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `release_type_IDX`;");
         $this->updateDatabase("CREATE INDEX `release_type_IDX` USING BTREE ON `album` (`release_type`);");
 
-        $this->updateDatabase("ALTER TABLE `album` DROP KEY `release_status_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `release_status_IDX`;");
         $this->updateDatabase("CREATE INDEX `release_status_IDX` USING BTREE ON `album` (`release_status`);");
 
-        $this->updateDatabase("ALTER TABLE `album` DROP KEY `mbid_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `mbid_IDX`;");
         $this->updateDatabase("CREATE INDEX `mbid_IDX` USING BTREE ON `album` (`mbid`);");
 
-        $this->updateDatabase("ALTER TABLE `album` DROP KEY `mbid_group_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `mbid_group_IDX`;");
         $this->updateDatabase("CREATE INDEX `mbid_group_IDX` USING BTREE ON `album` (`mbid_group`);");
     }
 }

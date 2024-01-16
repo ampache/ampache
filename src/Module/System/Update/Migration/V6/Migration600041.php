@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,7 +36,7 @@ final class Migration600041 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase('ALTER TABLE `label_asso` DROP KEY `label_asso_label_IDX`');
+        Dba::write('ALTER TABLE `label_asso` DROP KEY `label_asso_label_IDX`');
         $this->updateDatabase('CREATE INDEX `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`)');
     }
 }
