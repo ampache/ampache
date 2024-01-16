@@ -934,7 +934,7 @@ class Search extends playlist_object
             1 => T_('pending'),
             2 => T_('completed')
         );
-        $this->_add_type_select('state', T_('State'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
+        $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
         $t_play_data = T_('Play History');
@@ -972,7 +972,7 @@ class Search extends playlist_object
             1 => T_('pending'),
             2 => T_('completed')
         );
-        $this->_add_type_select('state', T_('State'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
+        $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
         $t_play_data = T_('Play History');

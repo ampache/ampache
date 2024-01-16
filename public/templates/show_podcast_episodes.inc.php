@@ -62,7 +62,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
             <?php } ?>
             <th class="cel_pubdate optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=pubdate', T_('Publication Date'), 'podcast_episode_sort_pubdate'); ?></th>
-            <th class="cel_state optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=state', T_('State'), 'podcast_episode_sort_state'); ?></th>
+            <th class="cel_state optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=state', T_('Status'), 'podcast_episode_sort_state'); ?></th>
             <?php if ($show_ratings) {
                 ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating', $rating_text, 'podcast_episode_sort_rating'); ?></th>
@@ -106,7 +106,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
             <?php } ?>
             <th class="cel_pubdate"><?php echo T_('Publication Date'); ?></th>
-            <th class="cel_state"><?php echo T_('State'); ?></th>
+            <th class="cel_state"><?php echo T_('Status'); ?></th>
             <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
             <?php } ?>
