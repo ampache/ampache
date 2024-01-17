@@ -38,7 +38,7 @@ class Metadata extends DatabaseObject implements Model
      * A library item like song or video
      * @var int
      */
-    protected $objectId;
+    protected $object_id;
 
     /**
      * Tag Field
@@ -71,7 +71,7 @@ class Metadata extends DatabaseObject implements Model
      */
     public function getObjectId(): int
     {
-        return $this->objectId;
+        return $this->object_id;
     }
 
     /**
@@ -97,7 +97,7 @@ class Metadata extends DatabaseObject implements Model
      */
     public function setObjectId($object_id)
     {
-        $this->objectId = $object_id;
+        $this->object_id = $object_id;
     }
 
     /**
