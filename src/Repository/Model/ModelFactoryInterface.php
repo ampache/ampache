@@ -120,4 +120,8 @@ interface ModelFactoryInterface
     public function createLabel(
         int $labelId
     ): Label;
+
+    public function createVideo(
+        int $videoId
+    ): Video;
 }
