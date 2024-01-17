@@ -54,6 +54,9 @@ final class RefreshPlaylistMediasAction implements ApplicationActionInterface
 
         $browse   = $this->modelFactory->createBrowse();
         $playlist = $this->modelFactory->createPlaylist((int) $objectId);
+        if ($playlist->isNew()) {
+            return null;
+        }
         $playlist->format();
 
         $object_ids = $playlist->get_items();

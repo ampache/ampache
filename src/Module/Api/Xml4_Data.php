@@ -308,6 +308,9 @@ class Xml4_Data
                 case 'playlist':
                     if ((int) $object_id === 0) {
                         $playlist = new Search((int) str_replace('smart_', '', (string) $object_id), 'song', $user);
+                        if ($playlist->isNew()) {
+                            break;
+                        }
                         $playlist->format();
 
                         $playlist_user  = ($playlist->type !== 'public')
@@ -316,6 +319,9 @@ class Xml4_Data
                         $playitem_total = $playlist->last_count;
                     } else {
                         $playlist = new Playlist($object_id);
+                        if ($playlist->isNew()) {
+                            break;
+                        }
                         $playlist->format();
 
                         $playlist_user  = $playlist->username;

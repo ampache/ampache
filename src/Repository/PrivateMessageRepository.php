@@ -146,7 +146,7 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
         int $privateMessageId
     ): PrivateMessageInterface {
         $item = $this->modelFactory->createPrivateMsg($privateMessageId);
-        if ($item->isNew() === true) {
+        if ($item->isNew()) {
             throw new ItemNotFoundException((string) $privateMessageId);
         }
 

@@ -461,6 +461,9 @@ final class AmpacheRss implements AmpacheRssInterface
             if ($object !== null) {
                 $object->format();
                 $user = new User($shout->getUserId());
+                if ($user->isNew()) {
+                    continue;
+                }
                 $user->format();
 
                 $xml_array = array(
