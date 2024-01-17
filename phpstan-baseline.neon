@@ -9386,16 +9386,6 @@ parameters:
 			path: src/Module/Util/AmazonSearch.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$created\\$\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$prev\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
 			message: "#^Comparison operation \"\\<\\=\" between 1 and 1 is always true\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha.php
@@ -9579,26 +9569,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_spike\\:\\:dxy\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_dxy_spike.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:\\$dist_x\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:\\$dist_y\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:\\$slow_x\\.$#"
-			count: 3
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:\\$slow_y\\.$#"
-			count: 3
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
 
 		-
 			message: "#^Constructor of class Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave has an unused parameter \\$max_x\\.$#"
@@ -9836,11 +9806,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:\\$img\\.$#"
-			count: 8
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
 			message: "#^Comparison operation \"\\<\\=\" between 1 and 1 is always true\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
@@ -9972,6 +9937,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#6 \\$color of function imagettftext expects int, int\\|false given\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:\\$img has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
@@ -15407,11 +15377,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on array\\.$#"
 			count: 1
 			path: src/Repository/Repository.php
 

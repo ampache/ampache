@@ -893,7 +893,22 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $changed    = array();
         $songs      = $this->getSongRepository()->getByAlbum($this->getId());
         // run an album check on the current object READONLY means that it won't insert a new album
-        $album_id   = self::check($this->catalog, $name, $year, $mbid, $mbid_group, $album_artist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version, true);
+        $album_id   = self::check(
+            $this->catalog,
+            $name,
+            $year,
+            $mbid,
+            $mbid_group,
+            $album_artist,
+            $release_type,
+            $release_status,
+            (int)$original_year,
+            $barcode,
+            $catalog_number,
+            $version,
+            true
+        );
+
         $cron_cache = AmpConfig::get('cron_cache');
         if ($album_id > 0 && $album_id != $this->id) {
             debug_event(self::class, "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);

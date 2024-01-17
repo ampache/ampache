@@ -1953,7 +1953,6 @@ class Subsonic_Api
         if (!$share_id) {
             return;
         }
-        $description = $input['description'] ?? '';
 
         if (AmpConfig::get('share')) {
             $share = new Share(Subsonic_Xml_Data::_getAmpacheId($share_id));
@@ -1966,7 +1965,7 @@ class Subsonic_Api
                     'expire' => $expires,
                     'allow_stream' => $share->allow_stream,
                     'allow_download' => $share->allow_download,
-                    'description' => $description ?? $share->description,
+                    'description' => $input['description'] ?? $share->description,
                 );
                 if ($share->update($data, $user)) {
                     $response = Subsonic_Xml_Data::addSubsonicResponse('updateshare');
