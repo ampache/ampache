@@ -84,6 +84,7 @@ class easy_captcha
     public $image;
     public $maxpasses;
     public $passed;
+    public $prev;
     public $saved;
     public $sent;
     public $shortcut;
@@ -128,8 +129,6 @@ class easy_captcha
         $this->created      = time();
         $this->{'created$'} = gmdate("r", $this->created);
         $this->expires      = $this->created + self::CAPTCHA_TIMEOUT;
-        //$this->tries = 0;
-        $this->passed = 0;
 
         #-- captcha processing info
         $this->sent       = 0;
