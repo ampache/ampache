@@ -211,16 +211,6 @@ parameters:
 			path: src/Gui/Song/SongViewAdapterInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Gui\\\\System\\\\UpdateViewAdapter\\:\\:getUpdateInfo\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Gui/System/UpdateViewAdapter.php
-
-		-
-			message: "#^Method Ampache\\\\Gui\\\\System\\\\UpdateViewAdapterInterface\\:\\:getUpdateInfo\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Gui/System/UpdateViewAdapterInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Gui\\\\TalView\\:\\:setContext\\(\\) has parameter \\$context with no type specified\\.$#"
 			count: 1
 			path: src/Gui/TalView.php
@@ -9154,51 +9144,6 @@ parameters:
 			message: "#^Parameter \\#6 \\$gc of function session_set_save_handler expects callable\\(string\\)\\: bool, Closure\\(\\)\\: void given\\.$#"
 			count: 1
 			path: src/Module/System/Session.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:_set_db_version\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:_set_versions\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:_write\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:check_tables\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:display_update\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module…', non\\-falsy\\-string\\} given\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\System\\\\Update\\:\\:\\$key has no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\System\\\\Update\\:\\:\\$value has no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\System\\\\Update\\:\\:\\$versions has no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Update.php
 
 		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"

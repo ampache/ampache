@@ -47,4 +47,5 @@ return [
     Model\ModelFactoryInterface::class => autowire(Model\ModelFactory::class),
     PreferenceRepositoryInterface::class => autowire(PreferenceRepository::class),
     PodcastRepositoryInterface::class => autowire(PodcastRepository::class),
+    UpdateInfoRepositoryInterface::class => autowire(UpdateInfoRepository::class),
 ];

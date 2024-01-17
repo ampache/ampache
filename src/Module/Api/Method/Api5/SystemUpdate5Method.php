@@ -67,10 +67,16 @@ final class SystemUpdate5Method
             }
             $updated = true;
         }
+
+        $updater = self::getUpdater();
+
         // update the database
-        if (Update::need_update()) {
-            if (Update::run_update()) {
+        if ($updater->hasPendingUpdates()) {
+            try {
+                $updater->update();
+
                 $updated = true;
+            } catch (Update\Exception\UpdateException $e) {
             }
         }
         if ($updated) {
@@ -86,10 +92,23 @@ final class SystemUpdate5Method
         return true;
     }
 
+    /**
+     * @todo inject dependency
+     */
     private static function getConfigContainer(): ConfigContainerInterface
     {
         global $dic;
 
         return $dic->get(ConfigContainerInterface::class);
+    }
+
+    /**
+     * @todo inject dependency
+     */
+    private static function getUpdater(): Update\UpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(Update\UpdaterInterface::class);
     }
 }

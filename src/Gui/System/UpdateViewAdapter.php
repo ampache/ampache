@@ -31,15 +31,30 @@ use Ampache\Module\Application\Update\UpdateAction;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Update;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Generator;
 
 final class UpdateViewAdapter implements UpdateViewAdapterInterface
 {
     private ConfigContainerInterface $configContainer;
 
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    private Update\UpdateHelperInterface $updateHelper;
+
+    private Update\UpdaterInterface $updater;
+
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        Update\UpdateHelperInterface $updateHelper,
+        Update\UpdaterInterface $updater
     ) {
-        $this->configContainer = $configContainer;
+        $this->configContainer      = $configContainer;
+        $this->updateInfoRepository = $updateInfoRepository;
+        $this->updateHelper         = $updateHelper;
+        $this->updater              = $updater;
     }
 
     public function getHtmlLanguage(): string
@@ -81,7 +96,7 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
             T_('This page handles all database updates to Ampache starting with %1$s. Your current version is %2$s with database version %3$s'),
             '<strong>3.3.3.5</strong>',
             '<strong>' . $this->configContainer->get(ConfigurationKeyEnum::VERSION) . '</strong>',
-            '<strong>' . Update::format_version() . '</strong>'
+            '<strong>' . $this->updateHelper->formatVersion((string) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION)) . '</strong>'
         );
     }
 
@@ -92,7 +107,7 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
 
     public function hasUpdate(): bool
     {
-        return Update::need_update();
+        return $this->updater->hasPendingUpdates();
     }
 
     public function getUpdateActionUrl(): string
@@ -104,19 +119,24 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
         );
     }
 
-    public function getUpdateInfo(): array
+    /**
+     * @return Generator<array{
+     *  title: string,
+     *  changelog: list<string>,
+     *  warning: bool
+     * }>
+     */
+    public function getUpdateInfo(): Generator
     {
-        $updates = Update::display_update();
-        $result  = [];
+        foreach ($this->updater->getPendingUpdates() as $update) {
+            $migration = $update['migration'];
 
-        foreach ($updates as $update) {
-            $result[] = [
-                'title' => $update['version'],
-                'description' => $update['description'],
+            yield [
+                'title' => sprintf('%s: %s', T_('Version'), $update['versionFormatted']),
+                'changelog' => $migration->getChangelog(),
+                'warning' => $migration->hasWarning()
             ];
         }
-
-        return $result;
     }
 
     public function getWebPath(): string

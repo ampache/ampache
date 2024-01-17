@@ -256,8 +256,7 @@ class Stream
         $player = null,
         $media_type = 'song',
         $options = array()
-    ): array
-    {
+    ): array {
         $target = self::get_transcode_format($source, $target, $player, $media_type);
         $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?? AmpConfig::get('transcode_cmd');
         if (empty($cmd)) {
