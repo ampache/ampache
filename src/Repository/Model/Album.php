@@ -249,7 +249,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param int $album_artist
      * @param string $release_type
      * @param string $release_status
-     * @param int $original_year
+     * @param int|null $original_year
      * @param string $barcode
      * @param string $catalog_number
      * @param string $version
