@@ -114,7 +114,7 @@ $songprops[T_('Description')]      = $episode->description;
 $songprops[T_('Category')]         = $episode->f_category;
 $songprops[T_('Author')]           = $episode->f_author;
 $songprops[T_('Publication Date')] = $episode->f_pubdate;
-$songprops[T_('State')]            = $episode->f_state;
+$songprops[T_('Status')]           = $episode->f_state;
 $songprops[T_('Website')]          = $episode->f_website;
 if ($episode->time > 0) {
     $songprops[T_('Length')] = $episode->f_time;
