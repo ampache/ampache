@@ -31,7 +31,6 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_graphic_image_waved extends easy_captcha_graphic
 {
-    /** @var resource|false */
     public $img;
 
     /**

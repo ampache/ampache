@@ -695,7 +695,7 @@ final class PlayAction implements ApplicationActionInterface
 
         header('Access-Control-Allow-Origin: *');
 
-        $sessionkey = $session_id ?? Stream::get_session();
+        $sessionkey = $session_id === '' ? Stream::get_session() : $session_id;
         $agent      = (!empty($client))
             ? $client
             : Session::agent($sessionkey);

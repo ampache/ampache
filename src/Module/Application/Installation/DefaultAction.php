@@ -135,7 +135,7 @@ final class DefaultAction implements ApplicationActionInterface
             }
         }
         AmpConfig::set('lang', $htmllang, true);
-        AmpConfig::set('site_charset', $charset ?? 'UTF-8', true);
+        AmpConfig::set('site_charset', $charset, true);
         if (!class_exists('Gettext\Translations')) {
             require_once __DIR__ . '/../../../../public/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
