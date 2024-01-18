@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 class ShowPlaylistActionTest extends MockeryTestCase
 {
@@ -46,10 +47,12 @@ class ShowPlaylistActionTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);
+        $this->logger       = $this->mock(LoggerInterface::class);
         $this->modelFactory = $this->mock(ModelFactoryInterface::class);
 
         $this->subject = new ShowAction(
             $this->ui,
+            $this->logger,
             $this->modelFactory
         );
     }
@@ -73,6 +76,10 @@ class ShowPlaylistActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['playlist_id' => (string) $playlistId]);
 
+        $search->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(false);
         $search->shouldReceive('format')
             ->withNoArgs()
             ->once();
