@@ -218,6 +218,9 @@ class Stream_Playlist
         $object_id = $media['object_id'];
         $className = ObjectTypeToClassNameMapper::map($type);
         $object    = new $className($object_id);
+        if ($object->isNew()) {
+            return null;
+        }
         $object->format();
 
         if (array_key_exists('client', $media)) {
