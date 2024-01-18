@@ -88,7 +88,7 @@ class Repository
         $statement = Dba::read($sql, is_array($value) ? $value : array($value));
         /** @var library_item $object */
         while ($object = Dba::fetch_object($statement, $this->modelClassName)) {
-            $data[$object->getId()] = $object;
+            $data[$object[0]->getId()] = $object[0];
         }
 
         return $data;
