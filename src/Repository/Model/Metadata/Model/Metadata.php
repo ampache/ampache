@@ -35,13 +35,13 @@ class Metadata extends DatabaseObject implements Model
     protected $id;
 
     /**
-     * A library item like song or video
+     * A library item like song or video //TODO why are there two?
      * @var int
      */
     protected $object_id;
 
     /**
-     * A library item like song or video //TODO why are there two?
+     * A library item like song or video
      * @var int
      */
     protected $objectId;
@@ -77,7 +77,7 @@ class Metadata extends DatabaseObject implements Model
      */
     public function getObjectId(): int
     {
-        return $this->object_id;
+        return $this->objectId;
     }
 
     /**
@@ -99,11 +99,11 @@ class Metadata extends DatabaseObject implements Model
 
     /**
      * setObjectId
-     * @param int $object_id
+     * @param int $objectId
      */
-    public function setObjectId($object_id)
+    public function setObjectId($objectId)
     {
-        $this->object_id = $object_id;
+        $this->objectId = $objectId;
     }
 
     /**
