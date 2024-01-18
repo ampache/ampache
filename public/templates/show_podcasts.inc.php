@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,17 +24,20 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\PodcastRepositoryInterface;
 
-/** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var Browse $browse */
+/** @var list<int> $object_ids */
+/** @var PodcastRepositoryInterface $podcastRepository */
 
+$webPath      = AmpConfig::get('web_path');
 $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_table     = $browse->is_grid_view();
@@ -46,18 +52,24 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     <ul>
         <?php if (Access::check('interface', 75)) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=show_create">
+            <a href="<?php echo $webPath; ?>/podcast.php?action=show_create">
                 <?php echo Ui::get_icon('add', T_('Add')); ?>
                 <?php echo T_('Subscribe to Podcast'); ?>
             </a>
         </li>
         <?php } ?>
+        <li>
+            <a href="<?php echo $webPath; ?>/podcast.php?action=export_podcasts" target="_blank">
+                <?php echo Ui::get_icon('download', T_('Export')); ?>
+                <?php echo T_('Export'); ?>
+            </a>
+        </li>
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="podcast">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="podcast">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -85,10 +97,13 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                     Userflag::build_cache('podcast', $object_ids);
                 }
 
-                foreach ($object_ids as $podcast_id) {
-                    $libitem = new Podcast($podcast_id);
+                foreach ($object_ids as $podcastId) {
+                    $libitem = $podcastRepository->findById($podcastId);
+                    if ($libitem === null) {
+                        continue;
+                    }
                     $libitem->format(); ?>
-        <tr id="podcast_<?php echo $libitem->id; ?>">
+        <tr id="podcast_<?php echo $libitem->getId(); ?>">
             <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
         </tr>
         <?php

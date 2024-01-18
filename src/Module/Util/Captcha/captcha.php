@@ -27,12 +27,7 @@ namespace Ampache\Module\Util\Captcha;
  */
 class captcha
 {
-
-    #-- tests submitted CAPTCHA solution against tracking data
-    /**
-     * @return boolean
-     */
-    public static function solved()
+    public static function solved(): bool
     {
         $c = new easy_captcha();
 
@@ -40,21 +35,12 @@ class captcha
     }
 
     /**
-     * @return boolean
-     */
-    public static function check()
-    {
-        return captcha::solved();
-    }
-
-    #-- returns string with "<img> and <input>" fields for display in your <form>
-
-    /**
      * @param string $text
      * @return string
      */
-    public static function form($text = '')
-    {
+    public static function form(
+        string $text = ''
+    ): string {
         $c = new easy_captcha();
 
         return $c->form("$text");

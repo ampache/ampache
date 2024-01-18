@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,6 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Repository\Model\Metadata\Model;
@@ -28,13 +30,19 @@ class Metadata extends DatabaseObject implements Model
 {
     /**
      * Database ID
-     * @var integer
+     * @var int
      */
     protected $id;
 
     /**
+     * A library item like song or video //TODO why are there two?
+     * @var int
+     */
+    protected $object_id;
+
+    /**
      * A library item like song or video
-     * @var integer
+     * @var int
      */
     protected $objectId;
 
@@ -65,9 +73,9 @@ class Metadata extends DatabaseObject implements Model
 
     /**
      *
-     * @return integer
+     * getObjectId
      */
-    public function getObjectId()
+    public function getObjectId(): int
     {
         return $this->objectId;
     }
@@ -82,21 +90,20 @@ class Metadata extends DatabaseObject implements Model
     }
 
     /**
-     *
-     * @return string
+     * getData
      */
-    public function getData()
+    public function getData(): string
     {
         return $this->data;
     }
 
     /**
      * setObjectId
-     * @param integer $object_id
+     * @param int $objectId
      */
-    public function setObjectId($object_id)
+    public function setObjectId($objectId)
     {
-        $this->objectId = $object_id;
+        $this->objectId = $objectId;
     }
 
     /**
@@ -118,10 +125,9 @@ class Metadata extends DatabaseObject implements Model
     }
 
     /**
-     *
-     * @return string
+     * getType
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }

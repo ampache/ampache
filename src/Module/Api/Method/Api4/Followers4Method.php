@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -46,10 +47,7 @@ final class Followers4Method
      * This gets followers of the user
      * Error when user not found or no followers
      *
-     * @param array $input
-     * @param User $user
      * username = (string) $username
-     * @return boolean
      */
     public static function followers(array $input, User $user): bool
     {
@@ -65,7 +63,7 @@ final class Followers4Method
         $username = $input['username'];
         if (!empty($username)) {
             $user = User::get_from_username($username);
-            if ($user !== null) {
+            if ($user instanceof User) {
                 $results = static::getUserFollowerRepository()->getFollowers($user->id);
                 if (!count($results)) {
                     Api4::message('error', 'User `' . $username . '` has no followers.', '400', $input['api_format']);
@@ -86,7 +84,7 @@ final class Followers4Method
         }
 
         return true;
-    } // followers
+    }
 
     /**
      * @deprecated inject by constructor

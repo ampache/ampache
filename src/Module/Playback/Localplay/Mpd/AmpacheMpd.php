@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -25,8 +26,10 @@ namespace Ampache\Module\Playback\Localplay\Mpd;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
@@ -55,37 +58,37 @@ class AmpacheMpd extends localplay_controller
      * get_description
      * Returns the description
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->description;
-    } // get_description
+    }
 
     /**
      * get_version
      * This returns the version information
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
-    } // get_version
+    }
 
     /**
      * is_installed
      * This returns true or false if MPD controller is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE 'localplay_mpd'";
         $db_results = Dba::read($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } // is_installed
+    }
 
     /**
      * install
      * This function installs the MPD Localplay controller
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -98,13 +101,13 @@ class AmpacheMpd extends localplay_controller
         Preference::insert('mpd_active', T_('MPD Active Instance'), 0, 25, 'integer', 'internal', 'mpd');
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
      * This removes the Localplay controller
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         $sql = "DROP TABLE `localplay_mpd`";
         Dba::write($sql);
@@ -112,13 +115,13 @@ class AmpacheMpd extends localplay_controller
         Preference::delete('mpd_active');
 
         return true;
-    } // uninstall
+    }
 
     /**
      * add_instance
      * This takes key'd data and inserts a new MPD instance
      * @param array $data
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public function add_instance($data)
     {
@@ -128,29 +131,28 @@ class AmpacheMpd extends localplay_controller
             : -1;
 
         return Dba::write($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id));
-    } // add_instance
+    }
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
      * @param $uid
-     * @return boolean
      */
-    public function delete_instance($uid)
+    public function delete_instance($uid): bool
     {
         $uid = Dba::escape($uid);
         $sql = "DELETE FROM `localplay_mpd` WHERE `id`='$uid'";
         Dba::write($sql);
 
         return true;
-    } // delete_instance
+    }
 
     /**
      * get_instances
      * This returns a key'd array of the instance information with
      * [UID]=>[NAME]
      */
-    public function get_instances()
+    public function get_instances(): array
     {
         $sql = "SELECT * FROM `localplay_mpd` ORDER BY `name`";
 
@@ -161,7 +163,7 @@ class AmpacheMpd extends localplay_controller
         }
 
         return $results;
-    } // get_instances
+    }
 
     /**
      * get_instance
@@ -170,23 +172,22 @@ class AmpacheMpd extends localplay_controller
      * @param string $instance
      * @return array
      */
-    public function get_instance($instance = '')
+    public function get_instance($instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('mpd_active', 0);
-        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id`= ?" : "SELECT * FROM `localplay_mpd`";
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
         $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
-    } // get_instance
+    }
 
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
      * @param $uid
      * @param array $data
-     * @return boolean
      */
-    public function update_instance($uid, $data)
+    public function update_instance($uid, $data): bool
     {
         $uid  = Dba::escape($uid);
         $host = $data['host'] ? Dba::escape($data['host']) : '127.0.0.1';
@@ -197,7 +198,7 @@ class AmpacheMpd extends localplay_controller
         Dba::write($sql);
 
         return true;
-    } // update_instance
+    }
 
     /**
      * instance_fields
@@ -213,15 +214,14 @@ class AmpacheMpd extends localplay_controller
         $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
 
         return $fields;
-    } // instance_fields
+    }
 
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
      * @param string $uid
-     * @return boolean
      */
-    public function set_active_instance($uid)
+    public function set_active_instance($uid): bool
     {
         $user = Core::get_global('user');
         if ($user == '') {
@@ -232,7 +232,7 @@ class AmpacheMpd extends localplay_controller
         debug_event('mdp.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
-    } // set_active_instance
+    }
 
     /**
      * get_active_instance
@@ -241,15 +241,14 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_active_instance()
     {
-    } // get_active_instance
+    }
 
     /**
      * add_url
      * This is the new hotness
      * @param Stream_Url $url
-     * @return boolean
      */
-    public function add_url(Stream_Url $url)
+    public function add_url(Stream_Url $url): bool
     {
         // If we haven't added anything then maybe we should clear the
         // playlist.
@@ -275,13 +274,13 @@ class AmpacheMpd extends localplay_controller
      * delete_track
      * This must take a single ID (as returned by the get function)
      * and delete it from the current playlist
-     * @param integer $object_id
-     * @return boolean|string
+     * @param int $object_id
+     * @return bool|string
      */
     public function delete_track($object_id)
     {
         return $this->_mpd->PLRemove($object_id);
-    } // delete_track
+    }
 
     /**
      * clear_playlist
@@ -290,7 +289,7 @@ class AmpacheMpd extends localplay_controller
     public function clear_playlist()
     {
         return $this->_mpd->PLClear();
-    } // clear_playlist
+    }
 
     /**
      * play
@@ -300,7 +299,7 @@ class AmpacheMpd extends localplay_controller
     public function play()
     {
         return $this->_mpd->Play();
-    } // play
+    }
 
     /**
      * stop
@@ -310,15 +309,14 @@ class AmpacheMpd extends localplay_controller
     public function stop()
     {
         return $this->_mpd->Stop();
-    } // stop
+    }
 
     /**
      * skip
      * This tells MPD to skip to the specified song
      * @param $song
-     * @return boolean
      */
-    public function skip($song)
+    public function skip($song): bool
     {
         if (!$this->_mpd->SkipTo($song)) {
             return false;
@@ -329,7 +327,7 @@ class AmpacheMpd extends localplay_controller
         $this->play();
 
         return true;
-    } // skip
+    }
 
     /**
      * This tells MPD to increase the volume by 5
@@ -337,7 +335,7 @@ class AmpacheMpd extends localplay_controller
     public function volume_up()
     {
         return $this->_mpd->AdjustVolume('5');
-    } // volume_up
+    }
 
     /**
      * This tells MPD to decrease the volume by 5
@@ -345,7 +343,7 @@ class AmpacheMpd extends localplay_controller
     public function volume_down()
     {
         return $this->_mpd->AdjustVolume('-5');
-    } // volume_down
+    }
 
     /**
      * next
@@ -354,7 +352,7 @@ class AmpacheMpd extends localplay_controller
     public function next()
     {
         return $this->_mpd->Next();
-    } // next
+    }
 
     /**
      * prev
@@ -363,7 +361,7 @@ class AmpacheMpd extends localplay_controller
     public function prev()
     {
         return $this->_mpd->Previous();
-    } // prev
+    }
 
     /**
      * pause
@@ -372,54 +370,54 @@ class AmpacheMpd extends localplay_controller
     public function pause()
     {
         return $this->_mpd->Pause();
-    } // pause
+    }
 
     /**
      * volume
      * This tells MPD to set the volume to the parameter
      * @param $volume
-     * @return boolean|string
+     * @return bool|string
      */
     public function volume($volume)
     {
         return $this->_mpd->SetVolume($volume);
-    } // volume
+    }
 
     /**
      * repeat
      * This tells MPD to set the repeating the playlist (i.e. loop) to either
      * on or off.
      * @param $state
-     * @return boolean|string
+     * @return bool|string
      */
     public function repeat($state)
     {
         return $this->_mpd->SetRepeat($state);
-    } // repeat
+    }
 
     /**
      * random
      * This tells MPD to turn on or off the playing of songs from the
      * playlist in random order.
      * @param $onoff
-     * @return boolean|string
+     * @return bool|string
      */
     public function random($onoff)
     {
         return $this->_mpd->SetRandom($onoff);
-    } // random
+    }
 
     /**
      * move
      * This tells MPD to move a song
      * @param $source
      * @param $destination
-     * @return boolean|string
+     * @return bool|string
      */
     public function move($source, $destination)
     {
         return $this->_mpd->PLMoveTrack($source, $destination);
-    } // move
+    }
 
     /**
      * get_songs
@@ -428,7 +426,7 @@ class AmpacheMpd extends localplay_controller
      * done in a standardized fashion
      * @return array
      */
-    public function get()
+    public function get(): array
     {
         if (!$this->_mpd || ($this->_mpd && !$this->_mpd->status)) {
             return array();
@@ -471,6 +469,7 @@ class AmpacheMpd extends localplay_controller
                     break;
                 case 'random':
                     $className    = ObjectTypeToClassNameMapper::map($url_data['random_type']);
+                    /** @var library_item $random */
                     $random       = new $className($url_data['random_id']);
                     $data['name'] = T_('Random') . ' - ' . scrub_out($random->get_fullname());
                     $data['link'] = '';
@@ -482,13 +481,14 @@ class AmpacheMpd extends localplay_controller
 
                     $db_results = Dba::read($sql);
                     if ($row = Dba::fetch_assoc($db_results)) {
-                        $class_name = ObjectTypeToClassNameMapper::map($row['type']);
-                        $media      = new $class_name($row['id']);
+                        $className = ObjectTypeToClassNameMapper::map($row['type']);
+                        $media     = new $className($row['id']);
                         $media->format();
                         switch ($row['type']) {
                             case 'song':
+                                /** @var Song $media */
                                 $data['name'] = $media->get_fullname() . ' - ' . $media->f_album . ' - ' . $media->f_artist;
-                                $data['link'] = $media->f_link;
+                                $data['link'] = $media->get_f_link();
                                 break;
                             case 'live_stream':
                                 /** @var Live_Stream $media */
@@ -514,13 +514,11 @@ class AmpacheMpd extends localplay_controller
         } // foreach playlist items
 
         return $results;
-    } // get
+    }
 
     /**
      * get_status
-     * This returns bool/int values for features, loop, repeat and any other
-     * features that this Localplay method supports.
-     * @return array
+     * This returns bool/int values for features, loop, repeat and any other features that this Localplay method supports.
      */
     public function status(): array
     {
@@ -573,7 +571,7 @@ class AmpacheMpd extends localplay_controller
         }
 
         return $array;
-    } // get_status
+    }
 
     /**
      * connect
@@ -591,5 +589,5 @@ class AmpacheMpd extends localplay_controller
         $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? '', 'debug_event');
 
         return $this->_mpd->connected;
-    } // connect
+    }
 }

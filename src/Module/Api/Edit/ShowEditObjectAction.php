@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,14 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\database_object;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -43,29 +44,36 @@ final class ShowEditObjectAction extends AbstractEditAction
 
     private StreamFactoryInterface $streamFactory;
 
+    private UiInterface $ui;
+
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UiInterface $ui
     ) {
         parent::__construct($configContainer, $logger);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
+        $this->ui              = $ui;
     }
 
     protected function handle(
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        database_object $libitem,
+        library_item $libitem,
         int $object_id
     ): ?ResponseInterface {
         ob_start();
         $users     = static::getUserRepository()->getValidArray();
         $users[-1] = T_('System');
 
-        require Ui::find_template('show_edit_' . $object_type . '.inc.php');
+        $this->ui->show(
+            'show_edit_' . $object_type . '.inc.php',
+            ['libitem' => $libitem]
+        );
 
         $results = ob_get_contents();
 

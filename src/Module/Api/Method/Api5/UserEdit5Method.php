@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
@@ -43,8 +43,6 @@ final class UserEdit5Method
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * @param array $input
-     * @param User $user
      * username          = (string) $username
      * password          = (string) hash('sha256', $password)) //optional
      * fullname          = (string) $fullname //optional
@@ -59,7 +57,6 @@ final class UserEdit5Method
      * reset_apikey      = (integer) 0,1 true to reset a user Api Key //optional
      * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
      * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
-     * @return boolean
      */
     public static function user_edit(array $input, User $user): bool
     {
@@ -68,5 +65,5 @@ final class UserEdit5Method
         }
 
         return UserUpdate5Method::user_update($input, $user);
-    } // tag_albums
+    }
 }

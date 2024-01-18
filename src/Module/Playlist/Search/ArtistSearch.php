@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Playlist\Search;
 
@@ -66,16 +67,16 @@ final class ArtistSearch implements SearchInterface
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
             $operator = array();
-            if (!$type) {
+            if ($type === null) {
                 continue;
             }
-            foreach ($search->basetypes[$type] as $op) {
-                if ($op['name'] == $rule[1]) {
-                    $operator = $op;
+            foreach ($search->basetypes[$type] as $baseOperator) {
+                if ($baseOperator['name'] == $rule[1]) {
+                    $operator = $baseOperator;
                     break;
                 }
             }
-            $input        = $search->filter_data($rule[2], $type, $operator);
+            $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
@@ -90,18 +91,18 @@ final class ArtistSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'time':
-                    $input        = $input * 60;
+                    $input        = ((int)$input) * 60;
                     $where[]      = "`artist`.`time` $operator_sql ?";
                     $parameters[] = $input;
                     break;
                 case 'genre':
-                    $where[]      = ($operator_sql == "NOT LIKE")
+                    $where[] = ($operator_sql == "NOT LIKE")
                         ? "`artist`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)"
                         : "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $operator_sql ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
                     break;
                 case 'song_genre':
-                    $where[]      = ($operator_sql == "NOT LIKE")
+                    $where[] = ($operator_sql == "NOT LIKE")
                         ? "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)"
                         : "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $operator_sql ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
@@ -334,11 +335,11 @@ final class ArtistSearch implements SearchInterface
                 case 'mbid':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`artist`.`mbid` IS NULL";
+                            $where[] = "`artist`.`mbid` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`artist`.`mbid` IS NOT NULL";
+                            $where[] = "`artist`.`mbid` IS NOT NULL";
                             break;
                         }
                     }
@@ -348,11 +349,11 @@ final class ArtistSearch implements SearchInterface
                 case 'mbid_album':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`album`.`mbid` IS NULL";
+                            $where[] = "`album`.`mbid` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`album`.`mbid` IS NOT NULL";
+                            $where[] = "`album`.`mbid` IS NOT NULL";
                             break;
                         }
                     }
@@ -363,11 +364,11 @@ final class ArtistSearch implements SearchInterface
                 case 'mbid_song':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
-                            $where[]      = "`song`.`mbid` IS NULL";
+                            $where[] = "`song`.`mbid` IS NULL";
                             break;
                         }
                         if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
-                            $where[]      = "`song`.`mbid` IS NOT NULL";
+                            $where[] = "`song`.`mbid` IS NOT NULL";
                             break;
                         }
                     }

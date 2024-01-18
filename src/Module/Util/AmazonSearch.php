@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
@@ -105,7 +106,7 @@ class AmazonSearch
             'MediumImage',
             'LargeImage'
         );
-    } // AmazonSearch
+    }
 
     /**
      * setProxy
@@ -132,7 +133,7 @@ class AmazonSearch
         if ($pass) {
             $this->_proxy_pass = $pass;
         }
-    } // setProxy
+    }
 
     /**
      * Create the XML parser to process the response.
@@ -148,7 +149,7 @@ class AmazonSearch
         xml_set_element_handler($this->_parser, 'startElement', 'endElement');
 
         xml_set_character_data_handler($this->_parser, 'cdata');
-    } // createParser
+    }
 
     /**
      * Run a search.
@@ -174,7 +175,7 @@ class AmazonSearch
         }
 
         xml_parser_free($this->_parser);
-    } // runSearch
+    }
 
     /**
      * getProxyConfig
@@ -182,7 +183,7 @@ class AmazonSearch
      * Returning the array of proxy config options.
      * @return array
      */
-    public function getProxyConfig()
+    public function getProxyConfig(): array
     {
         $options = array();
         if ($this->_proxy_host) {
@@ -196,7 +197,7 @@ class AmazonSearch
         }
 
         return $options;
-    } // getProxyConfig
+    }
 
     /**
      * Create an XML search string.
@@ -205,7 +206,7 @@ class AmazonSearch
      * @param string $type The type of result desired.
      * @return array
      */
-    public function search($terms, $type = 'Music')
+    public function search($terms, $type = 'Music'): array
     {
         $params = array();
 
@@ -243,15 +244,14 @@ class AmazonSearch
         unset($this->results['ASIN']);
 
         return $this->results;
-    } // search
+    }
 
     /**
      * signString
      * Sign a query string
      * @param string $string_to_sign The string to sign
-     * @return string
      */
-    public function signString($string_to_sign)
+    public function signString($string_to_sign): string
     {
         // hash and encode the query string
         $signature = base64_encode(hash_hmac("sha256", $string_to_sign, $this->private_key, true));
@@ -260,7 +260,7 @@ class AmazonSearch
         $signature = str_replace("%7E", "~", rawurlencode($signature));
 
         return $signature;
-    } // signString
+    }
 
     /**
      * Lookup the selected item by the 'Amazon Standard Identification Number'
@@ -269,7 +269,7 @@ class AmazonSearch
      * @param string $type The category of results desired from the web service.
      * @return array
      */
-    public function lookup($asin, $type = 'Music')
+    public function lookup($asin, $type = 'Music'): array
     {
         if (is_array($asin)) {
             foreach ($asin as $key => $value) {
@@ -283,7 +283,7 @@ class AmazonSearch
         unset($this->results['ASIN']);
 
         return $this->results;
-    } // lookup
+    }
 
     /**
      * Query the AWS for information about the selected item by ASIN and parse the results.
@@ -334,7 +334,7 @@ class AmazonSearch
         }
 
         xml_parser_free($this->_parser);
-    } // runSearchAsin
+    }
 
     /**
      * Start XML Element.
@@ -361,7 +361,7 @@ class AmazonSearch
                 $this->_currentTag = $tag;
             }
         }
-    } // startElement
+    }
 
     /**
      * CDATA handler.
@@ -391,7 +391,7 @@ class AmazonSearch
                 }
                 break;
         } // end switch
-    } // cdata
+    }
 
     /**
      * End XML Element
@@ -402,5 +402,5 @@ class AmazonSearch
     {
         // zero the tag
         $this->_currentTag = '';
-    } // endElement
+    }
 }

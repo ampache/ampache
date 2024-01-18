@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,18 +23,16 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Modules;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -42,6 +43,8 @@ final class UninstallPluginAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'uninstall_plugin';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -49,10 +52,12 @@ final class UninstallPluginAction implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
@@ -66,11 +71,13 @@ final class UninstallPluginAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
+        $plugin_name = $this->requestParser->getFromRequest('plugin');
+
         /* Verify that this plugin exists */
         $plugins = Plugin::get_plugins();
-        if (!array_key_exists($_REQUEST['plugin'], $plugins)) {
+        if (!array_key_exists($plugin_name, $plugins)) {
             $this->logger->error(
-                sprintf('Error: Invalid Plugin: %s selected', Core::get_request('plugin')),
+                sprintf('Error: Invalid Plugin: %s selected', $plugin_name),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
@@ -79,7 +86,7 @@ final class UninstallPluginAction implements ApplicationActionInterface
 
             return null;
         }
-        $plugin = new Plugin($_REQUEST['plugin']);
+        $plugin = new Plugin($plugin_name);
         $plugin->uninstall();
 
         // Don't trust the plugin to do it

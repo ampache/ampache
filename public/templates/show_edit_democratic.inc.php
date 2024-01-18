@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -41,7 +44,7 @@ Ui::show_box_top(T_('Configure Democratic Playlist')); ?>
         </tr>
         <tr>
             <td><?php echo T_('Base Playlist'); ?></td>
-            <td><?php echo Democratic::show_playlist_select('democratic', $democratic->base_playlist); ?></td>
+            <td><?php echo Democratic::show_playlist_select('democratic', (string)$democratic->base_playlist); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Cooldown Time'); ?></td>

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -28,21 +30,22 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\AmazonSearch;
 
-class AmpacheAmazon
+class AmpacheAmazon implements AmpachePluginInterface
 {
-    public $name        = 'Amazon';
-    public $categories  = 'metadata';
-    public $description = 'Amazon arts';
-    public $url         = 'http://www.amazon.com';
-    public $version     = '000001';
-    public $min_ampache = '370009';
-    public $max_ampache = '999999';
+    public string $name        = 'Amazon';
+    public string $categories  = 'metadata';
+    public string $description = 'Amazon arts';
+    public string $url         = 'http://www.amazon.com';
+    public string $version     = '000001';
+    public string $min_ampache = '370009';
+    public string $max_ampache = '999999';
 
-    public $amazon_base_url;
-    public $amazon_max_results_pages;
-    public $amazon_developer_public_key;
-    public $amazon_developer_private_api_key;
-    public $amazon_developer_associate_tag;
+    // These are internal settings used by this class, run this->load to fill them out
+    private $amazon_base_url;
+    private $amazon_max_results_pages;
+    private $amazon_developer_public_key;
+    private $amazon_developer_private_api_key;
+    private $amazon_developer_associate_tag;
 
     /**
      * Constructor
@@ -51,52 +54,64 @@ class AmpacheAmazon
     public function __construct()
     {
         $this->description = T_('Amazon art search');
-
-        return true;
     }
 
     /**
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('amazon_base_url')) {
+        if (!Preference::exists('amazon_base_url') && !Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('amazon_max_results_pages') && !Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('amazon_developer_public_key') && !Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('amazon_developer_private_api_key') && !Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('amazon_developer_associate_tag') && !Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name);
-        Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name);
-        Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name);
-
         return true;
-    } // install
+    }
 
     /**
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('amazon_base_url');
-        Preference::delete('amazon_max_results_pages');
-        Preference::delete('amazon_developer_public_key');
-        Preference::delete('amazon_developer_private_api_key');
-        Preference::delete('amazon_developer_associate_tag');
+        return (
+            Preference::delete('amazon_base_url') &&
+            Preference::delete('amazon_max_results_pages') &&
+            Preference::delete('amazon_developer_public_key') &&
+            Preference::delete('amazon_developer_private_api_key') &&
+            Preference::delete('amazon_developer_associate_tag')
+        );
+    }
 
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
-    } // uninstall
+    }
 
     /**
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -147,17 +162,17 @@ class AmpacheAmazon
         }
 
         return true;
-    } // load
+    }
 
     /**
      * gather_arts
      * Returns arts for what we're passed in.
      * @param string $type
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5)
+    public function gather_arts($type, $options = array(), $limit = 5): array
     {
         $images        = array();
         $final_results = array();
@@ -173,8 +188,12 @@ class AmpacheAmazon
         set_time_limit(0);
 
         // Create the Search Object
-        $amazon = new AmazonSearch($this->amazon_developer_public_key, $this->amazon_developer_private_api_key,
-            $this->amazon_developer_associate_tag, $this->amazon_base_url);
+        $amazon = new AmazonSearch(
+            $this->amazon_developer_public_key,
+            $this->amazon_developer_private_api_key,
+            $this->amazon_developer_associate_tag,
+            $this->amazon_base_url
+        );
         if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
             $proxyhost = AmpConfig::get('proxy_host');
             $proxyport = AmpConfig::get('proxy_port');
@@ -190,8 +209,10 @@ class AmpacheAmazon
         $max_pages_to_search = max($this->amazon_max_results_pages, $amazon->_default_results_pages);
         // while we have pages to search
         do {
-            $raw_results = $amazon->search(array('artist' => '', 'album' => '', 'keywords' => $options['keyword']),
-                $mediaType);
+            $raw_results = $amazon->search(
+                array('artist' => '', 'album' => '', 'keywords' => $options['keyword']),
+                $mediaType
+            );
             $total = count($raw_results) + count($search_results);
 
             // If we've gotten more then we wanted
@@ -206,8 +227,11 @@ class AmpacheAmazon
 
             $search_results  = array_merge($search_results, $raw_results);
             $pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
-            debug_event('amazon.plugin',
-                "Searched results page " . ($amazon->_currentPage + 1) . '/' . $pages_to_search, 5);
+            debug_event(
+                'amazon.plugin',
+                "Searched results page " . ($amazon->_currentPage + 1) . '/' . $pages_to_search,
+                5
+            );
             $amazon->_currentPage++;
         } while ($amazon->_currentPage < $pages_to_search);
 
@@ -217,16 +241,19 @@ class AmpacheAmazon
         }
 
         /* Log this if we're doin debug */
-        debug_event('amazon.plugin', "Searched using " . $options['keyword'] . ", results: " . count($final_results),
-            5);
+        debug_event(
+            'amazon.plugin',
+            "Searched using " . $options['keyword'] . ", results: " . count($final_results),
+            5
+        );
 
         /* Foreach through what we've found */
         foreach ($final_results as $result) {
             $key = '';
             /* Recurse through the images found */
-            foreach ($possible_keys as $k) {
-                if (strlen($result[$k])) {
-                    $key = $k;
+            foreach ($possible_keys as $pKey) {
+                if (strlen($result[$pKey])) {
+                    $key = $pKey;
                     break;
                 }
             } // foreach
@@ -260,5 +287,5 @@ class AmpacheAmazon
         } // if we've got something
 
         return $images;
-    } // gather_arts
+    }
 }

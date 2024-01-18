@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -55,14 +56,14 @@ class Horde_Browser
     /**
      * Major version number.
      *
-     * @var integer
+     * @var int
      */
     private $_majorVersion = 0;
 
     /**
      * Minor version number.
      *
-     * @var integer
+     * @var int
      */
     private $_minorVersion = 0;
 
@@ -104,14 +105,14 @@ class Horde_Browser
     /**
      * Is this a mobile browser?
      *
-     * @var boolean
+     * @var bool
      */
     private $_mobile = false;
 
     /**
      * Is this a tablet browser?
      *
-     * @var boolean
+     * @var bool
      */
     private $_tablet = false;
 
@@ -151,7 +152,7 @@ class Horde_Browser
      * @param string $userAgent The browser string to parse.
      * @param string $accept The HTTP_ACCEPT settings to use.
      */
-    public function match($userAgent = null, $accept = null)
+    public function match($userAgent = null, $accept = null): void
     {
         // Set our agent string.
         if ($userAgent == null) {
@@ -364,10 +365,14 @@ class Horde_Browser
             $this->setQuirk('no_hidden_overflow_tables');
             $this->setFeature('dataurl');
 
-            if (strpos($agent, 'Mobile') !== false || strpos($agent, 'Android') !== false || strpos($agent, 'SAMSUNG-GT') !== false ||
+            if (
+                strpos($agent, 'Mobile') !== false ||
+                strpos($agent, 'Android') !== false ||
+                strpos($agent, 'SAMSUNG-GT') !== false ||
                 ((strpos($agent, 'Nokia') !== false || strpos($agent, 'Symbian') !== false) && strpos($agent, 'WebKit') !== false) ||
                 (strpos($agent, 'N900') !== false && strpos($agent, 'Maemo Browser') !== false) ||
-                (strpos($agent, 'MeeGo') !== false && strpos($agent, 'NokiaN9') !== false)) {
+                (strpos($agent, 'MeeGo') !== false && strpos($agent, 'NokiaN9') !== false)
+            ) {
                 // WebKit Mobile
                 $this->setFeature('frames', false);
                 $this->setFeature('javascript');
@@ -616,10 +621,8 @@ class Horde_Browser
 
     /**
      * Returns the currently matched platform.
-     *
-     * @return string  The user's platform.
      */
-    private function getPlatform()
+    private function getPlatform(): string
     {
         return $this->_platform;
     }
@@ -638,10 +641,8 @@ class Horde_Browser
      * Determines if the given browser is the same as the current.
      *
      * @param string $browser The browser to check.
-     *
-     * @return boolean  Is the given browser the same as the current?
      */
-    public function isBrowser($browser)
+    public function isBrowser($browser): bool
     {
         return ($this->_browser === $browser);
     }
@@ -667,7 +668,7 @@ class Horde_Browser
      *   - scrollbar_in_way
      *   - scroll_tds
      *   - windowed_controls
-     * @param boolean $value Special behavior parameter.
+     * @param bool $value Special behavior parameter.
      */
     private function setQuirk($quirk, $value = true)
     {
@@ -682,10 +683,8 @@ class Horde_Browser
      * Checks unique behavior for the current browser.
      *
      * @param string $quirk The behavior to check.
-     *
-     * @return boolean  Does the browser have the behavior set?
      */
-    private function hasQuirk($quirk)
+    private function hasQuirk($quirk): bool
     {
         return !empty($this->_quirks[$quirk]);
     }
@@ -716,7 +715,7 @@ class Horde_Browser
      *   - utf
      *   - wml
      *   - xmlhttpreq
-     * @param boolean $value Special capability parameter.
+     * @param bool $value Special capability parameter.
      */
     public function setFeature($feature, $value = true)
     {
@@ -732,7 +731,7 @@ class Horde_Browser
      *
      * @param string $filename The filename of the download.
      * @param string $cType The content-type description of the file.
-     * @param boolean $inline True if inline, false if attachment.
+     * @param bool $inline True if inline, false if attachment.
      * @param string $cLength The content-length of this file.
      *
      * @return string[]
@@ -791,15 +790,14 @@ class Horde_Browser
             }
         }
 
-        /* Content-Length Header. Only send if we are not compressing
-         * output. */
-        if ($cLength !== null && !in_array('ob_gzhandler', ob_list_handlers())) {
+        /* Content-Length Header. Only send if we are not compressing output. */
+        if (!empty($cLength) && !in_array('ob_gzhandler', ob_list_handlers())) {
             $headers['Content-Length'] = $cLength;
         }
 
         /* Overwrite Pragma: and other caching headers for IE. */
         if ($this->hasQuirk('cache_ssl_downloads')) {
-            $headers['Expires']       = 0;
+            $headers['Expires']       = '0';
             $headers['Cache-Control'] = 'must-revalidate';
             $headers['Pragma']        = 'public';
         }

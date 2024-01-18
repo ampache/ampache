@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -29,16 +31,17 @@ use Ampache\Repository\Model\User;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheDiscogs
+class AmpacheDiscogs implements AmpachePluginInterface
 {
-    public $name        = 'Discogs';
-    public $categories  = 'metadata';
-    public $description = 'Discogs metadata integration';
-    public $url         = 'http://www.discogs.com';
-    public $version     = '000001';
-    public $min_ampache = '370021';
-    public $max_ampache = '999999';
+    public string $name        = 'Discogs';
+    public string $categories  = 'metadata';
+    public string $description = 'Discogs metadata integration';
+    public string $url         = 'http://www.discogs.com';
+    public string $version     = '000001';
+    public string $min_ampache = '370021';
+    public string $max_ampache = '999999';
 
+    // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
     private $secret;
 
@@ -49,45 +52,52 @@ class AmpacheDiscogs
     public function __construct()
     {
         $this->description = T_('Discogs metadata integration');
-
-        return true;
     }
 
     /**
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('discogs_api_key')) {
+        if (!Preference::exists('discogs_api_key') && !Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', 75, 'string', 'plugins', $this->name);
-        Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', 75, 'string', 'plugins', $this->name);
+        if (!Preference::exists('discogs_secret_api_key') && !Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('discogs_api_key');
-        Preference::delete('discogs_secret_api_key');
+        return (
+            Preference::delete('discogs_api_key') &&
+            Preference::delete('discogs_secret_api_key')
+        );
+    }
 
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
-    } // uninstall
+    }
 
     /**
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -114,7 +124,7 @@ class AmpacheDiscogs
         }
 
         return true;
-    } // load
+    }
 
     /**
      * @param $query
@@ -143,7 +153,7 @@ class AmpacheDiscogs
     }
 
     /**
-     * @param integer $object_id
+     * @param int $object_id
      * @return mixed
      */
     protected function get_artist($object_id)
@@ -166,7 +176,7 @@ class AmpacheDiscogs
     }
 
     /**
-     * @param integer $object_id
+     * @param int $object_id
      * @return mixed
      */
     protected function get_album($object_id)
@@ -181,9 +191,9 @@ class AmpacheDiscogs
      * Returns song metadata for what we're passed in.
      * @param array $gather_types
      * @param array $media_info
-     * @return array|null
+     * @return array
      */
-    public function get_metadata($gather_types, $media_info)
+    public function get_metadata($gather_types, $media_info): array
     {
         debug_event(self::class, 'Getting metadata from Discogs...', 5);
 
@@ -191,7 +201,7 @@ class AmpacheDiscogs
         if (!in_array('music', $gather_types)) {
             debug_event(self::class, 'Not a valid media type, skipped.', 5);
 
-            return null;
+            return array();
         }
 
         $results = array();
@@ -220,15 +230,15 @@ class AmpacheDiscogs
         }
 
         return $results;
-    } // get_metadata
+    }
 
     /**
      * @param string $type
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5)
+    public function gather_arts($type, $options = array(), $limit = 5): array
     {
         return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }

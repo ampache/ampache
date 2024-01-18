@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api5;
@@ -35,6 +38,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -53,19 +57,19 @@ final class ShareCreate5Method
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
+     *  filter      = (string) object_id
+     *  type        = (string) object_type ('song', 'album', 'artist')
+     *  description = (string) description (will be filled for you if empty) //optional
+     *  expires     = (integer) days to keep active //optional
      * @param User $user
-     * filter      = (string) object_id
-     * type        = (string) object_type ('song', 'album', 'artist')
-     * description = (string) description (will be filled for you if empty) //optional
-     * expires     = (integer) days to keep active //optional
-     * @return boolean
+     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public static function share_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api5::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -80,7 +84,7 @@ final class ShareCreate5Method
         // confirm the correct data
         if (!in_array(strtolower($object_type), array('song', 'album', 'artist'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $object_type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -90,12 +94,13 @@ final class ShareCreate5Method
         $results = array();
         if (!$className || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $object_type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
         } else {
+            /** @var Song|Album|Artist $item */
             $item = new $className($object_id);
-            if (!$item->id) {
+            if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+                Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
@@ -104,7 +109,7 @@ final class ShareCreate5Method
             $functionChecker   = $dic->get(FunctionCheckerInterface::class);
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
 
-            $results[] = Share::create_share(
+            $share = Share::create_share(
                 $user->id,
                 $object_type,
                 $object_id,
@@ -115,9 +120,12 @@ final class ShareCreate5Method
                 0,
                 $description
             );
+            if ($share !== null) {
+                $results[] = $share;
+            }
         }
         if (empty($results)) {
-            Api5::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

@@ -1,9 +1,14 @@
 parameters:
-	level: 8
-	paths:
-	- src
-	excludePaths:
-	- tests
-	- src/Module/Playback/Scrobble/ScrobblerAsync.php
+  level: 8
+  paths:
+    - public
+    - src
+  excludePaths:
+    - public/lib
+    - public/templates
+    - public/themes
+    - public/upnp
+    - src/Module/Playback/Scrobble/ScrobblerAsync.php
+    - tests
 includes:
-	- phpstan-baseline.neon
+    - phpstan-baseline.neon

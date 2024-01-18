@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
@@ -73,7 +74,6 @@ final class ShowAction implements ApplicationActionInterface
         $albumId = (int) ($request->getQueryParams()['album'] ?? 0);
 
         $album = $this->modelFactory->createAlbum($albumId);
-        $album->format();
 
         if ($album->isNew()) {
             $this->logger->warning(
@@ -81,7 +81,8 @@ final class ShowAction implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             echo T_('You have requested an object that does not exist');
-        } elseif ($album->disk_count == 1) {
+        } elseif ($album->getDiskCount() === 1) {
+            $album->format();
             // Single disk albums
             $this->ui->show(
                 'show_album.inc.php',
@@ -94,6 +95,7 @@ final class ShowAction implements ApplicationActionInterface
                 ]
             );
         } else {
+            $album->format();
             // Multi disk albums
             $this->ui->show(
                 'show_album_group_disks.inc.php',
@@ -124,7 +126,7 @@ final class ShowAction implements ApplicationActionInterface
             return true;
         }
 
-        if (!$album->album_artist) {
+        if ($album->getAlbumArtist() === 0) {
             return false;
         }
 

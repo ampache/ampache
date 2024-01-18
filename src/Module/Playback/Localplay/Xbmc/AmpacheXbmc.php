@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 namespace Ampache\Module\Playback\Localplay\Xbmc;
 
@@ -57,37 +58,37 @@ class AmpacheXbmc extends localplay_controller
      * get_description
      * This returns the description of this Localplay method
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->description;
-    } // get_description
+    }
 
     /**
      * get_version
      * This returns the current version
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
-    } // get_version
+    }
 
     /**
      * is_installed
      * This returns true or false if xbmc controller is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE 'localplay_xbmc'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } // is_installed
+    }
 
     /**
      * install
      * This function installs the XBMC Localplay controller
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -100,13 +101,13 @@ class AmpacheXbmc extends localplay_controller
         Preference::insert('xbmc_active', T_('XBMC Active Instance'), 0, 25, 'integer', 'internal', 'xbmc');
 
         return true;
-    } // install
+    }
 
     /**
      * uninstall
      * This removes the Localplay controller
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         $sql = "DROP TABLE `localplay_xbmc`";
         Dba::query($sql);
@@ -115,13 +116,13 @@ class AmpacheXbmc extends localplay_controller
         Preference::delete('xbmc_active');
 
         return true;
-    } // uninstall
+    }
 
     /**
      * add_instance
      * This takes key'd data and inserts a new xbmc instance
      * @param array $data
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public function add_instance($data)
     {
@@ -131,28 +132,27 @@ class AmpacheXbmc extends localplay_controller
             : -1;
 
         return Dba::query($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['user'] ?? null, $data['pass'] ?? null, $user_id));
-    } // add_instance
+    }
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
      * @param $uid
-     * @return boolean
      */
-    public function delete_instance($uid)
+    public function delete_instance($uid): bool
     {
         $sql = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
         Dba::query($sql, array($uid));
 
         return true;
-    } // delete_instance
+    }
 
     /**
      * get_instances
      * This returns a key'd array of the instance information with
      * [UID]=>[NAME]
      */
-    public function get_instances()
+    public function get_instances(): array
     {
         $sql        = "SELECT * FROM `localplay_xbmc` ORDER BY `name`";
         $db_results = Dba::query($sql);
@@ -163,22 +163,21 @@ class AmpacheXbmc extends localplay_controller
         }
 
         return $results;
-    } // get_instances
+    }
 
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
      * @param $uid
      * @param array $data
-     * @return boolean
      */
-    public function update_instance($uid, $data)
+    public function update_instance($uid, $data): bool
     {
         $sql = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
         Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid));
 
         return true;
-    } // update_instance
+    }
 
     /**
      * instance_fields
@@ -195,7 +194,7 @@ class AmpacheXbmc extends localplay_controller
         $fields['pass'] = array('description' => T_('Password'), 'type' => 'password');
 
         return $fields;
-    } // instance_fields
+    }
 
     /**
      * get_instance
@@ -203,22 +202,21 @@ class AmpacheXbmc extends localplay_controller
      * @param string $instance
      * @return array
      */
-    public function get_instance($instance = '')
+    public function get_instance($instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('xbmc_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
         $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
-    } // get_instance
+    }
 
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
      * @param $uid
-     * @return boolean
      */
-    public function set_active_instance($uid)
+    public function set_active_instance($uid): bool
     {
         $user = Core::get_global('user');
         if ($user == '') {
@@ -229,7 +227,7 @@ class AmpacheXbmc extends localplay_controller
         debug_event('xbmc.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
-    } // set_active_instance
+    }
 
     /**
      * get_active_instance
@@ -238,13 +236,12 @@ class AmpacheXbmc extends localplay_controller
      */
     public function get_active_instance()
     {
-    } // get_active_instance
+    }
 
     /**
      * @param Stream_Url $url
-     * @return boolean
      */
-    public function add_url(Stream_Url $url)
+    public function add_url(Stream_Url $url): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -268,9 +265,8 @@ class AmpacheXbmc extends localplay_controller
      * delete_track
      * Delete a track from the xbmc playlist
      * @param $object_id
-     * @return boolean
      */
-    public function delete_track($object_id)
+    public function delete_track($object_id): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -288,13 +284,13 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // delete_track
+    }
 
     /**
      * clear_playlist
      * This deletes the entire xbmc playlist.
      */
-    public function clear_playlist()
+    public function clear_playlist(): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -312,14 +308,14 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // clear_playlist
+    }
 
     /**
      * play
      * This just tells xbmc to start playing, it does not
      * take any arguments
      */
-    public function play()
+    public function play(): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -346,13 +342,13 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // play
+    }
 
     /**
      * pause
      * This tells XBMC to pause the current song
      */
-    public function pause()
+    public function pause(): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -370,14 +366,14 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // pause
+    }
 
     /**
      * stop
      * This just tells XBMC to stop playing, it does not take
      * any arguments
      */
-    public function stop()
+    public function stop(): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -394,15 +390,14 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // stop
+    }
 
     /**
      * skip
      * This tells XBMC to skip to the specified song
      * @param $song
-     * @return boolean
      */
-    public function skip($song)
+    public function skip($song): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -420,12 +415,12 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // skip
+    }
 
     /**
      * This tells XBMC to increase the volume
      */
-    public function volume_up()
+    public function volume_up(): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -442,12 +437,12 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // volume_up
+    }
 
     /**
      * This tells XBMC to decrease the volume
      */
-    public function volume_down()
+    public function volume_down(): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -464,13 +459,13 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // volume_down
+    }
 
     /**
      * next
      * This just tells xbmc to skip to the next song
      */
-    public function next()
+    public function next(): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -488,13 +483,13 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // next
+    }
 
     /**
      * prev
      * This just tells xbmc to skip to the prev song
      */
-    public function prev()
+    public function prev(): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -512,15 +507,14 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // prev
+    }
 
     /**
      * volume
      * This tells XBMC to set the volume to the specified amount
      * @param $volume
-     * @return boolean
      */
-    public function volume($volume)
+    public function volume($volume): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -537,15 +531,14 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // volume
+    }
 
     /**
      * repeat
      * This tells XBMC to set the repeating the playlist (i.e. loop) to either on or off
      * @param $state
-     * @return boolean
      */
-    public function repeat($state)
+    public function repeat($state): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -563,15 +556,14 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // repeat
+    }
 
     /**
      * random
      * This tells XBMC to turn on or off the playing of songs from the playlist in random order
      * @param $onoff
-     * @return boolean
      */
-    public function random($onoff)
+    public function random($onoff): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -589,7 +581,7 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // random
+    }
 
     /**
      * get
@@ -623,7 +615,7 @@ class AmpacheXbmc extends localplay_controller
                 if ($url_data != null) {
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
-                    if ($song->id) {
+                    if ($song->isNew() === false) {
                         $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                     }
                 }
@@ -637,14 +629,12 @@ class AmpacheXbmc extends localplay_controller
         }
 
         return $results;
-    } // get
+    }
 
     /**
      * status
-     * This returns bool/int values for features, loop, repeat and any other features
-     * that this Localplay method supports.
+     * This returns bool/int values for features, loop, repeat and any other features that this Localplay method supports.
      * This works as in requesting the xbmc properties
-     * @return array
      */
     public function status(): array
     {
@@ -686,8 +676,8 @@ class AmpacheXbmc extends localplay_controller
                     'properties' => array('position')
                 ));
 
-                $array['track']  = $playposition['position'] + 1;
-                $playlist_item   = rawurldecode($currentplay['item']['file']);
+                $array['track'] = $playposition['position'] + 1;
+                $playlist_item  = rawurldecode($currentplay['item']['file']);
 
                 $url_data = $this->parse_url($playlist_item);
                 $song     = new Song($url_data['oid']);
@@ -705,7 +695,7 @@ class AmpacheXbmc extends localplay_controller
         }
 
         return $array;
-    } // status
+    }
 
     /**
      * connect
@@ -713,7 +703,7 @@ class AmpacheXbmc extends localplay_controller
      * a boolean value for the status, to save time this handle
      * is stored in this class
      */
-    public function connect()
+    public function connect(): bool
     {
         $options = self::get_instance();
         try {
@@ -727,5 +717,5 @@ class AmpacheXbmc extends localplay_controller
 
             return false;
         }
-    } // connect
+    }
 }

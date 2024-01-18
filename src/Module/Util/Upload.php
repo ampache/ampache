@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,53 +23,43 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Util;
 
-use Ampache\Repository\Model\Album;
-use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\User;
 use RuntimeException;
 
 class Upload
 {
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker
-    ) {
-        $this->privilegeChecker = $privilegeChecker;
-    }
-
     /**
      * process
-     * @return boolean
      */
-    public static function process()
+    public static function process(): bool
     {
         header('Content-Type: application/json');
         ob_start();
         define('CLI', true);
 
         $can_upload = Access::check('interface', AmpConfig::get('upload_access_level', 25));
-        $catalog_id = AmpConfig::get('upload_catalog');
+        $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
         if ($catalog !== null) {
             debug_event(self::class, 'Uploading to catalog ID ' . $catalog_id, 4);
 
             $rootdir = self::get_root($catalog);
             // check the catalog path is valid
-            if (!$targetdir = self::check_target_dir($rootdir)) {
+            $targetdir = self::check_target_dir($rootdir);
+            if (!$targetdir) {
                 return self::rerror();
             }
             // check the file is valid and doesn't already exist
-            if (!$targetfile = self::check_target_path($targetdir . DIRECTORY_SEPARATOR . $_FILES['upl']['name'])) {
+            $targetfile = self::check_target_path($targetdir . DIRECTORY_SEPARATOR . $_FILES['upl']['name']);
+            if (!$targetfile) {
                 return self::rerror();
             }
             // check that the minimum level of permission is there
@@ -91,7 +83,8 @@ class Upload
                 }
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
-                    if (!$artist_id = self::check_artist(Core::get_request('artist_name'), Core::get_global('user')->id)) {
+                    $artist_id = self::check_artist(Core::get_request('artist_name'), Core::get_global('user')->id);
+                    if (!$artist_id) {
                         return self::rerror($targetfile);
                     }
                     $artist = new Artist($artist_id);
@@ -105,7 +98,8 @@ class Upload
 
                 // Try to create a new album
                 if (Core::get_request('album_name') !== '') {
-                    if (!$album_id = self::check_album(Core::get_request('album_name'), $options['artist_id'])) {
+                    $album_id = self::check_album(Core::get_request('album_name'), ($options['artist_id'] ?? null));
+                    if (!is_int($album_id)) {
                         return self::rerror($targetfile);
                     }
                     $album = new Album($album_id);
@@ -142,16 +136,17 @@ class Upload
         }
 
         return self::rerror();
-    } // process
+    }
 
     /**
      * check
      * Can you even upload?
-     * @param $catalog_id
-     * @return Catalog|null
      */
-    public static function check($catalog_id)
+    public static function check(int $catalog_id): ?Catalog
     {
+        if ($catalog_id === 0) {
+            return null;
+        }
         $allowed   = explode('|', AmpConfig::get('catalog_file_pattern'));
         $extension = strtolower((string) pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION));
 
@@ -161,22 +156,25 @@ class Upload
             return null;
         }
         if (array_key_exists('upl', $_FILES) && $_FILES['upl']['error'] == 0) {
-            $upload_catalog = Catalog::create_from_id($catalog_id);
-            if ($upload_catalog->catalog_type == "local") {
-                return $upload_catalog;
+            $catalog = Catalog::create_from_id($catalog_id);
+            if ($catalog === null) {
+                return null;
+            }
+            if ($catalog->catalog_type == "local") {
+                return $catalog;
             }
         } else {
             debug_event(self::class, 'File upload error (check filesize limits).', 2);
         }
 
         return null;
-    } // check
+    }
 
     /**
      * can_upload
      * check settings and permissions for uploads
      * @param User|string|null $user
-     * @return boolean
+     * @return bool
      * @throws RuntimeException
      */
     public static function can_upload($user = null): bool
@@ -193,10 +191,10 @@ class Upload
     /**
      * rerror
      * @param string $file
-     * @return boolean
+     * @return bool
      * @throws RuntimeException
      */
-    public static function rerror($file = null)
+    public static function rerror($file = null): bool
     {
         if ($file !== null) {
             if (unlink($file) === false) {
@@ -209,14 +207,14 @@ class Upload
         echo '{"status":"error"}';
 
         return false;
-    } // rerror
+    }
 
     /**
      * upload_script
      * @param string $targetdir
      * @param string $targetfile
      */
-    public static function upload_script($targetdir, $targetfile)
+    public static function upload_script($targetdir, $targetfile): void
     {
         $script = AmpConfig::get('upload_script');
         if (AmpConfig::get('allow_upload_scripts') && $script) {
@@ -224,67 +222,64 @@ class Upload
             $script = str_replace('%FILE%', $targetfile, $script);
             exec($script);
         }
-    } // upload_script
+    }
 
     /**
      * check_artist
      * @param string $artist_name
-     * @param integer $user_id
-     * @return boolean|integer
+     * @param int $user_id
      */
-    public static function check_artist($artist_name, $user_id)
+    public static function check_artist($artist_name, $user_id): ?int
     {
         debug_event(self::class, 'check_artist: looking for ' . $artist_name, 5);
         if ($artist_name !== '') {
-            if (Artist::check($artist_name, null, true) !== null) {
+            if (Artist::check($artist_name, '', true) !== null) {
                 debug_event(self::class, 'An artist with the name "' . $artist_name . '" already exists, uploaded song skipped.', 3);
 
-                return false;
+                return null;
             }
-            $artist_id = Artist::check($artist_name, null);
-            if ((int) $artist_id < 0) {
+            $artist_id = (int)Artist::check($artist_name);
+            if ($artist_id === 0) {
                 debug_event(self::class, 'Artist information required, uploaded song skipped.', 3);
 
-                return false;
+                return null;
             }
             $artist = new Artist($artist_id);
             $artist->update_artist_user($user_id); // take ownership of the new artist
 
-            return (int) $artist_id;
+            return $artist_id;
         }
 
-        return false;
-    } // check_artist
+        return null;
+    }
 
     /**
      * check_album
      * @param string $album_name
-     * @param int $artist_id
-     * @return boolean|integer
+     * @param int|null $artist_id
      */
-    public static function check_album($album_name, $artist_id)
+    public static function check_album($album_name, $artist_id): ?int
     {
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
             $album_id = Album::check(AmpConfig::get('upload_catalog'), $album_name, 0, null, null, $artist_id);
-            if ((int)$album_id < 0) {
+            if ((int)$album_id === 0) {
                 debug_event(self::class, 'Album information required, uploaded song skipped.', 3);
 
-                return false;
+                return null;
             }
 
             return (int)$album_id;
         }
 
-        return false;
-    } // check_album
+        return null;
+    }
 
     /**
      * check_target_path
      * @param string $targetfile
-     * @return boolean|string
      */
-    public static function check_target_path($targetfile)
+    public static function check_target_path($targetfile): ?string
     {
         debug_event(self::class, 'Target File `' . $targetfile, 4);
         if (Core::is_readable($targetfile)) {
@@ -294,19 +289,18 @@ class Upload
             if (Core::is_readable($targetfile)) {
                 debug_event(self::class, 'File `' . $targetfile . '` already exists.', 1);
 
-                return false;
+                return null;
             }
         }
 
         return $targetfile;
-    } // check_target_path
+    }
 
     /**
      * check_target_dir
      * @param string $catalog_dir
-     * @return boolean|string
      */
-    public static function check_target_dir($catalog_dir)
+    public static function check_target_dir($catalog_dir): ?string
     {
         $targetdir = $catalog_dir;
         $folder    = (Core::get_post('folder') == '..') ? '' : Core::get_post('folder');
@@ -317,22 +311,21 @@ class Upload
 
         $targetdir = realpath($targetdir);
         debug_event(self::class, 'Target Directory `' . $targetdir, 4);
-        if (strpos($targetdir, $catalog_dir) === false) {
+        if ($targetdir === false || strpos($targetdir, $catalog_dir) === false) {
             debug_event(self::class, 'Something wrong with final upload path.', 1);
 
-            return false;
+            return null;
         }
 
         return $targetdir;
-    } // check_target_dir
+    }
 
     /**
      * get_root
      * @param Catalog $catalog
      * @param string $username
-     * @return string
      */
-    public static function get_root($catalog = null, $username = null)
+    public static function get_root($catalog = null, $username = null): string
     {
         if ($catalog == null) {
             $catalog_id = AmpConfig::get('upload_catalog');
@@ -340,13 +333,12 @@ class Upload
                 $catalog = Catalog::create_from_id($catalog_id);
             }
         }
-
         if ($username === null) {
             $username = Core::get_global('user')->username;
         }
 
         $rootdir = "";
-        if ($catalog != null && $catalog->id) {
+        if ($catalog !== null && $catalog->id) {
             $rootdir = realpath($catalog->get_path());
             if (!empty($rootdir)) {
                 if (AmpConfig::get('upload_subdir')) {
@@ -360,5 +352,5 @@ class Upload
         }
 
         return $rootdir;
-    } // get_root
+    }
 }

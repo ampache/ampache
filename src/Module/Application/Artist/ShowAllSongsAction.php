@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
@@ -66,6 +67,7 @@ final class ShowAllSongsAction implements ApplicationActionInterface
                 'artist' => $artist,
                 'object_type' => 'song',
                 'object_ids' => $this->songRepository->getAllByArtist($artistId),
+                'multi_object_ids' => array(),
                 'gatekeeper' => $gatekeeper
             ]
         );

@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public Label, version 3 (AGPL-3.0-or-later)
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -46,15 +47,12 @@ final class LabelMethod
      *
      * This returns a single label based on UID
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of label
-     * @return boolean
      */
     public static function label(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
-            Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: label'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -63,9 +61,9 @@ final class LabelMethod
         }
         $object_id = (int) $input['filter'];
         $label     = new Label($object_id);
-        if (!$label->id) {
+        if ($label->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

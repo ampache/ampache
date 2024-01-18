@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -22,16 +25,22 @@
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
+/** @var Localplay $localplay */
+/** @var array $objects */
+
+Ajax::start_container('localplay_status');
+Ui::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status');
 $status = $localplay->status();
-?>
-<?php Ajax::start_container('localplay_status'); ?>
-<?php Ui::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status'); ?>
-<?php if ($status) {
-    $now_playing = ($status) ? $status['track_title'] : '';
+if (!empty($status)) {
+    $now_playing = $status['track_title'] ?? '';
     if (!empty($status['track_album'])) {
-        $now_playing .= ' - ' . $status['track_album'] . ' - ' . $status['track_artist'];
+        $now_playing .= ' - ' . $status['track_album'];
+    }
+    if (!empty($status['track_artist'])) {
+        $now_playing .= ' - ' . $status['track_artist'];
     } ?>
 <?php echo T_('Now Playing'); ?>:&nbsp;<i><?php echo $now_playing; ?></i>
 <div id="information_actions">
@@ -40,13 +49,13 @@ $status = $localplay->status();
         <?php echo T_('Volume'); ?>: <?php echo $status['volume']; ?>%
         </li>
         <li>
-            <?php echo print_bool($status['repeat']); ?> |
-            <?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), print_bool(invert_bool($status['repeat'])), 'localplay_repeat'); ?>
+            <?php echo Ui::printBool($status['repeat']); ?> |
+            <?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), Ui::printBool(invert_bool($status['repeat'])), 'localplay_repeat'); ?>
             <?php echo T_('Repeat'); ?>
         </li>
         <li>
-            <?php echo print_bool($status['random']); ?> |
-            <?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), print_bool(invert_bool($status['random'])), 'localplay_random'); ?>
+            <?php echo Ui::printBool($status['random']); ?> |
+            <?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), Ui::printBool(invert_bool($status['random'])), 'localplay_random'); ?>
             <?php echo T_('Random'); ?>
         </li>
         <li>
@@ -54,12 +63,12 @@ $status = $localplay->status();
         </li>
     </ul>
 </div>
-<?php
-} ?>
-<?php $browse = new Browse();
+<?php }
+$browse = new Browse();
 $browse->set_type('playlist_localplay');
+$browse->set_use_filters(false);
 $browse->set_static_content(true);
 $browse->show_objects($objects);
-$browse->store(); ?>
-<?php Ui::show_box_bottom(); ?>
-<?php Ajax::end_container(); ?>
+$browse->store();
+Ui::show_box_bottom();
+Ajax::end_container(); ?>

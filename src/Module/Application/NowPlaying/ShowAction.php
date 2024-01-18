@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\NowPlaying;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -29,9 +30,10 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -40,16 +42,24 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private LoggerInterface $logger;
 
+    private UiInterface $ui;
+
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UiInterface $ui
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -73,7 +83,7 @@ final class ShowAction implements ApplicationActionInterface
         $refreshLimit           = '';
         $nowPlayingCssFile      = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_CSS_FILE) ?? "templates/now-playing.css";
         $nowPlayingRefreshLimit = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_REFRESH_LIMIT);
-        $language               = $this->configContainer->get(ConfigurationKeyEnum::LANG);
+        $language               = $this->configContainer->get(ConfigurationKeyEnum::LANG) ?? 'en-US';
 
         if ($nowPlayingCssFile) {
             $css = sprintf(
@@ -116,11 +126,16 @@ final class ShowAction implements ApplicationActionInterface
             $css,
             $refreshLimit
         );
-        $user_id = (int)Core::get_request('user_id');
+        $user_id = (int)$this->requestParser->getFromRequest('user_id');
         $results = Stream::get_now_playing($user_id);
 
-        require Ui::find_template('show_now_playing.inc.php');
-
+        $this->ui->show(
+            'show_now_playing.inc.php',
+            [
+                'web_path' => $this->configContainer->get(ConfigurationKeyEnum::WEB_PATH),
+                'results' => $results
+            ]
+        );
         print('</body></html>');
 
         return null;

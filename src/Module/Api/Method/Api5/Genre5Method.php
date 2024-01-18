@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
@@ -44,10 +45,7 @@ final class Genre5Method
      *
      * This returns a single genre based on UID
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Genre
-     * @return boolean
      */
     public static function genre(array $input, User $user): bool
     {
@@ -56,9 +54,9 @@ final class Genre5Method
         }
         $object_id = (int) $input['filter'];
         $tag       = new Tag($object_id);
-        if (!$tag->id) {
+        if ($tag->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,13 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class UserCreate4Method
@@ -43,14 +44,11 @@ final class UserCreate4Method
      * Create a new user.
      * Requires the username, password and email.
      *
-     * @param array $input
-     * @param User $user
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password)
      * email    = (string) $email
      * disable  = (integer) 0,1 //optional, default = 0
-     * @return boolean
      */
     public static function user_create(array $input, User $user): bool
     {
@@ -67,7 +65,7 @@ final class UserCreate4Method
         $disable              = (bool)($input['disable'] ?? false);
         $access               = 25;
         $catalog_filter_group = 0;
-        $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
+        $user_id              = User::create($username, $fullname, $email, '', $password, $access, $catalog_filter_group, '', '', $disable, true);
 
         if ($user_id > 0) {
             Api4::message('success', 'successfully created: ' . $username, null, $input['api_format']);
@@ -75,12 +73,15 @@ final class UserCreate4Method
 
             return true;
         }
-        if (User::id_from_username($username) > 0) {
+
+        $userRepository = self::getUserRepository();
+
+        if ($userRepository->idByUsername($username) > 0) {
             Api4::message('error', 'username already exists: ' . $username, '400', $input['api_format']);
 
             return false;
         }
-        if (User::id_from_email($email) > 0) {
+        if ($userRepository->idByEmail($email) > 0) {
             Api4::message('error', 'email already exists: ' . $email, '400', $input['api_format']);
 
             return false;
@@ -88,5 +89,15 @@ final class UserCreate4Method
         Api4::message('error', 'failed to create: ' . $username, '400', $input['api_format']);
 
         return false;
-    } // user_create
+    }
+
+    /**
+     * @todo Inject by constructor
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
+    }
 }

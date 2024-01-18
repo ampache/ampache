@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -40,7 +40,7 @@ final class UpnpApplication implements ApplicationInterface
             return;
         }
 
-        $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
+        $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
         if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
             $msIP = 1;
             Upnp_Api::sddpSend($msIP);

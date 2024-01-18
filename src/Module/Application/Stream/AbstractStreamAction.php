@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stream;
 
@@ -93,7 +94,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
         if ($mediaIds !== [] || $urls !== []) {
-            if ($streamType != 'democratic') {
+            if (!defined('NO_SESSION') && $streamType != 'democratic') {
                 if (!User::stream_control($mediaIds)) {
                     $this->logger->warning(
                         'Stream control failed for user ' . Core::get_global('user')->username,

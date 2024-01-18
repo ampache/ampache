@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Gui\Playlist;
 
@@ -94,9 +95,9 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return Userflag::show($this->playlist->getId(), 'playlist');
     }
 
-    public function getArt(): ?string
+    public function getArt(): void
     {
-        return $this->playlist->display_art(2, true);
+        $this->playlist->display_art(2, true);
     }
 
     public function canAutoplayNext(): bool
@@ -246,7 +247,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function canBeRefreshed(): bool
     {
-        $search_id = $this->playlist->has_search($this->playlist->user);
+        $search_id = $this->playlist->has_search((int)$this->playlist->user);
 
         return $this->playlist->has_access() &&
             $search_id > 0;
@@ -254,7 +255,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getRefreshUrl(): string
     {
-        $search_id = $this->playlist->has_search($this->playlist->user);
+        $search_id = $this->playlist->has_search((int)$this->playlist->user);
 
         return sprintf(
             '%s/playlist.php?action=refresh_playlist&type=playlist&user_id=%d&playlist_id=%d&search_id=%d',
@@ -277,22 +278,22 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getPlaylistUrl(): string
     {
-        return $this->playlist->get_link();
+        return (string)$this->playlist->get_link();
     }
 
     public function getPlaylistLink(): string
     {
-        return $this->playlist->get_f_link();
+        return (string)$this->playlist->get_f_link();
     }
 
     public function getUsername(): string
     {
-        return $this->playlist->username;
+        return (string)$this->playlist->username;
     }
 
     public function getLastUpdate(): string
     {
-        return $this->playlist->f_last_update;
+        return $this->playlist->f_last_update ?? '';
     }
 
     public function getType(): string

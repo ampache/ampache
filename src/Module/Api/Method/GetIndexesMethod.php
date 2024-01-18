@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -48,8 +49,6 @@ final class GetIndexesMethod
      * This takes a collection of inputs and returns ID + name for the object type
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
-     * @param array $input
-     * @param User $user
      * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
@@ -59,7 +58,6 @@ final class GetIndexesMethod
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * @return boolean
      */
     public static function get_indexes(array $input, User $user): bool
     {
@@ -69,22 +67,22 @@ final class GetIndexesMethod
         $album_artist = ((string)$input['type'] == 'album_artist');
         $type         = ($album_artist) ? 'artist' : (string)$input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!AmpConfig::get('share') && $type == 'share') {
-            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!AmpConfig::get('live_stream') && $type == 'live_stream') {
-            Api::error(T_('Enable: live_stream'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: live_stream'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -92,7 +90,7 @@ final class GetIndexesMethod
         $hide    = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -111,7 +109,7 @@ final class GetIndexesMethod
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
         if ($type == 'playlist') {
-            $browse->set_filter('playlist_type', $user->id);
+            $browse->set_filter('playlist_type', 1);
             if (!$hide) {
                 $results = array_merge($browse->get_objects(), Playlist::get_smartlists($user->id));
             } else {

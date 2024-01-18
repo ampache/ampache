@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,6 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Module\Song\Tag;
@@ -37,13 +39,18 @@ use Psr\Log\LoggerInterface;
 final class SongTagWriter implements SongTagWriterInterface
 {
     private ConfigContainerInterface $configContainer;
+
+    private UtilityFactoryInterface $utilityFactory;
+
     private LoggerInterface $logger;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
+        UtilityFactoryInterface $utilityFactory,
         LoggerInterface $logger
     ) {
         $this->configContainer = $configContainer;
+        $this->utilityFactory  = $utilityFactory;
         $this->logger          = $logger;
     }
 
@@ -57,10 +64,10 @@ final class SongTagWriter implements SongTagWriterInterface
             return;
         }
 
-        global $dic;
-        $utilityFactory = $dic->get(UtilityFactoryInterface::class);
-
-        $catalog = Catalog::create_from_id($song->catalog);
+        $catalog = Catalog::create_from_id($song->getCatalogId());
+        if ($catalog === null) {
+            return;
+        }
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing metadata to file %s', $song->file),
@@ -73,8 +80,8 @@ final class SongTagWriter implements SongTagWriterInterface
                     $ndata[$metadata->getField()->getName()] = $metadata->getData();
                 }
             }
-            $vainfo = $utilityFactory->createVaInfo(
-                $song->file
+            $vainfo = $this->utilityFactory->createVaInfo(
+                (string) $song->file
             );
 
             $result     = $vainfo->read_id3();
@@ -163,7 +170,7 @@ final class SongTagWriter implements SongTagWriterInterface
                     }
                 }
             }
-            $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg')
+            $apic_typeid = ($fileformat == 'flac' || $fileformat == 'ogg')
                 ? 'typeid'
                 : 'picturetypeid';
             $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
@@ -222,7 +229,7 @@ final class SongTagWriter implements SongTagWriterInterface
             }
             $vainfo->write_id3($ndata);
         } // catalog type = local
-    } //write
+    }
 
     /**
      * Write the song rating to the file and include existing tags
@@ -236,18 +243,18 @@ final class SongTagWriter implements SongTagWriterInterface
             return;
         }
 
-        global $dic;
-        $utilityFactory = $dic->get(UtilityFactoryInterface::class);
-
-        $catalog = Catalog::create_from_id($song->catalog);
+        $catalog = Catalog::create_from_id($song->getCatalogId());
+        if ($catalog === null) {
+            return;
+        }
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing rating to file %s', $song->file),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
-            $vainfo = $utilityFactory->createVaInfo(
-                $song->file
+            $vainfo = $this->utilityFactory->createVaInfo(
+                (string) $song->file
             );
 
             $ndata      = array();
@@ -312,7 +319,7 @@ final class SongTagWriter implements SongTagWriterInterface
                     );
                 }
             }
-            $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg')
+            $apic_typeid = ($fileformat == 'flac' || $fileformat == 'ogg')
                 ? 'typeid'
                 : 'picturetypeid';
             $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
@@ -366,13 +373,18 @@ final class SongTagWriter implements SongTagWriterInterface
             }
             $vainfo->write_id3($ndata);
         } // catalog type = local
-    } //writeRating
+    }
 
-    private function search_txxx($description, $ndata)
+    /**
+     * @param int|string $description
+     * @param $ndata
+     * @return int|null
+     */
+    private function search_txxx($description, $ndata): ?int
     {
         $cnt = count($ndata);
-        for ($i=0; $i < $cnt; $i++) {
-            if (strtolower($ndata[$i]['description']) == strtolower($description)) {
+        for ($i = 0; $i < $cnt; $i++) {
+            if (strtolower($ndata[$i]['description']) == strtolower((string)$description)) {
                 return $i;
             }
         }
@@ -380,11 +392,11 @@ final class SongTagWriter implements SongTagWriterInterface
         return null;
     }
 
-    public function check_for_duplicate($apics, $new_pic, &$ndata, $apic_typeid)
+    public function check_for_duplicate($apics, $new_pic, &$ndata, $apic_typeid): ?int
     {
         $idx = null;
         $cnt = count($apics);
-        for ($i=0; $i < $cnt; $i++) {
+        for ($i = 0; $i < $cnt; $i++) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
                 $ndata['attached_picture'][$i]['description']   = $new_pic['description'];
                 $ndata['attached_picture'][$i]['data']          = $new_pic['data'];
@@ -511,7 +523,7 @@ final class SongTagWriter implements SongTagWriterInterface
             }
         }
 
-        $meta['genre']  = [];
+        $meta['genre'] = [];
 
         if (!empty($song->tags)) {
             foreach ($song->tags as $tag) {

@@ -48,6 +48,7 @@ use Ampache\Application\Api\Upnp\EventReplyApplication;
 use Ampache\Application\Api\Upnp\MediaServiceDescriptionApplication;
 use Ampache\Application\Api\Upnp\PlayStatusApplication;
 use Ampache\Application\Api\Upnp\UpnpApplication;
+
 use function DI\autowire;
 
 /**

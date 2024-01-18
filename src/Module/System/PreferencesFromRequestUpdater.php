@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\System;
 
@@ -73,8 +74,8 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             $name         = (string) $data['name'];
             $apply_to_all = 'check_' . $data['name'];
             $new_level    = 'level_' . $data['name'];
-            $pref_id      = $data['id'];
-            $value        = scrub_in($_REQUEST[$name] ?? '');
+            $pref_id      = (string)$data['id'];
+            $value        = (string)scrub_in((string) ($_REQUEST[$name] ?? ''));
 
             // Some preferences require some extra checks to be performed
             switch ($name) {
@@ -82,7 +83,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                     $value = (string) Stream::validate_bitrate($value);
                     break;
                 case 'custom_timezone':
-                    $listIdentifiers = DateTimeZone::listIdentifiers() ?? array();
+                    $listIdentifiers = DateTimeZone::listIdentifiers() ?: array();
                     if (!in_array($value, $listIdentifiers)) {
                         $value = '';
                     }
@@ -106,7 +107,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             }
 
             if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) && array_key_exists($new_level, $_REQUEST)) {
-                Preference::update_level($pref_id, $_REQUEST[$new_level]);
+                Preference::update_level($pref_id, (int)$_REQUEST[$new_level]);
             }
         } // end foreach preferences
 

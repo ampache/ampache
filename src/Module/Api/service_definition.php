@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,12 +23,12 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Api\Method\PodcastEpisodesMethod;
 use Ampache\Module\Api\Output\ApiOutputFactory;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
+
 use function DI\autowire;
 
 return [
@@ -42,4 +45,5 @@ return [
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
     Edit\ShowEditPlaylistAction::class => autowire(),
+    PodcastEpisodesMethod::class => autowire(),
 ];

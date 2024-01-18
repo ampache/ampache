@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Util\OAuth;
 
 /**
@@ -34,9 +35,9 @@ namespace Ampache\Module\Util\OAuth;
 class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod
 {
     /**
-     * @return string
+     * get_name
      */
-    public function get_name()
+    public function get_name(): string
     {
         return "HMAC-SHA1";
     }
@@ -45,9 +46,8 @@ class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod
      * @param OAuthRequest $request
      * @param OAuthConsumer $consumer
      * @param OAuthToken $token
-     * @return string
      */
-    public function build_signature($request, $consumer, $token)
+    public function build_signature($request, $consumer, $token): string
     {
         $base_string          = $request->get_signature_base_string();
         $request->base_string = $base_string;

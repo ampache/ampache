@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
@@ -51,17 +52,19 @@ final class AdminAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $tab = $request->getQueryParams()['tab'] ?? '';
-
-        $this->ui->showHeader();
-        $this->ui->show(
-            'show_preferences.inc.php',
-            [
-                'fullname' => T_('Server'),
-                'preferences' => $gatekeeper->getUser()->get_preferences($tab, true),
-                'ui' => $this->ui
-            ]
-        );
+        $tab  = $request->getQueryParams()['tab'] ?? '';
+        $user = $gatekeeper->getUser();
+        if ($user !== null) {
+            $this->ui->showHeader();
+            $this->ui->show(
+                'show_preferences.inc.php',
+                [
+                    'fullname' => T_('Server'),
+                    'preferences' => $user->get_preferences($tab, true),
+                    'ui' => $this->ui
+                ]
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

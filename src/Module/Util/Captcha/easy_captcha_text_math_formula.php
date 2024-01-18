@@ -36,7 +36,7 @@ class easy_captcha_text_math_formula extends easy_captcha
     #-- set up
     public function __construct()
     {
-        $this->question = sprintf(CAPTCHA_WHATIS_TEXT, $this->create_formula());
+        $this->question = sprintf(self::CAPTCHA_WHATIS_TEXT, $this->create_formula());
         $this->solution = $this->calculate_formula($this->question);
         // we could do easier with iterated formula+result generation here, of course
         // but I had this code handy already ;) and it's easier to modify
@@ -56,9 +56,9 @@ class easy_captcha_text_math_formula extends easy_captcha
     #-- make new captcha formula string
 
     /**
-     * @return mixed
+     * create_formula
      */
-    public function create_formula()
+    public function create_formula(): string
     {
         $formula = array(
             rand(20, 100) . " / " . rand(2, 10),

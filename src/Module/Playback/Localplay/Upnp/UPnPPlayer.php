@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
 use Ampache\Config\AmpConfig;
@@ -38,10 +39,10 @@ use SimpleXMLElement;
  */
 class UPnPPlayer
 {
-    /* @var UPnPPlaylist $object */
+    /** @var UPnPPlaylist $object */
     private $_playlist = null;
 
-    /* @var UPnPDevice $object */
+    /** @var UPnPDevice $object */
     private $_device;
 
     private $_description_url;
@@ -97,9 +98,8 @@ class UPnPPlayer
      * $link    URL of the song
      * @param string $name
      * @param $link
-     * @return boolean
      */
-    public function PlayListAdd($name, $link)
+    public function PlayListAdd($name, $link): bool
     {
         $this->Playlist()->Add($name, $link);
 
@@ -110,9 +110,8 @@ class UPnPPlayer
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return boolean
      */
-    public function PlaylistRemove($track)
+    public function PlaylistRemove($track): bool
     {
         $this->Playlist()->RemoveTrack($track);
 
@@ -120,9 +119,9 @@ class UPnPPlayer
     }
 
     /**
-     * @return boolean
+     * PlaylistClear
      */
-    public function PlaylistClear()
+    public function PlaylistClear(): bool
     {
         $this->Playlist()->Clear();
 
@@ -142,7 +141,7 @@ class UPnPPlayer
     /**
      * @return array
      */
-    public function GetCurrentItem()
+    public function GetCurrentItem(): array
     {
         return $this->Playlist()->CurrentItem();
     }
@@ -168,10 +167,9 @@ class UPnPPlayer
     /**
      * next
      * go to next song
-     * @param boolean $forcePlay
-     * @return boolean
+     * @param bool $forcePlay
      */
-    public function Next($forcePlay = true)
+    public function Next($forcePlay = true): bool
     {
         // get current internal play state, for case if someone has changed it
         if (!$forcePlay) {
@@ -190,7 +188,7 @@ class UPnPPlayer
      * prev
      * go to previous song
      */
-    public function Prev()
+    public function Prev(): bool
     {
         if ($this->Playlist()->Prev()) {
             $this->Play();
@@ -205,9 +203,8 @@ class UPnPPlayer
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return boolean
      */
-    public function Skip($pos)
+    public function Skip($pos): bool
     {
         if ($this->Playlist()->Skip($pos)) {
             $this->Play();
@@ -221,9 +218,8 @@ class UPnPPlayer
     /**
      * @param $song
      * @param $prefix
-     * @return array|null
      */
-    private function prepareURIRequest($song, $prefix)
+    private function prepareURIRequest($song, $prefix): ?array
     {
         if ($song == null) {
             return null;
@@ -264,7 +260,7 @@ class UPnPPlayer
      * play
      * play the current song
      */
-    public function Play()
+    public function Play(): bool
     {
         //!!$this->Stop();
 
@@ -292,7 +288,7 @@ class UPnPPlayer
      * Stop
      * stops the current song amazing!
      */
-    public function Stop()
+    public function Stop(): bool
     {
         $this->SetIntState(0);
         $response = $this->Device()->instanceOnly('Stop');
@@ -310,7 +306,7 @@ class UPnPPlayer
      * pause
      * toggle pause mode on current song
      */
-    public function Pause()
+    public function Pause(): bool
     {
         $state = $this->GetState();
         debug_event(self::class, 'Pause. prev state = ' . $state, 5);
@@ -329,9 +325,8 @@ class UPnPPlayer
      * Repeat
      * This toggles the repeat state
      * @param $value
-     * @return boolean
      */
-    public function Repeat($value)
+    public function Repeat($value): bool
     {
         //!! TODO not implemented yet
         return true;
@@ -341,9 +336,8 @@ class UPnPPlayer
      * Random
      * this toggles the random state
      * @param $value
-     * @return boolean
      */
-    public function Random($value)
+    public function Random($value): bool
     {
         //!! TODO not implemented yet
         return true;
@@ -351,9 +345,8 @@ class UPnPPlayer
 
     /**
      *
-     *
      */
-    public function FullState()
+    public function FullState(): string
     {
         //!! TODO not implemented yet
         return "";
@@ -363,7 +356,7 @@ class UPnPPlayer
      * VolumeUp
      * increases the volume
      */
-    public function VolumeUp()
+    public function VolumeUp(): bool
     {
         $volume = $this->GetVolume() + 2;
 
@@ -374,7 +367,7 @@ class UPnPPlayer
      * VolumeDown
      * decreases the volume
      */
-    public function VolumeDown()
+    public function VolumeDown(): bool
     {
         $volume = $this->GetVolume() - 2;
 
@@ -384,9 +377,8 @@ class UPnPPlayer
     /**
      * SetVolume
      * @param $value
-     * @return boolean
      */
-    public function SetVolume($value)
+    public function SetVolume($value): bool
     {
         $desiredVolume = Max(0, Min(100, $value));
         $instanceId    = 0;
@@ -416,7 +408,7 @@ class UPnPPlayer
             'Channel' => $channel
         ));
 
-        $responseXML  = simplexml_load_string($response);
+        $responseXML = simplexml_load_string($response);
         if (empty($responseXML)) {
             return '';
         }

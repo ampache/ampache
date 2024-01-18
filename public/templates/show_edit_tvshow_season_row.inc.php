@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,11 +31,11 @@ use Ampache\Repository\Model\TVShow_Season;
     <form method="post" id="edit_tvshow_season_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Season') ?></td>
-                <td><input type="number" name="season_number" value="<?php echo scrub_out($libitem->season_number); ?>" autofocus /></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Season'); ?></td>
+                <td><input type="number" name="season_number" value="<?php echo scrub_out((string)$libitem->season_number); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('TV Show') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('TV Show'); ?></td>
                 <td><?php show_tvshow_select('tvshow', $libitem->tvshow); ?></td>
             </tr>
         </table>

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,69 +22,62 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 
-class AmpacheLibravatar
+class AmpacheLibravatar implements AmpachePluginInterface
 {
-    public $name        = 'Libravatar';
-    public $categories  = 'avatar';
-    public $description = 'Users avatar\'s with Libravatar';
-    public $url         = 'https://www.libravatar.org';
-    public $version     = '000001';
-    public $min_ampache = '360040';
-    public $max_ampache = '999999';
+    public string $name        = 'Libravatar';
+    public string $categories  = 'avatar';
+    public string $description = 'Users avatar\'s with Libravatar';
+    public string $url         = 'https://www.libravatar.org';
+    public string $version     = '000001';
+    public string $min_ampache = '360040';
+    public string $max_ampache = '999999';
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_("Users avatar's with Libravatar");
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         return true;
-    } // install
+    }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         return true;
-    } // uninstall
+    }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
-     * @param $user
-     * @param integer $size
-     * @return string
+     * @param User $user
+     * @param int $size
      */
-    public function get_avatar_url($user, $size = 80)
+    public function get_avatar_url($user, $size = 80): string
     {
         $url = "";
         if (!empty($user->email)) {
@@ -102,15 +98,13 @@ class AmpacheLibravatar
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
 
         return true;
-    } // load
+    }
 }

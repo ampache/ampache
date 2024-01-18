@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -26,6 +27,25 @@ use Ampache\Repository\Model\User;
 
 interface ApiOutputInterface
 {
+    public function setOffset(int $offset): void;
+
+    public function setLimit(int $limit): void;
+
+    /**
+     * @param list<int> $result
+     */
+    public function podcastEpisodes(
+        array $result,
+        User $user
+    ): string;
+
+    /**
+     * Generate an empty api result
+     */
+    public function writeEmpty(
+        string $emptyType
+    ): string;
+
     /**
      * This generates an error message
      */
@@ -63,13 +83,13 @@ interface ApiOutputInterface
     ): string;
 
     /**
-     * @param integer[] $albums
+     * @param int[] $albums
      * @param array $include
      * @param User $user
      * @param bool $encode
      * @param bool $asObject
-     * @param integer $limit
-     * @param integer $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return array|string
      */
@@ -82,4 +102,14 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     );
+
+
+    /**
+     * This generates a standard JSON Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<mixed> $return_data
+     */
+    public function success(string $string, array $return_data = []): string;
 }

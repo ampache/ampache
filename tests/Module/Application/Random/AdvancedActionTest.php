@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Random;
 
 use Ampache\MockeryTestCase;
@@ -41,7 +42,7 @@ class AdvancedActionTest extends MockeryTestCase
 
     private ?AdvancedAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
         $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
@@ -64,7 +65,8 @@ class AdvancedActionTest extends MockeryTestCase
             ->with(
                 'show_random.inc.php',
                 [
-                    'videoRepository' => $this->videoRepository
+                    'videoRepository' => $this->videoRepository,
+                    'object_ids' => []
                 ]
             )
             ->once();

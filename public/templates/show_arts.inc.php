@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -27,7 +30,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var array $images */
+/** @var int $object_id */
 /** @var string $object_type */
+/** @var string $burl */
 
 $total_images = count($images);
 $rows         = floor($total_images / 5);
@@ -74,6 +79,6 @@ while ($count <= $rows) {
         echo "</tr>";
     }
     $count++;
-} // end while?>
+} ?>
 </table>
 <?php Ui::show_box_bottom(); ?>

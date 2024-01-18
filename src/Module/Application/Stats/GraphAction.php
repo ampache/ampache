@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Stats;
 
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -38,7 +39,7 @@ final class GraphAction extends AbstractGraphRendererAction
     public function __construct(
         UiInterface $ui
     ) {
-        $this->ui           = $ui;
+        $this->ui = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

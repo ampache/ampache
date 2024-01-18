@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\AjaxUriRetrieverInterface;
-use Ampache\Module\Util\Ui;
 
 final class PlayerAjaxHandler implements AjaxHandlerInterface
 {
@@ -37,12 +37,16 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
 
     private AjaxUriRetrieverInterface $ajaxUriRetriever;
 
+    private UiInterface $ui;
+
     public function __construct(
         RequestParserInterface $requestParser,
-        AjaxUriRetrieverInterface $ajaxUriRetriever
+        AjaxUriRetrieverInterface $ajaxUriRetriever,
+        UiInterface $ui
     ) {
         $this->requestParser    = $requestParser;
         $this->ajaxUriRetriever = $ajaxUriRetriever;
+        $this->ui               = $ui;
     }
 
     public function handle(): void
@@ -54,7 +58,11 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'show_broadcasts':
                 ob_start();
-                require Ui::find_template('show_broadcasts_dialog.inc.php');
+                $ajaxUri = $this->ajaxUriRetriever->getAjaxUri();
+                $this->ui->show(
+                    'show_broadcasts_dialog.inc.php',
+                    ['ajaxUri' => $ajaxUri]
+                );
                 $results = ob_get_contents();
                 ob_end_clean();
                 echo $results;
@@ -67,8 +75,8 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $broadcast = new Broadcast((int) $broadcast_id);
-                if ($broadcast->id) {
-                    $key  = Broadcast::generate_key();
+                if ($broadcast->isNew() === false) {
+                    $key = Broadcast::generate_key();
                     $broadcast->update_state(true, $key);
                     $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
                 }
@@ -76,7 +84,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
             case 'unbroadcast':
                 $broadcast_id = Core::get_get('broadcast_id');
                 $broadcast    = new Broadcast((int) $broadcast_id);
-                if ($broadcast->id) {
+                if ($broadcast->isNew() === false) {
                     $broadcast->update_state(false);
                     $results['broadcast'] = Broadcast::get_broadcast_link() . '<script>stopBroadcast();</script>';
                 }

@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -42,6 +43,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'confirm_delete';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
@@ -51,11 +54,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
     private ArtistDeleterInterface $artistDeleter;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ArtistDeleterInterface $artistDeleter
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
@@ -71,8 +76,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
             return null;
         }
-
-        $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist_id']);
+        $artist_id = (int)$this->requestParser->getFromRequest('artist_id');
+        $artist    = $this->modelFactory->createArtist($artist_id);
 
         if (!Catalog::can_remove($artist)) {
             throw new AccessDeniedException(

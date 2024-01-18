@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Catalog\Update;
 
@@ -55,10 +56,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         ob_start();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            /** @var Catalog_local $catalog */
             $catalog = Catalog::create_from_id($row['id']);
-            ob_flush();
-            if (!$catalog) {
+            if ($catalog === null) {
                 $interactor->error(
                     sprintf(T_('Catalog `%s` not found'), $catname),
                     true
@@ -66,7 +65,9 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
                 return;
             }
+            ob_flush();
             // Identify the catalog and file (if it exists in the DB)
+            /** @var Catalog_local $catalog */
             switch ($catalog->gather_types) {
                 case 'podcast':
                     $type    = 'podcast_episode';
@@ -83,9 +84,9 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     break;
                 case 'music':
                 default:
-                    $type      = 'song';
-                    $file_id   = Catalog::get_id_from_file($filePath, $type);
-                    $media     = new Song($file_id);
+                    $type    = 'song';
+                    $file_id = Catalog::get_id_from_file($filePath, $type);
+                    $media   = new Song($file_id);
                     break;
             }
             $file_test = is_file($filePath);
@@ -135,7 +136,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                         if (!$art->has_db_info()) {
                             Catalog::gather_art_item($art_type, $art_id, true);
                         }
-                        if (!$artist->has_db_info()) {
+                        if ($media->artist && !$artist->has_db_info()) {
                             Catalog::gather_art_item('artist', $media->artist, true);
                         }
                     }

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -68,6 +68,8 @@ interface ConfigContainerInterface
 
     /**
      * Return a list of types which are zip-able
+     *
+     * @return list<string>
      */
     public function getTypesAllowedForZip(): array;
 
@@ -95,6 +97,11 @@ interface ConfigContainerInterface
      * Returns the demo mode state
      */
     public function isDemoMode(): bool;
+
+    /**
+     * Returns the current Ampache version
+     */
+    public function getVersion(): string;
 
     /**
      * Returns the path to the ampache config file

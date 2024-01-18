@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -38,7 +38,7 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         RequestParserInterface $requestParser
     ) {
-        $this->requestParser   = $requestParser;
+        $this->requestParser = $requestParser;
     }
 
     public function handle(): void
@@ -54,14 +54,16 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
 
                     return;
                 }
-
-                $catalog     = Catalog::create_from_id($_REQUEST['catalog_id']);
+                $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
+                if ($catalog === null) {
+                    break;
+                }
                 $new_enabled = !$catalog->enabled;
                 Catalog::update_enabled($new_enabled, $catalog->id);
-                $catalog->enabled = (int)$new_enabled;
+                $catalog->enabled = $new_enabled;
 
                 // Return the new Ajax::button
-                $id  = 'button_flip_state_' . $catalog->id;
+                $id = 'button_flip_state_' . $catalog->id;
                 if ($new_enabled) {
                     $button     = 'disable';
                     $buttontext = T_('Disable');

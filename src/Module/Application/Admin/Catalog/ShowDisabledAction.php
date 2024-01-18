@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
@@ -69,7 +70,10 @@ final class ShowDisabledAction implements ApplicationActionInterface
 
         $songs = Song::get_disabled();
         if (count($songs)) {
-            require Ui::find_template('show_disabled_songs.inc.php');
+            $this->ui->show(
+                'show_disabled_songs.inc.php',
+                ['$ongs' => $songs]
+            );
         } else {
             echo '<div class="error show-disabled">' . T_('No disabled Songs found') . '</div>';
         }

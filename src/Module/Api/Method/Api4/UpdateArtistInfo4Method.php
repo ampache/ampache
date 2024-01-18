@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -43,10 +44,7 @@ final class UpdateArtistInfo4Method
      * Update artist information and fetch similar artists from last.fm
      * Make sure lastfm_api_key is set in your configuration file
      *
-     * @param array $input
-     * @param User $user
      * id   = (integer) $artist_id
-     * @return boolean
      */
     public static function update_artist_info(array $input, User $user): bool
     {
@@ -58,7 +56,7 @@ final class UpdateArtistInfo4Method
         }
         $object = (int) $input['id'];
         $item   = new Artist($object);
-        if (!$item->id) {
+        if ($item->isNew()) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
             return false;
@@ -73,5 +71,5 @@ final class UpdateArtistInfo4Method
         Api4::message('error', T_('Failed to update_artist_info or recommendations for ' . (string) $object), '400', $input['api_format']);
 
         return true;
-    } // update_artist_info
+    }
 }

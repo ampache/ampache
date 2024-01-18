@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,7 +23,6 @@
  *
  */
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 namespace Ampache\Module\Beets;
 
 use Ampache\Module\System\Core;
@@ -63,7 +65,7 @@ class CliHandler extends Handler
 
     /**
      * Choose whether the -f argument from beets is applied. May be needed to use other commands than 'beet ls'
-     * @var boolean
+     * @var bool
      */
     protected $useCustomFields = true;
 
@@ -108,9 +110,8 @@ class CliHandler extends Handler
 
     /**
      * Starts a command
-     * @param string $command
      */
-    public function start($command)
+    public function start(string $command): void
     {
         $handle = popen($this->assembleCommand($command), 'r');
         if ($handle) {
@@ -121,7 +122,7 @@ class CliHandler extends Handler
     /**
      * @param $handle
      */
-    public function iterateItems($handle)
+    public function iterateItems($handle): void
     {
         $item = '';
         while (!feof($handle)) {
@@ -137,10 +138,9 @@ class CliHandler extends Handler
     /**
      * Assemble the command for CLI
      * @param string $command beets command (e.g. 'ls myArtist')
-     * @param boolean $disableCostomFields disables the -f switch for this time
-     * @return string
+     * @param bool $disableCostomFields disables the -f switch for this time
      */
-    protected function assembleCommand($command, $disableCostomFields = false)
+    protected function assembleCommand($command, $disableCostomFields = false): string
     {
         $commandParts = array(
             escapeshellcmd($this->beetsCommand),
@@ -157,9 +157,8 @@ class CliHandler extends Handler
     /**
      *
      * @param string $item
-     * @return boolean
      */
-    protected function itemIsComlete($item)
+    protected function itemIsComlete($item): bool
     {
         $offset   = strlen($this->itemEnd);
         $position = (strlen($item) > $offset)
@@ -174,7 +173,7 @@ class CliHandler extends Handler
      * @param string $item
      * @return array
      */
-    protected function parse($item)
+    protected function parse($item): array
     {
         $item               = str_replace($this->itemEnd, '', $item);
         $values             = explode($this->seperator, $item);
@@ -187,11 +186,10 @@ class CliHandler extends Handler
 
     /**
      * Create the format string for beet ls -f
-     * @return string
      */
-    protected function getFieldFormat()
+    protected function getFieldFormat(): string
     {
-        if (!isset($this->fieldFormat)) {
+        if (!empty($this->fieldFormat)) {
             $this->fields      = $this->getFields();
             $this->fieldFormat = '$' . implode($this->seperator . '$', $this->fields) . $this->itemEnd;
         }
@@ -203,7 +201,7 @@ class CliHandler extends Handler
      *
      * @return array
      */
-    protected function getFields()
+    protected function getFields(): array
     {
         $fields          = null;
         $processedFields = array();

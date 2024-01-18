@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,17 +23,19 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Video;
 
 /**
  * Class BookmarkEditMethod
@@ -47,15 +51,12 @@ final class BookmarkEditMethod
      *
      * Edit a placeholder for the current media that you can return to later.
      *
-     * @param array $input
-     * @param User $user
      * filter   = (string) object_id
      * type     = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
      * client   = (string) Agent string //optional
      * date     = (integer) UNIXTIME() //optional
      * include  = (integer) 0,1, if true include the object in the bookmark //optional
-     * @return boolean
      */
     public static function bookmark_edit(array $input, User $user): bool
     {
@@ -64,19 +65,19 @@ final class BookmarkEditMethod
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $position  = filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT) ?? 0;
-        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : null;
+        $position  = (int)filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT);
+        $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         $include   = (bool)($input['include'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), array('bookmark', 'song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -84,15 +85,16 @@ final class BookmarkEditMethod
             $className = ObjectTypeToClassNameMapper::map($type);
             if ($className === $type || !$object_id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+                Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
                 return false;
             }
 
             $item = new $className($object_id);
-            if (!$item->id) {
+            /** @var Bookmark|Song|Podcast_Episode|Video $item */
+            if ($item->getId() === 0) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
@@ -109,7 +111,7 @@ final class BookmarkEditMethod
         $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'bookmark', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'bookmark', $input['api_format']);
 
             return false;
         }

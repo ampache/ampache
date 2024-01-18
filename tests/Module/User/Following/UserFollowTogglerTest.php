@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,10 +23,9 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\User\Following;
 
+use Mockery;
 use Ampache\MockeryTestCase;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Repository\UserFollowerRepositoryInterface;
@@ -39,7 +41,7 @@ class UserFollowTogglerTest extends MockeryTestCase
 
     private ?UserFollowToggler $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->userFollowerRepository = $this->mock(UserFollowerRepositoryInterface::class);
         $this->userActivityPoster     = $this->mock(UserActivityPosterInterface::class);
@@ -64,7 +66,7 @@ class UserFollowTogglerTest extends MockeryTestCase
             ->once();
 
         $this->userActivityPoster->shouldReceive('post')
-            ->with($followingUserId, 'follow', 'user', $userId, \Mockery::type('int'))
+            ->with($followingUserId, 'follow', 'user', $userId, Mockery::type('int'))
             ->once();
 
         $this->subject->toggle(

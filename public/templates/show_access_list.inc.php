@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -22,16 +25,17 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListTypeEnum;
 use Ampache\Module\Util\Ui;
 
-/** @var Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface $access $access */
+/** @var list<AccessListItemInterface> $list */
 
 Ui::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');
 $addrpc     = T_('Add API / RPC Host');
 $addlocal   = T_('Add Local Network Definition');
-$web_path   = AmpConfig::get('web_path'); ?>
+$web_path   = (string)AmpConfig::get('web_path', ''); ?>
 <div id="information_actions" class="left-column">
 <ul>
     <li>
@@ -41,7 +45,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
         <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_RPC; ?>"><?php echo Ui::get_icon('cog', $addrpc) . ' ' . $addrpc; ?></a>
     </li>
     <li>
-        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_LOCAL ?>"><?php echo Ui::get_icon('home', $addlocal) . ' ' . $addlocal; ?></a>
+        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_LOCAL; ?>"><?php echo Ui::get_icon('home', $addlocal) . ' ' . $addlocal; ?></a>
     <li>
         <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo Ui::get_icon('add_key', T_('Advanced Add')) . ' ' . T_('Advanced Add'); ?></a>
     </li>

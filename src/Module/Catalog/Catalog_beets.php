@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Catalog;
 
@@ -50,7 +51,7 @@ class Catalog_beets extends Catalog
      * get_create_help
      * This returns hints on catalog creation
      */
-    public function get_create_help()
+    public function get_create_help(): string
     {
         return "<ul><li>Fetch songs from beets command over CLI.</li><li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessible by the Webserver.</li></ul>";
     }
@@ -59,7 +60,7 @@ class Catalog_beets extends Catalog
      * is_installed
      * This returns true or false if remote catalog is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE 'catalog_beets'";
         $db_results = Dba::query($sql);
@@ -71,7 +72,7 @@ class Catalog_beets extends Catalog
      * install
      * This function installs the remote catalog
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -86,7 +87,7 @@ class Catalog_beets extends Catalog
     /**
      * @return array
      */
-    public function catalog_fields()
+    public function catalog_fields(): array
     {
         $fields = array();
 
@@ -101,11 +102,10 @@ class Catalog_beets extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param $catalog_id
+     * @param string $catalog_id
      * @param array $data
-     * @return boolean
      */
-    public static function create_type($catalog_id, $data)
+    public static function create_type($catalog_id, $data): bool
     {
         // TODO: This Method should be required / provided by parent
         $beetsdb = $data['beetsdb'];
@@ -134,9 +134,9 @@ class Catalog_beets extends Catalog
     }
 
     /**
-     * @return CliHandler
+     * getParser
      */
-    protected function getParser()
+    protected function getParser(): CliHandler
     {
         return new CliHandler($this);
     }
@@ -144,10 +144,10 @@ class Catalog_beets extends Catalog
     /**
      * Check if a song was added before
      * @param array $song
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
-    public function checkSong($song)
+    public function checkSong($song): bool
     {
         $date       = new DateTime($song['added']);
         $last_added = date("Y-m-d H:i:s", $this->last_add);
@@ -158,19 +158,19 @@ class Catalog_beets extends Catalog
             return true;
         }
 
-        return (boolean)$this->getIdFromPath($song['file']);
+        return (bool)$this->getIdFromPath($song['file']);
     }
 
     /**
      * get_path
      * This returns the current catalog path/uri
      */
-    public function get_path()
+    public function get_path(): string
     {
         return $this->beetsdb;
-    } // get_path
+    }
 
-    public function format()
+    public function format(): void
     {
         parent::format();
         $this->f_info      = $this->beetsdb;

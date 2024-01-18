@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Repository\Model\User;
@@ -36,7 +36,7 @@ use Ampache\Module\Api\Xml5_Data;
  */
 final class Songs5Method
 {
-    const ACTION = 'songs';
+    public const ACTION = 'songs';
 
     /**
      * songs
@@ -46,15 +46,12 @@ final class Songs5Method
      * Returns songs based on the specified filter
      * All calls that return songs now include <playlisttrack> which can be used to identify track order.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add    = Api::set_filter(date) //optional
      * update = Api::set_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function songs(array $input, User $user): bool
     {

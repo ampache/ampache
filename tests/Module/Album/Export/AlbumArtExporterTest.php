@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,12 +20,12 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Album\Export;
 
+use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -36,15 +39,11 @@ use Ampache\Module\Album\Export\Writer\MetadataWriterInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
-use Psr\Log\LoggerInterface;
 
 class AlbumArtExporterTest extends MockeryTestCase
 {
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
 
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
@@ -54,16 +53,14 @@ class AlbumArtExporterTest extends MockeryTestCase
 
     private ?AlbumArtExporter $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->songRepository  = $this->mock(SongRepositoryInterface::class);
 
         $this->subject = new AlbumArtExporter(
             $this->configContainer,
-            $this->logger,
             $this->modelFactory,
             $this->songRepository
         );
@@ -76,7 +73,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $metadataWriter = $this->mock(MetadataWriterInterface::class);
         $art            = $this->mock(Art::class);
 
-        $albumId  = 666;
+        $albumId = 666;
 
         $catalog->shouldReceive('get_album_ids')
             ->withNoArgs()
@@ -114,11 +111,10 @@ class AlbumArtExporterTest extends MockeryTestCase
         $songId   = 42;
         $file     = $fs_root->url() . '/some-file';
         $raw_mime = '/some-raw-mime.png';
-        $fileName = 'some-full-name';
 
         $album->id = $albumId;
 
-        $this->expectException(Exception\AlbumArtExportException::class);
+        $this->expectException(AlbumArtExportException::class);
         $this->expectExceptionMessage(
             'Unable to open `vfs:/folder.some-raw-mime.png` for writing',
         );

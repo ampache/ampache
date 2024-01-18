@@ -8,29 +8,29 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 
-// TODO remove me
-global $dic;
-
 /** @var bool $isVideo  */
 /** @var bool $isRadio */
-/** @var bool $isShare */
 /** @var bool $isDemocratic */
 /** @var bool $isRandom */
+/** @var bool $isShare */
+/** @var bool $iframed */
+/** @var bool $embed */
 /** @var Ampache\Module\Playback\Stream_Playlist $playlist */
 
+// TODO remove me
+global $dic;
 $environment   = $dic->get(EnvironmentInterface::class);
-$web_path      = AmpConfig::get('web_path');
+$web_path      = (string)AmpConfig::get('web_path', '');
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 7, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 7, path: '/', samesite: 'Strict'";
 
-$autoplay       = true;
-$iframed        = $iframed ?? false;
-$isShare        = $isShare ?? false;
-$embed          = $embed ?? false;
-$loop           = ($isRandom || $isDemocratic);
-$removeCount    = (int)AmpConfig::get('webplayer_removeplayed', 0);
-$removePlayed   = ($removeCount > 0);
+$autoplay     = true;
+$embed        = $embed ?? false;
+$loop         = ($isRandom || $isDemocratic);
+$jp_volume    = (float)AmpConfig::get('jp_volume', 0.80);
+$removeCount  = (int)AmpConfig::get('webplayer_removeplayed', 0);
+$removePlayed = ($removeCount > 0);
 if ($removePlayed && $removeCount === 999) {
     $removeCount = 0;
 }
@@ -72,7 +72,7 @@ $replaygain = (AmpConfig::get('theme_color') == 'light')
         if (!isNaN(Cookies.get('jp_volume'))) {
             var jp_volume = Cookies.get('jp_volume');
         } else {
-            var jp_volume = 0.80;
+            var jp_volume = <?php echo $jp_volume; ?>;
         }
 
         var replaygainPersist = Cookies.get('replaygain');
@@ -133,7 +133,9 @@ echo implode(',', $solutions); ?>",
                 } elseif ($isRadio) {
                     // No size
                 } else {
-                    if ($iframed) { ?>
+                    if ($isRandom) { ?>
+                    visibility: "hidden",
+                <?php } elseif ($iframed) { ?>
                 width: "80px",
                 height: "80px",
                 <?php } else { ?>
@@ -144,6 +146,12 @@ echo implode(',', $solutions); ?>",
             }
             <?php } ?>
         });
+
+        // Allow control from the OS via e.g. MPRIS D-Bus interface on Linux
+        if ("mediaSession" in navigator) {
+            navigator.mediaSession.setActionHandler("nexttrack", () => { jplaylist.next(); });
+            navigator.mediaSession.setActionHandler("previoustrack", () => { jplaylist.previous(); });
+        }
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
             if (replaygainPersist === 'true' && replaygainEnabled === false) {
@@ -174,6 +182,15 @@ echo implode(',', $solutions); ?>",
                         <?php if (AmpConfig::get('browser_notify')) { ?>
                         NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
                         <?php } ?>
+                        if ("mediaSession" in navigator) {
+                            // Allow the browser to expose what's playing the the OS via e.g. MPRIS on Linux
+                            navigator.mediaSession.metadata = new MediaMetadata({
+                                title: obj.title,
+                                artist: obj.artist,
+                                artwork: [{ src: currentjpitem.attr("data-poster") }]
+                            });
+                            navigator.mediaSession.playbackState = "playing";
+                        }
                         ApplyReplayGain();
                     }
                     if (brkey != '') {
@@ -210,7 +227,7 @@ echo implode(',', $solutions); ?>",
                     }
 
                     <?php if (!$isVideo && !$isRadio && !$isShare) {
-                        if ($iframed && !$isRadio && !$isRandom && !$isDemocratic) {
+                        if ($iframed) {
                             if (AmpConfig::get('sociable')) {
                                 echo "ajaxPut(jsAjaxUrl + '?page=' + currenttype + '&action=shouts&object_type=' + currenttype + '&object_id=' + currentjpitem.attr('data-media_id'), 'shouts_data');";
                             }
@@ -224,14 +241,15 @@ echo implode(',', $solutions); ?>",
                                 echo "actionsobj += (typeof actiontype !== 'undefined') ? ' <a href=\"javascript:NavigateTo(\'" . $web_path . "/shout.php?action=show_add_shout&type=' + currenttype + '&id=' + currentjpitem.attr('data-media_id') + '\');\">" . Ui::get_icon('comment', addslashes(T_('Post Shout'))) . "</a> |' : '';";
                             }
                             echo "actionsobj += '<div id=\'action_buttons\'></div>';";
-                            if (AmpConfig::get('waveform') && !$isShare) {
+                            if (AmpConfig::get('waveform')) {
+                                $shoutLink = AmpConfig::get('sociable') && Access::check('interface', 25);
                                 echo "var waveformobj = '';";
-                                if (AmpConfig::get('sociable') && Access::check('interface', 25)) {
+                                if ($shoutLink) {
                                     echo "waveformobj += '<a href=\"#\" title=\"" . addslashes(T_('Double click to post a new shout')) . "\" onClick=\"javascript:WaveformClick(' + currentjpitem.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
                                 }
                                 echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
                                 echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . $web_path . "/waveform.php?' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\" onLoad=\"ShowWaveform();\">';";
-                                if (AmpConfig::get('waveform')) {
+                                if ($shoutLink) {
                                     echo "waveformobj += '</a>';";
                                 }
                             }
@@ -241,7 +259,12 @@ echo implode(',', $solutions); ?>",
                         } ?>
                     $('.playing_title').html(titleobj);
                     $('.playing_artist').html(artistobj);
-                    <?php if ($iframed && !$isRadio && !$isRandom && !$isDemocratic) { ?>
+                    <?php if (
+                        $iframed &&
+                        !$isRadio &&
+                        !$isRandom &&
+                        !$isDemocratic
+                    ) { ?>
                     $('.playing_actions').html(actionsobj);
                     <?php if (AmpConfig::get('show_lyrics')) { ?>
                     $('.playing_lyrics').html(lyricsobj);
@@ -292,10 +315,13 @@ echo implode(',', $solutions); ?>",
             if (brkey != '') {
                 sendBroadcastMessage('PLAYER_PLAY', 0);
             }
+            if ("mediaSession" in navigator) {
+                navigator.mediaSession.playbackState = "paused";
+            }
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
-            Cookies.set('jp_volume', event.jPlayer.options.volume, {<?php echo $cookie_string ?>});
+            Cookies.set('jp_volume', event.jPlayer.options.volume, {<?php echo $cookie_string; ?>});
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.resize, function (event) {
@@ -365,14 +391,14 @@ if ($embed) {
 }
 
 // hide that awful art section for shares
-$shareStyle = ($isShare)
+$shareStyle = ($isShare || $isRandom)
     ? "display: none;"
     : '';
 
 if (!$isVideo) {
     $containerClass = "jp-audio";
     $playerClass    = "jp-jplayer-audio"; ?>
-    <div class="playing_info">
+    <div class="playing_info"<?php echo ($isRandom) ? ' style="left: 10px;"' : '' ?>>
         <div class="playing_artist"></div>
         <div class="playing_title"></div>
         <div class="playing_features">
@@ -489,31 +515,31 @@ if (!$isVideo) {
                         <?php if (Access::check('interface', 25)) { ?>
                             <div class="action_button">
                                 <a href="javascript:SaveToExistingPlaylist(event);">
-                                    <?php echo Ui::get_icon('playlist_add_all', addslashes(T_('Add All to playlist'))) ?>
+                                    <?php echo Ui::get_icon('playlist_add_all', addslashes(T_('Add All to playlist'))); ?>
                                 </a>
                             </div>
                         <?php } ?>
                         <div id="slideshow" class="slideshow action_button">
-                            <a href="javascript:SwapSlideshow();"><?php echo Ui::get_icon('image', addslashes(T_('Slideshow'))) ?></a>
+                            <a href="javascript:SwapSlideshow();"><?php echo Ui::get_icon('image', addslashes(T_('Slideshow'))); ?></a>
                         </div>
                         <div id="expandplaylistbtn" class="action_button">
-                            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_icon('multilines', addslashes(T_('Expand/Collapse playlist'))) ?></a>
+                            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_icon('multilines', addslashes(T_('Expand/Collapse playlist'))); ?></a>
                         </div>
                         <div id="playlistloopbtn" class="action_button">
-                            <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_icon('playlist_loop', addslashes(T_('Loop Playlist'))) ?></a>
+                            <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_icon('playlist_loop', addslashes(T_('Loop Playlist'))); ?></a>
                         </div>
                         <?php if (AmpConfig::get('webplayer_html5')) { ?>
                             <div class="action_button">
-                                <a href="javascript:ShowVisualizer();"><?php echo Ui::get_icon('visualizer', addslashes(T_('Visualizer'))) ?></a>
+                                <a href="javascript:ShowVisualizer();"><?php echo Ui::get_icon('visualizer', addslashes(T_('Visualizer'))); ?></a>
                             </div>
                             <div id="replaygainbtn" class="action_button">
-                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon($replaygain, addslashes(T_('ReplayGain'))) ?></a>
+                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon($replaygain, addslashes(T_('ReplayGain'))); ?></a>
                             </div>
                             <div id="vizfullbtn" class="action_button" style="visibility: hidden;">
-                                <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', addslashes(T_('Visualizer full-screen'))) ?></a>
+                                <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', addslashes(T_('Visualizer full-screen'))); ?></a>
                             </div>
                             <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
-                                <a href="javascript:ShowEqualizer();"><?php echo Ui::get_icon('equalizer', addslashes(T_('Equalizer'))) ?></a>
+                                <a href="javascript:ShowEqualizer();"><?php echo Ui::get_icon('equalizer', addslashes(T_('Equalizer'))); ?></a>
                             </div>
                         <?php } ?>
                     <?php } ?>

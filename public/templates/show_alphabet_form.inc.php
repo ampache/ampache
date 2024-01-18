@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -26,5 +29,5 @@ use Ampache\Config\AmpConfig;
 <form style="display:inline;" name="f" method="get" action="<?php echo AmpConfig::get('web_path') . "/$action"; ?>" enctype="multipart/form-data">
     <label for="match" accesskey="S"><?php echo $text; ?></label>
     <input type="text" id="match" name="match" value="<?php echo $match; ?>" />
-    <input type="hidden" name="action" value="<?php echo scrub_out(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">
+    <input type="hidden" name="action" value="<?php echo scrub_out((string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">
 </form>

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\WebDav;
 
@@ -49,7 +50,7 @@ class WebDavDirectory extends DAV\Collection
      * @return array
      * @throws DAV\Exception\NotFound
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         //debug_event(self::class, 'Directory getChildren', 5);
         $children = array();
@@ -92,9 +93,10 @@ class WebDavDirectory extends DAV\Collection
      */
     public static function getChildFromArray($array)
     {
-        $class_name = ObjectTypeToClassNameMapper::map($array['object_type']);
-        $libitem    = new $class_name($array['object_id']);
-        if (!$libitem->id) {
+        $className = ObjectTypeToClassNameMapper::map($array['object_type']);
+        /** @var library_item $libitem */
+        $libitem = new $className($array['object_id']);
+        if ($libitem->isNew()) {
             throw new DAV\Exception\NotFound('The library item `' . $array['object_type'] . '` with id `' . $array['object_id'] . '` could not be found');
         }
 
@@ -108,9 +110,8 @@ class WebDavDirectory extends DAV\Collection
     /**
      * childExists
      * @param string $name
-     * @return boolean
      */
-    public function childExists($name)
+    public function childExists($name): bool
     {
         $matches = $this->libitem->get_children($name);
 
@@ -119,9 +120,8 @@ class WebDavDirectory extends DAV\Collection
 
     /**
      * getName
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return (string)$this->libitem->get_fullname();
     }

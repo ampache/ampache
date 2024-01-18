@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -39,7 +39,7 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         RequestParserInterface $requestParser
     ) {
-        $this->requestParser   = $requestParser;
+        $this->requestParser = $requestParser;
     }
     public function handle(): void
     {
@@ -70,7 +70,6 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                         $new = 'web_player';
                         break;
                     default:
-                        $new                = 'stream';
                         $results['rfc3514'] = '0x1';
                         break 2;
                 } // end switch
@@ -134,7 +133,7 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 $_SESSION['iframe']['target'] = (array_key_exists('playlist_method', $_REQUEST))
                     ? $web_path . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
                     : $web_path . '/stream.php?action=basket';
-                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
+                $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
                 break;
             default:
                 $results['rfc3514'] = '0x1';

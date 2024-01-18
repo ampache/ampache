@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,14 +23,14 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\System\Session;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class UpdatePodcast4Method
@@ -42,10 +45,7 @@ final class UpdatePodcast4Method
      *
      * Sync and download new podcast episodes
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of podcast
-     * @return boolean
      */
     public static function update_podcast(array $input, User $user): bool
     {
@@ -55,12 +55,13 @@ final class UpdatePodcast4Method
         if (!Api4::check_access('interface', 50, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
-        $object_id = (int) scrub_in($input['filter']);
-        $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
-            if ($podcast->sync_episodes(true)) {
+        $object_id = (int) $input['filter'];
+        $podcast   = self::getPodcastRepository()->findById($object_id);
+
+        if ($podcast !== null) {
+            if (static::getPodcastSyncer()->sync($podcast, true)) {
                 Api4::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['api_format']);
-                Session::extend($input['auth']);
+                Session::extend($input['auth'], 'api');
             } else {
                 Api4::message('error', T_('Failed to sync episodes for podcast: ' . (string) $object_id), '400', $input['api_format']);
             }
@@ -69,5 +70,25 @@ final class UpdatePodcast4Method
         }
 
         return true;
-    } // update_podcast
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
+    }
 }

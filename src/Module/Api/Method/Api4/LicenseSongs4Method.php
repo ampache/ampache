@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -45,10 +45,7 @@ final class LicenseSongs4Method
      *
      * This returns all songs attached to a license ID
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of license
-     * @return boolean
      */
     public static function license_songs(array $input, User $user): bool
     {
@@ -60,7 +57,7 @@ final class LicenseSongs4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $results = static::getSongRepository()->getByLicense((int) scrub_in($input['filter']));
+        $results = static::getSongRepository()->getByLicense((int) scrub_in((string) $input['filter']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
@@ -71,7 +68,7 @@ final class LicenseSongs4Method
         }
 
         return true;
-    } // license_songs
+    }
 
     private static function getSongRepository(): SongRepositoryInterface
     {

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
@@ -48,7 +49,7 @@ class Ajax
     public function __construct()
     {
         // Rien a faire
-    } // constructor
+    }
 
     /**
      * observe
@@ -58,9 +59,8 @@ class Ajax
      * @param string $method
      * @param string $action
      * @param string $confirm
-     * @return string
      */
-    public static function observe($source, $method, $action, $confirm = '')
+    public static function observe($source, $method, $action, $confirm = ''): string
     {
         $non_quoted = array('document', 'window');
 
@@ -85,15 +85,14 @@ class Ajax
         $observe .= "</script>";
 
         return $observe;
-    } // observe
+    }
 
     /**
      * url
      * This takes a string and makes an URL
      * @param string $action
-     * @return string
      */
-    public static function url($action)
+    public static function url($action): string
     {
         global $dic;
 
@@ -107,9 +106,8 @@ class Ajax
      * @param string $action
      * @param string $source
      * @param string $post
-     * @return string
      */
-    public static function action($action, $source, $post = '')
+    public static function action($action, $source, $post = ''): string
     {
         $url = self::url($action);
 
@@ -128,7 +126,7 @@ class Ajax
         }
 
         return $ajax_string;
-    } // action
+    }
 
     /**
      * button
@@ -141,9 +139,8 @@ class Ajax
      * @param string $post
      * @param string $class
      * @param string $confirm
-     * @return string
      */
-    public static function button($action, $icon, $alt, $source = '', $post = '', $class = '', $confirm = '')
+    public static function button($action, $icon, $alt, $source = '', $post = '', $class = '', $confirm = ''): string
     {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
@@ -163,7 +160,7 @@ class Ajax
         $string .= self::observe($source, 'click', $ajax_string, $confirm);
 
         return $string;
-    } // button
+    }
 
     /**
      * button_with_text
@@ -176,9 +173,8 @@ class Ajax
      * @param string $post
      * @param string $class
      * @param string $confirm
-     * @return string
      */
-    public static function button_with_text($action, $icon, $text, $source = '', $post = '', $class = '', $confirm = '')
+    public static function button_with_text($action, $icon, $text, $source = '', $post = '', $class = '', $confirm = ''): string
     {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
@@ -195,7 +191,7 @@ class Ajax
         $string .= self::observe($source, 'click', $ajax_string, $confirm);
 
         return $string;
-    } // button
+    }
 
     /**
      * text
@@ -206,9 +202,8 @@ class Ajax
      * @param string $source
      * @param string $post
      * @param string $class
-     * @return string
      */
-    public static function text($action, $text, $source, $post = '', $class = '')
+    public static function text($action, $text, $source, $post = '', $class = ''): string
     {
         // Temporary workaround to avoid sorting on custom base requests
         if (!defined("NO_BROWSE_SORTING") || strpos($source, "sort_") === false) {
@@ -231,30 +226,30 @@ class Ajax
         }
 
         return $string;
-    } // text
+    }
 
     /**
      * run
      * This runs the specified action no questions asked
      * @param string $action
      */
-    public static function run($action)
+    public static function run($action): void
     {
         echo "<script><!--\n";
         echo "$action";
         echo "\n--></script>";
-    } // run
+    }
 
     /**
      * set_include_override
      * This sets the including div override, used only one place. Kind of a
      * hack.
-     * @param boolean $value
+     * @param bool $value
      */
-    public static function set_include_override($value)
+    public static function set_include_override($value): void
     {
         self::$include_override = make_bool($value);
-    } // set_include_override
+    }
 
     /**
      * start_container
@@ -262,9 +257,8 @@ class Ajax
      * the html needed to start a container that can be replaced by Ajax.
      * @param string $name
      * @param string $class
-     * @return boolean
      */
-    public static function start_container($name, $class = '')
+    public static function start_container($name, $class = ''): bool
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
@@ -277,14 +271,13 @@ class Ajax
         }
 
         return false;
-    } // start_container
+    }
 
     /**
      * end_container
      * This ends the container if we're not doing the AJAX thing
-     * @return boolean
      */
-    public static function end_container()
+    public static function end_container(): bool
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
@@ -294,5 +287,5 @@ class Ajax
         }
 
         return false;
-    } // end_container
-} // end ajax.class
+    }
+}

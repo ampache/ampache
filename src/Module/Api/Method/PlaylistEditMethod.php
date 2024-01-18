@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -45,8 +46,6 @@ final class PlaylistEditMethod
      * This modifies name and type of playlist.
      * Changed name and type to optional and the playlist id is mandatory
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
@@ -54,7 +53,6 @@ final class PlaylistEditMethod
      * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
-     * @return boolean
      */
     public static function playlist_edit(array $input, User $user): bool
     {
@@ -75,7 +73,7 @@ final class PlaylistEditMethod
 
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->id || (!$playlist->has_access($user->id) && $user->access !== 100)) {
-            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
+            Api::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -107,7 +105,7 @@ final class PlaylistEditMethod
         }
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
 
             return false;
         }

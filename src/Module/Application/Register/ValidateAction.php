@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Register;
 
@@ -58,28 +59,11 @@ final class ValidateAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        /* Check Perms */
+        // Check allow_public_registration
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === false &&
-            !Mailer::is_mail_enabled()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === false
         ) {
-            throw new AccessDeniedException('Error attempted registration');
-        }
-
-        /* Don't even include it if we aren't going to use it */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
-            define('CAPTCHA_INVERSE', 1);
-            /**
-             * @todo broken, the path does not exist any longer
-             */
-            define(
-                'CAPTCHA_BASE_URL',
-                sprintf(
-                    '%s/modules/captcha/captcha.php',
-                    $this->configContainer->getWebPath()
-                )
-            );
-            require_once __DIR__ . '/../../Util/Captcha/init.php';
+            throw new AccessDeniedException('Error `allow_public_registration` disabled');
         }
 
         $username           = trim(scrub_in(Core::get_get('username')));

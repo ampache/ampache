@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -32,9 +35,9 @@ use Ampache\Module\Util\Ui;
 /** require@ src/Application/Api/Ajax/Handler/IndexAjaxHandler.php */
 /** require@ src/Application/Api/Ajax/Handler/LocalPlayAjaxHandler.php */
 
-$web_path         = AmpConfig::get('web_path');
-$is_session       = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
-$cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
+$web_path      = (string)AmpConfig::get('web_path', '');
+$is_session    = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
+$cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
 
@@ -85,7 +88,7 @@ $t_logout          = T_('Log out'); ?>
     if (!array_key_exists('state', $_SESSION) || !array_key_exists('sidebar_tab', $_SESSION['state'])) {
         $_SESSION['state']['sidebar_tab'] = 'home';
     }
-    $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
+    $className = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 
     // List of buttons ( id, title, icon, access level)
     $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
@@ -94,11 +97,11 @@ $t_logout          = T_('Log out'); ?>
     }
     if ($is_session) {
         $sidebar_items[] = array('id' => 'preferences', 'title' => $t_preferences, 'icon' => 'edit', 'access' => 5);
-        $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
-    } ?>
+    }
+    $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75); ?>
     <?php foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
-            $active    = ('sidebar_' . $item['id'] == $class_name) ? ' active' : '';
+            $active    = ('sidebar_' . $item['id'] == $className) ? ' active' : '';
             $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'"; ?>
         <li <?php print_r($li_params); ?>>
     <?php print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));
@@ -145,7 +148,7 @@ $(function() {
             if ($header.children(".header-img").hasClass("collapsed")) {
                 sbstate = "collapsed";
             }
-            Cookies.set('sb_' + $header.children(".header-img").attr('id'), sbstate, {<?php echo $cookie_string ?>});
+            Cookies.set('sb_' + $header.children(".header-img").attr('id'), sbstate, {<?php echo $cookie_string; ?>});
         });
     });
 });

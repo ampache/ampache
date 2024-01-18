@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\License;
 
@@ -69,25 +70,25 @@ final class EditAction implements ApplicationActionInterface
 
         $data      = $request->getParsedBody();
         $licenseId = (array_key_exists('license_id', $data))
-            ? filter_var($data['license_id'], FILTER_SANITIZE_NUMBER_INT)
+            ? (int)filter_var($data['license_id'], FILTER_SANITIZE_NUMBER_INT)
             : 0;
         if ($licenseId > 0) {
             $license = $this->modelFactory->createLicense($licenseId);
 
-            if ($license->id) {
+            if ($license->isNew() === false) {
                 $this->licenseRepository->update(
                     $licenseId,
-                    (array_key_exists('name', $data)) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : '',
-                    (array_key_exists('description', $data)) ? filter_var($data['description'], FILTER_SANITIZE_STRING)  : '',
-                    (array_key_exists('external_link', $data)) ? filter_var($data['external_link'], FILTER_SANITIZE_URL)  : ''
+                    (array_key_exists('name', $data)) ? htmlspecialchars($data['name']) : '',
+                    (array_key_exists('description', $data)) ? htmlspecialchars($data['description']) : '',
+                    (array_key_exists('external_link', $data)) ? (string)filter_var($data['external_link'], FILTER_SANITIZE_URL) : ''
                 );
             }
             $text = T_('The License has been updated');
         } else {
             $this->licenseRepository->create(
-                (array_key_exists('name', $data)) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : '',
-                (array_key_exists('description', $data)) ? filter_var($data['description'], FILTER_SANITIZE_STRING)  : '',
-                (array_key_exists('external_link', $data)) ? filter_var($data['external_link'], FILTER_SANITIZE_URL)  : ''
+                (array_key_exists('name', $data)) ? htmlspecialchars($data['name']) : '',
+                (array_key_exists('description', $data)) ? htmlspecialchars($data['description']) : '',
+                (array_key_exists('external_link', $data)) ? (string)filter_var($data['external_link'], FILTER_SANITIZE_URL) : ''
             );
             $text = T_('A new License has been created');
         }

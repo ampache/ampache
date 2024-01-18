@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
@@ -52,7 +52,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
      * Relationships
      *
      * @param Art $art
-     * @param integer $limit
+     * @param int $limit
      * @param array $data
      *
      * @return array
@@ -69,7 +69,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             return $images;
         }
 
-        if (!array_key_exists('mb_albumid', $data)) {
+        if (!array_key_exists('mb_albumid', $data) || $data['mb_albumid'] === null) {
             return $images;
         }
         $this->logger->debug(

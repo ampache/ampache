@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,28 +31,28 @@ use Ampache\Repository\Model\Tag;
     <form method="post" id="edit_tvshow_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->get_fullname()); ?>" autofocus /></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out((string)$libitem->get_fullname()); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Summary'); ?></td>
                 <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
-                <td><input type="number" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
+                <td><input type="number" name="year" value="<?php echo scrub_out((string)$libitem->year); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub episodes') ?></td>
+                <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub episodes'); ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub episodes') ?></td>
+                <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub episodes'); ?></td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />

@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
@@ -53,14 +53,14 @@ final class Handshake3Method
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      * @param array $input
-     * @return boolean
+     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public static function handshake(array $input): bool
     {
         $now_time   = time();
-        $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
+        $timestamp  = (int)preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = $_POST['auth'];
@@ -84,9 +84,9 @@ final class Handshake3Method
             $client   = static::getUserRepository()->findByApiKey(trim($passphrase));
             $username = false;
         } else {
-            $client  = User::get_from_username($username);
+            $client = User::get_from_username($username);
         }
-        if ($client) {
+        if ($client instanceof User) {
             $user_id = $client->id;
         }
 
@@ -101,11 +101,13 @@ final class Handshake3Method
             // Authentication with user/password, we still need to check the password
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
-                if (($timestamp < ($now_time - 1800)) ||
-                    ($timestamp > ($now_time + 1800))) {
+                if (
+                    ($timestamp < ($now_time - 1800)) ||
+                    ($timestamp > ($now_time + 1800))
+                ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login Failed: timestamp out of range'));
-                    echo Xml3_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    echo Xml3_Data::error(401, T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
 
                     return false;
                 }
@@ -116,7 +118,7 @@ final class Handshake3Method
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Invalid Username/Password'));
-                    echo Xml3_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    echo Xml3_Data::error(401, T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
                     return false;
                 }
@@ -128,12 +130,12 @@ final class Handshake3Method
                 }
             }
 
-            if ($client) {
+            if ($client instanceof User) {
                 // Create the session
                 $data             = array();
-                $data['username'] = $client->username;
+                $data['username'] = (string)$client->username;
                 $data['type']     = 'api';
-                $data['apikey']   = $client->apikey;
+                $data['apikey']   = (string)$client->apikey;
                 $data['value']    = $data_version;
                 if (isset($input['client'])) {
                     $data['agent'] = $input['client'];
@@ -147,12 +149,12 @@ final class Handshake3Method
                 if (isset($input['geo_name'])) {
                     $data['geo_name'] = $input['geo_name'];
                 }
-                //Session might not exist or has expired
+                // Session might not exist or has expired
                 if (!Session::read($data['apikey'])) {
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);
                 } else {
-                    Session::extend($data['apikey']);
+                    Session::extend($data['apikey'], 'api');
                     $token = $data['apikey'];
                 }
 
@@ -165,11 +167,17 @@ final class Handshake3Method
                 $row        = Dba::fetch_assoc($db_results);
 
                 // Now we need to quickly get the totals
-                $counts  = Catalog::get_server_counts($user_id);
+                $counts = Catalog::get_server_counts($user_id);
+                // perpetual sessions do not expire
+                $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+                $session_expire = ($perpetual)
+                    ? 0
+                    : date("c", $now_time + AmpConfig::get('session_length') - 60);
+
                 $results = array(
                     'auth' => $token,
                     'api' => Api3::$version,
-                    'session_expire' => date("c", $now_time + AmpConfig::get('session_length') - 60),
+                    'session_expire' => $session_expire,
                     'update' => date("c", $row['update']),
                     'add' => date("c", $row['add']),
                     'clean' => date("c", $row['clean']),
@@ -187,10 +195,10 @@ final class Handshake3Method
         } // end while
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
-        echo Xml3_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        echo Xml3_Data::error(401, T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;
-    } // handshake
+    }
 
     /**
      * @deprecated inject by constructor

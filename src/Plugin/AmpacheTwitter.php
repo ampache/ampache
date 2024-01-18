@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,69 +22,62 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheTwitter
+class AmpacheTwitter implements AmpachePluginInterface
 {
-    public $name        = 'Twitter';
-    public $categories  = 'share';
-    public $description = 'Twitter share';
-    public $url         = 'https://twitter.com';
-    public $version     = '000001';
-    public $min_ampache = '370027';
-    public $max_ampache = '999999';
+    public string $name        = 'Twitter';
+    public string $categories  = 'share';
+    public string $description = 'Twitter share';
+    public string $url         = 'https://twitter.com';
+    public string $version     = '000001';
+    public string $min_ampache = '370027';
+    public string $max_ampache = '999999';
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Twitter share');
-
-        return true;
-    } // constructor
+    }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
         return true;
-    } // install
+    }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         return true;
-    } // uninstall
+    }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
-    } // upgrade
+    }
 
     /**
      * external_share
      * @param string $url
      * @param string $text
-     * @return string
      */
-    public function external_share($url, $text)
+    public function external_share($url, $text): string
     {
         $share = "https://twitter.com/share";
         $share .= "?url=" . rawurlencode($url);
@@ -94,15 +90,13 @@ class AmpacheTwitter
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
 
         return true;
-    } // load
+    }
 }

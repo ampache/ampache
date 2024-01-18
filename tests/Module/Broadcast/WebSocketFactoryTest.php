@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Broadcast;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -29,10 +30,9 @@ use Ratchet\Server\EchoServer;
 
 class WebSocketFactoryTest extends MockeryTestCase
 {
-    /** @var WebSocketFactory|null */
     private ?WebSocketFactory $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->subject = new WebSocketFactory();
     }

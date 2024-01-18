@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,11 +24,15 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
+/** @var ShoutObjectLoaderInterface $shoutObjectLoader */
+/** @var list<Shoutbox> $shouts */
+
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
@@ -39,16 +46,15 @@ $web_path = AmpConfig::get('web_path'); ?>
     </thead>
     <tbody>
         <?php
-        foreach ($object_ids as $shout_id) {
-            $libitem = new Shoutbox($shout_id);
+        foreach ($shouts as $libitem) {
 
-            $object = Shoutbox::get_object($libitem->object_type, $libitem->object_id);
-            $client = new User($libitem->user);
+            $object = $shoutObjectLoader->loadByShout($libitem);
+            $client = new User($libitem->getUserId());
 
             require Ui::find_template('show_shout_row.inc.php'); ?>
         <?php
         } ?>
-        <?php if (!count($object_ids)) { ?>
+        <?php if ($shouts === []) { ?>
         <tr>
             <td colspan="6" class="error"><?php echo T_('No records found'); ?></td>
         </tr>

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Config\Init;
 
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
@@ -31,6 +32,14 @@ use Ampache\Module\System\Update;
 
 final class InitializationHandlerDatabaseUpdate implements InitializationHandlerInterface
 {
+    private Update\UpdaterInterface $updater;
+
+    public function __construct(
+        Update\UpdaterInterface $updater
+    ) {
+        $this->updater = $updater;
+    }
+
     public function init(): void
     {
         // Check to see if we need to perform an update
@@ -38,7 +47,7 @@ final class InitializationHandlerDatabaseUpdate implements InitializationHandler
             if (!Dba::check_database()) {
                 throw new EnvironmentNotSuitableException();
             }
-            if (Update::need_update()) {
+            if ($this->updater->hasPendingUpdates()) {
                 throw new DatabaseOutdatedException();
             }
         }

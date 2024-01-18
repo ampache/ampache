@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -27,7 +30,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="share">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="share">
     <thead>
     <tr class="th-top">
             <th class="cel_object essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=object', T_('Object'), 'sort_share_object'); ?></th>
@@ -45,14 +48,14 @@ use Ampache\Module\Util\Ui;
         </tr>
     </thead>
     <tbody>
-    <?php
-    foreach ($object_ids as $share_id) {
-        $libitem = new Share($share_id); ?>
-    <tr id="share_<?php echo $libitem->id; ?>">
+<?php foreach ($object_ids as $share_id) {
+    $libitem = new Share($share_id);
+    if ($libitem->hasObject()) { ?>
+        <tr id="share_<?php echo $libitem->id; ?>">
         <?php require Ui::find_template('show_share_row.inc.php'); ?>
-    </tr>
-    <?php
-    } ?>
+        </tr>
+    <?php } ?>
+<?php } ?>
     </tbody>
 </table>
 <?php Ui::show_box_bottom(); ?>

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -32,6 +33,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -72,7 +74,7 @@ final class ShowAction implements ApplicationActionInterface
             $pvmsg = $this->privateMessageRepository->getById($msgId);
 
             if ($pvmsg->getRecipientUserId() !== $gatekeeper->getUserId()) {
-                throw new \Exception();
+                throw new Exception();
             }
             if ($pvmsg->isRead() === false) {
                 $this->privateMessageRepository->setIsRead($msgId, 1);
@@ -82,7 +84,7 @@ final class ShowAction implements ApplicationActionInterface
                 'show_pvmsg.inc.php',
                 ['pvmsg' => $pvmsg]
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new AccessDeniedException(
                 sprintf('Unknown or unauthorized private message #%d.', $msgId),
             );

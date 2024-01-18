@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,8 +24,9 @@
  */
 
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Song_Preview;
 
-?>
+/** @var array $object_ids */ ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
@@ -35,7 +39,11 @@ use Ampache\Module\Util\Ui;
     </thead>
     <tbody>
         <?php
-        foreach ($object_ids as $libitem) { ?>
+        foreach ($object_ids as $libitem) {
+            /** @var Song_Preview $libitem */
+            if ($libitem->isNew()) {
+                continue;
+            } ?>
         <tr id="song_preview_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_song_preview_row.inc.php'); ?>
         </tr>

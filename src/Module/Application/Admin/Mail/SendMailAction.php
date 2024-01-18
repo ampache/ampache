@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Mail;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,14 +42,18 @@ final class SendMailAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'send_mail';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
@@ -77,17 +82,16 @@ final class SendMailAction implements ApplicationActionInterface
             $mailer = new Mailer();
 
             // Set the vars on the object
-            $mailer->subject = $_REQUEST['subject'];
-            $mailer->message = $_REQUEST['message'];
+            $mailer->setSubject($this->requestParser->getFromRequest('subject'));
+            $mailer->setMessage($this->requestParser->getFromRequest('message'));
 
-            if (Core::get_request('from') == 'system') {
+            if ($this->requestParser->getFromRequest('from') == 'system') {
                 $mailer->set_default_sender();
             } else {
-                $mailer->sender      = Core::get_global('user')->email;
-                $mailer->sender_name = Core::get_global('user')->fullname;
+                $mailer->setSender(Core::get_global('user')->email, Core::get_global('user')->fullname);
             }
 
-            if ($mailer->send_to_group($_REQUEST['to'])) {
+            if ($mailer->send_to_group($this->requestParser->getFromRequest('to'))) {
                 $title = T_('No Problem');
                 $body  = T_('Your e-mail has been sent');
             } else {

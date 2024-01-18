@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\RefreshReordered;
 
@@ -60,7 +61,7 @@ final class RefreshAlbumSongsAction implements ApplicationActionInterface
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
         echo "<div id='browse_content_song' class='browse_content'>";
-        $browse->show_objects(null, true); // true argument is set to show the reorder column
+        $browse->show_objects(array(), true); // true argument is set to show the reorder column
         $browse->store();
         echo "</div>";
 

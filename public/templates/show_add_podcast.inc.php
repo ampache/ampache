@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -25,19 +28,22 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var int $catalog_id */
+/** @var string $feed */
+
 Ui::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
 <form name="podcast" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=create">
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Podcast Feed URL'); ?></td>
-    <td><input type="text" name="feed" value="<?php echo scrub_out($_REQUEST['feed'] ?? '') ?? 'http://'; ?>" />
+    <td><input type="text" name="feed" value="<?php echo scrub_out($feed); ?>" />
         <?php echo AmpError::display('feed'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
     <td>
-        <?php show_catalog_select('catalog', (int) scrub_out($_REQUEST['catalog'] ?? 0), '', false, 'podcast'); ?>
+        <?php show_catalog_select('catalog', $catalog_id, '', false, 'podcast'); ?>
         <?php echo AmpError::display('catalog'); ?>
     </td>
 </tr>

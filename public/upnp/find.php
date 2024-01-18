@@ -17,7 +17,7 @@ class UPnPFind
      *
      * Requires socket extension
      */
-    public static function findDevices()
+    public static function findDevices(): array
     {
         $discover = self::discover(10);
 
@@ -73,26 +73,28 @@ class UPnPFind
      *
      * Thanks to artheus (https://github.com/artheus/PHP-UPnP/blob/master/phpupnp.class.php)
      *
-     * @param integer $timeout Timeout to wait for responses
-     *
+     * @param int $timeout Timeout to wait for responses
      * @return array  Response
      */
-    private static function discover($timeout = 2)
+    private static function discover($timeout = 2): array
     {
-        $msg  = 'M-SEARCH * HTTP/1.1' . "\r\n";
+        $msg = 'M-SEARCH * HTTP/1.1' . "\r\n";
         $msg .= 'HOST: 239.255.255.250:1900' . "\r\n";
         $msg .= 'MAN: "ssdp:discover"' . "\r\n";
         $msg .= "MX: 3\r\n";
         $msg .= "ST: upnp:rootdevice\r\n";
         $msg .= "\r\n";
 
-        $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+        $response = array();
+        $socket   = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+        if ($socket === false) {
+            return $response;
+        }
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
         socket_sendto($socket, $msg, strlen($msg), 0, '239.255.255.250', 1900);
 
         socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $timeout, 'usec' => 0));
 
-        $response = array();
         do {
             $buf  = null;
             $from = null;
@@ -132,7 +134,7 @@ class UPnPFind
             $result[$key] = $value;
         }
 
-        return (Object) $result;
+        return (object) $result;
     }
 }
 

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\WebDav;
 
@@ -46,7 +47,7 @@ class WebDavCatalog extends DAV\Collection
      * getChildren
      * @return array
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         $children = array();
         $catalogs = null;
@@ -84,9 +85,8 @@ class WebDavCatalog extends DAV\Collection
     /**
      * childExists
      * @param string $name
-     * @return boolean
      */
-    public function childExists($name)
+    public function childExists($name): bool
     {
         $matches = Catalog::get_children($name, $this->catalog_id);
 
@@ -95,14 +95,13 @@ class WebDavCatalog extends DAV\Collection
 
     /**
      * getName
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         if ($this->catalog_id > 0) {
             $catalog = Catalog::create_from_id($this->catalog_id);
 
-            return $catalog->name;
+            return $catalog->name ?? '';
         }
 
         return AmpConfig::get('site_title');

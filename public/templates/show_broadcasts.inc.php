@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -24,10 +27,13 @@ use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="broadcast">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="broadcast">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -41,6 +47,9 @@ if ($browse->is_show_header()) {
     <tbody>
         <?php foreach ($object_ids as $broadcast_id) {
             $libitem = new Broadcast($broadcast_id);
+            if ($libitem->isNew()) {
+                continue;
+            }
             $libitem->format(); ?>
         <tr id="broadcast_row_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_broadcast_row.inc.php'); ?>

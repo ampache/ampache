@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,12 +31,12 @@ if (empty($logo_url)) {
     $logo_url = Ui::get_logo_url('dark');
 }
 
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <!DOCTYPE html>
 <html lang="en-US">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
-        <meta http-equiv="refresh" content="10;URL=<?php echo($web_path);?>" />
+        <meta http-equiv="refresh" content="10;URL=<?php echo($web_path); ?>" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo T_('Ampache') . ' -- ' . T_("Debug Page"); ?></title>

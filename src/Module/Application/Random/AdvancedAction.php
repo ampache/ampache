@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Random;
 
@@ -53,7 +54,8 @@ final class AdvancedAction implements ApplicationActionInterface
         $this->ui->show(
             'show_random.inc.php',
             [
-                'videoRepository' => $this->videoRepository
+                'videoRepository' => $this->videoRepository,
+                'object_ids' => array()
             ]
         );
         $this->ui->showQueryStats();

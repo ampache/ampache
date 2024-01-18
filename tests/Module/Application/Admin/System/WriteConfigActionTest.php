@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\System;
 
@@ -51,7 +52,7 @@ class WriteConfigActionTest extends MockeryTestCase
 
     private ?WriteConfigAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->configContainer    = $this->mock(ConfigContainerInterface::class);
         $this->installationHelper = $this->mock(InstallationHelperInterface::class);
@@ -119,9 +120,7 @@ class WriteConfigActionTest extends MockeryTestCase
 
         $this->installationHelper->shouldReceive('write_config')
             ->with(
-                Mockery::on(function (): bool {
-                    return true;
-                })
+                Mockery::on(static fn (): bool => true)
             )
             ->once()
             ->andReturnTrue();

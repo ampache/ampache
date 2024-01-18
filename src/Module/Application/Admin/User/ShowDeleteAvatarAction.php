@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,54 +23,46 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders the confirmation dialogue for avatar deletion
+ */
 final class ShowDeleteAvatarAction extends AbstractUserAction
 {
+    use UserAdminApplicationTrait;
+
     public const REQUEST_KEY = 'show_delete_avatar';
 
     private UiInterface $ui;
 
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        UiInterface $ui
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
+        $this->ui = $ui;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
-        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
-        if ($userId < 1) {
-            echo T_('You have requested an object that does not exist');
-        } else {
-            $this->ui->showConfirmation(
-                T_('Are You Sure?'),
-                T_('This Avatar will be deleted'),
-                sprintf(
-                    'admin/users.php?action=%s&user_id=%d',
-                    DeleteAvatarAction::REQUEST_KEY,
-                    $userId
-                ),
-                1,
-                'delete_avatar'
-            );
-        }
-        $this->ui->showQueryStats();
-        $this->ui->showFooter();
-
-        return null;
+        return $this->showGenericUserConfirmation(
+            $request,
+            function (int $userId): void {
+                $this->ui->showConfirmation(
+                    T_('Are You Sure?'),
+                    T_('This Avatar will be deleted'),
+                    sprintf(
+                        'admin/users.php?action=%s&user_id=%d',
+                        DeleteAvatarAction::REQUEST_KEY,
+                        $userId
+                    ),
+                    1,
+                    'delete_avatar'
+                );
+            }
+        );
     }
 }

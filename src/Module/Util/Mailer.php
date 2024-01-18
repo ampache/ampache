@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
@@ -31,26 +32,69 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * This class handles the Mail
- *
- * @todo create setters for all properties
  */
 final class Mailer implements MailerInterface
 {
-    // The message, recipient and from
-    public $message;
-    public $subject;
-    public $recipient;
-    public $recipient_name;
-    public $sender;
-    public $sender_name;
+    private ?string $message = null;
+
+    private ?string $subject = null;
+
+    private ?string $recipient = null;
+
+    private ?string $recipient_name = null;
+
+    private ?string $sender = null;
+
+    private ?string $sender_name = null;
+
+    /**
+     * Set the actual mail body/message
+     */
+    public function setMessage(string $message): MailerInterface
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
+     * Set the mail subject
+     */
+    public function setSubject(string $subject): MailerInterface
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    /**
+     * Set recipient email and -name
+     */
+    public function setRecipient(string $recipientEmail, string $recipientName = ''): MailerInterface
+    {
+        $this->recipient      = $recipientEmail;
+        $this->recipient_name = $recipientName;
+
+        return $this;
+    }
+
+    /**
+     * Set sender email and -name
+     */
+    public function setSender(string $senderEmail, string $senderName = ''): MailerInterface
+    {
+        $this->sender      = $senderEmail;
+        $this->sender_name = $senderName;
+
+        return $this;
+    }
 
     /**
      * is_mail_enabled
      *
      * Check that the mail feature is enabled. By default, you people to configure their mail settings first
-     * @return boolean
      */
-    public static function is_mail_enabled()
+    public static function is_mail_enabled(): bool
     {
         if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
             return true;
@@ -72,9 +116,8 @@ final class Mailer implements MailerInterface
      *
      * Checks whether what we have looks like a valid address.
      * @param string $address
-     * @return boolean
      */
-    public static function validate_address($address)
+    public static function validate_address($address): bool
     {
         return PHPMailer::ValidateAddress($address);
     }
@@ -85,7 +128,7 @@ final class Mailer implements MailerInterface
      * Does the config magic to figure out the "system" email sender and
      * sets it as the sender.
      */
-    public function set_default_sender()
+    public function set_default_sender(): MailerInterface
     {
         $user     = AmpConfig::get('mail_user', 'info');
         $domain   = AmpConfig::get('mail_domain', 'example.com');
@@ -93,7 +136,9 @@ final class Mailer implements MailerInterface
 
         $this->sender      = $user . '@' . $domain;
         $this->sender_name = $fromname;
-    } // set_default_sender
+
+        return $this;
+    }
 
     /**
      * get_users
@@ -102,7 +147,7 @@ final class Mailer implements MailerInterface
      * @param $filter
      * @return array
      */
-    public static function get_users($filter)
+    public static function get_users($filter): array
     {
         switch ($filter) {
             case 'users':
@@ -134,42 +179,42 @@ final class Mailer implements MailerInterface
         }
 
         return $results;
-    } // get_users
+    }
 
     /**
      * send
      * This actually sends the mail, how amazing
      * @param PHPMailer $phpmailer
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
-    public function send($phpmailer = null)
+    public function send($phpmailer = null): bool
     {
         $mailtype = AmpConfig::get('mail_type', 'php');
 
         if ($phpmailer == null) {
             $mail = new PHPMailer();
 
-            $recipient_name = $this->recipient_name;
+            $recipient_name = (string) $this->recipient_name;
             if (function_exists('mb_encode_mimeheader')) {
                 $recipient_name = mb_encode_mimeheader($recipient_name);
             }
-            $mail->AddAddress($this->recipient, $recipient_name);
+            $mail->AddAddress((string) $this->recipient, $recipient_name);
         } else {
             $mail = $phpmailer;
         }
 
         $mail->CharSet  = AmpConfig::get('site_charset');
         $mail->Encoding = 'base64';
-        $mail->From     = $this->sender;
-        $mail->Sender   = $this->sender;
-        $mail->FromName = $this->sender_name;
-        $mail->Subject  = $this->subject;
+        $mail->From     = (string) $this->sender;
+        $mail->Sender   = (string) $this->sender;
+        $mail->FromName = (string) $this->sender_name;
+        $mail->Subject  = (string) $this->subject;
 
         if (function_exists('mb_eregi_replace')) {
-            $this->message = mb_eregi_replace("\r\n", "\n", $this->message);
+            $this->message = (string) mb_eregi_replace("\r\n", "\n", (string) $this->message);
         }
-        $mail->Body = $this->message;
+        $mail->Body = (string) $this->message;
 
         $sendmail = AmpConfig::get('sendmail_path', '/usr/sbin/sendmail');
         $mailhost = AmpConfig::get('mail_host', 'localhost');
@@ -206,18 +251,18 @@ final class Mailer implements MailerInterface
         if ($retval === true) {
             return true;
         } else {
-            debug_event(self::class, 'Did not send mail. ErrorInfo: ' . $mail['ErrorInfo'] ?? '', 5);
+            debug_event(self::class, 'Did not send mail. ErrorInfo: ' . ($mail['ErrorInfo'] ?? ''), 5);
 
             return false;
         }
-    } // send
+    }
 
     /**
      * @param $group_name
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
-    public function send_to_group($group_name)
+    public function send_to_group($group_name): bool
     {
         $mail = new PHPMailer();
 

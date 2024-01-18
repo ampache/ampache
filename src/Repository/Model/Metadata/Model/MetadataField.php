@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,6 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Repository\Model\Metadata\Model;
@@ -28,7 +30,7 @@ class MetadataField extends DatabaseObject implements Model
 {
     /**
      * Database ID
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -40,7 +42,7 @@ class MetadataField extends DatabaseObject implements Model
 
     /**
      * Is the Tag public?
-     * @var boolean
+     * @var bool
      */
     protected $public = true;
 
@@ -53,19 +55,17 @@ class MetadataField extends DatabaseObject implements Model
     }
 
     /**
-     *
-     * @return string
+     * getName
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     *
-     * @return string
+     * getFormattedName
      */
-    public function getFormattedName()
+    public function getFormattedName(): string
     {
         return ucwords(str_replace("_", " ", $this->name));
     }
@@ -80,10 +80,9 @@ class MetadataField extends DatabaseObject implements Model
     }
 
     /**
-     *
-     * @return boolean
+     * isPublic
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->public;
     }
@@ -91,7 +90,7 @@ class MetadataField extends DatabaseObject implements Model
     /**
      * Set public to false
      */
-    public function hide()
+    public function hide(): void
     {
         $this->public = false;
     }

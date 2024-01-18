@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,24 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
-use Ampache\Module\System\Dba;
-use Ampache\Repository\UserRepositoryInterface;
-use PDOStatement;
 
 final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInterface
 {

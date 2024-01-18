@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,17 +23,15 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,14 +40,18 @@ final class GrantAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'grant';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
@@ -65,41 +70,42 @@ final class GrantAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $pluginName = mb_strtolower(Core::get_request('plugin'));
+        if ($user !== null) {
+            $plugin_name = mb_strtolower($this->requestParser->getFromRequest('plugin'));
+            if (
+                $this->requestParser->getFromRequest('token') &&
+                in_array($plugin_name, Plugin::get_plugins('save_mediaplay'))
+            ) {
+                // we receive a token for a valid plugin, have to call getSession and obtain a session key
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                    if ($plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))) {
+                        $title = T_('No Problem');
+                        $text  = T_('Your account has been updated') . ' : ' . $plugin_name;
+                    } else {
+                        $title = T_('There Was a Problem');
+                        $text  = T_('Your account has not been updated') . ' : ' . $plugin_name;
+                    }
+                    $next_url = sprintf(
+                        '%s/preferences.php?tab=plugins',
+                        $this->configContainer->getWebPath()
+                    );
 
-        if (
-            Core::get_request('token') &&
-            in_array($pluginName, Plugin::get_plugins('save_mediaplay'))
-        ) {
-            // we receive a token for a valid plugin, have to call getSession and obtain a session key
-            if ($plugin = new Plugin($pluginName)) {
-                $plugin->load($user);
-                if ($plugin->_plugin->get_session(Core::get_request('token'))) {
-                    $title    = T_('No Problem');
-                    $text     = T_('Your account has been updated') . ' : ' . $pluginName;
-                } else {
-                    $title    = T_('There Was a Problem');
-                    $text     = T_('Your account has not been updated') . ' : ' . $pluginName;
+                    $this->ui->showConfirmation($title, $text, $next_url);
+
+                    return null;
                 }
-                $next_url = sprintf(
-                    '%s/preferences.php?tab=plugins',
-                    $this->configContainer->getWebPath()
-                );
-
-                $this->ui->showConfirmation($title, $text, $next_url);
-
-                return null;
             }
-        }
 
-        $this->ui->show(
-            'show_preferences.inc.php',
-            [
-                'fullname' => $user->fullname,
-                'preferences' => $user->get_preferences($_REQUEST['tab']),
-                'ui' => $this->ui,
-            ]
-        );
+            $this->ui->show(
+                'show_preferences.inc.php',
+                [
+                    'fullname' => $user->fullname,
+                    'preferences' => $user->get_preferences($this->requestParser->getFromRequest('tab')),
+                    'ui' => $this->ui,
+                ]
+            );
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

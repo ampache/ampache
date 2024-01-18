@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\MockeryTestCase;
@@ -31,6 +32,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 class ShowPlaylistActionTest extends MockeryTestCase
 {
@@ -40,15 +42,17 @@ class ShowPlaylistActionTest extends MockeryTestCase
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
 
-    private ?ShowPlaylistAction $subject;
+    private ?ShowAction $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);
+        $this->logger       = $this->mock(LoggerInterface::class);
         $this->modelFactory = $this->mock(ModelFactoryInterface::class);
 
-        $this->subject = new ShowPlaylistAction(
+        $this->subject = new ShowAction(
             $this->ui,
+            $this->logger,
             $this->modelFactory
         );
     }
@@ -72,6 +76,10 @@ class ShowPlaylistActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['playlist_id' => (string) $playlistId]);
 
+        $search->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(false);
         $search->shouldReceive('format')
             ->withNoArgs()
             ->once();

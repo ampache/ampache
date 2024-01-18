@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -53,9 +56,9 @@ use Ampache\Module\Util\Ui;
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php Art::display('tvshow', $libitem->id, $libitem->get_fullname(), 6, $libitem->get_link()); ?>
+    <?php Art::display('tvshow', $libitem->id, (string)$libitem->get_fullname(), 6, $libitem->get_link()); ?>
 </td>
-<td class="cel_tvshow"><?php echo $libitem->f_link; ?></td>
+<td class="cel_tvshow"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <td class="cel_seasons"><?php echo $libitem->seasons; ?></td>
 <?php if (!$hide_genres) { ?>
@@ -71,12 +74,12 @@ use Ampache\Module\Util\Ui;
     <?php } ?>
 <td class="cel_action">
 <?php if (Access::check('interface', 50)) { ?>
-    <a id="<?php echo 'edit_tvshow_' . $libitem->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_' . $libitem->id ?>', '<?php echo addslashes(T_('TV Show Edit')) ?>', 'tvshow_')">
+    <a id="<?php echo 'edit_tvshow_' . $libitem->id; ?>" onclick="showEditDialog('tvshow_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_tvshow_' . $libitem->id; ?>', '<?php echo addslashes(T_('TV Show Edit')); ?>', 'tvshow_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php } ?>
 <?php if (Catalog::can_remove($libitem)) { ?>
-    <a id="<?php echo 'delete_tvshow_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshows.php?action=delete&tvshow_id=<?php echo $libitem->id; ?>">
+    <a id="<?php echo 'delete_tvshow_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshows.php?action=delete&tvshow_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
 <?php } ?>

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Playlist;
 
@@ -54,8 +55,8 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         }
         $this->ui->showHeader();
 
-        $playlist_name = (string) scrub_in($_REQUEST['playlist_name']);
-        $playlist_type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $playlist_name = scrub_in((string) $_REQUEST['playlist_name']);
+        $playlist_type = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
         $_SESSION['data']['playlist_id'] = $playlist_id;

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,20 +23,22 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
+/**
+ * Renders the podcast overview
+ */
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
@@ -42,16 +47,20 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
+    private LoggerInterface $logger;
+
+    private PodcastRepositoryInterface $podcastRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        LoggerInterface $logger,
+        PodcastRepositoryInterface $podcastRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer   = $configContainer;
+        $this->ui                = $ui;
+        $this->logger            = $logger;
+        $this->podcastRepository = $podcastRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,13 +71,23 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $podcast_id = (int) filter_input(INPUT_GET, 'podcast', FILTER_SANITIZE_NUMBER_INT);
-        if ($podcast_id > 0) {
-            $podcast = $this->modelFactory->createPodcast($podcast_id);
-            $podcast->format();
-            $object_ids  = $podcast->get_episodes();
-            $object_type = 'podcast_episode';
-            require_once Ui::find_template('show_podcast.inc.php');
+        $podcastId = (int) ($request->getQueryParams()['podcast'] ?? 0);
+        $podcast   = $this->podcastRepository->findById($podcastId);
+        if ($podcast === null) {
+            $this->logger->warning(
+                'Requested a podcast that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $this->ui->show(
+                'show_podcast.inc.php',
+                [
+                    'podcast' => $podcast,
+                    'object_ids' => $this->podcastRepository->getEpisodes($podcast),
+                    'object_type' => 'podcast_episode'
+                ]
+            );
         }
 
         $this->ui->showQueryStats();

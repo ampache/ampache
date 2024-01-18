@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Util\FileSystem;
 
@@ -50,6 +51,9 @@ final class FileNameConverter implements FileNameConverterInterface
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
+            if ($catalog === null) {
+                break;
+            }
             /* HINT: %1 Catalog Name, %2 Catalog Path */
             $interactor->info(
                 sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->get_path()),
@@ -77,7 +81,7 @@ final class FileNameConverter implements FileNameConverterInterface
         $source_encoding = iconv_get_encoding('output_encoding');
 
         // Correctly detect the slash we need to use here
-        if (strstr($path,"/")) {
+        if (strstr($path, "/")) {
             $slash_type = '/';
         } else {
             $slash_type = '\\';
@@ -118,19 +122,19 @@ final class FileNameConverter implements FileNameConverterInterface
                 continue;
             }
 
-            $verify_filename = iconv($siteCharset,$siteCharset . '//IGNORE', $full_file);
+            $verify_filename = iconv($siteCharset, $siteCharset . '//IGNORE', $full_file);
 
-            if (strcmp($full_file,$verify_filename) != 0) {
-                $translated_filename = iconv($source_encoding,$siteCharset . '//TRANSLIT',$full_file);
+            if (strcmp($full_file, $verify_filename) != 0) {
+                $translated_filename = iconv($source_encoding, $siteCharset . '//TRANSLIT', $full_file);
 
                 // Make sure the extension stayed the same
-                if (substr($translated_filename,strlen($translated_filename) - 3,3) != substr($full_file,strlen($full_file) - 3,3)) {
+                if (substr($translated_filename, strlen($translated_filename) - 3, 3) != substr($full_file, strlen($full_file) - 3, 3)) {
                     $interactor->warn(
                         T_('Translation failure, stripping non-valid characters'),
                         true
                     );
 
-                    $translated_filename = iconv($source_encoding,$siteCharset . '//IGNORE',$full_file);
+                    $translated_filename = iconv($source_encoding, $siteCharset . '//IGNORE', $full_file);
                 }
 
                 $interactor->info(
@@ -159,7 +163,7 @@ final class FileNameConverter implements FileNameConverterInterface
                         'n'
                     );
                     if ($input === true) {
-                        $this->charset_rename_file($interactor, $full_file,$translated_filename);
+                        $this->charset_rename_file($interactor, $full_file, $translated_filename);
                     } else {
                         $interactor->eol();
                         $interactor->warn(
@@ -168,7 +172,7 @@ final class FileNameConverter implements FileNameConverterInterface
                         );
                     }
                 } else {
-                    $this->charset_rename_file($interactor, $full_file,$translated_filename);
+                    $this->charset_rename_file($interactor, $full_file, $translated_filename);
                 }
             }
         }
@@ -182,7 +186,7 @@ final class FileNameConverter implements FileNameConverterInterface
      * @param Interactor $interactor
      * @param string $full_file
      * @param string $translated_filename
-     * @return boolean
+     * @return bool
      */
     private function charset_rename_file(
         Interactor $interactor,
@@ -193,7 +197,7 @@ final class FileNameConverter implements FileNameConverterInterface
         // First break out the base directory name and make sure it exists
         // in case our crap char is in the directory
         $directory = dirname($translated_filename);
-        $data      = preg_split("/[\/\\\]/",$directory);
+        $data      = preg_split("/[\/\\\]/", $directory);
         $path      = '';
 
         foreach ($data as $dir) {
@@ -219,7 +223,7 @@ final class FileNameConverter implements FileNameConverterInterface
         } // end foreach
 
         // Now to copy the file
-        $results_copy = copy($full_file,$translated_filename);
+        $results_copy = copy($full_file, $translated_filename);
 
         if (!$results_copy) {
             $interactor->error(
@@ -271,9 +275,9 @@ final class FileNameConverter implements FileNameConverterInterface
     private function charset_clean_name(string $string)
     {
         /* First remove any / or \ chars */
-        $string_1 = preg_replace('/[\/\\\]/','-',$string);
-        $string_2 = str_replace(':',' ',$string_1);
+        $string_1 = preg_replace('/[\/\\\]/', '-', $string);
+        $string_2 = str_replace(':', ' ', $string_1);
 
-        return preg_replace('/[\!\:\*]/','_',$string_2);
+        return preg_replace('/[\!\:\*]/', '_', $string_2);
     }
 }

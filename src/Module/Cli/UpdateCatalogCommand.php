@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
@@ -36,7 +37,7 @@ final class UpdateCatalogCommand extends Command
     ) {
         parent::__construct('run:updateCatalog', T_('Perform catalog actions for all files of a catalog. If no options are given, the defaults actions -ceag are assumed'));
 
-        $this->updateCatalog   = $updateCatalog;
+        $this->updateCatalog = $updateCatalog;
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
@@ -45,7 +46,7 @@ final class UpdateCatalogCommand extends Command
             ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
             ->option('-f|--find', T_('Find missing files and print a list of filenames'), 'boolval', false)
             ->option('-u|--update', T_('Update local object metadata using external plugins'), 'boolval', false)
-            ->option('-i|--import', T_('Adds new media files and imports playlist files'),  'boolval',false)
+            ->option('-i|--import', T_('Adds new media files and imports playlist files'), 'boolval', false)
             ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
             ->option('-t|--garbage', T_('Update table mapping, counts and delete garbage data'), 'boolval', false)
             ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)
@@ -60,7 +61,19 @@ final class UpdateCatalogCommand extends Command
     ): void {
         $values = $this->values();
         // do a default list of actions if you don't have anything set
-        if (empty($values['cleanup']) && empty($values['add']) && empty($values['art']) && empty($values['verify']) && empty($values['update']) && empty($values['import']) && empty($values['optimize']) && empty($values['garbage']) && empty($values['memorylimit']) && empty($values['catalogName']) && $values['catalogType'] === 'local') {
+        if (
+            empty($values['cleanup']) &&
+            empty($values['add']) &&
+            empty($values['art']) &&
+            empty($values['verify']) &&
+            empty($values['update']) &&
+            empty($values['import']) &&
+            empty($values['optimize']) &&
+            empty($values['garbage']) &&
+            empty($values['memorylimit']) &&
+            empty($values['catalogName']) &&
+            $values['catalogType'] === 'local'
+        ) {
             $values['cleanup'] = true;
             $values['add']     = true;
             $values['art']     = true;

@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,14 +23,47 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Gui\Stats;
 
 final class CatalogStats implements CatalogStatsInterface
 {
+    /** @var array{
+     *  tags: int,
+     *  formatted_size: string,
+     *  time_text: string,
+     *  users: int,
+     *  connected: int,
+     *  album?: int,
+     *  album_disk?: int,
+     *  artist?: int,
+     *  song?: int,
+     *  podcast?: int,
+     *  podcast_episode?: int,
+     *  items?: int,
+     *  video?: int,
+     *  user?: int
+     * } $stats
+     */
     private array $stats;
 
+    /**
+     * @param array{
+     *  tags: int,
+     *  formatted_size: string,
+     *  time_text: string,
+     *  users: int,
+     *  connected: int,
+     *  album?: int,
+     *  album_disk?: int,
+     *  artist?: int,
+     *  song?: int,
+     *  podcast?: int,
+     *  podcast_episode?: int,
+     *  items?: int,
+     *  video?: int,
+     *  user?: int
+     * } $stats
+     */
     public function __construct(
         array $stats
     ) {

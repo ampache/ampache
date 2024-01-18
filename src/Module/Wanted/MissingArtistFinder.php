@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,16 +20,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Wanted;
 
 use MusicBrainz\Exception;
 use MusicBrainz\Filters\ArtistFilter;
 use MusicBrainz\MusicBrainz;
-use stdClass;
 
 final class MissingArtistFinder implements MissingArtistFinderInterface
 {

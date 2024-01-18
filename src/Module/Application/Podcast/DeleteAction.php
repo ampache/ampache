@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -34,6 +35,9 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders confirmation-dialogue for podcast-deletion
+ */
 final class DeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'delete';
@@ -63,21 +67,19 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $podcast_id = (string) scrub_in($_REQUEST['podcast_id']);
+        $podcastId = (int) ($request->getQueryParams()['podcast_id']);
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Podcast will be removed from the database'),
             sprintf(
-                '%s/podcast.php?action=confirm_delete&podcast_id=%s',
-                $this->configContainer->getWebPath(),
-                $podcast_id
+                'podcast.php?action=confirm_delete&podcast_id=%d',
+                $podcastId
             ),
             1,
             'delete_podcast'
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

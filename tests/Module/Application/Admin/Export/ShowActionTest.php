@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,9 +20,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Export;
 
@@ -27,23 +29,29 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\CatalogLoaderInterface;
+use Ampache\Module\Catalog\Export\CatalogExportTypeEnum;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface|null */
-    private MockInterface $ui;
+    private MockInterface&UiInterface $ui;
 
-    private ?ShowAction $subject;
+    private CatalogLoaderInterface&MockObject $catalogLoader;
 
-    public function setUp(): void
+    private ShowAction $subject;
+
+    protected function setUp(): void
     {
-        $this->ui = $this->mock(UiInterface::class);
+        $this->ui            = $this->mock(UiInterface::class);
+        $this->catalogLoader = $this->createMock(CatalogLoaderInterface::class);
 
         $this->subject = new ShowAction(
-            $this->ui
+            $this->ui,
+            $this->catalogLoader,
         );
     }
 
@@ -70,16 +78,31 @@ class ShowActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
+        $catalogs = ['some-catalog'];
+
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
             ->once()
             ->andReturnTrue();
 
+        $this->catalogLoader->expects(static::once())
+            ->method('getCatalogs')
+            ->willReturn($catalogs);
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
         $this->ui->shouldReceive('show')
-            ->with('show_export.inc.php')
+            ->with(
+                'show_export.inc.php',
+                [
+                    'catalogs' => $catalogs,
+                    'exportTypes' => [
+                        CatalogExportTypeEnum::CSV => 'CSV',
+                        CatalogExportTypeEnum::ITUNES => 'iTunes',
+                    ]
+                ]
+            )
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
@@ -88,7 +111,7 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
+        static::assertNull(
             $this->subject->run(
                 $request,
                 $gatekeeper

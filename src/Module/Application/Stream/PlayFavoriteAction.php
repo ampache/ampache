@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,14 +23,13 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -60,14 +62,14 @@ final class PlayFavoriteAction extends AbstractStreamAction
         $mediaIds  = [];
         $inputType = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        /** @var \Ampache\Repository\Model\User $user */
+        /** @var User $user */
         $user = Core::get_global('user');
-        $data = $user->get_favorites($inputType) ?? array();
+        $data = $user->get_favorites($inputType);
 
         switch ($inputType) {
             case 'artist':
                 foreach ($data as $value) {
-                    $mediaIds  = array_merge(
+                    $mediaIds = array_merge(
                         $mediaIds,
                         $this->songRepository->getByArtist((int) $value->id)
                     );
@@ -75,7 +77,7 @@ final class PlayFavoriteAction extends AbstractStreamAction
                 break;
             case 'album':
                 foreach ($data as $value) {
-                    $mediaIds  = array_merge(
+                    $mediaIds = array_merge(
                         $mediaIds,
                         $this->songRepository->getByAlbum((int) $value->id)
                     );

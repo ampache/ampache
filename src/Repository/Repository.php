@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -44,7 +45,7 @@ class Repository
      * @param $values
      * @return array
      */
-    protected function findBy($fields, $values)
+    protected function findBy($fields, $values): array
     {
         $table = $this->getTableName();
 
@@ -55,7 +56,7 @@ class Repository
      *
      * @return DatabaseObject[]
      */
-    public function findAll()
+    public function findAll(): array
     {
         $table = $this->getTableName();
 
@@ -64,7 +65,7 @@ class Repository
 
     /**
      *
-     * @param integer $object_id
+     * @param int $object_id
      */
     public function findById($object_id)
     {
@@ -79,7 +80,7 @@ class Repository
      * @param array|string $value
      * @return array
      */
-    private function getRecords($table, $field = array(), $value = null)
+    private function getRecords($table, $field = array(), $value = null): array
     {
         $data = array();
         $sql  = $this->assembleQuery($table, $field);
@@ -87,7 +88,7 @@ class Repository
         $statement = Dba::read($sql, is_array($value) ? $value : array($value));
         /** @var library_item $object */
         while ($object = Dba::fetch_object($statement, $this->modelClassName)) {
-            $data[$object->getId()] = $object;
+            $data[$object[0]->getId()] = $object[0];
         }
 
         return $data;
@@ -114,7 +115,7 @@ class Repository
     }
 
     /**
-     * @return string
+     * Get database table name from Class
      */
     private function getTableName(): string
     {
@@ -124,7 +125,9 @@ class Repository
             '/(?<=.)([A-Z])/',
             function ($name) {
                 return '_' . strtolower((string) $name[0]);
-            }, end($nameParts));
+            },
+            end($nameParts)
+        );
 
         return lcfirst($tableName);
     }
@@ -133,7 +136,7 @@ class Repository
      * @param DatabaseObject $object
      * @throws ReflectionException
      */
-    public function add(DatabaseObject $object)
+    public function add(DatabaseObject $object): void
     {
         $properties = $object->getDirtyProperties();
         $this->setPrivateProperty(
@@ -146,7 +149,7 @@ class Repository
     /**
      * @param DatabaseObject $object
      */
-    public function update(DatabaseObject $object)
+    public function update(DatabaseObject $object): void
     {
         if ($object->isDirty()) {
             $properties = $object->getDirtyProperties();
@@ -157,14 +160,14 @@ class Repository
     /**
      * @param DatabaseObject $object
      */
-    public function remove(DatabaseObject $object)
+    public function remove(DatabaseObject $object): void
     {
         $this->deleteRecord($object->getId());
     }
 
     /**
      * @param $properties
-     * @return string|null
+     * @return string|false
      */
     protected function insertRecord($properties)
     {
@@ -178,10 +181,10 @@ class Repository
     }
 
     /**
-     * @param integer $object_id
+     * @param int $object_id
      * @param $properties
      */
-    protected function updateRecord($object_id, $properties)
+    protected function updateRecord($object_id, $properties): void
     {
         $sql = 'UPDATE ' . $this->getTableName() .
             ' SET ' . implode(',', $this->getKeyValuePairs($properties)) .
@@ -194,9 +197,9 @@ class Repository
     }
 
     /**
-     * @param integer $object_id
+     * @param int $object_id
      */
-    protected function deleteRecord($object_id)
+    protected function deleteRecord($object_id): void
     {
         $sql = 'DELETE FROM `' . $this->getTableName() . '` WHERE id = ?';
         Dba::write($sql, array($object_id));
@@ -206,7 +209,7 @@ class Repository
      * @param $properties
      * @return array
      */
-    protected function getKeyValuePairs($properties)
+    protected function getKeyValuePairs($properties): array
     {
         $pairs = array();
         foreach ($properties as $property => $value) {
@@ -221,10 +224,10 @@ class Repository
      * Only used in case where a property should not publicly writable
      * @param Model $object
      * @param string $property
-     * @param string|null $value
+     * @param string|false $value
      * @throws ReflectionException
      */
-    protected function setPrivateProperty(Model $object, $property, $value)
+    protected function setPrivateProperty(Model $object, $property, $value): void
     {
         $reflectionClass    = new ReflectionClass(get_class($object));
         $ReflectionProperty = $reflectionClass->getProperty($property);
@@ -237,7 +240,7 @@ class Repository
      * @param array $properties
      * @return array
      */
-    protected function resolveObjects(array $properties)
+    protected function resolveObjects(array $properties): array
     {
         foreach ($properties as $property => $value) {
             if (is_object($value)) {
@@ -252,9 +255,8 @@ class Repository
      * Create query for one or multiple fields
      * @param string $table
      * @param array $fields
-     * @return string
      */
-    public function assembleQuery($table, $fields)
+    public function assembleQuery($table, $fields): string
     {
         $sql = "SELECT * FROM `$table`";
         if (!empty($fields)) {
@@ -274,10 +276,9 @@ class Repository
 
     /**
      * camelCaseToUnderscore
-     * @param  string $string
-     * @return string
+     * @param string $string
      */
-    public function camelCaseToUnderscore($string)
+    public function camelCaseToUnderscore($string): string
     {
         return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', '_$1', $string));
     }

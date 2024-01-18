@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Config;
 
@@ -67,7 +68,7 @@ class AmpConfig
      * This returns all of the current config variables as an array.
      * @return array
      */
-    public static function get_all()
+    public static function get_all(): array
     {
         return self::$_global;
     }
@@ -76,9 +77,8 @@ class AmpConfig
      * get_rating_filter
      * Find out whether you are filtering ratings on your search
      * This function is used in mashup and random queries
-     * @return integer
      */
-    public static function get_rating_filter()
+    public static function get_rating_filter(): int
     {
         $rating_filter = 0;
         if (self::get('rating_browse_filter')) {
@@ -89,18 +89,17 @@ class AmpConfig
         }
 
         return 0;
-    } // get_rating_filter
+    }
 
     /**
      * set
      *
      * This sets config values.
      * @param string $name
-     * @param $value
-     * @param boolean $clobber
-     * @return boolean
+     * @param mixed $value
+     * @param bool $clobber
      */
-    public static function set($name, $value, $clobber = false)
+    public static function set($name, $value, $clobber = false): bool
     {
         if (isset(self::$_global[$name]) && !$clobber) {
             debug_event(self::class, "Tried to overwrite existing key $name without setting clobber", 5);
@@ -119,9 +118,9 @@ class AmpConfig
      * This is the same as the set function except it takes an array as
      * input.
      * @param array $array
-     * @param boolean $clobber
+     * @param bool $clobber
      */
-    public static function set_by_array($array, $clobber = false)
+    public static function set_by_array($array, $clobber = false): void
     {
         foreach ($array as $name => $value) {
             self::set($name, $value, $clobber);
@@ -136,10 +135,10 @@ class AmpConfig
      * get_skip_timer
      *
      * pull the timer and check using the time of the song for %complete skips
-     * @param integer $previous_time
-     * @return integer
+     * @param int $previous_time
+     * @return int
      */
-    public static function get_skip_timer($previous_time)
+    public static function get_skip_timer($previous_time): ?int
     {
         $timekeeper = AmpConfig::get('skip_timer');
         $skip_time  = 20;

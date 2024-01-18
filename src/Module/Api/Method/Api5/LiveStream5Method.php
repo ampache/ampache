@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public Label, version 3 (AGPL-3.0-or-later)
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
@@ -45,15 +46,12 @@ final class LiveStream5Method
      *
      * This returns a single live_stream based on UID
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of live_stream
-     * @return boolean
      */
     public static function live_stream(array $input, User $user): bool
     {
         if (!AmpConfig::get('live_stream')) {
-            Api5::error(T_('Enable: live_stream'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: live_stream'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -62,9 +60,9 @@ final class LiveStream5Method
         }
         $object_id   = (int) $input['filter'];
         $live_stream = new Live_Stream($object_id);
-        if (!$live_stream->id) {
+        if ($live_stream->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

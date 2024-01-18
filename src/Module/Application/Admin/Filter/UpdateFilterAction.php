@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -29,7 +30,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,6 +40,7 @@ final class UpdateFilterAction extends AbstractFilterAction
     public const REQUEST_KEY = 'update_filter';
 
     private UiInterface $ui;
+
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
@@ -60,12 +61,14 @@ final class UpdateFilterAction extends AbstractFilterAction
             throw new AccessDeniedException();
         }
 
+        $body = $request->getParsedBody();
+
         $this->ui->showHeader();
 
-        $filter_id   = filter_input(INPUT_POST, 'filter_id', FILTER_SANITIZE_NUMBER_INT);
-        $filter_name = ($filter_id == 0)
+        $filter_id   = (int) ($body['filter_id'] ?? 0);
+        $filter_name = ($filter_id === 0)
             ? 'DEFAULT'
-            : (string) scrub_in(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            : scrub_in(htmlspecialchars($body['filter_name'] ?? '', ENT_NOQUOTES));
 
         if (empty($filter_name)) {
             AmpError::add('name', T_('A filter name is required'));
@@ -78,7 +81,13 @@ final class UpdateFilterAction extends AbstractFilterAction
 
         // If we've got an error then show add form!
         if (AmpError::occurred()) {
-            require_once Ui::find_template('show_edit_filter.inc.php');
+            $this->ui->show(
+                'show_edit_filter.inc.php',
+                [
+                    'filter_id' => $filter_id,
+                    'filter_name' => $filter_name
+                ]
+            );
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -39,7 +39,7 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         RequestParserInterface $requestParser
     ) {
-        $this->requestParser   = $requestParser;
+        $this->requestParser = $requestParser;
     }
 
     public function handle(): void

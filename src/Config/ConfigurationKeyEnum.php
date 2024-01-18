@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -94,6 +94,7 @@ final class ConfigurationKeyEnum
     public const DAAP_BACKEND                          = 'daap_backend';
     public const DAAP_PASS                             = 'daap_pass';
     public const DEBUG_MODE                            = 'debug';
+    public const DELETE_FROM_DISK                      = 'delete_from_disk';
     public const DEMO_CLEAR_SESSIONS                   = 'demo_clear_sessions';
     public const DEMO_USE_SEARCH                       = 'demo_use_search';
     public const DEMO_MODE                             = 'demo_mode';
@@ -136,6 +137,7 @@ final class ConfigurationKeyEnum
     public const NOW_PLAYING_REFRESH_LIMIT             = 'now_playing_refresh_limit';
     public const OFFSET_LIMIT                          = 'offset_limit';
     public const OF_THE_MOMENT                         = 'of_the_moment';
+    public const PERPETUAL_API_SESSION                 = 'perpetual_api_session';
     public const PLAYLIST_METHOD                       = 'playlist_method';
     public const PLAYLIST_TYPE                         = 'playlist_type';
     public const PLAY_TYPE                             = 'play_type';
@@ -143,6 +145,10 @@ final class ConfigurationKeyEnum
     public const PODCAST_NEW_DOWNLOAD                  = 'podcast_new_download';
     public const PODCAST                               = 'podcast';
     public const POPULAR_THRESHOLD                     = 'popular_threshold';
+    public const PROXY_HOST                            = 'proxy_host';
+    public const PROXY_PASS                            = 'proxy_pass';
+    public const PROXY_PORT                            = 'proxy_port';
+    public const PROXY_USER                            = 'proxy_user';
     public const RADIO                                 = 'live_stream';
     public const RATE_LIMIT                            = 'rate_limit';
     public const RATING_FILE_TAG_USER                  = 'rating_file_tag_user';
@@ -161,6 +167,7 @@ final class ConfigurationKeyEnum
     public const SHOW_PLAYED_TIMES                     = 'show_played_times';
     public const SHOW_PLAYLIST_USERNAME                = 'show_playlist_username';
     public const SHOW_SKIPPED_TIMES                    = 'show_skipped_times';
+    public const SHOW_WRAPPED                          = 'show_wrapped';
     public const SIDEBAR_LIGHT                         = 'sidebar_light';
     public const SIMPLE_USER_MODE                      = 'simple_user_mode';
     public const SITE_CHARSET                          = 'site_charset';

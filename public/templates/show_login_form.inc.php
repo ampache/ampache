@@ -1,7 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
 
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -31,9 +33,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path');
-$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-$dir      = is_rtl(AmpConfig::get('lang'))
+$web_path = (string)AmpConfig::get('web_path', '');
+$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
+$dir      = is_rtl(AmpConfig::get('lang', 'en_US'))
     ? 'rtl'
     : 'ltr';
 

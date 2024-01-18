@@ -1,6 +1,7 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,24 +29,23 @@ namespace Ampache\Module\Util;
 interface VaInfoInterface
 {
     /**
-     * @param $size
+     * forceSize
      */
-    public function forceSize($size);
+    public function forceSize(int $size): void;
 
     /**
      * get_info
      *
      * This function runs the various steps to gathering the metadata. Filling $this->tags
      */
-    public function gather_tags();
+    public function gather_tags(): void;
 
     /**
      * check_time
      * check a cached file is close to the expected time
      * @param int $time
-     * @return bool
      */
-    public function check_time($time);
+    public function check_time($time): bool;
 
     /**
      * write_id3
@@ -53,7 +53,7 @@ interface VaInfoInterface
      * @param $tagData
      * @throws \Exception
      */
-    public function write_id3($tagData);
+    public function write_id3($tagData): void;
 
     /**
      * prepare_metadata_for_writing
@@ -61,7 +61,7 @@ interface VaInfoInterface
      * @param array $frames
      * @return array
      */
-    public function prepare_metadata_for_writing($frames);
+    public function prepare_metadata_for_writing($frames): array;
 
     /**
      * read_id3
@@ -69,7 +69,7 @@ interface VaInfoInterface
      * This function runs the various steps to gathering the metadata
      * @return array
      */
-    public function read_id3();
+    public function read_id3(): array;
 
     /**
      * get_tag_type
@@ -82,7 +82,7 @@ interface VaInfoInterface
      * @param string $configKey
      * @return array
      */
-    public static function get_tag_type($results, $configKey = 'metadata_order');
+    public static function get_tag_type($results, $configKey = 'metadata_order'): array;
 
     /**
      * clean_tag_info
@@ -95,7 +95,7 @@ interface VaInfoInterface
      * @param string $filename
      * @return array
      */
-    public static function clean_tag_info($results, $keys, $filename = null);
+    public static function clean_tag_info($results, $keys, $filename = null): array;
 
     /**
      * parse_pattern
@@ -104,7 +104,7 @@ interface VaInfoInterface
      * @param string $filePattern
      * @return array
      */
-    public static function parse_pattern($filepath, $dirPattern, $filePattern);
+    public static function parse_pattern($filepath, $dirPattern, $filePattern): array;
 
     /**
      * set_broken
@@ -113,5 +113,5 @@ interface VaInfoInterface
      *
      * @return array Return broken title, album, artist
      */
-    public function set_broken();
+    public function set_broken(): array;
 }

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,9 +20,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Repository;
 
@@ -144,7 +146,7 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
         int $privateMessageId
     ): PrivateMessageInterface {
         $item = $this->modelFactory->createPrivateMsg($privateMessageId);
-        if ($item->isNew() === true) {
+        if ($item->isNew()) {
             throw new ItemNotFoundException((string) $privateMessageId);
         }
 

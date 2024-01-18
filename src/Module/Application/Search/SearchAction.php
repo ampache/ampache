@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,15 +23,13 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Search;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
@@ -39,6 +40,8 @@ final class SearchAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'search';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
@@ -46,10 +49,12 @@ final class SearchAction implements ApplicationActionInterface
     private MissingArtistFinderInterface $missingArtistFinder;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         MissingArtistFinderInterface $missingArtistFinder
     ) {
+        $this->requestParser       = $requestParser;
         $this->ui                  = $ui;
         $this->modelFactory        = $modelFactory;
         $this->missingArtistFinder = $missingArtistFinder;
@@ -60,8 +65,8 @@ final class SearchAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // set the browse type BEFORE running the search (for the search bar)
-        $searchType = Core::get_request('type');
-        $rule_1     = Core::get_request('rule_1');
+        $searchType = $this->requestParser->getFromRequest('type');
+        $rule_1     = $this->requestParser->getFromRequest('rule_1');
         if (empty($searchType)) {
             $searchType = in_array($rule_1, Search::VALID_TYPES)
                 ? str_replace('_name', ' ', $rule_1)
@@ -82,12 +87,12 @@ final class SearchAction implements ApplicationActionInterface
             $browse->show_objects($results);
             $browse->store();
         } else {
-            $wartists = $this->missingArtistFinder->find($_REQUEST['rule_1_input']);
+            $wartists = $this->missingArtistFinder->find($this->requestParser->getFromRequest('rule_1_input'));
             require_once Ui::find_template('show_missing_artists.inc.php');
 
             printf(
                 '<a href="http://musicbrainz.org/search?query=%s&type=artist&method=indexed" target="_blank">%s</a><br />',
-                rawurlencode($_REQUEST['rule_1_input']),
+                rawurlencode($this->requestParser->getFromRequest('rule_1_input')),
                 T_('View on MusicBrainz')
             );
         }

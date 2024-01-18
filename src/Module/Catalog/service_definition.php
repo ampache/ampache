@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Catalog;
 
 use Ampache\Module\Catalog\Update\AddCatalog;
@@ -32,6 +33,7 @@ use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolder;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolderInterface;
+
 use function DI\autowire;
 
 return [
@@ -40,4 +42,6 @@ return [
     UpdateSingleCatalogFolderInterface::class => autowire(UpdateSingleCatalogFolder::class),
     UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
     GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
+    Export\CatalogExportFactoryInterface::class => autowire(Export\CatalogExportFactory::class),
+    CatalogLoaderInterface::class => autowire(CatalogLoader::class),
 ];

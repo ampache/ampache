@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
@@ -67,9 +68,9 @@ final class ArtSizeCalculationCommand extends Command
 
             $art_id     = $row['id'];
             $dimensions = Core::image_dimensions($source);
-            if (!empty($dimensions) && ((int) $dimensions['width'] > 0 && (int) $dimensions['height'] > 0)) {
-                $width  = (int) $dimensions['width'];
-                $height = (int) $dimensions['height'];
+            if ($dimensions['width'] > 0 && $dimensions['height'] > 0) {
+                $width  = $dimensions['width'];
+                $height = $dimensions['height'];
                 $sql    = "UPDATE `image` SET `width`=" . $width . ", `height`=" . $height . " WHERE `id`='" . $art_id . "'";
                 Dba::write($sql);
             }

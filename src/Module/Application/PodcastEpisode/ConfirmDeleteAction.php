@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,12 +23,12 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\PodcastEpisode;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -41,23 +44,31 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'confirm_delete';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
 
+    private PodcastDeleterInterface $podcastDeleter;
+
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
+        PodcastDeleterInterface $podcastDeleter,
         LoggerInterface $logger
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
+        $this->podcastDeleter  = $podcastDeleter;
         $this->logger          = $logger;
     }
 
@@ -67,7 +78,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $episode = $this->modelFactory->createPodcastEpisode((int) $_REQUEST['podcast_episode_id']);
+        $episode_id = (int)$this->requestParser->getFromRequest('podcast_id');
+        $episode    = $this->modelFactory->createPodcastEpisode($episode_id);
         if (!Catalog::can_remove($episode)) {
             $this->logger->warning(
                 sprintf('Unauthorized to remove the episode `%s`', $episode->id),
@@ -76,30 +88,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
+        $this->podcastDeleter->deleteEpisode([$episode]);
 
-        if ($episode->remove()) {
-            Catalog::count_table('podcast_episode');
-            $this->ui->showConfirmation(
-                T_('No Problem'),
-                T_('Podcast Episode has been deleted'),
-                sprintf(
-                    '%s/podcast.php?action=show&podcast=%s',
-                    $this->configContainer->getWebPath(),
-                    $episode->podcast
-                )
-            );
-        } else {
-            $this->ui->showConfirmation(
-                T_('There Was a Problem'),
-                T_('Couldn\'t delete this Podcast Episode'),
-                sprintf(
-                    '%s/podcast.php?action=show&podcast=%s',
-                    $this->configContainer->getWebPath(),
-                    $episode->podcast
-                )
-            );
-        }
+        $this->ui->showHeader();
+        $this->ui->showConfirmation(
+            T_('No Problem'),
+            T_('Podcast Episode has been deleted'),
+            sprintf(
+                '%s/podcast.php?action=show&podcast=%s',
+                $this->configContainer->getWebPath(),
+                $episode->podcast
+            )
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

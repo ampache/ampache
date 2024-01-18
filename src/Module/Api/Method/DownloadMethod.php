@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
@@ -45,12 +46,9 @@ final class DownloadMethod
      *
      * Downloads a given media file. set format=raw to download the full file
      *
-     * @param array $input
-     * @param User $user
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * format = (string) 'mp3', 'ogg', etc //optional
-     * @return boolean
      */
     public static function download(array $input, User $user): bool
     {
@@ -82,7 +80,7 @@ final class DownloadMethod
             $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
-            Session::extend($input['auth']);
+            Session::extend($input['auth'], 'api');
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;

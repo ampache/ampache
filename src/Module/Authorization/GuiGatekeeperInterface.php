@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -22,6 +23,8 @@
 
 namespace Ampache\Module\Authorization;
 
+use Ampache\Repository\Model\User;
+
 interface GuiGatekeeperInterface
 {
     /**
@@ -37,5 +40,5 @@ interface GuiGatekeeperInterface
     /**
      * Returns the currently logged in user
      */
-    public function getUser();
+    public function getUser(): ?User;
 }

@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\User;
@@ -46,14 +47,11 @@ final class LiveStreamCreateMethod
      *
      * Create a live_stream (radio station) object.
      *
-     * @param array $input
-     * @param User $user
      * name     = (string) Stream title
      * url      = (string) URL of the http/s stream
      * codec    = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac')
      * catalog  = (int) Catalog ID to associate with this stream
      * site_url = (string) Homepage URL of the stream //optional
-     * @return boolean
      */
     public static function live_stream_create(array $input, User $user): bool
     {
@@ -64,20 +62,20 @@ final class LiveStreamCreateMethod
             return false;
         }
         $name       = $input['name'];
-        $url        = filter_var(urldecode($input['url']), FILTER_VALIDATE_URL) ?? null;
+        $url        = filter_var(urldecode($input['url']), FILTER_VALIDATE_URL) ?: null;
         $codec      = preg_replace("/[^a-z]/", "", strtolower($input['codec']));
         $site_url   = (isset($input['site_url'])) ? filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL) : null;
         $catalog_id = filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($catalog_id);
-        if (!$catalog->name) {
+        if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
         }
         if (!$url) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $url), '4710', self::ACTION, 'url', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $url), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
 
             return false;
         }

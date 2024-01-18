@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
@@ -57,14 +58,14 @@ final class HandshakeMethod
      * user      = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
      * version   = (string) $version //optional
-     * @return boolean
+     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public static function handshake(array $input): bool
     {
         $now_time   = time();
-        $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
+        $timestamp  = (int)preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
@@ -79,7 +80,7 @@ final class HandshakeMethod
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int)($version) < Api::$auth_version && $data_version !== 6) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
-            AmpError::add('api', T_('Login failed, API version is too old'));
+            Api::error(T_('Received Invalid Handshake'), ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'version', $input['api_format']);
 
             return false;
         }
@@ -90,9 +91,9 @@ final class HandshakeMethod
             $client   = static::getUserRepository()->findByApiKey(trim($passphrase));
             $username = false;
         } else {
-            $client  = User::get_from_username($username);
+            $client = User::get_from_username($username);
         }
-        if ($client) {
+        if ($client instanceof User) {
             $user_id = $client->id;
         }
 
@@ -109,11 +110,13 @@ final class HandshakeMethod
             // Authentication with user/password, we still need to check the password
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
-                if (($timestamp < ($now_time - 1800)) ||
-                    ($timestamp > ($now_time + 1800))) {
+                if (
+                    ($timestamp < ($now_time - 1800)) ||
+                    ($timestamp > ($now_time + 1800))
+                ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
-                    Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
+                    Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
@@ -124,7 +127,7 @@ final class HandshakeMethod
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
+                    Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
@@ -136,15 +139,15 @@ final class HandshakeMethod
                 }
             }
 
-            if ($client) {
+            if ($client instanceof User) {
                 // Create the session
                 $data             = array();
-                $data['username'] = $client->username;
+                $data['username'] = (string)$client->username;
                 $data['type']     = 'api';
-                $data['apikey']   = $client->apikey;
+                $data['apikey']   = (string)$client->apikey;
                 $data['value']    = $data_version;
                 if (isset($input['client'])) {
-                    $data['agent'] = scrub_in($input['client']);
+                    $data['agent'] = scrub_in((string) $input['client']);
                 }
                 if (isset($input['geo_latitude'])) {
                     $data['geo_latitude'] = $input['geo_latitude'];
@@ -155,12 +158,12 @@ final class HandshakeMethod
                 if (isset($input['geo_name'])) {
                     $data['geo_name'] = $input['geo_name'];
                 }
-                //Session might not exist or has expired
+                // Session might not exist or has expired
                 if (!Session::read($data['apikey'])) {
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);
                 } else {
-                    Session::extend($data['apikey']);
+                    Session::extend($data['apikey'], 'api');
                     $token = $data['apikey'];
                 }
 
@@ -180,7 +183,7 @@ final class HandshakeMethod
         } // end while
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
-        Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '4701', self::ACTION, 'account', $input['api_format']);
+        Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);
 
         return false;
     }

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,13 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,9 +53,22 @@ final class ShowEditAction extends AbstractFilterAction
             return null;
         }
 
-        $this->ui->showHeader();
+        $body = $request->getQueryParams();
 
-        require_once Ui::find_template('show_edit_filter.inc.php');
+        $filter_id = (int) ($body['filter_id'] ?? 0);
+
+        $filter_name = ($filter_id === 0)
+            ? 'DEFAULT'
+            : scrub_in(htmlspecialchars($body['filter_name'] ?? '', ENT_NOQUOTES));
+
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_edit_filter.inc.php',
+            [
+                'filter_id' => $filter_id,
+                'filter_name' => $filter_name
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

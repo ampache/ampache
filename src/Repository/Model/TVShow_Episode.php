@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
@@ -30,10 +31,10 @@ class TVShow_Episode extends Video
 {
     protected const DB_TABLENAME = 'tvshow_episode';
 
-    public $original_name;
-    public $season;
-    public $episode_number;
-    public $summary;
+    public ?string $original_name;
+    public int $season;
+    public int $episode_number;
+    public ?string $summary;
 
     public $f_link;
     public $f_season;
@@ -45,18 +46,19 @@ class TVShow_Episode extends Video
      * Constructor
      * This pulls the tv show episode information from the database and returns
      * a constructed object
-     * @param $episode_id
+     * @param int|null $episode_id
      */
-    public function __construct($episode_id)
+    public function __construct($episode_id = 0)
     {
+        if (!$episode_id) {
+            return;
+        }
         parent::__construct($episode_id);
 
         $info = $this->get_info($episode_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     }
 
     public function getId(): int
@@ -64,12 +66,17 @@ class TVShow_Episode extends Video
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * garbage_collection
      *
      * This cleans out unused tv shows episodes
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = "DELETE FROM `tvshow_episode` USING `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
@@ -78,12 +85,8 @@ class TVShow_Episode extends Video
     /**
      * insert
      * Insert a new tv show episode and related entities.
-     * @param array $data
-     * @param array $gtypes
-     * @param array $options
-     * @return integer
      */
-    public static function insert(array $data, $gtypes = array(), $options = array())
+    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
     {
         if (empty($data['tvshow'])) {
             $data['tvshow'] = T_('Unknown');
@@ -91,12 +94,12 @@ class TVShow_Episode extends Video
         $tags = $data['genre'];
 
         $tvshow = TvShow::check($data['tvshow'], $data['year'], $data['tvshow_summary']);
-        if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db((int)$tvshow, 'tvshow')) {
+        if (!empty($options) && $options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db((int)$tvshow, 'tvshow')) {
             $art = new Art((int)$tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
         }
         $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
-        if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
+        if (!empty($options) && $options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
             $art = new Art($tvshow_season, 'tvshow_season');
             $art->insert_url($data['tvshow_season_art']);
         }
@@ -113,8 +116,8 @@ class TVShow_Episode extends Video
 
         $sdata = $data;
         // Replace relation name with db ids
-        $sdata['tvshow']                      = $tvshow;
-        $sdata['tvshow_season']               = $tvshow_season;
+        $sdata['tvshow']        = $tvshow;
+        $sdata['tvshow_season'] = $tvshow_season;
 
         return self::create($sdata);
     }
@@ -123,9 +126,8 @@ class TVShow_Episode extends Video
      * create
      * This takes a key'd array of data as input and inserts a new tv show episode entry, it returns the record id
      * @param array $data
-     * @return integer
      */
-    public static function create($data)
+    public static function create($data): int
     {
         $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array(
@@ -143,9 +145,8 @@ class TVShow_Episode extends Video
      * update
      * This takes a key'd array of data as input and updates a tv show episode entry
      * @param array $data
-     * @return integer
      */
-    public function update(array $data)
+    public function update(array $data): int
     {
         parent::update($data);
 
@@ -168,17 +169,17 @@ class TVShow_Episode extends Video
     /**
      * format
      * this function takes the object and formats some values
-     * @param boolean $details
-     * @return boolean
+     *
+     * @param bool $details
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         parent::format($details);
 
         $season = new TVShow_Season($this->season);
         $season->format($details);
 
-        $this->f_name        = ($this->original_name ?: $this->f_name);
+        $this->f_name        = ($this->original_name ?? $this->f_name);
         $this->f_link        = '<a href="' . $this->get_link() . '">' . scrub_out($this->f_name) . '</a>';
         $this->f_season      = $season->f_name;
         $this->f_season_link = $season->f_link;
@@ -191,15 +192,13 @@ class TVShow_Episode extends Video
         }
         $this->f_file .= ' - ' . $this->f_name;
         $this->f_full_title = $this->f_file;
-
-        return true;
     }
 
     /**
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords           = parent::get_keywords();
         $keywords['tvshow'] = array(
@@ -230,18 +229,9 @@ class TVShow_Episode extends Video
 
     /**
      * get_parent
-     * @return array
+     * Return parent `object_type`, `object_id`; null otherwise.
      */
-    public function get_parent()
-    {
-        return array('object_type' => 'tvshow_season', 'object_id' => $this->season);
-    }
-
-    /**
-     * get_release_item_art
-     * @return array
-     */
-    public function get_release_item_art()
+    public function get_parent(): ?array
     {
         return array(
             'object_type' => 'tvshow_season',
@@ -250,9 +240,21 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * @return string
+     * get_release_item_art
+     * @return array
      */
-    public function get_description()
+    public function get_release_item_art(): array
+    {
+        return array(
+            'object_type' => 'tvshow_season',
+            'object_id' => $this->season
+        );
+    }
+
+    /**
+     * get_description
+     */
+    public function get_description(): string
     {
         if (!empty($this->summary)) {
             return $this->summary;
@@ -265,10 +267,10 @@ class TVShow_Episode extends Video
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool $force
      */
-    public function display_art($thumb = 2, $force = false)
+    public function display_art($thumb = 2, $force = false): void
     {
         $episode_id = null;
         $type       = null;
@@ -290,16 +292,15 @@ class TVShow_Episode extends Video
         }
 
         if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->get_link());
+            Art::display($type, $episode_id, (string)$this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
     /**
      * remove
      * Delete the object from disk and/or database where applicable.
-     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         $deleted = parent::remove();
         if ($deleted) {

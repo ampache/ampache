@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
@@ -43,23 +45,20 @@ final class GoodbyeMethod
      *
      * Destroy session for auth key.
      *
-     * @param array $input
-     * @param User $user
      * auth = (string)
-     * @return boolean
      */
     public static function goodbye(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
         }
-        unset($user);
+        debug_event(self::class, 'Goodbye Received from ' . $user->id . ' ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
+
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";
             Dba::write($sql, array($input['auth']));
 
-            debug_event(self::class, 'Goodbye Received from ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
             ob_end_clean();
             Api::message($input['auth'], $input['api_format']);
 
@@ -67,7 +66,7 @@ final class GoodbyeMethod
         }
         ob_end_clean();
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $input['auth']), '4710', self::ACTION, 'account', $input['api_format']);
+        Api::error(sprintf(T_('Bad Request: %s'), $input['auth']), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
 
         return false;
     }

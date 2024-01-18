@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,22 +23,26 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Deletes a user avatar
+ */
 final class DeleteAvatarAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'delete_avatar';
+
+    private RequestParserInterface $requestParser;
 
     private UiInterface $ui;
 
@@ -44,10 +51,12 @@ final class DeleteAvatarAction extends AbstractUserAction
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
@@ -59,20 +68,25 @@ final class DeleteAvatarAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('delete_avatar')) {
+        if ($this->requestParser->verifyForm('delete_avatar') === false) {
             throw new AccessDeniedException();
         }
+
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
+        $user   = $this->modelFactory->createUser($userId);
+
+        if ($user->isNew()) {
+            throw new ObjectNotFoundException($userId);
+        }
+
+        $user->deleteAvatar();
+
         $this->ui->showHeader();
-
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
-        $client->delete_avatar();
-
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Avatar has been deleted'),
-            sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+            'admin/users.php'
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

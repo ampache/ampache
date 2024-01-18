@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,9 +20,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
@@ -65,21 +67,19 @@ class Search extends playlist_object
         'video'
     );
 
+    // override playlist_object
+    public ?string $type = 'public';
+    // rules used to run a search (User chooses rules from available types for that object)
+    public $rules; // JSON string to decoded to array
+    public ?string $logic_operator = 'AND';
+    public ?int $random            = 0;
+    public int $limit              = 0;
+    public ?int $last_count        = 0;
+
     public $objectType; // the type of object you want to return (self::VALID_TYPES)
-
-    public $logic_operator = 'AND';
-    public $type           = 'public';
-    public $random         = 0;
-    public $limit          = 0;
-    public $last_count     = 0;
-    public $last_duration  = 0;
-    public $date           = 0;
-
-    public $types     = array(); // rules that are available to the objectType (title, year, rating, etc)
-    public $rules     = array(); // rules used to run a search (User chooses rules from available types for that object)
-    public $basetypes = array(); // rule operator subtypes (numeric, text, boolean, etc)
-
     public $search_user; // user running the search
+    public $types     = array(); // rules that are available to the objectType (title, year, rating, etc)
+    public $basetypes = array(); // rule operator subtypes (numeric, text, boolean, etc)
 
     private $searchType; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
     private $stars;
@@ -87,20 +87,20 @@ class Search extends playlist_object
 
     /**
      * constructor
-     * @param integer $search_id // saved searches have rules already
+     * @param int|null $search_id // saved searches have rules already
      * @param string $object_type // map to self::VALID_TYPES
      * @param User|null $user
      */
     public function __construct($search_id = 0, $object_type = 'song', ?User $user = null)
     {
-        $this->search_user = ($user !== null)
-            ? $user
-            : Core::get_global('user');
-
-        //debug_event(self::class, "SearchID: $search_id; Search Type: $object_type\n" . print_r($this, true), 5);
+        $this->search_user = $user;
+        if (!$this->search_user instanceof User) {
+            $this->search_user = User::get_from_global() ?? new User(-1);
+        }
         $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
             ? strtolower($object_type)
             : 'song';
+        $this->user = $this->search_user->id ?? -1; // define a user for live searches (overwriten if saved before)
         if ($search_id > 0) {
             $info = $this->get_info($search_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
@@ -114,6 +114,9 @@ class Search extends playlist_object
                     $this->$key = $value;
                 }
             }
+            if (!is_array($this->rules)) {
+                $this->rules = array();
+            }
             // make sure saved rules match the correct names
             $rule_count = 0;
             foreach ($this->rules as $rule) {
@@ -125,7 +128,6 @@ class Search extends playlist_object
                 $this->search_user = new User($this->user);
             }
         }
-        $this->date  = time();
         $this->stars = array(
             T_('0 Stars'),
             T_('1 Star'),
@@ -199,11 +201,16 @@ class Search extends playlist_object
                 $this->order_by   = '`video`.`file`';
                 break;
         } // end switch on objectType
-    } // end constructor
+    }
 
     public function getId(): int
     {
         return (int)($this->id ?? 0);
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
     }
 
     /**
@@ -211,7 +218,7 @@ class Search extends playlist_object
      *
      * Function called during construction to set the different types and rules for search
      */
-    private function _set_basetypes()
+    private function _set_basetypes(): void
     {
         $this->basetypes['numeric'][] = array(
             'name' => 'gte',
@@ -497,7 +504,7 @@ class Search extends playlist_object
      * @param string $type
      * @param string $group
      */
-    private function _add_type_numeric($name, $label, $type = 'numeric', $group = '')
+    private function _add_type_numeric($name, $label, $type = 'numeric', $group = ''): void
     {
         $this->types[] = array(
             'name' => $name,
@@ -516,7 +523,7 @@ class Search extends playlist_object
      * @param string $label
      * @param string $group
      */
-    private function _add_type_date($name, $label, $group = '')
+    private function _add_type_date($name, $label, $group = ''): void
     {
         $this->types[] = array(
             'name' => $name,
@@ -535,7 +542,7 @@ class Search extends playlist_object
      * @param string $label
      * @param string $group
      */
-    private function _add_type_text($name, $label, $group = '')
+    private function _add_type_text($name, $label, $group = ''): void
     {
         $this->types[] = array(
             'name' => $name,
@@ -556,7 +563,7 @@ class Search extends playlist_object
      * @param array $array
      * @param string $group
      */
-    private function _add_type_select($name, $label, $type, $array, $group = '')
+    private function _add_type_select($name, $label, $type, $array, $group = ''): void
     {
         $this->types[] = array(
             'name' => $name,
@@ -576,7 +583,7 @@ class Search extends playlist_object
      * @param string $type
      * @param string $group
      */
-    private function _add_type_boolean($name, $label, $type = 'boolean', $group = '')
+    private function _add_type_boolean($name, $label, $type = 'boolean', $group = ''): void
     {
         $this->types[] = array(
             'name' => $name,
@@ -592,7 +599,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for songs are defined
      */
-    private function _set_types_song()
+    private function _set_types_song(): void
     {
         $this->_add_type_text('anywhere', T_('Any searchable text'));
 
@@ -701,7 +708,10 @@ class Search extends playlist_object
         $this->_add_type_boolean('orphaned_album', T_('Orphaned Album'), 'is_true', $t_file_data);
         $catalogs = array();
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
-            $catalog          = Catalog::create_from_id($catid);
+            $catalog = Catalog::create_from_id($catid);
+            if ($catalog === null) {
+                break;
+            }
             $catalogs[$catid] = $catalog->name;
         }
         if (!empty($catalogs)) {
@@ -736,7 +746,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for artists are defined
      */
-    private function _set_types_artist()
+    private function _set_types_artist(): void
     {
         $t_artist_data = T_('Artist Data');
         $this->_add_type_text('title', T_('Name'), $t_artist_data);
@@ -791,7 +801,10 @@ class Search extends playlist_object
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $catalogs = array();
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
-            $catalog          = Catalog::create_from_id($catid);
+            $catalog = Catalog::create_from_id($catid);
+            if ($catalog === null) {
+                break;
+            }
             $catalogs[$catid] = $catalog->name;
         }
         if (!empty($catalogs)) {
@@ -802,14 +815,14 @@ class Search extends playlist_object
         $this->_add_type_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
         $this->_add_type_text('mbid_album', T_('MusicBrainz ID (Album)'), $t_musicbrainz);
         $this->_add_type_text('mbid_song', T_('MusicBrainz ID (Song)'), $t_musicbrainz);
-    } // artisttypes
+    }
 
     /**
      * _set_types_album
      *
      * this is where all the available rules for albums are defined
      */
-    private function _set_types_album()
+    private function _set_types_album(): void
     {
         $t_album_data = T_('Album Data');
         $this->_add_type_text('title', T_('Title'), $t_album_data);
@@ -875,7 +888,10 @@ class Search extends playlist_object
         $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $catalogs = array();
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
-            $catalog          = Catalog::create_from_id($catid);
+            $catalog = Catalog::create_from_id($catid);
+            if ($catalog === null) {
+                break;
+            }
             $catalogs[$catid] = $catalog->name;
         }
         if (!empty($catalogs)) {
@@ -886,14 +902,14 @@ class Search extends playlist_object
         $this->_add_type_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
         $this->_add_type_text('mbid_artist', T_('MusicBrainz ID (Artist)'), $t_musicbrainz);
         $this->_add_type_text('mbid_song', T_('MusicBrainz ID (Song)'), $t_musicbrainz);
-    } // albumtypes
+    }
 
     /**
      * _set_types_video
      *
      * this is where all the available rules for videos are defined
      */
-    private function _set_types_video()
+    private function _set_types_video(): void
     {
         $this->_add_type_text('file', T_('Filename'));
     }
@@ -903,7 +919,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for playlists are defined
      */
-    private function _set_types_playlist()
+    private function _set_types_playlist(): void
     {
         $t_playlist = T_('Playlist');
         $this->_add_type_text('title', T_('Name'), $t_playlist);
@@ -921,7 +937,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for podcasts are defined
      */
-    private function _set_types_podcast()
+    private function _set_types_podcast(): void
     {
         $t_podcasts = T_('Podcast');
         $this->_add_type_text('title', T_('Name'), $t_podcasts);
@@ -962,7 +978,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for podcast_episodes are defined
      */
-    private function _set_types_podcast_episode()
+    private function _set_types_podcast_episode(): void
     {
         $t_podcast_episodes = T_('Podcast Episode');
         $this->_add_type_text('title', T_('Name'), $t_podcast_episodes);
@@ -1000,7 +1016,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for labels are defined
      */
-    private function _set_types_label()
+    private function _set_types_label(): void
     {
         $t_label = T_('Label');
         $this->_add_type_text('title', T_('Name'), $t_label);
@@ -1012,7 +1028,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for users are defined
      */
-    private function _set_types_user()
+    private function _set_types_user(): void
     {
         $this->_add_type_text('username', T_('Username'));
     }
@@ -1022,7 +1038,7 @@ class Search extends playlist_object
      *
      * this is where all the available rules for Genres are defined
      */
-    private function _set_types_tag()
+    private function _set_types_tag(): void
     {
         $this->_add_type_text('title', T_('Genre'));
     }
@@ -1034,7 +1050,7 @@ class Search extends playlist_object
      * @param array $data
      * @return array
      */
-    private static function _filter_request($data)
+    private static function _filter_request($data): array
     {
         $request = array();
         foreach ($data as $key => $value) {
@@ -1063,7 +1079,7 @@ class Search extends playlist_object
             $request['offset'] = $data['offset'];
         }
         if (array_key_exists('random', $data)) {
-            $request['random'] = $data['random'];
+            $request['random'] = (int)$data['random'];
         }
 
         // Verify the type
@@ -1095,22 +1111,22 @@ class Search extends playlist_object
         }
 
         return $request;
-    } // end _filter_request
+    }
 
     /**
      * get_searches
      *
      * Return the IDs of all saved searches accessible by the current user.
-     * @param integer $user_id
+     * @param int $user_id
      * @return array
      */
-    public static function get_searches($user_id = null)
+    public static function get_searches($user_id = null): array
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+            $user_id = $user->id ?: 0;
         }
-        $key     = 'searches';
+        $key = 'searches';
         if (parent::is_cached($key, $user_id)) {
             return parent::get_from_cache($key, $user_id);
         }
@@ -1138,10 +1154,10 @@ class Search extends playlist_object
     /**
      * get_search_array
      * Returns a list of searches accessible by the user with formatted name.
-     * @param integer $user_id
+     * @param int $user_id
      * @return array
      */
-    public static function get_search_array($user_id = null)
+    public static function get_search_array($user_id = null): array
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -1171,7 +1187,7 @@ class Search extends playlist_object
         parent::add_to_cache($key, $user_id, $results);
 
         return $results;
-    } // get_smartlist_array
+    }
 
     /**
      * run
@@ -1180,14 +1196,14 @@ class Search extends playlist_object
      * results.
      * @param array $data
      * @param User $user
-     * @return integer[]
+     * @return int[]
      */
-    public static function run($data, $user = null)
+    public static function run($data, $user = null): array
     {
         $limit  = (int)($data['limit'] ?? 0);
         $offset = (int)($data['offset'] ?? 0);
         $random = ((int)($data['random'] ?? 0) > 0) ? 1 : 0;
-        $search = new Search(null, $data['type'], $user);
+        $search = new Search(0, $data['type'], $user);
         $search->set_rules($data);
 
         // Generate BASE SQL
@@ -1229,9 +1245,8 @@ class Search extends playlist_object
      * delete
      *
      * Does what it says on the tin.
-     * @return boolean
      */
-    public function delete()
+    public function delete(): bool
     {
         $sql = "DELETE FROM `search` WHERE `id` = ?";
         Dba::write($sql, array($this->id));
@@ -1243,9 +1258,10 @@ class Search extends playlist_object
     /**
      * format
      * Gussy up the data
-     * @param boolean $details
+     *
+     * @param bool $details
      */
-    public function format($details = true)
+    public function format($details = true): void
     {
         parent::format($details);
     }
@@ -1257,10 +1273,10 @@ class Search extends playlist_object
      * (part of the playlist interface).
      * @return array
      */
-    public function get_items()
+    public function get_items(): array
     {
         $results = array();
-        if (!$this->id) {
+        if ($this->isNew()) {
             return $results;
         }
         $sqltbl = $this->to_sql();
@@ -1304,7 +1320,7 @@ class Search extends playlist_object
      * get SQL for an item subsearch
      * @return array
      */
-    public function get_subsearch($table)
+    public function get_subsearch($table): array
     {
         $sqltbl = $this->to_sql();
         $sql    = "SELECT DISTINCT(`$table`.`id`) FROM `$table` " . $sqltbl['table_sql'];
@@ -1333,10 +1349,10 @@ class Search extends playlist_object
     /**
      * set_last
      *
-     * @param integer $count
+     * @param int $count
      * @param string $column
      */
-    private function set_last($count, $column)
+    private function set_last($count, $column): void
     {
         if (in_array($column, array('last_count', 'last_duration'))) {
             $search_id = Dba::escape($this->id);
@@ -1350,15 +1366,14 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
-     * @param integer $limit
+     * @param string|null $limit
      * @return array
      */
-    public function get_random_items($limit = null)
+    public function get_random_items($limit = ''): array
     {
         $results = array();
-
-        $sqltbl = $this->to_sql();
-        $sql    = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
+        $sqltbl  = $this->to_sql();
+        $sql     = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
         if (!empty($sqltbl['where_sql'])) {
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
@@ -1378,13 +1393,12 @@ class Search extends playlist_object
         }
 
         $sql .= " ORDER BY RAND()";
-        $sql .= ($limit)
-            ? " LIMIT " . (string) ($limit)
+        $sql .= (!empty($limit))
+            ? " LIMIT " . $limit
             : "";
+
         //debug_event(self::class, 'SQL get_random_items: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
-
         $db_results = Dba::read($sql, $sqltbl['parameters']);
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array(
                 'object_id' => $row['id'],
@@ -1399,9 +1413,8 @@ class Search extends playlist_object
      * get_total_duration
      * Get the total duration of all songs.
      * @param array $songs
-     * @return integer
      */
-    public static function get_total_duration($songs)
+    public static function get_total_duration($songs): int
     {
         $song_ids = array();
         foreach ($songs as $objects) {
@@ -1417,7 +1430,7 @@ class Search extends playlist_object
         $row        = Dba::fetch_row($db_results);
 
         return (int)($row[0] ?? 0);
-    } // get_total_duration
+    }
 
     /**
      * _get_rule_name
@@ -1425,9 +1438,8 @@ class Search extends playlist_object
      * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
      * @param string $name
-     * @return string
      */
-    private function _get_rule_name($name)
+    private function _get_rule_name($name): string
     {
         // check that the rule you sent is not an alias (needed for pulling details from the rule)
         switch ($this->objectType) {
@@ -1573,9 +1585,8 @@ class Search extends playlist_object
      * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
      * @param string $name
-     * @return string|false
      */
-    public function get_rule_type($name)
+    public function get_rule_type($name): ?string
     {
         //debug_event(self::class, 'get_rule_type: ' . $name, 5);
         foreach ($this->types as $type) {
@@ -1584,7 +1595,7 @@ class Search extends playlist_object
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -1593,14 +1604,21 @@ class Search extends playlist_object
      * Takes an array of sanitized search data from the form and generates our real array from it.
      * @param array $data
      */
-    public function set_rules($data)
+    public function set_rules($data): void
     {
-        $data        = self::_filter_request($data);
-        $this->rules = array();
-        $user_rules  = array();
+        if (isset($data['playlist_name'])) {
+            $this->name = (string)$data['playlist_name'];
+        }
+        if (isset($data['playlist_type'])) {
+            $this->type = (string)$data['playlist_type'];
+        }
         // check that a limit or random flag and operator have been sent
-        $this->random         = (isset($data['random'])) ? (int) $data['random'] : $this->random;
-        $this->limit          = (isset($data['limit'])) ? (int) $data['limit'] : $this->limit;
+        $this->random = (isset($data['random'])) ? (int)$data['random'] : $this->random;
+        $this->limit  = (isset($data['limit'])) ? (int) $data['limit'] : $this->limit;
+        // the rules array needs to be filtered to just have rules
+        $data                 = self::_filter_request($data);
+        $this->rules          = array();
+        $user_rules           = array();
         $this->logic_operator = $data['operator'] ?? 'AND';
         // match the numeric rules you send (e.g. rule_1, rule_6000)
         foreach ($data as $rule => $value) {
@@ -1610,8 +1628,11 @@ class Search extends playlist_object
         }
         // get the data for each rule group the user sent
         foreach ($user_rules as $ruleID) {
-            $rule_name     = $this->_get_rule_name($data["rule_" . $ruleID]);
-            $rule_type     = $this->get_rule_type($rule_name);
+            $rule_name = $this->_get_rule_name($data["rule_" . $ruleID]);
+            $rule_type = $this->get_rule_type($rule_name);
+            if ($rule_type === null) {
+                continue;
+            }
             $rule_input    = (string)($data['rule_' . $ruleID . '_input'] ?? '');
             $rule_operator = $this->basetypes[$rule_type][$data['rule_' . $ruleID . '_operator']]['name'] ?? '';
             // keep vertical bar in regular expression
@@ -1635,13 +1656,12 @@ class Search extends playlist_object
      * create
      *
      * Save this search to the database for use as a smart playlist
-     * @return string|null
      */
-    public function create()
+    public function create(): ?string
     {
         $user = Core::get_global('user');
         // Make sure we have a unique name
-        if (!$this->name) {
+        if (empty($this->name)) {
             $this->name = $user->username . ' - ' . get_datetime(time());
         }
         $sql        = "SELECT `id` FROM `search` WHERE `name` = ? AND `user` = ? AND `type` = ?;";
@@ -1649,8 +1669,9 @@ class Search extends playlist_object
         if (Dba::num_rows($db_results)) {
             $this->name .= uniqid('', true);
         }
+        $time = time();
 
-        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `username`, `rules`, `logic_operator`, `random`, `limit`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `username`, `rules`, `logic_operator`, `random`, `limit`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array(
             $this->name,
             $this->type,
@@ -1659,10 +1680,15 @@ class Search extends playlist_object
             json_encode($this->rules),
             $this->logic_operator,
             ($this->random > 0) ? 1 : 0,
-            $this->limit
+            $this->limit,
+            $time,
+            $time
         ));
         $insert_id = Dba::insert_id();
-        $this->id  = (int)$insert_id;
+        if (!$insert_id) {
+            return null;
+        }
+        $this->id = (int)$insert_id;
         Catalog::count_table('search');
 
         return $insert_id;
@@ -1672,9 +1698,8 @@ class Search extends playlist_object
      * to_js
      *
      * Outputs the javascript necessary to re-show the current set of rules.
-     * @return string
      */
-    public function to_js()
+    public function to_js(): string
     {
         $javascript = "";
         foreach ($this->rules as $rule) {
@@ -1690,7 +1715,7 @@ class Search extends playlist_object
      * Call the appropriate real function.
      * @return array
      */
-    public function to_sql()
+    public function to_sql(): array
     {
         return $this->searchType->getSql($this);
     }
@@ -1700,24 +1725,23 @@ class Search extends playlist_object
      *
      * This function updates the saved search with the current settings.
      * @param array|null $data
-     * @return integer
      */
-    public function update(array $data = null)
+    public function update(array $data = null): int
     {
         if ($data && is_array($data)) {
             $this->name   = $data['name'] ?? $this->name;
             $this->type   = $data['pl_type'] ?? $this->type;
             $this->user   = $data['pl_user'] ?? $this->user;
-            $this->random = ((int)($data['random'] ?? 0) > 0) ? 1 : 0;
+            $this->random = $data['random'] ?? $this->random;
             $this->limit  = $data['limit'] ?? $this->limit;
         }
-        $this->username = User::get_username($this->user);
+        $this->username = User::get_username((int)$this->user);
 
-        if (!$this->id) {
+        if ($this->isNew()) {
             return 0;
         }
 
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ? WHERE `id` = ?";
         Dba::write($sql, array(
             $this->name,
             $this->type,
@@ -1725,8 +1749,9 @@ class Search extends playlist_object
             $this->username,
             json_encode($this->rules),
             $this->logic_operator,
-            $this->random,
+            (int)$this->random,
             $this->limit,
+            time(),
             $this->id
         ));
         // reformat after an update
@@ -1741,12 +1766,12 @@ class Search extends playlist_object
      * Private convenience function.  Mangles the input according to a set
      * of predefined rules so that we don't have to include this logic in
      * _get_sql_foo.
-     * @param array|string $data
-     * @param string|false $type
+     * @param string $data
+     * @param string $type
      * @param array $operator
-     * @return array|boolean|integer|string|string[]|null
+     * @return bool|int|null|string
      */
-    public function filter_data($data, $type, $operator)
+    public function filter_data(string $data, string $type, array $operator)
     {
         if (array_key_exists('preg_match', $operator)) {
             $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
@@ -1767,13 +1792,13 @@ class Search extends playlist_object
      * year_search
      *
      * Build search rules for year -> year album searches for subsonic.
-     * @param $fromYear
-     * @param $toYear
+     * @param int $fromYear
+     * @param int $toYear
      * @param int $size
      * @param int $offset
      * @return array
      */
-    public static function year_search($fromYear, $toYear, $size, $offset)
+    public static function year_search($fromYear, $toYear, $size, $offset): array
     {
         $search           = array();
         $search['limit']  = $size;

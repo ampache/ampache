@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
@@ -40,10 +41,8 @@ final class Timeline3Method
     /**
      * timeline
      * This gets a user's timeline
-     * @param array $input
-     * @param User $user
      */
-    public static function timeline(array $input, User $user)
+    public static function timeline(array $input, User $user): void
     {
         unset($user);
         if (AmpConfig::get('sociable')) {
@@ -53,7 +52,7 @@ final class Timeline3Method
 
             if (!empty($username)) {
                 $user = User::get_from_username($username);
-                if ($user !== null) {
+                if ($user instanceof User) {
                     if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
                         $results = static::getUseractivityRepository()->getActivities(
                             $user->id,
@@ -70,7 +69,7 @@ final class Timeline3Method
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    } // timeline
+    }
 
     private static function getUseractivityRepository(): UserActivityRepositoryInterface
     {

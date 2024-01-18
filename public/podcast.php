@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,12 +23,11 @@
  *
  */
 
-declare(strict_types=1);
-
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Podcast\ConfirmDeleteAction;
 use Ampache\Module\Application\Podcast\CreateAction;
 use Ampache\Module\Application\Podcast\DeleteAction;
+use Ampache\Module\Application\Podcast\ExportPodcastsAction;
 use Ampache\Module\Application\Podcast\ShowAction;
 use Ampache\Module\Application\Podcast\ShowCreateAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -43,6 +44,7 @@ $dic->get(ApplicationRunner::class)->run(
         DeleteAction::REQUEST_KEY => DeleteAction::class,
         ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
         ShowAction::REQUEST_KEY => ShowAction::class,
+        ExportPodcastsAction::REQUEST_KEY => ExportPodcastsAction::class,
     ],
     ShowAction::REQUEST_KEY
 );

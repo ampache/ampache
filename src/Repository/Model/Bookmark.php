@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
@@ -37,27 +38,27 @@ class Bookmark extends database_object
     protected const DB_TABLENAME = 'bookmark';
 
     // Public variables
-    public $id;
-    public $user;
-    public $object_id;
-    public $object_type;
-    public $position;
-    public $comment;
-    public $creation_date;
-    public $update_date;
+    public int $id = 0;
+    public int $user;
+    public int $position;
+    public ?string $comment;
+    public ?string $object_type;
+    public int $object_id;
+    public int $creation_date;
+    public int $update_date;
 
     /**
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull for
-     * @param integer $object_id
+     * @param int|null $object_id
      * @param string $object_type
-     * @param integer $user_id
+     * @param int $user_id
      */
-    public function __construct($object_id, $object_type = null, $user_id = null)
+    public function __construct($object_id = 0, $object_type = null, $user_id = null)
     {
         if (!$object_id) {
-            return false;
+            return;
         }
 
         if ($object_type === null) {
@@ -68,14 +69,14 @@ class Bookmark extends database_object
                 $user_id = $user->id ?? 0;
             }
             if ($user_id === 0) {
-                return false;
+                return;
             }
 
             $sql        = "SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?";
             $db_results = Dba::read($sql, array($object_type, $object_id, $user_id));
 
             if (!$db_results) {
-                return false;
+                return;
             }
 
             $info = Dba::fetch_assoc($db_results);
@@ -83,8 +84,6 @@ class Bookmark extends database_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     }
 
     public function getId(): int
@@ -92,14 +91,24 @@ class Bookmark extends database_object
         return (int)($this->id ?? 0);
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * getBookmarks
-     * @param array $data
-     * @return integer[]
+     * @param array{
+     *  object_type: string,
+     *  object_id: int,
+     *  comment: null|string,
+     *  user: int
+     * } $data
+     * @return list<int>
      */
-    public static function getBookmarks($data)
+    public static function getBookmarks(array $data): array
     {
-        $bookmarks   = array();
+        $bookmarks = array();
         if ($data['object_type'] !== 'bookmark') {
             $comment_sql = (!empty($data['comment'])) ? "AND `comment` = '" . scrub_in($data['comment']) . "'" : "";
             $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql . ' ORDER BY `update_date` DESC;';
@@ -118,14 +127,19 @@ class Bookmark extends database_object
 
     /**
      * create
-     * @param array $data
-     * @param integer $userId
-     * @param integer $updateDate
-     * @return PDOStatement|boolean
+     * @param array{
+     *  comment: null|string,
+     *  object_type: string,
+     *  object_id: int,
+     *  position: int
+     * } $data
+     * @param int $userId
+     * @param int $updateDate
+     * @return PDOStatement|bool
      */
     public static function create(array $data, int $userId, int $updateDate)
     {
-        $comment = scrub_in($data['comment']);
+        $comment = scrub_in((string) $data['comment']);
         if (AmpConfig::get('bookmark_latest', false)) {
             // delete duplicates first
             $sql = "DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?;";
@@ -140,24 +154,27 @@ class Bookmark extends database_object
 
     /**
      * edit
-     * @param integer $bookmarkId
-     * @param array $data
-     * @param integer $updateDate
-     * @return PDOStatement|boolean
+     * @param int $bookmarkId
+     * @param array{
+     *  position: int,
+     *  comment: null|string
+     * } $data
+     * @param int $updateDate
+     * @return PDOStatement|bool
      */
     public static function edit(int $bookmarkId, array $data, int $updateDate)
     {
         $sql = "UPDATE `bookmark` SET `position` = ?, `comment` = ?, `update_date` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($data['position'], scrub_in($data['comment']), $updateDate, $bookmarkId));
+        return Dba::write($sql, array($data['position'], scrub_in((string) $data['comment']), $updateDate, $bookmarkId));
     }
 
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return PDOStatement|bool
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

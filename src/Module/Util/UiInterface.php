@@ -1,8 +1,9 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,6 +49,8 @@ interface UiInterface
 
     public function showBoxBottom(): void;
 
+    public function showObjectNotFound(): void;
+
     /**
      * Displays the default error page
      */
@@ -64,9 +67,9 @@ interface UiInterface
      * @param string $title The Title of the message
      * @param string $text The details of the message
      * @param string $next_url Where to go next
-     * @param integer $cancel T/F show a cancel button that uses return_referer()
+     * @param int $cancel T/F show a cancel button that uses return_referer()
      * @param string $form_name
-     * @param boolean $visible
+     * @param bool $visible
      */
     public function showConfirmation(
         $title,
@@ -94,7 +97,7 @@ interface UiInterface
     public function createPreferenceInput(
         string $name,
         $value
-    );
+    ): void;
 
     /**
      * This shows the preference box for the preferences pages.

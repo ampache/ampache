@@ -1,8 +1,9 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +22,8 @@
  */
 
 namespace Ampache\Gui\System;
+
+use Traversable;
 
 interface UpdateViewAdapterInterface
 {
@@ -42,7 +45,14 @@ interface UpdateViewAdapterInterface
 
     public function getUpdateActionUrl(): string;
 
-    public function getUpdateInfo(): array;
+    /**
+     * @return Traversable<array{
+     *  title: string,
+     *  changelog: list<string>,
+     *  warning: bool
+     * }>
+     */
+    public function getUpdateInfo(): Traversable;
 
     public function getWebPath(): string;
 }

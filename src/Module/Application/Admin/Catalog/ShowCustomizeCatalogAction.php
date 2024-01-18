@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,18 +23,15 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Catalog;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,12 +39,16 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_customize_catalog';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui
     ) {
-        $this->ui = $ui;
+        $this->requestParser = $requestParser;
+        $this->ui            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -55,26 +59,20 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
+        $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
+        if ($catalog === null) {
+            return null;
+        }
         $catalog->format();
-        $users    = static::getUserRepository()->getValidArray();
-        $users[0] = T_('Public Catalog');
 
-        require_once Ui::find_template('show_edit_catalog.inc.php');
+        $this->ui->show(
+            'show_edit_catalog.inc.php',
+            ['catalog' => $catalog]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
         return null;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

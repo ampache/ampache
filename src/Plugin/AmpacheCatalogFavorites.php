@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -33,15 +35,15 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-class AmpacheCatalogFavorites
+class AmpacheCatalogFavorites implements AmpachePluginInterface
 {
-    public $name        = 'Catalog Favorites';
-    public $categories  = 'home';
-    public $description = 'Catalog favorites on homepage';
-    public $url         = '';
-    public $version     = '000002';
-    public $min_ampache = '370021';
-    public $max_ampache = '999999';
+    public string $name        = 'Catalog Favorites';
+    public string $categories  = 'home';
+    public string $description = 'Catalog favorites on homepage';
+    public string $url         = '';
+    public string $version     = '000002';
+    public string $min_ampache = '370021';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
@@ -49,51 +51,45 @@ class AmpacheCatalogFavorites
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Catalog favorites on homepage');
-
-        return true;
     }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
-        // Check and see if it's already installed
-        if (Preference::exists('catalogfav_max_items')) {
+        if (!Preference::exists('catalogfav_max_items') && !Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, 25, 'integer', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, 25, 'integer', 'plugins', $this->name);
-        Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean', 'plugins', $this->name);
+        if (!Preference::exists('catalogfav_gridview') && !Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
 
         return true;
     }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('catalogfav_max_items');
-        Preference::delete('catalogfav_gridview');
-
-        return true;
+        return (
+            Preference::delete('catalogfav_max_items') &&
+            Preference::delete('catalogfav_gridview')
+        );
     }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version == 0) {
@@ -110,7 +106,7 @@ class AmpacheCatalogFavorites
      * display_home
      * This display the module in home page
      */
-    public function display_home()
+    public function display_home(): void
     {
         if (AmpConfig::get('ratings')) {
             $userflags = Userflag::get_latest('song', 0, $this->maxitems);
@@ -124,23 +120,33 @@ class AmpacheCatalogFavorites
             echo '">';
             foreach ($userflags as $userflag) {
                 $item = new Song($userflag);
-                if ($item->id) {
+                if ($item->isNew() === false) {
                     echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
                     if ($this->gridview) {
                         echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
-                            echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
-                                'play', T_('Play'), 'play_song_' . $userflag);
+                            echo Ajax::button(
+                                '?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
+                                'play',
+                                T_('Play'),
+                                'play_song_' . $userflag
+                            );
                             if (Stream_Playlist::check_autoplay_next()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&playnext=true',
-                                    'play_next', T_('Play next'),
-                                    'nextplay_song_' . $userflag);
+                                echo Ajax::button(
+                                    '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&playnext=true',
+                                    'play_next',
+                                    T_('Play next'),
+                                    'nextplay_song_' . $userflag
+                                );
                             }
                             if (Stream_Playlist::check_autoplay_append()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
-                                    'play_add', T_('Play last'),
-                                    'addplay_song_' . $userflag);
+                                echo Ajax::button(
+                                    '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
+                                    'play_add',
+                                    T_('Play last'),
+                                    'addplay_song_' . $userflag
+                                );
                             }
                         }
                         echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);
@@ -173,9 +179,8 @@ class AmpacheCatalogFavorites
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

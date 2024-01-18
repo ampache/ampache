@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,13 +24,13 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\AmpacheRss;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\Ui;
 
 /** @var int[] $data */
 
@@ -36,7 +39,7 @@ global $dic;
 $ajax_page = $ajax_page ?? 'stats';
 $user_id   = $user_id ?? -1;
 $link      = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_skipped', $user_id) : '';
-$web_path  = AmpConfig::get('web_path');
+$web_path  = (string)AmpConfig::get('web_path', '');
 $is_admin  = Access::check('interface', 100);
 UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
 <table class="tabledata striped-rows">
@@ -60,7 +63,7 @@ UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
     </thead>
     <tbody>
     <?php
-    $count    = 0;
+    $count = 0;
 foreach ($data as $row) {
     $row_id   = ($row['user'] > 0) ? (int) $row['user'] : -1;
     $row_user = new User($row_id);
@@ -76,7 +79,7 @@ foreach ($data as $row) {
     if ($is_allowed_recent) {
         // add the time if you've allowed it
         if ($is_allowed_time) {
-            $interval = (int) (time() - $row['date']);
+            $interval = (int) (time() - ($row['date'] ?? 0));
 
             if ($interval < 60) {
                 $time_string = sprintf(nT_('%d second ago', '%d seconds ago', $interval), $interval);
@@ -123,7 +126,7 @@ foreach ($data as $row) {
                 <td class="cel_add">
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>
-                    <a id="<?php echo 'add_playlist_' . $count . '_' . $song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
+                    <a id="<?php echo 'add_playlist_' . $count . '_' . $song->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id; ?>')">
                         <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
                     </a>
                 </span>
@@ -133,7 +136,7 @@ foreach ($data as $row) {
                 <td class="cel_year"><?php echo $song->year; ?></td>
                 <?php if ($user_id > 0) { ?>
                     <td class="cel_username">
-                        <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
+                        <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out((string)$row_user->id); ?>">
                             <?php echo scrub_out($row_user->fullname); ?>
                         </a>
                     </td>

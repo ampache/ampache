@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -44,19 +45,16 @@ final class ShareEditMethod
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
      *
-     * @param array $input
-     * @param User $user
      * filter      = (string) Alpha-numeric search term
      * stream      = (boolean) 0,1 //optional
      * download    = (boolean) 0,1 //optional
      * expires     = (integer) number of whole days before expiry //optional
      * description = (string) update description //optional
-     * @return boolean
      */
     public static function share_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -66,7 +64,7 @@ final class ShareEditMethod
         $share_id = $input['filter'];
         if (in_array($share_id, Share::get_share_list($user))) {
             $share       = new Share($share_id);
-            $description = (isset($input['description'])) ? filter_var($input['description'], FILTER_SANITIZE_STRING) : $share->description;
+            $description = (isset($input['description'])) ? htmlspecialchars($input['description']) : $share->description;
             $stream      = (isset($input['stream'])) ? filter_var($input['stream'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_stream;
             $download    = (isset($input['download'])) ? filter_var($input['download'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_download;
             $expires     = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : $share->expire_days;
@@ -82,11 +80,11 @@ final class ShareEditMethod
                 Api::message('share ' . $share_id . ' updated', $input['api_format']);
             } else {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $share_id), '4710', self::ACTION, 'system', $input['api_format']);
+                Api::error(sprintf(T_('Bad Request: %s'), $share_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
             }
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $share_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $share_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
         }
 
         return true;

@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
@@ -36,7 +38,7 @@ use Ampache\Repository\UserActivityRepositoryInterface;
  */
 final class FriendsTimeline5Method
 {
-    const ACTION = 'friends_timeline';
+    public const ACTION = 'friends_timeline';
 
     /**
      * friends_timeline
@@ -44,16 +46,13 @@ final class FriendsTimeline5Method
      *
      * This get current user friends timeline
      *
-     * @param array $input
-     * @param User $user
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
-     * @return boolean
      */
     public static function friends_timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api5::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api5::error(T_('Enable: sociable'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

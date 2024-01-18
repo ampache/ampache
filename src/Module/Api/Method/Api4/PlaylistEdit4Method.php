@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -44,15 +44,12 @@ final class PlaylistEdit4Method
      * This modifies name and type of playlist.
      * Changed name and type to optional and the playlist id is mandatory
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
      * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
-     * @return boolean
      */
     public static function playlist_edit(array $input, User $user): bool
     {
@@ -110,5 +107,5 @@ final class PlaylistEdit4Method
         Api4::message('success', 'playlist changes saved', null, $input['api_format']);
 
         return true;
-    } // playlist_edit
+    }
 }

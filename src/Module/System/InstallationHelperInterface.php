@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -31,41 +32,38 @@ interface InstallationHelperInterface
      * still need to install ampache. This function is
      * very important, we don't want to reinstall over top of an existing install
      * @param $configfile
-     * @return boolean
      */
-    public function install_check_status($configfile);
+    public function install_check_status($configfile): bool;
 
     /**
-     * @return boolean
+     * install_check_server_apache
      */
-    public function install_check_server_apache();
+    public function install_check_server_apache(): bool;
 
     /**
      * @param string $file
      * @param $web_path
-     * @param boolean $fix
-     * @return boolean|string
+     * @param bool $fix
+     * @return bool|string
      */
     public function install_check_rewrite_rules($file, $web_path, $fix = false);
 
     /**
      * @param string $file
      * @param $web_path
-     * @param boolean $download
-     * @return boolean
+     * @param bool $download
      */
-    public function install_rewrite_rules($file, $web_path, $download);
+    public function install_rewrite_rules($file, $web_path, $download): bool;
 
     /**
      * Inserts the database using the values from Config.
      * @param string $db_user
      * @param string $db_pass
-     * @param boolean $create_db
-     * @param boolean $overwrite
-     * @param boolean $create_tables
+     * @param bool $create_db
+     * @param bool $overwrite
+     * @param bool $create_tables
      * @param string $charset
      * @param string $collation
-     * @return boolean
      */
     public function install_insert_db(
         $db_user = null,
@@ -75,30 +73,29 @@ interface InstallationHelperInterface
         $create_tables = true,
         $charset = 'utf8mb4',
         $collation = 'utf8mb4_unicode_ci'
-    );
+    ): bool;
 
     /**
      * Attempts to write out the config file or offer it as a download.
-     * @param boolean $download
-     * @return boolean
+     * @param bool $download
+     * @return bool
      * @throws Exception
      */
-    public function install_create_config($download = false);
+    public function install_create_config($download = false): bool;
 
     /**
      * this creates your initial account and sets up the preferences for the -1 user and you
      * @param string $username
      * @param string $password
      * @param string $password2
-     * @return boolean
      */
-    public function install_create_account($username, $password, $password2);
+    public function install_create_account($username, $password, $password2): bool;
 
     /**
      * get transcode modes available on this machine.
      * @return array
      */
-    public function install_get_transcode_modes();
+    public function install_get_transcode_modes(): array;
 
     /**
      * @param $mode

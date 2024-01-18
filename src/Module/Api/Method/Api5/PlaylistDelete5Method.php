@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -43,10 +44,7 @@ final class PlaylistDelete5Method
      *
      * This deletes a playlist
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of playlist
-     * @return boolean
      */
     public static function playlist_delete(array $input, User $user): bool
     {
@@ -56,7 +54,7 @@ final class PlaylistDelete5Method
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && $user->access !== 100) {
-            Api5::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
+            Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
         } else {
             $playlist->delete();
             Api5::message('playlist deleted', $input['api_format']);

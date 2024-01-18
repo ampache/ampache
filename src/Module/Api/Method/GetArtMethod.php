@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
@@ -47,12 +49,9 @@ final class GetArtMethod
      *
      * Get an art image.
      *
-     * @param array $input
-     * @param User $user
      * id       = (string) $object_id
      * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
-     * @return boolean
      */
     public static function get_art(array $input, User $user): bool
     {
@@ -68,7 +67,7 @@ final class GetArtMethod
 
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -117,7 +116,7 @@ final class GetArtMethod
             header('Content-type: ' . $art->raw_mime);
             header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
-            Session::extend($input['auth']);
+            Session::extend($input['auth'], 'api');
 
             return true;
         }

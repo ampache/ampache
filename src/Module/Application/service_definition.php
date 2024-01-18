@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Application;
 
@@ -140,11 +141,13 @@ return [
     Radio\ShowAction::class => autowire(Radio\ShowAction::class),
     Image\ShowAction::class => autowire(Image\ShowAction::class),
     Mashup\ShowAction::class => autowire(Mashup\ShowAction::class),
+    Mashup\WrappedAction::class => autowire(Mashup\WrappedAction::class),
     Podcast\ShowCreateAction::class => autowire(Podcast\ShowCreateAction::class),
     Podcast\CreateAction::class => autowire(Podcast\CreateAction::class),
     Podcast\DeleteAction::class => autowire(Podcast\DeleteAction::class),
     Podcast\ConfirmDeleteAction::class => autowire(Podcast\ConfirmDeleteAction::class),
     Podcast\ShowAction::class => autowire(Podcast\ShowAction::class),
+    Podcast\ExportPodcastsAction::class => autowire(),
     PodcastEpisode\DeleteAction::class => autowire(PodcastEpisode\DeleteAction::class),
     PodcastEpisode\ConfirmDeleteAction::class => autowire(PodcastEpisode\ConfirmDeleteAction::class),
     PodcastEpisode\ShowAction::class => autowire(PodcastEpisode\ShowAction::class),
@@ -186,7 +189,6 @@ return [
     SmartPlaylist\ShowAction::class => autowire(SmartPlaylist\ShowAction::class),
     SmartPlaylist\RefreshPlaylistAction::class => autowire(SmartPlaylist\RefreshPlaylistAction::class),
     SmartPlaylist\UpdatePlaylistAction::class => autowire(SmartPlaylist\UpdatePlaylistAction::class),
-    SmartPlaylist\ShowPlaylistAction::class => autowire(SmartPlaylist\ShowPlaylistAction::class),
     SmartPlaylist\DeletePlaylistAction::class => autowire(SmartPlaylist\DeletePlaylistAction::class),
     SmartPlaylist\CreatePlaylistAction::class => autowire(SmartPlaylist\CreatePlaylistAction::class),
     Playlist\ShowAction::class => autowire(Playlist\ShowAction::class),
@@ -196,7 +198,6 @@ return [
     Playlist\SetTrackNumbersAction::class => autowire(Playlist\SetTrackNumbersAction::class),
     Playlist\ImportPlaylistAction::class => autowire(Playlist\ImportPlaylistAction::class),
     Playlist\ShowImportPlaylistAction::class => autowire(Playlist\ShowImportPlaylistAction::class),
-    Playlist\ShowPlaylistAction::class => autowire(Playlist\ShowPlaylistAction::class),
     Playlist\DeletePlaylistAction::class => autowire(Playlist\DeletePlaylistAction::class),
     Playlist\RefreshPlaylistAction::class => autowire(Playlist\RefreshPlaylistAction::class),
     Playlist\CreatePlaylistAction::class => autowire(Playlist\CreatePlaylistAction::class),
@@ -320,21 +321,21 @@ return [
     Admin\User\ShowPreferencesAction::class => autowire(Admin\User\ShowPreferencesAction::class),
     Admin\User\ShowAddUserAction::class => autowire(Admin\User\ShowAddUserAction::class),
     Admin\User\ShowIpHistoryAction::class => autowire(Admin\User\ShowIpHistoryAction::class),
-    Admin\User\GenerateRsstokenAction::class => autowire(Admin\User\GenerateRsstokenAction::class),
-    Admin\User\ShowGenerateRsstokenAction::class => autowire(Admin\User\ShowGenerateRsstokenAction::class),
-    Admin\User\GenerateStreamtokenAction::class => autowire(Admin\User\GenerateStreamtokenAction::class),
-    Admin\User\ShowGenerateStreamtokenAction::class => autowire(Admin\User\ShowGenerateStreamtokenAction::class),
-    Admin\User\DeleteStreamtokenAction::class => autowire(Admin\User\DeleteStreamtokenAction::class),
-    Admin\User\DeleteRsstokenAction::class => autowire(Admin\User\DeleteRsstokenAction::class),
-    Admin\User\ShowDeleteStreamtokenAction::class => autowire(Admin\User\ShowDeleteStreamtokenAction::class),
-    Admin\User\ShowDeleteRsstokenAction::class => autowire(Admin\User\ShowDeleteRsstokenAction::class),
-    Admin\User\GenerateApikeyAction::class => autowire(Admin\User\GenerateApikeyAction::class),
-    Admin\User\ShowGenerateApikeyAction::class => autowire(Admin\User\ShowGenerateApikeyAction::class),
-    Admin\User\DeleteApikeyAction::class => autowire(Admin\User\DeleteApikeyAction::class),
-    Admin\User\ShowDeleteApikeyAction::class => autowire(Admin\User\ShowDeleteApikeyAction::class),
+    Admin\User\GenerateRssTokenAction::class => autowire(Admin\User\GenerateRssTokenAction::class),
+    Admin\User\ShowGenerateRssTokenAction::class => autowire(Admin\User\ShowGenerateRssTokenAction::class),
+    Admin\User\GenerateStreamTokenAction::class => autowire(Admin\User\GenerateStreamTokenAction::class),
+    Admin\User\ShowGenerateStreamTokenAction::class => autowire(Admin\User\ShowGenerateStreamTokenAction::class),
+    Admin\User\DeleteStreamTokenAction::class => autowire(Admin\User\DeleteStreamTokenAction::class),
+    Admin\User\DeleteRssTokenAction::class => autowire(Admin\User\DeleteRssTokenAction::class),
+    Admin\User\ShowDeleteStreamTokenAction::class => autowire(Admin\User\ShowDeleteStreamTokenAction::class),
+    Admin\User\ShowDeleteRssTokenAction::class => autowire(Admin\User\ShowDeleteRssTokenAction::class),
+    Admin\User\GenerateApiKeyAction::class => autowire(Admin\User\GenerateApiKeyAction::class),
+    Admin\User\ShowGenerateApiKeyAction::class => autowire(Admin\User\ShowGenerateApiKeyAction::class),
+    Admin\User\DeleteApiKeyAction::class => autowire(Admin\User\DeleteApiKeyAction::class),
+    Admin\User\ShowDeleteApiKeyAction::class => autowire(Admin\User\ShowDeleteApiKeyAction::class),
     Admin\User\DeleteAvatarAction::class => autowire(Admin\User\DeleteAvatarAction::class),
     Admin\User\ShowDeleteAvatarAction::class => autowire(Admin\User\ShowDeleteAvatarAction::class),
-    Admin\User\DeleteAction::class => autowire(Admin\User\DeleteAction::class),
+    Admin\User\ShowDeleteAction::class => autowire(Admin\User\ShowDeleteAction::class),
     Admin\User\ConfirmDeleteAction::class => autowire(Admin\User\ConfirmDeleteAction::class),
     Admin\User\ShowEditAction::class => autowire(Admin\User\ShowEditAction::class),
     Admin\User\DisableAction::class => autowire(Admin\User\DisableAction::class),

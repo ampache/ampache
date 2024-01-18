@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,6 +24,11 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Clip;
+use Ampache\Repository\Model\Movie;
+use Ampache\Repository\Model\Personal_Video;
+use Ampache\Repository\Model\TVShow_Episode;
+use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Ajax;
@@ -30,7 +38,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 
-$web_path     = AmpConfig::get('web_path');
+$web_path     = (string)AmpConfig::get('web_path', '');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = $browse->is_grid_view();
@@ -41,7 +49,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="video">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="video">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -71,9 +79,13 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <?php foreach ($object_ids as $video_id) {
             if (isset($video_type)) {
                 $className = ObjectTypeToClassNameMapper::map($video_type);
+                /** @var Movie|Clip|Personal_Video|TVShow_Episode|TVShow_Season|Video $libitem */
                 $libitem   = new $className($video_id);
             } else {
                 $libitem = new Video($video_id);
+            }
+            if ($libitem->isNew()) {
+                continue;
             }
             $libitem->format(); ?>
         <tr id="video_<?php echo $libitem->id; ?>">

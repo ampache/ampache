@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
@@ -75,6 +76,7 @@ final class HighestSongAction implements ApplicationActionInterface
         $objects = Rating::get_highest('song', -1, 0, $user_id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
+        $browse->set_use_filters(false);
         $browse->set_type('song');
         $browse->show_objects($objects);
         $browse->store();

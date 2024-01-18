@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2017 Ampache.org
@@ -83,14 +84,8 @@ class Api3
         'videos' => Method\Api3\Videos3Method::class
     ];
 
-    /**
-     * @var string $auth_version
-     */
-    public static $auth_version = '350001';
-    /**
-     * @var string $version
-     */
-    public static $version = '390001'; // AMPACHE_VERSION
+    public static string $auth_version = '350001';
+    public static string $version      = '390001'; // AMPACHE_VERSION
 
     /**
      * constructor
@@ -99,5 +94,5 @@ class Api3
     private function __construct()
     {
         // Rien a faire
-    } // constructor
-} // API3 class
+    }
+}

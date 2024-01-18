@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\RequestParser;
 use Exception;
 
 /**
@@ -56,13 +58,13 @@ class Core
      *
      * @deprecated Use RequestParser
      */
-    public static function get_request($variable)
+    public static function get_request($variable): string
     {
         if (!array_key_exists($variable, $_REQUEST)) {
             return '';
         }
 
-        return scrub_in($_REQUEST[$variable]);
+        return scrub_in((string) $_REQUEST[$variable]);
     }
 
     /**
@@ -70,15 +72,14 @@ class Core
      * Return a $GET variable instead of calling directly
      *
      * @param string $variable
-     * @return string
      */
-    public static function get_get($variable)
+    public static function get_get($variable): string
     {
         if (!array_key_exists($variable, $_GET)) {
             return '';
         }
 
-        return scrub_in($_GET[$variable]);
+        return scrub_in((string) $_GET[$variable]);
     }
 
     /**
@@ -88,15 +89,14 @@ class Core
      *
      * get_cookie
      * Return a $COOKIE variable instead of calling directly
-     *
      */
-    public static function get_cookie($variable)
+    public static function get_cookie($variable): string
     {
         if (!array_key_exists($variable, $_COOKIE)) {
             return '';
         }
 
-        return scrub_in($_COOKIE[$variable]);
+        return scrub_in((string) $_COOKIE[$variable]);
     }
 
     /**
@@ -104,15 +104,14 @@ class Core
      * Return a $SERVER variable instead of calling directly
      *
      * @param string $variable
-     * @return string
      */
-    public static function get_server($variable)
+    public static function get_server($variable): string
     {
         if (!array_key_exists($variable, $_SERVER)) {
             return '';
         }
 
-        return scrub_in($_SERVER[$variable]);
+        return scrub_in((string) $_SERVER[$variable]);
     }
 
     /**
@@ -120,31 +119,30 @@ class Core
      * Return a $POST variable instead of calling directly
      *
      * @param string $variable
-     * @return string
      */
-    public static function get_post($variable)
+    public static function get_post($variable): string
     {
         if (!array_key_exists($variable, $_POST)) {
             return '';
         }
 
-        return scrub_in($_POST[$variable]);
+        return scrub_in((string) $_POST[$variable]);
     }
 
     /**
      * get_user_ip
      * check for the ip of the request
      *
-     * @return string
+     * @todo make dynamic and testable
      */
-    public static function get_user_ip()
+    public static function get_user_ip(): string
     {
         // get the x forward if it's valid
         if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
             return filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
         }
 
-        return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
+        return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?: '';
     }
 
     /**
@@ -153,9 +151,8 @@ class Core
      * variables and then returns a string for use in the HTML form
      * @param string $name
      * @param string $type
-     * @return string
      */
-    public static function form_register($name, $type = 'post')
+    public static function form_register($name, $type = 'post'): string
     {
         // Make ourselves a nice little sid
         $sid    = md5(uniqid((string)rand(), true));
@@ -181,7 +178,7 @@ class Core
         } // end switch on type
 
         return $string;
-    } // form_register
+    }
 
     /**
      * form_verify
@@ -191,9 +188,11 @@ class Core
      * continue
      * @param string $name
      * @param string $type
-     * @return boolean
+     * @return bool
+     *
+     * @see RequestParser::verifyForm()
      */
-    public static function form_verify($name, $type = 'post')
+    public static function form_verify($name, $type = 'post'): bool
     {
         switch ($type) {
             case 'post':
@@ -236,7 +235,7 @@ class Core
         debug_event(self::class, "$type form $sid failed consistency check, rejecting request", 2);
 
         return false;
-    } // form_verify
+    }
 
     /**
      * gen_secure_token
@@ -244,8 +243,8 @@ class Core
      * This generates a cryptographically secure token.
      * Returns a token of the required bytes length, as a string. Returns false
      * if it could not generate a cryptographically secure token.
-     * @param integer $length
-     * @return false|string
+     * @param int $length
+     * @return string|false
      * @throws Exception
      */
     public static function gen_secure_token($length)
@@ -270,35 +269,40 @@ class Core
      * false on error
      *
      * @param string $image_data
-     * @return array
+     * @return array{width: int, height: int}
      */
-    public static function image_dimensions($image_data)
+    public static function image_dimensions($image_data): array
     {
+        $empty = array(
+            'width' => 0,
+            'height' => 0
+        );
         if (!function_exists('imagecreatefromstring')) {
-            return array('width' => 0, 'height' => 0);
+            return $empty;
         }
 
         if (empty($image_data)) {
             debug_event(self::class, "Cannot create image from empty data", 2);
 
-            return array('width' => 0, 'height' => 0);
+            return $empty;
         }
 
         $image = imagecreatefromstring($image_data);
-
         if (!$image) {
-            return array('width' => 0, 'height' => 0);
+            return $empty;
         }
 
         $width  = imagesx($image);
         $height = imagesy($image);
-
         if (!$width || !$height) {
-            return array('width' => 0, 'height' => 0);
+            return $empty;
         }
 
-        return array('width' => $width, 'height' => $height);
-    } // image_dimensions
+        return array(
+            'width' => $width,
+            'height' => $height
+        );
+    }
 
     /**
      * is_readable
@@ -307,9 +311,8 @@ class Core
      * https://bugs.php.net/bug.php?id=49620
      *
      * @param string $path
-     * @return boolean
      */
-    public static function is_readable($path)
+    public static function is_readable($path): bool
     {
         if (!$path) {
             return false;
@@ -343,10 +346,9 @@ class Core
     /**
      * get_filesize
      * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
-     * @param $filename
-     * @return integer
+     * @param string|null $filename
      */
-    public static function get_filesize($filename)
+    public static function get_filesize($filename): int
     {
         if (!$filename || !file_exists($filename)) {
             return 0;
@@ -379,9 +381,8 @@ class Core
      *
      * Convert site charset filename to local charset filename for file operations
      * @param string $filename
-     * @return string
      */
-    public static function conv_lc_file($filename)
+    public static function conv_lc_file($filename): string
     {
         $lc_filename  = $filename;
         $site_charset = AmpConfig::get('site_charset');
@@ -392,16 +393,15 @@ class Core
             }
         }
 
-        return $lc_filename;
+        return $lc_filename ?: $filename;
     }
 
     /**
      * is_session_started
      *
      * Universal function for checking session status.
-     * @return boolean
      */
-    public static function is_session_started()
+    public static function is_session_started(): bool
     {
         if (php_sapi_name() !== 'cli') {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
@@ -415,9 +415,9 @@ class Core
     }
 
     /**
-     * @return string
+     * get_reloadutil
      */
-    public static function get_reloadutil()
+    public static function get_reloadutil(): string
     {
         $play_type = AmpConfig::get('play_type');
 
@@ -429,7 +429,7 @@ class Core
      * @param array $options
      * @return array
      */
-    public static function requests_options($options = array())
+    public static function requests_options($options = array()): array
     {
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
@@ -449,10 +449,8 @@ class Core
 
     /**
      * get_tmp_dir
-     *
-     * @return string
      */
-    public static function get_tmp_dir()
+    public static function get_tmp_dir(): string
     {
         if (AmpConfig::get('tmp_dir_path')) {
             return AmpConfig::get('tmp_dir_path');

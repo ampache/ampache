@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -30,7 +33,7 @@ use Ampache\Repository\Model\Catalog;
 
 /** @var User $client */
 
-$web_path  = AmpConfig::get('web_path');
+$web_path  = (string)AmpConfig::get('web_path', '');
 $access100 = Access::check('interface', 100); ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>
 <?php echo AmpError::display('general'); ?>
@@ -129,8 +132,8 @@ switch ($var_name) {
             <td><?php echo T_('Catalog Filter'); ?>:</td>
             <td><?php
 
-    $filters  = Catalog::get_catalog_filters();
-    $options  = array();
+    $filters = Catalog::get_catalog_filters();
+    $options = array();
     foreach ($filters as $filter) {
         $selected = "";
         if ($filter['id'] == $client->catalog_filter_group) {
@@ -139,7 +142,7 @@ switch ($var_name) {
         $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . $filter['name'] . '</option>';
     }
     echo '<select name="catalog_filter_group">' . implode("\n", $options) . '</select>';
-}?>
+} ?>
             </td>
         </tr>
         <tr>

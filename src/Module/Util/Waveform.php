@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
@@ -72,23 +73,23 @@ class Waveform
      * Get a song or podcast_episode waveform.
      * @param Song|Podcast_Episode $media
      * @param string $object_type
-     * @return string|null|boolean
+     * @return null|string
      * @throws RuntimeException
      */
-    public static function get($media, string $object_type)
+    public static function get($media, string $object_type): ?string
     {
         $waveform = null;
 
-        if ($media->id) {
+        if ($media->isNew() === false) {
             $media->format();
             if (AmpConfig::get('album_art_store_disk')) {
                 $waveform = self::get_from_file($media->id, $object_type);
             } else {
                 $waveform = $media->waveform;
             }
-            if (!$waveform) {
+            if (empty($waveform)) {
                 $catalog = Catalog::create_from_id($media->catalog);
-                if ($catalog->get_type() == 'local') {
+                if ($catalog !== null && $catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';
                     $transcode_cfg = AmpConfig::get('transcode');
                     $valid_types   = $media->get_stream_types();
@@ -98,7 +99,9 @@ class Waveform
                         if ($basedir) {
                             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
                                 $tmpfile = tempnam($basedir, $transcode_to);
-
+                                if (!$tmpfile) {
+                                    return null;
+                                }
                                 $tfp = fopen($tmpfile, 'wb');
                                 if (!is_resource($tfp)) {
                                     debug_event(self::class, "Failed to open " . $tmpfile, 3);
@@ -116,8 +119,9 @@ class Waveform
                                 }
 
                                 do {
-                                    $buf = fread($filepointer, 2048);
-                                    fwrite($tfp, $buf);
+                                    if ($buf = fread($filepointer, 2048)) {
+                                        fwrite($tfp, $buf);
+                                    }
                                 } while (!feof($filepointer));
 
                                 fclose($filepointer);
@@ -136,13 +140,13 @@ class Waveform
                         } else {
                             debug_event(self::class, 'tmp_dir_path setting required for waveform.', 3);
                         }
-                    } else {
+                    } elseif ($media->file !== null) {
                         // Already wav file, no transcode required
                         $waveform = self::create_waveform($media->file);
                     }
                 }
 
-                if ($waveform !== null && $waveform !== false) {
+                if (!empty($waveform)) {
                     if (AmpConfig::get('album_art_store_disk')) {
                         self::save_to_file($media->id, $object_type, $waveform);
                     } else {
@@ -157,9 +161,9 @@ class Waveform
 
     /**
      * Return full path of the Waveform file.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
-     * @return false|string
+     * @return string|false
      */
     public static function get_filepath($object_id, $object_type)
     {
@@ -170,8 +174,8 @@ class Waveform
             return false;
         }
         // Create subdirectory based on the 2 last digit of the Song Id. We prevent having thousands of file in one directory.
-        $dir1 = substr($object_id, -1, 1);
-        $dir2 = substr($object_id, -2, 1);
+        $dir1 = substr((string)$object_id, -1, 1);
+        $dir2 = substr((string)$object_id, -2, 1);
         $path .= "/waveform/" . $object_type . '/' . $dir1 . '/' . $dir2 . "/";
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
@@ -188,28 +192,30 @@ class Waveform
 
     /**
      * Return content of a Waveform file.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
-     * @return string|false
      */
-    public static function get_from_file($object_id, $object_type)
+    public static function get_from_file($object_id, $object_type): ?string
     {
         $file = self::get_filepath($object_id, $object_type);
         if ($file !== false && file_exists($file)) {
             debug_event(self::class, 'get_from_file ' . $file, 5);
+            $waveform = file_get_contents($file);
 
-            return file_get_contents($file);
+            if ($waveform !== false) {
+                return $waveform;
+            }
         }
 
-        return false;
+        return null;
     }
 
     /**
      * Save content of a Waveform into a file.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
      * @param string $waveform
-     * @return integer|boolean
+     * @return int|bool
      */
     public static function save_to_file($object_id, $object_type, $waveform)
     {
@@ -238,7 +244,7 @@ class Waveform
      * @param string $input
      * @return array
      */
-    protected static function html2rgb($input)
+    protected static function html2rgb($input): array
     {
         $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
 
@@ -252,9 +258,8 @@ class Waveform
     /**
      * Create waveform from song file.
      * @param string $filename
-     * @return string|null
      */
-    protected static function create_waveform($filename)
+    protected static function create_waveform($filename): ?string
     {
         if (!file_exists($filename)) {
             debug_event(self::class, 'File ' . $filename . ' doesn\'t exists', 1);
@@ -272,9 +277,9 @@ class Waveform
         }
 
         $detail     = 5;
-        $width      = AmpConfig::get('waveform_width') ?: 400;
-        $height     = AmpConfig::get('waveform_height') ?: 32;
-        $foreground = AmpConfig::get('waveform_color') ?: '#FF0000';
+        $width      = AmpConfig::get('waveform_width') ?? 400;
+        $height     = AmpConfig::get('waveform_height') ?? 32;
+        $foreground = AmpConfig::get('waveform_color') ?? '#FF0000';
         $draw_flat  = true;
 
         // generate foreground color
@@ -368,12 +373,15 @@ class Waveform
                 // don't print flat values on the canvas if not necessary
                 if (!($value / $height == 0.5 && !$draw_flat)) {
                     // draw the line on the image using the $value and centering it vertically on the canvas
-                    imageline($img, // x1
+                    imageline(
+                        $img, // x1
                         (int)($data_point / $detail),
                         // y1: height of the image minus  as a percentage of the height for the wave amplitude
                         $height - $value, // x2
                         (int)($data_point / $detail), // y2: same as y1, but from the bottom of the image
-                        $height - ($height - $value), imagecolorallocate($img, (int)$red, (int)$green, (int)$blue));
+                        $height - ($height - $value),
+                        imagecolorallocate($img, (int)$red, (int)$green, (int)$blue)
+                    );
                 }
             } else {
                 // skip this one due to lack of detail
@@ -411,10 +419,10 @@ class Waveform
 
     /**
      * Save waveform to db.
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
      * @param string $waveform
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     protected static function save_to_db($object_id, $object_type, $waveform)
     {

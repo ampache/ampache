@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Scrobble;
 
@@ -55,16 +56,15 @@ class Scrobbler
         $this->api_key       = $api_key;
         $this->secret        = $secret;
         $this->queued_tracks = array();
-    } // scrobbler
+    }
 
     /**
      * get_api_sig
      * Provide the API signature for calling Last.fm / Libre.fm services
      * It is the md5 of the <name><value> of all parameter plus API's secret
      * @param array $vars
-     * @return string
      */
-    public function get_api_sig($vars = array())
+    public function get_api_sig($vars = array()): string
     {
         ksort($vars);
         $sig = '';
@@ -75,7 +75,7 @@ class Scrobbler
         $sig = md5($sig);
 
         return $sig;
-    } // get_api_sig
+    }
 
     /**
      * call_url
@@ -84,7 +84,7 @@ class Scrobbler
      * @param string $url
      * @param string $method
      * @param array $vars
-     * @return false|string
+     * @return string|false
      */
     public function call_url($url, $method = 'GET', $vars = null)
     {
@@ -125,30 +125,30 @@ class Scrobbler
         fclose($filepath);
 
         return $buffer;
-    } // call_url
+    }
 
     /**
      * get_error_msg
      */
-    public function get_error_msg()
+    public function get_error_msg(): string
     {
         return $this->error_msg;
-    } // get_error_msg
+    }
 
     /**
      * get_queue_count
      */
-    public function get_queue_count()
+    public function get_queue_count(): ?int
     {
         return count($this->queued_tracks);
-    } // get_queue_count
+    }
 
     /**
      * get_session_key
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
      * @param string $token
-     * @return boolean|SimpleXMLElement
+     * @return bool|SimpleXMLElement
      */
     public function get_session_key($token = null)
     {
@@ -188,7 +188,7 @@ class Scrobbler
         $this->error_msg = 'Need a token to call getSession';
 
         return false;
-    } // get_session_key
+    }
 
     /**
      * queue_track
@@ -201,9 +201,8 @@ class Scrobbler
      * @param $timestamp
      * @param $length
      * @param $track
-     * @return boolean
      */
-    public function queue_track($artist, $album, $title, $timestamp, $length, $track)
+    public function queue_track($artist, $album, $title, $timestamp, $length, $track): bool
     {
         if ($length < 30) {
             debug_event(self::class, "Not queuing track, too short", 3);
@@ -222,14 +221,14 @@ class Scrobbler
         $this->queued_tracks[$timestamp] = $newtrack;
 
         return true;
-    } // queue_track
+    }
 
     /**
      * submit_tracks
      * This actually talks to LastFM / Libre.fm submitting the tracks that are queued up.
      * It passed the API key, session key combined with the signature
      */
-    public function submit_tracks()
+    public function submit_tracks(): bool
     {
         // Check and make sure that we've got some queued tracks
         if (!count($this->queued_tracks)) {
@@ -280,18 +279,17 @@ class Scrobbler
 
             return false;
         }
-    } // submit_tracks
+    }
 
     /**
      * love
      * This takes care of spreading your love to the world
      * If passed the API key, session key combined with the signature
-     * @param boolean $is_loved
+     * @param bool $is_loved
      * @param string $artist
      * @param string $title
-     * @return boolean
      */
-    public function love($is_loved, $artist = '', $title = '')
+    public function love($is_loved, $artist = '', $title = ''): bool
     {
         $vars           = array();
         $vars['track']  = $title;
@@ -322,5 +320,5 @@ class Scrobbler
 
             return false;
         }
-    } // love
+    }
 }

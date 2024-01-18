@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,24 +23,26 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ShowCreateAction implements ApplicationActionInterface
 {
@@ -49,22 +54,22 @@ final class ShowCreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     private PasswordGeneratorInterface $passwordGenerator;
+
+    private ZipHandlerInterface $zipHandler;
 
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        LoggerInterface $logger,
-        PasswordGeneratorInterface $passwordGenerator
+        PasswordGeneratorInterface $passwordGenerator,
+        ZipHandlerInterface $zipHandler
     ) {
         $this->requestParser     = $requestParser;
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
-        $this->logger            = $logger;
         $this->passwordGenerator = $passwordGenerator;
+        $this->zipHandler        = $zipHandler;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -82,11 +87,24 @@ final class ShowCreateAction implements ApplicationActionInterface
                 $object_id = $object_id[0];
             }
 
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $object     = new $class_name($object_id);
-            if ($object->id) {
+            $className = ObjectTypeToClassNameMapper::map($object_type);
+            /** @var Song|Album|AlbumDisk|Playlist|Video $object */
+            $object = new $className($object_id);
+            if ($object->isNew() === false) {
+                $token     = $this->passwordGenerator->generate_token();
+                $isZipable = $this->zipHandler->isZipable($object_type);
                 $object->format();
-                require_once Ui::find_template('show_add_share.inc.php');
+                $this->ui->show(
+                    'show_add_share.inc.php',
+                    [
+                        'has_failed' => false,
+                        'message' => '',
+                        'object' => $object,
+                        'object_type' => $object_type,
+                        'token' => $token,
+                        'isZipable' => $isZipable
+                    ]
+                );
             }
         }
         $this->ui->showFooter();

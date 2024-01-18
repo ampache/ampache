@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,17 +23,13 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
-use Ampache\Repository\Model\database_object;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Repository\Model\library_item;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,38 +44,32 @@ final class ShowEditPlaylistAction extends AbstractEditAction
 
     private StreamFactoryInterface $streamFactory;
 
-    private AjaxUriRetrieverInterface $ajaxUriRetriever;
 
     private TalFactoryInterface $talFactory;
 
     private GuiFactoryInterface $guiFactory;
 
-    private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        AjaxUriRetrieverInterface $ajaxUriRetriever,
         TalFactoryInterface $talFactory,
-        GuiFactoryInterface $guiFactory,
-        ModelFactoryInterface $modelFactory
+        GuiFactoryInterface $guiFactory
     ) {
         parent::__construct($configContainer, $logger);
         $this->responseFactory  = $responseFactory;
         $this->streamFactory    = $streamFactory;
-        $this->ajaxUriRetriever = $ajaxUriRetriever;
         $this->talFactory       = $talFactory;
         $this->guiFactory       = $guiFactory;
-        $this->modelFactory     = $modelFactory;
     }
 
     protected function handle(
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        database_object $libitem,
+        library_item $libitem,
         int $object_id
     ): ?ResponseInterface {
         /**

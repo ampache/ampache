@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -93,6 +96,9 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
             </li>
         </ul>
     </li>
+    <li id="rb_reload">
+        <?php echo Ajax::button('?action=basket_refresh', 'refresh', T_('Refresh'), 'rb_refresh'); ?>
+    </li>
 </ul>
 <?php if (AmpConfig::get('play_type') == 'localplay') {
     require_once Ui::find_template('show_localplay_control.inc.php');
@@ -129,9 +135,9 @@ foreach ($objects as $object_data) {
     $uid  = $object_data['track_id'];
     $type = array_shift($object_data);
     if (in_array($type, $normal_array)) {
+        $className = ObjectTypeToClassNameMapper::map($type);
         /** @var Ampache\Repository\Model\playable_item $object */
-        $class_name = ObjectTypeToClassNameMapper::map($type);
-        $object     = new $class_name(array_shift($object_data)); ?>
+        $object = new $className(array_shift($object_data)); ?>
     <li>
       <?php echo $object->get_f_link();
         echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>

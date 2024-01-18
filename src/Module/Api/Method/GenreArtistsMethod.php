@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Repository\Model\Tag;
@@ -37,7 +37,7 @@ use Ampache\Module\Api\Xml_Data;
  */
 final class GenreArtistsMethod
 {
-    const ACTION = 'genre_artists';
+    public const ACTION = 'genre_artists';
 
     /**
      * genre_artists
@@ -45,16 +45,13 @@ final class GenreArtistsMethod
      *
      * This returns the artists associated with the genre in question as defined by the UID
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) UID of Album //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
      */
     public static function genre_artists(array $input, User $user): bool
     {
-        $results = Tag::get_tag_objects('artist', ($input['filter'] ?? ''));
+        $results = Tag::get_tag_objects('artist', (int)($input['filter'] ?? 0));
         if (empty($results)) {
             Api::empty('artist', $input['api_format']);
 

@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -24,6 +25,7 @@ namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -34,16 +36,20 @@ final class PlaylistRandomAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'playlist_random';
 
+    private RequestParserInterface $requestParser;
+
     private ModelFactoryInterface $modelFactory;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer
     ) {
         parent::__construct($logger, $configContainer);
+        $this->requestParser   = $requestParser;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
@@ -54,8 +60,9 @@ final class PlaylistRandomAction extends AbstractStreamAction
             return null;
         }
 
-        $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
-        $mediaIds = $playlist->get_random_items();
+        $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
+        $playlist    = $this->modelFactory->createPlaylist($playlist_id);
+        $mediaIds    = $playlist->get_random_items();
 
         return $this->stream(
             $mediaIds,

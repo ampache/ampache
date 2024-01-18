@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
@@ -108,10 +109,6 @@ interface ModelFactoryInterface
         ?User $user = null
     ): Search;
 
-    public function createShoutbox(
-        int $shoutboxId
-    ): Shoutbox;
-
     public function createLicense(
         int $licenseId
     ): License;
@@ -123,4 +120,8 @@ interface ModelFactoryInterface
     public function createLabel(
         int $labelId
     ): Label;
+
+    public function createVideo(
+        int $videoId
+    ): Video;
 }

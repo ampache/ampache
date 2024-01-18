@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,66 +23,99 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Podcast;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class PodcastDeleteMethod
- * @package Lib\ApiMethods
+ * Deletes a podcast
  */
-final class PodcastDeleteMethod
+final class PodcastDeleteMethod implements MethodInterface
 {
     public const ACTION = 'podcast_delete';
 
+    private PodcastDeleterInterface $podcastDeleter;
+
+    private ConfigContainerInterface $configContainer;
+
+    private PrivilegeCheckerInterface $privilegeChecker;
+
+    private PodcastRepositoryInterface $podcastRepository;
+
+    public function __construct(
+        PodcastDeleterInterface $podcastDeleter,
+        ConfigContainerInterface $configContainer,
+        PrivilegeCheckerInterface $privilegeChecker,
+        PodcastRepositoryInterface $podcastRepository
+    ) {
+        $this->podcastDeleter    = $podcastDeleter;
+        $this->configContainer   = $configContainer;
+        $this->privilegeChecker  = $privilegeChecker;
+        $this->podcastRepository = $podcastRepository;
+    }
+
     /**
-     * podcast_delete
      * MINIMUM_API_VERSION=420000
      *
      * Delete an existing podcast.
      *
-     * @param array $input
-     * @param User $user
-     * filter = (string) UID of podcast to delete
-     * @return boolean
+     * filter = (string) ID of podcast to delete
+     *
+     * @param array{filter?: string} $input
      */
-    public static function podcast_delete(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('podcast')) {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
-
-        if (!$podcast->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
+            throw new AccessDeniedException(
+                T_('Enable: podcast')
+            );
         }
 
-        if ($podcast->remove()) {
-            Api::message('podcast ' . $object_id . ' deleted', $input['api_format']);
-            Catalog::count_table('podcast');
-        } else {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'filter', $input['api_format']);
+        if (!$this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER, $user->getId())) {
+            throw new AccessDeniedException(
+                T_('Access denied')
+            );
         }
 
-        return true;
+        $podcastId = (int) ($input['filter'] ?? 0);
+
+        if ($podcastId === 0) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
+        }
+
+        $podcast = $this->podcastRepository->findById($podcastId);
+
+        if ($podcast === null) {
+            throw new ResultEmptyException(
+                (string) $podcastId
+            );
+        }
+
+        $this->podcastDeleter->delete($podcast);
+
+        $response->getBody()->write(
+            $output->success(sprintf('podcast %d deleted', $podcastId))
+        );
+
+        return $response;
     }
 }

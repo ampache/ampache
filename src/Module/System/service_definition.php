@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\System;
 
 use Psr\Log\LoggerInterface;
+
 use function DI\autowire;
 
 return [
@@ -32,4 +34,10 @@ return [
     SessionInterface::class => autowire(Session::class),
     InstallationHelperInterface::class => autowire(InstallationHelper::class),
     PreferencesFromRequestUpdaterInterface::class => autowire(PreferencesFromRequestUpdater::class),
+    Update\UpdateHelperInterface::class => autowire(Update\UpdateHelper::class),
+    Update\UpdaterInterface::class => autowire(Update\Updater::class)
+        ->constructorParameter(
+            'updateRunner',
+            autowire(Update\UpdateRunner::class)
+        ),
 ];

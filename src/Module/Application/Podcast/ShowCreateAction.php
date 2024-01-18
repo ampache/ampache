@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -30,11 +31,13 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Renders the podcast creation dialogue
+ */
 final class ShowCreateAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_create';
@@ -61,10 +64,16 @@ final class ShowCreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $data = $request->getParsedBody();
+
         $this->ui->showHeader();
-
-        require_once Ui::find_template('show_add_podcast.inc.php');
-
+        $this->ui->show(
+            'show_add_podcast.inc.php',
+            [
+                'catalog_id' => (int)($data['catalog'] ?? 0),
+                'feed' => ($data['feed'] ?? '')
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

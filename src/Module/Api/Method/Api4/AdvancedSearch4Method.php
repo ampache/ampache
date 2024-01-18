@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
@@ -55,17 +55,15 @@ final class AdvancedSearch4Method
      * Refer to the wiki for further information on rule_* types and data
      * https://github.com/ampache/ampache/wiki/XML-methods
      *
-     * @param array $input
-     * @param User $user
      * operator        = (string) 'and'|'or' (whether to match one rule or all)
      * rule_1          = (string)
-     * rule_1_operator = (integer) 0,1|2|3|4|5|6
+     * rule_1_operator = (integer) 0|1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
      * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
      * offset          = (integer)
      * limit           = (integer)
      */
-    public static function advanced_search(array $input, User $user)
+    public static function advanced_search(array $input, User $user): void
     {
         ob_end_clean();
 
@@ -130,5 +128,5 @@ final class AdvancedSearch4Method
                         break;
                 }
         }
-    } // advanced_search
+    }
 }

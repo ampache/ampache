@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,48 +23,36 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\database_object;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LabelRepositoryInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
 final class EditObjectAction extends AbstractEditAction
 {
     public const REQUEST_KEY = 'edit_object';
 
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
     private LabelRepositoryInterface $labelRepository;
 
     private LoggerInterface $logger;
 
     public function __construct(
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
         LabelRepositoryInterface $labelRepository,
         LoggerInterface $logger
     ) {
         parent::__construct($configContainer, $logger);
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
         $this->labelRepository = $labelRepository;
         $this->logger          = $logger;
     }
@@ -70,17 +61,23 @@ final class EditObjectAction extends AbstractEditAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        database_object $libitem,
+        library_item $libitem,
         int $object_id
     ): ?ResponseInterface {
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {
             foreach ($data as $key => $value) {
-                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities((string) scrub_in($value));
+                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities((string)scrub_in((string) $value));
             }
 
             return $data;
         };
+
+        $user   = $gatekeeper->getUser();
+        $userId = ($user)
+            ? $user->getId()
+            : null;
+
         $entities($_POST);
         if (empty($object_type)) {
             $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -91,11 +88,11 @@ final class EditObjectAction extends AbstractEditAction
             'edit_object: {' . $object_type . '} {' . $object_id . '}',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
-
-        $className  = ObjectTypeToClassNameMapper::map($object_type);
-        $libitem    = new $className($_POST['id']);
-        if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
-            // TODO: improve this uniqueless check
+        $className = ObjectTypeToClassNameMapper::map((string)$object_type);
+        /** @var library_item|Share $libitem */
+        $libitem = new $className($_POST['id']);
+        if ($libitem->get_user_owner() === $userId && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
+            // TODO: improve this uniqueness check
             if (isset($_POST['user'])) {
                 unset($_POST['user']);
             }
@@ -124,23 +121,29 @@ final class EditObjectAction extends AbstractEditAction
                 $_POST['edit_labels'] = $this->clean_to_existing($_POST['edit_labels']);
             }
             // Check mbid and *_mbid match as it is used as identifier
-            if (isset($_POST['mbid'])) {
+            if (isset($_POST['mbid']) && isset($libitem->mbid)) {
                 $_POST['mbid'] = $libitem->mbid;
             }
-            if (isset($_POST['mbid_group'])) {
+            if (isset($_POST['mbid_group']) && isset($libitem->mbid_group)) {
                 $_POST['mbid_group'] = $libitem->mbid_group;
             }
         }
 
-        $libitem->format();
-        $new_id     = $libitem->update($_POST);
-        $className  = ObjectTypeToClassNameMapper::map($object_type);
-        $libitem    = new $className($new_id);
-        $libitem->format();
+        if ($libitem instanceof Share && $user !== null) {
+            $libitem->update($_POST, $user);
+        } else {
+            // @todo: is it really necessary to call format before updating the object?
+            if (method_exists($libitem, 'format')) {
+                $libitem->format();
+            }
+            $libitem->update($_POST);
+        }
 
         xoutput_headers();
-        $results = array('id' => $new_id);
-        echo (string) xoutput_from_array($results);
+
+        echo (string) xoutput_from_array([
+            'id' => $object_id
+        ]);
 
         return null;
     }
@@ -148,18 +151,20 @@ final class EditObjectAction extends AbstractEditAction
     /**
      * clean_to_existing
      * Clean label list to existing label list only
-     * @param array|string $labels
-     * @return array|string
+     * @param list<string>|string $labels
+     * @return list<string>|string
      */
     private function clean_to_existing($labels)
     {
         $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
         $ret   = array();
-        foreach ($array as $label) {
-            $label = trim((string)$label);
-            if (!empty($label)) {
-                if ($this->labelRepository->lookup($label) > 0) {
-                    $ret[] = $label;
+        if ($array !== false) {
+            foreach ($array as $label) {
+                $label = trim((string)$label);
+                if (!empty($label)) {
+                    if ($this->labelRepository->lookup($label) > 0) {
+                        $ret[] = $label;
+                    }
                 }
             }
         }

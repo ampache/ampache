@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -45,14 +46,14 @@ class AmpacheUPnP extends localplay_controller
 
     private $_description = 'Controls a UPnP instance';
 
-    /* @var UPnPPlayer $object */
+    /** @var UPnPPlayer $object */
     private $_upnp;
 
     /**
      * get_description
      * This returns the description of this Localplay method
      */
-    public function get_description()
+    public function get_description(): string
     {
         return $this->_description;
     }
@@ -61,7 +62,7 @@ class AmpacheUPnP extends localplay_controller
      * get_version
      * This returns the current version
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->_version;
     }
@@ -70,7 +71,7 @@ class AmpacheUPnP extends localplay_controller
      * is_installed
      * This returns true or false if UPnP controller is installed
      */
-    public function is_installed()
+    public function is_installed(): bool
     {
         $sql        = "SHOW TABLES LIKE 'localplay_upnp'";
         $db_results = Dba::query($sql);
@@ -82,7 +83,7 @@ class AmpacheUPnP extends localplay_controller
      * install
      * This function installs the UPnP Localplay controller
      */
-    public function install()
+    public function install(): bool
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -101,7 +102,7 @@ class AmpacheUPnP extends localplay_controller
      * uninstall
      * This removes the Localplay controller
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         $sql = "DROP TABLE `localplay_upnp`";
         Dba::query($sql);
@@ -116,7 +117,7 @@ class AmpacheUPnP extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new UPnP instance
      * @param array $data
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public function add_instance($data)
     {
@@ -132,9 +133,8 @@ class AmpacheUPnP extends localplay_controller
      * delete_instance
      * This takes a UID and deletes the instance in question
      * @param $uid
-     * @return boolean
      */
-    public function delete_instance($uid)
+    public function delete_instance($uid): bool
     {
         $sql = "DELETE FROM `localplay_upnp` WHERE `id` = ?";
         Dba::query($sql, array($uid));
@@ -147,7 +147,7 @@ class AmpacheUPnP extends localplay_controller
      * This returns a key'd array of the instance information with
      * [UID]=>[NAME]
      */
-    public function get_instances()
+    public function get_instances(): array
     {
         $sql        = "SELECT * FROM `localplay_upnp` ORDER BY `name`";
         $db_results = Dba::query($sql);
@@ -165,9 +165,8 @@ class AmpacheUPnP extends localplay_controller
      * This takes an ID and an array of data and updates the instance specified
      * @param $uid
      * @param array $data
-     * @return boolean
      */
-    public function update_instance($uid, $data)
+    public function update_instance($uid, $data): bool
     {
         $sql = "UPDATE `localplay_upnp` SET `url` = ?, `name` = ? WHERE `id` = ?";
         Dba::query($sql, array($data['url'], $data['name'], $uid));
@@ -195,7 +194,7 @@ class AmpacheUPnP extends localplay_controller
      * @param string $instance
      * @return array
      */
-    public function get_instance($instance = '')
+    public function get_instance($instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('upnp_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
@@ -208,9 +207,8 @@ class AmpacheUPnP extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      * @param $uid
-     * @return boolean
      */
-    public function set_active_instance($uid)
+    public function set_active_instance($uid): bool
     {
         $user = Core::get_global('user');
         if ($user == '') {
@@ -221,7 +219,7 @@ class AmpacheUPnP extends localplay_controller
         debug_event('upnp.controller', 'set_active_instance userid: ' . $user->id, 5);
 
         return true;
-    } // set_active_instance
+    }
 
     /**
      * get_active_instance
@@ -234,9 +232,8 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * @param Stream_Url $url
-     * @return boolean
      */
-    public function add_url(Stream_Url $url)
+    public function add_url(Stream_Url $url): bool
     {
         debug_event('upnp.controller', 'add_url: ' . $url->title . " | " . $url->url, 5);
 
@@ -253,9 +250,8 @@ class AmpacheUPnP extends localplay_controller
      * delete_track
      * Delete a track from the UPnP playlist
      * @param $object_id
-     * @return boolean
      */
-    public function delete_track($object_id)
+    public function delete_track($object_id): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -270,7 +266,7 @@ class AmpacheUPnP extends localplay_controller
      * clear_playlist
      * This deletes the entire UPnP playlist.
      */
-    public function clear_playlist()
+    public function clear_playlist(): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -286,7 +282,7 @@ class AmpacheUPnP extends localplay_controller
      * This just tells UPnP to start playing, it does not
      * take any arguments
      */
-    public function play()
+    public function play(): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -299,7 +295,7 @@ class AmpacheUPnP extends localplay_controller
      * pause
      * This tells UPnP to pause the current song
      */
-    public function pause()
+    public function pause(): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -313,7 +309,7 @@ class AmpacheUPnP extends localplay_controller
      * This just tells UPnP to stop playing, it does not take
      * any arguments
      */
-    public function stop()
+    public function stop(): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -326,9 +322,8 @@ class AmpacheUPnP extends localplay_controller
      * skip
      * This tells UPnP to skip to the specified song
      * @param $pos
-     * @return boolean
      */
-    public function skip($pos)
+    public function skip($pos): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -343,7 +338,7 @@ class AmpacheUPnP extends localplay_controller
      * next
      * This just tells UPnP to skip to the next song
      */
-    public function next()
+    public function next(): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -358,7 +353,7 @@ class AmpacheUPnP extends localplay_controller
      * prev
      * This just tells UPnP to skip to the prev song
      */
-    public function prev()
+    public function prev(): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -373,9 +368,8 @@ class AmpacheUPnP extends localplay_controller
      * volume
      * This tells UPnP to set the volume to the specified amount
      * @param $volume
-     * @return boolean
      */
-    public function volume($volume)
+    public function volume($volume): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -389,7 +383,7 @@ class AmpacheUPnP extends localplay_controller
     /**
      * This tells UPnP to increase the volume
      */
-    public function volume_up()
+    public function volume_up(): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -401,7 +395,7 @@ class AmpacheUPnP extends localplay_controller
     /**
      * This tells UPnP to decrease the volume
      */
-    public function volume_down()
+    public function volume_down(): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -414,9 +408,8 @@ class AmpacheUPnP extends localplay_controller
      * repeat
      * This tells UPnP to set the repeating the playlist (i.e. loop) to either on or off
      * @param $state
-     * @return boolean
      */
-    public function repeat($state)
+    public function repeat($state): bool
     {
         debug_event('upnp.controller', 'repeat: ' . $state, 5);
 
@@ -435,9 +428,8 @@ class AmpacheUPnP extends localplay_controller
      * random
      * This tells UPnP to turn on or off the playing of songs from the playlist in random order
      * @param $onoff
-     * @return boolean
      */
-    public function random($onoff)
+    public function random($onoff): bool
     {
         debug_event('upnp.controller', 'random: ' . $onoff, 5);
 
@@ -477,7 +469,7 @@ class AmpacheUPnP extends localplay_controller
             $url_data = Stream_Url::parse($data['link']);
             if (array_key_exists('id', $url_data)) {
                 $song = new Song($url_data['id']);
-                if ($song->id) {
+                if ($song->isNew() === false) {
                     $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                 }
             }
@@ -494,10 +486,8 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * status
-     * This returns bool/int values for features, loop, repeat and any other features
-     * that this Localplay method supports.
+     * This returns bool/int values for features, loop, repeat and any other features that this Localplay method supports.
      * This works as in requesting the UPnP properties
-     * @return array
      */
     public function status(): array
     {
@@ -519,7 +509,7 @@ class AmpacheUPnP extends localplay_controller
         $url_data = Stream_Url::parse($array['track']);
         if (array_key_exists('id', $url_data)) {
             $song = new Song($url_data['id']);
-            if ($song->id) {
+            if ($song->isNew() === false) {
                 $array['track_artist'] = $song->get_artist_fullname();
                 $array['track_album']  = $song->get_album_fullname();
             }
@@ -534,7 +524,7 @@ class AmpacheUPnP extends localplay_controller
      * a boolean value for the status, to save time this handle
      * is stored in this class
      */
-    public function connect()
+    public function connect(): bool
     {
         $options = self::get_instance();
         debug_event('upnp.controller', 'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);

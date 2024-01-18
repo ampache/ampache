@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,12 +23,11 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Register;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -37,7 +39,6 @@ use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,46 +51,43 @@ final class AddUserAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private UiInterface $ui;
-
     private UserRepositoryInterface $userRepository;
+
+    private Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer;
+
+    private UiInterface $ui;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer,
+        UiInterface $ui
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->userRepository  = $userRepository;
+        $this->configContainer               = $configContainer;
+        $this->modelFactory                  = $modelFactory;
+        $this->userRepository                = $userRepository;
+        $this->registrationAgreementRenderer = $registrationAgreementRenderer;
+        $this->ui                            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        /* Check Perms */
+        // Check allow_public_registration
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === false
         ) {
-            throw new AccessDeniedException('Error attempted registration');
+            throw new AccessDeniedException('Error `allow_public_registration` disabled');
+        }
+        // Check for confirmation email requirements when mail is disabled
+        if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === true &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false &&
+            !Mailer::is_mail_enabled()
+        ) {
+            throw new AccessDeniedException('Error `mail_enable` failed. Enable `user_no_email_confirm` to disable mail requirements');
         }
 
-        /* Don't even include it if we aren't going to use it */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
-            define('CAPTCHA_INVERSE', 1);
-            /**
-             * @todo broken, the path does not exist anylonger
-             */
-            define(
-                'CAPTCHA_BASE_URL',
-                sprintf(
-                    '%s/modules/captcha/captcha.php',
-                    $this->configContainer->getWebPath()
-                )
-            );
-            require_once __DIR__ . '/../../Util/Captcha/init.php';
-        }
         /**
          * User information has been entered
          * we need to check the database for possible existing username first
@@ -99,14 +97,14 @@ final class AddUserAction implements ApplicationActionInterface
          * possibly by logging them in right then and there with their current info
          * and 'click here to login' would just be a link back to index.php
          */
-        $fullname       = (string) scrub_in(Core::get_post('fullname'));
-        $username       = (string) scrub_in(Core::get_post('username'));
-        $email          = (string) scrub_in(Core::get_post('email'));
-        $pass1          = Core::get_post('password_1');
-        $pass2          = Core::get_post('password_2');
-        $website        = (string) scrub_in(Core::get_post('website'));
-        $state          = (string) scrub_in(Core::get_post('state'));
-        $city           = (string) scrub_in(Core::get_post('city'));
+        $fullname = (string) scrub_in(Core::get_post('fullname'));
+        $username = trim(scrub_in(Core::get_post('username')));
+        $email    = (string) scrub_in(Core::get_post('email'));
+        $pass1    = Core::get_post('password_1');
+        $pass2    = Core::get_post('password_2');
+        $website  = (string) scrub_in(Core::get_post('website'));
+        $state    = (string) scrub_in(Core::get_post('state'));
+        $city     = (string) scrub_in(Core::get_post('city'));
 
         /* If we're using the captcha stuff */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
@@ -129,7 +127,7 @@ final class AddUserAction implements ApplicationActionInterface
             }
         } // if they have to agree to something
 
-        if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
+        if ($username === '') {
             AmpError::add('username', T_('You must enter a Username'));
         }
 
@@ -166,7 +164,12 @@ final class AddUserAction implements ApplicationActionInterface
 
         // If we've hit an error anywhere up there break!
         if (AmpError::occurred()) {
-            require_once Ui::find_template('show_user_registration.inc.php');
+            $this->ui->show(
+                'show_user_registration.inc.php',
+                [
+                    'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
+                ]
+            );
 
             return null;
         }
@@ -189,18 +192,24 @@ final class AddUserAction implements ApplicationActionInterface
             $username,
             $fullname,
             $email,
-            (string) $website,
+            $website,
             $pass1,
             $access,
             0,
-            (string) $state,
-            (string) $city,
+            $state,
+            $city,
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ADMIN_ENABLE_REQUIRED)
         );
 
         if ($userId <= 0) {
             AmpError::add('duplicate_user', T_("Failed to create user"));
-            require_once Ui::find_template('show_user_registration.inc.php');
+
+            $this->ui->show(
+                'show_user_registration.inc.php',
+                [
+                    'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
+                ]
+            );
 
             return null;
         }

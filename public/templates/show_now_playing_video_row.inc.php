@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -31,7 +34,6 @@ use Ampache\Repository\Model\Video;
 /** @var string $web_path */
 /** @var string $agent */
 
-$media = Video::create_from_id($media->id);
 $media->format(); ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
@@ -56,10 +58,10 @@ if ($np_user->f_avatar_medium) {
     <div class="np_cell cel_video">
         <?php $art_showed = false;
 if ($media->get_default_art_kind() == 'preview') {
-    $art_showed = Art::display('video', $media->id, $media->f_full_title, 9, $media->get_link(), false, 'preview');
+    $art_showed = Art::display('video', $media->id, (string)$media->f_full_title, 9, $media->get_link(), false, 'preview');
 }
 if (!$art_showed) {
-    Art::display('video', $media->id, $media->f_full_title, 6, $media->get_link());
+    Art::display('video', $media->id, (string)$media->f_full_title, 6, $media->get_link());
 } ?>
     </div>
 </div>

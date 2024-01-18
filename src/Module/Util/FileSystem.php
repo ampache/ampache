@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Util;
 
 use Exception;
@@ -35,7 +36,7 @@ class FileSystem
      * @return string
      * @throws Exception
      */
-    protected function real($path)
+    protected function real($path): string
     {
         $temp = realpath($path);
         if (!$temp) {
@@ -55,7 +56,7 @@ class FileSystem
      * @return string
      * @throws Exception
      */
-    protected function path($fs_id)
+    protected function path($fs_id): string
     {
         $fs_id = str_replace('/', DIRECTORY_SEPARATOR, $fs_id);
         $fs_id = trim($fs_id, DIRECTORY_SEPARATOR);
@@ -69,7 +70,7 @@ class FileSystem
      * @return string
      * @throws Exception
      */
-    protected function id($path)
+    protected function id($path): string
     {
         $path = $this->real($path);
         $path = substr($path, strlen($this->base));
@@ -94,11 +95,11 @@ class FileSystem
 
     /**
      * @param $fs_id
-     * @param boolean $with_root
+     * @param bool $with_root
      * @return array
      * @throws Exception
      */
-    public function lst($fs_id, $with_root = false)
+    public function lst($fs_id, $with_root = false): array
     {
         $dir = (string)$this->path($fs_id);
         $lst = @scandir($dir);
@@ -143,16 +144,22 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function data($fs_id)
+    public function data($fs_id): array
     {
         if (strpos($fs_id, ":")) {
             $fs_id = array_map(array($this, 'id'), explode(':', $fs_id));
 
-            return array('type' => 'multiple', 'content' => 'Multiple selected: ' . implode(' ', $fs_id));
+            return array(
+                'type' => 'multiple',
+                'content' => 'Multiple selected: ' . implode(' ', $fs_id)
+            );
         }
         $dir = $this->path($fs_id);
         if (is_dir($dir)) {
-            return array('type' => 'folder', 'content' => $fs_id);
+            return array(
+                'type' => 'folder',
+                'content' => $fs_id
+            );
         }
         if (is_file($dir)) {
             $ext = strpos($dir, '.') !== false ? substr($dir, strrpos($dir, '.') + 1) : '';
@@ -198,11 +205,11 @@ class FileSystem
     /**
      * @param $fs_id
      * @param string $name
-     * @param boolean $mkdir
+     * @param bool $mkdir
      * @return array
      * @throws Exception
      */
-    public function create($fs_id, $name, $mkdir = false)
+    public function create($fs_id, $name, $mkdir = false): array
     {
         $dir = $this->path($fs_id);
         debug_event('fs.ajax', 'create ' . $fs_id . ' ' . $name, 5);
@@ -224,7 +231,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function rename($fs_id, $name)
+    public function rename($fs_id, $name): array
     {
         $dir = $this->path($fs_id);
         if ($dir === $this->base) {
@@ -250,7 +257,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function remove($fs_id)
+    public function remove($fs_id): array
     {
         $dir = $this->path($fs_id);
         if ($dir === $this->base) {
@@ -275,7 +282,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function move($fs_id, $par)
+    public function move($fs_id, $par): array
     {
         $dir = $this->path($fs_id);
         $par = $this->path($par);
@@ -293,7 +300,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function copy($fs_id, $par)
+    public function copy($fs_id, $par): array
     {
         $dir = $this->path($fs_id);
         $par = $this->path($par);

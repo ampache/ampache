@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,36 +23,38 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private ?MockInterface $configContainer;
+    private ConfigContainerInterface&MockInterface $configContainer;
 
-    /** @var UiInterface|MockInterface|null */
-    private ?MockInterface $ui;
+    private UiInterface&MockInterface $ui;
 
-    private ?DeleteAction $subject;
+    private LoggerInterface&MockInterface $logger;
 
-    public function setup(): void
+    private DeleteAction $subject;
+
+    protected function setup(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->ui              = $this->mock(UiInterface::class);
+        $this->logger          = $this->mock(LoggerInterface::class);
 
         $this->subject = new DeleteAction(
             $this->configContainer,
-            $this->ui
+            $this->ui,
+            $this->logger
         );
     }
 
@@ -125,6 +130,47 @@ class DeleteActionTest extends MockeryTestCase
             ->andReturn($webPath);
 
         $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunErrorsIfAlbumIdIsLesserThenOne(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $albumId = 0;
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['album_id' => $albumId]);
+
+        $this->logger->shouldReceive('warning')
+            ->with(
+                'Requested an album that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
+            )
+            ->once();
+
+        static::expectOutputString('You have requested an object that does not exist');
+
+        static::assertNull(
             $this->subject->run($request, $gatekeeper)
         );
     }

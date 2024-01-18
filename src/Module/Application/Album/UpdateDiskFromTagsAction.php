@@ -1,8 +1,11 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\Album;
 
@@ -67,11 +68,12 @@ final class UpdateDiskFromTagsAction implements ApplicationActionInterface
         $albumDisk->format();
 
         $this->ui->showHeader();
+        $this->ui->showBoxTop(T_('Starting Update from Tags'), 'box box_update_items');
         $this->ui->show(
             'show_update_items.inc.php',
             [
                 'object_id' => $albumDiskId,
-                'catalog_id' => $albumDisk->get_catalogs(),
+                'catalog_id' => $albumDisk->getCatalogId(),
                 'type' => 'album_disk',
                 'target_url' => sprintf(
                     '%s/albums.php?action=show_disk&amp;album_disk=%d',
@@ -80,6 +82,7 @@ final class UpdateDiskFromTagsAction implements ApplicationActionInterface
                 )
             ]
         );
+        $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

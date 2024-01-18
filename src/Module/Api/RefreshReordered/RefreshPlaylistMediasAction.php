@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api\RefreshReordered;
 
@@ -53,6 +54,9 @@ final class RefreshPlaylistMediasAction implements ApplicationActionInterface
 
         $browse   = $this->modelFactory->createBrowse();
         $playlist = $this->modelFactory->createPlaylist((int) $objectId);
+        if ($playlist->isNew()) {
+            return null;
+        }
         $playlist->format();
 
         $object_ids = $playlist->get_items();

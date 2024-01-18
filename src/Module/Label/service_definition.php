@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Label;
 
 use Ampache\Module\Label\Deletion\LabelDeleter;
+
 use function DI\autowire;
 
 return [

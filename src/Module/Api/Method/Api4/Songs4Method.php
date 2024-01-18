@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Repository\Model\User;
@@ -35,7 +35,7 @@ use Ampache\Module\Api\Xml4_Data;
  */
 final class Songs4Method
 {
-    const ACTION = 'songs';
+    public const ACTION = 'songs';
 
     /**
      * songs
@@ -45,8 +45,6 @@ final class Songs4Method
      * Returns songs based on the specified filter
      * All calls that return songs now include <playlisttrack> which can be used to identify track order.
      *
-     * @param array $input
-     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add    = Api::set_filter(date) //optional
@@ -54,7 +52,7 @@ final class Songs4Method
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function songs(array $input, User $user)
+    public static function songs(array $input, User $user): void
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -82,5 +80,5 @@ final class Songs4Method
                 Xml4_Data::set_limit($input['limit'] ?? 0);
                 echo Xml4_Data::songs($results, $user);
         }
-    } // songs
+    }
 }

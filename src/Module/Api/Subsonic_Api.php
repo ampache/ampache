@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,17 +23,21 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
+use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
+use Ampache\Module\Podcast\PodcastSyncerInterface;
+use Ampache\Module\Podcast\Exception\PodcastCreationException;
+use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
@@ -58,6 +65,7 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -76,11 +84,39 @@ use SimpleXMLElement;
  */
 class Subsonic_Api
 {
+    // List of internal functions that should be skipped when called from SubsonicApiApplication
+    public const SYSTEM_LIST = [
+        '_albumList',
+        '_apiOutput',
+        '_apiOutput2',
+        '_check_parameter',
+        '_decrypt_password',
+        '_follow_stream',
+        '_hasNestedArray',
+        '_output_body',
+        '_output_header',
+        '_setHeader',
+        '_setStar',
+        '_updatePlaylist',
+        '_xml2json'
+    ];
+
+    private const ALWAYS_ARRAY = [
+        'musicFolder',
+        'channel',
+        'artist',
+        'child',
+        'song',
+        'album',
+        'share',
+        'entry'
+    ];
+
     /**
      * check_parameter
      * @param array $input
      * @param string $parameter
-     * @param boolean $addheader
+     * @param bool $addheader
      * @return false|mixed
      */
     private static function _check_parameter($input, $parameter, $addheader = false)
@@ -88,10 +124,12 @@ class Subsonic_Api
         if (empty($input[$parameter])) {
             ob_end_clean();
             if ($addheader) {
-                self::_setHeader($input['f'] ?? 'xml');
+                self::_setHeader((string)($input['f'] ?? 'xml'));
             }
-            self::_apiOutput($input,
-                Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'check_parameter'));
+            self::_apiOutput(
+                $input,
+                Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'check_parameter')
+            );
 
             return false;
         }
@@ -101,9 +139,8 @@ class Subsonic_Api
 
     /**
      * @param $password
-     * @return string
      */
-    public static function _decryptPassword($password)
+    public static function _decryptPassword($password): string
     {
         // Decode hex-encoded password
         $encpwd = strpos($password, "enc:");
@@ -121,11 +158,8 @@ class Subsonic_Api
 
     /**
      * _output_body
-     * @param $curl
-     * @param $data
-     * @return integer
      */
-    public static function _output_body($curl, $data)
+    public static function _output_body($curl, $data): int
     {
         unset($curl);
         echo $data;
@@ -136,11 +170,8 @@ class Subsonic_Api
 
     /**
      * _output_header
-     * @param $curl
-     * @param $header
-     * @return integer
      */
-    public static function _output_header($curl, $header)
+    public static function _output_header($curl, $header): int
     {
         $rheader = trim((string)$header);
         $rhpart  = explode(':', $rheader);
@@ -160,7 +191,7 @@ class Subsonic_Api
      * _follow_stream
      * @param string $url
      */
-    private static function _follow_stream($url)
+    private static function _follow_stream($url): void
     {
         set_time_limit(0);
         ob_end_clean();
@@ -182,20 +213,29 @@ class Subsonic_Api
             debug_event(self::class, 'Stream proxy: ' . $url, 5);
             $curl = curl_init($url);
             if ($curl) {
-                curl_setopt_array($curl, array(
-                    CURLOPT_FAILONERROR => true,
-                    CURLOPT_HTTPHEADER => $reqheaders,
-                    CURLOPT_HEADER => false,
-                    CURLOPT_RETURNTRANSFER => false,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_WRITEFUNCTION => array('Ampache\Module\Api\Subsonic_Api', '_output_body'),
-                    CURLOPT_HEADERFUNCTION => array('Ampache\Module\Api\Subsonic_Api', '_output_header'),
-                    // Ignore invalid certificate
-                    // Default trusted chain is crap anyway and currently no custom CA option
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_SSL_VERIFYHOST => false,
-                    CURLOPT_TIMEOUT => 0
-                ));
+                curl_setopt_array(
+                    $curl,
+                    array(
+                        CURLOPT_FAILONERROR => true,
+                        CURLOPT_HTTPHEADER => $reqheaders,
+                        CURLOPT_HEADER => false,
+                        CURLOPT_RETURNTRANSFER => false,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_WRITEFUNCTION => array(
+                            'Ampache\Module\Api\Subsonic_Api',
+                            '_output_body'
+                        ),
+                        CURLOPT_HEADERFUNCTION => array(
+                            'Ampache\Module\Api\Subsonic_Api',
+                            '_output_header'
+                        ),
+                        // Ignore invalid certificate
+                        // Default trusted chain is crap anyway and currently no custom CA option
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_TIMEOUT => 0
+                    )
+                );
                 if (curl_exec($curl) === false) {
                     debug_event(self::class, 'Stream error: ' . curl_error($curl), 1);
                 }
@@ -211,9 +251,9 @@ class Subsonic_Api
     }
 
     /**
-     * @param $filetype
+     * @param string $filetype
      */
-    public static function _setHeader($filetype)
+    public static function _setHeader($filetype): void
     {
         if (strtolower((string)$filetype) == "json") {
             header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
@@ -234,7 +274,7 @@ class Subsonic_Api
      * @param array $alwaysArray
      */
 
-    private static function _apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share', 'entry'))
+    private static function _apiOutput($input, $xml, $alwaysArray = self::ALWAYS_ARRAY): void
     {
         $format   = strtolower($input['f'] ?? 'xml');
         $callback = $input['callback'] ?? $format;
@@ -248,7 +288,7 @@ class Subsonic_Api
      * @param string $callback
      * @param array $alwaysArray
      */
-    public static function _apiOutput2($format, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share', 'entry'))
+    public static function _apiOutput2($format, $xml, $callback = '', $alwaysArray = self::ALWAYS_ARRAY): void
     {
         $conf = array('alwaysArray' => $alwaysArray);
         if ($format == "json") {
@@ -261,13 +301,18 @@ class Subsonic_Api
 
             return;
         }
+        $output = false;
         $xmlstr = $xml->asXml();
-        // clean illegal XML characters.
-        $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
-        $dom       = new DOMDocument();
-        $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
-        $dom->formatOutput = true;
-        $output            = $dom->saveXML();
+        if (is_string($xmlstr)) {
+            // clean illegal XML characters.
+            $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
+            if (is_string($clean_xml)) {
+                $dom = new DOMDocument();
+                $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
+                $dom->formatOutput = true;
+                $output            = $dom->saveXML();
+            }
+        }
         // saving xml can fail
         if (!$output) {
             $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . Api::$version . "\"" . ">" .
@@ -285,7 +330,7 @@ class Subsonic_Api
      * @param array $input_options
      * @return array
      */
-    private static function _xml2Json($xml, $input_options = array())
+    private static function _xml2Json($xml, $input_options = array()): array
     {
         $defaults = array(
             'namespaceSeparator' => ' :', // you may want this to be something other than a colon
@@ -325,7 +370,7 @@ class Subsonic_Api
                         $vattr = (int) $strattr;
                     }
                     if (in_array($attributeName, $options['alwaysDouble'])) {
-                        $vattr = (double) $strattr;
+                        $vattr = (float) $strattr;
                     }
                 }
                 $attributesArray[$attributeKey] = $vattr;
@@ -360,13 +405,17 @@ class Subsonic_Api
                                 $tagsArray[$childTagName] = (object)$childProperties;
                             } else {
                                 // test if tags of this type should always be arrays, no matter the element count
-                                $tagsArray[$childTagName] = in_array($childTagName,
-                                    $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
+                                $tagsArray[$childTagName] = in_array(
+                                    $childTagName,
+                                    $options['alwaysArray']
+                                ) || !$options['autoArray'] ? array($childProperties) : $childProperties;
                             }
                         } else {
                             // test if tags of this type should always be arrays, no matter the element count
-                            $tagsArray[$childTagName] = in_array($childTagName,
-                                $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
+                            $tagsArray[$childTagName] = in_array(
+                                $childTagName,
+                                $options['alwaysArray']
+                            ) || !$options['autoArray'] ? array($childProperties) : $childProperties;
                         }
                     } elseif (is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName]) === range(0, count($tagsArray[$childTagName]) - 1)) {
                         //key already exists and is integer indexed array
@@ -387,8 +436,11 @@ class Subsonic_Api
         }
 
         // stick it all together
-        $propertiesArray = !$options['autoText'] || !empty($attributesArray) || !empty($tagsArray) || ($plainText === '') ? array_merge($attributesArray,
-            $tagsArray, $textContentArray) : $plainText;
+        $propertiesArray = !$options['autoText'] || !empty($attributesArray) || !empty($tagsArray) || ($plainText === '') ? array_merge(
+            $attributesArray,
+            $tagsArray,
+            $textContentArray
+        ) : $plainText;
 
         if (isset($propertiesArray['xmlns'])) {
             unset($propertiesArray['xmlns']);
@@ -404,9 +456,8 @@ class Subsonic_Api
      * has_Nested_Array
      * Used for xml2json to detect a sub-array
      * @param $properties
-     * @return boolean
      */
-    private static function _hasNestedArray($properties)
+    private static function _hasNestedArray($properties): bool
     {
         foreach ($properties as $property) {
             if (is_array($property)) {
@@ -424,7 +475,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function ping($input, $user)
+    public static function ping($input, $user): void
     {
         unset($user);
         // Don't check client API version here. Some client give version 0.0.0 for ping command
@@ -439,7 +490,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getlicense($input, $user)
+    public static function getlicense($input, $user): void
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getlicense');
@@ -455,7 +506,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getmusicfolders($input, $user)
+    public static function getmusicfolders($input, $user): void
     {
         $catalogs = $user->get_catalogs('music');
         $response = Subsonic_Xml_Data::addSubsonicResponse('getmusicfolders');
@@ -472,12 +523,12 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getindexes($input, $user)
+    public static function getindexes($input, $user): void
     {
         set_time_limit(300);
 
-        $musicFolderId    = $input['musicFolderId'] ?? '-1';
-        $ifModifiedSince  = $input['ifModifiedSince'] ?? '';
+        $musicFolderId   = $input['musicFolderId'] ?? '-1';
+        $ifModifiedSince = $input['ifModifiedSince'] ?? '';
 
         $catalogs = array();
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
@@ -492,7 +543,9 @@ class Subsonic_Api
         foreach ($catalogs as $catalogid) {
             $clastmodified = 0;
             $catalog       = Catalog::create_from_id($catalogid);
-
+            if ($catalog === null) {
+                break;
+            }
             if ($catalog->last_update > $clastmodified) {
                 $clastmodified = $catalog->last_update;
             }
@@ -506,7 +559,7 @@ class Subsonic_Api
             if ($clastmodified > $lastmodified) {
                 $lastmodified = $clastmodified;
             }
-            if (!empty($ifModifiedSince) && $clastmodified > ($ifModifiedSince / 1000)) {
+            if (!empty($ifModifiedSince) && $clastmodified > (((int)$ifModifiedSince) / 1000)) {
                 $fcatalogs[] = $catalogid;
             }
         }
@@ -530,7 +583,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getmusicdirectory($input, $user)
+    public static function getmusicdirectory($input, $user): void
     {
         unset($user);
         $object_id = $input['id'] ?? 0;
@@ -558,7 +611,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getgenres($input, $user)
+    public static function getgenres($input, $user): void
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getgenres');
@@ -574,7 +627,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getartists($input, $user)
+    public static function getartists($input, $user): void
     {
         unset($user);
         $musicFolderId = $input['musicFolderId'] ?? '';
@@ -596,7 +649,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getartist($input, $user)
+    public static function getartist($input, $user): void
     {
         unset($user);
         $artistid = self::_check_parameter($input, 'id');
@@ -621,7 +674,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getalbum($input, $user)
+    public static function getalbum($input, $user): void
     {
         unset($user);
         $albumid = self::_check_parameter($input, 'id');
@@ -629,7 +682,7 @@ class Subsonic_Api
             return;
         }
         $album = new Album(Subsonic_Xml_Data::_getAmpacheId($albumid));
-        if (!isset($album->id)) {
+        if ($album->isNew()) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getalbum');
         } else {
             $response = Subsonic_Xml_Data::addSubsonicResponse('getalbum');
@@ -648,7 +701,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getsong($input, $user)
+    public static function getsong($input, $user): void
     {
         unset($user);
         $songid = self::_check_parameter($input, 'id');
@@ -669,7 +722,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getvideos($input, $user)
+    public static function getvideos($input, $user): void
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getvideos');
@@ -683,7 +736,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getvideoinfo($input, $user)
+    public static function getvideoinfo($input, $user): void
     {
         unset($user);
         $video_id = self::_check_parameter($input, 'id');
@@ -704,7 +757,7 @@ class Subsonic_Api
      * @param User $user
      * @param string $elementName
      */
-    public static function getartistinfo($input, $user, $elementName = "artistInfo")
+    public static function getartistinfo($input, $user, $elementName = "artistInfo"): void
     {
         unset($user);
         $object_id = self::_check_parameter($input, 'id');
@@ -742,7 +795,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getartistinfo2($input, $user)
+    public static function getartistinfo2($input, $user): void
     {
         self::getartistinfo($input, $user, 'artistInfo2');
     }
@@ -752,7 +805,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getalbuminfo($input, $user)
+    public static function getalbuminfo($input, $user): void
     {
         unset($user);
         $object_id = self::_check_parameter($input, 'id');
@@ -777,7 +830,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getalbuminfo2($input, $user)
+    public static function getalbuminfo2($input, $user): void
     {
         self::getalbuminfo($input, $user);
     }
@@ -791,7 +844,7 @@ class Subsonic_Api
      * @param User $user
      * @param string $elementName
      */
-    public static function getsimilarsongs($input, $user, $elementName = "similarSongs")
+    public static function getsimilarsongs($input, $user, $elementName = "similarSongs"): void
     {
         unset($user);
         if (!AmpConfig::get('show_similar')) {
@@ -816,6 +869,9 @@ class Subsonic_Api
                     debug_event(self::class, $similar['name'] . ' (id=' . $similar['id'] . ')', 5);
                     if ($similar['id']) {
                         $artist = new Artist($similar['id']);
+                        if ($artist->isNew()) {
+                            continue;
+                        }
                         // get the songs in a random order for even more chaos
                         $artist_songs = static::getSongRepository()->getRandomByArtist($artist);
                         foreach ($artist_songs as $song) {
@@ -859,7 +915,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getsimilarsongs2($input, $user)
+    public static function getsimilarsongs2($input, $user): void
     {
         self::getsimilarsongs($input, $user, "similarSongs2");
     }
@@ -872,7 +928,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function gettopsongs($input, $user)
+    public static function gettopsongs($input, $user): void
     {
         unset($user);
         $name   = self::_check_parameter($input, 'artist');
@@ -902,18 +958,15 @@ class Subsonic_Api
      * @param User $user
      * @param string $elementName
      */
-    public static function getalbumlist($input, $user, $elementName = "albumList")
+    public static function getalbumlist($input, $user, $elementName = "albumList"): void
     {
         $type     = self::_check_parameter($input, 'type');
         $response = Subsonic_Xml_Data::addSubsonicResponse($elementName);
         if ($type) {
-            $errorOccured = false;
-            $albums       = self::_albumList($input, $user, (string)$type);
+            $albums = self::_albumList($input, $user, (string)$type);
             if ($albums === false) {
                 $response     = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, $elementName);
-                $errorOccured = true;
-            }
-            if (!$errorOccured) {
+            } else {
                 switch ($elementName) {
                     case 'albumList':
                         Subsonic_Xml_Data::addAlbumList($response, $albums);
@@ -935,7 +988,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getalbumlist2($input, $user)
+    public static function getalbumlist2($input, $user): void
     {
         self::getAlbumList($input, $user, "albumList2");
     }
@@ -948,23 +1001,20 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getrandomsongs($input, $user)
+    public static function getrandomsongs($input, $user): void
     {
-        $size = $input['size'] ?? false;
-        if (!$size) {
-            $size = 10;
-        }
+        $size = (int)($input['size'] ?? 10);
 
         $genre         = $input['genre'] ?? '';
         $fromYear      = $input['fromYear'] ?? null;
         $toYear        = $input['toYear'] ?? null;
         $musicFolderId = $input['musicFolderId'] ?? 0;
 
-        $data             = array();
-        $data['limit']    = $size;
-        $data['random']   = 1;
-        $data['type']     = "song";
-        $count            = 0;
+        $data           = array();
+        $data['limit']  = $size;
+        $data['random'] = 1;
+        $data['type']   = "song";
+        $count          = 0;
         if ($genre) {
             $data['rule_' . $count . '_input']    = $genre;
             $data['rule_' . $count . '_operator'] = 0;
@@ -1025,18 +1075,18 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getsongsbygenre($input, $user)
+    public static function getsongsbygenre($input, $user): void
     {
         unset($user);
         $genre  = self::_check_parameter($input, 'genre');
-        $count  = $input['count'] ?? '';
-        $offset = $input['offset'] ?? '';
+        $count  = (int)($input['count'] ?? 0);
+        $offset = (int)($input['offset'] ?? 0);
 
         $tag = Tag::construct_from_name($genre);
-        if ($tag->id) {
-            $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset);
-        } else {
+        if ($tag->isNew()) {
             $songs = array();
+        } else {
+            $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset);
         }
         $response = Subsonic_Xml_Data::addSubsonicResponse('getsongsbygenre');
         Subsonic_Xml_Data::addSongsByGenre($response, $songs);
@@ -1051,7 +1101,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getnowplaying($input, $user)
+    public static function getnowplaying($input, $user): void
     {
         unset($user);
         $data     = Stream::get_now_playing();
@@ -1069,17 +1119,25 @@ class Subsonic_Api
      * @param User $user
      * @param string $elementName
      */
-    public static function getstarred($input, $user, $elementName = "starred")
+    public static function getstarred($input, $user, $elementName = "starred"): void
     {
         $response = Subsonic_Xml_Data::addSubsonicResponse($elementName);
         switch ($elementName) {
             case 'starred':
-                Subsonic_Xml_Data::addStarred($response, Userflag::get_latest('artist', $user->id, 10000),
-                    Userflag::get_latest('album', $user->id, 10000), Userflag::get_latest('song', $user->id, 10000));
+                Subsonic_Xml_Data::addStarred(
+                    $response,
+                    Userflag::get_latest('artist', $user->id, 10000),
+                    Userflag::get_latest('album', $user->id, 10000),
+                    Userflag::get_latest('song', $user->id, 10000)
+                );
                 break;
             case 'starred2':
-                Subsonic_Xml_Data::addStarred2($response, Userflag::get_latest('artist', $user->id, 10000),
-                    Userflag::get_latest('album', $user->id, 10000), Userflag::get_latest('song', $user->id, 10000));
+                Subsonic_Xml_Data::addStarred2(
+                    $response,
+                    Userflag::get_latest('artist', $user->id, 10000),
+                    Userflag::get_latest('album', $user->id, 10000),
+                    Userflag::get_latest('song', $user->id, 10000)
+                );
                 break;
         }
         self::_apiOutput($input, $response);
@@ -1093,7 +1151,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getstarred2($input, $user)
+    public static function getstarred2($input, $user): void
     {
         self::getStarred($input, $user, "starred2");
     }
@@ -1107,13 +1165,13 @@ class Subsonic_Api
      * @param User $user
      * @param string $elementName
      */
-    public static function search2($input, $user, $elementName = "searchResult2")
+    public static function search2($input, $user, $elementName = "searchResult2"): void
     {
         $operator = 0; // contains
         $original = unhtmlentities((string)self::_check_parameter($input, 'query'));
         $query    = $original;
         if (substr($original, 0, 1) == '"' && (substr($original, -1) == '"')) {
-            $query    = substr($original, 1, -1);
+            $query = substr($original, 1, -1);
             // query is non-optional, but some clients send empty queries to fetch
             // all items. Fall back on default contains in such cases.
             if (strlen($query) > 0) {
@@ -1124,9 +1182,9 @@ class Subsonic_Api
             $query    = substr($original, 1, -2);
             $operator = 4; // equals
         }
-        $artists  = array();
-        $albums   = array();
-        $songs    = array();
+        $artists = array();
+        $albums  = array();
+        $songs   = array();
 
         if (strlen($query) > 1) {
             // if we didn't catch a "wrapped" query it might just be a starts with
@@ -1136,49 +1194,59 @@ class Subsonic_Api
             }
         }
 
-        $artistCount  = $input['artistCount'] ?? 20;
-        $artistOffset = $input['artistOffset'] ?? 0;
-        $albumCount   = $input['albumCount'] ?? 20;
-        $albumOffset  = $input['albumOffset'] ?? 0;
-        $songCount    = $input['songCount'] ?? 20;
-        $songOffset   = $input['songOffset'] ?? 0;
+        $artistCount   = $input['artistCount'] ?? 20;
+        $artistOffset  = $input['artistOffset'] ?? 0;
+        $albumCount    = $input['albumCount'] ?? 20;
+        $albumOffset   = $input['albumOffset'] ?? 0;
+        $songCount     = $input['songCount'] ?? 20;
+        $songOffset    = $input['songOffset'] ?? 0;
+        $musicFolderId = $input['musicFolderId'] ?? 0;
 
-        $data          = array();
-        $data['limit'] = $artistCount;
-        if ($artistOffset) {
-            $data['offset'] = $artistOffset;
-        }
-        $data['rule_1_input']    = $query;
-        $data['rule_1_operator'] = $operator;
-        $data['rule_1']          = 'title';
-        $data['type']            = 'artist';
         if ($artistCount > 0) {
+            $data                    = array();
+            $data['limit']           = $artistCount;
+            $data['offset']          = $artistOffset;
+            $data['type']            = 'artist';
+            $data['rule_1_input']    = $query;
+            $data['rule_1_operator'] = $operator;
+            $data['rule_1']          = 'title';
+            if ($musicFolderId > 0) {
+                $data['rule_2_input']    = $musicFolderId;
+                $data['rule_2_operator'] = 0;
+                $data['rule_2']          = 'catalog';
+            }
             $artists = Search::run($data, $user);
         }
 
-        $data          = array();
-        $data['limit'] = $albumCount;
-        if ($albumOffset) {
-            $data['offset'] = $albumOffset;
-        }
-        $data['rule_1_input']    = $query;
-        $data['rule_1_operator'] = $operator;
-        $data['rule_1']          = 'title';
-        $data['type']            = 'album';
         if ($albumCount > 0) {
+            $data                    = array();
+            $data['limit']           = $albumCount;
+            $data['offset']          = $albumOffset;
+            $data['type']            = 'album';
+            $data['rule_1_input']    = $query;
+            $data['rule_1_operator'] = $operator;
+            $data['rule_1']          = 'title';
+            if ($musicFolderId > 0) {
+                $data['rule_2_input']    = $musicFolderId;
+                $data['rule_2_operator'] = 0;
+                $data['rule_2']          = 'catalog';
+            }
             $albums = Search::run($data, $user);
         }
 
-        $data          = array();
-        $data['limit'] = $songCount;
-        if ($songOffset) {
-            $data['offset'] = $songOffset;
-        }
-        $data['rule_1_input']    = $query;
-        $data['rule_1_operator'] = $operator;
-        $data['rule_1']          = 'title';
-        $data['type']            = 'song';
         if ($songCount > 0) {
+            $data                    = array();
+            $data['limit']           = $songCount;
+            $data['offset']          = $songOffset;
+            $data['type']            = 'song';
+            $data['rule_1_input']    = $query;
+            $data['rule_1_operator'] = $operator;
+            $data['rule_1']          = 'title';
+            if ($musicFolderId > 0) {
+                $data['rule_2_input']    = $musicFolderId;
+                $data['rule_2_operator'] = 0;
+                $data['rule_2']          = 'catalog';
+            }
             $songs = Search::run($data, $user);
         }
 
@@ -1202,7 +1270,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function search3($input, $user)
+    public static function search3($input, $user): void
     {
         self::search2($input, $user, "searchResult3");
     }
@@ -1215,18 +1283,19 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getplaylists($input, $user)
+    public static function getplaylists($input, $user): void
     {
-        $user  = (isset($input['username']))
+        $user = (isset($input['username']))
             ? User::get_from_username($input['username'])
             : $user;
+        $user_id   = $user->id ?? 0;
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
-        $playlists = Playlist::get_playlists($user->id, '', true, true, false);
-        $searches  = Playlist::get_smartlists($user->id, '', true, false);
+        $playlists = Playlist::get_playlists($user_id, '', true, true, false);
+        $searches  = Playlist::get_smartlists($user_id, '', true, false);
         // allow skipping dupe search names when used as refresh searches
-        $hide_dupe_searches = (bool)Preference::get_by_user($user->id, 'api_hide_dupe_searches');
+        $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
 
-        Subsonic_Xml_Data::addPlaylists($response, $user->id, $playlists, $searches, $hide_dupe_searches);
+        Subsonic_Xml_Data::addPlaylists($response, $user_id, $playlists, $searches, $hide_dupe_searches);
         self::_apiOutput($input, $response);
     }
 
@@ -1238,7 +1307,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getplaylist($input, $user)
+    public static function getplaylist($input, $user): void
     {
         $playlistId = self::_check_parameter($input, 'id');
         if (!$playlistId) {
@@ -1264,26 +1333,26 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function createplaylist($input, $user)
+    public static function createplaylist($input, $user): void
     {
         $playlistId = $input['playlistId'] ?? null;
         $name       = $input['name'] ?? '';
         $songIdList = $input['songId'] ?? array();
-        if (is_string($input['songId'])) {
+        if (isset($input['songId']) && is_string($input['songId'])) {
             $songIdList = explode(',', $input['songId']);
         }
 
-        if ($playlistId) {
-            self::_updatePlaylist($playlistId, $name, $songIdList, array(), true, true);
+        if ($playlistId !== null) {
+            self::_updatePlaylist((string)$playlistId, $name, $songIdList, array(), true, true);
             $response = Subsonic_Xml_Data::addSubsonicResponse('createplaylist');
         } elseif (!empty($name)) {
             $playlistId = Playlist::create($name, 'public', $user->id);
-            if (count($songIdList) > 0) {
-                self::_updatePlaylist($playlistId, "", $songIdList, array(), true, true);
-            }
-            if (!empty($playlistId)) {
+            if ($playlistId !== null) {
+                if (count($songIdList) > 0) {
+                    self::_updatePlaylist($playlistId, "", $songIdList, array(), true, true);
+                }
                 $response = Subsonic_Xml_Data::addSubsonicResponse('createplaylist');
-                $playlist = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlistId));
+                $playlist = new Playlist($playlistId);
                 Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
             } else {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'createplaylist');
@@ -1301,7 +1370,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function updateplaylist($input, $user)
+    public static function updateplaylist($input, $user): void
     {
         unset($user);
         $playlistId        = self::_check_parameter($input, 'playlistId');
@@ -1310,14 +1379,20 @@ class Subsonic_Api
         $songIdToAdd       = $input['songIdToAdd'] ?? array();
         $songIndexToRemove = $input['songIndexToRemove'] ?? array();
 
-        if (!Subsonic_Xml_Data::_isSmartPlaylist($playlistId)) {
+        if ($playlistId === false) {
+            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'playlistId');
+            self::_apiOutput($input, $response);
+
+            return;
+        }
+        if (Subsonic_Xml_Data::_isPlaylist((string)$playlistId)) {
             if (is_string($songIdToAdd)) {
                 $songIdToAdd = explode(',', $songIdToAdd);
             }
             if (is_string($songIndexToRemove)) {
                 $songIndexToRemove = explode(',', $songIndexToRemove);
             }
-            self::_updatePlaylist(Subsonic_Xml_Data::_getAmpacheId($playlistId), $name, $songIdToAdd, $songIndexToRemove, $public);
+            self::_updatePlaylist(Subsonic_Xml_Data::_getAmpacheId((string)$playlistId), $name, $songIdToAdd, $songIndexToRemove, $public);
 
             $response = Subsonic_Xml_Data::addSubsonicResponse('updateplaylist');
         } else {
@@ -1333,7 +1408,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function deleteplaylist($input, $user)
+    public static function deleteplaylist($input, $user): void
     {
         $playlistId = self::_check_parameter($input, 'id');
         if (!$playlistId) {
@@ -1358,7 +1433,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function stream($input, $user)
+    public static function stream($input, $user): void
     {
         $fileid = self::_check_parameter($input, 'id', true);
 
@@ -1366,7 +1441,7 @@ class Subsonic_Api
         $format        = $input['format'] ?? null; // mp3, flv or raw
         $timeOffset    = $input['timeOffset'] ?? false;
         $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode
-        $client        = scrub_in($input['c'] ?? 'Subsonic');
+        $client        = scrub_in((string) ($input['c'] ?? 'Subsonic'));
 
         $params = '&client=' . rawurlencode($client);
         if ($contentLength == 'true') {
@@ -1412,10 +1487,10 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function download($input, $user)
+    public static function download($input, $user): void
     {
         $fileid = self::_check_parameter($input, 'id', true);
-        $client = scrub_in($input['c'] ?? 'Subsonic');
+        $client = scrub_in((string) ($input['c'] ?? 'Subsonic'));
         $params = '&client=' . rawurlencode($client) . '&cache=1';
         $url    = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
@@ -1443,7 +1518,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function hls($input, $user)
+    public static function hls($input, $user): void
     {
         unset($user);
         $fileid  = self::_check_parameter($input, 'id', true);
@@ -1456,7 +1531,10 @@ class Subsonic_Api
         } else {
             self::_apiOutput(
                 $input,
-                Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'hls'));
+                Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'hls')
+            );
+
+            return;
         }
         $media['object_id'] = Subsonic_Xml_Data::_getAmpacheId($fileid);
         $medias             = array();
@@ -1480,7 +1558,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getcaptions($input, $user)
+    public static function getcaptions($input, $user): void
     {
         // Ampache doesn't support srt/subtitles and probably won't ever support them but the function is required
     }
@@ -1493,9 +1571,17 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getcoverart($input, $user)
+    public static function getcoverart($input, $user): void
     {
-        $sub_id = str_replace('al-', '', self::_check_parameter($input, 'id'));
+        $sub_id = self::_check_parameter($input, 'id');
+        if (!$sub_id) {
+            self::_setHeader((string)($input['f'] ?? 'xml'));
+            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getcoverart');
+            self::_apiOutput($input, $response);
+
+            return;
+        }
+        $sub_id = str_replace('al-', '', (string)$sub_id);
         $sub_id = str_replace('ar-', '', $sub_id);
         $sub_id = str_replace('pl-', '', $sub_id);
         $sub_id = str_replace('pod-', '', $sub_id);
@@ -1504,10 +1590,13 @@ class Subsonic_Api
         if (!empty($matches)) {
             $sub_id = (string)(100000000 + (int)$matches[1]);
         }
-        $size   = $input['size'] ?? false;
-        $type   = Subsonic_Xml_Data::_getAmpacheType($sub_id);
+        if (!is_string($sub_id)) {
+            return;
+        }
+        $size = $input['size'] ?? false;
+        $type = Subsonic_Xml_Data::_getAmpacheType($sub_id);
         if ($type == "") {
-            self::_setHeader($input['f'] ?? 'xml');
+            self::_setHeader((string)($input['f'] ?? 'xml'));
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getcoverart');
             self::_apiOutput($input, $response);
 
@@ -1548,7 +1637,7 @@ class Subsonic_Api
             }
         }
         if (!$art || $art->get(false, true) == '') {
-            self::_setHeader($input['f'] ?? 'xml');
+            self::_setHeader((string)($input['f'] ?? 'xml'));
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getcoverart');
             self::_apiOutput($input, $response);
 
@@ -1584,12 +1673,12 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getlyrics($input, $user)
+    public static function getlyrics($input, $user): void
     {
-        $artist = $input['artist'] ?? false;
-        $title  = $input['title'] ?? false;
+        $artist = (string)($input['artist'] ?? '');
+        $title  = (string)($input['title'] ?? '');
 
-        if (!$artist && !$title) {
+        if (empty($artist) || empty($title)) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'getlyrics');
         } else {
             $data           = array();
@@ -1597,18 +1686,12 @@ class Subsonic_Api
             $data['offset'] = 0;
             $data['type']   = "song";
 
-            $count = 0;
-            if ($artist) {
-                $data['rule_' . $count . '_input']    = $artist;
-                $data['rule_' . $count . '_operator'] = 4;
-                $data['rule_' . $count]               = "artist";
-                ++$count;
-            }
-            if ($title) {
-                $data['rule_' . $count . '_input']    = $title;
-                $data['rule_' . $count . '_operator'] = 4;
-                $data['rule_' . $count]               = "title";
-            }
+            $data['rule_0_input']    = $artist;
+            $data['rule_0_operator'] = 4;
+            $data['rule_0']          = "artist";
+            $data['rule_1_input']    = $title;
+            $data['rule_1_operator'] = 4;
+            $data['rule_1']          = "title";
 
             $songs    = Search::run($data, $user);
             $response = Subsonic_Xml_Data::addSubsonicResponse('getlyrics');
@@ -1628,7 +1711,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getavatar($input, $user)
+    public static function getavatar($input, $user): void
     {
         $username = self::_check_parameter($input, 'username');
         $response = null;
@@ -1639,7 +1722,7 @@ class Subsonic_Api
                 $update_user = User::get_from_username((string)$username);
             }
 
-            if ($update_user !== null) {
+            if ($update_user instanceof User) {
                 // Get Session key
                 $avatar = $update_user->get_avatar(true);
                 if (isset($avatar['url']) && !empty($avatar['url'])) {
@@ -1666,7 +1749,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function star($input, $user)
+    public static function star($input, $user): void
     {
         self::_setStar($input, $user, true);
     }
@@ -1678,7 +1761,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function unstar($input, $user)
+    public static function unstar($input, $user): void
     {
         self::_setStar($input, $user, false);
     }
@@ -1690,7 +1773,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function setrating($input, $user)
+    public static function setrating($input, $user): void
     {
         $object_id = self::_check_parameter($input, 'id');
         if (!$object_id) {
@@ -1724,36 +1807,39 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function scrobble($input, $user)
+    public static function scrobble($input, $user): void
     {
         $object_ids = self::_check_parameter($input, 'id');
         if (!$object_ids) {
             return;
         }
         $submission = (array_key_exists('submission', $input) && ($input['submission'] === 'true' || $input['submission'] === '1'));
-        $client     = scrub_in($input['c'] ?? 'Subsonic');
+        $client     = scrub_in((string) ($input['c'] ?? 'Subsonic'));
 
         if (!is_array($object_ids)) {
             $rid        = array();
             $rid[]      = $object_ids;
             $object_ids = $rid;
         }
-        $playqueue_time = (int)(User::get_user_data($user->id, 'playqueue_time')['playqueue_time'] ?? 0);
+        $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
         $now_time       = time();
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
             foreach ($object_ids as $subsonic_id) {
-                $time      = isset($input['time']) ? (int) $input['time'] / 1000 : time();
+                $time      = isset($input['time']) ? (int)(((int)$input['time']) / 1000) : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?? 0;
                 $prev_date = $previous['date'] ?? 0;
-                $type      = Subsonic_Xml_Data::_getAmpacheType($subsonic_id);
-                $media     = Subsonic_Xml_Data::_getAmpacheObject($subsonic_id);
+                $type      = Subsonic_Xml_Data::_getAmpacheType((string)$subsonic_id);
+                $media     = Subsonic_Xml_Data::_getAmpacheObject((string)$subsonic_id);
+                if ($media === null || $media->isNew()) {
+                    continue;
+                }
                 $media->format();
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
-                Stream::insert_now_playing((int) $media->id, (int) $user->id, ((int)$media->time), $user->username, $type, ((int)$time));
+                Stream::insert_now_playing((int)$media->id, (int)$user->id, ((int)$media->time), (string)$user->username, $type, ((int)$time));
                 // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
                 if ($submission && get_class($media) == Song::class && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
                     // stream has finished
@@ -1779,7 +1865,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getshares($input, $user)
+    public static function getshares($input, $user): void
     {
         $response = Subsonic_Xml_Data::addSubsonicResponse('getshares');
         $shares   = Share::get_share_list($user);
@@ -1796,7 +1882,7 @@ class Subsonic_Api
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function createshare($input, $user)
+    public static function createshare($input, $user): void
     {
         $object_id = self::_check_parameter($input, 'id');
         if (!$object_id) {
@@ -1806,14 +1892,14 @@ class Subsonic_Api
         if (AmpConfig::get('share')) {
             $share_expire = AmpConfig::get('share_expire', 7);
             $expire_days  = (isset($input['expires']))
-                ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000)
+                ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
                 : $share_expire;
-            $object_type  = null;
+            $object_type = null;
             if (is_array($object_id) && Subsonic_Xml_Data::_isSong($object_id[0])) {
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
                 $song_id     = Subsonic_Xml_Data::_getAmpacheId($object_id[0]);
                 $tmp_song    = new Song($song_id);
-                $object_id   = Subsonic_Xml_Data::_getAmpacheId($tmp_song->album);
+                $object_id   = $tmp_song->album;
                 $object_type = 'album';
             } else {
                 if (Subsonic_Xml_Data::_isAlbum($object_id)) {
@@ -1823,7 +1909,7 @@ class Subsonic_Api
                 } elseif (Subsonic_Xml_Data::_isPlaylist($object_id)) {
                     $object_type = 'playlist';
                 }
-                $object_id   = Subsonic_Xml_Data::_getAmpacheId($object_id);
+                $object_id = Subsonic_Xml_Data::_getAmpacheId($object_id);
             }
             debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
@@ -1861,26 +1947,25 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function updateshare($input, $user)
+    public static function updateshare($input, $user): void
     {
         $share_id = self::_check_parameter($input, 'id');
         if (!$share_id) {
             return;
         }
-        $description = $input['description'] ?? '';
 
         if (AmpConfig::get('share')) {
             $share = new Share(Subsonic_Xml_Data::_getAmpacheId($share_id));
             if ($share->id > 0) {
                 $expires = (isset($input['expires']))
-                    ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000)
+                    ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
                     : $share->expire_days;
-                $data    = array(
+                $data = array(
                     'max_counter' => $share->max_counter,
                     'expire' => $expires,
                     'allow_stream' => $share->allow_stream,
                     'allow_download' => $share->allow_download,
-                    'description' => $description ?? $share->description,
+                    'description' => $input['description'] ?? $share->description,
                 );
                 if ($share->update($data, $user)) {
                     $response = Subsonic_Xml_Data::addSubsonicResponse('updateshare');
@@ -1904,14 +1989,14 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function deleteshare($input, $user)
+    public static function deleteshare($input, $user): void
     {
         $share_id = self::_check_parameter($input, 'id');
         if (!$share_id) {
             return;
         }
         if (AmpConfig::get('share')) {
-            if (Share::delete_share((int) $share_id, $user)) {
+            if (Share::delete_share((int)$share_id, $user)) {
                 $response = Subsonic_Xml_Data::addSubsonicResponse('deleteshare');
             } else {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deleteshare');
@@ -1930,19 +2015,21 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getpodcasts($input, $user)
+    public static function getpodcasts($input, $user): void
     {
         $podcast_id      = $input['id'] ?? null;
         $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
 
-        if (AmpConfig::get('podcast')) {
+        if (AmpConfig::get(ConfigurationKeyEnum::PODCAST)) {
             if ($podcast_id) {
-                $podcast = new Podcast(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
-                if ($podcast->id) {
+                $podcast = self::getPodcastRepository()->findById(
+                    Subsonic_Xml_Data::_getAmpacheId($podcast_id)
+                );
+                if ($podcast === null) {
+                    $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getpodcasts');
+                } else {
                     $response = Subsonic_Xml_Data::addSubsonicResponse('getpodcasts');
                     Subsonic_Xml_Data::addPodcasts($response, array($podcast), $includeEpisodes);
-                } else {
-                    $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getpodcasts');
                 }
             } else {
                 $podcasts = Catalog::get_podcasts(User::get_user_catalogs($user->id));
@@ -1963,7 +2050,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getnewestpodcasts($input, $user)
+    public static function getnewestpodcasts($input, $user): void
     {
         unset($user);
         $count = $input['count'] ?? AmpConfig::get('podcast_new_download');
@@ -1984,12 +2071,15 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function refreshpodcasts($input, $user)
+    public static function refreshpodcasts($input, $user): void
     {
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $podcasts = Catalog::get_podcasts(User::get_user_catalogs($user->id));
+
+            $podcastSyncer = self::getPodcastSyncer();
+
             foreach ($podcasts as $podcast) {
-                $podcast->sync_episodes(true);
+                $podcastSyncer->sync($podcast, true);
             }
             $response = Subsonic_Xml_Data::addSubsonicResponse('refreshpodcasts');
         } else {
@@ -2005,7 +2095,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function createpodcastchannel($input, $user)
+    public static function createpodcastchannel($input, $user): void
     {
         $url = self::_check_parameter($input, 'url');
         if (!$url) {
@@ -2015,12 +2105,14 @@ class Subsonic_Api
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $catalogs = $user->get_catalogs('podcast');
             if (count($catalogs) > 0) {
-                $data            = array();
-                $data['feed']    = $url;
-                $data['catalog'] = $catalogs[0];
-                if (Podcast::create($data)) {
+                /** @var Catalog $catalog */
+                $catalog = Catalog::create_from_id($catalogs[0]);
+
+                try {
+                    self::getPodcastCreator()->create($url, $catalog);
+
                     $response = Subsonic_Xml_Data::addSubsonicResponse('createpodcastchannel');
-                } else {
+                } catch (PodcastCreationException $e) {
                     $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'createpodcastchannel');
                 }
             } else {
@@ -2039,23 +2131,20 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function deletepodcastchannel($input, $user)
+    public static function deletepodcastchannel($input, $user): void
     {
-        $podcast_id = (int)self::_check_parameter($input, 'id');
+        $podcast_id = self::_check_parameter($input, 'id');
         if (!$podcast_id) {
             return;
         }
 
-        if (AmpConfig::get('podcast') && $user->access >= 75) {
-            $podcast = new Podcast(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
-            if ($podcast->id) {
-                if ($podcast->remove()) {
-                    $response = Subsonic_Xml_Data::addSubsonicResponse('deletepodcastchannel');
-                } else {
-                    $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'deletepodcastchannel');
-                }
-            } else {
+        if (AmpConfig::get(ConfigurationKeyEnum::PODCAST) && $user->access >= AccessLevelEnum::LEVEL_MANAGER) {
+            $podcast = self::getPodcastRepository()->findById(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
+            if ($podcast === null) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletepodcastchannel');
+            } else {
+                self::getPodcastDeleter()->delete($podcast);
+                $response = Subsonic_Xml_Data::addSubsonicResponse('deletepodcastchannel');
             }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'deletepodcastchannel');
@@ -2070,7 +2159,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function deletepodcastepisode($input, $user)
+    public static function deletepodcastepisode($input, $user): void
     {
         $episode_id = self::_check_parameter($input, 'id');
         if (!$episode_id) {
@@ -2079,7 +2168,7 @@ class Subsonic_Api
 
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
-            if (!isset($episode->id)) {
+            if ($episode->isNew()) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletepodcastepisode');
             } else {
                 if ($episode->remove()) {
@@ -2102,7 +2191,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function downloadpodcastepisode($input, $user)
+    public static function downloadpodcastepisode($input, $user): void
     {
         $episode_id = self::_check_parameter($input, 'id');
         if (!$episode_id) {
@@ -2111,10 +2200,10 @@ class Subsonic_Api
 
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
-            if (!isset($episode->id)) {
+            if ($episode->isNew()) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'downloadpodcastepisode');
             } else {
-                $episode->gather();
+                self::getPodcastEpisodeDownloader()->fetch($episode);
                 $response = Subsonic_Xml_Data::addSubsonicResponse('downloadpodcastepisode');
             }
         } else {
@@ -2131,7 +2220,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function jukeboxcontrol($input, $user)
+    public static function jukeboxcontrol($input, $user): void
     {
         $action    = self::_check_parameter($input, 'action');
         $object_id = $input['id'] ?? array();
@@ -2234,7 +2323,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getinternetradiostations($input, $user)
+    public static function getinternetradiostations($input, $user): void
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getinternetradiostations');
@@ -2251,7 +2340,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function createinternetradiostation($input, $user)
+    public static function createinternetradiostation($input, $user): void
     {
         $url = self::_check_parameter($input, 'streamUrl');
         if (!$url) {
@@ -2261,7 +2350,7 @@ class Subsonic_Api
         if (!$name) {
             return;
         }
-        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?? '';
+        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?: '';
         $catalogs = User::get_user_catalogs($user->id, 'music');
         if (AmpConfig::get('live_stream') && $user->access >= 75) {
             $data = array(
@@ -2271,9 +2360,7 @@ class Subsonic_Api
                 "catalog" => $catalogs[0],
                 "site_url" => $site_url
             );
-            $internetradiostations   = array();
-            $internetradiostations[] = Live_Stream::create($data);
-            if (empty($internetradiostations)) {
+            if (!Live_Stream::create($data)) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'createinternetradiostation');
                 self::_apiOutput($input, $response);
 
@@ -2293,7 +2380,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function updateinternetradiostation($input, $user)
+    public static function updateinternetradiostation($input, $user): void
     {
         $internetradiostation_id = self::_check_parameter($input, 'id');
         if (!$internetradiostation_id) {
@@ -2307,7 +2394,7 @@ class Subsonic_Api
         if (!$name) {
             return;
         }
-        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?? '';
+        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?: '';
 
         if (AmpConfig::get('live_stream') && $user->access >= 75) {
             $internetradiostation = new Live_Stream(Subsonic_Xml_Data::_getAmpacheId($internetradiostation_id));
@@ -2340,7 +2427,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function deleteinternetradiostation($input, $user)
+    public static function deleteinternetradiostation($input, $user): void
     {
         $stream_id = self::_check_parameter($input, 'id');
         if (!$stream_id) {
@@ -2366,7 +2453,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getchatmessages($input, $user)
+    public static function getchatmessages($input, $user): void
     {
         unset($user);
         $since                    = (int)($input['since'] ?? 0);
@@ -2387,7 +2474,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function addchatmessage($input, $user)
+    public static function addchatmessage($input, $user): void
     {
         $message = self::_check_parameter($input, 'message');
         if (!$message) {
@@ -2410,7 +2497,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getuser($input, $user)
+    public static function getuser($input, $user): void
     {
         $username = self::_check_parameter($input, 'username');
         if ($user->access === 100 || $user->username == $username) {
@@ -2439,7 +2526,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getusers($input, $user)
+    public static function getusers($input, $user): void
     {
         if ($user->access === 100) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('getusers');
@@ -2458,7 +2545,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function createuser($input, $user)
+    public static function createuser($input, $user): void
     {
         $username     = self::_check_parameter($input, 'username');
         $password     = self::_check_parameter($input, 'password');
@@ -2488,7 +2575,7 @@ class Subsonic_Api
                 $access = AccessLevelEnum::LEVEL_ADMIN;
             }
             $password = self::_decryptPassword($password);
-            $user_id  = User::create($username, $username, $email, null, $password, $access);
+            $user_id  = User::create($username, $username, $email, '', $password, $access);
             if ($user_id > 0) {
                 if ($downloadRole) {
                     Preference::update('download', $user_id, 1);
@@ -2517,7 +2604,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function updateuser($input, $user)
+    public static function updateuser($input, $user): void
     {
         $username = self::_check_parameter($input, 'username');
         $password = $input['password'] ?? false;
@@ -2540,8 +2627,8 @@ class Subsonic_Api
             }
             // identify the user to modify
             $update_user = User::get_from_username((string)$username);
-            $user_id     = $update_user->id;
-            if ($user_id > 0) {
+            if ($update_user instanceof User) {
+                $user_id = $update_user->id;
                 // update access level
                 $update_user->update_access($access);
                 // update password
@@ -2584,12 +2671,12 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function deleteuser($input, $user)
+    public static function deleteuser($input, $user): void
     {
         $username = self::_check_parameter($input, 'username');
         if ($user->access === 100) {
             $update_user = User::get_from_username((string)$username);
-            if ($update_user->id) {
+            if ($update_user instanceof User) {
                 $update_user->delete();
                 $response = Subsonic_Xml_Data::addSubsonicResponse('deleteuser');
             } else {
@@ -2609,14 +2696,14 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function changepassword($input, $user)
+    public static function changepassword($input, $user): void
     {
         $username = self::_check_parameter($input, 'username');
         $inp_pass = self::_check_parameter($input, 'password');
         $password = self::_decryptPassword($inp_pass);
         if ($user->username == $username || $user->access === 100) {
             $update_user = User::get_from_username((string) $username);
-            if ($update_user->id && !AmpConfig::get('simple_user_mode')) {
+            if ($update_user instanceof User && !AmpConfig::get('simple_user_mode')) {
                 $update_user->update_password($password);
                 $response = Subsonic_Xml_Data::addSubsonicResponse('changepassword');
             } else {
@@ -2636,7 +2723,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getbookmarks($input, $user)
+    public static function getbookmarks($input, $user): void
     {
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getbookmarks');
         $bookmarks = [];
@@ -2655,21 +2742,19 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function createbookmark($input, $user)
+    public static function createbookmark($input, $user): void
     {
         $object_id = self::_check_parameter($input, 'id');
         $position  = self::_check_parameter($input, 'position');
         if (!$object_id || !$position) {
             return;
         }
-        $comment   = $input['comment'] ?? '';
-        $type      = Subsonic_Xml_Data::_getAmpacheType($object_id);
+        $comment = $input['comment'] ?? '';
+        $type    = Subsonic_Xml_Data::_getAmpacheType((string)$object_id);
 
         if (!empty($type)) {
             $bookmark = new Bookmark(Subsonic_Xml_Data::_getAmpacheId($object_id), $type);
-            if ($bookmark->id) {
-                static::getBookmarkRepository()->update($bookmark->getId(), (int)$position, time());
-            } else {
+            if ($bookmark->isNew()) {
                 Bookmark::create(
                     [
                         'object_id' => Subsonic_Xml_Data::_getAmpacheId($object_id),
@@ -2680,6 +2765,8 @@ class Subsonic_Api
                     $user->id,
                     time()
                 );
+            } else {
+                static::getBookmarkRepository()->update($bookmark->getId(), (int)$position, time());
             }
             $response = Subsonic_Xml_Data::addSubsonicResponse('createbookmark');
         } else {
@@ -2695,20 +2782,20 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function deletebookmark($input, $user)
+    public static function deletebookmark($input, $user): void
     {
         $object_id = self::_check_parameter($input, 'id');
         if (!$object_id) {
             return;
         }
-        $type = Subsonic_Xml_Data::_getAmpacheType($object_id);
+        $type = Subsonic_Xml_Data::_getAmpacheType((string)$object_id);
 
         $bookmark = new Bookmark(Subsonic_Xml_Data::_getAmpacheId($object_id), $type, $user->id);
-        if ($bookmark->id) {
+        if ($bookmark->isNew()) {
+            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletebookmark');
+        } else {
             static::getBookmarkRepository()->delete($bookmark->getId());
             $response = Subsonic_Xml_Data::addSubsonicResponse('deletebookmark');
-        } else {
-            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletebookmark');
         }
         self::_apiOutput($input, $response);
     }
@@ -2722,12 +2809,12 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getplayqueue($input, $user)
+    public static function getplayqueue($input, $user): void
     {
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplayqueue');
-        $client    = scrub_in($input['c'] ?? 'Subsonic');
+        $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
         $playQueue = new User_Playlist($user->id, $client);
-        Subsonic_Xml_Data::addPlayQueue($response, $playQueue, $user->username);
+        Subsonic_Xml_Data::addPlayQueue($response, $playQueue, (string)$user->username);
         self::_apiOutput($input, $response);
     }
 
@@ -2738,18 +2825,20 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function saveplayqueue($input, $user)
+    public static function saveplayqueue($input, $user): void
     {
-        $current = (int)($input['current'] ?? 0);
-        $media   = Subsonic_Xml_Data::_getAmpacheObject($current);
-        if ($media->id) {
-            $response       = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
-            $position       = (array_key_exists('position', $input))
-                ? (int)((int)$input['position'] / 1000)
+        $current = (string)($input['current'] ?? '0');
+        $media   = Subsonic_Xml_Data::_getAmpacheObject((string)$current);
+        if ($media === null || $media->isNew()) {
+            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'saveplayqueue');
+        } else {
+            $response = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
+            $position = (array_key_exists('position', $input))
+                ? (int)(((int)$input['position']) / 1000)
                 : 0;
-            $client         = scrub_in($input['c'] ?? 'Subsonic');
+            $client         = scrub_in((string) ($input['c'] ?? 'Subsonic'));
             $user_id        = $user->id;
-            $playqueue_time = (int)(User::get_user_data($user->id, 'playqueue_time')['playqueue_time'] ?? 0);
+            $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
             $time           = time();
             // wait a few seconds before smashing out play times
             if ($playqueue_time < ($time - 2)) {
@@ -2757,7 +2846,7 @@ class Subsonic_Api
                 $type     = Subsonic_Xml_Data::_getAmpacheType($current);
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
-                Stream::insert_now_playing((int)$media->id, (int)$user_id, ((int)$media->time - $position), $user->username, $type, ($time - $position));
+                Stream::insert_now_playing((int)$media->id, (int)$user_id, ((int)$media->time - $position), (string)$user->username, $type, ($time - $position));
 
                 if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->id) {
                     $time_diff = $time - $previous['date'];
@@ -2775,11 +2864,9 @@ class Subsonic_Api
                 $sub_ids   = (is_array($input['id']))
                     ? $input['id']
                     : array($input['id']);
-                $playlist  = Subsonic_Xml_Data::_getAmpacheIdArrays($sub_ids);
+                $playlist = Subsonic_Xml_Data::_getAmpacheIdArrays($sub_ids);
                 $playQueue->set_items($playlist, $type, $media->id, $position, $time);
             }
-        } else {
-            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'saveplayqueue');
         }
 
         self::_apiOutput($input, $response);
@@ -2807,16 +2894,16 @@ class Subsonic_Api
         $albums = false;
         switch ($type) {
             case "random":
-                $albums   = static::getAlbumRepository()->getRandom(
+                $albums = static::getAlbumRepository()->getRandom(
                     $user->id,
                     $size
                 );
                 break;
             case "newest":
-                $albums   = Stats::get_newest("album", $size, $offset, $musicFolderId, $user->id);
+                $albums = Stats::get_newest("album", $size, $offset, $musicFolderId, $user->id);
                 break;
             case "highest":
-                $albums   = Rating::get_highest("album", $size, $offset, $user->id);
+                $albums = Rating::get_highest("album", $size, $offset, $user->id);
                 break;
             case "frequent":
                 $albums = Stats::get_top("album", $size, 0, $offset);
@@ -2825,7 +2912,7 @@ class Subsonic_Api
                 $albums = Stats::get_recent("album", $size, $offset);
                 break;
             case "starred":
-                $albums   = Userflag::get_latest('album', 0, $size, $offset);
+                $albums = Userflag::get_latest('album', 0, $size, $offset);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);
@@ -2834,12 +2921,12 @@ class Subsonic_Api
                 $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
             case "byYear":
-                $fromYear = min($input['fromYear'], $input['toYear']);
-                $toYear   = max($input['fromYear'], $input['toYear']);
+                $fromYear = (int)min($input['fromYear'], $input['toYear']);
+                $toYear   = (int)max($input['fromYear'], $input['toYear']);
 
                 if ($fromYear || $toYear) {
-                    $data     = Search::year_search($fromYear, $toYear, $size, $offset);
-                    $albums   = Search::run($data, $user);
+                    $data   = Search::year_search($fromYear, $toYear, $size, $offset);
+                    $albums = Search::run($data, $user);
                 }
                 break;
             case "byGenre":
@@ -2856,12 +2943,12 @@ class Subsonic_Api
 
     /**
      * _updatePlaylist
-     * @param $playlist_id
+     * @param int|string $playlist_id
      * @param string $name
      * @param array $songsIdToAdd
      * @param array $songIndexToRemove
-     * @param boolean $public
-     * @param boolean $clearFirst
+     * @param bool $public
+     * @param bool $clearFirst
      */
     private static function _updatePlaylist(
         $playlist_id,
@@ -2870,8 +2957,12 @@ class Subsonic_Api
         $songIndexToRemove = array(),
         $public = true,
         $clearFirst = false
-    ) {
-        $playlist           = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlist_id));
+    ): void {
+        // If it's a string it probably needs a clean up
+        if (is_string($playlist_id)) {
+            $playlist_id = Subsonic_Xml_Data::_getAmpacheId($playlist_id);
+        }
+        $playlist           = new Playlist($playlist_id);
         $songsIdToAdd_count = count($songsIdToAdd);
         $newdata            = array();
         $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
@@ -2902,9 +2993,9 @@ class Subsonic_Api
      * _setStar
      * @param array $input
      * @param User $user
-     * @param boolean $star
+     * @param bool $star
      */
-    private static function _setStar($input, $user, $star)
+    private static function _setStar($input, $user, $star): void
     {
         $object_id = $input['id'] ?? null;
         $albumId   = $input['albumId'] ?? null;
@@ -2971,7 +3062,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function startscan($input, $user)
+    public static function startscan($input, $user): void
     {
         $response = Subsonic_Xml_Data::addSubsonicResponse('startscan');
         Subsonic_Xml_Data::addScanStatus($response, $user);
@@ -2983,7 +3074,7 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getscanstatus($input, $user)
+    public static function getscanstatus($input, $user): void
     {
         $response = Subsonic_Xml_Data::addSubsonicResponse('getscanstatus');
         Subsonic_Xml_Data::addScanStatus($response, $user);
@@ -3048,5 +3139,55 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PrivateMessageRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastCreator(): PodcastCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastCreatorInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastEpisodeDownloader(): PodcastEpisodeDownloaderInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeDownloaderInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastDeleter(): PodcastDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastDeleterInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

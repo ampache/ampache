@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
@@ -80,23 +81,23 @@ class UPnPPlaylist
     /**
      * @return array
      */
-    public function CurrentItem()
+    public function CurrentItem(): array
     {
         return $this->_songs[$this->_current] ?? array();
     }
 
     /**
-     * @return integer
+     * CurrentPos
      */
-    public function CurrentPos()
+    public function CurrentPos(): int
     {
         return $this->_current;
     }
 
     /**
-     * @return boolean
+     * Next
      */
-    public function Next()
+    public function Next(): bool
     {
         if ($this->_current < count($this->_songs) - 1) {
             $this->_current++;
@@ -109,9 +110,9 @@ class UPnPPlaylist
     }
 
     /**
-     * @return integer|null
+     * @return int|null
      */
-    public function NextItem()
+    public function NextItem(): ?int
     {
         if ($this->_current < count($this->_songs) - 1) {
             $nxt = $this->_current + 1;
@@ -123,9 +124,9 @@ class UPnPPlaylist
     }
 
     /**
-     * @return boolean
+     * Prev
      */
-    public function Prev()
+    public function Prev(): bool
     {
         if ($this->_current > 0) {
             $this->_current--;
@@ -139,9 +140,8 @@ class UPnPPlaylist
 
     /**
      * @param $pos
-     * @return boolean
      */
-    public function Skip($pos)
+    public function Skip($pos): bool
     {
         // note that pos is started from 1 not from zero
         if (($pos >= 1) && ($pos <= count($this->_songs))) {

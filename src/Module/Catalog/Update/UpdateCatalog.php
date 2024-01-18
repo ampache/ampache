@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Catalog\Update;
 
@@ -61,7 +62,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         if ($deactivateMemoryLimit === true) {
             // Temporarily deactivate PHP memory limit
             echo "\033[31m- " . T_("Deactivated PHP memory limit") . " -\033[0m\n";
-            ini_set('memory_limit','-1');
+            ini_set('memory_limit', '-1');
             echo "------------------\n\n";
         }
 
@@ -71,7 +72,14 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ];
 
         // don't look at catalogs without an action
-        if (!$addNew && !$addArt && !$importPlaylists && !$cleanup && !$missing && !$verification) {
+        if (
+            !$addNew &&
+            !$addArt &&
+            !$importPlaylists &&
+            !$cleanup &&
+            !$missing &&
+            !$verification
+        ) {
             $catalogType = '';
             $catalogName = '';
         }
@@ -83,6 +91,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ob_end_clean();
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
+            if ($catalog === null) {
+                break;
+            }
             /* HINT: Catalog Name */
             $interactor->info(
                 sprintf(T_('Reading Catalog: "%s"'), $catalog->name),
@@ -319,7 +330,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 true
             );
         }
-        $time_diff  = (time() - $start_time) ?? 0;
+        $time_diff = time() - $start_time;
         $interactor->info(
             T_('Time') . ": " . date('i:s', $time_diff),
             true
@@ -337,7 +348,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $newPath     = $catalogType;
             $catalogType = 'local';
         }
-        $result  = $this->lookupCatalogs(
+        $result = $this->lookupCatalogs(
             $catalogType,
             $catalogName
         );
@@ -355,6 +366,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
 
         while ($row = Dba::fetch_assoc($result)) {
             $catalog = Catalog::create_from_id($row['id']);
+            if ($catalog === null) {
+                break;
+            }
             /* HINT: Catalog Name */
             $interactor->info(
                 sprintf(T_('Reading Catalog: "%s"'), $catalog->name),

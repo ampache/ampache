@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Application\PrivateMessage;
 
@@ -80,11 +81,11 @@ final class AddMessageAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $subject = trim(strip_tags(filter_var($data['subject'] ?? '', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
-        $message = trim(strip_tags(filter_var($data['message'] ?? '', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
+        $subject = trim(strip_tags(htmlspecialchars($data['subject'] ?? '', ENT_NOQUOTES)));
+        $message = trim(strip_tags(htmlspecialchars($data['message'] ?? '', ENT_NOQUOTES)));
         $to_user = User::get_from_username($data['to_user'] ?? '');
 
-        if (!$to_user->id) {
+        if (!$to_user) {
             AmpError::add('to_user', T_('Unknown user'));
         }
         if (empty($subject)) {

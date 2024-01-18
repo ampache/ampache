@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,74 +22,65 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\ShoutRepositoryInterface;
 
-class AmpacheShoutHome
+class AmpacheShoutHome implements AmpachePluginInterface
 {
-    public $name        = 'Shout Home';
-    public $categories  = 'home';
-    public $description = 'Shoutbox on homepage';
-    public $url         = '';
-    public $version     = '000001';
-    public $min_ampache = '370021';
-    public $max_ampache = '999999';
+    public string $name        = 'Shout Home';
+    public string $categories  = 'home';
+    public string $description = 'Shoutbox on homepage';
+    public string $url         = '';
+    public string $version     = '000001';
+    public string $min_ampache = '370021';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
 
     /**
      * Constructor
-     * This function does nothing...
      */
     public function __construct()
     {
         $this->description = T_('Shoutbox on homepage');
-
-        return true;
     }
 
     /**
      * install
-     * This is a required plugin function. It inserts our preferences
-     * into Ampache
+     * Inserts plugin preferences into Ampache
      */
-    public function install()
+    public function install(): bool
     {
-        // Check and see if it's already installed
-        if (Preference::exists('shouthome_max_items')) {
+        if (!Preference::exists('shouthome_max_items') && !Preference::insert('shouthome_max_items', T_('Shoutbox on homepage max items'), 5, 25, 'integer', 'plugins', $this->name)) {
             return false;
         }
-
-        Preference::insert('shouthome_max_items', T_('Shoutbox on homepage max items'), 5, 25, 'integer', 'plugins', $this->name);
 
         return true;
     }
 
     /**
      * uninstall
-     * This is a required plugin function. It removes our preferences from
-     * the database returning it to its original form
+     * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('shouthome_max_items');
-
-        return true;
+        return Preference::delete('shouthome_max_items');
     }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         return true;
     }
@@ -95,12 +89,16 @@ class AmpacheShoutHome
      * display_home
      * This display the module in home page
      */
-    public function display_home()
+    public function display_home(): void
     {
         if (AmpConfig::get('sociable')) {
             echo "<div id='shout_objects'>\n";
-            $shouts = Shoutbox::get_top($this->maxitems);
-            if (count($shouts)) {
+            $shouts = iterator_to_array(
+                self::getShoutRepository()->getTop((int) $this->maxitems)
+            );
+            $shoutRenderer = $this->getShoutRenderer();
+
+            if (count($shouts) > 0) {
                 require_once Ui::find_template('show_shoutbox.inc.php');
             }
             echo "</div>\n";
@@ -109,12 +107,10 @@ class AmpacheShoutHome
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes
-     * from the preferences.
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -125,5 +121,25 @@ class AmpacheShoutHome
         }
 
         return true;
+    }
+
+    /**
+     * @todo find a better solution...
+     */
+    private function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @todo find a better solution...
+     */
+    private function getShoutRenderer(): ShoutRendererInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRendererInterface::class);
     }
 }

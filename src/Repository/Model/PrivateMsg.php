@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
@@ -35,52 +36,27 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
     protected const DB_TABLENAME = 'user_pvmsg';
 
     /* Variables from DB */
-    /**
-     * @var integer $id
-     */
-    private $id;
+    private int $id = 0;
+    private ?string $subject;
+    private ?string $message;
+    private int $from_user;
+    private int $to_user;
+    private bool $is_read;
+    private ?int $creation_date;
+
 
     /**
-     * @var string $subject
+     * @param int|null $pm_id
      */
-    private $subject;
-
-    /**
-     * @var string $message
-     */
-    private $message;
-
-    /**
-     * @var integer $from_user
-     */
-    private $from_user;
-
-    /**
-     * @var integer $to_user
-     */
-    private $to_user;
-
-    /**
-     * @var integer $creation_date
-     */
-    private $creation_date;
-
-    /**
-     * @var boolean $is_read
-     */
-    private $is_read;
-
-    /**
-     * @param integer $pm_id
-     */
-    public function __construct($pm_id)
+    public function __construct($pm_id = 0)
     {
+        if (!$pm_id) {
+            return;
+        }
         $info = $this->get_info($pm_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        return true;
     }
 
     public function getId(): int
@@ -95,18 +71,18 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getSenderUserLink(): string
     {
-        $from_user = new User((int) $this->from_user);
-        $from_user->format();
-
-        return $from_user->f_link;
+        return (new User($this->from_user))->get_f_link();
     }
 
     public function getRecipientUserLink(): string
     {
         $to_user = new User((int) $this->to_user);
+        if ($to_user->isNew()) {
+            return '';
+        }
         $to_user->format();
 
-        return $to_user->f_link;
+        return (string)$to_user->get_f_link();
     }
 
     public function getCreationDate(): int

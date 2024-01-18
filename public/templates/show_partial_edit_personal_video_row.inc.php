@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -18,12 +21,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Repository\Model\Personal_Video;
+
+/** @var Personal_Video $libitem */ ?>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Location') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Location'); ?></td>
                 <td><input type="text" name="location" value="<?php echo scrub_out($libitem->location); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Summary'); ?></td>
                 <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
             </tr>

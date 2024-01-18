@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -17,6 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Repository\Model;
@@ -58,9 +60,9 @@ abstract class DatabaseObject
     //}
 
     /**
-     * @return boolean
+     * isDirty
      */
-    public function isDirty()
+    public function isDirty(): bool
     {
         return true;
     }
@@ -70,7 +72,7 @@ abstract class DatabaseObject
      * TODO: we get all properties for now...need more logic here...
      * @return array
      */
-    public function getDirtyProperties()
+    public function getDirtyProperties(): array
     {
         $properties = get_object_vars($this);
         unset($properties['id']);
@@ -84,7 +86,7 @@ abstract class DatabaseObject
      * This works in constructor because the properties are here from
      * fetch_object before the constructor get called.
      */
-    protected function remapCamelcase()
+    protected function remapCamelcase(): void
     {
         foreach (get_object_vars($this) as $key => $val) {
             if (strpos($key, '_') !== false) {
@@ -99,7 +101,7 @@ abstract class DatabaseObject
      * @param $properties
      * @return array
      */
-    protected function fromCamelCase($properties)
+    protected function fromCamelCase($properties): array
     {
         $data = array();
         foreach ($properties as $propertie => $value) {
@@ -114,13 +116,13 @@ abstract class DatabaseObject
      * Adds child Objects based of the Model Information
      * TODO: Someday we might need lazy loading, but for now it should be ok.
      */
-    public function initializeChildObjects()
+    public function initializeChildObjects(): void
     {
         foreach ($this->fieldClassRelations as $field => $repositoryName) {
             if (class_exists($repositoryName)) {
-                /* @var Repository $repository */
-                $class_name   = ObjectTypeToClassNameMapper::map($repositoryName);
-                $repository   = new $class_name();
+                $className = ObjectTypeToClassNameMapper::map($repositoryName);
+                /** @var Repository $repository */
+                $repository   = new $className();
                 $this->$field = $repository->findById($this->$field);
             }
         }

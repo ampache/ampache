@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -25,7 +26,9 @@ namespace Ampache\Module\Application\Login;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\EnvironmentInterface;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
+use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -50,6 +53,8 @@ final class DefaultAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'default';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private AuthenticationManagerInterface $authenticationManager;
@@ -60,22 +65,28 @@ final class DefaultAction implements ApplicationActionInterface
 
     private NetworkCheckerInterface $networkChecker;
 
-    private EnvironmentInterface $environment;
+    private UiInterface $ui;
+
+    private UserTrackerInterface $userTracker;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         AuthenticationManagerInterface $authenticationManager,
         ResponseFactoryInterface $responseFactory,
         LoggerInterface $logger,
         NetworkCheckerInterface $networkChecker,
-        EnvironmentInterface $environment
+        UiInterface $ui,
+        UserTrackerInterface $userTracker
     ) {
+        $this->requestParser         = $requestParser;
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
         $this->responseFactory       = $responseFactory;
         $this->logger                = $logger;
         $this->networkChecker        = $networkChecker;
-        $this->environment           = $environment;
+        $this->ui                    = $ui;
+        $this->userTracker           = $userTracker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -125,11 +136,12 @@ final class DefaultAction implements ApplicationActionInterface
         /* Clean Auth values */
         unset($auth);
 
-        if (empty($_REQUEST['step'])) {
+        if (empty($this->requestParser->getFromRequest('step'))) {
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
-            if ((isset($_POST['username'])) ||
-                (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) &&
-                    (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))) {
+            if (
+                (isset($_POST['username'])) ||
+                (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
+            ) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
                     $auth                         = array();
@@ -173,22 +185,22 @@ final class DefaultAction implements ApplicationActionInterface
                     }
                 }
             }
-        } elseif (Core::get_request('step') == '2') {
-            $auth_mod = $_REQUEST['auth_mod'];
+        } elseif ($this->requestParser->getFromRequest('step') == '2') {
+            $auth_mod = $this->requestParser->getFromRequest('auth_mod');
 
             $auth = $this->authenticationManager->postAuth($auth_mod);
 
             /**
              * postAuth may return null, so this has to be considered in here
              */
-            if ($auth['success']) {
+            if (isset($auth['success']) && $auth['success']) {
                 $username = $auth['username'];
             } else {
                 $this->logger->error(
                     'Second step authentication failed',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                AmpError::add('general', $auth['error']);
+                AmpError::add('general', $auth['error'] ?? '');
             }
         }
 
@@ -206,7 +218,7 @@ final class DefaultAction implements ApplicationActionInterface
                 );
             } elseif (AmpConfig::get('prevent_multiple_logins')) {
                 // if logged in multiple times
-                $session_ip = $user->is_logged_in();
+                $session_ip = ($user instanceof User) ? $user->is_logged_in() : false;
                 $current_ip = Core::get_user_ip();
                 if ($current_ip && ($current_ip != $session_ip)) {
                     $auth['success'] = false;
@@ -259,7 +271,13 @@ final class DefaultAction implements ApplicationActionInterface
             } // end if auto_create
 
             // This allows stealing passwords validated by external means such as LDAP
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) && isset($auth) && $auth['success'] && isset($password) && $user instanceof User) {
+            if (
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) &&
+                isset($auth) &&
+                $auth['success'] &&
+                isset($password) &&
+                $user instanceof User
+            ) {
                 $user->update_password($password);
             }
         }
@@ -278,9 +296,7 @@ final class DefaultAction implements ApplicationActionInterface
             unset($_SESSION['userdata']['avatar']);
 
             // Record the IP of this person!
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::TRACK_USER_IP)) {
-                $user->insert_ip_history();
-            }
+            $this->userTracker->trackIpAddress($user);
 
             if (isset($username)) {
                 Session::create_user_cookie($username);
@@ -329,13 +345,15 @@ final class DefaultAction implements ApplicationActionInterface
              * to redirect them back into an admin section
              */
             $web_path = $this->configContainer->getWebPath();
-            if ((substr($_POST['referrer'], 0, strlen((string) $web_path)) == $web_path) &&
+            if (
+                (substr($_POST['referrer'], 0, strlen((string) $web_path)) == $web_path) &&
                 strpos($_POST['referrer'], 'install.php') === false &&
                 strpos($_POST['referrer'], 'login.php') === false &&
                 strpos($_POST['referrer'], 'logout.php') === false &&
                 strpos($_POST['referrer'], 'update.php') === false &&
                 strpos($_POST['referrer'], 'activate.php') === false &&
-                strpos($_POST['referrer'], 'admin') === false) {
+                strpos($_POST['referrer'], 'admin') === false
+            ) {
                 return $this->responseFactory
                     ->createResponse(StatusCode::FOUND)
                     ->withHeader(
@@ -352,7 +370,7 @@ final class DefaultAction implements ApplicationActionInterface
                 );
         } // auth success
 
-        require Ui::find_template('show_login_form.inc.php');
+        $this->ui->show('show_login_form.inc.php');
 
         return null;
     }

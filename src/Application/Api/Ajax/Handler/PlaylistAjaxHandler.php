@@ -2,7 +2,7 @@
 
 declare(strict_types=0);
 
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -32,6 +32,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Playlist;
 
 final class PlaylistAjaxHandler implements AjaxHandlerInterface
@@ -41,7 +42,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         RequestParserInterface $requestParser
     ) {
-        $this->requestParser   = $requestParser;
+        $this->requestParser = $requestParser;
     }
 
     public function handle(): void
@@ -54,6 +55,9 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
             case 'delete_track':
                 // Create the object and remove the track
                 $playlist = new Playlist($_REQUEST['playlist_id']);
+                if ($playlist->isNew()) {
+                    break;
+                }
                 $playlist->format();
                 if ($playlist->has_access()) {
                     $playlist->delete_track($_REQUEST['track_id']);
@@ -61,9 +65,10 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $playlist->regenerate_track_numbers();
                 }
 
+                $browse_id  = (int)($_REQUEST['browse_id'] ?? 0);
                 $object_ids = $playlist->get_items();
                 ob_start();
-                $browse = new Browse();
+                $browse = new Browse((int) $browse_id);
                 $browse->set_type('playlist_media');
                 $browse->add_supplemental_object('playlist', $playlist->id);
                 $browse->save_objects($object_ids);
@@ -106,9 +111,10 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
                     $item_ids = explode(',', $item_id);
                     foreach ($item_ids as $iid) {
-                        $class_name = ObjectTypeToClassNameMapper::map($item_type);
-                        $libitem    = new $class_name($iid);
-                        if ($libitem->id) {
+                        $className = ObjectTypeToClassNameMapper::map($item_type);
+                        /** @var library_item $libitem */
+                        $libitem = new $className($iid);
+                        if ($libitem->isNew() === false) {
                             $medias = array_merge($medias, $libitem->get_medias());
                         }
                     }

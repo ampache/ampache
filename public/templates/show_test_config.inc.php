@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -29,7 +32,7 @@ use Ampache\Module\Util\Ui;
 <head>
   <!-- Propelled by Ampache | ampache.org -->
   <?php Ui::show_custom_style(); ?>
-  <title><?php echo T_('Ampache -- Config Debug Page') ?></title>
+  <title><?php echo T_('Ampache -- Config Debug Page'); ?></title>
   <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
   <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />

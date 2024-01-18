@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -30,14 +33,17 @@ use Ampache\Module\Util\Ui;
 $currentType = (isset($currentType))
     ? $currentType
     : Core::get_request('type');
+if (empty($currentType)) {
+    $currentType = 'song';
+}
 if (isset($playlist)) {
     $logic_operator = $playlist->logic_operator;
 } else {
     $logic_operator = Core::get_request('operator');
 }
-$logic_operator = strtolower($logic_operator); ?>
+$logic_operator = strtolower((string)$logic_operator); ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $currentType ?: 'song'; ?>"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $currentType; ?>"></script>
 
 <?php Ui::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata">
@@ -48,10 +54,10 @@ $logic_operator = strtolower($logic_operator); ?>
                 <select name="operator">
                     <option value="and" <?php if ($logic_operator == 'and') {
                         echo 'selected="selected"';
-                    }?>><?php echo T_('all rules'); ?></option>
+                    } ?>><?php echo T_('all rules'); ?></option>
                     <option value="or" <?php if ($logic_operator == 'or') {
                         echo 'selected="selected"';
-                    }?>><?php echo T_('any rule'); ?></option>
+                    } ?>><?php echo T_('any rule'); ?></option>
                 </select>
         </td>
         </tr>
@@ -70,7 +76,7 @@ $logic_operator = strtolower($logic_operator); ?>
 <?php if (isset($playlist)) {
     $out = $playlist->to_js();
 } else {
-    $mysearch = new Search(null, $currentType);
+    $mysearch = new Search(0, $currentType);
     $mysearch->set_rules($_REQUEST);
     $out = $mysearch->to_js();
 }

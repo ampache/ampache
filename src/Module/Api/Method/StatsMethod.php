@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
@@ -55,15 +56,12 @@ final class StatsMethod
      * Get some items based on some simple search types and filters. (Random by default)
      * This method HAD partial backwards compatibility with older api versions but it has now been removed
      *
-     * @param array $input
-     * @param User $user
      * type     = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
      * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
      * user_id  = (integer) //optional
      * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) //optional
-     * @return boolean
      */
     public static function stats(array $input, User $user): bool
     {
@@ -78,36 +76,40 @@ final class StatsMethod
         }
         // do you allow video?
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return false;
-        }
-
-        // override your user if you're looking at others
-        if (array_key_exists('username', $input)) {
-            $user = User::get_from_username($input['username']);
-        } elseif (array_key_exists('user_id', $input)) {
-            $user = new User((int)$input['user_id']);
-        }
-        if (!$user instanceof User || $user->id < 1) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), 'user'), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         $user_id = $user->id;
+        // override your user if you're looking at others
+        if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
+            $user    = User::get_from_username($input['username']);
+            $user_id = $user->id;
+        } elseif (array_key_exists('user_id', $input)) {
+            $userTwo = new User((int)$input['user_id']);
+            if (!$userTwo->isNew()) {
+                $user_id = (int)$input['user_id'];
+                $user    = new User($user_id);
+            }
+        }
+        if (!$user instanceof User || $user->isNew()) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), 'user'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+
+            return false;
+        }
         $results = array();
         $filter  = $input['filter'] ?? '';
         switch ($filter) {
@@ -253,7 +255,7 @@ final class StatsMethod
                         Xml_Data::set_limit($limit);
                         echo Xml_Data::videos($results, $user);
                 }
-                Session::extend($input['auth']);
+                Session::extend($input['auth'], 'api');
                 break;
             case 'podcast':
                 switch ($input['api_format']) {

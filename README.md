@@ -8,7 +8,7 @@
 
 ## News
 
-Ampache6 is [HERE!](https://github.com/ampache/ampache/releases/tag/6.0.0)
+Ampache6 is [HERE!](https://github.com/ampache/ampache/releases/tag/6.2.0)
 
 ## Basics
 
@@ -32,7 +32,7 @@ The recommended and most stable version is the current stable [release6 branch](
 
 You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
-[![Code Coverage](https://scrutinizer-ci.com/g/ampache/ampache/badges/coverage.png?b=source-changes)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=source-changes)
+[![Code Coverage](https://scrutinizer-ci.com/g/ampache/ampache/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f995711a30364908968bf0efb3e7e257)](https://app.codacy.com/gh/ampache/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 
@@ -50,23 +50,25 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * nginx
   * IIS
 
-* PHP 7.1-7.4 (Ampache 4.x.x)
-* PHP 7.4 (Ampache 5.0.x and higher)
-* PHP 8.0 (Ampache 5.1.x and higher)
-* PHP 8.1 (Ampache 5.5.0 and higher)
-* PHP 8.2 (Ampache 6.0.0 and higher)
+* The correct PHP version for your Ampache release
+  * PHP 7.1-7.4 (Ampache 4.x.x)
+  * PHP 7.4 (Ampache 5.0.x and higher)
+  * PHP 8.0 (Ampache 5.1.x and higher)
+  * PHP 8.1 (Ampache 5.5.0 and higher)
+  * PHP 8.2 (Ampache 6.0.0 and higher)
+  * PHP 8.3 (Ampache 6.2.0 and higher)
 
-**NOTE** That php7.4 will not be supported for Ampache6 but can still be used.
+**NOTE** That php7.4 will not be supported for Ampache6 but can still be built.
 
 * PHP modules:
   * PDO
   * PDO_MYSQL
   * hash
   * session
-  * json
+  * json (included in php8+)
   * intl
-  * simplexml (optional)
-  * curl (optional)
+  * simplexml
+  * curl
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml

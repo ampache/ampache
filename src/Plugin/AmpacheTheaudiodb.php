@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,7 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
@@ -35,19 +37,20 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheTheaudiodb
+class AmpacheTheaudiodb implements AmpachePluginInterface
 {
-    public $name        = 'TheAudioDb';
-    public $categories  = 'metadata';
-    public $description = 'TheAudioDb metadata integration';
-    public $url         = 'http://www.theaudiodb.com';
-    public $version     = '000003';
-    public $min_ampache = '370009';
-    public $max_ampache = '999999';
+    public string $name        = 'TheAudioDb';
+    public string $categories  = 'metadata';
+    public string $description = 'TheAudioDb metadata integration';
+    public string $url         = 'http://www.theaudiodb.com';
+    public string $version     = '000003';
+    public string $min_ampache = '370009';
+    public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
+    public $overwrite_name;
+
     private $api_key;
-    private $overwrite_name;
 
     /**
      * Constructor
@@ -56,44 +59,42 @@ class AmpacheTheaudiodb
     public function __construct()
     {
         $this->description = T_('TheAudioDb metadata integration');
-
-        return true;
     }
 
     /**
      * install
      * This is a required plugin function
      */
-    public function install()
+    public function install(): bool
     {
-        if (Preference::exists('tadb_api_key')) {
+        // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
+        if (!Preference::exists('tadb_api_key') && !Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+        if (!Preference::exists('tadb_overwrite_name') && !Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 
-        // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name);
-        Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
-
         return true;
-    } // install
+    }
 
     /**
      * uninstall
      * This is a required plugin function
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
-        Preference::delete('tadb_api_key');
-        Preference::delete('tadb_overwrite_name');
-
-        return true;
-    } // uninstall
+        return (
+            Preference::delete('tadb_api_key') &&
+            Preference::delete('tadb_overwrite_name')
+        );
+    }
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade()
+    public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version == 0) {
@@ -111,9 +112,8 @@ class AmpacheTheaudiodb
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return boolean
      */
-    public function load($user)
+    public function load($user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -133,7 +133,7 @@ class AmpacheTheaudiodb
         $this->overwrite_name = (bool)$data['tadb_overwrite_name'];
 
         return true;
-    } // load
+    }
 
     /**
      * get_metadata
@@ -142,7 +142,7 @@ class AmpacheTheaudiodb
      * @param array $media_info
      * @return array
      */
-    public function get_metadata($gather_types, $media_info)
+    public function get_metadata($gather_types, $media_info): array
     {
         // Music metadata only
         if (!in_array('music', $gather_types)) {
@@ -204,7 +204,7 @@ class AmpacheTheaudiodb
         }
 
         return $results;
-    } // get_metadata
+    }
 
     /**
      * get_external_metadata
@@ -213,7 +213,7 @@ class AmpacheTheaudiodb
      * @param string $object_type
      * @return bool
      */
-    public function get_external_metadata($object, string $object_type)
+    public function get_external_metadata($object, string $object_type): bool
     {
         $valid_types = array('artist');
         // Artist metadata only for now
@@ -227,7 +227,7 @@ class AmpacheTheaudiodb
         try {
             if (in_array($object_type, $valid_types)) {
                 $release = null;
-                if (Vainfo::is_mbid($object->mbid)) {
+                if ($object->mbid !== null && VaInfo::is_mbid($object->mbid)) {
                     $artist  = $this->get_artist($object->mbid);
                     $release = $artist->artists[0] ?? $release;
                 } else {
@@ -291,7 +291,7 @@ class AmpacheTheaudiodb
                     $data['yearformed']  = $release->intFormedYear ?? null;
 
                     // when you come in with an mbid you might want to keep the name updated (ignore case)
-                    if ($this->overwrite_name && Vainfo::is_mbid($object->mbid) && strtolower($data['name'] ?? '') !== strtolower($object->get_fullname())) {
+                    if ($this->overwrite_name && $object->mbid !== null && VaInfo::is_mbid($object->mbid) && strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         $object->prefix = $name_check['prefix'];
                         $object->name   = $name_check['name'];
@@ -308,15 +308,15 @@ class AmpacheTheaudiodb
         }
 
         return true;
-    } // get_external_metadata
+    }
 
     /**
      * @param string $type
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5)
+    public function gather_arts($type, $options = array(), $limit = 5): array
     {
         debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
@@ -341,12 +341,14 @@ class AmpacheTheaudiodb
     }
 
     /**
-     * @param string $name
+     * @param null|string $name
      * @return mixed|null
      */
     private function search_artists($name)
     {
-        return $this->api_call('search.php?s=' . rawurlencode($name));
+        return ($name)
+            ? $this->api_call('search.php?s=' . rawurlencode($name))
+            : null;
     }
 
     /**

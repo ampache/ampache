@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Playlist\Search;
 
@@ -42,26 +43,26 @@ final class PodcastEpisodeSearch implements SearchInterface
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
-        $where       = array();
-        $table       = array();
-        $join        = array();
-        $group       = array();
-        $having      = array();
-        $parameters  = array();
+        $where      = array();
+        $table      = array();
+        $join       = array();
+        $group      = array();
+        $having     = array();
+        $parameters = array();
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
             $operator = array();
-            if (!$type) {
+            if ($type === null) {
                 continue;
             }
-            foreach ($search->basetypes[$type] as $op) {
-                if ($op['name'] == $rule[1]) {
-                    $operator = $op;
+            foreach ($search->basetypes[$type] as $baseOperator) {
+                if ($baseOperator['name'] == $rule[1]) {
+                    $operator = $baseOperator;
                     break;
                 }
             }
-            $input        = $search->filter_data($rule[2], $type, $operator);
+            $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
@@ -75,12 +76,12 @@ final class PodcastEpisodeSearch implements SearchInterface
                     $join['podcast'] = true;
                     break;
                 case 'time':
-                    $input        = $input * 60;
+                    $input        = ((int)$input) * 60;
                     $where[]      = "`podcast_episode`.`time` $operator_sql ?";
                     $parameters[] = $input;
                     break;
                 case 'state':
-                    $where[]      = "`podcast_episode`.`state` $operator_sql ?";
+                    $where[] = "`podcast_episode`.`state` $operator_sql ?";
                     switch ($input) {
                         case 0:
                             $parameters[] = 'skipped';

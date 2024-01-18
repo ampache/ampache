@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,17 +23,16 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\SmartPlaylist;
 
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class ShowAction implements ApplicationActionInterface
 {
@@ -38,24 +40,43 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         UiInterface $ui,
+        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory
     ) {
         $this->ui           = $ui;
+        $this->logger       = $logger;
         $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist = $this->modelFactory->createSearch((int)($request->getParsedBody()['playlist_id'] ?? 0));
-
+        $playlist = $this->modelFactory->createSearch(
+            (int)($request->getQueryParams()['playlist_id'] ?? 0)
+        );
         $this->ui->showHeader();
+        if ($playlist->isNew()) {
+            $this->logger->warning(
+                'Requested a search that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $playlist->format();
 
-        $object_ids = $playlist->get_items();
-        require_once  Ui::find_template('show_search.inc.php');
+            $this->ui->show(
+                'show_search.inc.php',
+                [
+                    'playlist' => $playlist,
+                    'object_ids' => $playlist->get_items()
+                ]
+            );
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,10 +22,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -62,14 +63,14 @@ class HttpQPlayer
      * with port 4800
      * @param string $host
      * @param string $password
-     * @param integer $port
+     * @param int $port
      */
     public function __construct($host = "localhost", $password = '', $port = 4800)
     {
         $this->host     = $host;
         $this->port     = $port;
         $this->password = $password;
-    } // HttpQPlayer
+    }
 
     /**
      * add
@@ -94,20 +95,20 @@ class HttpQPlayer
         }
 
         return $results;
-    } // add
+    }
 
     /**
      * version
      * This gets the version of winamp currently
      * running, use this to test for a valid connection
      */
-    public function version()
+    public function version(): bool
     {
         $args    = array();
         $results = $this->sendCommand('getversion', $args);
 
         return ($results !== '0'); // a return of 0 is a bad value
-    } // version
+    }
 
     /**
      * clear
@@ -123,13 +124,13 @@ class HttpQPlayer
         }
 
         return $results;
-    } // clear
+    }
 
     /**
      * next
      * go to next song
      */
-    public function next()
+    public function next(): bool
     {
         $args    = array();
         $results = $this->sendCommand("next", $args);
@@ -139,13 +140,13 @@ class HttpQPlayer
         }
 
         return true;
-    } // next
+    }
 
     /**
      * prev
      * go to previous song
      */
-    public function prev()
+    public function prev(): bool
     {
         $args    = array();
         $results = $this->sendCommand("prev", $args);
@@ -155,15 +156,15 @@ class HttpQPlayer
         }
 
         return true;
-    } // prev
+    }
 
     /**
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return boolean|null
+     * @return bool|null
      */
-    public function skip($pos)
+    public function skip($pos): ?bool
     {
         $args    = array('index' => $pos);
         $results = $this->sendCommand('setplaylistpos', $args);
@@ -177,7 +178,7 @@ class HttpQPlayer
         $this->play();
 
         return true;
-    } // skip
+    }
 
     /**
      * play
@@ -193,7 +194,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // play
+    }
 
     /**
      * pause
@@ -209,7 +210,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // pause
+    }
 
     /**
      * stop
@@ -225,7 +226,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // stop
+    }
 
     /**
      * repeat
@@ -243,7 +244,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // repeat
+    }
 
     /**
      * random
@@ -261,7 +262,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // random
+    }
 
     /**
      * delete_pos
@@ -279,13 +280,13 @@ class HttpQPlayer
         }
 
         return $results;
-    } // delete_pos
+    }
 
     /**
      * state
      * This returns the current state of the httpQ player
      */
-    public function state()
+    public function state(): string
     {
         $state   = '';
         $args    = array();
@@ -302,7 +303,7 @@ class HttpQPlayer
         }
 
         return $state;
-    } // state
+    }
 
     /**
      * get_volume
@@ -318,13 +319,13 @@ class HttpQPlayer
         }
 
         return round((($results / 255) * 100), 2);
-    } // get_volume
+    }
 
     /**
      * volume_up
      * This increases the volume by Winamp's defined amount
      */
-    public function volume_up()
+    public function volume_up(): bool
     {
         $args    = array();
         $results = $this->sendCommand('volumeup', $args);
@@ -334,13 +335,13 @@ class HttpQPlayer
         }
 
         return true;
-    } // volume_up
+    }
 
     /**
      * volume_down
      * This decreases the volume by Winamp's defined amount
      */
-    public function volume_down()
+    public function volume_down(): bool
     {
         $args    = array();
         $results = $this->sendCommand('volumedown', $args);
@@ -350,16 +351,15 @@ class HttpQPlayer
         }
 
         return true;
-    } // volume_down
+    }
 
     /**
      * set_volume
      * This sets the volume as best it can, we go from a resolution
      * of 100 --> 255 so it's a little fuzzy
      * @param $value
-     * @return boolean
      */
-    public function set_volume($value)
+    public function set_volume($value): bool
     {
         // Convert it to base 255
         $volume  = $value * 2.55;
@@ -371,13 +371,13 @@ class HttpQPlayer
         }
 
         return true;
-    } // set_volume
+    }
 
     /**
      * clear_playlist
      * this flushes the playlist cache (I hope this means clear)
      */
-    public function clear_playlist()
+    public function clear_playlist(): bool
     {
         $args    = array();
         $results = $this->sendcommand('flushplaylist', $args);
@@ -387,7 +387,7 @@ class HttpQPlayer
         }
 
         return true;
-    } // clear_playlist
+    }
 
     /**
      * get_repeat
@@ -398,7 +398,7 @@ class HttpQPlayer
         $args = array();
 
         return $this->sendCommand('repeat_status', $args);
-    } // get_repeat
+    }
 
     /**
      * get_random
@@ -409,7 +409,7 @@ class HttpQPlayer
         $args = array();
 
         return $this->sendCommand('shuffle_status', $args);
-    } // get_random
+    }
 
     /**
      * get_now_playing
@@ -423,7 +423,7 @@ class HttpQPlayer
 
         // Now get the filename
         return $this->sendCommand('getplaylistfile', array('index' => $pos));
-    } // get_now_playing
+    }
 
     /**
      * get_tracks
@@ -440,7 +440,7 @@ class HttpQPlayer
         }
 
         return $results;
-    } // get_tracks
+    }
 
     /**
      * sendCommand
@@ -481,5 +481,5 @@ class HttpQPlayer
         $data = explode("\n", $data);
 
         return $data['4'];
-    } // sendCommand
-} // End HttpQPlayer Class
+    }
+}

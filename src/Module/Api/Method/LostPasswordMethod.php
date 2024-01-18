@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,15 +23,15 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\User\NewPasswordSenderInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Core;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -54,45 +56,68 @@ final class LostPasswordMethod
      *   $key = hash('sha256', 'email');
      *   auth = hash('sha256', $username . $key);
      * )
-     * @return boolean
+     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public static function handshake(array $input): bool
     {
         if (!Mailer::is_mail_enabled()) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
         }
         if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
         }
         // identify the user to modify
-        $user_id     = User::id_from_token($input['auth']);
+        $user_id     = self::getUserRepository()->idByResetToken($input['auth']);
         $update_user = new User($user_id);
 
         if ($user_id > 0) {
             // no resets for admin users
             if ($update_user->access == 100) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $user_id), '4710', self::ACTION, 'system', $input['api_format']);
+                Api::error(sprintf(T_('Bad Request: %s'), $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
                 return false;
             }
-            // @todo replace by constructor injection
-            global $dic;
-            /* @var NewPasswordSenderInterface $newPasswordSender */
-            $newPasswordSender = $dic->get(NewPasswordSenderInterface::class);
-            $current_ip        = Core::get_user_ip();
+            if (empty($update_user->email)) {
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Bad Request: %s'), $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
+
+                return false;
+            }
+
+            $current_ip = Core::get_user_ip();
 
             // Do not acknowledge a password has been sent or failed
-            $newPasswordSender->send($update_user->email, $current_ip);
+            self::getNewPasswordSender()->send($update_user->email, $current_ip);
 
             Api::message('success', $input['api_format']);
 
             return true;
         }
-        Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+        Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
 
         return false;
+    }
+
+    /**
+     * @todo replace by constructor injection
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @todo replace by constructor injection
+     */
+    private static function getNewPasswordSender(): NewPasswordSenderInterface
+    {
+        global $dic;
+
+        return $dic->get(NewPasswordSenderInterface::class);
     }
 }

@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,28 +23,43 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Gui\System;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\System\Update\Migration\MigrationInterface;
+use Ampache\Module\System\Update\UpdateHelperInterface;
+use Ampache\Module\System\Update\UpdaterInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use ArrayIterator;
 use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class UpdateViewAdapterTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private ?MockInterface $configContainer;
+    private MockInterface $configContainer;
 
-    private ?UpdateViewAdapter $subject;
+    private UpdateInfoRepositoryInterface&MockObject $updateInfoRepository;
 
-    public function setUp(): void
+    private UpdateHelperInterface&MockObject $updateHelper;
+
+    private UpdaterInterface&MockObject $updater;
+
+    private UpdateViewAdapter $subject;
+
+    protected function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->configContainer      = $this->mock(ConfigContainerInterface::class);
+        $this->updateInfoRepository = $this->createMock(UpdateInfoRepositoryInterface::class);
+        $this->updateHelper         = $this->createMock(UpdateHelperInterface::class);
+        $this->updater              = $this->createMock(UpdaterInterface::class);
 
         $this->subject = new UpdateViewAdapter(
-            $this->configContainer
+            $this->configContainer,
+            $this->updateInfoRepository,
+            $this->updateHelper,
+            $this->updater
         );
     }
 
@@ -131,6 +149,38 @@ class UpdateViewAdapterTest extends MockeryTestCase
         $this->assertSame(
             $webPath,
             $this->subject->getWebPath()
+        );
+    }
+
+    public function testGetUpdateInfoReturnsData(): void
+    {
+        $version   = 'version-string';
+        $changelog = ['some-changelog'];
+        $warning   = true;
+
+        $migration = $this->createMock(MigrationInterface::class);
+
+        $this->updater->expects(static::once())
+            ->method('getPendingUpdates')
+            ->willReturn(new ArrayIterator([[
+                'versionFormatted' => $version,
+                'migration' => $migration
+            ]]));
+
+        $migration->expects(static::once())
+            ->method('getChangelog')
+            ->willReturn($changelog);
+        $migration->expects(static::once())
+            ->method('hasWarning')
+            ->willReturn($warning);
+
+        static::assertSame(
+            [[
+                'title' => 'Version: ' . $version,
+                'changelog' => $changelog,
+                'warning' => $warning
+            ]],
+            iterator_to_array($this->subject->getUpdateInfo())
         );
     }
 }

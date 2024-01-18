@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
@@ -49,7 +50,7 @@ class Random
      * artist
      * This returns the ID of a random artist, nothing special here for now
      */
-    public static function artist()
+    public static function artist(): int
     {
         $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
         $sql     = "SELECT `artist`.`id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
@@ -64,16 +65,15 @@ class Random
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return $results['id'];
-    } // artist
+        return (int)$results['id'];
+    }
 
     /**
      * playlist
      * This returns a random Playlist with songs little bit of extra
      * logic require
-     * @return integer
      */
-    public static function playlist()
+    public static function playlist(): int
     {
         $sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL ORDER BY RAND()";
 
@@ -81,7 +81,7 @@ class Random
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['id'];
-    } // playlist
+    }
 
     /**
      * get_single_song
@@ -89,9 +89,8 @@ class Random
      * @param string $random_type
      * @param User $user
      * @param int $object_id
-     * @return int
      */
-    public static function get_single_song($random_type, $user, $object_id = 0)
+    public static function get_single_song($random_type, $user, $object_id = 0): int
     {
         switch ($random_type) {
             case 'artist':
@@ -110,27 +109,24 @@ class Random
         //debug_event(__CLASS__, "get_single_song:" . $song, 5);
 
         return (int)$song;
-    } // get_single_song
+    }
 
     /**
      * get_default
      * This just randomly picks a song at whim from all catalogs
      * nothing special here...
-     * @param string $limit
+     * @param int $limit
      * @param User $user
-     * @return integer[]
+     * @return int[]
      */
-    public static function get_default($limit = '', $user = null)
+    public static function get_default($limit, $user = null): array
     {
         $results = array();
 
-        if (empty($limit)) {
-            $limit = AmpConfig::get('offset_limit', 50);
-        }
         if (empty($user)) {
             $user = Core::get_global('user');
         }
-        $user_id = $user->id ?? null;
+        $user_id = ($user instanceof User) ? $user->id : null;
         $sql     = "SELECT `song`.`id` FROM `song` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -147,17 +143,17 @@ class Random
         }
 
         return $results;
-    } // get_default
+    }
 
     /**
      * get_artist
      * This looks at the last artist played and then randomly picks a song from the
      * same artist
-     * @param integer $limit
+     * @param int $limit
      * @param User $user
-     * @return integer[]
+     * @return int[]
      */
-    public static function get_artist($limit, $user = null)
+    public static function get_artist($limit, $user = null): array
     {
         $results = array();
 
@@ -185,41 +181,41 @@ class Random
         }
 
         return $results;
-    } // get_artist
+    }
 
     /**
      * get_playlist
      * Get a random song from a playlist (that you own)
      * @param User $user
      * @param int $playlist_id
-     * @return integer[]
+     * @return int[]
      */
-    public static function get_playlist($user, $playlist_id = 0)
+    public static function get_playlist($user, $playlist_id = 0): array
     {
         $results  = array();
         $playlist = new Playlist($playlist_id);
         if ($playlist->has_access($user->id)) {
-            foreach ($playlist->get_random_items(1) as $songs) {
+            foreach ($playlist->get_random_items('1') as $songs) {
                 $results[] = (int)$songs['object_id'];
             }
         }
 
         return $results;
-    } // get_playlist
+    }
 
     /**
      * get_search
      * Get a random song from a search (that you own)
      * @param User $user
      * @param int $search_id
-     * @return integer[]
+     * @return int[]
      */
-    public static function get_search($user, $search_id = 0)
+    public static function get_search(User $user, $search_id = 0): array
     {
         $results = array();
         $search  = new Search($search_id, 'song', $user);
         if ($search->has_access($user->id) || $search->type == 'public') {
-            foreach ($search->get_random_items(1) as $songs) {
+            foreach ($search->get_random_items('1') as $songs) {
                 $results[] = (int)$songs['object_id'];
             }
 
@@ -228,7 +224,7 @@ class Random
         debug_event(__CLASS__, $user->id . " doesn't have access to search:" . $search_id, 5);
 
         return $results;
-    } // get_search
+    }
 
     /**
      * advanced
@@ -238,7 +234,7 @@ class Random
      * @param array $data
      * @return array
      */
-    public static function advanced($type, $data)
+    public static function advanced($type, $data): array
     {
         /* Figure out our object limit */
         $limit     = (int)($data['limit'] ?? -1);
@@ -277,7 +273,7 @@ class Random
             default:
                 return array();
         }
-    } // advanced
+    }
 
     /**
      * advanced_results
@@ -287,7 +283,7 @@ class Random
      * @param array $data
      * @return array
      */
-    private static function advanced_results($sql_query, $sql_params, $data)
+    private static function advanced_results($sql_query, $sql_params, $data): array
     {
         // Run the query generated above so we can while it
         $db_results = Dba::read($sql_query, $sql_params);
@@ -365,9 +361,9 @@ class Random
      * @param string $limit_sql
      * @return array
      */
-    private static function advanced_sql($data, $type, $limit_sql)
+    private static function advanced_sql($data, $type, $limit_sql): array
     {
-        $search = new Search(null, $type);
+        $search = new Search(0, $type);
         $search->set_rules($data);
         $search_info     = $search->to_sql();
         $catalog_disable = AmpConfig::get('catalog_disable');
@@ -424,13 +420,13 @@ class Random
      * @param string $object_type
      * @param int $object_id
      */
-    public static function get_play_url($object_type, $object_id)
+    public static function get_play_url($object_type, $object_id): string
     {
         $user = Core::get_global('user');
-        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out($user->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out($object_id);
+        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out((string)$user->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
 
         return Stream_Url::format($link);
-    } // get_play_url
+    }
 
     /**
      * @deprecated

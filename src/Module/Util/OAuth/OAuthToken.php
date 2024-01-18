@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Util\OAuth;
 
@@ -49,15 +50,15 @@ class OAuthToken
      * generates the basic string serialization of a token that a server
      * would respond to request_token and access_token calls with
      */
-    public function to_string()
+    public function to_string(): string
     {
         return "oauth_token=" . OAuthUtil::urlencode_rfc3986($this->key) . "&oauth_token_secret=" . OAuthUtil::urlencode_rfc3986($this->secret);
     }
 
     /**
-     * @return string
+     * __toString
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->to_string();
     }

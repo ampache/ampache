@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,19 +23,15 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -67,11 +66,13 @@ final class AddCatalogAction extends AbstractCatalogAction
 
         ob_end_flush();
 
+        $body = $request->getParsedBody();
+
         if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'none') {
             AmpError::add('general', T_('Please select a Catalog type'));
         }
 
-        if (!strlen(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) {
+        if (!strlen(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES))) {
             AmpError::add('general', T_('Please enter a Catalog name'));
         }
 
@@ -82,10 +83,9 @@ final class AddCatalogAction extends AbstractCatalogAction
         // If an error hasn't occurred
         if (!AmpError::occurred()) {
             $catalog_id = Catalog::create($_POST);
-            $users      = static::getUserRepository()->getValidArray();
 
             if (!$catalog_id) {
-                require Ui::find_template('show_add_catalog.inc.php');
+                $this->ui->show('show_add_catalog.inc.php');
 
                 return null;
             }
@@ -96,7 +96,8 @@ final class AddCatalogAction extends AbstractCatalogAction
             $catalogIds[] = $catalog_id;
             catalog_worker('add_to_catalog', $catalogIds, $_POST);
 
-            $this->ui->showConfirmation(T_('No Problem'),
+            $this->ui->showConfirmation(
+                T_('No Problem'),
                 T_('The Catalog creation process has started'),
                 sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
                 0,
@@ -104,19 +105,9 @@ final class AddCatalogAction extends AbstractCatalogAction
                 false
             );
         } else {
-            require Ui::find_template('show_add_catalog.inc.php');
+            $this->ui->show('show_add_catalog.inc.php');
         }
 
         return null;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+declare(strict_types=1);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,11 +23,10 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Config;
 
 use Ampache\MockeryTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ConfigContainerTest extends MockeryTestCase
 {
@@ -187,9 +188,7 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @dataProvider featureEnabledDataProvider
-     */
+    #[DataProvider(methodName: 'featureEnabledDataProvider')]
     public function testIsFeatureEnabledReturnsExpectedState(
         $value,
         bool $state
@@ -204,7 +203,7 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
-    public function featureEnabledDataProvider(): array
+    public static function featureEnabledDataProvider(): array
     {
         return [
             [true, true],
@@ -267,6 +266,18 @@ class ConfigContainerTest extends MockeryTestCase
             $this->createSubject([
                 ConfigurationKeyEnum::COMPOSER_BINARY_PATH => $value
             ])->getComposerBinaryPath()
+        );
+    }
+
+    public function testGetVersionReturnsVersion(): void
+    {
+        $value = 'some-value';
+
+        $this->assertSame(
+            $value,
+            $this->createSubject([
+                ConfigurationKeyEnum::VERSION => $value
+            ])->getVersion()
         );
     }
 

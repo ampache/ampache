@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
@@ -166,20 +167,11 @@ class Api
         6
     );
 
-    /**
-     * @var string $auth_version
-     */
-    public static $auth_version = '350001';
+    public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
-    /**
-     * @var string $version
-     */
-    public static $version = '6.1.0'; // AMPACHE_VERSION
-
-    /**
-     * @var string $version_numeric
-     */
-    public static $version_numeric = '610000'; // AMPACHE_VERSION
+    public static string $auth_version    = '350001';
+    public static string $version         = '6.2.1'; // AMPACHE_VERSION
+    public static string $version_numeric = '621000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
@@ -202,7 +194,7 @@ class Api
      * @param string $format
      * @param array $return_data
      */
-    public static function message($message, $format = 'xml', $return_data = array())
+    public static function message($message, $format = 'xml', $return_data = array()): void
     {
         switch ($format) {
             case 'json':
@@ -211,18 +203,18 @@ class Api
             default:
                 echo Xml_Data::success($message, $return_data);
         }
-    } // message
+    }
 
     /**
      * error
      * call the correct error message depending on format
      * @param string $message
-     * @param string $error_code
+     * @param int|string $error_code
      * @param string $method
      * @param string $error_type
      * @param string $format
      */
-    public static function error($message, $error_code, $method, $error_type, $format = 'xml')
+    public static function error($message, $error_code, $method, $error_type, $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
@@ -231,7 +223,7 @@ class Api
             default:
                 echo Xml_Data::error($error_code, $message, $method, $error_type);
         }
-    } // error
+    }
 
     /**
      * empty
@@ -239,7 +231,7 @@ class Api
      * @param string $empty_type
      * @param string $format
      */
-    public static function empty($empty_type, $format = 'xml')
+    public static function empty($empty_type, $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
@@ -248,7 +240,7 @@ class Api
             default:
                 echo Xml_Data::empty();
         }
-    } // empty
+    }
 
     /**
      * set_filter
@@ -259,10 +251,10 @@ class Api
      * end users--so we have to do a little extra work to make them work
      * internally.
      * @param string $filter
-     * @param integer|string|boolean|null $value
-     * @return boolean
+     * @param int|string|bool|null $value
+     * @param Browse|null $browse
      */
-    public static function set_filter($filter, $value, ?Browse $browse = null)
+    public static function set_filter($filter, $value, $browse = null): bool
     {
         if (!strlen((string)$value)) {
             return false;
@@ -305,7 +297,7 @@ class Api
         } // end filter
 
         return true;
-    } // set_filter
+    }
 
     /**
      * check_parameter
@@ -316,9 +308,8 @@ class Api
      * @param array $input
      * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
-     * @return boolean
      */
-    public static function check_parameter($input, $parameters, $method)
+    public static function check_parameter($input, $parameters, $method): bool
     {
         foreach ($parameters as $parameter) {
             if (array_key_exists($parameter, $input) && ($input[$parameter] === 0 || $input[$parameter] === '0')) {
@@ -335,7 +326,7 @@ class Api
         }
 
         return true;
-    } // check_parameter
+    }
 
     /**
      * check_access
@@ -344,13 +335,12 @@ class Api
      * 'interface', 100, $user->id
      *
      * @param string $type
-     * @param integer $level
-     * @param integer $user_id
+     * @param int $level
+     * @param int $user_id
      * @param string $method
      * @param string $format
-     * @return boolean
      */
-    public static function check_access($type, $level, $user_id, $method, $format = 'xml')
+    public static function check_access($type, $level, $user_id, $method, $format = 'xml'): bool
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type . " '" . $level . "' required on " . $method . " function call.", 2);
@@ -361,7 +351,7 @@ class Api
         }
 
         return true;
-    } // check_access
+    }
 
     /**
      * server_details
@@ -371,7 +361,7 @@ class Api
      * @param string $token
      * @return array
      */
-    public static function server_details($token = '')
+    public static function server_details($token = ''): array
     {
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
         $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
@@ -380,16 +370,21 @@ class Api
 
         // Now we need to quickly get the totals
         $client    = static::getUserRepository()->findByApiKey(trim($token));
-        $counts    = Catalog::get_server_counts($client->id);
+        $counts    = Catalog::get_server_counts($client->id ?? 0);
         $playlists = (AmpConfig::get('hide_search', false))
             ? $counts['playlist']
             : $counts['playlist'] + $counts['search'];
         $autharray = (!empty($token)) ? array('auth' => $token) : array();
+        // perpetual sessions do not expire
+        $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+        $session_expire = ($perpetual)
+            ? 0
+            : date("c", time() + AmpConfig::get('session_length', 3600) - 60);
 
         // send the totals
         $outarray = array(
             'api' => self::$version,
-            'session_expire' => date("c", time() + AmpConfig::get('session_length', 3600) - 60),
+            'session_expire' => $session_expire,
             'update' => date("c", (int)$details['update']),
             'add' => date("c", (int)$details['add']),
             'clean' => date("c", (int)$details['clean']),
@@ -412,7 +407,7 @@ class Api
         );
 
         return array_merge($autharray, $outarray);
-    } // server_details
+    }
 
     /**
      * @deprecated inject by constructor

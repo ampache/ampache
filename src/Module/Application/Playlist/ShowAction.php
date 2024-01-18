@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,16 +23,16 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class ShowAction implements ApplicationActionInterface
 {
@@ -37,17 +40,43 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
+    private ModelFactoryInterface $modelFactory;
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        LoggerInterface $logger,
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ui = $ui;
+        $this->ui           = $ui;
+        $this->logger       = $logger;
+        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $playlist = $this->modelFactory->createPlaylist(
+            (int)($_REQUEST['playlist_id'] ?? 0)
+        );
         $this->ui->showHeader();
 
-        require_once Ui::find_template('show_playlist.inc.php');
+        if ($playlist->isNew()) {
+            $this->logger->warning(
+                'Requested a playlist that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $playlist->format();
+            $object_ids = $playlist->get_items();
+            $this->ui->show(
+                'show_playlist.inc.php',
+                [
+                    'playlist' => $playlist,
+                    'object_ids' => $object_ids
+                ]
+            );
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

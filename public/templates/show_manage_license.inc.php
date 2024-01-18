@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -24,7 +27,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
+/** @var array $object_ids */
+
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <div id="information_actions">
     <ul>
         <li>
@@ -44,9 +49,10 @@ $web_path = AmpConfig::get('web_path'); ?>
         <?php
         foreach ($object_ids as $license_id) {
             $libitem = new License($license_id);
-
-            require Ui::find_template('show_license_row.inc.php'); ?>
-        <?php
+            if ($libitem->isNew()) {
+                continue;
+            }
+            require Ui::find_template('show_license_row.inc.php');
         } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>

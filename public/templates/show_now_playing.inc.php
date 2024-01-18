@@ -1,6 +1,7 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -28,16 +29,18 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\Util\AmpacheRss;
-use Ampache\Module\Util\Ui;
 
 /** @var array $results */
 
 if (count($results)) {
-    $link = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('nowplaying') : '';
-    Ui::show_box_top(T_('Now Playing') . $link);
+    $rss_link = AmpConfig::get('use_rss') ? '&nbsp' . AmpacheRss::get_display('nowplaying') : '';
+    $refresh  = "&nbsp" . Ajax::button('?page=index&action=refresh_now_playing', 'refresh', T_('Refresh'), 'refresh_now_playing', 'box_np');
+    Ui::show_box_top(T_('Now Playing') . $rss_link . $refresh, 'box_np');
 
     foreach ($results as $item) {
         $media   = $item['media'];

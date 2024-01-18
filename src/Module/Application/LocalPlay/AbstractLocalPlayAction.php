@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -30,7 +31,6 @@ use Ampache\Module\Application\Exception\ApplicationException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -38,14 +38,10 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
 {
     private ConfigContainerInterface $configContainer;
 
-    private UiInterface $ui;
-
     protected function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        ConfigContainerInterface $configContainer
     ) {
         $this->configContainer = $configContainer;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,9 +58,9 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
 
     protected function showRefresh(): void
     {
-        $refresh_limit = (int)$this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0;
+        $refresh_limit = (int)($this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0);
         if ($refresh_limit > 5) {
-            $ajax_url      = '?page=localplay&action=command&command=refresh';
+            $ajax_url = '?page=localplay&action=command&command=refresh';
             require_once Ui::find_template('javascript_refresh.inc.php');
         }
     }

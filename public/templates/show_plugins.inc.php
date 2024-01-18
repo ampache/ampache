@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -25,13 +28,14 @@ use Ampache\Repository\Model\Plugin;
 
 /** @var array $plugins */
 
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <!-- Plugin we've found -->
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
             <th class="cel_description"><?php echo T_('Description'); ?></th>
+            <th class="cel_category"><?php echo T_('Category'); ?></th>
             <th class="cel_version"><?php echo T_('Version'); ?></th>
             <th class="cel_iversion"><?php echo T_('Installed Version'); ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
@@ -41,7 +45,9 @@ $web_path = AmpConfig::get('web_path'); ?>
         <?php
         foreach ($plugins as $plugin_name) {
             $plugin            = new Plugin($plugin_name);
-            $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
+            $installed_version = ($plugin->_plugin !== null)
+                ? Plugin::get_plugin_version($plugin->_plugin->name)
+                : 0;
             if ($installed_version == 0) {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
@@ -55,10 +61,11 @@ $web_path = AmpConfig::get('web_path'); ?>
                 }
             } ?>
         <tr>
-            <td class="cel_name"><?php echo scrub_out($plugin->_plugin->name); ?></td>
+            <td class="cel_name"><?php echo scrub_out(T_($plugin->_plugin->name)); ?></td>
             <td class="cel_description"><?php echo scrub_out($plugin->_plugin->description); ?></td>
+            <td class="cel_category"><?php echo scrub_out($plugin->_plugin->categories); ?></td>
             <td class="cel_version"><?php echo scrub_out($plugin->_plugin->version); ?></td>
-            <td class="cel_iversion"><?php echo scrub_out($installed_version); ?></td>
+            <td class="cel_iversion"><?php echo $installed_version; ?></td>
             <td class="cel_action"><?php echo $action; ?></td>
         </tr>
         <?php
@@ -72,6 +79,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         <tr class="th-bottom">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
             <th class="cel_description"><?php echo T_('Description'); ?></th>
+            <th class="cel_category"><?php echo T_('Category'); ?></th>
             <th class="cel_version"><?php echo T_('Version'); ?></th>
             <th class="cel_iversion"><?php echo T_('Installed Version'); ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?></th>

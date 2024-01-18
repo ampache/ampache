@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Config\Init\Exception;
 
 final class DatabaseOutdatedException extends InitializationException
 {
+    /** @var string */
     protected $message = 'Database outdated - please update';
 }

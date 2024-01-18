@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,11 +23,10 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\System;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Api;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Query;
 use Ampache\Repository\Model\User;
@@ -81,7 +83,7 @@ final class Session implements SessionInterface
             self::check();
 
             // Create the new user
-            $GLOBALS['user'] = (array_key_exists('username', $_SESSION['userdata']))
+            $GLOBALS['user'] = (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata']))
                 ? User::get_from_username($_SESSION['userdata']['username'])
                 : '';
 
@@ -106,7 +108,7 @@ final class Session implements SessionInterface
                 self::create_cookie();
                 self::create($auth);
                 self::check();
-                $GLOBALS['user']           = new User('-1');
+                $GLOBALS['user']           = new User(-1);
                 $GLOBALS['user']->username = $auth['username'];
                 $GLOBALS['user']->fullname = $auth['fullname'];
                 $GLOBALS['user']->access   = (int) ($auth['access']);
@@ -115,7 +117,7 @@ final class Session implements SessionInterface
                 if (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
                     self::createGlobalUser(User::get_from_username($_SESSION['userdata']['username']));
                 } else {
-                    $GLOBALS['user']           = new User('-1');
+                    $GLOBALS['user']           = new User(-1);
                     $GLOBALS['user']->id       = -1;
                     $GLOBALS['user']->username = $auth['username'];
                     $GLOBALS['user']->fullname = $auth['fullname'];
@@ -131,7 +133,7 @@ final class Session implements SessionInterface
             }
         } else {
             // If Auth, but no session is set
-            if (array_key_exists('sid', $_REQUEST)) {
+            if (array_key_exists('sid', $_REQUEST) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
                 session_name($sessionName);
                 session_id(scrub_in((string) $_REQUEST['sid']));
                 session_start();
@@ -150,16 +152,18 @@ final class Session implements SessionInterface
      * This saves the session information into the database.
      * @param $key
      * @param $value
-     * @return boolean
+     * @param bool $perpetual
      */
-    public static function write($key, $value)
+    public static function write($key, $value, $perpetual = false): bool
     {
         if (defined('NO_SESSION_UPDATE')) {
             return true;
         }
 
-        $expire = time() + AmpConfig::get('session_length', 3600);
-        $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
+        $expire = ($perpetual)
+            ? 0
+            : time() + AmpConfig::get('session_length', 3600);
+        $sql = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
         debug_event(self::class, 'Writing to ' . $key . ' with expiration ' . $expire, 5);
@@ -172,9 +176,8 @@ final class Session implements SessionInterface
      *
      * This removes the specified session from the database.
      * @param string $key
-     * @return boolean
      */
-    public static function destroy($key)
+    public static function destroy($key): bool
     {
         if (!strlen((string)$key)) {
             return false;
@@ -204,13 +207,26 @@ final class Session implements SessionInterface
     }
 
     /**
+     * destroy_perpetual
+     *
+     * Remove all perpetual API sessions
+     */
+    public static function destroy_perpetual(): void
+    {
+        $sql = "DELETE FROM `session` WHERE `expire` = 0 AND `type` = 'api';";
+        Dba::write($sql);
+    }
+
+    /**
      * garbage_collection
      *
      * This function is randomly called and it cleans up the expired sessions
      */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
-        $sql = 'DELETE FROM `session` WHERE `expire` < ?';
+        $sql = (AmpConfig::get('perpetual_api_session'))
+            ? "DELETE FROM `session` WHERE NOT (`expire` = 0 AND `type` = 'api') AND `expire` < ?;"
+            : "DELETE FROM `session` WHERE `expire` < ?;";
         Dba::write($sql, array(time()));
 
         $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?;';
@@ -228,9 +244,8 @@ final class Session implements SessionInterface
      *
      * This takes a key and returns the data from the database.
      * @param $key
-     * @return string
      */
-    public static function read($key)
+    public static function read($key): string
     {
         return self::_read($key, 'value');
     }
@@ -241,11 +256,12 @@ final class Session implements SessionInterface
      * This returns the specified column from the session row.
      * @param string $key
      * @param string $column
-     * @return string
      */
-    private static function _read($key, $column)
+    private static function _read($key, $column): string
     {
-        $sql        = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
+        $sql = (AmpConfig::get('perpetual_api_session'))
+            ? "SELECT * FROM `session` WHERE `id` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
+            : "SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?;";
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -264,9 +280,8 @@ final class Session implements SessionInterface
      *
      * This returns the username associated with a session ID, if any
      * @param $key
-     * @return string
      */
-    public static function username($key)
+    public static function username($key): string
     {
         return self::_read($key, 'username');
     }
@@ -276,9 +291,8 @@ final class Session implements SessionInterface
      *
      * This returns the agent associated with a session ID, if any
      * @param string $key
-     * @return string
      */
-    public static function agent($key)
+    public static function agent($key): string
     {
         return self::_read($key, 'agent');
     }
@@ -289,13 +303,16 @@ final class Session implements SessionInterface
      * it takes care of setting the initial cookie, and inserting the first
      * chunk of data, nifty ain't it!
      * @param array $data
-     * @return string
      */
-    public static function create($data)
+    public static function create($data): string
     {
         $type = $data['type'] ?? '';
         // Regenerate the session ID to prevent fixation
         switch ($type) {
+            case 'header':
+                $type = 'api';
+                $key  = $data['apikey'];
+                break;
             case 'api':
                 $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
                 break;
@@ -324,7 +341,11 @@ final class Session implements SessionInterface
 
         $expire = time() + AmpConfig::get('session_length', 3600);
         if ($type == 'stream') {
-            $expire = time() + AmpConfig::get('stream_length');
+            $expire = time() + AmpConfig::get('stream_length', 7200);
+        }
+        // this is risky but allow it
+        if ($type == 'api' && AmpConfig::get('perpetual_api_session')) {
+            $expire = 0;
         }
         $latitude = null;
         if (isset($data['geo_latitude'])) {
@@ -361,11 +382,9 @@ final class Session implements SessionInterface
     /**
      * check
      *
-     * This checks for an existing session. If it's still valid we go ahead
-     * and start it and return true.
-     * @return boolean
+     * This checks for an existing session. If it's still valid we go ahead and start it and return true.
      */
-    public static function check()
+    public static function check(): bool
     {
         $session_name = AmpConfig::get('session_name');
 
@@ -415,9 +434,8 @@ final class Session implements SessionInterface
      * based on the type.
      * @param string $type
      * @param string $key
-     * @return boolean
      */
-    public static function exists($type, $key)
+    public static function exists($type, $key): bool
     {
         // didn't pass an auth key so don't let them in!
         if (!$key) {
@@ -427,7 +445,9 @@ final class Session implements SessionInterface
         switch ($type) {
             case 'api':
             case 'stream':
-                $sql        = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' . "AND `type` in ('stream', 'api')";
+                $sql = (AmpConfig::get('perpetual_api_session'))
+                    ? "SELECT * FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ?) AND `type` in ('api', 'stream');"
+                    : "SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? AND `type` in ('api', 'stream');"; // TODO why are these together?
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
@@ -467,20 +487,25 @@ final class Session implements SessionInterface
      * This takes a SID and extends its expiration.
      * @param string $sid
      * @param string $type
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function extend($sid, $type = null)
     {
         $time = time();
-        if ($type == 'stream') {
-            $expire = $time + AmpConfig::get('stream_length');
+        // this is risky but allow it
+        if ($type == 'api' && AmpConfig::get('perpetual_api_session')) {
+            $expire = 0;
+        } elseif ($type == 'stream') {
+            $expire = $time + AmpConfig::get('stream_length', 7200);
         } else {
             $expire = $time + AmpConfig::get('session_length', 3600);
         }
 
-        $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
+        $sql = 'UPDATE `session` SET `expire` = ? WHERE `id` = ?';
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
-            debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            if ($expire !== 0) {
+                debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            }
             $results = Dba::fetch_assoc($db_results);
             if ($results) {
                 self::createGlobalUser(User::get_from_username($results['username']));
@@ -494,9 +519,8 @@ final class Session implements SessionInterface
      * get
      *
      * This checks for an existing session cookie and returns the value.
-     * @return string
      */
-    public static function get()
+    public static function get(): string
     {
         $session_name = AmpConfig::get('session_name');
 
@@ -513,11 +537,11 @@ final class Session implements SessionInterface
      * This takes a SID and update associated username.
      * @param string $sid
      * @param string $username
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function update_username($sid, $username)
     {
-        $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
+        $sql = 'UPDATE `session` SET `username` = ? WHERE `id` = ?';
 
         return Dba::write($sql, array($username, $sid));
     }
@@ -528,11 +552,11 @@ final class Session implements SessionInterface
      * This takes a SID and update associated agent.
      * @param string $sid
      * @param string $agent
-     * @return PDOStatement|boolean
+     * @return PDOStatement|bool
      */
     public static function update_agent($sid, $agent)
     {
-        $sql = 'UPDATE `session` SET `agent` = ? WHERE `id`= ?';
+        $sql = 'UPDATE `session` SET `agent` = ? WHERE `id` = ?';
 
         return Dba::write($sql, array($agent, $sid));
     }
@@ -545,7 +569,7 @@ final class Session implements SessionInterface
      * @param float $longitude
      * @param string $name
      */
-    public static function update_geolocation($sid, $latitude, $longitude, $name)
+    public static function update_geolocation($sid, $latitude, $longitude, $name): void
     {
         if ($sid) {
             $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
@@ -559,7 +583,7 @@ final class Session implements SessionInterface
      * @param string $sid
      * @return array
      */
-    public static function get_geolocation($sid)
+    public static function get_geolocation($sid): array
     {
         $location = array();
 
@@ -580,18 +604,17 @@ final class Session implements SessionInterface
      * get_api_version
      * Get session geolocation.
      * @param string $sid
-     * @return int
      */
-    public static function get_api_version($sid)
+    public static function get_api_version($sid): int
     {
-        $api_version = 5;
+        $api_version = Api::DEFAULT_VERSION;
 
         if ($sid) {
             $sql        = "SELECT `value` FROM `session` WHERE `type` = 'api' AND `id` = ?;";
             $db_results = Dba::read($sql, array($sid));
             $row        = Dba::fetch_assoc($db_results);
             if (!empty($row)) {
-                $api_version =  (int)$row['value'];
+                $api_version = (int)$row['value'];
             }
         }
 
@@ -637,7 +660,7 @@ final class Session implements SessionInterface
      * a cookie at the same time as a header redirect. As such on view of a
      * login a cookie is set with the proper name.
      */
-    public static function create_cookie()
+    public static function create_cookie(): void
     {
         $cookie_params = [
             'lifetime' => (int)AmpConfig::get('cookie_life'),
@@ -676,7 +699,7 @@ final class Session implements SessionInterface
      * It also creates a cookie to store used language.
      * @param string $username
      */
-    public static function create_user_cookie($username)
+    public static function create_user_cookie($username): void
     {
         $session_name   = AmpConfig::get('session_name');
         $cookie_options = [
@@ -688,7 +711,7 @@ final class Session implements SessionInterface
         ];
 
         setcookie($session_name . '_user', $username, $cookie_options);
-        setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_options);
+        setcookie($session_name . '_lang', AmpConfig::get('lang', 'en_US'), $cookie_options);
     }
 
     /**
@@ -697,7 +720,7 @@ final class Session implements SessionInterface
      * This function just creates the remember me cookie, nothing special.
      * @param string $username
      */
-    public static function create_remember_cookie($username)
+    public static function create_remember_cookie($username): void
     {
         $session_name    = AmpConfig::get('session_name');
         $remember_length = (int)(time() + AmpConfig::get('remember_length', 604800));
@@ -721,9 +744,8 @@ final class Session implements SessionInterface
     /**
      * generateRandomToken
      * Generate a random token.
-     * @return string
      */
-    public static function generateRandomToken()
+    public static function generateRandomToken(): string
     {
         return md5(uniqid((string)bin2hex(random_bytes(20)), true));
     }
@@ -732,13 +754,13 @@ final class Session implements SessionInterface
      * createGlobalUser
      * Set up the global user
      */
-    public static function createGlobalUser(?User $user)
+    public static function createGlobalUser(?User $user): void
     {
         if (empty(Core::get_global('user'))) {
             if ($user instanceof User && $user->id > 0) {
                 $GLOBALS['user'] = $user;
             } elseif (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
-                $GLOBALS['user'] =  User::get_from_username($_SESSION['userdata']['username']);
+                $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
             }
         }
     }
@@ -747,8 +769,8 @@ final class Session implements SessionInterface
      * storeTokenForUser
      * @param string $username
      * @param string $token
-     * @param integer $remember_length
-     * @return PDOStatement|boolean
+     * @param int $remember_length
+     * @return PDOStatement|bool
      */
     public static function storeTokenForUser($username, $token, $remember_length)
     {
@@ -759,9 +781,8 @@ final class Session implements SessionInterface
 
     /**
      * auth_remember
-     * @return boolean
      */
-    public static function auth_remember()
+    public static function auth_remember(): bool
     {
         $auth  = false;
         $cname = AmpConfig::get('session_name') . '_remember';
@@ -797,7 +818,7 @@ final class Session implements SessionInterface
      *
      * @todo check if we still need to do this today
      */
-    public static function ungimp_ie()
+    public static function ungimp_ie(): bool
     {
         // If no https, no ungimpage required
         if (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') != 'on') {

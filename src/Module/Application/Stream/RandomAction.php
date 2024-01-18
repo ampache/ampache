@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,8 +23,6 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
@@ -37,15 +37,12 @@ final class RandomAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'random';
 
-    private LoggerInterface $logger;
-
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer
     ) {
-        $this->logger          = $logger;
         $this->configContainer = $configContainer;
 
         parent::__construct($logger, $configContainer);

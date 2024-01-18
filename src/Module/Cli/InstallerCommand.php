@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
@@ -115,8 +116,8 @@ final class InstallerCommand extends Command
         }
 
         AmpConfig::set_by_array(array(
-            'database_username' => $new_db_user ?: $db_user,
-            'database_password' => $new_db_pass ?: $db_pass
+            'database_username' => $new_db_user ?? $db_user,
+            'database_password' => $new_db_pass ?? $db_pass
         ), true);
 
         // Write the config file

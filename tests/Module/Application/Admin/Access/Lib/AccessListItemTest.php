@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,8 +23,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Application\Admin\Access\Lib;
 
 use Ampache\MockeryTestCase;
@@ -29,18 +30,17 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AccessListItemTest extends MockeryTestCase
 {
-    /** @var MockInterface|Access|null */
-    private MockInterface $access;
+    private MockInterface&Access $access;
 
-    /** @var MockInterface|ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
+    private MockInterface&ModelFactoryInterface $modelFactory;
 
-    private ?AccessListItem $subject;
+    private AccessListItem $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->access       = $this->mock(Access::class);
         $this->modelFactory = $this->mock(ModelFactoryInterface::class);
@@ -51,9 +51,7 @@ class AccessListItemTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @dataProvider levelNameDataProvider
-     */
+    #[DataProvider(methodName: 'levelNameDataProvider')]
     public function testGetLevelNameReturnsLabel(
         int $level,
         string $label
@@ -66,7 +64,7 @@ class AccessListItemTest extends MockeryTestCase
         );
     }
 
-    public function levelNameDataProvider(): array
+    public static function levelNameDataProvider(): array
     {
         return [
             [99, 'All'],
@@ -113,9 +111,7 @@ class AccessListItemTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @dataProvider typeNameDataProvider
-     */
+    #[DataProvider(methodName: 'typeNameDataProvider')]
     public function testGetTypeNameReturnLabel(
         string $typeId,
         string $label
@@ -128,7 +124,7 @@ class AccessListItemTest extends MockeryTestCase
         );
     }
 
-    public function typeNameDataProvider(): array
+    public static function typeNameDataProvider(): array
     {
         return [
             ['rpc', 'API/RPC'],

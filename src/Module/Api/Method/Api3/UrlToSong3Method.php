@@ -1,9 +1,11 @@
 <?php
 
-/*
+declare(strict_types=0);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +23,9 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Repository\Model\User;
@@ -40,14 +41,13 @@ final class UrlToSong3Method
      * url_to_song
      *
      * This takes a url and returns the song object in question
-     * @param array $input
-     * @param User $user
      */
-    public static function url_to_song(array $input, User $user)
+    public static function url_to_song(array $input, User $user): void
     {
-        // Don't scrub, the function needs her raw and juicy
-        $url_data = Stream_URL::parse($input['url']);
+        $charset  = AmpConfig::get('site_charset');
+        $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
+        $url_data = Stream_URL::parse($song_url);
         ob_end_clean();
-        echo Xml3_Data::songs(array((int)$url_data['id']), $user);
+        echo Xml3_Data::songs(array((int)($url_data['id'] ?? 0)), $user);
     }
 }

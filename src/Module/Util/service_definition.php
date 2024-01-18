@@ -1,5 +1,8 @@
 <?php
-/*
+
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,12 +23,16 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
 use Ampache\Module\Util\FileSystem\FileNameConverter;
 use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
+use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Rss\AmpacheRssInterface;
+use Ampache\Module\Util\Rss\RssPodcastBuilder;
+use Ampache\Module\Util\WebFetcher\WebFetcher;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
+
 use function DI\autowire;
 
 return [
@@ -39,4 +46,10 @@ return [
     UiInterface::class => autowire(Ui::class),
     Mailer::class => autowire(),
     UtilityFactoryInterface::class => autowire(UtilityFactory::class),
+    AmpacheRssInterface::class => autowire(AmpacheRss::class)
+        ->constructorParameter(
+            'rssPodcastBuilder',
+            autowire(RssPodcastBuilder::class)
+        ),
+    WebFetcherInterface::class => autowire(WebFetcher::class),
 ];

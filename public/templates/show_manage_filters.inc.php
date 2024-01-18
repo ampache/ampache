@@ -1,6 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+declare(strict_types=0);
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -24,11 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
-/** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
-
-$web_path = AmpConfig::get('web_path'); ?>
-<?php Ui::show_box_top(T_('Show Catalog Filters'), 'box box_manage_filter'); ?>
+$web_path = (string)AmpConfig::get('web_path', ''); ?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>
@@ -67,4 +66,3 @@ foreach ($filters as $filter) {
         </tr>
     </tfoot>
 </table>
-<?php //require Ui::find_template('list_header.inc.php');?>
