@@ -41,6 +41,12 @@ class Metadata extends DatabaseObject implements Model
     protected $object_id;
 
     /**
+     * A library item like song or video //TODO why are there two?
+     * @var int
+     */
+    protected $objectId;
+
+    /**
      * Tag Field
      * @var MetadataField
      */
