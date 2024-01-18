@@ -25,13 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
+use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
  * Class UserPlaylistsMethod
@@ -53,6 +51,8 @@ final class UserPlaylistsMethod
      * update      = Api::set_filter(date) //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
+     *
+     * @param array<string, mixed> $input
      */
     public static function user_playlists(array $input, User $user): bool
     {
