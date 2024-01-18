@@ -63,10 +63,10 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('catalogfav_max_items') && !Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, 25, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('catalogfav_gridview') && !Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 

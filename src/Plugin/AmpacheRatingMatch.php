@@ -71,10 +71,10 @@ class AmpacheRatingMatch implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('ratingmatch_stars') && !Preference::insert('ratingmatch_stars', T_('Minimum star rating to match'), 0, 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('ratingmatch_stars', T_('Minimum star rating to match'), 0, 25, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('ratingmatch_flags') && !Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, 25, 'boolean', 'plugins', $this->name)) {
             return false;
         }
         if (!Preference::exists('ratingmatch_star1_rule') && !Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', 25, 'string', 'plugins', $this->name)) {
@@ -92,10 +92,10 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         if (!Preference::exists('ratingmatch_star5_rule') && !Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('ratingmatch_flag_rule') && !Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('ratingmatch_write_tags') && !Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', 25, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 

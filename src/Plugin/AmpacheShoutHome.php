@@ -60,7 +60,7 @@ class AmpacheShoutHome implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('shouthome_max_items') && !Preference::insert('shouthome_max_items', T_('Shoutbox on homepage max items'), 5, 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('shouthome_max_items', T_('Shoutbox on homepage max items'), 5, 25, 'integer', 'plugins', $this->name)) {
             return false;
         }
 

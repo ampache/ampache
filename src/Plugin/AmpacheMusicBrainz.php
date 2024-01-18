@@ -65,7 +65,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('mb_overwrite_name') && !Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 

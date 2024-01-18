@@ -58,10 +58,10 @@ class AmpacheRSSView implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('rssview_feed_url') && !Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('rssview_max_items') && !Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, 25, 'integer', 'plugins', $this->name)) {
             return false;
         }
 

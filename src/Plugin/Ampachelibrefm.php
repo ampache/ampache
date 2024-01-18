@@ -66,10 +66,10 @@ class Ampachelibrefm implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('librefm_challenge') && !Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name)) {
+        if (!Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name)) {
             return false;
         }
-        if (!Preference::exists('librefm_grant_link') && !Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
 

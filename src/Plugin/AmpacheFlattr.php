@@ -58,7 +58,7 @@ class AmpacheFlattr implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('flattr_user_id') && !Preference::insert('flattr_user_id', T_('Flattr User ID'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('flattr_user_id', T_('Flattr User ID'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
 

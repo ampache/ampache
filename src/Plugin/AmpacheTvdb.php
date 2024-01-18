@@ -59,7 +59,7 @@ class AmpacheTvdb implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('tvdb_api_key') && !Preference::insert('tvdb_api_key', T_('TVDb API key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('tvdb_api_key', T_('TVDb API key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 

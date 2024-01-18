@@ -57,7 +57,7 @@ class Ampacheflickr implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('flickr_api_key') && !Preference::insert('flickr_api_key', T_('Flickr API key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('flickr_api_key', T_('Flickr API key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 

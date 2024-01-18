@@ -60,10 +60,10 @@ class AmpacheDiscogs implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('discogs_api_key') && !Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('discogs_secret_api_key') && !Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 
