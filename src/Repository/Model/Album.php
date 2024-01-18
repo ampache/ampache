@@ -244,18 +244,18 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param int $catalog_id
      * @param string $name
      * @param int $year
-     * @param string $mbid
-     * @param string $mbid_group
-     * @param int $album_artist
-     * @param string $release_type
-     * @param string $release_status
-     * @param int $original_year
-     * @param string $barcode
-     * @param string $catalog_number
-     * @param string $version
+     * @param string|null $mbid
+     * @param string|null $mbid_group
+     * @param int|null $album_artist
+     * @param string|null $release_type
+     * @param string|null $release_status
+     * @param int|null $original_year
+     * @param string|null $barcode
+     * @param string|null $catalog_number
+     * @param string|null $version
      * @param bool $readonly
      */
-    public static function check($catalog_id, $name, $year = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $release_status = null, $original_year = 0, $barcode = null, $catalog_number = null, $version = null, $readonly = false): int
+    public static function check($catalog_id, $name, $year = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $release_status = null, $original_year = null, $barcode = null, $catalog_number = null, $version = null, $readonly = false): int
     {
         $trimmed        = Catalog::trim_prefix(trim((string) $name));
         $name           = $trimmed['string'];
@@ -902,7 +902,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $album_artist,
             $release_type,
             $release_status,
-            (int)$original_year,
+            $original_year,
             $barcode,
             $catalog_number,
             $version,
