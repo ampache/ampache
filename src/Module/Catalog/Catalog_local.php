@@ -444,7 +444,7 @@ class Catalog_local extends Catalog
                 $this->_playlists[] = $full_file;
             } else {
                 if (count($this->get_gather_types('music')) > 0) {
-                    if ($is_audio_file && $this->insert_local_song($full_file, $options)) {
+                    if ($is_audio_file && $this->_insert_local_song($full_file, $options)) {
                         debug_event('local.catalog', 'Imported song file: ' . $full_file, 5);
                     } else {
                         debug_event('local.catalog', 'Skipped song file: ' . $full_file, 5);
@@ -453,7 +453,7 @@ class Catalog_local extends Catalog
                     }
                 } else {
                     if (count($this->get_gather_types('video')) > 0) {
-                        if ($is_video_file && $this->insert_local_video($full_file, $options)) {
+                        if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
                             debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
                         } else {
                             debug_event('local.catalog', 'Skipped video file: ' . $full_file, 5);
@@ -901,7 +901,7 @@ class Catalog_local extends Catalog
      * @throws Exception
      * @throws Exception
      */
-    private function insert_local_song($file, $options = array())
+    private function _insert_local_song($file, $options = array())
     {
         $vainfo = $this->getUtilityFactory()->createVaInfo(
             $file,
@@ -1050,7 +1050,7 @@ class Catalog_local extends Catalog
      * @throws Exception
      * @throws Exception
      */
-    private function insert_local_video($file, $options = array()): int
+    private function _insert_local_video($file, $options = array()): int
     {
         /* Create the vainfo object and get info */
         $gtypes = $this->get_gather_types('video');
