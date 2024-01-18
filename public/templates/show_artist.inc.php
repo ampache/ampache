@@ -73,7 +73,7 @@ Ui::show_box_top($title, 'info-box'); ?>
         <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
         <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
         <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($f_name); ?>%22&type=artist" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
-    <?php if ($artist->mbid) { ?>
+    <?php if (!empty($artist->mbid)) { ?>
         <a href="https://musicbrainz.org/artist/<?php echo $artist->mbid; ?>" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
     <?php } else { ?>
         <a href="https://musicbrainz.org/search?query=%22<?php echo rawurlencode($f_name); ?>%22&type=artist" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
@@ -190,7 +190,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 <?php echo T_('Update from tags'); ?>
             </a>
         </li>
-    <?php if ($artist->mbid && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
+    <?php if (!empty($artist->mbid) && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
                 <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
