@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -217,7 +218,8 @@ class Stream_Playlist
         $type      = $media['object_type'];
         $object_id = $media['object_id'];
         $className = ObjectTypeToClassNameMapper::map($type);
-        $object    = new $className($object_id);
+        /** @var library_item $object */
+        $object = new $className($object_id);
         if ($object->isNew()) {
             return null;
         }
@@ -249,10 +251,14 @@ class Stream_Playlist
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
 
-        return self::media_object_to_url($object, $additional_params, $urltype, $user);
+        if ($object instanceof Media) {
+            return self::media_object_to_url($object, $additional_params, $urltype, $user);
+        }
+
+        return null;
     }
 
-    private static function media_object_to_url(media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
+    private static function media_object_to_url(Media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
     {
         $surl = null;
         $url  = array();
