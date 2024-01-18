@@ -59,11 +59,21 @@ final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
         return (string) $value;
     }
 
+    /**
+     * Sets a value using the provided params
+     */
     public function setValue(string $key, string $value): void
     {
-        $this->connection->query(
-            "UPDATE `update_info` SET `value` = ? WHERE `key` = ?",
+        $result = $this->connection->query(
+            'UPDATE `update_info` SET `value` = ? WHERE `key` = ?',
             [$value, $key]
         );
+
+        if ($result->rowCount() === 0) {
+            $this->connection->query(
+                'INSERT INTO `update_info` (`key`, `value`) VALUES (?, ?)',
+                [$key, $value]
+            );
+        }
     }
 }

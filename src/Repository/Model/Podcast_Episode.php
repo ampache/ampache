@@ -654,46 +654,6 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
-     * get_deleted
-     * get items from the deleted_podcast_episodes table
-     * @return list<array{
-     *  id: int,
-     *  addition_time: int,
-     *  delete_time: int,
-     *  title: string,
-     *  file: string,
-     *  catalog: int,
-     *  total_count: int,
-     *  total_skip: int,
-     *  podcast: int
-     * }>
-     */
-    public static function get_deleted(): array
-    {
-        $deleted    = array();
-        $sql        = "SELECT * FROM `deleted_podcast_episode`";
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            /**
-             * @var array{
-             *  id: int,
-             *  addition_time: int,
-             *  delete_time: int,
-             *  title: string,
-             *  file: string,
-             *  catalog: int,
-             *  total_count: int,
-             *  total_skip: int,
-             *  podcast: int
-             * } $row
-             */
-            $deleted[] = $row;
-        }
-
-        return $deleted;
-    }
-
-    /**
      * @deprecated Inject dependency
      */
     private function getPodcastDeleter(): PodcastDeleterInterface

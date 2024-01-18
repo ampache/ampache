@@ -26,11 +26,15 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class UpdateInfoRepositoryTest extends TestCase
 {
+    use ConsecutiveParams;
+
     private DatabaseConnectionInterface&MockObject $connection;
 
     private UpdateInfoRepository $subject;
@@ -52,12 +56,12 @@ class UpdateInfoRepositoryTest extends TestCase
             ->method('fetchOne')
             ->with(
                 'SELECT value from update_info WHERE `key` = ? LIMIT 1',
-                [$key]
+                [$key],
             )
             ->willReturn(false);
 
         static::assertNull(
-            $this->subject->getValueByKey($key)
+            $this->subject->getValueByKey($key),
         );
     }
 
@@ -70,13 +74,65 @@ class UpdateInfoRepositoryTest extends TestCase
             ->method('fetchOne')
             ->with(
                 'SELECT value from update_info WHERE `key` = ? LIMIT 1',
-                [$key]
+                [$key],
             )
             ->willReturn($value);
 
         static::assertSame(
             (string) $value,
-            $this->subject->getValueByKey($key)
+            $this->subject->getValueByKey($key),
         );
+    }
+
+    public function testSetValueUpdatesExistingValue(): void
+    {
+        $key   = 'some-key';
+        $value = 'some-value';
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `update_info` SET `value` = ? WHERE `key` = ?',
+                [$value, $key]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('rowCount')
+            ->willReturn(1);
+
+        $this->subject->setValue($key, $value);
+    }
+
+    public function testSetValueInsertIfUpdateFails(): void
+    {
+        $key   = 'some-key';
+        $value = 'some-value';
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    [
+                        'UPDATE `update_info` SET `value` = ? WHERE `key` = ?',
+                        [$value, $key]
+                    ],
+                    [
+                        'INSERT INTO `update_info` (`key`, `value`) VALUES (?, ?)',
+                        [$key, $value]
+                    ]
+                )
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('rowCount')
+            ->willReturn(0);
+
+        $this->subject->setValue($key, $value);
     }
 }
