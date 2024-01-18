@@ -64,6 +64,14 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                 <?php echo T_('Export'); ?>
             </a>
         </li>
+        <?php if (Access::check('interface', 75)) { ?>
+            <li>
+                <a href="<?php echo $webPath; ?>/podcast.php?action=show_import_podcasts">
+                    <?php echo Ui::get_icon('upload', T_('Import')); ?>
+                    <?php echo T_('Import'); ?>
+                </a>
+            </li>
+        <?php } ?>
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {
