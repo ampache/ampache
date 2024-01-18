@@ -9516,6 +9516,11 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha.php
 
 		-
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$prev has no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha.php
+
+		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$saved has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha.php
@@ -9906,6 +9911,11 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
+			message: "#^Parameter \\#1 \\$image of function imagearc expects GdImage, resource\\|false given\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
+
+		-
 			message: "#^Parameter \\#1 \\$image of function imagecolorallocate expects GdImage, resource\\|false given\\.$#"
 			count: 2
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
@@ -9916,8 +9926,23 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
+			message: "#^Parameter \\#1 \\$image of function imageline expects GdImage, resource\\|false given\\.$#"
+			count: 2
+			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
+
+		-
 			message: "#^Parameter \\#1 \\$image of function imagesetpixel expects GdImage, resource\\|false given\\.$#"
 			count: 3
+			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
+
+		-
+			message: "#^Parameter \\#1 \\$image of function imagesetthickness expects GdImage, resource\\|false given\\.$#"
+			count: 2
+			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
+
+		-
+			message: "#^Parameter \\#1 \\$image of function imagettftext expects GdImage, resource\\|false given\\.$#"
+			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-

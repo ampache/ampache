@@ -177,4 +177,10 @@ final class ModelFactory implements ModelFactoryInterface
     ): Label {
         return new Label($labelId);
     }
+
+    public function createVideo(
+        int $videoId
+    ): Video {
+        return new Video($videoId);
+    }
 }
