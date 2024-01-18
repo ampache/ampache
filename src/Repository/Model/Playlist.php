@@ -124,7 +124,7 @@ class Playlist extends playlist_object
             ? 'playlistids'
             : 'accessibleplaylistids';
         if (empty($playlist_name)) {
-            if (parent::is_cached($key, $user_id)) {
+            if ($user_id > 0 && parent::is_cached($key, $user_id)) {
                 return parent::get_from_cache($key, $user_id);
             }
         }
@@ -179,7 +179,7 @@ class Playlist extends playlist_object
             $user_id = Core::get_global('user')->id ?? 0;
         }
         $key = 'playlistarray';
-        if (parent::is_cached($key, $user_id)) {
+        if ($user_id > 0 && parent::is_cached($key, $user_id)) {
             return parent::get_from_cache($key, $user_id);
         }
         $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
@@ -245,7 +245,7 @@ class Playlist extends playlist_object
         }
         $key = 'smartlists';
         if (empty($playlist_name)) {
-            if (parent::is_cached($key, $user_id)) {
+            if ($user_id > 0 && parent::is_cached($key, $user_id)) {
                 return parent::get_from_cache($key, $user_id);
             }
         }
