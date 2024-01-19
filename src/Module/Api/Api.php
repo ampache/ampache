@@ -155,7 +155,7 @@ class Api
         Method\UserPlaylistsMethod::ACTION => Method\UserPlaylistsMethod::class,
         Method\UserPreferenceMethod::ACTION => Method\UserPreferenceMethod::class,
         Method\UserPreferencesMethod::ACTION => Method\UserPreferencesMethod::class,
-        Method\UserSearchesMethod::ACTION => Method\UserSearchesMethod::class,
+        Method\UserSmartlistsMethod::ACTION => Method\UserSmartlistsMethod::class,
         Method\UsersMethod::ACTION => Method\UsersMethod::class,
         Method\UserUpdateMethod::ACTION => Method\UserUpdateMethod::class,
         Method\VideoMethod::ACTION => Method\VideoMethod::class,

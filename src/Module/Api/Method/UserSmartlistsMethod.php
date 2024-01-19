@@ -34,18 +34,18 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
- * Class UserSearchesMethod
+ * Class UserSmartlistsMethod
  * @package Lib\ApiMethods
  */
-final class UserSearchesMethod
+final class UserSmartlistsMethod
 {
-    public const ACTION = 'user_searches';
+    public const ACTION = 'user_smartlists';
 
     /**
-     * user_searches
+     * user_smartlists
      * MINIMUM_API_VERSION=6.3.0
      *
-     * This returns searches based on the specified filter (Does not include playlists)
+     * This returns smartlists (searches) based on the specified filter (Does not include playlists)
      *
      * filter      = (string) Alpha-numeric search term (match all if missing) //optional
      * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
@@ -56,7 +56,7 @@ final class UserSearchesMethod
      *
      * @param array<string, mixed> $input
      */
-    public static function user_searches(array $input, User $user): bool
+    public static function user_smartlists(array $input, User $user): bool
     {
         $like    = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $filter  = (string)($input['filter'] ?? '');
