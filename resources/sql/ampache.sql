@@ -1480,7 +1480,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600049'),
+('db_version', '600050'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
