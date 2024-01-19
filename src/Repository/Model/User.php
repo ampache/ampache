@@ -302,21 +302,21 @@ class User extends database_object
         $user_limit = "";
         if (!$system) {
             $user_id    = $this->id;
-            $user_limit = "AND preference.catagory != 'system'";
+            $user_limit = "AND `preference`.`category` != 'system'";
         } else {
             $user_id = -1;
             if ($type != '0') {
-                $user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
+                $user_limit = "AND `preference`.`category` = '" . Dba::escape($type) . "'";
             }
         }
 
-        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`catagory`, `preference`.`subcatagory`, `preference`.`description`";
+        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`";
         $db_results = Dba::read($sql, array($user_id));
         $results    = array();
         $type_array = array();
         /* Ok this is crappy, need to clean this up or improve the code FIXME */
         while ($row = Dba::fetch_assoc($db_results)) {
-            $type  = $row['catagory'];
+            $type  = $row['category'];
             $admin = false;
             if ($type == 'system') {
                 $admin = true;
@@ -326,7 +326,7 @@ class User extends database_object
                 'level' => $row['level'],
                 'description' => $row['description'],
                 'value' => $row['value'],
-                'subcategory' => $row['subcatagory']
+                'subcategory' => $row['subcategory']
             );
             $results[$type] = array(
                 'title' => ucwords((string)$type),
@@ -1056,7 +1056,7 @@ class User extends database_object
 
         // If your user is missing preferences we copy the value from system (Except for plugins and system prefs)
         if ($user_id != '-1') {
-            $sql        = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` NOT IN ('plugins', 'system');";
+            $sql        = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`category` NOT IN ('plugins', 'system');";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -1070,7 +1070,7 @@ class User extends database_object
 
         // If not system, exclude system... *gasp*
         if ($user_id != '-1') {
-            $sql .= " WHERE catagory !='system';";
+            $sql .= " WHERE category !='system';";
         }
         $db_results = Dba::read($sql);
 
@@ -1328,11 +1328,11 @@ class User extends database_object
         $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE `user_preference`.`user` != -1 AND `user`.`id` IS NULL;";
         Dba::write($sql);
         // delete system prefs from users
-        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`catagory` = 'system';";
+        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`category` = 'system';";
         Dba::write($sql);
 
         // How many preferences should we have?
-        $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `catagory` != 'system';";
+        $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `category` != 'system';";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
         $pref_count = (int)$row['pref_count'];

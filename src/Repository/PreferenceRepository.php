@@ -55,7 +55,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
         $userId    = User::INTERNAL_SYSTEM_USER_ID;
 
         if ($user !== null) {
-            $userLimit = 'AND `preference`.`catagory` != \'system\'';
+            $userLimit = 'AND `preference`.`category` != \'system\'';
             $userId    = $user->getId();
         }
 
@@ -66,8 +66,8 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
                 `preference`.`description`,
                 `preference`.`level`,
                 `preference`.`type`,
-                `preference`.`catagory`,
-                `preference`.`subcatagory`,
+                `preference`.`category`,
+                `preference`.`subcategory`,
                 `user_preference`.`value`
             FROM
                 `preference`
@@ -78,9 +78,9 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
             WHERE
                 `user_preference`.`user` = ?
                 AND
-                `preference`.`catagory` != 'internal' %s
+                `preference`.`category` != 'internal' %s
             ORDER BY
-                `preference`.`subcatagory`,
+                `preference`.`subcategory`,
                 `preference`.`description`
         SQL;
 
@@ -99,8 +99,8 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
                 'description' => $row['description'],
                 'value' => $row['value'],
                 'type' => $row['type'],
-                'category' => $row['catagory'],
-                'subcategory' => $row['subcatagory']
+                'category' => $row['category'],
+                'subcategory' => $row['subcategory']
             ];
         }
 

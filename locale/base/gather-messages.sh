@@ -197,7 +197,7 @@ generate_pot_utds() {
 
         mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
         while read dbprefid; do
-            dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT subcatagory FROM preference where id=$dbprefid AND subcatagory IS NOT NULL")
+            dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT subcategory FROM preference where id=$dbprefid AND subcategory IS NOT NULL")
             dbprefdescchk=$(grep "\"$dbprefdesc\"" $potfile $tdstxt)
             if [ ! -z "$dbprefdesc" ]; then
                 if [ ! "$dbprefdescchk" ]; then
