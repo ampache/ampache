@@ -30,4 +30,5 @@ namespace Ampache\Repository\Model;
 final class UpdateInfoEnum
 {
     public const DB_VERSION = 'db_version';
+    public const CRON_DATE  = 'cron_date';
 }

@@ -34,5 +34,8 @@ interface UpdateInfoRepositoryInterface
      */
     public function getValueByKey(string $key): ?string;
 
+    /**
+     * Sets a value using the provided params
+     */
     public function setValue(string $key, string $value): void;
 }

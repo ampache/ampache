@@ -36,6 +36,8 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 final class CronProcessCommand extends Command
@@ -50,12 +52,15 @@ final class CronProcessCommand extends Command
 
     private UserRepositoryInterface $userRepository;
 
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ObjectCacheInterface $objectCache,
         CatalogGarbageCollectorInterface $catalogGarbageCollector,
         BookmarkRepositoryInterface $bookmarkRepository,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        UpdateInfoRepositoryInterface $updateInfoRepository
     ) {
         parent::__construct('run:cronProcess', T_('Run the cron process'));
 
@@ -64,6 +69,7 @@ final class CronProcessCommand extends Command
         $this->catalogGarbageCollector = $catalogGarbageCollector;
         $this->bookmarkRepository      = $bookmarkRepository;
         $this->userRepository          = $userRepository;
+        $this->updateInfoRepository    = $updateInfoRepository;
     }
 
     public function execute(): void
@@ -130,7 +136,10 @@ final class CronProcessCommand extends Command
         $this->objectCache->compute();
 
         // mark the date this cron was completed.
-        Cron::set_cron_date();
+        $this->updateInfoRepository->setValue(
+            UpdateInfoEnum::CRON_DATE,
+            (string) time()
+        );
 
         debug_event('cron', 'finished cron process', 4);
 
