@@ -895,13 +895,12 @@ class Catalog_local extends Catalog
      * insert_local_song
      *
      * Insert a song that isn't already in the database.
-     * @param $file
-     * @param array $options
+     * @param array<string, mixed> $options
      * @return bool|int
      * @throws Exception
      * @throws Exception
      */
-    private function _insert_local_song($file, $options = array())
+    private function _insert_local_song(string $file, $options = array())
     {
         $vainfo = $this->getUtilityFactory()->createVaInfo(
             $file,
@@ -1045,7 +1044,7 @@ class Catalog_local extends Catalog
      * information we can get is super sketchy so it's kind of a crap shoot
      * here
      * @param string $file
-     * @param array $options
+     * @param array<string, mixed> $options
      * @return int
      * @throws Exception
      * @throws Exception

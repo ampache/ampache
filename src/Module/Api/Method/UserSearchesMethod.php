@@ -53,6 +53,8 @@ final class UserSearchesMethod
      * update      = Api::set_filter(date) //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
+     *
+     * @param array<string, mixed> $input
      */
     public static function user_searches(array $input, User $user): bool
     {
