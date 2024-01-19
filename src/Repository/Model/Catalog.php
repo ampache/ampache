@@ -3829,7 +3829,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        $sql        = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE catalog_id = ?';
+        $sql        = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE `catalog_id` = ?';
         $db_results = Dba::write($sql, $params);
         if (!$db_results) {
             return false;

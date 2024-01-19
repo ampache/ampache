@@ -324,7 +324,7 @@ class ShoutRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'UPDATE `user_shout` SET user = ?, date = ?, text = ?, sticky = ?, object_id = ?, object_type = ?, data = ? WHERE id = ?',
+                'UPDATE `user_shout` SET `user` = ?, `date` = ?, `text` = ?, `sticky` = ?, `object_id` = ?, `object_type` = ?, `data` = ? WHERE `id` = ?',
                 [
                     $userId,
                     $date->getTimestamp(),

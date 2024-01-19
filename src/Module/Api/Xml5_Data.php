@@ -305,7 +305,7 @@ class Xml5_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        // you might not want the joined tables for playlsits
+        // you might not want the joined tables for playlists
         $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
             : Catalog::get_update_info($object_type, $user->id);

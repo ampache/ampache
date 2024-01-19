@@ -186,9 +186,9 @@ class Repository
      */
     protected function updateRecord($object_id, $properties): void
     {
-        $sql = 'UPDATE ' . $this->getTableName() .
+        $sql = 'UPDATE `' . $this->getTableName() . '`' .
             ' SET ' . implode(',', $this->getKeyValuePairs($properties)) .
-            ' WHERE id = ?';
+            ' WHERE `id` = ?';
         $properties[] = $object_id;
         Dba::write(
             $sql,
@@ -201,7 +201,7 @@ class Repository
      */
     protected function deleteRecord($object_id): void
     {
-        $sql = 'DELETE FROM `' . $this->getTableName() . '` WHERE id = ?';
+        $sql = 'DELETE FROM `' . $this->getTableName() . '` WHERE `id` = ?';
         Dba::write($sql, array($object_id));
     }
 

@@ -732,7 +732,7 @@ class User extends database_object
             return false;
         }
 
-        $sql = "UPDATE `user` SET `disabled`='1' WHERE id='" . $this->id . "'";
+        $sql = "UPDATE `user` SET `disabled`='1' WHERE `id`='" . $this->id . "'";
         Dba::write($sql);
 
         // Delete any sessions they may have
@@ -1070,7 +1070,7 @@ class User extends database_object
 
         // If not system, exclude system... *gasp*
         if ($user_id != '-1') {
-            $sql .= " WHERE category !='system';";
+            $sql .= " WHERE `category` !='system';";
         }
         $db_results = Dba::read($sql);
 

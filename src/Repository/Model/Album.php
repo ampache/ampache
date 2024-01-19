@@ -733,7 +733,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     public function get_children($name): array
     {
         $childrens  = array();
-        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE song.album = ? AND `song`.`file` LIKE ?;";
+        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`file` LIKE ?;";
         $db_results = Dba::read($sql, array($this->id, "%" . $name));
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = array(

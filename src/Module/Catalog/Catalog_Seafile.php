@@ -355,7 +355,7 @@ class Catalog_Seafile extends Catalog
                     parent::gather_art([$added]);
                     // Restore the Seafile virtual path
                     $virtpath = $this->seafile->to_virtual_path($file);
-                    Dba::write("UPDATE song SET file = ? WHERE id = ?", [$virtpath, $added]);
+                    Dba::write("UPDATE `song` SET `file` = ? WHERE `id` = ?", [$virtpath, $added]);
                     $this->count++;
                 }
 

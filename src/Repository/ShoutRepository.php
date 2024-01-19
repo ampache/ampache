@@ -174,7 +174,7 @@ final class ShoutRepository implements ShoutRepositoryInterface
             $result = $this->connection->getLastInsertedId();
         } else {
             $this->connection->query(
-                'UPDATE `user_shout` SET user = ?, date = ?, text = ?, sticky = ?, object_id = ?, object_type = ?, data = ? WHERE id = ?',
+                'UPDATE `user_shout` SET `user` = ?, `date` = ?, `text` = ?, `sticky` = ?, `object_id` = ?, `object_type` = ?, `data` = ? WHERE `id` = ?',
                 [
                     $shout->getUserId(),
                     $shout->getDate()->getTimestamp(),
