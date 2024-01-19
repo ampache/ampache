@@ -178,8 +178,8 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `preference` MODIFY COLUMN `value` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `preference` MODIFY COLUMN `description` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `preference` MODIFY COLUMN `type` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `preference` MODIFY COLUMN `catagory` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `preference` MODIFY COLUMN `subcatagory` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
+        Dba::write("ALTER TABLE `preference` MODIFY COLUMN `category` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
+        Dba::write("ALTER TABLE `preference` MODIFY COLUMN `subcategory` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
         Dba::write("ALTER TABLE `recommendation` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `recommendation_item` MODIFY COLUMN `name` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
