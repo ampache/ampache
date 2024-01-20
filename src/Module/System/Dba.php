@@ -276,15 +276,15 @@ class Dba
     }
 
     /**
-     * @param $resource
-     * @param string $class
+     * @param false|PDOStatement $resource
+     * @param class-string<object> $class
      * @param bool $finish
-     * @return array
+     * @return null|object
      */
-    public static function fetch_object($resource, $class = 'stdClass', $finish = true): array
+    public static function fetch_object($resource, $class = 'stdClass', $finish = true)
     {
         if (!$resource) {
-            return array();
+            return null;
         }
 
         $result = $resource->fetchObject($class);
@@ -294,7 +294,7 @@ class Dba
                 self::finish($resource);
             }
 
-            return array();
+            return null;
         }
 
         return $result;

@@ -25,17 +25,16 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Beets;
 
+use Ampache\Repository\MetadataFieldRepositoryInterface;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Module\System\AmpError;
-use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Video;
 
 /**
@@ -110,7 +109,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             'file_path' => (string) $media->file,
             'file_name' => $media->f_file,
             'file_size' => $media->size,
-            'file_type' => $media->type
+            'file_type' => $media->type,
         ];
     }
 
@@ -213,7 +212,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $tags = array_diff($metadata, get_object_vars($libraryItem));
         $keys = array_merge(
             $libraryItem::$aliases ?? array(),
-            array_keys(get_object_vars($libraryItem))
+            array_keys(get_object_vars($libraryItem)),
         );
         foreach ($keys as $key) {
             unset($tags[$key]);
@@ -298,8 +297,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             $this->deleteSongs($this->songs);
         }
         if (Song::isCustomMetadataEnabled()) {
-            Metadata::garbage_collection();
-            MetadataField::garbage_collection();
+            $this->getMetadataRepository()->collectGarbage();
+            $this->getMetadataFieldRepository()->collectGarbage();
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
@@ -399,7 +398,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         return implode('/', array(
             $song['artist'],
             $song['album'],
-            $song['title']
+            $song['title'],
         ));
     }
 
@@ -458,5 +457,25 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             $field = $song->getField($tag);
             $song->updateOrInsertMetadata($field, $value);
         }
+    }
+
+    /**
+     * @deprecated  inject dependency
+     */
+    private function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated  inject dependency
+     */
+    private function getMetadataFieldRepository(): MetadataFieldRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataFieldRepositoryInterface::class);
     }
 }

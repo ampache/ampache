@@ -35,12 +35,6 @@ class Repository
     protected $modelClassName;
 
     /**
-     * Stores relation between SQL field name and class name so we can initialize objects the right way
-     * @var array
-     */
-    protected $fieldClassRelations = array();
-
-    /**
      * @param $fields
      * @param $values
      * @return array
@@ -88,7 +82,7 @@ class Repository
         $statement = Dba::read($sql, is_array($value) ? $value : array($value));
         /** @var library_item $object */
         while ($object = Dba::fetch_object($statement, $this->modelClassName)) {
-            $data[$object[0]->getId()] = $object[0];
+            $data[$object->getId()] = $object;
         }
 
         return $data;

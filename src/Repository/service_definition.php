@@ -48,4 +48,6 @@ return [
     PreferenceRepositoryInterface::class => autowire(PreferenceRepository::class),
     PodcastRepositoryInterface::class => autowire(PodcastRepository::class),
     UpdateInfoRepositoryInterface::class => autowire(UpdateInfoRepository::class),
+    MetadataRepositoryInterface::class => autowire(MetadataRepository::class),
+    MetadataFieldRepositoryInterface::class => autowire(MetadataFieldRepository::class),
 ];

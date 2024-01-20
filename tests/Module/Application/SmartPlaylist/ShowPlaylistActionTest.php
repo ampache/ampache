@@ -31,23 +31,24 @@ use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class ShowPlaylistActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface&MockInterface $ui;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
+    private ModelFactoryInterface&MockInterface $modelFactory;
+
+    private LoggerInterface&MockObject $logger;
 
     private ?ShowAction $subject;
 
     protected function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);
-        $this->logger       = $this->mock(LoggerInterface::class);
+        $this->logger       = $this->createMock(LoggerInterface::class);
         $this->modelFactory = $this->mock(ModelFactoryInterface::class);
 
         $this->subject = new ShowAction(
