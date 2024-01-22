@@ -325,15 +325,16 @@ class AmpacheXbmc extends localplay_controller
             // XBMC requires to load a playlist to play. We don't know if this play is after a new playlist or after pause
             // So we get current status
             $status = $this->status();
-            if ($status['state'] == 'stop') {
-                $this->_xbmc->Player->Open(array(
-                    'item' => array('playlistid' => $this->_playlistId)
-                ));
-            } else {
+            if ($status['state'] == 'pause') {
                 $this->_xbmc->Player->PlayPause(array(
                     'playerid' => $this->_playerId,
                     'play' => true
                 ));
+            } else {
+                $this->_xbmc->Player->Open(array(
+                   'item' => array('playlistid' => $this->_playlistId)
+               ));
+
             }
 
             return true;
@@ -354,11 +355,20 @@ class AmpacheXbmc extends localplay_controller
             return false;
         }
 
+	$play = false;
+
+	$status = $this->status();
+	//stop if is playing, restart if pausing
+	if ($status['state'] == 'pause') {
+		$play = true;
+	}
+
         try {
             $this->_xbmc->Player->PlayPause(array(
                 'playerid' => $this->_playerId,
-                'play' => false
+                'play' => $play
             ));
+
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
@@ -650,19 +660,32 @@ class AmpacheXbmc extends localplay_controller
             $array['volume'] = (int)($appprop['volume']);
 
             try {
+                // We assume it's playing. Pause detection with player speed
+                $array['state'] = 'play';
+
+                // So we get active players, if no exists active player, set the status to stop and return
+                $xbmc_players = $this->_xbmc->Player->GetActivePlayers();
+                if (empty($xbmc_players)) {
+                    $array['state'] = 'stop';
+                    //no other fields possible if they are no active players
+                    return $array;
+                }
+
+                $speed = $this->_xbmc->Player->GetProperties(array(
+                    'playerid' => $this->_playerId,
+                    'properties' => array('speed')
+                ));
+
+                //speed == 0, pause
+                if($speed['speed'] == 0) {
+                    $array['state'] = 'pause';
+                }
+
+
                 $currentplay = $this->_xbmc->Player->GetItem(array(
                     'playerid' => $this->_playerId,
                     'properties' => array('file')
                 ));
-
-                // We assume it's playing. No pause detection support.
-                $array['state'] = 'play';
-
-                // So we get active players, if no exists active player, set the status to stop
-                $xbmc_players = $this->_xbmc->Player->GetActivePlayers();
-                if (empty($xbmc_players)) {
-                    $array['state'] = 'stop';
-                }
 
                 $playprop = $this->_xbmc->Player->GetProperties(array(
                     'playerid' => $this->_playerId,
