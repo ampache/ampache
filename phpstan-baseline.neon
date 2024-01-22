@@ -11871,16 +11871,6 @@ parameters:
 			path: src/Plugin/AmpacheDiscogs.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFlattr\\:\\:\\$user_id has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFlattr.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$maxitems has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheFriendsTimeline.php
