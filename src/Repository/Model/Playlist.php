@@ -628,7 +628,7 @@ class Playlist extends playlist_object
      * @param array $song_ids
      * This takes an array of song_ids and then adds it to the playlist
      */
-    public function add_songs($song_ids = array()): void
+    public function add_songs($song_ids = array()): bool
     {
         $medias = array();
         foreach ($song_ids as $song_id) {
@@ -637,8 +637,13 @@ class Playlist extends playlist_object
                 'object_id' => $song_id,
             );
         }
-        $this->add_medias($medias);
-        Catalog::update_mapping('playlist');
+        if ($this->add_medias($medias)) {
+            Catalog::update_mapping('playlist');
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

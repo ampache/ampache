@@ -112,9 +112,13 @@ final class PlaylistAddMethod
             return false;
         }
 
-        $playlist->add_songs($results);
-        Api::message('song added to playlist', $input['api_format']);
+        if ($playlist->add_songs($results)) {
+            Api::message('songs added to playlist', $input['api_format']);
 
-        return true;
+            return true;
+        }
+        Api::message('nothing was added to the playlist', $input['api_format']);
+
+        return false;
     }
 }
