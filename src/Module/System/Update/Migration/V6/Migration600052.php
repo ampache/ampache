@@ -45,6 +45,5 @@ final class Migration600052 extends AbstractMigration
         Dba::write("ALTER TABLE `playlist_data` DROP KEY `playlist_track_UN`;");
         $sql = 'ALTER TABLE `playlist_data` ADD CONSTRAINT `playlist_track_UN` UNIQUE KEY (`playlist`,`track`);';
         $this->updateDatabase($sql);
-
     }
 }
