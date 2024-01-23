@@ -248,14 +248,16 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Playlist->Add(array(
-                'playlistid' => $this->_playlistId,
-                'item' => array('file' => $url->url)
-            ));
+            $this->_xbmc->Playlist->Add(
+                array(
+                    'playlistid' => $this->_playlistId,
+                    'item' => array('file' => $url->url)
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'add_url failed: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'add_url failed: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -273,14 +275,16 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Playlist->Remove(array(
-                'playlistid' => $this->_playlistId,
-                'position' => $object_id
-            ));
+            $this->_xbmc->Playlist->Remove(
+                array(
+                    'playlistid' => $this->_playlistId,
+                    'position' => $object_id
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'delete_track failed: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'delete_track failed: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -297,14 +301,16 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Playlist->Clear(array(
-                'playlistid' => $this->_playlistId
-            ));
+            $this->_xbmc->Playlist->Clear(
+                array(
+                    'playlistid' => $this->_playlistId
+                )
+            );
             $this->stop();
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'clear_playlist failed: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'clear_playlist failed: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -325,20 +331,27 @@ class AmpacheXbmc extends localplay_controller
             // XBMC requires to load a playlist to play. We don't know if this play is after a new playlist or after pause
             // So we get current status
             $status = $this->status();
-            if ($status['state'] == 'stop') {
-                $this->_xbmc->Player->Open(array(
-                    'item' => array('playlistid' => $this->_playlistId)
-                ));
+            if ($status['state'] == 'pause') {
+                $this->_xbmc->Player->PlayPause(
+                    array(
+                        'playerid' => $this->_playerId,
+                        'play' => true
+                    )
+                );
             } else {
-                $this->_xbmc->Player->PlayPause(array(
-                    'playerid' => $this->_playerId,
-                    'play' => true
-                ));
+                $this->_xbmc->Player->Open(
+                    array(
+                       'item' => array(
+                           'playlistid' => $this->_playlistId
+                       )
+                    )
+                );
+
             }
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'play failed: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'play failed: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -354,15 +367,26 @@ class AmpacheXbmc extends localplay_controller
             return false;
         }
 
+        $play = false;
+
+        $status = $this->status();
+        // stop if is playing, restart if pausing
+        if ($status['state'] == 'pause') {
+            $play = true;
+        }
+
         try {
-            $this->_xbmc->Player->PlayPause(array(
-                'playerid' => $this->_playerId,
-                'play' => false
-            ));
+            $this->_xbmc->Player->PlayPause(
+                array(
+                    'playerid' => $this->_playerId,
+                    'play' => $play
+                )
+            );
+
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'pause failed, is the player started? ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'pause failed, is the player started? ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -380,13 +404,15 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Player->Stop(array(
-                'playerid' => $this->_playerId
-            ));
+            $this->_xbmc->Player->Stop(
+                array(
+                    'playerid' => $this->_playerId
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'stop failed, is the player started? ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'stop failed, is the player started? ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -403,15 +429,20 @@ class AmpacheXbmc extends localplay_controller
             return false;
         }
 
+        // force integer, some apps sends string (subsonic jukebox)
+        $song = (int)$song;
+
         try {
-            $this->_xbmc->Player->GoTo(array(
-                'playerid' => $this->_playerId,
-                'to' => $song
-            ));
+            $this->_xbmc->Player->GoTo(
+                array(
+                    'playerid' => $this->_playerId,
+                    'to' => $song
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'skip failed, is the player started?: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'skip failed, is the player started?: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -427,13 +458,15 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Application->SetVolume(array(
-                'volume' => 'increment'
-            ));
+            $this->_xbmc->Application->SetVolume(
+                array(
+                    'volume' => 'increment'
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'volume_up failed: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'volume_up failed: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -449,13 +482,15 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Application->SetVolume(array(
-                'volume' => 'decrement'
-            ));
+            $this->_xbmc->Application->SetVolume(
+                array(
+                    'volume' => 'decrement'
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'volume_down failed: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'volume_down failed: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -472,14 +507,16 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Player->GoTo(array(
-                'playerid' => $this->_playerId,
-                'to' => 'next'
-            ));
+            $this->_xbmc->Player->GoTo(
+                array(
+                    'playerid' => $this->_playerId,
+                    'to' => 'next'
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'next failed, is the player started? ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'next failed, is the player started? ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -496,14 +533,16 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Player->GoTo(array(
-                'playerid' => $this->_playerId,
-                'to' => 'previous'
-            ));
+            $this->_xbmc->Player->GoTo(
+                array(
+                    'playerid' => $this->_playerId,
+                    'to' => 'previous'
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'prev failed, is the player started? ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'prev failed, is the player started? ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -521,13 +560,15 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Application->SetVolume(array(
-                'volume' => $volume
-            ));
+            $this->_xbmc->Application->SetVolume(
+                array(
+                    'volume' => $volume
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'volume failed: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'volume failed: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -545,14 +586,16 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Player->SetRepeat(array(
-                'playerid' => $this->_playerId,
-                'repeat' => ($state ? 'all' : 'off')
-            ));
+            $this->_xbmc->Player->SetRepeat(
+                array(
+                    'playerid' => $this->_playerId,
+                    'repeat' => ($state ? 'all' : 'off')
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'repeat failed, is the player started? ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'repeat failed, is the player started? ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -570,14 +613,16 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Player->SetShuffle(array(
-                'playerid' => $this->_playerId,
-                'shuffle' => $onoff
-            ));
+            $this->_xbmc->Player->SetShuffle(
+                array(
+                    'playerid' => $this->_playerId,
+                    'shuffle' => $onoff
+                )
+            );
 
             return true;
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'random failed, is the player started? ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'random failed, is the player started? ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -598,10 +643,12 @@ class AmpacheXbmc extends localplay_controller
         $results = array();
 
         try {
-            $playlist = $this->_xbmc->Playlist->GetItems(array(
-                'playlistid' => $this->_playlistId,
-                'properties' => array('file')
-            ));
+            $playlist = $this->_xbmc->Playlist->GetItems(
+                array(
+                    'playlistid' => $this->_playlistId,
+                    'properties' => array('file')
+                )
+            );
 
             for ($i = $playlist['limits']['start']; $i < $playlist['limits']['end']; ++$i) {
                 $item = $playlist['items'][$i];
@@ -619,13 +666,13 @@ class AmpacheXbmc extends localplay_controller
                         $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                     }
                 }
-                if (!$data['name']) {
+                if (!isset($data['name'])) {
                     $data['name'] = $item['label'];
                 }
                 $results[] = $data;
             }
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'get failed: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'get failed: ' . $error->getMessage(), 1);
         }
 
         return $results;
@@ -644,39 +691,67 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $appprop = $this->_xbmc->Application->GetProperties(array(
-                'properties' => array('volume')
-            ));
-            $array['volume'] = (int)($appprop['volume']);
+            $appprop = $this->_xbmc->Application->GetProperties(
+                array(
+                    'properties' => array('volume')
+                )
+            );
+            $array['volume']       = (int)($appprop['volume']);
+            $array['track_title']  = '';
+            $array['track_artist'] = '';
+            $array['track_album']  = '';
 
             try {
-                $currentplay = $this->_xbmc->Player->GetItem(array(
-                    'playerid' => $this->_playerId,
-                    'properties' => array('file')
-                ));
-
-                // We assume it's playing. No pause detection support.
+                // We assume it's playing. Pause detection with player speed
                 $array['state'] = 'play';
 
-                // So we get active players, if no exists active player, set the status to stop
-                $xbmc_players = $this->_xbmc->Player->GetActivePlayers();
-                if (empty($xbmc_players)) {
-                    $array['state'] = 'stop';
+                $speed = $this->_xbmc->Player->GetProperties(
+                    array(
+                        'playerid' => $this->_playerId,
+                        'properties' => array('speed')
+                    )
+                );
+
+                //speed == 0, pause
+                if($speed['speed'] == 0) {
+                    $array['state'] = 'pause';
                 }
 
-                $playprop = $this->_xbmc->Player->GetProperties(array(
-                    'playerid' => $this->_playerId,
-                    'properties' => array('repeat', 'shuffled')
-                ));
+
+                $currentplay = $this->_xbmc->Player->GetItem(
+                    array(
+                        'playerid' => $this->_playerId,
+                        'properties' => array('file')
+                    )
+                );
+
+                $playprop = $this->_xbmc->Player->GetProperties(
+                    array(
+                        'playerid' => $this->_playerId,
+                        'properties' => array('repeat', 'shuffled')
+                    )
+                );
                 $array['repeat'] = ($playprop['repeat'] != "off");
                 $array['random'] = (strtolower($playprop['shuffled']) == 1);
 
-                $playposition = $this->_xbmc->Player->GetProperties(array(
-                    'playerid' => $this->_playerId,
-                    'properties' => array('position')
-                ));
+                $playposition = $this->_xbmc->Player->GetProperties(
+                    array(
+                        'playerid' => $this->_playerId,
+                        'properties' => array('position')
+                    )
+                );
 
                 $array['track'] = $playposition['position'] + 1;
+
+                // So we get active players, if no exists active player, set the status to stop and return
+                $xbmc_players = $this->_xbmc->Player->GetActivePlayers();
+                if (empty($xbmc_players)) {
+                    $array['state'] = 'stop';
+                    // no other fields possible if they are no active players
+
+                    return $array;
+                }
+
                 $playlist_item  = rawurldecode($currentplay['item']['file']);
 
                 $url_data = $this->parse_url($playlist_item);
@@ -686,12 +761,12 @@ class AmpacheXbmc extends localplay_controller
                     $array['track_artist'] = $song->get_artist_fullname();
                     $array['track_album']  = $song->get_album_fullname();
                 }
-            } catch (XBMC_RPC_Exception $ex) {
-                debug_event(self::class, 'get current item failed, player probably stopped. ' . $ex->getMessage(), 1);
+            } catch (XBMC_RPC_Exception $error) {
+                debug_event(self::class, 'get current item failed, player probably stopped. ' . $error->getMessage(), 1);
                 $array['state'] = 'stop';
             }
-        } catch (XBMC_RPC_Exception $ex) {
-            debug_event(self::class, 'status failed: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $error) {
+            debug_event(self::class, 'status failed: ' . $error->getMessage(), 1);
         }
 
         return $array;
@@ -712,8 +787,8 @@ class AmpacheXbmc extends localplay_controller
             debug_event(self::class, 'Connected.', 5);
 
             return true;
-        } catch (XBMC_RPC_ConnectionException $ex) {
-            debug_event(self::class, 'xbmc connection failed: ' . $ex->getMessage(), 1);
+        } catch (XBMC_RPC_ConnectionException $error) {
+            debug_event(self::class, 'xbmc connection failed: ' . $error->getMessage(), 1);
 
             return false;
         }
