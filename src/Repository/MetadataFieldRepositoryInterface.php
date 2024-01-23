@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,17 +23,12 @@
  *
  */
 
-namespace Ampache\Repository\Model\Metadata\Repository;
+namespace Ampache\Repository;
 
-use Ampache\Repository\MetadataRepository;
-use Ampache\Repository\Repository;
-
-/**
- * @deprecated replaced
- *
- * @see MetadataRepository
- */
-class Metadata extends Repository
+interface MetadataFieldRepositoryInterface
 {
-    protected $modelClassName = \Ampache\Repository\Model\Metadata\Model\Metadata::class;
+    /**
+     * Remove metadata for songs which don't exist anymore
+     */
+    public function collectGarbage(): void;
 }

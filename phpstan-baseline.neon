@@ -8841,16 +8841,6 @@ parameters:
 			path: src/Module/System/Dba.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:fetch_object\\(\\) has parameter \\$resource with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Dba.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:fetch_object\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/Dba.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:fetch_row\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/System/Dba.php
@@ -15457,11 +15447,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Repository\\:\\:\\$fieldClassRelations type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Repository.php
 

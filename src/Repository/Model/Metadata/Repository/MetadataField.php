@@ -23,15 +23,15 @@
 
 namespace Ampache\Repository\Model\Metadata\Repository;
 
-use Ampache\Module\System\Dba;
+use Ampache\Repository\MetadataFieldRepository;
 use Ampache\Repository\Repository;
 
+/**
+ * @deprecated replaced
+ *
+ * @see MetadataFieldRepository
+ */
 class MetadataField extends Repository
 {
     protected $modelClassName = \Ampache\Repository\Model\Metadata\Model\MetadataField::class;
-
-    public static function garbage_collection(): void
-    {
-        Dba::write("DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL;");
-    }
 }

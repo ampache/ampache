@@ -41,12 +41,6 @@ trait Metadata
     protected $metadataFieldRepository;
 
     /**
-     * Determines if the functionality is enabled or not.
-     * @var bool
-     */
-    protected $enableCustomMetadata;
-
-    /**
      * Cache variable for disabled metadata field names
      * @var array
      */

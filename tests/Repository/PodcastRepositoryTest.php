@@ -739,4 +739,45 @@ class PodcastRepositoryTest extends TestCase
             $this->subject->persist($podcast)
         );
     }
+
+    public function testFindByIdReturnsNullIfNotFound(): void
+    {
+        $podcastId = 666;
+
+        $podcast = $this->createMock(Podcast::class);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcast')
+            ->with($podcastId)
+            ->willReturn($podcast);
+
+        $podcast->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        static::assertNull(
+            $this->subject->findById($podcastId)
+        );
+    }
+
+    public function testFindByIdReturnsObject(): void
+    {
+        $podcastId = 666;
+
+        $podcast = $this->createMock(Podcast::class);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcast')
+            ->with($podcastId)
+            ->willReturn($podcast);
+
+        $podcast->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
+
+        static::assertSame(
+            $podcast,
+            $this->subject->findById($podcastId)
+        );
+    }
 }

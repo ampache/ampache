@@ -53,7 +53,7 @@ use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
-use Ampache\Repository\Model\Metadata\Repository\Metadata;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -4378,7 +4378,7 @@ abstract class Catalog extends database_object
             Playlist::migrate($object_type, $old_object_id, $new_object_id);
             Label::migrate($object_type, $old_object_id, $new_object_id);
             Wanted::migrate($object_type, $old_object_id, $new_object_id);
-            Metadata::migrate($object_type, $old_object_id, $new_object_id);
+            self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
             Bookmark::migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
 
@@ -4501,5 +4501,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated  inject dependency
+     */
+    private static function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
     }
 }

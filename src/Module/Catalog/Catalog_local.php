@@ -27,11 +27,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Repository\MetadataFieldRepositoryInterface;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
@@ -778,8 +779,8 @@ class Catalog_local extends Catalog
             Dba::write($sql);
         }
 
-        Metadata::garbage_collection();
-        MetadataField::garbage_collection();
+        $this->getMetadataRepository()->collectGarbage();
+        $this->getMetadataFieldRepository()->collectGarbage();
 
         return $this->count;
     }
@@ -1383,5 +1384,25 @@ class Catalog_local extends Catalog
         global $dic;
 
         return $dic->get(PodcastSyncerInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getMetadataFieldRepository(): MetadataFieldRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataFieldRepositoryInterface::class);
     }
 }
