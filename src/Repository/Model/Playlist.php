@@ -676,11 +676,15 @@ class Playlist extends playlist_object
                 $values[] = $track;
             } // if valid id
         } // end foreach medias
-        Dba::write(rtrim($sql, ', '), $values);
-        debug_event(self::class, "Added $count tracks to playlist: " . $this->id, 5);
-        $this->update_last_update();
+        if ($count === 0 || !empty($values)) {
+            Dba::write(rtrim($sql, ', '), $values);
+            debug_event(self::class, "Added $count tracks to playlist: " . $this->id, 5);
+            $this->update_last_update();
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 
     /**
