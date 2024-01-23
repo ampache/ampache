@@ -38,6 +38,8 @@ class Api4
 {
     /**
      * This dict contains all known api-methods (key) and their respective handler (value)
+     *
+     * @var array<string, class-string<object>>
      */
     public const METHOD_LIST = [
         'advanced_search' => Method\Api4\AdvancedSearch4Method::class,

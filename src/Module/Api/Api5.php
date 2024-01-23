@@ -43,6 +43,8 @@ class Api5
 {
     /**
      * This dict contains all known api-methods (key) and their respective handler (value)
+     *
+     * @var array<string, class-string<object>>
      */
     public const METHOD_LIST = [
         Method\Api5\Handshake5Method::ACTION => Method\Api5\Handshake5Method::class,

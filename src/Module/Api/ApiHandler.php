@@ -443,6 +443,7 @@ final class ApiHandler implements ApiHandlerInterface
                 sprintf('API function [%s]', $handlerClassName),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
+
             if ($this->dic->has($handlerClassName) && $this->dic->get($handlerClassName) instanceof MethodInterface) {
                 /** @var MethodInterface $handler */
                 $handler = $this->dic->get($handlerClassName);
@@ -458,20 +459,19 @@ final class ApiHandler implements ApiHandlerInterface
                 $gatekeeper->extendSession($input['auth']);
 
                 return $response;
-            } elseif ($is_public) {
-                call_user_func(
-                    [$handlerClassName, $action],
-                    $input
-                );
-
-                $gatekeeper->extendSession($input['auth']);
-
-                return null;
             } else {
-                call_user_func(
-                    [$handlerClassName, $action],
-                    $input,
-                    $user
+                $params = [$input];
+
+                /** @var callable $callback */
+                $callback = [$handlerClassName, $action];
+
+                if (!$is_public) {
+                    $params[] = $user;
+                }
+
+                call_user_func_array(
+                    $callback,
+                    $params
                 );
 
                 $gatekeeper->extendSession($input['auth']);
