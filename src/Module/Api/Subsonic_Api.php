@@ -1550,7 +1550,7 @@ class Subsonic_Api
         // vlc won't work if we use application/vnd.apple.mpegurl, but works fine with this. this is
         // also an allowed header by the standard
         header('Content-Type: audio/mpegurl;');
-        $stream->create_m3u();
+        echo $stream->create_m3u();
     }
 
     /**

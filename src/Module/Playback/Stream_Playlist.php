@@ -468,7 +468,7 @@ class Stream_Playlist
                 $ext      = $type = 'm3u';
                 $ctype    = 'audio/x-mpegurl';
                 $callable = function (): void {
-                    $this->create_m3u();
+                    echo $this->create_m3u();
                 };
                 break;
         }
@@ -546,10 +546,18 @@ class Stream_Playlist
     }
 
     /**
-     * creates an m3u file, this includes the EXTINFO and as such can be
+     * for compatibility, the get_m3u_string function name is generated in the ExportPlaylist console export
+     */
+    public function get_m3u_string(): string
+    {
+        return $this->create_m3u();
+    }
+
+    /**
+     * creates the content of an m3u file, this includes the EXTINFO and as such can be
      * large with very long playlists
      */
-    public function create_m3u(): void
+    public function create_m3u(): string
     {
         $ret = "#EXTM3U\n";
 
@@ -558,7 +566,7 @@ class Stream_Playlist
             $ret .= $url->url . "\n";
         }
 
-        echo $ret;
+        return $ret;
     }
 
     public function create_pls(): void
