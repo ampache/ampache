@@ -413,6 +413,9 @@ class AmpacheXbmc extends localplay_controller
             return false;
         }
 
+        //force integer, some apps sends sting ( subsonic jukebox )
+        $song = intval( $song );
+
         try {
             $this->_xbmc->Player->GoTo(array(
                 'playerid' => $this->_playerId,
@@ -658,18 +661,13 @@ class AmpacheXbmc extends localplay_controller
                 'properties' => array('volume')
             ));
             $array['volume'] = (int)($appprop['volume']);
+            $array['track_title']  = '';
+            $array['track_artist'] = '';
+            $array['track_album']  = '';
 
             try {
                 // We assume it's playing. Pause detection with player speed
                 $array['state'] = 'play';
-
-                // So we get active players, if no exists active player, set the status to stop and return
-                $xbmc_players = $this->_xbmc->Player->GetActivePlayers();
-                if (empty($xbmc_players)) {
-                    $array['state'] = 'stop';
-                    //no other fields possible if they are no active players
-                    return $array;
-                }
 
                 $speed = $this->_xbmc->Player->GetProperties(array(
                     'playerid' => $this->_playerId,
@@ -700,6 +698,15 @@ class AmpacheXbmc extends localplay_controller
                 ));
 
                 $array['track'] = $playposition['position'] + 1;
+
+                // So we get active players, if no exists active player, set the status to stop and return
+                $xbmc_players = $this->_xbmc->Player->GetActivePlayers();
+                if (empty($xbmc_players)) {
+                    $array['state'] = 'stop';
+                    //no other fields possible if they are no active players
+                    return $array;
+                }
+
                 $playlist_item  = rawurldecode($currentplay['item']['file']);
 
                 $url_data = $this->parse_url($playlist_item);
