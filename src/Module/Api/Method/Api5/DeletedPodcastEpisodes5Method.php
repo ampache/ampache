@@ -30,7 +30,6 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
 

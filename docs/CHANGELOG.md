@@ -712,7 +712,7 @@ Stream token's will let you design permalinked streams and allow users to stream
   * For data responses id is the only attribute and everything else is an element
   * Name was not set as an attribute OR an element so now it's always an element
   * Return original XML output (that may be malformed) when loadxml fails.
-* Api6::get_indexes: This method is depreciated and will be removed in Ampache 7.0.0 (Use Api6::list instead)
+* Api6::get_indexes: This method is depreciated and will be removed in Ampache **API7** (Use list instead)
 
 ### Removed
 

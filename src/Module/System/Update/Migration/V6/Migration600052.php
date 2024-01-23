@@ -24,17 +24,26 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Playlist;
 
 final class Migration600052 extends AbstractMigration
 {
-    protected array $changelog = [
-        'Remove Flattr plugin (Service has been discontinued)'
-    ];
+    protected array $changelog = ['Add unique constraint `playlist_track_UN` on `playlist_data` table'];
 
     public function migrate(): void
     {
-        Preference::delete('flattr_user_id');
+        # fix up duplicate playlist track numbers
+        $sql        = 'SELECT DISTINCT `playlist` from `playlist_data` GROUP BY `playlist`, `track` having COUNT(`playlist`) > 1;';
+        $db_results = Dba::read($sql);
+        // get the base album you will migrate into
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $playlist = new Playlist($row['playlist']);
+            $playlist->regenerate_track_numbers();
+        }
+        Dba::write("ALTER TABLE `playlist_data` DROP KEY `playlist_track_UN`;");
+        $sql = 'ALTER TABLE `playlist_data` ADD CONSTRAINT `playlist_track_UN` UNIQUE KEY (`playlist`,`track`);';
+        $this->updateDatabase($sql);
     }
 }

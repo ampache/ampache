@@ -1221,7 +1221,7 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 
 This takes a collection of inputs and returns ID + name for the object type
 
-**DEVELOP** This method is depreciated and will be removed in Ampache 7.0.0 (Use list)
+**DEVELOP** This method is depreciated and will be removed in **API7** (Use list)
 
 | Input         | Type       | Description                                                                                        | Optional |
 |---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
@@ -1687,6 +1687,8 @@ This returns a single playlist
 ### playlist_add_song
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
+
+**DEVELOP** This method is depreciated and will be removed in **API7** (Use playlist_add)
 
 | Input    | Type    | Description                                                   | Optional |
 |----------|---------|---------------------------------------------------------------|---------:|
