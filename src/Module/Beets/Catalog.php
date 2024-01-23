@@ -29,7 +29,6 @@ use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Module\System\AmpError;
-use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\library_item;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;

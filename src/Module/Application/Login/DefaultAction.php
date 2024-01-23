@@ -42,7 +42,6 @@ use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
-use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

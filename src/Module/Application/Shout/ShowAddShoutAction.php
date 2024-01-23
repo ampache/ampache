@@ -28,7 +28,6 @@ namespace Ampache\Module\Application\Shout;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;

@@ -23,10 +23,8 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
-use DateTimeInterface;
 use Traversable;
 
 interface ShoutRepositoryInterface

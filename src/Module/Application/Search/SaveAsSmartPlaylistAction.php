@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
