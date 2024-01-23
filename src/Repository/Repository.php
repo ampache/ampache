@@ -80,8 +80,8 @@ class Repository
         $sql  = $this->assembleQuery($table, $field);
 
         $statement = Dba::read($sql, is_array($value) ? $value : array($value));
-        /** @var library_item $object */
         while ($object = Dba::fetch_object($statement, $this->modelClassName)) {
+            /** @var library_item $object */
             $data[$object->getId()] = $object;
         }
 
@@ -238,6 +238,7 @@ class Repository
     {
         foreach ($properties as $property => $value) {
             if (is_object($value)) {
+                /** @var library_item $value */
                 $properties[$property] = $value->getId();
             }
         }

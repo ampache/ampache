@@ -8136,16 +8136,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Offset 'name' does not exist on array\\{link\\: mixed, id\\: mixed, track\\: \\(float\\|int\\), oid\\?\\: mixed, name\\?\\: non\\-falsy\\-string\\}\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:\\$_playerId has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
@@ -13676,11 +13666,6 @@ parameters:
 			path: src/Repository/Model/Playlist.php
 
 		-
-			message: "#^Parameter \\#2 \\$params of static method Ampache\\\\Module\\\\System\\\\Dba\\:\\:read\\(\\) expects array, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
 			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, int\\|string given\\.$#"
 			count: 2
 			path: src/Repository/Model/Playlist.php
@@ -15351,11 +15336,6 @@ parameters:
 			path: src/Repository/Model/playlist_object.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:__call\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Repository.php
@@ -15452,11 +15432,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Repository\\:\\:\\$modelClassName has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Variable \\$object in PHPDoc tag @var does not exist\\.$#"
 			count: 1
 			path: src/Repository/Repository.php
 
