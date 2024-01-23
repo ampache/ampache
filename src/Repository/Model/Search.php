@@ -1410,6 +1410,43 @@ class Search extends playlist_object
     }
 
     /**
+     * get_songs
+     * This is called by the batch script, because we can't pass in Dynamic objects they pulled once and then their
+     * target song.id is pushed into the array
+     */
+    public function get_songs(): array
+    {
+        $results = array();
+        if ($this->isNew()) {
+            return $results;
+        }
+        $sqltbl = $this->to_sql();
+        $sql    = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
+        if (!empty($sqltbl['where_sql'])) {
+            $sql .= ' WHERE ' . $sqltbl['where_sql'];
+        }
+        if (!empty($sqltbl['group_sql'])) {
+            $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
+        }
+        if (!empty($sqltbl['having_sql'])) {
+            $sql .= ' HAVING ' . $sqltbl['having_sql'];
+        }
+
+        $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $this->order_by;
+        if ($this->limit > 0) {
+            $sql .= " LIMIT " . (string)($this->limit);
+        }
+        //debug_event(self::class, 'SQL get_songs: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
+
+        $db_results = Dba::read($sql, $sqltbl['parameters']);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * get_total_duration
      * Get the total duration of all songs.
      * @param array $songs
