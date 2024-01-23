@@ -628,7 +628,7 @@ class Playlist extends playlist_object
      * @param array $song_ids
      * This takes an array of song_ids and then adds it to the playlist
      */
-    public function add_songs($song_ids = array()): void
+    public function add_songs($song_ids = array()): bool
     {
         $medias = array();
         foreach ($song_ids as $song_id) {
@@ -637,8 +637,13 @@ class Playlist extends playlist_object
                 'object_id' => $song_id,
             );
         }
-        $this->add_medias($medias);
-        Catalog::update_mapping('playlist');
+        if ($this->add_medias($medias)) {
+            Catalog::update_mapping('playlist');
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -650,14 +655,16 @@ class Playlist extends playlist_object
         if (empty($medias)) {
             return false;
         }
-        /* We need to pull the current 'end' track and then use that to
-         * append, rather then integrate take end track # and add it to
-         * $song->track add one to make sure it really is 'next'
-         */
+
         debug_event(self::class, "add_medias to: " . $this->id, 5);
-        $unique     = (bool) AmpConfig::get('unique_playlist');
-        $track_data = $this->get_items();
-        $base_track = count($track_data);
+        $unique     = (bool) AmpConfig::get('unique_playlist', false);
+        $track_data = ($unique) ?
+            $this->get_songs()
+            : array();
+        $sql        = "SELECT MAX(`track`) AS `track` FROM `playlist_data` WHERE `object_id` = ? ";
+        $db_results = Dba::read($sql, array($this->id));
+        $row        = Dba::fetch_assoc($db_results);
+        $base_track = (int)($row['track'] ?? 0);
         $count      = 0;
         $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = array();
@@ -674,11 +681,15 @@ class Playlist extends playlist_object
                 $values[] = $track;
             } // if valid id
         } // end foreach medias
-        Dba::write(rtrim($sql, ', '), $values);
-        debug_event(self::class, "Added $count tracks to playlist: " . $this->id, 5);
-        $this->update_last_update();
+        if ($count === 0 || !empty($values)) {
+            Dba::write(rtrim($sql, ', '), $values);
+            debug_event(self::class, "Added $count tracks to playlist: " . $this->id, 5);
+            $this->update_last_update();
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 
     /**
