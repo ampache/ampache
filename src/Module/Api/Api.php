@@ -43,6 +43,8 @@ class Api
 {
     /**
      * This dict contains all known api-methods (key) and their respective handler (value)
+     *
+     * @var array<string, class-string<object>>
      */
     public const METHOD_LIST = [
         Method\AdvancedSearchMethod::ACTION => Method\AdvancedSearchMethod::class,
