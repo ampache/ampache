@@ -27,7 +27,7 @@ namespace Ampache\Module\System\Update\Migration\V6;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Ampache\Repository\Model\Preference;
 
-final class Migration600052 extends AbstractMigration
+final class Migration600053 extends AbstractMigration
 {
     protected array $changelog = [
         'Remove Flattr plugin (Service has been discontinued)'
