@@ -103,6 +103,7 @@ class Api
         Method\LocalplayMethod::ACTION => Method\LocalplayMethod::class,
         Method\LocalplaySongsMethod::ACTION => Method\LocalplaySongsMethod::class,
         Method\PingMethod::ACTION => Method\PingMethod::class,
+        Method\PlaylistAddMethod::ACTION => Method\PlaylistAddMethod::class,
         Method\PlaylistAddSongMethod::ACTION => Method\PlaylistAddSongMethod::class,
         Method\PlaylistCreateMethod::ACTION => Method\PlaylistCreateMethod::class,
         Method\PlaylistDeleteMethod::ACTION => Method\PlaylistDeleteMethod::class,
