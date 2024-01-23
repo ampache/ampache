@@ -650,14 +650,16 @@ class Playlist extends playlist_object
         if (empty($medias)) {
             return false;
         }
-        /* We need to pull the current 'end' track and then use that to
-         * append, rather then integrate take end track # and add it to
-         * $song->track add one to make sure it really is 'next'
-         */
+
         debug_event(self::class, "add_medias to: " . $this->id, 5);
-        $unique     = (bool) AmpConfig::get('unique_playlist');
-        $track_data = $this->get_items();
-        $base_track = count($track_data);
+        $unique     = (bool) AmpConfig::get('unique_playlist', false);
+        $track_data = ($unique) ?
+            $this->get_songs()
+            : array();
+        $sql        = "SELECT MAX(`track`) AS `track` FROM `playlist_data` WHERE `object_id` = ? ";
+        $db_results = Dba::read($sql, $this->id);
+        $row        = Dba::fetch_assoc($db_results);
+        $base_track = (int)($row['track'] ?? 0);
         $count      = 0;
         $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = array();
