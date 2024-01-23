@@ -397,7 +397,7 @@ class Playlist extends playlist_object
                     $sql .= 'ORDER BY RAND()';
                     break;
                 default:
-                    $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist` = ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' AND `playlist_data`.`object_type` != 'live_stream' ORDER BY `track`";
+                    $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist` = ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' AND `playlist_data`.`object_type` != 'live_stream' ORDER BY RAND()";
                     debug_event(__CLASS__, "get_items(): $object_type not handled", 5);
             }
             $sql .= (!empty($limit))
@@ -415,6 +415,7 @@ class Playlist extends playlist_object
                 );
             }
         }
+        shuffle($results);
 
         return $results;
     }
