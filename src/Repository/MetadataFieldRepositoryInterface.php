@@ -25,10 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Traversable;
+
 interface MetadataFieldRepositoryInterface
 {
     /**
      * Remove metadata for songs which don't exist anymore
      */
     public function collectGarbage(): void;
+
+    /**
+     * Returns the list of available fields
+     *
+     * Key is the primary key, value the name
+     *
+     * @return Traversable<int, string>
+     */
+    public function getPropertyList(): Traversable;
 }

@@ -10991,11 +10991,6 @@ parameters:
 			path: src/Module/Util/SlideshowInterface.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:createPreferenceInput\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
@@ -11031,11 +11026,6 @@ parameters:
 			path: src/Module/Util/Ui.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_classes has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_icon_cache has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
@@ -11047,11 +11037,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_ticker has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Static property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_classes is unused\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
 
@@ -14039,11 +14024,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Repository/Model/Rating.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:_add_type_select\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"

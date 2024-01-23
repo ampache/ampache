@@ -40,6 +40,7 @@ use Ampache\Module\Playlist\Search\UserSearch;
 use Ampache\Module\Playlist\Search\VideoSearch;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Core;
+use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -725,16 +726,11 @@ class Search extends playlist_object
 
         $t_metadata = T_('Metadata');
         if (AmpConfig::get('enable_custom_metadata')) {
-            $metadataFields          = array();
-            $metadataFieldRepository = new MetadataField();
-            foreach ($metadataFieldRepository->findAll() as $metadata) {
-                $metadataFields[$metadata->getId()] = $metadata->getName();
-            }
             $this->types[] = array(
                 'name' => 'metadata',
                 'label' => $t_metadata,
                 'type' => 'multiple',
-                'subtypes' => $metadataFields,
+                'subtypes' => iterator_to_array($this->getMetadataFieldRepository()->getPropertyList()),
                 'widget' => array('subtypes', array('input', 'text')),
                 'title' => $t_metadata
             );
@@ -1873,5 +1869,15 @@ class Search extends playlist_object
         global $dic;
 
         return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getMetadataFieldRepository(): MetadataFieldRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataFieldRepositoryInterface::class);
     }
 }
