@@ -345,6 +345,7 @@ class Playlist extends playlist_object
                     $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist` = ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' ORDER BY `track`";
                     debug_event(__CLASS__, "get_items(): $object_type not handled", 5);
             }
+            // debug_event(__CLASS__, "get_items(): Results:\n" . print_r($results,true) , 5);
             $db_results = Dba::read($sql, $params);
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -356,7 +357,9 @@ class Playlist extends playlist_object
                 );
             }
         }
-        //	debug_event(__CLASS__, "get_items(): Results:\n" . print_r($results,true) , 5);
+        // sort these object types by the track column
+        $tracks = array_column($results, 'track');
+        array_multisort($tracks, SORT_ASC, $results);
 
         return $results;
     }
@@ -435,7 +438,7 @@ class Playlist extends playlist_object
         }
         $sql .= "ORDER BY `playlist_data`.`track`";
         $db_results = Dba::read($sql, $params);
-        //	debug_event(__CLASS__, "get_songs(): " . $sql, 5);
+        // debug_event(__CLASS__, "get_songs(): " . $sql, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];
@@ -499,7 +502,7 @@ class Playlist extends playlist_object
             return 0;
         }
 
-        //	debug_event(__CLASS__, "get_total_duration(): " . $sql, 5);
+        // debug_event(__CLASS__, "get_total_duration(): " . $sql, 5);
 
         return (int) $row[0];
     }
