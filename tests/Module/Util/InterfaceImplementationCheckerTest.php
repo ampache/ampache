@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Song_Preview;
 use Mockery;

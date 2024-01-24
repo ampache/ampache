@@ -32,8 +32,6 @@ use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Catalog;
 use Exception;
 
-use function PHPStan\dumpType;
-
 final class PrintTagsCommand extends Command
 {
     private UtilityFactoryInterface $utilityFactory;

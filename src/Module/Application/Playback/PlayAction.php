@@ -58,8 +58,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-use function PHPStan\dumpType;
-
 final class PlayAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'play';

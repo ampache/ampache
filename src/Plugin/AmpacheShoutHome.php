@@ -28,7 +28,6 @@ namespace Ampache\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\ShoutRepositoryInterface;

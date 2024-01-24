@@ -26,9 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Podcast\Feed;
 
 use Ampache\Module\Podcast\Feed\Exception\FeedLoadingException;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use SimpleXMLElement;
