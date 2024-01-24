@@ -1,5 +1,74 @@
 # CHANGELOG
 
+## Ampache 6.3.0
+
+### Added
+
+* Lots more static typing on missing function returns
+* Dynamic properties on the Captcha classes
+* Add opml import for podcasts
+* Database 600052
+  * Update Last.FM plugin preferences that could be incorrect
+  * Spell category and subcategory correctly
+  * Add unique constraint `playlist_track_UN` on `playlist_data` table
+  
+### Changed
+
+* Split database updates into small migration classes
+* Change usage of State in podcast_episode pages for Status
+* Song additional metadata classes have been updated
+
+### Removed
+
+* Flattr service has shut down, so remove the plugin
+
+### Fixed
+
+* Catalog Filters could not be edited after creating
+* Catalogs were not cleaned up from the `catalog_filter_group_map` table
+* Wanted errors on an empty global user
+* Public users can not cache playlist browses
+* Last.FM plugin errors with preferences and linking accounts
+* Fix up localplay commands for Kodi/XBMC clients
+* Playlists were sorting by object type
+* User::get_user_data was not putting the default return in correctly
+* Static typing errors
+  * Updating album data when original_year is missing
+  * Template `show_recently_played` with a non-database song
+  * Use isNew() to check for valid objects to avoid type errors
+  * Check for valid media before zip operations
+* Subsonic
+  * Data for starred results was not always an array
+  * Send correct art respecting `show_song_art` again
+
+## API 6.3.0
+
+### Added
+
+* API6
+  * New Method: user_playlists (return user playlists and does not include smartlists)
+  * New Method: user_smartlists (return user smartlists (searches) and does not include playlists)
+  * New Method: playlist_add (add songs to a playlist, allowing different song parent types)
+  * Add `has_art` parameter to any object with an `art_url`
+
+### Changed
+
+* API6
+  * playlist_add_song is depreciated and will be removed in **API7** (Use playlist_add)
+
+### Fixed
+
+* ALL
+  * Userflag wasn't sending bool when cached in the database
+* API4
+  * playlists method not respecting like for smartlists
+* API5
+  * playlists method not respecting like for smartlists
+* API6
+  * playlists method not respecting like for smartlists
+  * playlist_edit method will decode html `,` separators
+
+
 ## Ampache 6.2.1
 
 The catalog verify process has been reworked a little. There were some bugs that would prevent you being able to 'finish' a catalog.
@@ -699,7 +768,7 @@ Stream token's will let you design permalinked streams and allow users to stream
 ### Changed
 
 * Api6
-  * Renamed `user_update` to `user_edit` (user_update still works and will be depreciated in API7)
+  * Renamed `user_update` to `user_edit` (user_update still works and will be removed in **API7**)
 * Api5
   * Add backwards compatible `user_edit` method to point to `user_update`
 * ALL
