@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Generator;
+use PDO;
 
 /**
  * Manages song metadata-fields related database access
@@ -48,5 +50,21 @@ final class MetadataFieldRepository implements MetadataFieldRepositoryInterface
     public function collectGarbage(): void
     {
         $this->connection->query('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL;');
+    }
+
+    /**
+     * Returns the list of available fields
+     *
+     * Key is the primary key, value the name
+     *
+     * @return Generator<int, string>
+     */
+    public function getPropertyList(): Generator
+    {
+        $result = $this->connection->query('SELECT `id`, `name` from metadata_field');
+
+        while ($data = $result->fetch(PDO::FETCH_ASSOC)) {
+            yield (int) $data['id'] => $data['name'];
+        }
     }
 }

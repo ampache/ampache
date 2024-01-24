@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -42,7 +43,6 @@ use Ampache\Repository\Model\Preference;
  */
 class Ui implements UiInterface
 {
-    private static $_classes;
     private static $_ticker;
     private static $_icon_cache;
     private static $_image_cache;
@@ -1161,10 +1161,9 @@ class Ui implements UiInterface
             case 'disabled_custom_metadata_fields':
                 $ids             = explode(',', $value);
                 $options         = array();
-                $fieldRepository = new MetadataField();
-                foreach ($fieldRepository->findAll() as $field) {
-                    $selected  = in_array($field->getId(), $ids) ? ' selected="selected"' : '';
-                    $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';
+                foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
+                    $selected  = in_array($propertyId, $ids) ? ' selected="selected"' : '';
+                    $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . $propertyName . '</option>';
                 }
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
                 break;
@@ -1232,5 +1231,15 @@ class Ui implements UiInterface
         }
 
         return $string;
+    }
+
+    /**
+     * @todo inject dependency
+     */
+    private function getMetadataFieldRepository(): MetadataFieldRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataFieldRepositoryInterface::class);
     }
 }

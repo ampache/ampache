@@ -48,17 +48,6 @@ class Repository
 
     /**
      *
-     * @return DatabaseObject[]
-     */
-    public function findAll(): array
-    {
-        $table = $this->getTableName();
-
-        return $this->getRecords($table);
-    }
-
-    /**
-     *
      * @param int $object_id
      */
     public function findById($object_id)
