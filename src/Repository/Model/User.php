@@ -474,8 +474,8 @@ class User extends database_object
         }
 
         $db_results = Dba::read($sql, $params);
-        $results    = ($key && $default !== null)
-            ? array('key' => $default)
+        $results    = ($key !== null && $default !== null)
+            ? array($key => $default)
             : array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['key']] = $row['value'];
