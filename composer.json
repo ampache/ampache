@@ -88,7 +88,7 @@
         "robloach/component-installer": "^0.0.12",
         "rsd/seafile-php-sdk": "^1",
         "sabre/dav": "3.*.*",
-        "scn/phptal": "dev-master",
+        "scn/phptal": "^4",
         "shrikeh/teapot": "^2.3",
         "swisnl/jquery-contextmenu": "2.1.*",
         "symfony/event-dispatcher": "^5.4.22",
