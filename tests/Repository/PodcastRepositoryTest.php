@@ -29,7 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -138,85 +137,6 @@ class PodcastRepositoryTest extends TestCase
         static::assertSame(
             $podcast,
             $this->subject->findByFeedUrl($feedUrl),
-        );
-    }
-
-    public function testCreateReturnsPodcast(): void
-    {
-        $title         = 'some-title';
-        $website       = 'some-website';
-        $description   = 'some-description';
-        $language      = 'some-language';
-        $copyright     = 'some-copyright';
-        $generator     = 'some-generator';
-        $lastBuildDate = 666;
-        $feedUrl       = 'some-feed-url';
-        $catalogId     = 42;
-        $podcastId     = 21;
-
-        $catalog = $this->createMock(Catalog::class);
-        $podcast = $this->createMock(Podcast::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                <<<SQL
-                INSERT INTO
-                    `podcast`
-                    (
-                        `feed`,
-                        `catalog`,
-                        `title`,
-                        `website`,
-                        `description`,
-                        `language`,
-                        `copyright`,
-                        `generator`,
-                        `lastbuilddate`
-                    )
-                VALUES
-                    (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                SQL,
-                [
-                    $feedUrl,
-                    $catalogId,
-                    $title,
-                    $website,
-                    $description,
-                    $language,
-                    $copyright,
-                    $generator,
-                    $lastBuildDate,
-                ],
-            );
-        $this->connection->expects(static::once())
-            ->method('getLastInsertedId')
-            ->willReturn($podcastId);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
-            ->with($podcastId)
-            ->willReturn($podcast);
-
-        $catalog->expects(static::once())
-            ->method('getId')
-            ->willReturn($catalogId);
-
-        static::assertSame(
-            $podcast,
-            $this->subject->create(
-                $catalog,
-                $feedUrl,
-                [
-                    'title' => $title,
-                    'website' => $website,
-                    'description' => $description,
-                    'language' => $language,
-                    'copyright' => $copyright,
-                    'generator' => $generator,
-                    'lastBuildDate' => $lastBuildDate,
-                ],
-            ),
         );
     }
 
@@ -778,6 +698,14 @@ class PodcastRepositoryTest extends TestCase
         static::assertSame(
             $podcast,
             $this->subject->findById($podcastId)
+        );
+    }
+
+    public function testPrototypeReturnsNewObject(): void
+    {
+        static::assertInstanceOf(
+            Podcast::class,
+            $this->subject->prototype()
         );
     }
 }

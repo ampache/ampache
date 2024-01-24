@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Generator;
@@ -44,25 +43,6 @@ interface PodcastRepositoryInterface
      * Searches for an existing podcast object by the feed url
      */
     public function findByFeedUrl(string $feedUrl): ?Podcast;
-
-    /**
-     * Creates a new podcast database item
-     *
-     * @param array{
-     *   title: string,
-     *   website: string,
-     *   description: string,
-     *   language: string,
-     *   copyright: string,
-     *   generator: string,
-     *   lastBuildDate: null|int
-     *  } $data
-     */
-    public function create(
-        Catalog $catalog,
-        string $feedUrl,
-        array $data
-    ): Podcast;
 
     /**
      * Returns all episode-ids for the given podcast
@@ -120,6 +100,11 @@ interface PodcastRepositoryInterface
      * }>
      */
     public function getDeletedEpisodes(): array;
+
+    /**
+     * Returns a new podcast item
+     */
+    public function prototype(): Podcast;
 
     /**
      * Persists the podcast-item in the database

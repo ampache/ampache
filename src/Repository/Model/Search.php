@@ -41,7 +41,6 @@ use Ampache\Module\Playlist\Search\VideoSearch;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Core;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
-use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 

@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
@@ -129,8 +130,24 @@ final class EditObjectAction extends AbstractEditAction
             }
         }
 
+        /**
+         * @todo updating must be separated by item type - this is ugly as hell
+         */
         if ($libitem instanceof Share && $user !== null) {
             $libitem->update($_POST, $user);
+        } elseif ($libitem instanceof Podcast) {
+            $feedUrl = $_POST['feed'] ?? '';
+
+            if (filter_var($feedUrl, FILTER_VALIDATE_URL)) {
+                $libitem->setTitle($_POST['title'] ?? $libitem->getTitle())
+                    ->setFeedUrl($feedUrl)
+                    ->setWebsite($_POST['website'] ?? $libitem->getWebsite())
+                    ->setDescription($_POST['description'] ?? $libitem->getDescription())
+                    ->setLanguage($_POST['language'] ?? $libitem->getLanguage())
+                    ->setGenerator($_POST['generator'] ?? $libitem->getGenerator())
+                    ->setCopyright($_POST['copyright'] ?? $libitem->getCopyright())
+                    ->save();
+            }
         } else {
             // @todo: is it really necessary to call format before updating the object?
             if (method_exists($libitem, 'format')) {

@@ -96,60 +96,6 @@ final class PodcastRepository implements PodcastRepositoryInterface
     }
 
     /**
-     * Creates a new podcast database item
-     *
-     * @param array{
-     *   title: string,
-     *   website: string,
-     *   description: string,
-     *   language: string,
-     *   copyright: string,
-     *   generator: string,
-     *   lastBuildDate: null|int
-     *  } $data
-     */
-    public function create(
-        Catalog $catalog,
-        string $feedUrl,
-        array $data
-    ): Podcast {
-        $this->connection->query(
-            <<<SQL
-            INSERT INTO
-                `podcast`
-                (
-                    `feed`,
-                    `catalog`,
-                    `title`,
-                    `website`,
-                    `description`,
-                    `language`,
-                    `copyright`,
-                    `generator`,
-                    `lastbuilddate`
-                )
-            VALUES
-                (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            SQL,
-            [
-                $feedUrl,
-                $catalog->getId(),
-                $data['title'],
-                $data['website'],
-                $data['description'],
-                $data['language'],
-                $data['copyright'],
-                $data['generator'],
-                $data['lastBuildDate']
-            ]
-        );
-
-        return $this->modelFactory->createPodcast(
-            $this->connection->getLastInsertedId()
-        );
-    }
-
-    /**
      * Returns all episode-ids for the given podcast
      *
      * @param string $stateFilter Return only items with this state
@@ -361,6 +307,14 @@ final class PodcastRepository implements PodcastRepositoryInterface
         }
 
         return $episodes;
+    }
+
+    /**
+     * Returns a new podcast item
+     */
+    public function prototype(): Podcast
+    {
+        return new Podcast();
     }
 
     /**

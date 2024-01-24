@@ -78,19 +78,16 @@ final class PodcastEdit4Method
         $description = (array_key_exists('description', $input)) ? scrub_in((string) $input['description']) : $podcast->get_description();
         $generator   = (array_key_exists('generator', $input)) ? scrub_in((string) $input['generator']) : $podcast->getGenerator();
         $copyright   = (array_key_exists('copyright', $input)) ? scrub_in((string) $input['copyright']) : $podcast->getCopyright();
-        $data        = array(
-            'feed' => $feed,
-            'title' => $title,
-            'website' => $website,
-            'description' => $description,
-            'generator' => $generator,
-            'copyright' => $copyright
-        );
-        if ($podcast->update($data) !== false) {
-            Api4::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
-        } else {
-            Api4::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['api_format']);
-        }
+
+        $podcast->setTitle($title)
+            ->setFeedUrl($feed)
+            ->setWebsite($website)
+            ->setDescription($description)
+            ->setGenerator($generator)
+            ->setCopyright($copyright)
+            ->save();
+
+        Api4::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
 
         return true;
     }
