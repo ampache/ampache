@@ -1684,17 +1684,15 @@ This returns a single playlist
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist.json)
 
-### playlist_add_song
+### playlist_add
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
-
-**DEVELOP** This method is depreciated and will be removed in **API7** (Use playlist_add)
 
 | Input    | Type    | Description                                                   | Optional |
 |----------|---------|---------------------------------------------------------------|---------:|
 | 'filter' | string  | UID of Playlist                                               |       NO |
-| 'song'   | string  | UID of song to add to playlist                                |       NO |
-| 'check'  | boolean | `0`, `1` Whether to check and ignore duplicates (default = 0) |      YES |
+| 'id'     | string  | UID of the object to add to playlist                          |       NO |
+| 'type'   | string  | 'song', 'album', 'artist', 'playlist'                         |       NO |
 
 * return object
 
@@ -1708,7 +1706,7 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_add_song.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_add.json)
 
 ### playlist_create
 
@@ -2883,6 +2881,33 @@ Update an existing user.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_edit.json)
 
+### user_playlists
+
+This returns playlists based on the specified filter
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+
+* return array
+
+```JSON
+"playlist": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_playlists.json)
+
 ### user_preference
 
 Get your user preference by name
@@ -2904,6 +2929,33 @@ Get your user preference by name
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_preference.json)
+
+### user_smartlists
+
+This returns smartlists based on the specified filter
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+
+* return array
+
+```JSON
+"playlist": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_smartlists.json)
 
 ### videos
 

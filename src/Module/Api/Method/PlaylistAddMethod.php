@@ -52,7 +52,6 @@ final class PlaylistAddMethod
      * filter = (string) UID of playlist
      * id     = (string) $object_id
      * type   = (string) 'song', 'album', 'artist', 'playlist'
-     * check  = (integer) 0,1 Check for duplicates //optional, default = 0
      */
     public static function playlist_add(array $input, User $user): bool
     {

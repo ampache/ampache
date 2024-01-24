@@ -68,7 +68,6 @@
   * playlists method not respecting like for smartlists
   * playlist_edit method will decode html `,` separators
 
-
 ## Ampache 6.2.1
 
 The catalog verify process has been reworked a little. There were some bugs that would prevent you being able to 'finish' a catalog.

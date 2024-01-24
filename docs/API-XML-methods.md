@@ -1742,6 +1742,32 @@ This returns a single playlist
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
 
+| Input    | Type    | Description                                                   | Optional |
+|----------|---------|---------------------------------------------------------------|---------:|
+| 'filter' | string  | UID of Playlist                                               |       NO |
+| 'id'     | string  | UID of the object to add to playlist                          |       NO |
+| 'type'   | string  | 'song', 'album', 'artist', 'playlist'                         |       NO |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_add.xml)
+
+### playlist_add_song
+
+This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
+
 **DEVELOP** This method is depreciated and will be removed in **API7** (Use playlist_add)
 
 | Input    | Type    | Description                                                   | Optional |
@@ -2943,6 +2969,38 @@ Update an existing user.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_edit.xml)
 
+### user_playlists
+
+This returns playlists based on the specified filter for your user
+
+**NOTE** This method does not include smartlists
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <playlist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_playlists.xml)
+
 ### user_preference
 
 Get your user preference by name
@@ -2966,6 +3024,38 @@ Get your user preference by name
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_preference.xml)
+
+### user_smartlists
+
+This returns smartlists based on the specified filter for your user
+
+**NOTE** This method does not include playlists
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <playlist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_smartlists.xml)
 
 ### videos
 
