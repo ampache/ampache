@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Label;
@@ -378,6 +379,130 @@ class Xml_Data
      * we want
      *
      * @param array $objects Array of object_ids (Mixed string|int)
+     * @param string $object_type 'album_artist'|'song_artist'|'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param User $user
+     * @param bool $include include children from objects that have them
+     */
+    public static function index($objects, $object_type, $user, $include = false): string
+    {
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
+        $string = "<total_count>" . count($objects) . "</total_count>\n";
+
+        switch ($object_type) {
+            case 'album_artist':
+                foreach ($objects as $object_id) {
+                    $string .= "<artist id=\"" . $object_id . "\">\n";
+                    if ($include) {
+                        $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album';";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $string .= "<album id=\"" . $row['album_id'] . "\"></album>\n";
+                        }
+                    }
+                    $string .= "</artist>\n";
+                }
+                break;
+            case 'song_artist':
+                foreach ($objects as $object_id) {
+                    $string .= "<artist id=\"" . $object_id . "\">\n";
+                    if ($include) {
+                        $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'song';";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $string .= "<album id=\"" . $row['album_id'] . "\"></album>\n";
+                        }
+                    }
+                    $string .= "</artist>\n";
+                }
+                break;
+            case 'artist':
+                foreach ($objects as $object_id) {
+                    $string .= "<artist id=\"" . $object_id . "\">\n";
+                    if ($include) {
+                        $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ?;";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $string .= "<album id=\"" . $row['album_id'] . "\"></album>\n";
+                        }
+                    }
+                    $string .= "</artist>\n";
+                }
+                break;
+            case 'album':
+                foreach ($objects as $object_id) {
+                    $string .= "<album id=\"" . $object_id . "\">\n";
+                    if ($include) {
+                        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ?;";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $string .= "<song id=\"" . $row['id'] . "\"></song>\n";
+                        }
+                    }
+                    $string .= "</album>\n";
+                }
+                break;
+            case 'playlist':
+                foreach ($objects as $object_id) {
+                    $string .= "<playlist id=\"" . $object_id . "\">\n";
+                    if ($include) {
+                        /**
+                         * Strip smart_ from playlist id and compare to original
+                         * smartlist = 'smart_1'
+                         * playlist  = 1000000
+                         */
+                        if ((int)$object_id === 0) {
+                            $playlist = new Search((int) str_replace('smart_', '', (string)$object_id), 'song', $user);
+                            foreach ($playlist->get_items() as $song) {
+                                $string .= "<song id=\"" . $song['object_id'] . "\"></song>\n";
+                            }
+                        } else {
+                            $sql        = "SELECT DISTINCT `playlist_data`.`object_id`, `playlist_data`.`object_type` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?;";
+                            $db_results = Dba::read($sql, array($object_id));
+                            while ($row = Dba::fetch_assoc($db_results)) {
+                                $string .= "<" . $row['object_type'] . " id=\"" . $row['object_id'] . "\"></" . $row['object_type'] . ">\n";
+                            }
+                        }
+                    }
+                    $string .= "</playlist>\n";
+                }
+                break;
+            case 'podcast':
+                foreach ($objects as $object_id) {
+                    $string .= "<podcast id=\"" . $object_id . "\">\n";
+                    if ($include) {
+                        $sql        = "SELECT DISTINCT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ?;";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $string .= "<podcast_episode id=\"" . $row['id'] . "\"></podcast_episode>\n";
+                        }
+                    }
+                    $string .= "</podcast>\n";
+                }
+                break;
+            case 'catalog':
+            case 'live_stream':
+            case 'podcast_episode':
+            case 'share':
+            case 'song':
+            case 'video':
+                foreach ($objects as $object_id) {
+                    $string .= "<$object_type id=\"" . $object_id . "\"></$object_type>\n";
+                } // end foreach objects
+                break;
+        }
+
+        return self::output_xml($string);
+    }
+
+    /**
+     * indexes
+     *
+     * This takes an array of object_ids and return XML based on the type of object
+     * we want
+     *
+     * @param array $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
@@ -388,7 +513,7 @@ class Xml_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        // you might not want the joined tables for playlsits
+        // you might not want the joined tables for playlists
         $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
             : Catalog::get_update_info($object_type, $user->id);

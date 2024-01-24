@@ -89,6 +89,7 @@ class Api
         Method\GetSimilarMethod::ACTION => Method\GetSimilarMethod::class,
         Method\GoodbyeMethod::ACTION => Method\GoodbyeMethod::class,
         Method\HandshakeMethod::ACTION => Method\HandshakeMethod::class,
+        Method\IndexMethod::ACTION => Method\IndexMethod::class,
         Method\LabelArtistsMethod::ACTION => Method\LabelArtistsMethod::class,
         Method\LabelMethod::ACTION => Method\LabelMethod::class,
         Method\LabelsMethod::ACTION => Method\LabelsMethod::class,

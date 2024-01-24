@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Label;
@@ -196,6 +197,131 @@ class Json_Data
         }
 
         return $JSON;
+    }
+
+    /**
+     * index
+     *
+     * This takes an array of object_ids and return JSON based on the type of object
+     *
+     * @param array $objects Array of object_ids (Mixed string|int)
+     * @param string $type 'catalog'|'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param User $user
+     * @param bool $include (add child id's of the object (in sub array by type))
+     * @return string  JSON Object "catalog"|"artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
+     */
+    public static function index($objects, $type, $user, $include = false): string
+    {
+        $output = array(
+            "total_count" => count($objects)
+        );
+
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
+
+        if ($include) {
+            $output[$type] = [];
+            switch ($type) {
+                case 'album_artist':
+                    foreach ($objects as $object_id) {
+                        $output[$type][$object_id]['album'] = [];
+
+                        $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album';";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$type][$object_id]['album'][] = $row['album_id'];
+                        }
+                    }
+                    break;
+                case 'song_artist':
+                    foreach ($objects as $object_id) {
+                        $output[$type][$object_id]['album'] = [];
+
+                        $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'song';";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$type][$object_id]['album'][] = $row['album_id'];
+                        }
+                    }
+                    break;
+                case 'artist':
+                    foreach ($objects as $object_id) {
+                        $output[$type][$object_id]['album'] = [];
+
+                        $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ?;";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$type][$object_id]['album'][] = $row['album_id'];
+                        }
+                    }
+                    break;
+                case 'album':
+                    foreach ($objects as $object_id) {
+                        $output[$type][$object_id]['song'] = [];
+
+                        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ?;";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$type][$object_id]['song'][] = $row['id'];
+                        }
+                    }
+                    break;
+                case 'playlist':
+                    foreach ($objects as $object_id) {
+                        $output[$type][$object_id]['song'] = [];
+
+                        /**
+                         * Strip smart_ from playlist id and compare to original
+                         * smartlist = 'smart_1'
+                         * playlist  = 1000000
+                         */
+                        if ((int)$object_id === 0) {
+                            $playlist = new Search((int)str_replace('smart_', '', (string)$object_id), 'song', $user);
+                            foreach ($playlist->get_items() as $song) {
+                                $output[$type][$object_id]['song'][] = $song['object_id'];
+                            }
+                        } else {
+                            $sql        = "SELECT DISTINCT `playlist_data`.`object_id`, `playlist_data`.`object_type` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?;";
+                            $db_results = Dba::read($sql, array($object_id));
+                            while ($row = Dba::fetch_assoc($db_results)) {
+                                $output[$type][$object_id][$row['object_type']][] = $row['object_id'];
+                            }
+                        }
+                    }
+                    break;
+                case 'podcast':
+                    foreach ($objects as $object_id) {
+                        $output[$type][$object_id]['podcast_episode'] = [];
+
+                        $sql        = "SELECT DISTINCT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ?;";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$type][$object_id]['podcast_episode'][] = $row['id'];
+                        }
+                    }
+                    break;
+                case 'catalog':
+                case 'live_stream':
+                case 'podcast_episode':
+                case 'share':
+                case 'song':
+                case 'video':
+                    // These objects don't have children
+                    foreach ($objects as $object_id) {
+                        $output[$type][$object_id] = [];
+                    }
+                    break;
+            }
+        } else {
+            $output[$type] = $objects;
+        }
+        $output = json_encode($output, JSON_PRETTY_PRINT);
+        if ($output !== false) {
+            return $output;
+        }
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
     }
 
     /**

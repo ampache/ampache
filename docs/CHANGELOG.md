@@ -32,6 +32,7 @@
 * Fix up localplay commands for Kodi/XBMC clients
 * Playlists were sorting by object type
 * User::get_user_data was not putting the default return in correctly
+* Unable to use `bin/cli export:playlist` undefined method
 * Static typing errors
   * Updating album data when original_year is missing
   * Template `show_recently_played` with a non-database song
@@ -49,6 +50,7 @@
   * New Method: user_playlists (return user playlists and does not include smartlists)
   * New Method: user_smartlists (return user smartlists (searches) and does not include playlists)
   * New Method: playlist_add (add songs to a playlist, allowing different song parent types)
+  * New Method: index (replaces get_indexes with a much simpler list of id's. children can be included)
   * Add `has_art` parameter to any object with an `art_url`
 
 ### Changed
