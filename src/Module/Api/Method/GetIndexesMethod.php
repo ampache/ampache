@@ -47,7 +47,7 @@ final class GetIndexesMethod
      * CHANGED_IN_API_VERSION=5.0.0
      *
      * This takes a collection of inputs and returns ID + name for the object type
-     * Added 'include' to allow indexing all song tracks (enabled for xml by default)
+     * Add 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * This method is depreciated and will be removed in **API7** (Use list)
      *

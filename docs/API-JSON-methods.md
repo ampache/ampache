@@ -1221,7 +1221,7 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 
 This takes a collection of inputs and returns ID + name for the object type
 
-**DEVELOP** This method is depreciated and will be removed in **API7** (Use list)
+**DEVELOP** This method is depreciated and will be removed in **API7** (Use list OR index)
 
 | Input         | Type       | Description                                                                                        | Optional |
 |---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
@@ -1247,7 +1247,7 @@ This takes a collection of inputs and returns ID + name for the object type
 "error": ""
 ```
 
-SONGS [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(song\).json)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(song\).json)
 
 ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(artist\).json)
 
@@ -1280,6 +1280,51 @@ Return similar artist id's or similar song ids compared to the input filter
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_similar.json)
+
+### index
+
+This takes a collection of inputs and return ID's for the object type. Add 'include' to include child objects
+
+| Input         | Type       | Description                                                                                                                                    | Optional |
+|---------------|------------|------------------------------------------------------------------------------------------------------------------------------------------------|---------:|
+| 'type'        | string     | `catalog`, `song`, `album`, `artist`, `album_artist`, `song_artist`, `playlist`, `podcast`, `podcast_episode`, `share`, `video`, `live_stream` |       NO |
+| 'filter'      | string     | Value is Alpha Match for returned results, may be more than one letter/number                                                                  |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                                                                |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date                                                |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date                                             |      YES |
+| 'include'     | boolean    | `0`, `1` (include songs in a playlist or episodes in a podcast)                                                                                |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                                                               |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                                                            |      YES |
+| 'hide_search' | integer    | `0`, `1` (if true do not include searches/smartlists in the result)                                                                            |      YES |
+
+* return array
+
+```JSON
+"catalog": []|"song": []|"album": []|"artist": []|"album_artist": []|"song_artist": []|"playlist": []|"podcast": []|"podcast_episode": []|"share": []|"video": []|"live_stream": []
+
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(song\).json)
+
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(artist\).json)
+
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(album\).json)
+
+PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(playlist\).json)
+
+SONG [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(song%20with%20include\).json)
+
+ARTIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(artist%20with%20include\).json)
+
+ALBUM [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(album%20with%20include\).json)
+
+PLAYLIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(playlist%20with%20include\).json)
 
 ### labels
 

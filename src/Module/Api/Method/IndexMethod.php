@@ -45,8 +45,8 @@ final class IndexMethod
      * index
      * MINIMUM_API_VERSION=6.3.0
      *
-     * This takes a collection of inputs and returns ID for the object type
-     * Added 'include' to allow indexing all child objects
+     * This takes a collection of inputs and return ID's for the object type
+     * Add 'include' to include child objects
      *
      * type        = (string) 'catalog', 'song', 'album', 'artist', 'album_artist', 'song_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
      * filter      = (string) //optional
