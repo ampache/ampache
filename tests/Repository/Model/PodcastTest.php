@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use DateTime;
 use Generator;
+use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -109,7 +110,7 @@ class PodcastTest extends TestCase
         yield ['Generator', '', 'some-value',];
         yield ['Website', '', 'some-value',];
         yield ['Copyright', '', 'some-value',];
-        yield ['Language', '', 'some-value',];
+        yield ['Language', '', 'chars',];
         yield ['FeedUrl', '', 'some-value',];
         yield ['Title', '', 'some-value',];
         yield ['Description', '', 'some-value',];
@@ -131,6 +132,18 @@ class PodcastTest extends TestCase
         static::assertSame(
             $value,
             call_user_func([$this->subject, 'get' . $methodName])
+        );
+    }
+
+    public function testSetLanguageTruncates(): void
+    {
+        $value = 'söme-löng-value';
+
+        $this->subject->setLanguage($value);
+
+        static::assertSame(
+            mb_substr($value, 0, 5),
+            $this->subject->getLanguage()
         );
     }
 
@@ -179,5 +192,12 @@ class PodcastTest extends TestCase
             $data->getTimestamp(),
             $this->subject->getLastBuildDate()->getTimestamp()
         );
+    }
+
+    public function testUpdateThrows(): void
+    {
+        $this->expectException(LogicException::class);
+
+        $this->subject->update([]);
     }
 }

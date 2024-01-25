@@ -26,12 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
-use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\PodcastRepository;
 use Ampache\Repository\PodcastRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
+use LogicException;
 
 /**
  * Podcast item
@@ -373,7 +373,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function setLanguage(string $value): Podcast
     {
-        $this->language = $value;
+        $this->language = mb_substr($value, 0, 5);
 
         return $this;
     }
@@ -427,7 +427,10 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function setDescription(string $value): Podcast
     {
-        $this->description = $value;
+        /**
+         * db field is limited to 4096 chars
+         */
+        $this->description = mb_substr($value, 0, 4096);
 
         return $this;
     }
@@ -479,9 +482,11 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     /**
      * Sets the last build-date
      */
-    public function setLastBuildDate(DateTimeInterface $value): Podcast
+    public function setLastBuildDate(?DateTimeInterface $value): Podcast
     {
-        $this->lastbuilddate = $value->getTimestamp();
+        if ($value !== null) {
+            $this->lastbuilddate = $value->getTimestamp();
+        }
 
         return $this;
     }
@@ -499,7 +504,11 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function save(): void
     {
-        $this->getPodcastRepository()->persist($this);
+        $id = $this->getPodcastRepository()->persist($this);
+
+        if ($id !== null) {
+            $this->id = $id;
+        }
     }
 
     /**
@@ -517,49 +526,12 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     /**
      * update
      * This takes a key'd array of data and updates the current podcast
-     * @param array{
-     *  feed?: string|null,
-     *  title?: string|null,
-     *  website?: string|null,
-     *  description?: string|null,
-     *  language?: string|null,
-     *  generator?: string|null,
-     *  copyright?: string|null
-     * } $data
+     * @param array<mixed> $data
      * @return int|false
      */
     public function update(array $data)
     {
-        $feed = $data['feed'] ?? $this->feed ?? '';
-
-        /** @var null|string $title */
-        $title = (isset($data['title'])) ? $data['title'] : null;
-
-        /** @var null|string $website */
-        $website = (isset($data['website'])) ? $data['website'] : null;
-
-        /** @var null|string $description */
-        $description = (isset($data['description'])) ? Dba::check_length((string)$data['description'], 4096) : null;
-
-        /** @var null|string $language */
-        $language = (isset($data['language'])) ? $data['language'] : null;
-
-        /** @var null|string $generator */
-        $generator = (isset($data['generator'])) ? $data['generator'] : null;
-
-        /** @var null|string $copyright */
-        $copyright = (isset($data['copyright'])) ? $data['copyright'] : null;
-
-        if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
-            debug_event(self::class, 'Podcast update canceled, bad feed url.', 1);
-
-            return false;
-        }
-
-        $sql = 'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `language` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?';
-        Dba::write($sql, array($feed, $title, $website, $description, $language, $generator, $copyright, $this->id));
-
-        return $this->id;
+        throw new LogicException('Podcast::update is not in use');
     }
 
     /**
