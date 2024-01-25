@@ -4896,11 +4896,6 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Parameter \\#3 \\$playlist_type of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:import_playlist\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Playlist/ImportPlaylistAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$recipient of method Ampache\\\\Module\\\\User\\\\PrivateMessage\\\\PrivateMessageCreatorInterface\\:\\:create\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/PrivateMessage/AddMessageAction.php
@@ -6164,6 +6159,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_subsonic.php
+
+		-
+			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
+			count: 1
+			path: src/Module/Catalog/PlaylistImporter.php
 
 		-
 			message: "#^Cannot call method getBody\\(\\) on Psr\\\\Http\\\\Message\\\\ResponseInterface\\|null\\.$#"
@@ -12966,31 +12966,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:import_playlist\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_asx\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_m3u\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_pls\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_xspf\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:perform_ready\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -13096,32 +13071,7 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^PHPDoc tag @var for variable \\$update has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_asx\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_m3u\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_pls\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_xspf\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
