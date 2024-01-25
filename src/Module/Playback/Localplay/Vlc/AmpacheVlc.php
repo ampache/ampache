@@ -552,25 +552,34 @@ class AmpacheVlc extends localplay_controller
         }
 
         $array           = array();
+        $array['track']  = 0;
+        $array['track_title']  = '';
+        $array['track_artist'] = '';
+        $array['track_album']  = '';
         $array['state']  = $state ?? '';
         $array['volume'] = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
         $array['repeat'] = $arrayholder['root']['repeat']['value'];
         $array['random'] = $arrayholder['root']['random']['value'];
-        $array['track']  = htmlspecialchars_decode(
-            $arrayholder['root']['information']['meta-information']['title']['value'],
-            ENT_NOQUOTES
-        );
+        if(array_key_exists( 'meta-information' , $arrayholder ) ) {
+            $array['track']  = htmlspecialchars_decode(
+                $arrayholder['root']['information']['meta-information']['title']['value'],
+                ENT_NOQUOTES
+            );
 
-        $url_data = $this->parse_url($array['track']);
-        $song     = new Song($url_data['oid']);
-        if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
-            $array['track_title']  = $song->title;
-            $array['track_artist'] = $song->get_artist_fullname();
-            $array['track_album']  = $song->get_album_fullname();
-        } else {
-            // if not a known format
-            $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
-            $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
+            $url_data = $this->parse_url($array['track']);
+            $oid = array_key_exists( 'oid' , $url_data )  ?  $url_data['oid'] : '';
+            if(!empty($oid)) {
+                $song     = new Song($url_data['oid']);
+                if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
+                    $array['track_title']  = $song->title;
+                    $array['track_artist'] = $song->get_artist_fullname();
+                    $array['track_album']  = $song->get_album_fullname();
+                } else {
+                    // if not a known format
+                    $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
+                    $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
+                }
+            }
         }
 
         return $array;

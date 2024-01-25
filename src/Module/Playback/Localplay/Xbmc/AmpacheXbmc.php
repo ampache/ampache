@@ -301,12 +301,17 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Playlist->Clear(
+
+            $this->stop();
+
+            $clear = $this->_xbmc->Playlist->Clear(
                 array(
                     'playlistid' => $this->_playlistId
                 )
             );
-            $this->stop();
+
+            //we have a delay between the stop/clear playlist in kodi and kodi notify it in the status, so, we add a mininal sleep
+            sleep(1);
 
             return true;
         } catch (XBMC_RPC_Exception $error) {
@@ -331,6 +336,7 @@ class AmpacheXbmc extends localplay_controller
             // XBMC requires to load a playlist to play. We don't know if this play is after a new playlist or after pause
             // So we get current status
             $status = $this->status();
+
             if ($status['state'] == 'pause') {
                 $this->_xbmc->Player->PlayPause(
                     array(
@@ -338,7 +344,7 @@ class AmpacheXbmc extends localplay_controller
                         'play' => true
                     )
                 );
-            } else {
+            } else if ($status['state'] == 'stop') {
                 $this->_xbmc->Player->Open(
                     array(
                        'item' => array(
@@ -717,6 +723,13 @@ class AmpacheXbmc extends localplay_controller
                     $array['state'] = 'pause';
                 }
 
+                // So we get active players, if no exists active player, set the status to stop and return
+                // stop has to check afret pause, cause in stop status speed = 0
+                $xbmc_players = $this->_xbmc->Player->GetActivePlayers();
+                if (empty($xbmc_players)) {
+                    $array['state'] = 'stop';
+                }
+
 
                 $currentplay = $this->_xbmc->Player->GetItem(
                     array(
@@ -743,23 +756,17 @@ class AmpacheXbmc extends localplay_controller
 
                 $array['track'] = $playposition['position'] + 1;
 
-                // So we get active players, if no exists active player, set the status to stop and return
-                $xbmc_players = $this->_xbmc->Player->GetActivePlayers();
-                if (empty($xbmc_players)) {
-                    $array['state'] = 'stop';
-                    // no other fields possible if they are no active players
-
-                    return $array;
-                }
-
                 $playlist_item  = rawurldecode($currentplay['item']['file']);
 
                 $url_data = $this->parse_url($playlist_item);
-                $song     = new Song($url_data['oid']);
-                if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
-                    $array['track_title']  = $song->title;
-                    $array['track_artist'] = $song->get_artist_fullname();
-                    $array['track_album']  = $song->get_album_fullname();
+                $oid = array_key_exists( 'oid' , $url_data )  ?  $url_data['oid'] : '';
+                if(!empty($oid)) {
+                    $song     = new Song($oid);
+                    if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
+                        $array['track_title']  = $song->title;
+                        $array['track_artist'] = $song->get_artist_fullname();
+                        $array['track_album']  = $song->get_album_fullname();
+                    }
                 }
             } catch (XBMC_RPC_Exception $error) {
                 debug_event(self::class, 'get current item failed, player probably stopped. ' . $error->getMessage(), 1);
