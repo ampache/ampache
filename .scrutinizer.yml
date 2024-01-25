@@ -2,6 +2,14 @@ build:
     environment:
         php:
             version: "8.2"
+    nodes:
+        coverage:
+            tests:
+                override:
+                    - command: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover build/coverage-clover.xml tests
+                      coverage:
+                        file: build/coverage-clover.xml
+                        format: clover
 filter:
     excluded_paths:
         - 'public/lib/components/*'
