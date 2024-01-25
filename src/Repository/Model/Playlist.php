@@ -665,7 +665,7 @@ class Playlist extends playlist_object
         $track_data = ($unique) ?
             $this->get_songs()
             : array();
-        $sql        = "SELECT MAX(`track`) AS `track` FROM `playlist_data` WHERE `object_id` = ? ";
+        $sql        = "SELECT MAX(`track`) AS `track` FROM `playlist_data` WHERE `playlist` = ? ";
         $db_results = Dba::read($sql, array($this->id));
         $row        = Dba::fetch_assoc($db_results);
         $base_track = (int)($row['track'] ?? 0);
