@@ -55,6 +55,7 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -3313,7 +3314,7 @@ abstract class Catalog extends database_object
             //Stats::migrate('artist', $row['maxid'], $row['minid']);
             Useractivity::migrate('artist', $row['maxid'], $row['minid']);
             Recommendation::migrate('artist', $row['maxid']);
-            Share::migrate('artist', $row['maxid'], $row['minid']);
+            self::getShareRepository()->migrate('artist', (int) $row['maxid'], (int) $row['minid']);
             self::getShoutRepository()->migrate('artist', (int) $row['maxid'], (int) $row['minid']);
             Tag::migrate('artist', $row['maxid'], $row['minid']);
             Userflag::migrate('artist', $row['maxid'], $row['minid']);
@@ -4369,7 +4370,7 @@ abstract class Catalog extends database_object
             Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id);
             Useractivity::migrate($object_type, $old_object_id, $new_object_id);
             Recommendation::migrate($object_type, $old_object_id);
-            Share::migrate($object_type, $old_object_id, $new_object_id);
+            self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::getShoutRepository()->migrate($object_type, $old_object_id, $new_object_id);
             Tag::migrate($object_type, $old_object_id, $new_object_id);
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
@@ -4511,5 +4512,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(MetadataRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated  inject dependency
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }

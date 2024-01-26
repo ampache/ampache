@@ -41,6 +41,7 @@ use Ampache\Repository\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use PDOStatement;
 
@@ -2202,7 +2203,7 @@ class Song extends database_object implements
             // migrate stats for the old artist
             Useractivity::migrate('artist', $old_artist, $new_artist);
             Recommendation::migrate('artist', $old_artist);
-            Share::migrate('artist', $old_artist, $new_artist);
+            self::getShareRepository()->migrate('artist', $old_artist, $new_artist);
             self::getShoutRepository()->migrate('artist', $old_artist, $new_artist);
             Tag::migrate('artist', $old_artist, $new_artist);
             Userflag::migrate('artist', $old_artist, $new_artist);
@@ -2247,7 +2248,7 @@ class Song extends database_object implements
         Stats::migrate('album', $old_album, $new_album, $song_id);
         Useractivity::migrate('album', $old_album, $new_album);
         //Recommendation::migrate('album', $old_album);
-        Share::migrate('album', $old_album, $new_album);
+        self::getShareRepository()->migrate('album', $old_album, $new_album);
         self::getShoutRepository()->migrate('album', $old_album, $new_album);
         Tag::migrate('album', $old_album, $new_album);
         Userflag::migrate('album', $old_album, $new_album);
@@ -2359,5 +2360,15 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }

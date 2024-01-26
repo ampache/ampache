@@ -50,4 +50,5 @@ return [
     UpdateInfoRepositoryInterface::class => autowire(UpdateInfoRepository::class),
     MetadataRepositoryInterface::class => autowire(MetadataRepository::class),
     MetadataFieldRepositoryInterface::class => autowire(MetadataFieldRepository::class),
+    ShareRepositoryInterface::class => autowire(ShareRepository::class),
 ];

@@ -62,7 +62,6 @@ class Share extends database_object
     public ?string $description;
 
     public $f_name;
-    public $f_user;
     /** @var Song|Artist|Album|playlist_object|null $object */
     private $object;
 
@@ -107,15 +106,6 @@ class Share extends database_object
         }
 
         return Dba::write($sql, $params);
-    }
-
-    /**
-     * garbage_collection
-     */
-    public static function garbage_collection(): void
-    {
-        $sql = "DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < " . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)";
-        Dba::write($sql);
     }
 
     /**
@@ -244,7 +234,7 @@ class Share extends database_object
     /**
      * get_share_list_sql
      */
-    public static function get_share_list_sql(User $user): string
+    private static function get_share_list_sql(User $user): string
     {
         $sql   = "SELECT `id` FROM `share` ";
         $multi = 'WHERE ';
@@ -548,19 +538,5 @@ class Share extends database_object
         $result .= '</a>';
 
         return $result;
-    }
-
-    /**
-     * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
-     * @return PDOStatement|bool
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        $sql = "UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 }
