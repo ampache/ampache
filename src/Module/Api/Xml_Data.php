@@ -378,7 +378,7 @@ class Xml_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param array $objects Array of object_ids (Mixed string|int)
+     * @param list<int> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'album_artist'|'song_artist'|'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param User $user
      * @param bool $include include children from objects that have them

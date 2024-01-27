@@ -9216,11 +9216,6 @@ parameters:
 			path: src/Module/Util/AmazonSearch.php
 
 		-
-			message: "#^Parameter \\#3 \\$value of function xml_parser_set_option expects int\\|string, false given\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:\\$_currentPage has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/AmazonSearch.php

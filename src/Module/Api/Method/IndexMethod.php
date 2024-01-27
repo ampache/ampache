@@ -57,14 +57,16 @@ final class IndexMethod
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
+     *
+     * @param array<string, mixed> $input
      */
     public static function index(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
-        $album_artist = ((string)$input['type'] == 'album_artist');
-        $song_artist  = ((string)$input['type'] == 'song_artist');
+        $album_artist = ((string)$input['type'] === 'album_artist');
+        $song_artist  = ((string)$input['type'] === 'song_artist');
         $type         = (string)$input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);

@@ -1,4 +1,4 @@
-name: unittest
+name: qa
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
         php: ['8.2', '8.3']
     continue-on-error: ${{ matrix.php == '8.3' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -42,6 +42,6 @@ jobs:
           command: composer update --no-interaction --no-progress --ignore-platform-req=php
 
       - name: Run test suite
-        run: composer run-script tests
+        run: composer run-script qa
         env:
           PHP_CS_FIXER_IGNORE_ENV: 1
