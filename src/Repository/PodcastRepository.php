@@ -29,7 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -206,15 +205,18 @@ final class PodcastRepository implements PodcastRepositoryInterface
     /**
      * Returns all podcast episodes which are eligible for download
      *
+     * @param null|positive-int $downloadLimit
+     *
      * @return Generator<Podcast_Episode>
      */
-    public function getEpisodesEligibleForDownload(Podcast $podcast): Generator
+    public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit): Generator
     {
-        $downloadLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
-        $query         = '';
+        $limitSql = '';
+        if ($downloadLimit !== null) {
+            $limitSql = sprintf(' LIMIT %d', $downloadLimit);
+        }
 
-        if ($downloadLimit > 0) {
-            $query = <<<SQL
+        $query = <<<SQL
             SELECT
                 `id`
             FROM
@@ -225,39 +227,23 @@ final class PodcastRepository implements PodcastRepositoryInterface
                 (`addition_time` > ? OR `state` = ?)
             ORDER BY
                 `pubdate`
-            DESC LIMIT %d
+            DESC%s
             SQL;
-        }
-        if ($downloadLimit === -1) {
-            $query = <<<SQL
-            SELECT
-                `id`
-            FROM
-                `podcast_episode`
-            WHERE
-                `podcast` = ?
-                AND
-                (`addition_time` > ? OR `state` = ?)
-            ORDER BY
-                `pubdate`
-            SQL;
-        }
-        if (!empty($query)) {
-            $result = $this->connection->query(
-                sprintf(
-                    $query,
-                    $downloadLimit
-                ),
-                [
-                    $podcast->getId(),
-                    $podcast->getLastSyncDate()->getTimestamp(),
-                    PodcastEpisodeStateEnum::PENDING
-                ]
-            );
 
-            while ($episodeId = $result->fetchColumn()) {
-                yield $this->modelFactory->createPodcastEpisode((int) $episodeId);
-            }
+        $result = $this->connection->query(
+            sprintf(
+                $query,
+                $limitSql
+            ),
+            [
+                $podcast->getId(),
+                $podcast->getLastSyncDate()->getTimestamp(),
+                PodcastEpisodeStateEnum::PENDING
+            ]
+        );
+
+        while ($episodeId = $result->fetchColumn()) {
+            yield $this->modelFactory->createPodcastEpisode((int) $episodeId);
         }
     }
 

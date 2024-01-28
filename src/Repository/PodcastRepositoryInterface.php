@@ -75,9 +75,11 @@ interface PodcastRepositoryInterface
     /**
      * Returns all podcast episodes which are eligible for download
      *
+     * @param null|positive-int $downloadLimit
+     *
      * @return Generator<Podcast_Episode>
      */
-    public function getEpisodesEligibleForDownload(Podcast $podcast): Traversable;
+    public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit): Traversable;
 
     /**
      * Returns the calculated count of available episodes for the given podcast
