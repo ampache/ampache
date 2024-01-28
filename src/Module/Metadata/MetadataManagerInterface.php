@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -20,49 +20,46 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Metadata;
 
-use Ampache\Repository\Model\MetadataField;
+use Ampache\Repository\Model\Metadata;
 use Traversable;
 
-interface MetadataFieldRepositoryInterface
+interface MetadataManagerInterface
 {
     /**
-     * Remove metadata for songs which don't exist anymore
+     * @return Traversable<Metadata>
+     */
+    public function getMetadata(MetadataEnabledInterface $item): Traversable;
+
+    /**
+     * Deletes a metadata-item
+     */
+    public function deleteMetadata(Metadata $metadata): void;
+
+    /**
+     * Return all disabled Metadata field names
+     *
+     * @return list<string>
+     */
+    public function getDisabledMetadataFields(): array;
+
+    /**
+     * Adds a new metadata item
+     */
+    public function addMetadata(MetadataEnabledInterface $item, string $name, string $data): void;
+
+    public function updateOrAddMetadata(MetadataEnabledInterface $item, string $name, string $data): void;
+
+    /**
+     * Returns `true` if custom metadata is enabled
+     */
+    public function isCustomMetadataEnabled(): bool;
+
+    /**
+     * Cleans up metadata-related database tables
      */
     public function collectGarbage(): void;
-
-    /**
-     * Returns the list of available fields
-     *
-     * Key is the primary key, value the name
-     *
-     * @return Traversable<int, string>
-     */
-    public function getPropertyList(): Traversable;
-
-    /**
-     * Finds a single `metadata-field` item by its id
-     */
-    public function findById(int $fieldId): ?MetadataField;
-
-    /**
-     * Finds a single `metadata-field` item by its name
-     */
-    public function findByName(string $name): ?MetadataField;
-
-    /**
-     * Saves the item
-     *
-     * @return null|int The id of the item if the item was new
-     */
-    public function persist(MetadataField $field): ?int;
-
-    /**
-     * Creates a new `metadata-field` item
-     */
-    public function prototype(): MetadataField;
 }

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\MetadataField;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -64,7 +65,7 @@ class MetadataFieldRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `id`, `name` from metadata_field')
+            ->with('SELECT `id`, `name` FROM `metadata_field`')
             ->willReturn($result);
 
         $result->expects(static::exactly(2))
@@ -75,6 +76,204 @@ class MetadataFieldRepositoryTest extends TestCase
         static::assertSame(
             [$id => $name],
             iterator_to_array($this->subject->getPropertyList())
+        );
+    }
+
+    public function testFindByIdReturnsNullIfNoItemWasFound(): void
+    {
+        $id = 666;
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT * FROM `metadata_field` WHERE `id` = ?',
+                [
+                    $id
+                ],
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('setFetchMode')
+            ->with(PDO::FETCH_CLASS, MetadataField::class, [$this->subject]);
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        static::assertNull(
+            $this->subject->findById($id)
+        );
+    }
+
+    public function testFindByIdReturnsFoundItem(): void
+    {
+        $id = 666;
+
+        $result = $this->createMock(PDOStatement::class);
+        $item   = $this->createMock(MetadataField::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT * FROM `metadata_field` WHERE `id` = ?',
+                [
+                    $id
+                ],
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('setFetchMode')
+            ->with(PDO::FETCH_CLASS, MetadataField::class, [$this->subject]);
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn($item);
+
+        static::assertSame(
+            $item,
+            $this->subject->findById($id)
+        );
+    }
+
+    public function testFindByNameReturnsNullIfNoItemWasFound(): void
+    {
+        $name = 'some-name';
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT * FROM `metadata_field` WHERE `name` = ? LIMIT 1',
+                [
+                    $name
+                ],
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('setFetchMode')
+            ->with(PDO::FETCH_CLASS, MetadataField::class, [$this->subject]);
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        static::assertNull(
+            $this->subject->findByName($name)
+        );
+    }
+
+    public function testFindByNameReturnsFoundItem(): void
+    {
+        $name = 'some-name';
+
+        $result = $this->createMock(PDOStatement::class);
+        $item   = $this->createMock(MetadataField::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT * FROM `metadata_field` WHERE `name` = ? LIMIT 1',
+                [
+                    $name
+                ],
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('setFetchMode')
+            ->with(PDO::FETCH_CLASS, MetadataField::class, [$this->subject]);
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn($item);
+
+        static::assertSame(
+            $item,
+            $this->subject->findByName($name)
+        );
+    }
+
+    public function testPersistInsertsNewItemIfNew(): void
+    {
+        $field = $this->createMock(MetadataField::class);
+
+        $name   = 'some-name';
+        $public = true;
+        $result = 666;
+
+        $field->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+        $field->expects(static::once())
+            ->method('getName')
+            ->willReturn($name);
+        $field->expects(static::once())
+            ->method('isPublic')
+            ->willReturn($public);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `metadata_field` (`name`, `public`) VALUES (?, ?)',
+                [
+                    $name,
+                    $public
+                ]
+            );
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn($result);
+
+        static::assertSame(
+            $result,
+            $this->subject->persist($field)
+        );
+    }
+
+    public function testPersistUpdatesExistingItem(): void
+    {
+        $field = $this->createMock(MetadataField::class);
+
+        $fieldId = 42;
+        $name    = 'some-name';
+        $public  = true;
+
+        $field->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
+        $field->expects(static::once())
+            ->method('getName')
+            ->willReturn($name);
+        $field->expects(static::once())
+            ->method('isPublic')
+            ->willReturn($public);
+        $field->expects(static::once())
+            ->method('getId')
+            ->willReturn($fieldId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `metadata_field` SET `name` = ?, `public` = ? WHERE `id` = ?',
+                [
+                    $name,
+                    $public,
+                    $fieldId
+                ]
+            );
+
+        static::assertNull(
+            $this->subject->persist($field)
+        );
+    }
+
+    public function testPrototypeReturnsNewItem(): void
+    {
+        static::assertInstanceOf(
+            MetadataField::class,
+            $this->subject->prototype()
         );
     }
 }

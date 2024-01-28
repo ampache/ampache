@@ -24,11 +24,10 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
-use Ampache\Repository\MetadataFieldRepositoryInterface;
-use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -778,8 +777,7 @@ class Catalog_local extends Catalog
             Dba::write($sql);
         }
 
-        $this->getMetadataRepository()->collectGarbage();
-        $this->getMetadataFieldRepository()->collectGarbage();
+        $this->getMetadataManager()->collectGarbage();
 
         return $this->count;
     }
@@ -1021,10 +1019,10 @@ class Catalog_local extends Catalog
                     Recommendation::get_artist_info($song->artist);
                 }
             }
-            if (Song::isCustomMetadataEnabled()) {
+
+            if ($this->getMetadataManager()->isCustomMetadataEnabled()) {
                 $song    = new Song($song_id);
-                $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
-                self::add_metadata($song, $results);
+                $this->addMetadata($song, $results);
             }
             // disable dupes if catalog_check_duplicate is enabled
             if ($is_duplicate) {
@@ -1388,20 +1386,10 @@ class Catalog_local extends Catalog
     /**
      * @deprecated inject dependency
      */
-    private function getMetadataRepository(): MetadataRepositoryInterface
+    private function getMetadataManager(): MetadataManagerInterface
     {
         global $dic;
 
-        return $dic->get(MetadataRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private function getMetadataFieldRepository(): MetadataFieldRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(MetadataFieldRepositoryInterface::class);
+        return $dic->get(MetadataManagerInterface::class);
     }
 }

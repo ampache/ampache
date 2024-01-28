@@ -25,10 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
+use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
-use Ampache\Repository\MetadataFieldRepositoryInterface;
-use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -64,9 +63,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private UserRepositoryInterface $userRepository;
 
-    private MetadataRepositoryInterface $metadataRepository;
-
-    private MetadataFieldRepositoryInterface $metadataFieldRepository;
+    private MetadataManagerInterface $metadataManager;
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
@@ -74,16 +71,14 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         ShoutRepositoryInterface $shoutRepository,
         UserActivityRepositoryInterface $useractivityRepository,
         UserRepositoryInterface $userRepository,
-        MetadataRepositoryInterface $metadataRepository,
-        MetadataFieldRepositoryInterface $metadataFieldRepository
+        MetadataManagerInterface $metadataManager
     ) {
         $this->albumRepository         = $albumRepository;
         $this->bookmarkRepository      = $bookmarkRepository;
         $this->shoutRepository         = $shoutRepository;
         $this->useractivityRepository  = $useractivityRepository;
         $this->userRepository          = $userRepository;
-        $this->metadataRepository      = $metadataRepository;
-        $this->metadataFieldRepository = $metadataFieldRepository;
+        $this->metadataManager         = $metadataManager;
     }
 
     public function collect(): void
@@ -109,8 +104,6 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Tag::garbage_collection();
         Catalog::clear_catalog_cache();
 
-        // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
-        $this->metadataRepository->collectGarbage();
-        $this->metadataFieldRepository->collectGarbage();
+        $this->metadataManager->collectGarbage();
     }
 }

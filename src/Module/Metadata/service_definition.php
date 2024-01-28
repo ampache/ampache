@@ -23,17 +23,13 @@ declare(strict_types=0);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\License;
 
-/**
- * Description of Model
- *
- * @author raziel
- */
-interface Model
-{
-    /**
-     * Get ID of Database Object
-     */
-    public function getId(): int;
-}
+use Ampache\Module\Metadata\MetadataManager;
+use Ampache\Module\Metadata\MetadataManagerInterface;
+
+use function DI\autowire;
+
+return [
+    MetadataManagerInterface::class => autowire(MetadataManager::class),
+];

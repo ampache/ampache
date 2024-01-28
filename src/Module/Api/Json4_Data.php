@@ -24,17 +24,19 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
@@ -42,13 +44,11 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
-use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Traversable;
@@ -848,9 +848,13 @@ class Json4_Data
             $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
             $ourSong['genre']                 = self::tags_array($song->tags, true);
 
-            if (Song::isCustomMetadataEnabled()) {
-                foreach ($song->getMetadata() as $metadata) {
-                    $meta_name           = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_', $metadata->getField()->getName());
+            /** @var Metadata $metadata */
+            foreach ($song->getMetadata() as $metadata) {
+                $field = $metadata->getField();
+
+                if ($field !== null) {
+                    $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_', $field->getName());
+
                     $ourSong[$meta_name] = $metadata->getData();
                 }
             }
