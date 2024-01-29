@@ -692,9 +692,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $type_sql = (!empty($type))
                 ? "AND `tag_map`.`object_type` = '" . (string)scrub_in($type) . "'"
                 : "";
+
             $sql = (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
-                ? "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql AND `tag`.`is_hidden` = false WHERE" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `name` IS NOT NULL "
-                : "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql AND `tag`.`is_hidden` = false WHERE `name` IS NOT NULL ";
+                ? "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql AND `tag`.`is_hidden` = false WHERE" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `name` IS NOT NULL "
+                : "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql AND `tag`.`is_hidden` = false WHERE `name` IS NOT NULL ";
 
             $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         }
@@ -711,8 +712,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['tag_id']] = array(
-                'id' => $row['tag_id'],
+            $results[$row['id']] = array(
+                'id' => $row['id'],
                 'name' => $row['name'],
                 'is_hidden' => $row['is_hidden'],
                 'count' => $row['count'] ?? 0
