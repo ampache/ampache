@@ -1167,9 +1167,9 @@ class Subsonic_Xml_Data
     {
         $xjbox  = self::addChildToResultXml($xml, htmlspecialchars($elementName));
         $status = $localplay->status();
-        $index  = (AmpConfig::get('localplay_controller') == 'mpd') // TODO a way for this to support all localplay types
-            ? $status['track'] - 1
-            : 0;
+        $index  = (((int)$status['track']) === 0)
+            ? 0
+            : $status['track'] - 1;
         $xjbox->addAttribute('currentIndex', (string)$index);
         $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
         $xjbox->addAttribute('gain', (string)$status['volume']);
