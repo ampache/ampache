@@ -694,8 +694,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 : "";
 
             $sql = (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
-                ? "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql AND `tag`.`is_hidden` = false WHERE" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `name` IS NOT NULL "
-                : "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql AND `tag`.`is_hidden` = false WHERE `name` IS NOT NULL ";
+                ? "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql WHERE" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 "
+                : "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql WHERE `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 ";
 
             $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         }
