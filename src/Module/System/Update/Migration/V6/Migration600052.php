@@ -34,13 +34,20 @@ final class Migration600052 extends AbstractMigration
 
     public function migrate(): void
     {
-        # fix up duplicate playlist track numbers
+        // fix up duplicate playlist track numbers
         $sql        = 'SELECT DISTINCT `playlist` from `playlist_data` GROUP BY `playlist`, `track` having COUNT(`playlist`) > 1;';
         $db_results = Dba::read($sql);
         // get the base album you will migrate into
         while ($row = Dba::fetch_assoc($db_results)) {
             $playlist = new Playlist($row['playlist']);
-            $playlist->regenerate_track_numbers();
+            if ($playlist->isNew()) {
+                // delete missing playlist data
+                $sql = 'DELETE FROM `playlist_data` WHERE `playlist` = ?;';
+                Dba::write($sql, array($row['playlist']));
+            } else {
+                // regenerate tracks for existing playlists
+                $playlist->regenerate_track_numbers();
+            }
         }
         Dba::write("ALTER TABLE `playlist_data` DROP KEY `playlist_track_UN`;");
         $sql = 'ALTER TABLE `playlist_data` ADD CONSTRAINT `playlist_track_UN` UNIQUE KEY (`playlist`,`track`);';
