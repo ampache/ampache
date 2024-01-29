@@ -533,14 +533,14 @@ class Catalog_local extends Catalog
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
                     debug_event('local.catalog', 'Processing playlist: ' . $full_file, 5);
-                    $result = Catalog::import_playlist($full_file, -1, 'public');
-                    if ($result['success']) {
+                    $result = PlaylistImporter::import_playlist($full_file, -1, 'public');
+                    if ($result !== null) {
                         $file = basename($full_file);
                         echo "\n$full_file\n";
                         if (!empty($result['results'])) {
                             foreach ($result['results'] as $file) {
                                 if ($file['found']) {
-                                    echo scrub_out($file['track']) . ": " . T_('Success') . ":\t" . scrub_out($file['file']) . "\n";
+                                    echo $file['track'] . ": " . T_('Success') . ":\t" . scrub_out($file['file']) . "\n";
                                 } else {
                                     echo "-: " . T_('Failure') . ":\t" . scrub_out($file['file']) . "\n";
                                 }
