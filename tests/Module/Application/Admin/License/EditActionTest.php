@@ -104,11 +104,9 @@ class EditActionTest extends MockeryTestCase
             'external_link' => $external_link,
         ];
 
-        $license->id = $licenseId;
-
         $this->licenseRepository->shouldReceive('update')
             ->with(
-                $licenseId,
+                $license,
                 $name,
                 $description,
                 $external_link

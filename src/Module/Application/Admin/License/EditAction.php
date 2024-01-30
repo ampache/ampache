@@ -77,7 +77,7 @@ final class EditAction implements ApplicationActionInterface
 
             if ($license->isNew() === false) {
                 $this->licenseRepository->update(
-                    $licenseId,
+                    $license,
                     (array_key_exists('name', $data)) ? htmlspecialchars($data['name']) : '',
                     (array_key_exists('description', $data)) ? htmlspecialchars($data['description']) : '',
                     (array_key_exists('external_link', $data)) ? (string)filter_var($data['external_link'], FILTER_SANITIZE_URL) : ''
