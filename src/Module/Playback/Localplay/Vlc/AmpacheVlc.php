@@ -323,8 +323,8 @@ class AmpacheVlc extends localplay_controller
         //vlc skip is based on his playlist track, we convert ampache localplay track to vlc
         //playlist id
         $listtracks = $this->get();
-        foreach( $listtracks as $track ) {
-            if( $track['id'] == $song ) {
+        foreach($listtracks as $track) {
+            if($track['id'] == $song) {
                 $songid = $track['vlid'];
                 break;
             }
@@ -455,7 +455,7 @@ class AmpacheVlc extends localplay_controller
         $counter = 0;
         // here we look if there are song in the playlist when media libary is used
         if ($list['node']['node'][0]['leaf'][$counter]['attr']['uri']) {
-            while (array_key_exists( $counter, $list['node']['node'][0]['leaf'])) {
+            while (array_key_exists($counter, $list['node']['node'][0]['leaf'])) {
                 $songs[] = htmlspecialchars_decode(
                     $list['node']['node'][0]['leaf'][$counter]['attr']['uri'],
                     ENT_NOQUOTES
@@ -489,9 +489,9 @@ class AmpacheVlc extends localplay_controller
             $data = array();
 
             /* Required Elements */
-            $data['id']  = $counter; // id follows localplay api
+            $data['id']    = $counter; // id follows localplay api
             $data['vlid']  = $song_id[$counter]; // vlid number of the files in the VLC playlist, needed for other operations
-            $data['raw'] = $entry;
+            $data['raw']   = $entry;
 
             $url_data = $this->parse_url($entry);
             switch ($url_data['primary_key']) {
@@ -551,7 +551,7 @@ class AmpacheVlc extends localplay_controller
         $arrayholder = $this->_vlc->fullstate(); //get status.xml via parser xmltoarray
         /* Construct the Array */
         $currentstat = $arrayholder['root']['state']['value'];
-        $listtracks = $this->get();
+        $listtracks  = $this->get();
 
         if ($currentstat == 'playing') {
             $state = 'play';
@@ -565,7 +565,7 @@ class AmpacheVlc extends localplay_controller
 
         $array                 = array();
         $array['track']        = 0;
-        $oid = '';
+        $oid                   = '';
 
         $array['track_title']  = '';
         $array['track_artist'] = '';
@@ -582,10 +582,10 @@ class AmpacheVlc extends localplay_controller
                 ENT_NOQUOTES
             );
             $url_data = $this->parse_url($ampurl);
-            $oid = array_key_exists( 'oid' , $url_data )  ?  $url_data['oid'] : '';
+            $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
 
-            foreach( $listtracks as $track ) {
-                if( $track['oid'] == $oid ) {
+            foreach($listtracks as $track) {
+                if($track['oid'] == $oid) {
                     $array['track'] = $track['track'];
                     break;
                 }
@@ -593,14 +593,14 @@ class AmpacheVlc extends localplay_controller
         }
 
         //api version 3
-        if(array_key_exists( 'currentplid' , $arrayholder['root'] ) ) {
+        if(array_key_exists('currentplid', $arrayholder['root'])) {
             $numtrack = 0 ;
             $numtrack = (int)$arrayholder['root']['currentplid']['value'];
 
-            foreach( $listtracks as $track ) {
-                if( $track['vlid'] == $numtrack ) {
+            foreach($listtracks as $track) {
+                if($track['vlid'] == $numtrack) {
                     $array['track'] = $track['track'];
-                    $oid = $track['oid'];
+                    $oid            = $track['oid'];
                     break;
                 }
             }
