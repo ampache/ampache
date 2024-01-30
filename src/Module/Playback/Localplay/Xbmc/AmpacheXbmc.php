@@ -344,7 +344,7 @@ class AmpacheXbmc extends localplay_controller
                         'play' => true
                     )
                 );
-            } else if ($status['state'] == 'stop') {
+            } elseif ($status['state'] == 'stop') {
                 $this->_xbmc->Player->Open(
                     array(
                        'item' => array(
@@ -759,7 +759,7 @@ class AmpacheXbmc extends localplay_controller
                 $playlist_item  = rawurldecode($currentplay['item']['file']);
 
                 $url_data = $this->parse_url($playlist_item);
-                $oid = array_key_exists( 'oid' , $url_data )  ?  $url_data['oid'] : '';
+                $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
                 if(!empty($oid)) {
                     $song     = new Song($oid);
                     if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {

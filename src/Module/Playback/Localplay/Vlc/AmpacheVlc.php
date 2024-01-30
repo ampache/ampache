@@ -551,23 +551,23 @@ class AmpacheVlc extends localplay_controller
             $state = 'pause';
         }
 
-        $array           = array();
-        $array['track']  = 0;
+        $array                 = array();
+        $array['track']        = 0;
         $array['track_title']  = '';
         $array['track_artist'] = '';
         $array['track_album']  = '';
-        $array['state']  = $state ?? '';
-        $array['volume'] = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
-        $array['repeat'] = $arrayholder['root']['repeat']['value'];
-        $array['random'] = $arrayholder['root']['random']['value'];
-        if(array_key_exists( 'meta-information' , $arrayholder ) ) {
+        $array['state']        = $state ?? '';
+        $array['volume']       = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
+        $array['repeat']       = $arrayholder['root']['repeat']['value'];
+        $array['random']       = $arrayholder['root']['random']['value'];
+        if(array_key_exists('meta-information', $arrayholder)) {
             $array['track']  = htmlspecialchars_decode(
                 $arrayholder['root']['information']['meta-information']['title']['value'],
                 ENT_NOQUOTES
             );
 
             $url_data = $this->parse_url($array['track']);
-            $oid = array_key_exists( 'oid' , $url_data )  ?  $url_data['oid'] : '';
+            $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
             if(!empty($oid)) {
                 $song     = new Song($url_data['oid']);
                 if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
