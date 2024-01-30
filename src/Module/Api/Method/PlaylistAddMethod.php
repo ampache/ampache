@@ -77,12 +77,13 @@ final class PlaylistAddMethod
         }
 
         if ($object_type === 'playlist' && ((int)$object_id) === 0) {
+            $object_id   = str_replace('smart_', '', (string) $object_id);
             $object_type = 'search';
         }
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
         /** @var Artist|Album|Song|Playlist|Search $item */
-        $item = new $className($object_id);
+        $item = new $className((int)$object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
