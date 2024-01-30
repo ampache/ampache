@@ -374,6 +374,67 @@ class PodcastRepositoryTest extends TestCase
         );
     }
 
+    public function testGetEpisodeEligibleForDownloadYieldsEpisodesWithoutLimit(): void
+    {
+        $episodeId     = 42;
+        $podcastId     = 21;
+        $lastSyncDate  = new DateTime();
+
+        $podcast = $this->createMock(Podcast::class);
+        $result  = $this->createMock(PDOStatement::class);
+        $episode = $this->createMock(Podcast_Episode::class);
+
+        $query = <<<SQL
+            SELECT
+                `id`
+            FROM
+                `podcast_episode`
+            WHERE
+                `podcast` = ?
+                AND
+                (`addition_time` > ? OR `state` = ?)
+            ORDER BY
+                `pubdate`
+            DESC%s
+            SQL;
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+        $podcast->expects(static::once())
+            ->method('getLastSyncDate')
+            ->willReturn($lastSyncDate);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                sprintf(
+                    $query,
+                    ''
+                ),
+                [
+                    $podcastId,
+                    $lastSyncDate->getTimestamp(),
+                    PodcastEpisodeStateEnum::PENDING
+                ]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $episodeId, false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcastEpisode')
+            ->with($episodeId)
+            ->willReturn($episode);
+
+        static::assertSame(
+            [$episode],
+            iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast, null))
+        );
+    }
+
     public function testGetEpisodeEligibleForDownloadYieldsEpisodes(): void
     {
         $downloadLimit = 666;
@@ -396,7 +457,7 @@ class PodcastRepositoryTest extends TestCase
                 (`addition_time` > ? OR `state` = ?)
             ORDER BY
                 `pubdate`
-            DESC LIMIT %d
+            DESC%s
             SQL;
 
         $podcast->expects(static::once())
@@ -406,17 +467,12 @@ class PodcastRepositoryTest extends TestCase
             ->method('getLastSyncDate')
             ->willReturn($lastSyncDate);
 
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
-            ->willReturn((string) $downloadLimit);
-
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
                 sprintf(
                     $query,
-                    $downloadLimit
+                    sprintf(' LIMIT %d', $downloadLimit)
                 ),
                 [
                     $podcastId,
@@ -437,20 +493,7 @@ class PodcastRepositoryTest extends TestCase
 
         static::assertSame(
             [$episode],
-            iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast))
-        );
-    }
-
-    public function testGetEpisodeEligibleForDownloadReturnsNothingIfDisabled(): void
-    {
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
-            ->willReturn('');
-
-        static::assertSame(
-            [],
-            iterator_to_array($this->subject->getEpisodesEligibleForDownload($this->createMock(Podcast::class)))
+            iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast, $downloadLimit))
         );
     }
 
