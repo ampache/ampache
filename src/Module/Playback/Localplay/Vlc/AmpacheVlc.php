@@ -325,13 +325,11 @@ class AmpacheVlc extends localplay_controller
         $listtracks = $this->get();
         foreach($listtracks as $track) {
             if($track['id'] == $song) {
-                $songid = $track['vlid'];
+                if ($this->_vlc->skip($track['vlid']) === null) {
+                    return false;
+                }
                 break;
             }
-        }
-
-        if ($this->_vlc->skip($songid) === null) {
-            return false;
         }
 
         return true;
