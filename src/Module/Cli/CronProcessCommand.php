@@ -28,7 +28,6 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Cache\ObjectCacheInterface;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream;
@@ -37,6 +36,7 @@ use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
@@ -54,13 +54,16 @@ final class CronProcessCommand extends Command
 
     private UpdateInfoRepositoryInterface $updateInfoRepository;
 
+    private ShareRepositoryInterface $shareRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ObjectCacheInterface $objectCache,
         CatalogGarbageCollectorInterface $catalogGarbageCollector,
         BookmarkRepositoryInterface $bookmarkRepository,
         UserRepositoryInterface $userRepository,
-        UpdateInfoRepositoryInterface $updateInfoRepository
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        ShareRepositoryInterface $shareRepository
     ) {
         parent::__construct('run:cronProcess', T_('Run the cron process'));
 
@@ -70,6 +73,7 @@ final class CronProcessCommand extends Command
         $this->bookmarkRepository      = $bookmarkRepository;
         $this->userRepository          = $userRepository;
         $this->updateInfoRepository    = $updateInfoRepository;
+        $this->shareRepository         = $shareRepository;
     }
 
     public function execute(): void
@@ -123,7 +127,7 @@ final class CronProcessCommand extends Command
         /**
          * Clean up remaining functions.
          */
-        Share::garbage_collection();
+        $this->shareRepository->collectGarbage();
         Stream::garbage_collection();
         Podcast_Episode::garbage_collection();
         $this->bookmarkRepository->collectGarbage();

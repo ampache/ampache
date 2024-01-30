@@ -14091,11 +14091,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$f_user has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Binary operation \"\\.\" between 'Running custom play…' and array\\<int, string\\>\\|string results in an error\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php

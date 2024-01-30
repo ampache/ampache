@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -420,8 +421,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
                 $current_id = (int)$tvshow_id;
                 Stats::migrate('tvshow', $this->id, $current_id, 0);
                 Useractivity::migrate('tvshow', $this->id, $current_id);
-                //Recommendation::migrate('tvshow', $this->id);
-                Share::migrate('tvshow', $this->id, $current_id);
+                $this->getShareRepository()->migrate('tvshow', $this->id, $current_id);
                 $this->getShoutRepository()->migrate('tvshow', $this->id, $current_id);
                 Tag::migrate('tvshow', $this->id, $current_id);
                 Userflag::migrate('tvshow', $this->id, $current_id);
@@ -533,5 +533,15 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }
