@@ -30,6 +30,11 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -40,6 +45,7 @@ use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -59,7 +65,7 @@ final class ShareCreateMethod
      *
      * @param array $input
      *  filter      = (string) object_id
-     *  type        = (string) object_type ('song', 'album', 'artist')
+     *  type        = (string) object_type ('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'song', 'video')
      *  description = (string) description (will be filled for you if empty) //optional
      *  expires     = (integer) days to keep active //optional
      * @param User $user
@@ -83,11 +89,16 @@ final class ShareCreateMethod
         $description = $input['description'] ?? null;
         $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
         // confirm the correct data
-        if (!in_array(strtolower($object_type), array('song', 'album', 'artist'))) {
+        if (!in_array(strtolower($object_type), array('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'song', 'video'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
+        }
+        // searches are playlists but not in the database
+        if ($object_type === 'playlist' && ((int)$object_id) === 0) {
+            $object_id   = str_replace('smart_', '', (string) $object_id);
+            $object_type = 'search';
         }
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
@@ -97,8 +108,8 @@ final class ShareCreateMethod
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
         } else {
-            /** @var Song|Album|Artist $item */
-            $item = new $className($object_id);
+            /** @var Album|Artist|Live_stream|Playlist|Podcast|Podcast_episode|Search|Song|Video $item */
+            $item = new $className((int)$object_id);
             if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
