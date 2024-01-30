@@ -28,8 +28,6 @@ tools:
                 - 'public/themes/*'
                 - '.github.*'
             paths: {  }
-    php_code_sniffer:
-        enabled: true
     php_pdepend:
         enabled: true
         configuration_file: null
