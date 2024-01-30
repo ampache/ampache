@@ -204,7 +204,7 @@ class Json_Data
      *
      * This takes an array of object_ids and return JSON based on the type of object
      *
-     * @param array $objects Array of object_ids (Mixed string|int)
+     * @param list<int> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'catalog'|'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param User $user
      * @param bool $include (add child id's of the object (in sub array by type))
@@ -220,56 +220,57 @@ class Json_Data
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
 
+        $output = [];
+
         if ($include) {
-            $output[$type] = [];
             switch ($type) {
                 case 'album_artist':
                     foreach ($objects as $object_id) {
-                        $output[$type][$object_id]['album'] = [];
+                        $output[$object_id]['album'] = [];
 
                         $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album';";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
-                            $output[$type][$object_id]['album'][] = $row['album_id'];
+                            $output[$object_id]['album'][] = $row['album_id'];
                         }
                     }
                     break;
                 case 'song_artist':
                     foreach ($objects as $object_id) {
-                        $output[$type][$object_id]['album'] = [];
+                        $output[$object_id]['album'] = [];
 
                         $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'song';";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
-                            $output[$type][$object_id]['album'][] = $row['album_id'];
+                            $output[$object_id]['album'][] = $row['album_id'];
                         }
                     }
                     break;
                 case 'artist':
                     foreach ($objects as $object_id) {
-                        $output[$type][$object_id]['album'] = [];
+                        $output[$object_id]['album'] = [];
 
                         $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ?;";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
-                            $output[$type][$object_id]['album'][] = $row['album_id'];
+                            $output[$object_id]['album'][] = $row['album_id'];
                         }
                     }
                     break;
                 case 'album':
                     foreach ($objects as $object_id) {
-                        $output[$type][$object_id]['song'] = [];
+                        $output[$object_id]['song'] = [];
 
                         $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ?;";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
-                            $output[$type][$object_id]['song'][] = $row['id'];
+                            $output[$object_id]['song'][] = $row['id'];
                         }
                     }
                     break;
                 case 'playlist':
                     foreach ($objects as $object_id) {
-                        $output[$type][$object_id]['song'] = [];
+                        $output[$object_id]['song'] = [];
 
                         /**
                          * Strip smart_ from playlist id and compare to original
@@ -279,25 +280,25 @@ class Json_Data
                         if ((int)$object_id === 0) {
                             $playlist = new Search((int)str_replace('smart_', '', (string)$object_id), 'song', $user);
                             foreach ($playlist->get_items() as $song) {
-                                $output[$type][$object_id]['song'][] = $song['object_id'];
+                                $output[$object_id]['song'][] = $song['object_id'];
                             }
                         } else {
                             $sql        = "SELECT DISTINCT `playlist_data`.`object_id`, `playlist_data`.`object_type` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?;";
                             $db_results = Dba::read($sql, array($object_id));
                             while ($row = Dba::fetch_assoc($db_results)) {
-                                $output[$type][$object_id][$row['object_type']][] = $row['object_id'];
+                                $output[$object_id][$row['object_type']][] = $row['object_id'];
                             }
                         }
                     }
                     break;
                 case 'podcast':
                     foreach ($objects as $object_id) {
-                        $output[$type][$object_id]['podcast_episode'] = [];
+                        $output[$object_id]['podcast_episode'] = [];
 
                         $sql        = "SELECT DISTINCT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ?;";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
-                            $output[$type][$object_id]['podcast_episode'][] = $row['id'];
+                            $output[$object_id]['podcast_episode'][] = $row['id'];
                         }
                     }
                     break;
@@ -309,14 +310,14 @@ class Json_Data
                 case 'video':
                     // These objects don't have children
                     foreach ($objects as $object_id) {
-                        $output[$type][$object_id] = [];
+                        $output[$object_id] = [];
                     }
                     break;
             }
         } else {
-            $output[$type] = $objects;
+            $output = $objects;
         }
-        $output = json_encode($output, JSON_PRETTY_PRINT);
+        $output = json_encode(['type' => $output], JSON_PRETTY_PRINT);
         if ($output !== false) {
             return $output;
         }
