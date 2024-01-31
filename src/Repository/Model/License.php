@@ -31,10 +31,10 @@ class License
 {
     protected const DB_TABLENAME = 'license';
 
-    public int $id = 0;
-    public ?string $name;
-    public ?string $description;
-    public ?string $external_link;
+    public int $id                = 0;
+    public ?string $name          = null;
+    public ?string $description   = null;
+    public ?string $external_link = null;
 
     /**
      * Constructor
@@ -52,12 +52,17 @@ class License
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function getName(): string
+    {
+        return (string) $this->name;
     }
 
     /**
@@ -82,7 +87,7 @@ class License
 
     public function getLinkFormatted(): string
     {
-        if ($this->external_link) {
+        if ($this->external_link !== '') {
             return sprintf(
                 '<a href="%s">%s</a>',
                 $this->external_link,
@@ -90,6 +95,6 @@ class License
             );
         }
 
-        return (string) $this->name;
+        return $this->getName();
     }
 }

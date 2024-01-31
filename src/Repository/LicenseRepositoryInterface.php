@@ -23,14 +23,17 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\License;
+use Traversable;
+
 interface LicenseRepositoryInterface
 {
     /**
      * Returns a list of licenses accessible by the current user.
      *
-     * @return int[]
+     * @return Traversable<int, string>
      */
-    public function getAll(): array;
+    public function getList(): Traversable;
 
     /**
      * This inserts a new license entry, it returns the auto_inc id
@@ -47,7 +50,7 @@ interface LicenseRepositoryInterface
      * This takes a key'd array of data as input and updates a license entry
      */
     public function update(
-        int $licenseId,
+        License $license,
         string $name,
         string $description,
         string $externalLink
@@ -57,7 +60,7 @@ interface LicenseRepositoryInterface
      * Deletes the license
      */
     public function delete(
-        int $licenseId
+        License $license
     ): void;
 
     /**
