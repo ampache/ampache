@@ -31,10 +31,10 @@ class License
 {
     protected const DB_TABLENAME = 'license';
 
-    public int $id                = 0;
-    public ?string $name          = null;
-    public ?string $description   = null;
-    public ?string $external_link = null;
+    private int $id                = 0;
+    private ?string $name          = null;
+    private ?string $description   = null;
+    private ?string $external_link = null;
 
     /**
      * Constructor
@@ -63,6 +63,11 @@ class License
     public function getName(): string
     {
         return (string) $this->name;
+    }
+
+    public function getDescription(): string
+    {
+        return (string) $this->description;
     }
 
     /**

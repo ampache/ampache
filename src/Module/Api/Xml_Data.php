@@ -26,10 +26,10 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Module\System\Dba;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Shoutbox;
@@ -706,10 +706,14 @@ class Xml_Data
         }
         $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n";
 
+        $licenseRepository = self::getLicenseRepository();
+
         foreach ($licenses as $license_id) {
-            $license = new license($license_id);
-            $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[" . $license->name . "]]></name>\n\t<description><![CDATA[" . $license->description . "]]></description>\n\t<external_link><![CDATA[" . $license->external_link . "]]></external_link>\n</license>\n";
-        } // end foreach
+            $license = $licenseRepository->findById($license_id);
+            if ($license !== null) {
+                $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[" . $license->getName() . "]]></name>\n\t<description><![CDATA[" . $license->getDescription() . "]]></description>\n\t<external_link><![CDATA[" . $license->getLinkFormatted() . "]]></external_link>\n</license>\n";
+            }
+        }
 
         return self::output_xml($string);
     }
@@ -1158,6 +1162,13 @@ class Xml_Data
             $songMime      = $song->mime;
             $songBitrate   = $song->bitrate;
             $play_url      = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $license       = $song->getLicense();
+            if ($license !== null) {
+                $licenseLink = $license->getLinkFormatted();
+            } else {
+                $licenseLink = '';
+            }
+
             $playlist_track++;
 
             $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n";
@@ -1171,7 +1182,7 @@ class Xml_Data
                     : $song_artist;
                 $string .= "\t<albumartist id=\"" . $song->albumartist . "\"><name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</albumartist>\n";
             }
-            $string .= "\t<disk><![CDATA[" . $song->disk . "]]></disk>\n\t<disksubtitle><![CDATA[" . $song->disksubtitle . "]]></disksubtitle>\n\t<track>" . $song->track . "</track>\n" . $tag_string . "\t<filename><![CDATA[" . $song->file . "]]></filename>\n\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n\t<time>" . $song->time . "</time>\n\t<year>" . $song->year . "</year>\n\t<format>" . $songType . "</format>\n\t<stream_format>" . $song->type . "</stream_format>\n\t<bitrate>" . $songBitrate . "</bitrate>\n\t<stream_bitrate>" . $song->bitrate . "</stream_bitrate>\n\t<rate>" . $song->rate . "</rate>\n\t<mode><![CDATA[" . $song->mode . "]]></mode>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<stream_mime><![CDATA[" . $song->mime . "]]></stream_mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($song->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $song->total_count . "</playcount>\n\t<catalog>" . $song->getCatalogId() . "</catalog>\n\t<composer><![CDATA[" . $song->composer . "]]></composer>\n\t<channels>" . $song->channels . "</channels>\n\t<comment><![CDATA[" . $song->comment . "]]></comment>\n\t<license><![CDATA[" . $song->f_license . "]]></license>\n\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n\t<language>" . $song->language . "</language>\n\t<lyrics><![CDATA[" . $song->lyrics . "]]></lyrics>\n\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n\t<r128_album_gain>" . $song->r128_album_gain . "</r128_album_gain>\n\t<r128_track_gain>" . $song->r128_track_gain . "</r128_track_gain>\n";
+            $string .= "\t<disk><![CDATA[" . $song->disk . "]]></disk>\n\t<disksubtitle><![CDATA[" . $song->disksubtitle . "]]></disksubtitle>\n\t<track>" . $song->track . "</track>\n" . $tag_string . "\t<filename><![CDATA[" . $song->file . "]]></filename>\n\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n\t<time>" . $song->time . "</time>\n\t<year>" . $song->year . "</year>\n\t<format>" . $songType . "</format>\n\t<stream_format>" . $song->type . "</stream_format>\n\t<bitrate>" . $songBitrate . "</bitrate>\n\t<stream_bitrate>" . $song->bitrate . "</stream_bitrate>\n\t<rate>" . $song->rate . "</rate>\n\t<mode><![CDATA[" . $song->mode . "]]></mode>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<stream_mime><![CDATA[" . $song->mime . "]]></stream_mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($song->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $song->total_count . "</playcount>\n\t<catalog>" . $song->getCatalogId() . "</catalog>\n\t<composer><![CDATA[" . $song->composer . "]]></composer>\n\t<channels>" . $song->channels . "</channels>\n\t<comment><![CDATA[" . $song->comment . "]]></comment>\n\t<license><![CDATA[" . $licenseLink . "]]></license>\n\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n\t<language>" . $song->language . "</language>\n\t<lyrics><![CDATA[" . $song->lyrics . "]]></lyrics>\n\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n\t<r128_album_gain>" . $song->r128_album_gain . "</r128_album_gain>\n\t<r128_track_gain>" . $song->r128_track_gain . "</r128_track_gain>\n";
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
                     $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_', $metadata->getField()->getName());
@@ -1521,5 +1532,15 @@ class Xml_Data
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getLicenseRepository(): LicenseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LicenseRepositoryInterface::class);
     }
 }

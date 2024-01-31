@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\License;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -60,8 +61,8 @@ final class LicenseMethod
             return false;
         }
         $object_id = (int) $input['filter'];
-        $license   = new License($object_id);
-        if ($license->isNew()) {
+        $license   = self::getLicenseRepository()->findById($object_id);
+        if ($license === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
@@ -78,5 +79,15 @@ final class LicenseMethod
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getLicenseRepository(): LicenseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LicenseRepositoryInterface::class);
     }
 }

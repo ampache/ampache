@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Label;
@@ -36,7 +37,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -267,24 +267,29 @@ class Json5_Data
      *
      * This returns licenses to the user, in a pretty JSON document with the information
      *
-     * @param int[] $licenses Licence id's assigned to songs and artists
+     * @param list<int> $licenses Licence id's assigned to songs and artists
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function licenses($licenses, $object = true): string
+    public static function licenses(array $licenses, $object = true): string
     {
         if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
         }
 
+        $licenseRepository = self::getLicenseRepository();
+
         $JSON = [];
         foreach ($licenses as $license_id) {
-            $license = new License($license_id);
-            $JSON[]  = array(
-                "id" => (string)$license_id,
-                "name" => $license->name,
-                "description" => $license->description,
-                "external_link" => $license->external_link
-            );
+            $license = $licenseRepository->findById($license_id);
+
+            if ($license !== null) {
+                $JSON[]  = array(
+                    'id' => (string) $license->getId(),
+                    'name' => $license->getName(),
+                    'description' => $license->getDescription(),
+                    'external_link' => $license->getLinkFormatted()
+                );
+            }
         } // end foreach
         $output = ($object) ? array("license" => $JSON) : $JSON[0] ?? array();
 
@@ -925,6 +930,13 @@ class Json5_Data
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $license     = $song->getLicense();
+            if ($license !== null) {
+                $licenseLink = $license->getLinkFormatted();
+            } else {
+                $licenseLink = '';
+            }
+
             $playlist_track++;
 
             $objArray = array(
@@ -970,7 +982,7 @@ class Json5_Data
             $objArray['composer']              = $song->composer;
             $objArray['channels']              = $song->channels;
             $objArray['comment']               = $song->comment;
-            $objArray['license']               = $song->f_license;
+            $objArray['license']               = $licenseLink;
             $objArray['publisher']             = $song->label;
             $objArray['language']              = $song->language;
             $objArray['lyrics']                = $song->lyrics;
@@ -1331,5 +1343,15 @@ class Json5_Data
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getLicenseRepository(): LicenseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LicenseRepositoryInterface::class);
     }
 }

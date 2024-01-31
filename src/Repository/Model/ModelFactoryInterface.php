@@ -109,10 +109,6 @@ interface ModelFactoryInterface
         ?User $user = null
     ): Search;
 
-    public function createLicense(
-        int $licenseId
-    ): License;
-
     public function createAccess(
         int $accessId
     ): Access;

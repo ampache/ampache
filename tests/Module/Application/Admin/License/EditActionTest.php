@@ -27,43 +27,34 @@ namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\License;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\Model\License;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class EditActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface|null */
-    private MockInterface $ui;
+    private MockInterface&UiInterface $ui;
 
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
+    private MockInterface&ConfigContainerInterface $configContainer;
 
-    /** @var MockInterface|ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
+    private MockInterface&LicenseRepositoryInterface $licenseRepository;
 
-    /** @var MockInterface|LicenseRepositoryInterface|null */
-    private MockInterface $licenseRepository;
-
-    private ?EditAction $subject;
+    private EditAction $subject;
 
     protected function setUp(): void
     {
         $this->ui                = $this->mock(UiInterface::class);
         $this->configContainer   = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
         $this->licenseRepository = $this->mock(LicenseRepositoryInterface::class);
 
         $this->subject = new EditAction(
             $this->ui,
             $this->configContainer,
-            $this->modelFactory,
             $this->licenseRepository
         );
     }
@@ -113,11 +104,6 @@ class EditActionTest extends MockeryTestCase
             )
             ->once();
 
-        $license->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
@@ -133,7 +119,7 @@ class EditActionTest extends MockeryTestCase
             ->once()
             ->andReturn($data);
 
-        $this->modelFactory->shouldReceive('createLicense')
+        $this->licenseRepository->shouldReceive('findById')
             ->with($licenseId)
             ->once()
             ->andReturn($license);

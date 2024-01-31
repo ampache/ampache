@@ -25,12 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\License;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -40,14 +41,14 @@ final class ShowEditAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
+    private LicenseRepositoryInterface $licenseRepository;
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        LicenseRepositoryInterface $licenseRepository
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui                = $ui;
+        $this->licenseRepository = $licenseRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -56,10 +57,15 @@ final class ShowEditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $license = $this->modelFactory->createLicense((int)($request->getQueryParams()['license_id'] ?? 0));
+        $licenseId = (int) ($request->getQueryParams()['license_id'] ?? 0);
+
+        $license = $this->licenseRepository->findById($licenseId);
+
+        if ($license === null) {
+            throw new ObjectNotFoundException($licenseId);
+        }
 
         $this->ui->showHeader();
-
         $this->ui->show(
             'show_edit_license.inc.php',
             ['license' => $license]
