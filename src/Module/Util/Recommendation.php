@@ -27,6 +27,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -170,6 +171,21 @@ class Recommendation
 
         $song     = new Song($song_id);
         $artist   = new Artist($song->artist);
+
+        if ($artist->isNew()) {
+            debug_event(
+                self::class,
+                sprintf(
+                    'Artist `%d` of Song `%d` is invalid, skip recommendation lookup',
+                    $song->artist,
+                    $song->id
+                ),
+                LegacyLogger::LOG_LEVEL_WARNING
+            );
+
+            return [];
+        }
+
         $fullname = (string)$artist->get_fullname();
         $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
