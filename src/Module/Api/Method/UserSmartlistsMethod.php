@@ -58,7 +58,7 @@ final class UserSmartlistsMethod
     {
         $like    = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $filter  = (string)($input['filter'] ?? '');
-        $results = Playlist::get_smartlists($user->id, $filter, $like);
+        $results = Playlist::get_smartlists($user->id, $filter, $like, false, true, true);
 
         if (empty($results)) {
             Api::empty('playlist', $input['api_format']);

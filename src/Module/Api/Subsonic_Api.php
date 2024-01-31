@@ -1291,7 +1291,7 @@ class Subsonic_Api
         $user_id   = $user->id ?? 0;
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
         $playlists = Playlist::get_playlists($user_id, '', true, true, false);
-        $searches  = Playlist::get_smartlists($user_id, '', true, false);
+        $searches  = Playlist::get_smartlists($user_id, '', true, true, false);
         // allow skipping dupe search names when used as refresh searches
         $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
 

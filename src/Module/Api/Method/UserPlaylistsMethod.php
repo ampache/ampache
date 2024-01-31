@@ -58,7 +58,7 @@ final class UserPlaylistsMethod
     {
         $like    = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $filter  = (string)($input['filter'] ?? '');
-        $results = Playlist::get_playlists($user->id, $filter, $like, false);
+        $results = Playlist::get_playlists($user->id, $filter, $like, false, true, true);
 
         if (empty($results)) {
             Api::empty('playlist', $input['api_format']);

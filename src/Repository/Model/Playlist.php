@@ -112,9 +112,10 @@ class Playlist extends playlist_object
      * @param bool $like
      * @param bool $includePublic
      * @param bool $includeHidden
+     * @param bool $userOnly
      * @return int[]
      */
-    public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true): array
+    public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true, $userOnly = false): array
     {
         if (!$user_id) {
             $user    = Core::get_global('user');
@@ -128,7 +129,7 @@ class Playlist extends playlist_object
                 return parent::get_from_cache($key, $user_id);
             }
         }
-        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+        $is_admin = ($userOnly === false || (Access::check('interface', 100, $user_id) || $user_id == -1));
         $sql      = "SELECT `id` FROM `playlist` ";
         $params   = array();
         $join     = 'WHERE';
@@ -234,10 +235,12 @@ class Playlist extends playlist_object
      * @param int $user_id
      * @param string $playlist_name
      * @param bool $like
+     * @param bool $includePublic
      * @param bool $includeHidden
+     * @param bool $userOnly
      * @return array
      */
-    public static function get_smartlists($user_id = null, $playlist_name = '', $like = true, $includeHidden = true): array
+    public static function get_smartlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true, $userOnly = false): array
     {
         if (!$user_id) {
             $user    = Core::get_global('user');
@@ -249,13 +252,15 @@ class Playlist extends playlist_object
                 return parent::get_from_cache($key, $user_id);
             }
         }
-        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+        $is_admin = ($userOnly === false || (Access::check('interface', 100, $user_id) || $user_id == -1));
         $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search` ";
         $params   = array();
         $join     = 'WHERE';
 
         if (!$is_admin) {
-            $sql .= "$join (`user` = ? OR `type` = 'public') ";
+            $sql .= ($includePublic)
+                ? "$join (`user` = ? OR `type` = 'public') "
+                : "$join (`user` = ?) ";
             $params[] = $user_id;
             $join     = 'AND';
         }
