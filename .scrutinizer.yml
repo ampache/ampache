@@ -70,5 +70,3 @@ tools:
         excluded_dirs:
             - 'public/lib/components/*'
             - 'vendor/*'
-    php_code_coverage:
-        test_command: vendor/bin/phpunit tests
