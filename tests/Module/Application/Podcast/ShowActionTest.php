@@ -122,9 +122,7 @@ class ShowActionTest extends TestCase
 
     public function testRunRenders(): void
     {
-        $podcast = $this->createMock(Podcast::class);
-
-        $name        = 'some-name';
+        $podcast     = $this->createMock(Podcast::class);
         $episodeList = [123, 456];
 
         $this->request->expects(static::once())
