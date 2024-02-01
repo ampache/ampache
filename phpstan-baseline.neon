@@ -3226,11 +3226,6 @@ parameters:
 			path: src/Module/Api/Method/UserEditMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UserMethod\\:\\:user\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UserPreferenceMethod\\:\\:user_preference\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/UserPreferenceMethod.php
