@@ -36,6 +36,11 @@ interface LicenseRepositoryInterface
     public function getList(): Traversable;
 
     /**
+     * Retrieve a single license-item by its id
+     */
+    public function findById(int $licenseId): ?License;
+
+    /**
      * This inserts a new license entry, it returns the auto_inc id
      *
      * @return int The id of the created license

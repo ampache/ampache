@@ -423,8 +423,9 @@ final class SongViewAdapter implements SongViewAdapterInterface
             $songprops[T_('Lyrics')] = $this->song->f_lyrics;
         }
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LICENSING) && $this->song->license) {
-            $songprops[T_('Licensing')] = $this->song->f_license;
+        $license = $this->song->getLicense();
+        if ($license !== null) {
+            $songprops[T_('Licensing')] = $license->getLinkFormatted();
         }
 
         $owner_id = $this->song->get_user_owner();
@@ -508,7 +509,13 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getLicenseLink(): string
     {
-        return (string) $this->song->f_license;
+        $license = $this->song->getLicense();
+
+        if ($license !== null) {
+            return $license->getLinkFormatted();
+        }
+
+        return '';
     }
 
     public function getNumberPlayed(): int

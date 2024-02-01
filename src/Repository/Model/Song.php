@@ -37,6 +37,7 @@ use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
@@ -161,20 +162,20 @@ class Song extends database_object implements
     public $f_size;
     /** @var null|string $f_lyrics */
     public $f_lyrics;
-    /** @var null|string $f_pattern */
-    public $f_pattern;
+
     /** @var int $count */
     public $count;
     /** @var null|string $f_publisher */
     public $f_publisher;
     /** @var null|string $f_composer */
     public $f_composer;
-    /** @var null|string $f_license */
-    public $f_license;
+
     /** @var int $tag_id */
     public $tag_id;
 
     private ?bool $has_art = null;
+
+    private ?License $licenseObj = null;
 
     /* Setting Variables */
     /**
@@ -1624,12 +1625,6 @@ class Song extends database_object implements
 
         $year              = (int)$this->year;
         $this->f_year_link = "<a href=\"" . $web_path . "/search.php?type=album&action=search&limit=0&rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
-
-        if (AmpConfig::get('licensing') && $this->license !== null) {
-            $license = new License($this->license);
-
-            $this->f_license = $license->getLinkFormatted();
-        }
     }
 
     /**
@@ -2302,6 +2297,19 @@ class Song extends database_object implements
         return $this->getSongDeleter()->delete($this);
     }
 
+    public function getLicense(): ?License
+    {
+        if (
+            AmpConfig::get('licensing') &&
+            $this->licenseObj !== null &&
+            $this->license !== null
+        ) {
+            $this->licenseObj = $this->getLicenseRepository()->findById($this->license);
+        }
+
+        return $this->licenseObj;
+    }
+
     /**
      * @deprecated
      */
@@ -2370,5 +2378,15 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(ShareRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getLicenseRepository(): LicenseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LicenseRepositoryInterface::class);
     }
 }

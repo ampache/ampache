@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Repository\Model\License;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -39,31 +39,23 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface|null */
-    private MockInterface $ui;
+    private MockInterface&UiInterface $ui;
 
-    /** @var MockInterface|ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
+    private MockInterface&ConfigContainerInterface $configContainer;
 
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
+    private MockInterface&LicenseRepositoryInterface $licenseRepository;
 
-    /** @var MockInterface|LicenseRepositoryInterface|null */
-    private MockInterface $licenseRepository;
-
-    private ?DeleteAction $subject;
+    private DeleteAction $subject;
 
     protected function setUp(): void
     {
         $this->ui                = $this->mock(UiInterface::class);
-        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
         $this->configContainer   = $this->mock(ConfigContainerInterface::class);
         $this->licenseRepository = $this->mock(LicenseRepositoryInterface::class);
 
         $this->subject = new DeleteAction(
             $this->ui,
             $this->configContainer,
-            $this->modelFactory,
             $this->licenseRepository
         );
     }
@@ -110,7 +102,7 @@ class DeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['license_id' => (string) $licenseId]);
 
-        $this->modelFactory->shouldReceive('createLicense')
+        $this->licenseRepository->shouldReceive('findById')
             ->with($licenseId)
             ->once()
             ->andReturn($license);
@@ -141,6 +133,36 @@ class DeleteActionTest extends MockeryTestCase
                 $request,
                 $gatekeeper
             )
+        );
+    }
+
+    public function testRunErrorsIfLicenseWasNotFound(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $licenseId = 666;
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->once()
+            ->andReturnTrue();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['license_id' => (string) $licenseId]);
+
+        $this->licenseRepository->shouldReceive('findById')
+            ->with($licenseId)
+            ->once()
+            ->andReturnNull();
+
+        $this->subject->run(
+            $request,
+            $gatekeeper
         );
     }
 }

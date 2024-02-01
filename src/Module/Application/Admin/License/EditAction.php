@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -44,19 +43,15 @@ final class EditAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private ModelFactoryInterface $modelFactory;
-
     private LicenseRepositoryInterface $licenseRepository;
 
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
         LicenseRepositoryInterface $licenseRepository
     ) {
         $this->ui                = $ui;
         $this->configContainer   = $configContainer;
-        $this->modelFactory      = $modelFactory;
         $this->licenseRepository = $licenseRepository;
     }
 
@@ -66,16 +61,13 @@ final class EditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
-
         $data      = $request->getParsedBody();
-        $licenseId = (array_key_exists('license_id', $data))
-            ? (int)filter_var($data['license_id'], FILTER_SANITIZE_NUMBER_INT)
-            : 0;
-        if ($licenseId > 0) {
-            $license = $this->modelFactory->createLicense($licenseId);
+        $licenseId = (int) ($data['license_id'] ?? 0);
 
-            if ($license->isNew() === false) {
+        if ($licenseId > 0) {
+            $license = $this->licenseRepository->findById($licenseId);
+
+            if ($license !== null) {
                 $this->licenseRepository->update(
                     $license,
                     (array_key_exists('name', $data)) ? htmlspecialchars($data['name']) : '',
@@ -93,12 +85,12 @@ final class EditAction implements ApplicationActionInterface
             $text = T_('A new License has been created');
         }
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             $text,
             sprintf('%s/admin/license.php', $this->configContainer->getWebPath())
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

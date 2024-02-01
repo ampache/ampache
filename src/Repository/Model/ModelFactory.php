@@ -160,12 +160,6 @@ final class ModelFactory implements ModelFactoryInterface
         return new Search((int) $searchId, $searchType, $user);
     }
 
-    public function createLicense(
-        int $licenseId
-    ): License {
-        return new License($licenseId);
-    }
-
     public function createAccess(
         int $accessId
     ): Access {

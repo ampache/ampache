@@ -29,14 +29,14 @@ use Ampache\Module\Util\Ui;
 /** @var string $web_path */
 /** @var License $libitem */
 ?>
-<tr id="license_<?php echo $libitem->id; ?>">
+<tr id="license_<?php echo $libitem->getId(); ?>">
     <td class="cel_name"><?php echo $libitem->getLinkFormatted(); ?></td>
-    <td class="cel_description"><?php echo $libitem->description; ?></td>
+    <td class="cel_description"><?php echo $libitem->getDescription(); ?></td>
     <td class="cel_action">
-        <a href="<?php echo $web_path; ?>/admin/license.php?action=show_edit&license_id=<?php echo $libitem->id; ?>">
+        <a href="<?php echo $web_path; ?>/admin/license.php?action=show_edit&license_id=<?php echo $libitem->getId(); ?>">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
-        <a href="<?php echo $web_path; ?>/admin/license.php?action=delete&license_id=<?php echo $libitem->id; ?>">
+        <a href="<?php echo $web_path; ?>/admin/license.php?action=delete&license_id=<?php echo $libitem->getId(); ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
     </td>
