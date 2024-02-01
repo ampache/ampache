@@ -70,11 +70,3 @@ tools:
         excluded_dirs:
             - 'public/lib/components/*'
             - 'vendor/*'
-    php_cpd:
-        enabled: true
-        excluded_dirs: {  }
-        filter:
-            excluded_paths:
-                - 'public/lib/components/*'
-                - 'vendor/*'
-            paths: {  }
