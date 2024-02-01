@@ -2814,11 +2814,13 @@ This takes a url and returns the song object in question
 
 ### user
 
-This gets a user's public information
+This gets a user's public information.
+
+If the username is omitted, this will return the current api user's public information.
 
 | Input      | Type   | Description                         | Optional |
 |------------|--------|-------------------------------------|---------:|
-| 'username' | string | Username of the user to get details |       NO |
+| 'username' | string | Username of the user to get details |      YES |
 
 * return array
 
