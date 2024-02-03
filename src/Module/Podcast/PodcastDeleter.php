@@ -33,6 +33,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Generator;
 use Psr\Log\LoggerInterface;
@@ -48,18 +49,22 @@ final class PodcastDeleter implements PodcastDeleterInterface
 
     private LoggerInterface $logger;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
     private ConfigContainerInterface $config;
 
     public function __construct(
         PodcastRepositoryInterface $podcastRepository,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $config,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         LoggerInterface $logger
     ) {
-        $this->podcastRepository = $podcastRepository;
-        $this->modelFactory      = $modelFactory;
-        $this->config            = $config;
-        $this->logger            = $logger;
+        $this->podcastRepository        = $podcastRepository;
+        $this->modelFactory             = $modelFactory;
+        $this->config                   = $config;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->logger                   = $logger;
     }
 
     /**
@@ -74,7 +79,7 @@ final class PodcastDeleter implements PodcastDeleterInterface
         );
 
         $episodeIterable = function (Podcast $podcast): Generator {
-            $episodes = $this->podcastRepository->getEpisodes($podcast);
+            $episodes = $this->podcastEpisodeRepository->getEpisodes($podcast);
 
             foreach ($episodes as $episodeId) {
                 yield $this->modelFactory->createPodcastEpisode($episodeId);
@@ -107,7 +112,7 @@ final class PodcastDeleter implements PodcastDeleterInterface
                 @unlink($filePath);
             }
 
-            $this->podcastRepository->deleteEpisode($episode);
+            $this->podcastEpisodeRepository->deleteEpisode($episode);
         }
 
         Catalog::count_table('podcast_episode');

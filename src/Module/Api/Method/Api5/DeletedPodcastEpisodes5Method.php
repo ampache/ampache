@@ -30,8 +30,8 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\DeletedPodcastEpisodeRepositoryInterface;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\PodcastRepositoryInterface;
 
 /**
  * Class DeletedPodcastEpisodes5Method
@@ -48,6 +48,12 @@ final class DeletedPodcastEpisodes5Method
      *
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *  api_format: string,
+     *  offset?: string,
+     *  limit?: string
+     * } $input
      */
     public static function deleted_podcast_episodes(array $input, User $user): bool
     {
@@ -58,8 +64,8 @@ final class DeletedPodcastEpisodes5Method
             return false;
         }
 
-        $items = self::getPodcastRepository()->getDeletedEpisodes();
-        if (empty($items)) {
+        $items = iterator_to_array(self::getDeletedPodcastEpisodesRepository()->findAll());
+        if ($items === []) {
             Api5::empty('deleted_podcast_episodes', $input['api_format']);
 
             return false;
@@ -68,13 +74,13 @@ final class DeletedPodcastEpisodes5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
+                Json5_Data::set_offset((int) ($input['offset'] ?? 0));
+                Json5_Data::set_limit((int) ($input['limit'] ?? 0));
                 echo Json5_Data::deleted('podcast_episode', $items);
                 break;
             default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
+                Xml5_Data::set_offset((int) ($input['offset'] ?? 0));
+                Xml5_Data::set_limit((int) ($input['limit'] ?? 0));
                 echo Xml5_Data::deleted('podcast_episode', $items);
         }
 
@@ -84,10 +90,10 @@ final class DeletedPodcastEpisodes5Method
     /**
      * @todo inject dependency
      */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
+    private static function getDeletedPodcastEpisodesRepository(): DeletedPodcastEpisodeRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(PodcastRepositoryInterface::class);
+        return $dic->get(DeletedPodcastEpisodeRepositoryInterface::class);
     }
 }

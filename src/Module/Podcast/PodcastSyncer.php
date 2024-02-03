@@ -32,6 +32,8 @@ use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
@@ -50,6 +52,8 @@ final class PodcastSyncer implements PodcastSyncerInterface
 
     private PodcastDeleterInterface $podcastDeleter;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
@@ -57,12 +61,14 @@ final class PodcastSyncer implements PodcastSyncerInterface
         ModelFactoryInterface $modelFactory,
         PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
         PodcastDeleterInterface $podcastDeleter,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         ConfigContainerInterface $configContainer
     ) {
         $this->podcastRepository        = $podcastRepository;
         $this->modelFactory             = $modelFactory;
         $this->podcastEpisodeDownloader = $podcastEpisodeDownloader;
         $this->podcastDeleter           = $podcastDeleter;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
         $this->configContainer          = $configContainer;
     }
 
@@ -124,7 +130,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
 
                 $this->sync($podcast);
 
-                $episodes = $this->podcastRepository->getEpisodes($podcast, PodcastEpisodeStateEnum::PENDING);
+                $episodes = $podcast->getEpisodeIds(PodcastEpisodeStateEnum::PENDING);
 
                 foreach ($episodes as $episodeId) {
                     $this->podcastEpisodeDownloader->fetch(
@@ -162,7 +168,9 @@ final class PodcastSyncer implements PodcastSyncerInterface
         }
 
         // Select episodes to download
-        $downloadEpisodes = $this->podcastRepository->getEpisodesEligibleForDownload($podcast, $downloadLimit);
+        $downloadEpisodes = $this->podcastEpisodeRepository->getEpisodesEligibleForDownload($podcast, $downloadLimit);
+
+        /** @var Podcast_Episode $episode */
         foreach ($downloadEpisodes as $episode) {
             $episode->change_state('pending');
             if ($gather) {
@@ -175,11 +183,11 @@ final class PodcastSyncer implements PodcastSyncerInterface
         if ($change > 0) {
             // cleanup old episodes (if available)
             $this->podcastDeleter->deleteEpisode(
-                $this->podcastRepository->getEpisodesEligibleForDeletion($podcast)
+                $this->podcastEpisodeRepository->getEpisodesEligibleForDeletion($podcast)
             );
 
             $podcast->setEpisodeCount(
-                $this->podcastRepository->getEpisodeCount($podcast)
+                $this->podcastEpisodeRepository->getEpisodeCount($podcast)
             );
             Catalog::update_mapping('podcast');
             Catalog::update_mapping('podcast_episode');

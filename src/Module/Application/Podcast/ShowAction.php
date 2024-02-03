@@ -84,7 +84,7 @@ final class ShowAction implements ApplicationActionInterface
                 'show_podcast.inc.php',
                 [
                     'podcast' => $podcast,
-                    'object_ids' => $this->podcastRepository->getEpisodes($podcast),
+                    'object_ids' => $podcast->getEpisodeIds(),
                     'object_type' => 'podcast_episode'
                 ]
             );

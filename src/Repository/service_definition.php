@@ -51,4 +51,6 @@ return [
     MetadataRepositoryInterface::class => autowire(MetadataRepository::class),
     MetadataFieldRepositoryInterface::class => autowire(MetadataFieldRepository::class),
     ShareRepositoryInterface::class => autowire(ShareRepository::class),
+    DeletedPodcastEpisodeRepositoryInterface::class => autowire(DeletedPodcastEpisodeRepository::class),
+    PodcastEpisodeRepositoryInterface::class => autowire(PodcastEpisodeRepository::class),
 ];

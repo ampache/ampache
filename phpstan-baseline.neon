@@ -2026,11 +2026,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/Catalogs5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\DeletedPodcastEpisodes5Method\\:\\:deleted_podcast_episodes\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/DeletedPodcastEpisodes5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\DeletedSongs5Method\\:\\:deleted_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/DeletedSongs5Method.php
@@ -2689,11 +2684,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\CatalogsMethod\\:\\:catalogs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/CatalogsMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\DeletedPodcastEpisodesMethod\\:\\:deleted_podcast_episodes\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/DeletedPodcastEpisodesMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\DeletedSongsMethod\\:\\:deleted_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"

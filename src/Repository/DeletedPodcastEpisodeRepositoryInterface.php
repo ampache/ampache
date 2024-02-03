@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -20,49 +20,33 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Podcast;
 use Traversable;
 
-interface PodcastRepositoryInterface
+/**
+ * Manages database access for deleted podcast episodes
+ *
+ * Tables: `deleted_podcast_episodes`
+ */
+interface DeletedPodcastEpisodeRepositoryInterface
 {
     /**
-     * Retrieve all podcast objects and maintain db-order
+     * Returns all deleted podcast episodes
      *
-     * @return Traversable<Podcast>
+     * @return Traversable<array{
+     *  id: int,
+     *  addition_time: int,
+     *  delete_time: int,
+     *  title: string,
+     *  file: string,
+     *  catalog: int,
+     *  total_count: int,
+     *  total_skip: int,
+     *  podcast: int
+     * }>
      */
     public function findAll(): Traversable;
-
-    /**
-     * Searches for an existing podcast object by the feed url
-     */
-    public function findByFeedUrl(string $feedUrl): ?Podcast;
-
-    /**
-     * Deletes a podcast
-     */
-    public function delete(Podcast $podcast): void;
-
-    /**
-     * Returns a new podcast item
-     */
-    public function prototype(): Podcast;
-
-    /**
-     * Persists the podcast-item in the database
-     *
-     * If the item is new, it will be created. Otherwise, an update will happen
-     *
-     * @return null|non-negative-int
-     */
-    public function persist(Podcast $podcast): ?int;
-
-    /**
-     * Retrieve a single podcast-item by its id
-     */
-    public function findById(int $podcastId): ?Podcast;
 }

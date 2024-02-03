@@ -35,6 +35,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 
 class Podcast_Episode extends database_object implements
@@ -644,13 +645,13 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
-     * change_state
+     * Updates the state of an episode
+     *
+     * @todo replace state by enum after switching to php 8
      */
     public function change_state(string $state): void
     {
-        $sql = "UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?";
-
-        Dba::write($sql, array($state, $this->id));
+        $this->getPodcastEpisodeRepository()->updateState($this, $state);
     }
 
     /**
@@ -671,5 +672,15 @@ class Podcast_Episode extends database_object implements
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
     }
 }

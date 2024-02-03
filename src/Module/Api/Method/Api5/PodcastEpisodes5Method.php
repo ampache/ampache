@@ -72,8 +72,8 @@ final class PodcastEpisodes5Method
             return false;
         }
 
-        $results = $podcastRepository->getEpisodes($podcast);
-        if (empty($results)) {
+        $results = $podcast->getEpisodeIds();
+        if ($results === []) {
             Api5::empty('podcast_episode', $input['api_format']);
 
             return false;

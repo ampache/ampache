@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepository;
 use Ampache\Repository\PodcastRepositoryInterface;
 use DateTime;
@@ -200,7 +201,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function get_childrens(): array
     {
-        return array('podcast_episode' => $this->getPodcastRepository()->getEpisodes($this));
+        return array('podcast_episode' => $this->getEpisodeIds());
     }
 
     /**
@@ -223,7 +224,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'podcast_episode') {
-            $episodes = $this->getPodcastRepository()->getEpisodes($this, PodcastEpisodeStateEnum::COMPLETED);
+            $episodes = $this->getEpisodeIds(PodcastEpisodeStateEnum::COMPLETED);
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
                     'object_type' => 'podcast_episode',
@@ -535,6 +536,19 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
+     * Returns the ids of all available episodes
+     *
+     * @param string $stateFilter Return only items with this state
+     *
+     * @return list<int>
+     */
+    public function getEpisodeIds(
+        string $stateFilter = ''
+    ): array {
+        return $this->getPodcastEpisodeRepository()->getEpisodes($this, $stateFilter);
+    }
+
+    /**
      * @deprecated Inject by constructor
      */
     private function getPodcastRepository(): PodcastRepositoryInterface
@@ -542,5 +556,15 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
     }
 }
