@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Module\Playback\Stream;
 use Ampache\Config\AmpConfig;
@@ -942,7 +943,10 @@ class Upnp_Api
             case 'live_streams':
                 // Get radios list
                 if (count($pathreq) == 1) {
-                    $radios              = static::getLiveStreamRepository()->getAll();
+                    $radios = static::getLiveStreamRepository()->findAll(
+                        (!empty(Core::get_global('user'))) ? Core::get_global('user') : null
+                    );
+
                     [$maxCount, $radios] = self::_slice($radios, $start, $count);
                     foreach ($radios as $radio_id) {
                         $radio = new Live_Stream($radio_id);

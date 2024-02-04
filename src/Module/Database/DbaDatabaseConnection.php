@@ -28,6 +28,7 @@ namespace Ampache\Module\Database;
 use Ampache\Module\Database\Exception\InsertIdInvalidException;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Module\System\Dba;
+use PDO;
 use PDOStatement;
 
 /**
@@ -65,13 +66,28 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      * Useful e.g. for counting-queries
      *
      * @param list<mixed> $params
-     * @return mixed
+     *
+     * @return mixed Will return `false` if row is empty
      */
     public function fetchOne(
         string $sql,
         array $params = []
     ) {
         return $this->query($sql, $params)->fetchColumn();
+    }
+
+    /**
+     * Fetches a single whole row and returns it as an associative array
+     *
+     * @param list<mixed> $params
+     *
+     * @return false|array<string, mixed> Will return `false` if row is empty
+     */
+    public function fetchRow(
+        string $sql,
+        array $params = []
+    ) {
+        return $this->query($sql, $params)->fetch(PDO::FETCH_ASSOC);
     }
 
     /**

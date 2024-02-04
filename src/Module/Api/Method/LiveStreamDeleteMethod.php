@@ -56,21 +56,20 @@ final class LiveStreamDeleteMethod
             return false;
         }
         unset($user);
+
+        $liveStreamRepository = self::getLiveStreamRepository();
+
         $object_id = (int)$input['filter'];
-        $item      = new Live_Stream($object_id);
-        if ($item->isNew()) {
+
+        $liveStream = $liveStreamRepository->findById($object_id);
+        if ($liveStream === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
-        $live_stream = static::getLiveStreamRepository()->delete($item->id);
-        if (!$live_stream) {
-            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
+        $liveStreamRepository->delete($liveStream);
 
         Api::message('Deleted live_stream: ' . $object_id, $input['api_format']);
 

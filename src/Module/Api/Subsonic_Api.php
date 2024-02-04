@@ -873,7 +873,7 @@ class Subsonic_Api
                             continue;
                         }
                         // get the songs in a random order for even more chaos
-                        $artist_songs = static::getSongRepository()->getRandomByArtist($artist);
+                        $artist_songs = self::getSongRepository()->getRandomByArtist($artist);
                         foreach ($artist_songs as $song) {
                             $songs[] = array('id' => $song);
                         }
@@ -939,7 +939,7 @@ class Subsonic_Api
             $count = 50;
         }
         if ($artist) {
-            $songs = static::getSongRepository()->getTopSongsByArtist(
+            $songs = self::getSongRepository()->getTopSongsByArtist(
                 $artist,
                 $count
             );
@@ -2327,7 +2327,7 @@ class Subsonic_Api
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getinternetradiostations');
-        $radios   = static::getLiveStreamRepository()->getAll();
+        $radios   = self::getLiveStreamRepository()->findAll();
         Subsonic_Xml_Data::addInternetRadioStations($response, $radios);
         self::_apiOutput($input, $response);
     }
@@ -2433,11 +2433,18 @@ class Subsonic_Api
         if (!$stream_id) {
             return;
         }
-        if (AmpConfig::get('live_stream') && $user->access >= 75) {
-            if (static::getLiveStreamRepository()->delete($stream_id)) {
-                $response = Subsonic_Xml_Data::addSubsonicResponse('deleteinternetradiostation');
-            } else {
+
+        $liveStreamRepository = self::getLiveStreamRepository();
+
+        if (AmpConfig::get('live_stream') && $user->access >= AccessLevelEnum::LEVEL_MANAGER) {
+            $liveStream = $liveStreamRepository->findById((int) $stream_id);
+
+            if ($liveStream === null) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deleteinternetradiostation');
+            } else {
+                $liveStreamRepository->delete($liveStream);
+
+                $response = Subsonic_Xml_Data::addSubsonicResponse('deleteinternetradiostation');
             }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'deleteinternetradiostation');
@@ -2457,7 +2464,7 @@ class Subsonic_Api
     {
         unset($user);
         $since                    = (int)($input['since'] ?? 0);
-        $privateMessageRepository = static::getPrivateMessageRepository();
+        $privateMessageRepository = self::getPrivateMessageRepository();
 
         $privateMessageRepository->cleanChatMessages();
 
@@ -2481,7 +2488,7 @@ class Subsonic_Api
             return;
         }
 
-        if (static::getPrivateMessageRepository()->sendChatMessage(trim($message), $user->id) !== null) {
+        if (self::getPrivateMessageRepository()->sendChatMessage(trim($message), $user->id) !== null) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('addchatmessage');
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'addChatMessage');
@@ -2530,7 +2537,7 @@ class Subsonic_Api
     {
         if ($user->access === 100) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('getusers');
-            $users    = static::getUserRepository()->getValid();
+            $users    = self::getUserRepository()->getValid();
             Subsonic_Xml_Data::addUsers($response, $users);
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'getusers');
@@ -2727,7 +2734,7 @@ class Subsonic_Api
     {
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getbookmarks');
         $bookmarks = [];
-        foreach (static::getBookmarkRepository()->getBookmarks($user->id) as $bookmarkId) {
+        foreach (self::getBookmarkRepository()->getBookmarks($user->id) as $bookmarkId) {
             $bookmarks[] = new Bookmark($bookmarkId);
         }
 
@@ -2766,7 +2773,7 @@ class Subsonic_Api
                     time()
                 );
             } else {
-                static::getBookmarkRepository()->update($bookmark->getId(), (int)$position, time());
+                self::getBookmarkRepository()->update($bookmark->getId(), (int)$position, time());
             }
             $response = Subsonic_Xml_Data::addSubsonicResponse('createbookmark');
         } else {
@@ -2794,7 +2801,7 @@ class Subsonic_Api
         if ($bookmark->isNew()) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletebookmark');
         } else {
-            static::getBookmarkRepository()->delete($bookmark->getId());
+            self::getBookmarkRepository()->delete($bookmark->getId());
             $response = Subsonic_Xml_Data::addSubsonicResponse('deletebookmark');
         }
         self::_apiOutput($input, $response);
@@ -2894,7 +2901,7 @@ class Subsonic_Api
         $albums = false;
         switch ($type) {
             case "random":
-                $albums = static::getAlbumRepository()->getRandom(
+                $albums = self::getAlbumRepository()->getRandom(
                     $user->id,
                     $size
                 );

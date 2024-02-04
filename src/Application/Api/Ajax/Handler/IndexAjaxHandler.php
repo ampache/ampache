@@ -28,6 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Artist;
@@ -280,7 +281,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $name = $this->requestParser->getFromRequest('name');
                     $year = $this->requestParser->getFromRequest('year');
 
-                    if (!$this->wantedRepository->find($mbid, $user->id)) {
+                    if (!$this->wantedRepository->find($mbid, $user)) {
                         Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
                         ob_start();
                         $walbum = new Wanted(Wanted::get_wanted($mbid));
@@ -294,10 +295,12 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'remove_wanted':
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
                     $mbid    = $this->requestParser->getFromRequest('mbid');
-                    $user_id = $user->has_access(75) ? null : $user->id;
                     $walbum  = new Wanted(Wanted::get_wanted($mbid));
 
-                    $this->wantedRepository->deleteByMusicbrainzId($mbid, $user_id);
+                    $this->wantedRepository->deleteByMusicbrainzId(
+                        $mbid,
+                        $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ? null : $user
+                    );
                     ob_start();
                     $walbum->accepted = false;
                     $walbum->id       = 0;

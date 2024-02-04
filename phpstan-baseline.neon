@@ -3776,36 +3776,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getBookmarkRepository\\(\\) through static\\:\\:\\.$#"
-			count: 3
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getLiveStreamRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getPrivateMessageRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Cannot cast array\\<int, string\\>\\|string\\|null to string\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
@@ -15334,11 +15304,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\UserRepositoryInterface\\:\\:getValidArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/UserRepositoryInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\WantedRepository\\:\\:getById\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/WantedRepository.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\WantedRepositoryInterface\\:\\:getById\\(\\) return type has no value type specified in iterable type array\\.$#"
