@@ -29,7 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
@@ -43,13 +43,17 @@ final class AddCatalogAction extends AbstractCatalogAction
 
     private UiInterface $ui;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        RequestParserInterface $requestParser
     ) {
         parent::__construct($ui);
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->requestParser   = $requestParser;
     }
 
     /**
@@ -76,7 +80,7 @@ final class AddCatalogAction extends AbstractCatalogAction
             AmpError::add('general', T_('Please enter a Catalog name'));
         }
 
-        if (!Core::form_verify('add_catalog')) {
+        if (!$this->requestParser->verifyForm('add_catalog')) {
             throw new AccessDeniedException();
         }
 
