@@ -62,15 +62,11 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
         string $message
     ): void {
         $messageId = $this->privateMessageRepository->create(
-            $sender->getId(),
-            $recipient->getId(),
+            $sender,
+            $recipient,
             $subject,
             $message
         );
-
-        if ($messageId === null) {
-            throw new Exception\PrivateMessageCreationException();
-        }
 
         if (Preference::get_by_user($recipient->getId(), 'notify_email')) {
             $mailer = $this->utilityFactory->createMailer();

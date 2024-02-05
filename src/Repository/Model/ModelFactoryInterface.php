@@ -89,7 +89,7 @@ interface ModelFactoryInterface
 
     public function createPrivateMsg(
         int $privateMessageId
-    ): PrivateMsg;
+    ): PrivateMessageInterface;
 
     public function createTvShow(
         int $tvShowId
