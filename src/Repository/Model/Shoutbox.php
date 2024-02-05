@@ -35,11 +35,8 @@ use DateTimeInterface;
  *
  * @see ShoutRepository
  */
-class Shoutbox
+class Shoutbox extends BaseModel
 {
-    /** @var int Primary key*/
-    private int $id = 0;
-
     /** @var int User-id */
     private int $user = 0;
 
@@ -67,24 +64,6 @@ class Shoutbox
         ShoutRepositoryInterface $shoutRepository
     ) {
         $this->shoutRepository = $shoutRepository;
-    }
-
-    /**
-     * Returns true if the object is new/unknown
-     */
-    public function isNew(): bool
-    {
-        return $this->id === 0;
-    }
-
-    /**
-     * Returns the id of the object
-     *
-     * Will return `0` if the object is not persisted yet
-     */
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     /**

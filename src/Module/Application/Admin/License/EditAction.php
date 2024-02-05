@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\License;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -35,6 +36,9 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Actually updates or creates a license
+ */
 final class EditAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'edit';
@@ -61,29 +65,31 @@ final class EditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data      = $request->getParsedBody();
-        $licenseId = (int) ($data['license_id'] ?? 0);
+        $data        = $request->getParsedBody();
+        $licenseId   = (int) ($data['license_id'] ?? 0);
+        $name        = (string) ($data['name'] ?? '');
+        $description = (string) ($data['description'] ?? '');
+
+        $url = (string) filter_var($data['external_link'] ?? '', FILTER_SANITIZE_URL);
 
         if ($licenseId > 0) {
             $license = $this->licenseRepository->findById($licenseId);
 
-            if ($license !== null) {
-                $this->licenseRepository->update(
-                    $license,
-                    (array_key_exists('name', $data)) ? htmlspecialchars($data['name']) : '',
-                    (array_key_exists('description', $data)) ? htmlspecialchars($data['description']) : '',
-                    (array_key_exists('external_link', $data)) ? (string)filter_var($data['external_link'], FILTER_SANITIZE_URL) : ''
-                );
+            if ($license === null) {
+                throw new ObjectNotFoundException($licenseId);
             }
+
             $text = T_('The License has been updated');
         } else {
-            $this->licenseRepository->create(
-                (array_key_exists('name', $data)) ? htmlspecialchars($data['name']) : '',
-                (array_key_exists('description', $data)) ? htmlspecialchars($data['description']) : '',
-                (array_key_exists('external_link', $data)) ? (string)filter_var($data['external_link'], FILTER_SANITIZE_URL) : ''
-            );
+            $license = $this->licenseRepository->prototype();
+
             $text = T_('A new License has been created');
         }
+
+        $license->setName($name)
+            ->setDescription($description)
+            ->setExternalLink($url)
+            ->save();
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(

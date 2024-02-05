@@ -2535,7 +2535,16 @@ abstract class Catalog extends database_object
             $licenseName       = (string) $results['license'];
             $licenseId         = $licenseRepository->find($licenseName);
 
-            $new_song->license = $licenseId === 0 ? $licenseRepository->create($licenseName, '', '') : $licenseId;
+            if ($licenseId === 0) {
+                $license = $licenseRepository->prototype()
+                    ->setName($licenseName);
+
+                $license->save();
+
+                $licenseId = $license->getId();
+            }
+
+            $new_song->license = $licenseId;
         } else {
             $new_song->license = null;
         }

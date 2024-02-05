@@ -36,6 +36,7 @@ use SEEC\PhpUnit\Helper\ConsecutiveParams;
 class LicenseRepositoryTest extends TestCase
 {
     use ConsecutiveParams;
+    use RepositoryTestTrait;
 
     private DatabaseConnectionInterface&MockObject $connection;
 
@@ -73,79 +74,6 @@ class LicenseRepositoryTest extends TestCase
                 $this->subject->getList()
             )
         );
-    }
-
-    public function testCreateReturnsId(): void
-    {
-        $name         = 'some-name';
-        $description  = 'some-description';
-        $externalLink = 'some-link';
-        $objectId     = 123;
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)',
-                [$name, $description, $externalLink]
-            );
-        $this->connection->expects(static::once())
-            ->method('getLastInsertedId')
-            ->willReturn($objectId);
-
-        static::assertSame(
-            $objectId,
-            $this->subject->create($name, $description, $externalLink)
-        );
-    }
-
-    public function testUpdateUpdates(): void
-    {
-        $name         = 'some-name';
-        $description  = 'some-description';
-        $externalLink = 'some-link';
-        $objectId     = 123;
-
-        $license = $this->createMock(License::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
-                [$name, $description, $externalLink, $objectId]
-            );
-
-        $license->expects(static::once())
-            ->method('getId')
-            ->willReturn($objectId);
-
-        $this->subject->update(
-            $license,
-            $name,
-            $description,
-            $externalLink
-        );
-    }
-
-    public function testDeleteDeletes(): void
-    {
-        $license = $this->createMock(License::class);
-
-        $objectId = 666;
-
-        $license->expects(static::once())
-            ->method('getId')
-            ->willReturn($objectId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `license` WHERE `id` = ?',
-                [
-                    $objectId
-                ]
-            );
-
-        $this->subject->delete($license);
     }
 
     public function testFindFindObjectByName(): void
@@ -197,6 +125,99 @@ class LicenseRepositoryTest extends TestCase
 
         static::assertNull(
             $this->subject->find($value)
+        );
+    }
+
+    public function testFindByIdPerformsTest(): void
+    {
+        $this->runFindByIdTrait(
+            'license',
+            License::class,
+            [$this->subject]
+        );
+    }
+
+    public function testPersistCreatesNewItem(): void
+    {
+        $license = $this->createMock(License::class);
+
+        $licenseId    = 666;
+        $name         = 'some-name';
+        $description  = 'some-description';
+        $externalLink = 'some-link';
+
+        $license->expects(static::once())
+            ->method('getName')
+            ->willReturn($name);
+        $license->expects(static::once())
+            ->method('getDescription')
+            ->willReturn($description);
+        $license->expects(static::once())
+            ->method('getExternalLink')
+            ->willReturn($externalLink);
+        $license->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)',
+                [
+                    $name,
+                    $description,
+                    $externalLink
+                ]
+            );
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn($licenseId);
+
+        static::assertSame(
+            $licenseId,
+            $this->subject->persist($license)
+        );
+    }
+
+    public function testPersistUpdatesExistingItems(): void
+    {
+        $license = $this->createMock(License::class);
+
+        $licenseId    = 666;
+        $name         = 'some-name';
+        $description  = 'some-description';
+        $externalLink = 'some-link';
+
+        $license->expects(static::once())
+            ->method('getName')
+            ->willReturn($name);
+        $license->expects(static::once())
+            ->method('getDescription')
+            ->willReturn($description);
+        $license->expects(static::once())
+            ->method('getExternalLink')
+            ->willReturn($externalLink);
+        $license->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
+        $license->expects(static::once())
+            ->method('getId')
+            ->willReturn($licenseId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
+                [
+                    $name,
+                    $description,
+                    $externalLink,
+                    $licenseId
+                ]
+            );
+
+        static::assertNull(
+            $this->subject->persist($license)
         );
     }
 }

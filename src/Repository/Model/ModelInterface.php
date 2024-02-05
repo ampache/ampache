@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,34 +23,21 @@
  *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Repository\Model;
 
-use Ampache\Repository\Model\License;
-use Traversable;
-
-/**
- * @extends BaseRepositoryInterface<License>
- */
-interface LicenseRepositoryInterface extends BaseRepositoryInterface
+interface ModelInterface
 {
     /**
-     * Returns a list of licenses accessible by the current user.
+     * Returns the id of the object
      *
-     * @return Traversable<int, string>
+     * Will return `0` if the object is not persisted yet
      */
-    public function getList(): Traversable;
+    public function getId(): int;
+
+    public function isNew(): bool;
 
     /**
-     * Searches for the License by name and external link
+     * Persists the object
      */
-    public function find(string $searchValue): ?int;
-
-    /**
-     * Persists the item in the database
-     *
-     * If the item is new, it will be created. Otherwise, an update will happen
-     *
-     * @return null|non-negative-int
-     */
-    public function persist(License $license): ?int;
+    public function save(): void;
 }

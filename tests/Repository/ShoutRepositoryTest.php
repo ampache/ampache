@@ -38,6 +38,7 @@ use SEEC\PhpUnit\Helper\ConsecutiveParams;
 class ShoutRepositoryTest extends TestCase
 {
     use ConsecutiveParams;
+    use RepositoryTestTrait;
 
     private DatabaseConnectionInterface&MockObject $connection;
 
@@ -416,17 +417,12 @@ class ShoutRepositoryTest extends TestCase
         $this->subject->migrate($objectType, $oldId, $newId);
     }
 
-    public function testPrototypeYieldsNewItems(): void
+    public function testFindByIdPerformsTest(): void
     {
-        $result = $this->subject->prototype();
-
-        static::assertTrue(
-            $result->isNew()
-        );
-
-        static::assertNotSame(
-            spl_object_hash($result),
-            spl_object_hash($this->subject->prototype())
+        $this->runFindByIdTrait(
+            'user_shout',
+            Shoutbox::class,
+            [$this->subject]
         );
     }
 }

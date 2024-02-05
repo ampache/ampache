@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\License;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
@@ -35,6 +36,9 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Shows the license edit-page
+ */
 final class ShowEditAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_edit';
@@ -43,12 +47,16 @@ final class ShowEditAction implements ApplicationActionInterface
 
     private LicenseRepositoryInterface $licenseRepository;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         UiInterface $ui,
-        LicenseRepositoryInterface $licenseRepository
+        LicenseRepositoryInterface $licenseRepository,
+        ConfigContainerInterface $configContainer
     ) {
         $this->ui                = $ui;
         $this->licenseRepository = $licenseRepository;
+        $this->configContainer   = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,11 +74,15 @@ final class ShowEditAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
+        $this->ui->showBoxTop(T_('Edit license'));
         $this->ui->show(
             'show_edit_license.inc.php',
-            ['license' => $license]
+            [
+                'license' => $license,
+                'webPath' => $this->configContainer->getWebPath(),
+            ]
         );
-
+        $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
