@@ -77,7 +77,11 @@ final class SongTagWriter implements SongTagWriterInterface
             $ndata = array();
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) === true) {
                 foreach ($song->getMetadata() as $metadata) {
-                    $ndata[$metadata->getField()->getName()] = $metadata->getData();
+                    $field = $metadata->getField();
+
+                    if ($field !== null) {
+                        $ndata[$field->getName()] = $metadata->getData();
+                    }
                 }
             }
             $vainfo = $this->utilityFactory->createVaInfo(

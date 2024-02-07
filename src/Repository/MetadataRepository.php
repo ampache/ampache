@@ -26,6 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\Metadata;
+use Ampache\Repository\Model\MetadataField;
+use Generator;
+use PDO;
 
 /**
  * Manages song metadata related database access
@@ -36,10 +40,14 @@ final class MetadataRepository implements MetadataRepositoryInterface
 {
     private DatabaseConnectionInterface $connection;
 
+    private MetadataFieldRepositoryInterface $metadataFieldRepository;
+
     public function __construct(
-        DatabaseConnectionInterface $connection
+        DatabaseConnectionInterface $connection,
+        MetadataFieldRepositoryInterface $metadataFieldRepository
     ) {
-        $this->connection = $connection;
+        $this->connection              = $connection;
+        $this->metadataFieldRepository = $metadataFieldRepository;
     }
 
     /**
@@ -63,5 +71,141 @@ final class MetadataRepository implements MetadataRepositoryInterface
                 ucfirst($objectType),
             ],
         );
+    }
+
+    /**
+     * Finds a single `metadata` item by its id
+     */
+    public function findById(int $metadataId): ?Metadata
+    {
+        $result = $this->connection->query(
+            'SELECT * FROM `metadata` WHERE `id` = ?',
+            [
+                $metadataId
+            ],
+        );
+
+        $result->setFetchMode(PDO::FETCH_CLASS, Metadata::class, [$this, $this->metadataFieldRepository]);
+
+        $metadata = $result->fetch();
+
+        if ($metadata === false) {
+            return null;
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * Finds a single `metadata`-item by its object-id, field and type
+     */
+    public function findByObjectIdAndFieldAndType(
+        int $objectId,
+        MetadataField $field,
+        string $objectType
+    ): ?Metadata {
+        $result = $this->connection->query(
+            'SELECT * FROM `metadata` WHERE `object_id` = ? AND `type` = ? AND `field` = ? LIMIT 1',
+            [
+                $objectId,
+                ucfirst($objectType),
+                $field->getId()
+            ],
+        );
+
+        $result->setFetchMode(PDO::FETCH_CLASS, Metadata::class, [$this, $this->metadataFieldRepository]);
+
+        $metadata = $result->fetch();
+
+        if ($metadata === false) {
+            return null;
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * Returns all `metadata`-items for a certain object-type combo
+     *
+     * @return Generator<Metadata>
+     */
+    public function findByObjectIdAndType(
+        int $objectId,
+        string $objectType
+    ): Generator {
+        $result = $this->connection->query(
+            'SELECT * FROM `metadata` WHERE `object_id` = ? AND `type` = ?',
+            [
+                $objectId,
+                ucfirst($objectType),
+            ],
+        );
+
+        $result->setFetchMode(PDO::FETCH_CLASS, Metadata::class, [$this, $this->metadataFieldRepository]);
+
+        while ($metadata = $result->fetch()) {
+            yield $metadata;
+        }
+    }
+
+    /**
+     * Deletes the `metadata` item
+     */
+    public function remove(Metadata $metadata): void
+    {
+        $this->connection->query(
+            'DELETE FROM `metadata` where `id` = ?',
+            [
+                $metadata->getId()
+            ]
+        );
+    }
+
+    /**
+     * Creates a new `metadata` item
+     */
+    public function prototype(): Metadata
+    {
+        return new Metadata(
+            $this,
+            $this->metadataFieldRepository
+        );
+    }
+
+    /**
+     * Saves the item
+     *
+     * @return null|int The id of the item if the item was new
+     */
+    public function persist(Metadata $metadata): ?int
+    {
+        $result = null;
+
+        if ($metadata->isNew()) {
+            $this->connection->query(
+                'INSERT INTO `metadata` (`object_id`, `field`, `data`, `type`) VALUES (?, ?, ?, ?)',
+                [
+                    $metadata->getObjectId(),
+                    $metadata->getFieldId(),
+                    $metadata->getData(),
+                    $metadata->getType()
+                ]
+            );
+
+            $result = $this->connection->getLastInsertedId();
+        } else {
+            $this->connection->query(
+                'UPDATE `metadata` SET `object_id` = ?, `field` = ?, `data` = ?, `type` = ? WHERE `id` = ?',
+                [
+                    $metadata->getObjectId(),
+                    $metadata->getFieldId(),
+                    $metadata->getData(),
+                    $metadata->getType(),
+                    $metadata->getId()
+                ]
+            );
+        }
+
+        return $result;
     }
 }

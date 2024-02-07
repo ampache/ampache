@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\MetadataField;
 use Generator;
 use PDO;
 
@@ -61,10 +62,97 @@ final class MetadataFieldRepository implements MetadataFieldRepositoryInterface
      */
     public function getPropertyList(): Generator
     {
-        $result = $this->connection->query('SELECT `id`, `name` from metadata_field');
+        $result = $this->connection->query('SELECT `id`, `name` FROM `metadata_field`');
 
         while ($data = $result->fetch(PDO::FETCH_ASSOC)) {
             yield (int) $data['id'] => $data['name'];
         }
+    }
+
+    /**
+     * Finds a single `metadata-field` item by its id
+     */
+    public function findById(int $fieldId): ?MetadataField
+    {
+        $result = $this->connection->query(
+            'SELECT * FROM `metadata_field` WHERE `id` = ?',
+            [
+                $fieldId
+            ],
+        );
+
+        $result->setFetchMode(PDO::FETCH_CLASS, MetadataField::class, [$this]);
+
+        $metadataField = $result->fetch();
+
+        if ($metadataField === false) {
+            return null;
+        }
+
+        return $metadataField;
+    }
+
+    /**
+     * Finds a single `metadata-field` item by its name
+     */
+    public function findByName(string $name): ?MetadataField
+    {
+        $result = $this->connection->query(
+            'SELECT * FROM `metadata_field` WHERE `name` = ? LIMIT 1',
+            [
+                $name
+            ],
+        );
+
+        $result->setFetchMode(PDO::FETCH_CLASS, MetadataField::class, [$this]);
+
+        $metadataField = $result->fetch();
+
+        if ($metadataField === false) {
+            return null;
+        }
+
+        return $metadataField;
+    }
+
+    /**
+     * Saves the item
+     *
+     * @return null|int The id of the item if the item was new
+     */
+    public function persist(MetadataField $field): ?int
+    {
+        $result = null;
+
+        if ($field->isNew()) {
+            $this->connection->query(
+                'INSERT INTO `metadata_field` (`name`, `public`) VALUES (?, ?)',
+                [
+                    $field->getName(),
+                    $field->isPublic()
+                ]
+            );
+
+            $result = $this->connection->getLastInsertedId();
+        } else {
+            $this->connection->query(
+                'UPDATE `metadata_field` SET `name` = ?, `public` = ? WHERE `id` = ?',
+                [
+                    $field->getName(),
+                    $field->isPublic(),
+                    $field->getId()
+                ]
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * Creates a new `metadata-field` item
+     */
+    public function prototype(): MetadataField
+    {
+        return new MetadataField($this);
     }
 }

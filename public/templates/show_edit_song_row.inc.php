@@ -24,14 +24,19 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Metadata\Model\Metadata;
+use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Api\Ajax;
 
 /** @var Song $libitem */
+
+global $dic;
+$metadataManager = $dic->get(MetadataManagerInterface::class);
+
 ?>
 <div>
     <form method="post" id="edit_song_<?php echo $libitem->id; ?>" class="edit_dialog_content">
@@ -116,18 +121,20 @@ use Ampache\Module\Api\Ajax;
                     </tr>
                     <?php } ?>
         </table>
-        <?php if (Song::isCustomMetadataEnabled()) { ?>
+        <?php if ($metadataManager->isCustomMetadataEnabled()) { ?>
             <button class="metadataAccordionButton"><?php echo T_('More Metadata'); ?></button>
                     <div class="metadataAccordion">
                     <table class="tabledata">
                         <?php
-                        $dismetas = $libitem->getDisabledMetadataFields();
-            foreach ($libitem->getMetadata() as $metadata) {
+                        $dismetas = $metadataManager->getDisabledMetadataFields();
+            foreach ($metadataManager->getMetadata($libitem) as $metadata) {
                 /** @var Metadata $metadata */
                 $field = $metadata->getField();
-                if ($field->isPublic() && !in_array($field->getName(), $dismetas)) {
+                if (
+                    $field !== null && $field->isPublic() && !in_array($field->getName(), $dismetas)
+                ) {
                     echo '<tr>' .
-                    '<td class="edit_dialog_content_header">' . $field->getFormattedName() . '</td>' .
+                    '<td class="edit_dialog_content_header">' . ucwords(str_replace("_", " ", $field->getName())) . '</td>' .
                     '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>' .
                     '</tr>';
                 }

@@ -25,35 +25,37 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
+use Ampache\Module\Metadata\MetadataEnabledInterface;
+use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
-use Ampache\Repository\Model\Metadata\Metadata;
-use Ampache\Module\Authorization\Access;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use PDOStatement;
+use Traversable;
 
 class Song extends database_object implements
     Media,
     library_item,
     GarbageCollectibleInterface,
-    CatalogItemInterface
+    CatalogItemInterface,
+    MetadataEnabledInterface
 {
-    use Metadata;
-
     protected const DB_TABLENAME = 'song';
 
     /* Variables from DB */
@@ -184,20 +186,6 @@ class Song extends database_object implements
     public $_fake = false; // If this is a 'construct_from_array' object
 
     /**
-     * Aliases used in insert function
-     */
-    public static $aliases = array(
-        'mb_trackid',
-        'mbid',
-        'mb_albumid',
-        'mb_albumid_group',
-        'mb_artistid',
-        'mb_albumartistid',
-        'genre',
-        'publisher'
-    );
-
-    /**
      * Constructor
      *
      * Song class, for modifying a song.
@@ -207,10 +195,6 @@ class Song extends database_object implements
     {
         if (!$song_id) {
             return;
-        }
-
-        if (self::isCustomMetadataEnabled()) {
-            $this->initializeMetadata();
         }
 
         $info = $this->has_info($song_id);
@@ -1185,9 +1169,7 @@ class Song extends database_object implements
                     $this->tags = Tag::get_top_tags('song', $this->id);
                     break;
                 case 'metadata':
-                    if (self::isCustomMetadataEnabled()) {
-                        $this->updateMetadata($value);
-                    }
+                    $this->updateMetadata($value);
                     break;
             } // end whitelist
         } // end foreach
@@ -2157,15 +2139,19 @@ class Song extends database_object implements
 
     /**
      * Update Metadata from array
-     * @param array $meta_value
+     * @param array<string, scalar> $meta_value
      */
-    public function updateMetadata($meta_value)
+    public function updateMetadata(array $meta_value): void
     {
-        foreach ($meta_value as $metadataId => $value) {
-            $metadata = $this->metadataRepository->findById($metadataId);
-            if (!$metadata || $value != $metadata->getData()) {
-                $metadata->setData($value);
-                $this->metadataRepository->update($metadata);
+        if ($this->getMetadataManager()->isCustomMetadataEnabled()) {
+            $metadataRepository = $this->getMetadataRepository();
+
+            foreach ($meta_value as $metadataId => $value) {
+                $metadata = $metadataRepository->findById((int) $metadataId);
+                if ($metadata && $value !== $metadata->getData()) {
+                    $metadata->setData((string) $value);
+                    $metadata->save();
+                }
             }
         }
     }
@@ -2289,6 +2275,16 @@ class Song extends database_object implements
     }
 
     /**
+     * Returns the available metadata for this object
+     *
+     * @return Traversable<Metadata>
+     */
+    public function getMetadata(): Traversable
+    {
+        return $this->getMetadataManager()->getMetadata($this);
+    }
+
+    /**
      * remove
      * Delete the object from disk and/or database where applicable.
      */
@@ -2308,6 +2304,31 @@ class Song extends database_object implements
         }
 
         return $this->licenseObj;
+    }
+
+    /**
+     * Returns the metadata object-type
+     */
+    public function getMetadataItemType(): string
+    {
+        return 'song';
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getIgnoredMetadataKeys(): array
+    {
+        return [
+            'mb_trackid',
+            'mbid',
+            'mb_albumid',
+            'mb_albumid_group',
+            'mb_artistid',
+            'mb_albumartistid',
+            'genre',
+            'publisher'
+        ];
     }
 
     /**
@@ -2388,5 +2409,25 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(LicenseRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getMetadataManager(): MetadataManagerInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataManagerInterface::class);
     }
 }

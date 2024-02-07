@@ -25,6 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Metadata;
+use Ampache\Repository\Model\MetadataField;
+use Traversable;
+
 interface MetadataRepositoryInterface
 {
     /**
@@ -36,4 +40,42 @@ interface MetadataRepositoryInterface
      * Migrate an object associate stats to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+
+    /**
+     * Finds a single `metadata` item by its id
+     */
+    public function findById(int $metadataId): ?Metadata;
+
+    public function findByObjectIdAndFieldAndType(
+        int $objectId,
+        MetadataField $field,
+        string $objectType
+    ): ?Metadata;
+
+    /**
+     * Returns all `metadata`-items for a certain object-type combo
+     *
+     * @return Traversable<Metadata>
+     */
+    public function findByObjectIdAndType(
+        int $objectId,
+        string $objectType
+    ): Traversable;
+
+    /**
+     * Deletes the `metadata` item
+     */
+    public function remove(Metadata $metadata): void;
+
+    /**
+     * Creates a new `metadata` item
+     */
+    public function prototype(): Metadata;
+
+    /**
+     * Saves the item
+     *
+     * @return null|int The id of the item if the item was new
+     */
+    public function persist(Metadata $metadata): ?int;
 }
