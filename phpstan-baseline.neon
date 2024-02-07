@@ -14576,12 +14576,22 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/User.php
+
+		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$catalogs type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$prefs type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/User.php
+
+		-
+			message: "#^Unable to resolve the template type TType in call to function scrub_in$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
