@@ -36,7 +36,7 @@ use Ampache\Module\Podcast\Exception\InvalidCatalogException;
 use Ampache\Module\Podcast\Exception\InvalidFeedUrlException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
@@ -52,14 +52,18 @@ final class CreateAction implements ApplicationActionInterface
 
     private PodcastCreatorInterface $podcastCreator;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        PodcastCreatorInterface $podcastCreator
+        PodcastCreatorInterface $podcastCreator,
+        RequestParserInterface $requestParser
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->podcastCreator  = $podcastCreator;
+        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,7 +75,7 @@ final class CreateAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !Core::form_verify('add_podcast')
+            !$this->requestParser->verifyForm('add_podcast')
         ) {
             throw new AccessDeniedException();
         }

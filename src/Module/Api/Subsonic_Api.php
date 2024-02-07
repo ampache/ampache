@@ -2468,7 +2468,12 @@ class Subsonic_Api
 
         $privateMessageRepository->cleanChatMessages();
 
-        $messages = $privateMessageRepository->getChatMessages($since);
+        if (!AmpConfig::get('sociable')) {
+            $messages = [];
+        } else {
+            $messages = $privateMessageRepository->getChatMessages($since);
+        }
+
         $response = Subsonic_Xml_Data::addSubsonicResponse('getchatmessages');
         Subsonic_Xml_Data::addChatMessages($response, $messages);
         self::_apiOutput($input, $response);
@@ -2488,11 +2493,13 @@ class Subsonic_Api
             return;
         }
 
-        if (self::getPrivateMessageRepository()->sendChatMessage(trim($message), $user->id) !== null) {
-            $response = Subsonic_Xml_Data::addSubsonicResponse('addchatmessage');
-        } else {
+        if (!AmpConfig::get('sociable')) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'addChatMessage');
+        } else {
+            self::getPrivateMessageRepository()->create(null, $user, '', trim($message));
+            $response = Subsonic_Xml_Data::addSubsonicResponse('addchatmessage');
         }
+
         self::_apiOutput($input, $response);
     }
 

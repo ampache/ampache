@@ -25,11 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Beets;
 
-use Ampache\Repository\MetadataFieldRepositoryInterface;
-use Ampache\Repository\MetadataRepositoryInterface;
+use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Module\System\AmpError;
-use Ampache\Repository\Model\library_item;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -178,46 +176,16 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'] ?? null, $song['mb_releasegroupid'] ?? null, $song['album_artist'] ?? null, $song['release_type'] ?? null, $song['release_status'] ?? null, $song['original_year'] ?? null, $song['barcode'] ?? null, $song['catalog_number'] ?? null, $song['version'] ?? null);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
-            if (Song::isCustomMetadataEnabled() && $songId !== false) {
+            if (
+                $songId !== false &&
+                $this->getMetadataManager()->isCustomMetadataEnabled()
+            ) {
                 $songObj = new Song($songId);
                 $this->addMetadata($songObj, $song);
-                $this->updateUi('add', ++$this->addedSongs, $song);
             }
+
+            $this->updateUi('add', ++$this->addedSongs, $song);
         }
-    }
-
-    /**
-     * @param library_item $libraryItem
-     * @param $metadata
-     */
-    public function addMetadata(library_item $libraryItem, $metadata): void
-    {
-        $tags = $this->getCleanMetadata($libraryItem, $metadata);
-
-        foreach ($tags as $tag => $value) {
-            $field = $libraryItem->getField($tag);
-            $libraryItem->addMetadata($field, $value);
-        }
-    }
-
-    /**
-     * Get rid of all tags found in the libraryItem
-     * @param library_item $libraryItem
-     * @param array $metadata
-     * @return array
-     */
-    protected function getCleanMetadata(library_item $libraryItem, $metadata): array
-    {
-        $tags = array_diff($metadata, get_object_vars($libraryItem));
-        $keys = array_merge(
-            $libraryItem::$aliases ?? array(),
-            array_keys(get_object_vars($libraryItem)),
-        );
-        foreach ($keys as $key) {
-            unset($tags[$key]);
-        }
-
-        return $tags;
     }
 
     /**
@@ -262,18 +230,17 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Verify and update a song
-     * @param array $beetsSong
+     * @param array<string, scalar> $beetsSong
      */
-    public function verifySong($beetsSong): void
+    public function verifySong(array $beetsSong): void
     {
-        $song                  = new Song($this->getIdFromPath($beetsSong['file']));
+        $song                  = new Song($this->getIdFromPath((string) $beetsSong['file']));
         $beetsSong['album_id'] = $song->album;
 
         if ($song->isNew() === false) {
             $song->update($beetsSong);
-            if (Song::isCustomMetadataEnabled()) {
-                $tags = $this->getCleanMetadata($song, $beetsSong);
-                $this->updateMetadata($song, $tags);
+            if ($this->getMetadataManager()->isCustomMetadataEnabled()) {
+                $this->updateMetadata($song, $beetsSong);
             }
             $this->updateUi('verify', ++$this->verifiedSongs, $beetsSong);
         }
@@ -295,9 +262,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($count > 0) {
             $this->deleteSongs($this->songs);
         }
-        if (Song::isCustomMetadataEnabled()) {
-            $this->getMetadataRepository()->collectGarbage();
-            $this->getMetadataFieldRepository()->collectGarbage();
+
+        $metadataManager = $this->getMetadataManager();
+
+        if ($metadataManager->isCustomMetadataEnabled()) {
+            $metadataManager->collectGarbage();
+            ;
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
@@ -447,34 +417,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * @param $song
-     * @param $tags
+     * @deprecated inject dependency
      */
-    public function updateMetadata($song, $tags): void
-    {
-        foreach ($tags as $tag => $value) {
-            $field = $song->getField($tag);
-            $song->updateOrInsertMetadata($field, $value);
-        }
-    }
-
-    /**
-     * @deprecated  inject dependency
-     */
-    private function getMetadataRepository(): MetadataRepositoryInterface
+    private function getMetadataManager(): MetadataManagerInterface
     {
         global $dic;
 
-        return $dic->get(MetadataRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated  inject dependency
-     */
-    private function getMetadataFieldRepository(): MetadataFieldRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(MetadataFieldRepositoryInterface::class);
+        return $dic->get(MetadataManagerInterface::class);
     }
 }

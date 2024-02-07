@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,20 +20,39 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Repository\Model\Metadata\Repository;
+namespace Ampache\Module\Metadata;
 
-use Ampache\Repository\MetadataRepository;
-use Ampache\Repository\Repository;
+use Ampache\Repository\Model\Metadata;
+use Traversable;
 
 /**
- * @deprecated replaced
- *
- * @see MetadataRepository
+ * Defines a set of methods item must provide to support metadata
  */
-class Metadata extends Repository
+interface MetadataEnabledInterface
 {
-    protected $modelClassName = \Ampache\Repository\Model\Metadata\Model\Metadata::class;
+    /**
+     * Returns the metadata object-type
+     */
+    public function getMetadataItemType(): string;
+
+    /**
+     * Returns the linked items id
+     */
+    public function getId(): int;
+
+    /**
+     * Returns a list of metadata-keys to ignore
+     *
+     * @return list<string>
+     */
+    public function getIgnoredMetadataKeys(): array;
+
+    /**
+     * Returns the available metadata for this object
+     *
+     * @return Traversable<Metadata>
+     */
+    public function getMetadata(): Traversable;
 }

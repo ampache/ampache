@@ -27,13 +27,13 @@ namespace Ampache\Module\Application\Radio;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,12 +46,16 @@ final class CreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        RequestParserInterface $requestParser
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -60,7 +64,7 @@ final class CreateAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RADIO) === false ||
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !Core::form_verify('add_radio')
+            !$this->requestParser->verifyForm('add_radio')
         ) {
             throw new AccessDeniedException();
         }

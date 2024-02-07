@@ -39,6 +39,8 @@ use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\CatalogLoader;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
+use Ampache\Module\Metadata\MetadataEnabledInterface;
+use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
@@ -2779,23 +2781,31 @@ abstract class Catalog extends database_object
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
 
-        if (AmpConfig::get('enable_custom_metadata')) {
-            $ctags = self::get_clean_metadata($song, $results);
+        $metadataManager = self::getMetadataManager();
+
+        if ($metadataManager->isCustomMetadataEnabled()) {
+            $ctags = self::filterMetadata($song, $results);
             //debug_event(__CLASS__, "get_clean_metadata " . print_r($ctags, true), 4);
-            if (method_exists($song, 'updateOrInsertMetadata')) {
-                $ctags = array_diff_key($ctags, array_flip($song->getDisabledMetadataFields()));
-                foreach ($ctags as $tag => $value) {
-                    $field = $song->getField($tag);
-                    $song->updateOrInsertMetadata($field, $value);
-                }
+            foreach ($ctags as $tag => $value) {
+                $metadataManager->updateOrAddMetadata($song, $tag, (string) $value);
             }
-            if (method_exists($song, 'deleteMetadata')) {
-                foreach ($song->getMetadata() as $metadata) {
-                    $metaName = $metadata->getField()->getName();
-                    if (!array_key_exists($metaName, $ctags)) {
-                        debug_event(__CLASS__, "delete metadata field " . $metaName, 4);
-                        $song->deleteMetadata($metadata);
-                    }
+
+            /** @var Metadata $metadata */
+            foreach ($metadataManager->getMetadata($song) as $metadata) {
+                $field = $metadata->getField();
+
+                if ($field === null) {
+                    debug_event(__CLASS__, "delete metadata with unknown field ", 4);
+
+                    $metadataManager->deleteMetadata($metadata);
+                    continue;
+                }
+
+                $metaName = $field->getName();
+
+                if (!array_key_exists($metaName, $ctags)) {
+                    debug_event(__CLASS__, "delete metadata field " . $metaName, 4);
+                    $metadataManager->deleteMetadata($metadata);
                 }
             }
         }
@@ -2966,14 +2976,15 @@ abstract class Catalog extends database_object
 
     /**
      * Get rid of all tags found in the libraryItem
-     * @param library_item $libraryItem
-     * @param array $metadata
-     * @return array
+     * @param array<string, scalar> $metadata
+     * @return array<string, scalar>
      */
-    private static function get_clean_metadata(library_item $libraryItem, $metadata): array
+    private static function filterMetadata(MetadataEnabledInterface $libraryItem, array $metadata): array
     {
+        $metadataManager = self::getMetadataManager();
+
         // these fields seem to be ignored but should be removed
-        $databaseFields = array(
+        $databaseFields = [
             'artists' => null,
             'mb_albumartistid_array' => null,
             'mb_artistid_array' => null,
@@ -2986,9 +2997,18 @@ abstract class Catalog extends database_object
             'volume level (replaygain)' => null,
             'peak level (r128)' => null,
             'peak level (sample)' => null
-        );
-        $tags = array_diff_key($metadata, get_object_vars($libraryItem), array_flip($libraryItem::$aliases ?? array()), $databaseFields);
+        ];
 
+        // Drops ignored keys from the metadata
+        $tags = array_diff_key(
+            $metadata,
+            get_object_vars($libraryItem),
+            array_flip($libraryItem->getIgnoredMetadataKeys()),
+            $databaseFields,
+            array_flip($metadataManager->getDisabledMetadataFields())
+        );
+
+        // filters empty metadata values
         return array_filter($tags);
     }
 
@@ -3175,17 +3195,30 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
-     * @param library_item $libraryItem
-     * @param array $metadata
+     * @param array<string, scalar> $metadata
      */
-    public static function add_metadata(library_item $libraryItem, $metadata): void
+    public function addMetadata(MetadataEnabledInterface $libraryItem, array $metadata): void
     {
-        $tags = self::get_clean_metadata($libraryItem, $metadata);
+        $metadataManager = self::getMetadataManager();
+
+        $tags = self::filterMetadata($libraryItem, $metadata);
 
         foreach ($tags as $tag => $value) {
-            $field = $libraryItem->getField($tag);
-            $libraryItem->addMetadata($field, $value);
+            $metadataManager->addMetadata($libraryItem, $tag, (string) $value);
+        }
+    }
+
+    /**
+     * @param array<string, scalar> $tags
+     */
+    protected function updateMetadata(MetadataEnabledInterface $item, array $tags): void
+    {
+        $metadataManager = self::getMetadataManager();
+
+        $tags = self::filterMetadata($item, $tags);
+
+        foreach ($tags as $tag => $value) {
+            $metadataManager->updateOrAddMetadata($item, $tag, (string) $value);
         }
     }
 
@@ -4286,7 +4319,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @deprecated  inject dependency
+     * @deprecated inject dependency
      */
     private static function getMetadataRepository(): MetadataRepositoryInterface
     {
@@ -4303,5 +4336,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(ShareRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getMetadataManager(): MetadataManagerInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataManagerInterface::class);
     }
 }

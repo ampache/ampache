@@ -70,7 +70,7 @@ final class PodcastEpisodes4Method
             return false;
         }
 
-        $results = self::getPodcastRepository()->getEpisodes($podcast);
+        $results = $podcast->getEpisodeIds();
 
         ob_end_clean();
         switch ($input['api_format']) {

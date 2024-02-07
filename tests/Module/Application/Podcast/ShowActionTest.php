@@ -134,9 +134,8 @@ class ShowActionTest extends TestCase
             ->with(0)
             ->willReturn($podcast);
 
-        $this->podcastRepository->expects(static::once())
-            ->method('getEpisodes')
-            ->with($podcast)
+        $podcast->expects(static::once())
+            ->method('getEpisodeIds')
             ->willReturn($episodeList);
 
         $this->ui->expects(static::once())

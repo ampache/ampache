@@ -25,10 +25,22 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
+use Psr\Log\LoggerInterface;
 
+/**
+ * Provides utility methods related to frontend request parsing
+ */
 final class RequestParser implements RequestParserInterface
 {
+    private LoggerInterface $logger;
+
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     /**
      * Return a $_REQUEST variable instead of calling directly
      */
@@ -64,11 +76,53 @@ final class RequestParser implements RequestParserInterface
      * the core-class to make it testable.
      *
      * @return bool True, if the form-submit is considered valid
-     *
-     * @see Core::form_verify()
      */
     public function verifyForm(string $formName): bool
     {
-        return Core::form_verify($formName);
+        $sid = $_POST['form_validation'] ?? '';
+
+        if (!isset($_SESSION['forms'][$sid])) {
+            $this->logger->error(
+                sprintf('Form %s not found in session, rejecting request', $formName),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            return false;
+        }
+
+        /**
+         * @var array{
+         *  name: string,
+         *  expire: int
+         * } $form
+         */
+        $form = $_SESSION['forms'][$sid];
+        unset($_SESSION['forms'][$sid]);
+
+        if ($form['name'] === $formName) {
+            $this->logger->debug(
+                sprintf('Verified SID %s for form %s', $sid, $formName),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            if ($form['expire'] < time()) {
+                $this->logger->error(
+                    sprintf('Form %s is expired, rejecting request', $formName),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        // OMG HAX0RZ
+        $this->logger->error(
+            sprintf('form %s failed consistency check, rejecting request', $formName),
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
+
+        return false;
     }
 }

@@ -622,10 +622,12 @@ class Playlist extends playlist_object
      */
     public function regenerate_track_numbers(): void
     {
-        $items = $this->get_items();
-        $index = 1;
-        foreach ($items as $item) {
-            $this->update_track_number($item['track_id'], $index);
+        $index  = 1;
+        $sql    = 'SELECT `id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? ORDER BY `track`, `id`;';
+        $tracks = Dba::read($sql, array($this->id));
+
+        while ($row = Dba::fetch_assoc($tracks)) {
+            $this->update_track_number($row['id'], $index);
             $index++;
         }
 

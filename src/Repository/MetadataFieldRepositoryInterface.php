@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\MetadataField;
 use Traversable;
 
 interface MetadataFieldRepositoryInterface
@@ -42,4 +43,26 @@ interface MetadataFieldRepositoryInterface
      * @return Traversable<int, string>
      */
     public function getPropertyList(): Traversable;
+
+    /**
+     * Finds a single `metadata-field` item by its id
+     */
+    public function findById(int $fieldId): ?MetadataField;
+
+    /**
+     * Finds a single `metadata-field` item by its name
+     */
+    public function findByName(string $name): ?MetadataField;
+
+    /**
+     * Saves the item
+     *
+     * @return null|int The id of the item if the item was new
+     */
+    public function persist(MetadataField $field): ?int;
+
+    /**
+     * Creates a new `metadata-field` item
+     */
+    public function prototype(): MetadataField;
 }

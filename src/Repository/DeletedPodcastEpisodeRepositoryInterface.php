@@ -20,11 +20,33 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Repository\Exception;
+namespace Ampache\Repository;
 
-final class ItemNotFoundException extends \Exception
+use Traversable;
+
+/**
+ * Manages database access for deleted podcast episodes
+ *
+ * Tables: `deleted_podcast_episodes`
+ */
+interface DeletedPodcastEpisodeRepositoryInterface
 {
+    /**
+     * Returns all deleted podcast episodes
+     *
+     * @return Traversable<array{
+     *  id: int,
+     *  addition_time: int,
+     *  delete_time: int,
+     *  title: string,
+     *  file: string,
+     *  catalog: int,
+     *  total_count: int,
+     *  total_skip: int,
+     *  podcast: int
+     * }>
+     */
+    public function findAll(): Traversable;
 }
