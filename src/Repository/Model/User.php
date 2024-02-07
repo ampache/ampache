@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -510,6 +511,64 @@ class User extends database_object
         }
 
         return $total;
+    }
+
+    /**
+     * update
+     * This function is an all encompassing update function that
+     * calls the mini ones does all the error checking and all that
+     * good stuff
+     * @param array $data
+     * @return int|false
+     */
+    public function update(array $data)
+    {
+        if (empty($data['username'])) {
+            AmpError::add('username', T_('Username is required'));
+        }
+
+        if ($data['password1'] != $data['password2'] && !empty($data['password1'])) {
+            AmpError::add('password', T_("Passwords do not match"));
+        }
+
+        if (AmpError::occurred()) {
+            return false;
+        }
+
+        if (!isset($data['fullname_public'])) {
+            $data['fullname_public'] = false;
+        }
+
+        foreach ($data as $name => $value) {
+            if ($name == 'password1') {
+                $name = 'password';
+            } else {
+                $value = scrub_in($value);
+            }
+
+            switch ($name) {
+                case 'password':
+                case 'access':
+                case 'email':
+                case 'username':
+                case 'fullname':
+                case 'fullname_public':
+                case 'website':
+                case 'state':
+                case 'city':
+                case 'catalog_filter_group':
+                    if ($this->$name != $value) {
+                        $function = 'update_' . $name;
+                        $this->$function($value);
+                    }
+                    break;
+                case 'clear_stats':
+                    Stats::clear($this->id);
+                    break;
+            }
+        }
+
+        return $this->id;
     }
 
     /**
