@@ -661,7 +661,7 @@ class Json4_Data
             $podcast_public_url  = $podcast->get_link();
             $podcast_episodes    = array();
             if ($episodes) {
-                $results          = $podcastRepository->getEpisodes($podcast);
+                $results          = $podcast->getEpisodeIds();
                 $podcast_episodes = self::podcast_episodes($results, $user, false);
             }
             // Build this element
