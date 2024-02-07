@@ -399,7 +399,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             try {
                 Wanted::delete_wanted_release(
                     (string) $mbid,
-                    (empty($user) || $user->has_access(AccessLevelEnum::LEVEL_MANAGER)) ? null : $user
+                    (empty($user) || !$user instanceof User || $user->has_access(AccessLevelEnum::LEVEL_MANAGER)) ? null : $user
                 );
             } catch (Exception $error) {
                 debug_event(self::class, 'Cannot process wanted releases auto-removal check: ' . $error->getMessage(), 2);

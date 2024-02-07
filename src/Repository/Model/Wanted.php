@@ -350,12 +350,17 @@ class Wanted extends database_object
                     );
                 }
             }
+            /** @var User|null $user */
+            $user = (!empty(Core::get_global('user'))) ? Core::get_global('user') : null;
             if (
-                Core::get_global('user')->has_access(AccessLevelEnum::LEVEL_MANAGER) ||
+                $user instanceof User &&
                 (
-                    $this->mbid !== null &&
-                    static::getWantedRepository()->find($this->mbid, Core::get_global('user')) &&
-                    $this->accepted != '1'
+                    $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ||
+                    (
+                        $this->mbid !== null &&
+                        static::getWantedRepository()->find($this->mbid, $user) &&
+                        $this->accepted != '1'
+                    )
                 )
             ) {
                 echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);

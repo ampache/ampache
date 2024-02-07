@@ -35,6 +35,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
@@ -943,8 +944,10 @@ class Upnp_Api
             case 'live_streams':
                 // Get radios list
                 if (count($pathreq) == 1) {
+                    /** @var User|null $user */
+                    $user   = (!empty(Core::get_global('user'))) ? Core::get_global('user') : null;
                     $radios = static::getLiveStreamRepository()->findAll(
-                        (!empty(Core::get_global('user'))) ? Core::get_global('user') : null
+                        $user
                     );
 
                     [$maxCount, $radios] = self::_slice($radios, $start, $count);

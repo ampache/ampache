@@ -40,6 +40,7 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -281,7 +282,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $name = $this->requestParser->getFromRequest('name');
                     $year = $this->requestParser->getFromRequest('year');
 
-                    if (!$this->wantedRepository->find($mbid, $user)) {
+                    if ($user instanceof User && !$this->wantedRepository->find($mbid, $user)) {
                         Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
                         ob_start();
                         $walbum = new Wanted(Wanted::get_wanted($mbid));
@@ -299,7 +300,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
                     $this->wantedRepository->deleteByMusicbrainzId(
                         $mbid,
-                        $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ? null : $user
+                        ($user instanceof User && $user->has_access(AccessLevelEnum::LEVEL_MANAGER)) ? null : $user
                     );
                     ob_start();
                     $walbum->accepted = false;
