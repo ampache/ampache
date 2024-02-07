@@ -25,48 +25,80 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\database_object;
-use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\User;
 
+/**
+ * Manages database access related to Wanted-items/recommendations
+ *
+ * Tables: `wanted`
+ *
+ * @phpstan-type DatabaseRow array{
+ *  id: int,
+ *  user: int,
+ *  artist: null|int,
+ *  artist_mbid: null|string,
+ *  mbid: null|string,
+ *  name: null|string,
+ *  year: null|int,
+ *  date: int,
+ *  accepted: int
+ * }
+ */
 final class WantedRepository implements WantedRepositoryInterface
 {
+    private DatabaseConnectionInterface $connection;
+
+    public function __construct(
+        DatabaseConnectionInterface $connection
+    ) {
+        $this->connection = $connection;
+    }
+
     /**
      * Get wanted list.
      *
-     * @return int[]
+     * @return list<int>
      */
-    public function getAll(?int $userId): array
+    public function findAll(?User $user = null): array
     {
-        $sql = "SELECT `id` FROM `wanted` ";
+        $sql       = 'SELECT `id` FROM `wanted`';
+        $params    = [];
+        $wantedIds = [];
 
-        if ($userId !== null) {
-            $sql .= "WHERE `user` = '" . (string) $userId . "'";
-        }
-        $db_results = Dba::read($sql);
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        if ($user !== null) {
+            $sql .= ' WHERE `user` = ?';
+            $params[] = $user->getId();
         }
 
-        return $results;
+        $result = $this->connection->query(
+            $sql,
+            $params
+        );
+
+        while ($rowId = $result->fetchColumn()) {
+            $wantedIds[] = (int) $rowId;
+        }
+
+        return $wantedIds;
     }
 
     /**
      * Check if a release mbid is already marked as wanted
      */
-    public function find(string $musicbrainzId, int $userId): ?int
+    public function find(string $musicbrainzId, User $user): ?int
     {
-        $db_results = Dba::read(
-            'SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ?',
-            [$musicbrainzId, $userId]
+        $wantedId = $this->connection->fetchOne(
+            'SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ? LIMIT 1',
+            [$musicbrainzId, $user->getId()]
         );
 
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['id'];
+        if ($wantedId === false) {
+            return null;
         }
 
-        return null;
+        return (int) $wantedId;
     }
 
     /**
@@ -74,16 +106,20 @@ final class WantedRepository implements WantedRepositoryInterface
      */
     public function deleteByMusicbrainzId(
         string $musicbrainzId,
-        ?int $userId
+        ?User $user = null
     ): void {
-        $sql    = "DELETE FROM `wanted` WHERE `mbid` = ?";
+        $sql    = 'DELETE FROM `wanted` WHERE `mbid` = ?';
         $params = [$musicbrainzId];
-        if ($userId !== null) {
-            $sql .= " AND `user` = ?";
-            $params[] = $userId;
+
+        if ($user !== null) {
+            $sql .= ' AND `user` = ?';
+            $params[] = $user->getId();
         }
 
-        Dba::write($sql, $params);
+        $this->connection->query(
+            $sql,
+            $params
+        );
     }
 
     /**
@@ -91,42 +127,34 @@ final class WantedRepository implements WantedRepositoryInterface
      */
     public function getAcceptedCount(): int
     {
-        $db_results = Dba::read(
-            "SELECT COUNT(`id`) AS `wanted_cnt` FROM `wanted` WHERE `accepted` = 1;"
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(`id`) AS `wanted_cnt` FROM `wanted` WHERE `accepted` = 1'
         );
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['wanted_cnt'];
-        }
-
-        return 0;
     }
 
     /**
      * retrieves the info from the database and puts it in the cache
+     *
+     * @return null|DatabaseRow
      */
-    public function getById(int $wantedId): array
+    public function getById(int $wantedId): ?array
     {
-        // Make sure we've got a real id
-        if ($wantedId < 1) {
-            return [];
-        }
-
         if (database_object::is_cached('wanted', $wantedId)) {
-            return database_object::get_from_cache('wanted', $wantedId);
+            $row = database_object::get_from_cache('wanted', $wantedId);
+        } else {
+            $row = $this->connection->fetchRow(
+                'SELECT * FROM `wanted` WHERE `id` = ?',
+                [$wantedId]
+            );
+
+            if ($row === false) {
+                return null;
+            }
+
+            database_object::add_to_cache('wanted', $wantedId, $row);
         }
 
-        $params     = [$wantedId];
-        $sql        = "SELECT * FROM `wanted` WHERE `id` = ?";
-        $db_results = Dba::read($sql, $params);
-
-        if (!$db_results) {
-            return [];
-        }
-
-        $row = Dba::fetch_assoc($db_results);
-
-        database_object::add_to_cache('wanted', $wantedId, $row);
-
+        /** @var DatabaseRow $row */
         return $row;
     }
 }

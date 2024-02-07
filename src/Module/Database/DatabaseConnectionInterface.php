@@ -48,9 +48,22 @@ interface DatabaseConnectionInterface
      * Useful e.g. for counting-queries
      *
      * @param list<mixed> $params
-     * @return mixed
+     *
+     * @return mixed Will return `false` on empty row
      */
     public function fetchOne(
+        string $sql,
+        array $params = []
+    );
+
+    /**
+     * Fetches a single whole row and returns it as an associative array
+     *
+     * @param list<mixed> $params
+     *
+     * @return false|array<string, mixed> Will return `false` if row is empty
+     */
+    public function fetchRow(
         string $sql,
         array $params = []
     );

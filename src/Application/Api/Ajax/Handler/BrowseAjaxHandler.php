@@ -170,7 +170,10 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                             return;
                         }
                         $liveStreamId = (int) Core::get_request('id');
-                        $this->liveStreamRepository->delete($liveStreamId);
+                        $liveStream   = $this->liveStreamRepository->findById($liveStreamId);
+                        if ($liveStream !== null) {
+                            $this->liveStreamRepository->delete($liveStream);
+                        }
                         $key = 'live_stream_' . $liveStreamId;
                         break;
                     default:

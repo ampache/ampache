@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -88,6 +89,9 @@ class Wanted extends database_object
             return;
         }
         $info = static::getWantedRepository()->getById((int) $wanted_id);
+        if ($info === null) {
+            return;
+        }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -269,18 +273,18 @@ class Wanted extends database_object
      * @param string $mbid
      * @throws \MusicBrainz\Exception
      */
-    public static function delete_wanted_release($mbid): void
-    {
+    public static function delete_wanted_release(
+        string $mbid,
+        ?User $user = null
+    ): void {
         if (static::getWantedRepository()->getAcceptedCount() > 0) {
             $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
             $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
+
             if ($malbum !== null && $malbum->{'release-group'}) {
-                $userId = (empty(Core::get_global('user')) || Core::get_global('user')->has_access(75))
-                    ? null
-                    : Core::get_global('user')->id;
                 static::getWantedRepository()->deleteByMusicbrainzId(
                     print_r($malbum->{'release-group'}, true),
-                    $userId
+                    $user
                 );
             }
         }
@@ -346,18 +350,23 @@ class Wanted extends database_object
                     );
                 }
             }
+            /** @var User|null $user */
+            $user = (!empty(Core::get_global('user'))) ? Core::get_global('user') : null;
             if (
-                Core::get_global('user')->has_access(75) ||
+                $user instanceof User &&
                 (
-                    $this->mbid !== null &&
-                    static::getWantedRepository()->find($this->mbid, Core::get_global('user')->id) &&
-                    $this->accepted != '1'
+                    $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ||
+                    (
+                        $this->mbid !== null &&
+                        static::getWantedRepository()->find($this->mbid, $user) &&
+                        $this->accepted != '1'
+                    )
                 )
             ) {
                 echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
             }
         } else {
-            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&client=' . urlencode((string)$this->name) . '&year=' . (int) $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
+            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode((string)$this->name) . '&year=' . (int) $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
         }
     }
 

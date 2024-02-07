@@ -26,9 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -392,8 +394,13 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         Catalog::update_map($catalog_id, 'album', $album_id);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
+            $user = Core::get_global('user');
+
             try {
-                Wanted::delete_wanted_release((string)$mbid);
+                Wanted::delete_wanted_release(
+                    (string) $mbid,
+                    (empty($user) || !$user instanceof User || $user->has_access(AccessLevelEnum::LEVEL_MANAGER)) ? null : $user
+                );
             } catch (Exception $error) {
                 debug_event(self::class, 'Cannot process wanted releases auto-removal check: ' . $error->getMessage(), 2);
             }

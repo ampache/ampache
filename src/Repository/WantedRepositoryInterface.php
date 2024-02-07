@@ -23,26 +23,28 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\User;
+
 interface WantedRepositoryInterface
 {
     /**
      * Get wanted list.
      *
-     * @return int[]
+     * @return list<int>
      */
-    public function getAll(?int $userId): array;
+    public function findAll(?User $user = null): array;
 
     /**
      * Check if a release mbid is already marked as wanted
      */
-    public function find(string $musicbrainzId, int $userId): ?int;
+    public function find(string $musicbrainzId, User $user): ?int;
 
     /**
      * Delete wanted release.
      */
     public function deleteByMusicbrainzId(
         string $musicbrainzId,
-        ?int $userId
+        ?User $user = null
     ): void;
 
     /**
@@ -53,5 +55,5 @@ interface WantedRepositoryInterface
     /**
      * retrieves the info from the database and puts it in the cache
      */
-    public function getById(int $wantedId): array;
+    public function getById(int $wantedId): ?array;
 }
