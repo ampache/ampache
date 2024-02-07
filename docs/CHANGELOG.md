@@ -11,12 +11,14 @@
   * Update Last.FM plugin preferences that could be incorrect
   * Spell category and subcategory correctly
   * Add unique constraint `playlist_track_UN` on `playlist_data` table
-  
+
 ### Changed
 
 * Split database updates into small migration classes
 * Change usage of State in podcast_episode pages for Status
 * Song additional metadata classes have been updated
+* When searching art limit results per-plugin instead of total results
+* Extend valid Share objects
 
 ### Removed
 
@@ -33,6 +35,8 @@
 * Playlists were sorting by object type
 * User::get_user_data was not putting the default return in correctly
 * Unable to use `bin/cli export:playlist` undefined method
+* Playlist had some issues adding songs
+* Localplay and jukebox mode improvements (VLC and XBMC)
 * Static typing errors
   * Updating album data when original_year is missing
   * Template `show_recently_played` with a non-database song
@@ -57,6 +61,7 @@
 
 * API6
   * playlist_add_song is depreciated and will be removed in **API7** (Use playlist_add)
+  * share_create add more valid types ('playlist', 'podcast', 'podcast_episode', 'video')
 
 ### Fixed
 

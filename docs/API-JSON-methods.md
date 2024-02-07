@@ -2818,9 +2818,9 @@ This gets a user's public information.
 
 If the username is omitted, this will return the current api user's public information.
 
-| Input      | Type   | Description                         | Optional |
-|------------|--------|-------------------------------------|---------:|
-| 'username' | string | Username of the user to get details |      YES |
+| Input      | Type   | Description                             | Optional |
+|------------|--------|-----------------------------------------|---------:|
+| 'username' | string | Username of the user to get details for |      YES |
 
 * return array
 
