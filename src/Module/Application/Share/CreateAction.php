@@ -31,6 +31,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
@@ -61,18 +62,22 @@ final class CreateAction implements ApplicationActionInterface
 
     private ZipHandlerInterface $zipHandler;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LoggerInterface $logger,
         PasswordGeneratorInterface $passwordGenerator,
-        ZipHandlerInterface $zipHandler
+        ZipHandlerInterface $zipHandler,
+        RequestParserInterface $requestParser
     ) {
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
         $this->logger            = $logger;
         $this->passwordGenerator = $passwordGenerator;
         $this->zipHandler        = $zipHandler;
+        $this->requestParser     = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -83,7 +88,7 @@ final class CreateAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            !Core::form_verify('add_share')
+            !$this->requestParser->verifyForm('add_share')
         ) {
             throw new AccessDeniedException();
         }

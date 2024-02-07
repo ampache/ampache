@@ -27,12 +27,12 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,12 +46,16 @@ final class CreateAction implements ApplicationActionInterface
 
     private ResponseFactoryInterface $responseFactory;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
+        RequestParserInterface $requestParser
     ) {
         $this->configContainer = $configContainer;
         $this->responseFactory = $responseFactory;
+        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -59,7 +63,7 @@ final class CreateAction implements ApplicationActionInterface
         /* Make sure they have access to this */
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false ||
-            !Core::form_verify('create_democratic') ||
+            !$this->requestParser->verifyForm('create_democratic') ||
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false
         ) {
             throw new AccessDeniedException();

@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,12 +47,16 @@ final class UpdateUserAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        RequestParserInterface $requestParser
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,7 +66,7 @@ final class UpdateUserAction implements ApplicationActionInterface
                 $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false &&
                 Core::get_global('user')->id > 0
             ) ||
-            !Core::form_verify('update_user')
+            !$this->requestParser->verifyForm('update_user')
         ) {
             throw new AccessDeniedException();
         }
