@@ -92,6 +92,7 @@ final class UpdateUserAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
+        /** @see User::update() */
         if (!Core::get_global('user')->update($_POST)) {
             AmpError::add('general', T_('Update failed'));
         } else {
