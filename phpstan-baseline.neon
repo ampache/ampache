@@ -461,11 +461,6 @@ parameters:
 			path: src/Module/Api/Edit/ShowEditObjectAction.php
 
 		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) has parameter \\$albums with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
@@ -646,11 +641,6 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Possibly invalid array key type \\(array\\<int, string\\>\\|string\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Module/Api/Json4_Data.php
@@ -659,11 +649,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
@@ -851,11 +836,6 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Possibly invalid array key type \\(array\\<int, string\\>\\|string\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
@@ -864,11 +844,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
@@ -1082,11 +1057,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:videos\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Possibly invalid array key type \\(array\\<int, string\\>\\|string\\)\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -2026,11 +1996,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/Catalogs5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\DeletedPodcastEpisodes5Method\\:\\:deleted_podcast_episodes\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/DeletedPodcastEpisodes5Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\DeletedSongs5Method\\:\\:deleted_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/DeletedSongs5Method.php
@@ -2689,11 +2654,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\CatalogsMethod\\:\\:catalogs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/CatalogsMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\DeletedPodcastEpisodesMethod\\:\\:deleted_podcast_episodes\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/DeletedPodcastEpisodesMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\DeletedSongsMethod\\:\\:deleted_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3996,6 +3956,26 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
+			message: "#^Access to an undefined property XMLReader\\:\\:\\$isEmptyElement\\.$#"
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: "#^Access to an undefined property XMLReader\\:\\:\\$localName\\.$#"
+			count: 2
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: "#^Access to an undefined property XMLReader\\:\\:\\$nodeType\\.$#"
+			count: 9
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: "#^Access to an undefined property XMLReader\\:\\:\\$value\\.$#"
+			count: 7
+			path: src/Module/Api/Upnp_Api.php
+
+		-
 			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
 			count: 4
 			path: src/Module/Api/Upnp_Api.php
@@ -4466,11 +4446,6 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
@@ -4546,11 +4521,6 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
@@ -4614,11 +4584,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
@@ -5451,27 +5416,7 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Access to an undefined static property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$aliases\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Call to an undefined method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:checkSong\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:addMetadata\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:getField\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:addMetadata\\(\\) has parameter \\$metadata with no type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -5501,16 +5446,6 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:getCleanMetadata\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:getCleanMetadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:getParser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
@@ -5531,22 +5466,7 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:updateMetadata\\(\\) has parameter \\$song with no type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:updateMetadata\\(\\) has parameter \\$tags with no type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:updateUi\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:verifySong\\(\\) has parameter \\$beetsSong with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -8604,11 +8524,6 @@ parameters:
 			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 1
 			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Song/Tag/SongTagWriter.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:check_for_duplicate\\(\\) has parameter \\$apic_typeid with no type specified\\.$#"
@@ -12791,33 +12706,8 @@ parameters:
 			path: src/Repository/Model/Browse.php
 
 		-
-			message: "#^Access to an undefined static property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$aliases\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Argument of an invalid type array\\|true supplied for foreach, only iterables are supported\\.$#"
 			count: 2
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:addMetadata\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:getField\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:add_metadata\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
-			count: 1
 			path: src/Repository/Model/Catalog.php
 
 		-
@@ -12867,16 +12757,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_clean_metadata\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_clean_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -13151,31 +13031,6 @@ parameters:
 			path: src/Repository/Model/Clip.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:fromCamelCase\\(\\) has parameter \\$properties with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:fromCamelCase\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:getDirtyProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:\\$fieldClassRelations type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:add_vote\\(\\) has parameter \\$items with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -13389,46 +13244,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:set_played\\(\\) has parameter \\$location with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Media.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata\\:\\:setData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/Metadata.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata\\:\\:setField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/Metadata.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata\\:\\:setObjectId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/Metadata.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata\\:\\:setType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/Metadata.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata\\:\\:\\$fieldClassRelations type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/Metadata.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\MetadataField\\:\\:setName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/MetadataField.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\Metadata\\:\\:\\$modelClassName has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Repository/Metadata.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\MetadataField\\:\\:\\$modelClassName has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Repository/MetadataField.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -14056,42 +13871,12 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\Metadata\\:\\:findByObjectIdAndFieldAndType\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\Metadata\\:\\:findByObjectIdAndType\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\MetadataField\\:\\:findByName\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Cannot call method setData\\(\\) on false\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:_get_ext_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:addMetadata\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -14106,17 +13891,7 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:deleteMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:find\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:getDisabledMetadataFields\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -14201,11 +13976,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:initializeMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:insert\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -14226,36 +13996,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:updateMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:updateMetadata\\(\\) has parameter \\$meta_value with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:updateOrInsertMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:updateOrInsertMetadata\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Parameter \\#1 \\$object of method Ampache\\\\Repository\\\\Repository\\:\\:update\\(\\) expects Ampache\\\\Repository\\\\Model\\\\DatabaseObject, false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of method Ampache\\\\Repository\\\\Repository\\:\\:findById\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function stripslashes expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -14271,17 +14011,7 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$aliases has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$artists type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$disabledMetadataFields type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -14836,12 +14566,22 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/User.php
+
+		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$catalogs type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\User\\:\\:\\$prefs type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/User.php
+
+		-
+			message: "#^Unable to resolve the template type TType in call to function scrub_in$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
@@ -15194,106 +14934,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:__call\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:__call\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:assembleQuery\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:findBy\\(\\) has parameter \\$fields with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:findBy\\(\\) has parameter \\$values with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:findBy\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:findById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:getKeyValuePairs\\(\\) has parameter \\$properties with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:getKeyValuePairs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:getRecords\\(\\) has parameter \\$field with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:getRecords\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:getRecords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:insertRecord\\(\\) has parameter \\$properties with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:resolveObjects\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:resolveObjects\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:updateRecord\\(\\) has parameter \\$properties with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$object of method Ampache\\\\Repository\\\\Repository\\:\\:setPrivateProperty\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Model, Ampache\\\\Repository\\\\Model\\\\DatabaseObject given\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function lcfirst expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Repository\\:\\:\\$modelClassName has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\UserRepository\\:\\:getValidArray\\(\\) return type has no value type specified in iterable type array\\.$#"
