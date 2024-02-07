@@ -55,7 +55,8 @@
   * New Method: user_smartlists (return user smartlists (searches) and does not include playlists)
   * New Method: playlist_add (add songs to a playlist, allowing different song parent types)
   * New Method: index (replaces get_indexes with a simpler list of id's. children can be included)
-  * Add `has_art` parameter to any object with an `art_url`
+  * Add `has_art` parameter to any object with an `art` url
+  * Add avatar url to user objects
 
 ### Changed
 

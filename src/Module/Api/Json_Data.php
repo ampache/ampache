@@ -1533,6 +1533,7 @@ class Json_Data
     public static function user(User $user, bool $fullinfo, ?bool $object = true): string
     {
         $user->format();
+        $art_url = Art::url($user->id, 'user', $_REQUEST['auth'] ?? '');
         if ($fullinfo) {
             $JSON = array(
                 "id" => (string)$user->id,
@@ -1548,7 +1549,9 @@ class Json_Data
                 "last_seen" => (int)$user->last_seen,
                 "website" => $user->website,
                 "state" => $user->state,
-                "city" => $user->city
+                "city" => $user->city,
+                "art" => $art_url,
+                "has_art" => $user->has_art()
             );
         } else {
             $JSON = array(
@@ -1558,10 +1561,11 @@ class Json_Data
                 "last_seen" => $user->last_seen,
                 "website" => $user->website,
                 "state" => $user->state,
-                "city" => $user->city
+                "city" => $user->city,
+                "art" => $art_url,
+                "has_art" => $user->has_art()
             );
         }
-
         if ($user->fullname_public) {
             $JSON['fullname'] = $user->fullname;
         }
