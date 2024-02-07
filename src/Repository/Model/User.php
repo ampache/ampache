@@ -118,6 +118,8 @@ class User extends database_object
      */
     public $catalogs;
 
+    private ?bool $has_art = null;
+
     /**
      * Constructor
      * This function is the constructor object for the user
@@ -1019,6 +1021,18 @@ class User extends database_object
     }
 
     /**
+     * does the item have art?
+     */
+    public function has_art(): bool
+    {
+        if ($this->has_art === null) {
+            $this->has_art = Art::has_db($this->id, 'user');
+        }
+
+        return $this->has_art;
+    }
+
+    /**
      * access_name_to_level
      * This takes the access name for the user and returns the level
      * @param string $name
@@ -1285,8 +1299,7 @@ class User extends database_object
     {
         $avatar          = array();
         $avatar['title'] = T_('User avatar');
-        $upavatar        = new Art($this->id, 'user');
-        if ($upavatar->has_db_info()) {
+        if ($this->has_art()) {
             $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id;
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
