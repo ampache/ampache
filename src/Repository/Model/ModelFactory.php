@@ -130,7 +130,7 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createPrivateMsg(
         int $privateMessageId
-    ): PrivateMsg {
+    ): PrivateMessageInterface {
         return new PrivateMsg($privateMessageId);
     }
 

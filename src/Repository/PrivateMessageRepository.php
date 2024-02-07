@@ -25,58 +25,60 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PrivateMessageInterface;
-use Ampache\Module\System\Dba;
-use Ampache\Repository\Exception\ItemNotFoundException;
+use Ampache\Repository\Model\User;
 
+/**
+ * Manages database access related to private-message
+ *
+ * Table: `user_pvmsg`
+ */
 final class PrivateMessageRepository implements PrivateMessageRepositoryInterface
 {
     private ModelFactoryInterface $modelFactory;
 
+    private DatabaseConnectionInterface $connection;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        DatabaseConnectionInterface $connection
     ) {
         $this->modelFactory = $modelFactory;
+        $this->connection   = $connection;
     }
 
     /**
      * Get the user received private messages.
-     *
-     * @param int $userId
-     * @return int
      */
     public function getUnreadCount(
-        int $userId
+        User $user
     ): int {
-        $sql    = "SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'";
-        $params = array($userId);
-
-        $db_results = Dba::read($sql, $params);
-
-        return (int) Dba::fetch_assoc($db_results)['amount'];
+        return (int) $this->connection->fetchOne(
+            'SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = \'0\'',
+            [$user->getId()]
+        );
     }
 
     /**
      * Get the subsonic chat messages.
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getChatMessages(int $since = 0): array
     {
-        if (!AmpConfig::get('sociable')) {
-            return array();
+        $result = $this->connection->query(
+            'SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0  AND `user_pvmsg`.`creation_date` > ? ORDER BY `user_pvmsg`.`creation_date` DESC',
+            [$since]
+        );
+
+        $ids = [];
+        while ($rowId = $result->fetchColumn()) {
+            $ids[] = (int) $rowId;
         }
 
-        $sql        = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0  AND `user_pvmsg`.`creation_date` > " . (string)$since . " ORDER BY `user_pvmsg`.`creation_date` DESC";
-        $db_results = Dba::read($sql);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
-
-        return $results;
+        return $ids;
     }
 
     /**
@@ -84,40 +86,27 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
      */
     public function cleanChatMessages(int $days = 30): void
     {
-        $sql = "DELETE FROM `user_pvmsg` WHERE `to_user` = 0 AND `creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL " . (string)$days . " day))";
-        Dba::write($sql);
-    }
-
-    /**
-     * Sends a subsonic chat message
-     */
-    public function sendChatMessage(string $message, int $userId): ?int
-    {
-        if (!AmpConfig::get('sociable')) {
-            return null;
-        }
-
-        $sql = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) VALUES (?, ?, ?, ?, ?, ?)";
-        if (Dba::write($sql, array(null, $message, $userId, 0, time(), 0))) {
-            return (int) Dba::insert_id();
-        }
-
-        return null;
-    }
-
-    public function setIsRead(int $privateMessageId, int $state): void
-    {
-        Dba::write(
-            'UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?',
-            [$state, $privateMessageId]
+        $this->connection->query(
+            sprintf(
+                'DELETE FROM `user_pvmsg` WHERE `to_user` = 0 AND `creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL %d day))',
+                $days
+            )
         );
     }
 
-    public function delete(int $privateMessageId): void
+    public function setIsRead(PrivateMessageInterface $message, int $state): void
     {
-        Dba::write(
+        $this->connection->query(
+            'UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?',
+            [$state, $message->getId()]
+        );
+    }
+
+    public function delete(PrivateMessageInterface $message): void
+    {
+        $this->connection->query(
             'DELETE FROM `user_pvmsg` WHERE `id` = ?',
-            [$privateMessageId]
+            [$message->getId()]
         );
     }
 
@@ -125,29 +114,36 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
      * Creates a private message and returns the id of the newly created object
      */
     public function create(
-        int $senderUserId,
-        int $recipientUserId,
+        ?User $sender,
+        User $recipient,
         string $subject,
         string $message
-    ): ?int {
-        $sql = 'INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) VALUES (?, ?, ?, ?, ?, ?)';
+    ): int {
+        $senderUserId = null;
 
-        if (Dba::write($sql, [$subject, $message, $senderUserId, $recipientUserId, time(), 0])) {
-            return (int) Dba::insert_id();
+        if ($sender !== null) {
+            $senderUserId = $sender->getId();
         }
 
-        return null;
+        $this->connection->query(
+            'INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), 0)',
+            [
+                $subject,
+                $message,
+                $senderUserId,
+                $recipient->getId(),
+            ]
+        );
+
+        return $this->connection->getLastInsertedId();
     }
 
-    /**
-     * @throws ItemNotFoundException
-     */
-    public function getById(
+    public function findById(
         int $privateMessageId
-    ): PrivateMessageInterface {
+    ): ?PrivateMessageInterface {
         $item = $this->modelFactory->createPrivateMsg($privateMessageId);
         if ($item->isNew()) {
-            throw new ItemNotFoundException((string) $privateMessageId);
+            return null;
         }
 
         return $item;

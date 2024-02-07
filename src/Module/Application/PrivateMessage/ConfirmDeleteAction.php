@@ -33,7 +33,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
-use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -74,18 +73,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             explode(',', $request->getQueryParams()['msgs'] ?? [])
         );
         foreach ($messageIds as $messageId) {
-            try {
-                $message = $this->privateMessageRepository->getById($messageId);
+            $message = $this->privateMessageRepository->findById($messageId);
 
-                if ($message->getRecipientUserId() !== $gatekeeper->getUserId()) {
-                    throw new Exception();
-                }
-                $this->privateMessageRepository->delete($messageId);
-            } catch (Exception $e) {
+            if (
+                $message === null ||
+                $message->getRecipientUserId() !== $gatekeeper->getUserId()
+            ) {
                 throw new AccessDeniedException(
                     sprintf('Unknown or unauthorized private message `%d`.', $messageId)
                 );
             }
+
+            $this->privateMessageRepository->delete($message);
         }
 
         $this->ui->showHeader();

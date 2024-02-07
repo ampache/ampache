@@ -28,33 +28,28 @@ namespace Ampache\Module\Application\PrivateMessage;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\PrivateMessageInterface;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Exception\ItemNotFoundException;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PrivateMessageInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowAddMessageActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
+    private ConfigContainerInterface&MockInterface $configContainer;
 
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface&MockInterface $ui;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
+    private ModelFactoryInterface&MockInterface $modelFactory;
 
-    /** @var PrivateMessageRepositoryInterface|MockInterface|null */
-    private MockInterface $privateMessageRepository;
+    private PrivateMessageRepositoryInterface&MockInterface $privateMessageRepository;
 
-    private ?ShowAddMessageAction $subject;
+    private ShowAddMessageAction $subject;
 
     protected function setUp(): void
     {
@@ -181,10 +176,10 @@ class ShowAddMessageActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['reply_to' => (string) $replyToMessageId]);
 
-        $this->privateMessageRepository->shouldReceive('getById')
+        $this->privateMessageRepository->shouldReceive('findById')
             ->with($replyToMessageId)
             ->once()
-            ->andThrow(new ItemNotFoundException());
+            ->andReturnNull();
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
@@ -237,7 +232,7 @@ class ShowAddMessageActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['reply_to' => (string) $replyToMessageId]);
 
-        $this->privateMessageRepository->shouldReceive('getById')
+        $this->privateMessageRepository->shouldReceive('findById')
             ->with($replyToMessageId)
             ->once()
             ->andReturn($message);
