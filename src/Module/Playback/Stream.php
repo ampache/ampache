@@ -349,7 +349,9 @@ class Stream
             return false;
         }
         $song_file = self::scrub_arg($media->file);
-        $bit_rate  = self::get_max_bitrate($media, $transcode_settings);
+        $bit_rate  = (isset($options['bitrate']))
+            ? $options['bitrate']
+            : self::get_max_bitrate($media, $transcode_settings);
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
         // Finalise the command line
