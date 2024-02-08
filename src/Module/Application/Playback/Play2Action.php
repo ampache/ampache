@@ -640,7 +640,9 @@ final class Play2Action implements ApplicationActionInterface
             }
             $cache_path   = (string)AmpConfig::get('cache_path', '');
             $cache_target = (string)AmpConfig::get('cache_target', '');
-            $file_target  = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
+            $file_target  = (!empty($cache_target) && $cache_target === $transcode_to)
+                ? Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target)
+                : null;
             if ($transcode_cfg != 'never' && !$is_download && ($file_target !== null && is_file($file_target))) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
