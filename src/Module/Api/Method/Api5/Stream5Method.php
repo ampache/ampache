@@ -64,7 +64,7 @@ final class Stream5Method
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
 
-        $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
+        $maxBitRate    = (int)($input['bitrate'] ?? 0);
         $format        = $input['format'] ?? null; // mp3, flv or raw
         $transcode_to  = $format && $format != 'raw';
         $timeOffset    = $input['offset'] ?? null;
