@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration600051 extends AbstractMigration
@@ -32,9 +33,13 @@ final class Migration600051 extends AbstractMigration
 
     public function migrate(): void
     {
-        $sql = 'ALTER TABLE `preference` RENAME COLUMN `catagory` TO `category`;';
-        $this->updateDatabase($sql);
-        $sql = 'ALTER TABLE `preference` RENAME COLUMN `subcatagory` TO `subcategory`;';
-        $this->updateDatabase($sql);
+        if (!Dba::read('SELECT `catagory` FROM `preference` LIMIT 1;')) {
+            $sql = 'ALTER TABLE `preference` CHANGE COLUMN `catagory` `category` varchar(128) DEFAULT NULL;';
+            $this->updateDatabase($sql);
+        }
+        if (!Dba::read('SELECT `subcatagory` FROM `preference` LIMIT 1;')) {
+            $sql = 'ALTER TABLE `preference` CHANGE COLUMN `subcatagory` `subcategory` varchar(128) DEFAULT NULL;';
+            $this->updateDatabase($sql);
+        }
     }
 }
