@@ -33,11 +33,11 @@ final class Migration600051 extends AbstractMigration
 
     public function migrate(): void
     {
-        if (!Dba::read('SELECT `catagory` FROM `preference` LIMIT 1;')) {
+        if (!Dba::read('SELECT `category` FROM `preference` LIMIT 1;')) {
             $sql = 'ALTER TABLE `preference` CHANGE COLUMN `catagory` `category` varchar(128) DEFAULT NULL;';
             $this->updateDatabase($sql);
         }
-        if (!Dba::read('SELECT `subcatagory` FROM `preference` LIMIT 1;')) {
+        if (!Dba::read('SELECT `subcategory` FROM `preference` LIMIT 1;')) {
             $sql = 'ALTER TABLE `preference` CHANGE COLUMN `subcatagory` `subcategory` varchar(128) DEFAULT NULL;';
             $this->updateDatabase($sql);
         }
