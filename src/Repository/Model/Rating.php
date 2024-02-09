@@ -250,7 +250,7 @@ class Rating extends database_object
     {
         $type    = Stats::validate_type($input_type);
         $user_id = (int)($user_id);
-        $sql     = "SELECT MIN(`rating`.`object_id`) AS `id`, ROUND(AVG(`rating`.`rating`), 2) AS `rating`, COUNT(DISTINCT(`rating`.`user`)) AS `count` FROM `rating`";
+        $sql     = "SELECT MAX(`id`) AS `table_id`, MIN(`rating`.`object_id`) AS `id`, ROUND(AVG(`rating`.`rating`), 2) AS `rating`, COUNT(DISTINCT(`rating`.`user`)) AS `count` FROM `rating`";
         if ($input_type == 'album_artist' || $input_type == 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `rating`.`object_id` AND `rating`.`object_type` = 'artist'";
         }
@@ -267,7 +267,7 @@ class Rating extends database_object
         if ($input_type == 'song_artist') {
             $sql .= " AND `artist`.`song_count` > 0";
         }
-        $sql .= " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `date` DESC ";
+        $sql .= " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `table_id` DESC ";
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
         return $sql;
