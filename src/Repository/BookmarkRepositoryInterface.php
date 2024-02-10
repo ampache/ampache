@@ -23,33 +23,38 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\User;
+use DateTimeInterface;
+
 interface BookmarkRepositoryInterface
 {
     /**
-     * @return int[]
+     * @return list<int>
      */
-    public function getBookmarks(int $userId): array;
+    public function getByUser(User $user): array;
 
     /**
-     * @param int $userId
-     * @param string $comment
-     * @return int[]
-     * @return int[]
+     * @return list<int>
      */
-    public function getBookmarksByComment(int $userId, string $comment): array;
+    public function getByUserAndComment(User $user, string $comment): array;
 
-    /**
-     * @param int $bookmarkId
-     * @param int $userId
-     */
-    public function getBookmark(int $bookmarkId, int $userId): int;
-
-    public function delete(int $bookmarkId): bool;
+    public function delete(int $bookmarkId): void;
 
     /**
      * Remove bookmark for items that no longer exist.
      */
     public function collectGarbage(): void;
 
-    public function update(int $bookmarkId, int $position, int $date): void;
+    public function update(int $bookmarkId, int $position, DateTimeInterface $date): void;
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+
+    /**
+     * Finds a single item by id
+     */
+    public function findById(int $itemId): ?Bookmark;
 }

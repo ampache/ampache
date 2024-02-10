@@ -30,6 +30,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
@@ -679,9 +680,15 @@ class Json5_Data
             $bookmarks = array_splice($bookmarks, self::$offset, self::$limit);
         }
 
+        $bookmarkRepository = self::getBookmarkRepository();
+
         $JSON = [];
         foreach ($bookmarks as $bookmark_id) {
-            $bookmark               = new Bookmark($bookmark_id);
+            $bookmark = $bookmarkRepository->findById($bookmark_id);
+            if ($bookmark === null) {
+                continue;
+            }
+
             $bookmark_username      = $bookmark->getUserName();
             $bookmark_object_type   = $bookmark->object_type;
             $bookmark_object_id     = (string)$bookmark->object_id;
@@ -1356,5 +1363,15 @@ class Json5_Data
         global $dic;
 
         return $dic->get(LicenseRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
     }
 }
