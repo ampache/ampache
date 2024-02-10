@@ -384,8 +384,8 @@
         "stan-baseline": "vendor/bin/phpstan --generate-baseline",
         "tests": "vendor/bin/phpunit tests",
         "syntax": "resources/scripts/tests/syntax.sh",
-        "cs:fix": "vendor/bin/php-cs-fixer fix -v",
-        "cs:check": "vendor/bin/php-cs-fixer fix --dry-run -v",
+        "cs:fix": "vendor/bin/php-cs-fixer fix",
+        "cs:check": "vendor/bin/php-cs-fixer fix --dry-run",
         "post-autoload-dump": [
             "@php resources/scripts/composer/check_tag_tools.php"
         ],
