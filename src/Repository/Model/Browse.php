@@ -497,12 +497,14 @@ class Browse extends Query
         if ($type === 'album_artist') {
             $this->set_type('artist', $custom_base);
             $this->set_album_artist(true);
+            $this->set_filter('album_artist', true);
 
             return;
         }
         if ($type === 'song_artist') {
             $this->set_type('artist', $custom_base);
             $this->set_song_artist(true);
+            $this->set_filter('song_artist', true);
 
             return;
         }

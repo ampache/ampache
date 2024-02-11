@@ -75,7 +75,6 @@ final class AlbumArtistAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_filter('album_artist', true);
         $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
