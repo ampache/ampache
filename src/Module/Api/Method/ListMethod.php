@@ -48,7 +48,7 @@ final class ListMethod
      *
      * This takes a named array of objects and returning `id`, `name`, `prefix` and `basename`
      *
-     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
+     * type        = (string) 'song', 'album', 'artist', 'song_artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add         = Api::set_filter(date) //optional
@@ -63,7 +63,8 @@ final class ListMethod
             return false;
         }
         $album_artist = ((string)$input['type'] == 'album_artist');
-        $type         = ($album_artist) ? 'artist' : (string)$input['type'];
+        $song_artist  = ((string)$input['type'] == 'song_artist');
+        $type         = ($album_artist || $song_artist) ? 'artist' : (string)$input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
@@ -95,6 +96,8 @@ final class ListMethod
         $browse->reset_filters();
         if ($album_artist) {
             $browse->set_type('album_artist');
+        } elseif ($song_artist) {
+            $browse->set_type('song_artist');
         } else {
             $browse->set_type($type);
         }
