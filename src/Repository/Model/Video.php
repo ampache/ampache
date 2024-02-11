@@ -88,10 +88,7 @@ class Video extends database_object implements
      * @var null|string $f_full_title
      */
     public $f_full_title;
-    /**
-     * @var null|string $f_artist_full
-     */
-    public $f_artist_full;
+
     /**
      * @var null|string $f_time
      */
@@ -1180,6 +1177,11 @@ class Video extends database_object implements
         $skip_array   = array('id', 'tag_id', 'mime', 'total_count', 'disabledMetadataFields');
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
+    }
+
+    public function get_artist_fullname(): string
+    {
+        return '';
     }
 
     /**

@@ -126,8 +126,9 @@ class Song extends database_object implements
     public $f_artist;
     /** @var null|string $f_album */
     public $f_album;
-    /** @var null|string $f_artist_full */
-    public $f_artist_full;
+
+    private ?string $artist_full_name = null;
+
     /** @var int|null $albumartist */
     public $albumartist;
     /** @var null|string $f_albumartist_full */
@@ -874,18 +875,14 @@ class Song extends database_object implements
     /**
      * get_artist_fullname
      * gets the name of $this->artist, allows passing of id
-     * @param int|null $artist_id
      */
-    public function get_artist_fullname($artist_id = 0): ?string
+    public function get_artist_fullname(): string
     {
-        if ($artist_id > 0) {
-            return Artist::get_fullname_by_id($artist_id);
-        }
-        if (!isset($this->f_artist_full)) {
-            $this->f_artist_full = Artist::get_fullname_by_id($this->artist);
+        if ($this->artist_full_name === null) {
+            $this->artist_full_name = Artist::get_fullname_by_id($this->artist);
         }
 
-        return $this->f_artist_full;
+        return $this->artist_full_name;
     }
 
     /**
@@ -896,7 +893,7 @@ class Song extends database_object implements
     public function get_album_artist_fullname($album_artist_id = 0): ?string
     {
         if ($album_artist_id) {
-            return self::get_artist_fullname($album_artist_id);
+            return Artist::get_fullname_by_id($album_artist_id);
         }
         if (!$this->albumartist) {
             return '';
@@ -905,7 +902,7 @@ class Song extends database_object implements
             $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
         }
 
-        return self::get_artist_fullname($this->albumartist);
+        return Artist::get_fullname_by_id($this->albumartist);
     }
 
     /**
@@ -1562,8 +1559,7 @@ class Song extends database_object implements
         $this->f_album      = $this->f_album_full;
 
         // Format the artist name
-        $this->f_artist_full = $this->get_artist_fullname();
-        $this->f_artist      = $this->f_artist_full;
+        $this->f_artist = $this->get_artist_fullname();
 
         // Format the album_artist name
         $this->f_albumartist_full = $this->get_album_artist_fullname();
@@ -1720,7 +1716,7 @@ class Song extends database_object implements
                 $this->get_artists();
             }
             foreach ($this->artists as $artist_id) {
-                $artist_fullname = scrub_out($this->get_artist_fullname($artist_id));
+                $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
                 $this->f_artist_link .= "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
             }
             $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");

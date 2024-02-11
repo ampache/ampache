@@ -37,11 +37,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
+use DateTime;
+use DateTimeInterface;
 
 class Podcast_Episode extends database_object implements
     Media,
     library_item,
-    GarbageCollectibleInterface,
     CatalogItemInterface
 {
     protected const DB_TABLENAME = 'podcast_episode';
@@ -72,25 +73,20 @@ class Podcast_Episode extends database_object implements
     public ?int $channels;
     public ?string $waveform;
 
-    public ?string $link = null;
     public $type;
     public $mime;
     public $f_name;
     public $f_file;
-    public $f_size;
     public $f_time;
     public $f_time_h;
-    public $f_description;
-    public $f_author;
-    public $f_artist_full;
-    public $f_bitrate;
-    public $f_category;
-    public $f_website;
-    public $f_pubdate;
-    public $f_state;
-    public $f_link;
-    public $f_podcast;
-    public $f_podcast_link;
+
+    private ?string $link = null;
+
+    private ?string $link_formatted = null;
+
+    private ?string $podcast_name = null;
+
+    private ?string $podcast_link = null;
 
     private ?bool $has_art = null;
 
@@ -123,22 +119,12 @@ class Podcast_Episode extends database_object implements
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
     {
         return $this->getId() === 0;
-    }
-
-    /**
-     * garbage_collection
-     *
-     * Cleans up the podcast_episode table
-     */
-    public static function garbage_collection(): void
-    {
-        Dba::write("DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL;");
     }
 
     /**
@@ -160,34 +146,13 @@ class Podcast_Episode extends database_object implements
         if ($this->isNew()) {
             return;
         }
-        $this->f_description = scrub_out($this->description);
-        $this->f_category    = scrub_out($this->category);
-        $this->f_author      = scrub_out($this->author);
-        $this->f_artist_full = $this->f_author;
-        $this->f_website     = scrub_out($this->website);
-        $this->f_pubdate     = date("c", (int)$this->pubdate);
-        switch ($this->state) {
-            case PodcastEpisodeStateEnum::SKIPPED:
-                $this->f_state = T_('skipped');
-                break;
-            case PodcastEpisodeStateEnum::PENDING:
-                $this->f_state = T_('pending');
-                break;
-            case PodcastEpisodeStateEnum::COMPLETED:
-                $this->f_state = T_('completed');
-                break;
-            default:
-                $this->f_state = '';
-        }
+
         // format the file
         if (!empty($this->file)) {
             $this->type    = strtolower((string)pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
         }
-
-        // Format the Bitrate
-        $this->f_bitrate = (int)($this->bitrate / 1024) . "-" . strtoupper((string)$this->mode);
 
         // Format the Time
         $min            = floor($this->time / 60);
@@ -197,19 +162,63 @@ class Podcast_Episode extends database_object implements
         $min_h          = sprintf("%02d", ($min % 60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
         // Format the Size
-        $this->f_size = Ui::format_bytes($this->size);
         $this->f_file = $this->get_fullname() . '.' . $this->type;
 
-        $this->get_f_link();
-
         if ($details) {
-            $this->get_f_podcast();
-            $this->get_f_podcast_link();
-            $this->f_file = $this->get_f_podcast() . ' - ' . $this->f_file;
+            $this->f_file = $this->getPodcastName() . ' - ' . $this->f_file;
         }
         if (AmpConfig::get('show_played_times')) {
             $this->total_count = (int) $this->total_count;
         }
+    }
+
+    public function getCategory(): string
+    {
+        return scrub_out($this->category);
+    }
+
+    public function getAuthor(): string
+    {
+        return scrub_out($this->author);
+    }
+
+    public function getWebsite(): string
+    {
+        return scrub_out($this->website);
+    }
+
+    public function getBitrateFormatted(): string
+    {
+        return sprintf('%d-%s', (int) ($this->bitrate / 1024), strtoupper((string)$this->mode));
+    }
+
+    public function getPubDate(): DateTimeInterface
+    {
+        return new DateTime('@' . $this->pubdate);
+    }
+
+    public function getStateDescription(): string
+    {
+        switch ($this->state) {
+            case PodcastEpisodeStateEnum::SKIPPED:
+                $state = T_('skipped');
+                break;
+            case PodcastEpisodeStateEnum::PENDING:
+                $state = T_('pending');
+                break;
+            case PodcastEpisodeStateEnum::COMPLETED:
+                $state = T_('completed');
+                break;
+            default:
+                $state = '';
+        }
+
+        return $state;
+    }
+
+    public function getSizeFormatted(): string
+    {
+        return UI::format_bytes($this->size);
     }
 
     /**
@@ -234,7 +243,7 @@ class Podcast_Episode extends database_object implements
         $keywords['podcast'] = array(
             'important' => true,
             'label' => T_('Podcast'),
-            'value' => $this->get_f_podcast()
+            'value' => $this->getPodcastName()
         );
         $keywords['title'] = array(
             'important' => true,
@@ -277,45 +286,39 @@ class Podcast_Episode extends database_object implements
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_link)) {
-            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        if ($this->link_formatted === null) {
+            $this->link_formatted = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
-        return $this->f_link;
+        return $this->link_formatted;
     }
 
-    /**
-     * get_f_podcast
-     */
-    public function get_f_podcast(): string
+    public function getPodcastName(): string
     {
-        if (!isset($this->f_podcast)) {
+        if ($this->podcast_name === null) {
             $podcast         = $this->getPodcastRepository()->findById($this->podcast);
             if ($podcast === null) {
-                $this->f_podcast = '';
+                $this->podcast_name = '';
             } else {
-                $this->f_podcast = $podcast->get_fullname();
+                $this->podcast_name = (string) $podcast->get_fullname();
             }
         }
 
-        return $this->f_podcast;
+        return $this->podcast_name;
     }
 
-    /**
-     * get_f_podcast_link
-     */
-    public function get_f_podcast_link(): string
+    public function getPodcastLink(): string
     {
-        if (!isset($this->f_podcast_link)) {
+        if ($this->podcast_link === null) {
             $podcast              = $this->getPodcastRepository()->findById($this->podcast);
             if ($podcast === null) {
-                $this->f_podcast_link = '';
+                $this->podcast_link = '';
             } else {
-                $this->f_podcast_link = $podcast->get_f_link();
+                $this->podcast_link = $podcast->get_f_link();
             }
         }
 
-        return $this->f_podcast_link;
+        return $this->podcast_link;
     }
 
     /**
@@ -323,7 +326,7 @@ class Podcast_Episode extends database_object implements
      */
     public function get_f_artist_link(): ?string
     {
-        return $this->get_f_podcast_link();
+        return $this->getPodcastLink();
     }
 
     /**
@@ -412,11 +415,7 @@ class Podcast_Episode extends database_object implements
      */
     public function get_description(): string
     {
-        if (!isset($this->f_description)) {
-            $this->f_description = scrub_out($this->description ?? '');
-        }
-
-        return $this->f_description;
+        return scrub_out((string) $this->description);
     }
 
     public function getSource(): string
@@ -560,7 +559,7 @@ class Podcast_Episode extends database_object implements
      */
     public function get_stream_name(): string
     {
-        return (string)($this->get_f_podcast() . " - " . $this->get_fullname());
+        return $this->getPodcastName() . " - " . $this->get_fullname();
     }
 
     /**
@@ -652,6 +651,11 @@ class Podcast_Episode extends database_object implements
     public function change_state(string $state): void
     {
         $this->getPodcastEpisodeRepository()->updateState($this, $state);
+    }
+
+    public function get_artist_fullname(): string
+    {
+        return $this->getAuthor();
     }
 
     /**

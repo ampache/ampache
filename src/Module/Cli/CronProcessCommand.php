@@ -27,7 +27,6 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Module\Cache\ObjectCacheInterface;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream;
@@ -36,6 +35,7 @@ use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -56,6 +56,8 @@ final class CronProcessCommand extends Command
 
     private ShareRepositoryInterface $shareRepository;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ObjectCacheInterface $objectCache,
@@ -63,17 +65,19 @@ final class CronProcessCommand extends Command
         BookmarkRepositoryInterface $bookmarkRepository,
         UserRepositoryInterface $userRepository,
         UpdateInfoRepositoryInterface $updateInfoRepository,
-        ShareRepositoryInterface $shareRepository
+        ShareRepositoryInterface $shareRepository,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
     ) {
         parent::__construct('run:cronProcess', T_('Run the cron process'));
 
-        $this->configContainer         = $configContainer;
-        $this->objectCache             = $objectCache;
-        $this->catalogGarbageCollector = $catalogGarbageCollector;
-        $this->bookmarkRepository      = $bookmarkRepository;
-        $this->userRepository          = $userRepository;
-        $this->updateInfoRepository    = $updateInfoRepository;
-        $this->shareRepository         = $shareRepository;
+        $this->configContainer          = $configContainer;
+        $this->objectCache              = $objectCache;
+        $this->catalogGarbageCollector  = $catalogGarbageCollector;
+        $this->bookmarkRepository       = $bookmarkRepository;
+        $this->userRepository           = $userRepository;
+        $this->updateInfoRepository     = $updateInfoRepository;
+        $this->shareRepository          = $shareRepository;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
     }
 
     public function execute(): void
@@ -129,7 +133,7 @@ final class CronProcessCommand extends Command
          */
         $this->shareRepository->collectGarbage();
         Stream::garbage_collection();
-        Podcast_Episode::garbage_collection();
+        $this->podcastEpisodeRepository->collectGarbage();
         $this->bookmarkRepository->collectGarbage();
         Recommendation::garbage_collection();
         $this->userRepository->collectGarbage();

@@ -224,4 +224,14 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
             [$state, $episode->getId()]
         );
     }
+
+    /**
+     * Cleans up orphaned episodes
+     */
+    public function collectGarbage(): void
+    {
+        $this->connection->query(
+            'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
+        );
+    }
 }

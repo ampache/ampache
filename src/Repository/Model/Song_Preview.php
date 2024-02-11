@@ -52,7 +52,6 @@ class Song_Preview extends database_object implements Media, playable_item
     public $type;
     public $f_file;
     public $f_artist;
-    public $f_artist_full;
     public $f_artist_link;
     public $f_name;
     public $f_name_full;
@@ -213,16 +212,16 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * get_artist_fullname
      * gets the name of $this->artist, allows passing of id
-     * @param int $artist_id
      */
-    public function get_artist_fullname($artist_id = 0): ?string
+    public function get_artist_fullname(): string
     {
-        if (!$artist_id) {
-            $artist_id = $this->artist;
-        }
-        $artist = new Artist($artist_id);
+        if ($this->artist) {
+            return (string) (new Artist($this->artist))->get_fullname();
+        } else {
+            $wartist             = Wanted::get_missing_artist((string)$this->artist_mbid);
 
-        return $artist->get_fullname();
+            return $wartist['name'];
+        }
     }
 
     /**
@@ -237,15 +236,14 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         unset($details); // dead code but called from other format calls
         // Format the artist name
+        $this->f_artist = $this->get_artist_fullname();
+
         if ($this->artist) {
-            $this->f_artist_full = $this->get_artist_fullname();
-            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist_full) . "</a>";
+            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist) . "\"> " . scrub_out($this->f_artist) . "</a>";
         } else {
             $wartist             = Wanted::get_missing_artist((string)$this->artist_mbid);
             $this->f_artist_link = $wartist['link'];
-            $this->f_artist_full = $wartist['name'];
         }
-        $this->f_artist = $this->f_artist_full;
 
         // Format the title
         $this->f_name_full  = $this->title;

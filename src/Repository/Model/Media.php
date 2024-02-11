@@ -100,4 +100,9 @@ interface Media
      * Delete the object from disk and/or database where applicable.
      */
     public function remove(): bool;
+
+    /**
+     * Returns the full/formatted name of the media items artist/author
+     */
+    public function get_artist_fullname(): string;
 }

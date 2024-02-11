@@ -33,7 +33,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
@@ -43,6 +42,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Wanted;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -65,20 +65,24 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private MetadataManagerInterface $metadataManager;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         BookmarkRepositoryInterface $bookmarkRepository,
         ShoutRepositoryInterface $shoutRepository,
         UserActivityRepositoryInterface $useractivityRepository,
         UserRepositoryInterface $userRepository,
-        MetadataManagerInterface $metadataManager
+        MetadataManagerInterface $metadataManager,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
     ) {
-        $this->albumRepository         = $albumRepository;
-        $this->bookmarkRepository      = $bookmarkRepository;
-        $this->shoutRepository         = $shoutRepository;
-        $this->useractivityRepository  = $useractivityRepository;
-        $this->userRepository          = $userRepository;
-        $this->metadataManager         = $metadataManager;
+        $this->albumRepository          = $albumRepository;
+        $this->bookmarkRepository       = $bookmarkRepository;
+        $this->shoutRepository          = $shoutRepository;
+        $this->useractivityRepository   = $useractivityRepository;
+        $this->userRepository           = $userRepository;
+        $this->metadataManager          = $metadataManager;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
     }
 
     public function collect(): void
@@ -87,7 +91,6 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Artist::garbage_collection();
         $this->albumRepository->collectGarbage();
         Video::garbage_collection();
-        Podcast_Episode::garbage_collection();
         $this->bookmarkRepository->collectGarbage();
         Wanted::garbage_collection();
         Art::garbage_collection();
@@ -105,5 +108,6 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Catalog::clear_catalog_cache();
 
         $this->metadataManager->collectGarbage();
+        $this->podcastEpisodeRepository->collectGarbage();
     }
 }

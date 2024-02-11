@@ -38,7 +38,7 @@ use Ampache\Module\Util\Ui;
 
 $web_path = (string)AmpConfig::get('web_path', '');
 
-Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->get_f_podcast_link(), 'box box_podcast_episode_details'); ?>
+Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
@@ -110,20 +110,20 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->get_f_podcast_link
     </dd>
 <?php
     $songprops[T_('Title')]        = $episode->get_fullname();
-$songprops[T_('Description')]      = $episode->description;
-$songprops[T_('Category')]         = $episode->f_category;
-$songprops[T_('Author')]           = $episode->f_author;
-$songprops[T_('Publication Date')] = $episode->f_pubdate;
-$songprops[T_('Status')]           = $episode->f_state;
-$songprops[T_('Website')]          = $episode->f_website;
+$songprops[T_('Description')]      = $episode->get_description();
+$songprops[T_('Category')]         = $episode->getCategory();
+$songprops[T_('Author')]           = $episode->getAuthor();
+$songprops[T_('Publication Date')] = $episode->getPubDate()->format(DATE_ATOM);
+$songprops[T_('Status')]           = $episode->getStateDescription();
+$songprops[T_('Website')]          = $episode->getWebsite();
 if ($episode->time > 0) {
     $songprops[T_('Length')] = $episode->f_time;
 }
 
 if (!empty($episode->file)) {
     $songprops[T_('File')]     = $episode->file;
-    $songprops[T_('Size')]     = $episode->f_size;
-    $songprops[T_('Bitrate')]  = scrub_out($episode->f_bitrate);
+    $songprops[T_('Size')]     = $episode->getSizeFormatted();
+    $songprops[T_('Bitrate')]  = scrub_out($episode->getBitrateFormatted());
     $songprops[T_('Channels')] = scrub_out((string)$episode->channels);
 }
 

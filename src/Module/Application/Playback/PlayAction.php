@@ -881,7 +881,7 @@ final class PlayAction implements ApplicationActionInterface
 
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
-            $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
+            $media_name  = $media->get_artist_fullname() . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } else {
             if ($cpaction && $media instanceof Song) {
                 $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
