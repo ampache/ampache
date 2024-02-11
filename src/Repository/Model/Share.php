@@ -479,10 +479,10 @@ class Share extends database_object
                 }
                 break;
             default:
-                $medias[] = array(
-                    'object_type' => $this->object_type,
+                $medias[] = [
+                    'object_type' => (string) $this->object_type,
                     'object_id' => $this->object_id,
-                );
+                ];
                 break;
         }
         if (!empty($medias)) {

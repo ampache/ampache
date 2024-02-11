@@ -754,19 +754,19 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get all children and sub-childrens media.
-     * @param string $filter_type
+     *
      * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null): array
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'song') {
+        if (!$filter_type || $filter_type === 'song') {
             $songs = $this->getSongRepository()->getByAlbum($this->id);
             foreach ($songs as $song_id) {
-                $medias[] = array(
+                $medias[] = [
                     'object_type' => 'song',
                     'object_id' => $song_id
-                );
+                ];
             }
         }
 

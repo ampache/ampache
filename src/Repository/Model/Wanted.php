@@ -50,7 +50,7 @@ class Wanted extends database_object
     public ?string $name;
     public ?int $year;
     public int $date;
-    public bool $accepted;
+    public int $accepted;
 
     /**
      * @var null|string $release_mbid
@@ -88,7 +88,7 @@ class Wanted extends database_object
         if (!$wanted_id) {
             return;
         }
-        $info = static::getWantedRepository()->getById((int) $wanted_id);
+        $info = self::getWantedRepository()->getById((int) $wanted_id);
         if ($info === null) {
             return;
         }
@@ -178,7 +178,7 @@ class Wanted extends database_object
                                         $wanted->year = (int)date("Y", strtotime($group->{'first-release-date'}));
                                     }
                                 }
-                                $wanted->accepted = false;
+                                $wanted->accepted = 0;
                                 $wanted->link     = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group->id;
                                 if ($artist !== null) {
                                     $wanted->link .= "&artist=" . $wanted->artist;
@@ -277,12 +277,12 @@ class Wanted extends database_object
         string $mbid,
         ?User $user = null
     ): void {
-        if (static::getWantedRepository()->getAcceptedCount() > 0) {
+        if (self::getWantedRepository()->getAcceptedCount() > 0) {
             $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
             $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
 
             if ($malbum !== null && $malbum->{'release-group'}) {
-                static::getWantedRepository()->deleteByMusicbrainzId(
+                self::getWantedRepository()->deleteByMusicbrainzId(
                     print_r($malbum->{'release-group'}, true),
                     $user
                 );
@@ -298,7 +298,7 @@ class Wanted extends database_object
         if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
             Dba::write($sql, array($this->mbid));
-            $this->accepted = true;
+            $this->accepted = 1;
 
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
@@ -340,7 +340,7 @@ class Wanted extends database_object
     public function show_action_buttons(): void
     {
         if ($this->isNew() === false) {
-            if (!$this->accepted) {
+            if ($this->accepted === 0) {
                 if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
                     echo Ajax::button(
                         '?page=index&action=accept_wanted&mbid=' . $this->mbid,
@@ -358,8 +358,8 @@ class Wanted extends database_object
                     $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ||
                     (
                         $this->mbid !== null &&
-                        static::getWantedRepository()->find($this->mbid, $user) &&
-                        $this->accepted != '1'
+                        self::getWantedRepository()->find($this->mbid, $user) &&
+                        $this->accepted !== 1
                     )
                 )
             ) {

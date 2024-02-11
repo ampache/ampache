@@ -137,6 +137,8 @@ final class UserRepository implements UserRepositoryInterface
 
     /**
      * This returns all valid users in an array (id => name).
+     *
+     * @return array<int, string>
      */
     public function getValidArray(bool $includeDisabled = false): array
     {
