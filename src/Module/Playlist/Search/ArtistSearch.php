@@ -76,7 +76,7 @@ final class ArtistSearch implements SearchInterface
                     break;
                 }
             }
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+            $input        = $search->filter_data(scrub_in((string)$rule[2]), $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
