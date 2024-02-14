@@ -41,12 +41,12 @@ class Democratic extends Tmp_Playlist
 {
     protected const DB_TABLENAME = 'democratic';
 
-    public ?string $name;
-    public ?int $cooldown;
-    public int $level;
-    public int $user;
-    public bool $primary;
-    public int $base_playlist;
+    public ?string $name      = null;
+    public ?int $cooldown     = null;
+    public int $level         = 0;
+    public int $user          = 0;
+    public bool $primary      = false;
+    public int $base_playlist = 0;
 
     public $f_cooldown;
     public $f_primary;
