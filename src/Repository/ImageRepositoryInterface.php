@@ -44,7 +44,7 @@ interface ImageRepositoryInterface
      *
      * @return Traversable<array{id: int, object_id: int, object_type: string, size: string, mime: string}>
      */
-    public function findAllHavingImage(): Traversable;
+    public function findAllImage(): Traversable;
 
     /**
      * Clear the image column (if you have the image on disk)

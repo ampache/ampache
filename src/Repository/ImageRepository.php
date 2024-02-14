@@ -75,7 +75,7 @@ final class ImageRepository implements ImageRepositoryInterface
      *
      * @return Generator<array{id: int, object_id: int, object_type: string, size: string, mime: string}>
      */
-    public function findAllHavingImage(): Generator
+    public function findAllImage(): Generator
     {
         $result = $this->connection->query(
             'SELECT `id`, `object_id`, `object_type`, `size`, `mime` FROM `image` WHERE `image` IS NOT NULL',

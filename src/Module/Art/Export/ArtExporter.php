@@ -72,7 +72,7 @@ final class ArtExporter implements ArtExporterInterface
             );
         }
         // Get all of the art items with an image
-        $images = $this->imageRepository->findAllHavingImage();
+        $images = $this->imageRepository->findAllImage();
         $count  = 0;
 
         // Run through them and get the art!

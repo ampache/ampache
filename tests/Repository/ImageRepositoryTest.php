@@ -97,7 +97,7 @@ class ImageRepositoryTest extends TestCase
         );
     }
 
-    public function testFindAllHavingImage(): void
+    public function testFindAllImage(): void
     {
         $result = $this->createMock(PDOStatement::class);
 
@@ -134,7 +134,7 @@ class ImageRepositoryTest extends TestCase
                 'size' => $size,
                 'mime' => $mimeType,
             ]],
-            iterator_to_array($this->subject->findAllHavingImage())
+            iterator_to_array($this->subject->findAllImage())
         );
     }
 
