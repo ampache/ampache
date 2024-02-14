@@ -83,4 +83,9 @@ interface PodcastEpisodeRepositoryInterface
         Podcast_Episode $episode,
         string $state
     ): void;
+
+    /**
+     * Cleans up orphaned episodes
+     */
+    public function collectGarbage(): void;
 }

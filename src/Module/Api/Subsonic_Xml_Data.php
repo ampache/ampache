@@ -1394,13 +1394,13 @@ class Subsonic_Xml_Data
         $xepisode  = self::addChildToResultXml($xml, htmlspecialchars($elementName));
         $xepisode->addAttribute('id', $sub_id);
         $xepisode->addAttribute('channelId', $subParent);
-        $xepisode->addAttribute('title', (string)self::_checkName($episode->get_fullname()));
-        $xepisode->addAttribute('album', (string)$episode->f_podcast);
-        $xepisode->addAttribute('description', (string)self::_checkName($episode->f_description));
+        $xepisode->addAttribute('title', self::_checkName($episode->get_fullname()));
+        $xepisode->addAttribute('album', $episode->getPodcastName());
+        $xepisode->addAttribute('description', self::_checkName($episode->get_description()));
         $xepisode->addAttribute('duration', (string)$episode->time);
         $xepisode->addAttribute('genre', "Podcast");
         $xepisode->addAttribute('isDir', "false");
-        $xepisode->addAttribute('publishDate', $episode->f_pubdate);
+        $xepisode->addAttribute('publishDate', $episode->getPubDate()->format(DATE_ATOM));
         $xepisode->addAttribute('status', (string)$episode->state);
         $xepisode->addAttribute('parent', $subParent);
         if ($episode->has_art()) {

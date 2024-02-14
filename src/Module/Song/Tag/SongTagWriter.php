@@ -200,7 +200,7 @@ final class SongTagWriter implements SongTagWriterInterface
                     'data' => $image,
                     'mime' => $art->raw_mime,
                     'picturetypeid' => 8,
-                    'description' => $song->f_artist_full,
+                    'description' => $song->get_artist_fullname(),
                     'encodingid' => 0
                 );
                 if ($file_has_pics) {
@@ -347,7 +347,7 @@ final class SongTagWriter implements SongTagWriterInterface
                 $new_pic = array(
                     'data' => $image,
                     'picturetypeid' => 8,
-                    'description' => $song->f_artist_full,
+                    'description' => $song->get_artist_fullname(),
                     'mime' => $art->raw_mime,
                     'encodingid' => 0
                 );
@@ -424,7 +424,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['title']               = $song->title;
         $meta['comment']             = $song->comment;
         $meta['album']               = $song->f_album_full;
-        $meta['artist']              = $song->f_artist_full;
+        $meta['artist']              = $song->get_artist_fullname();
         $meta['albumartist']         = $song->f_albumartist_full;
         $meta['composer']            = $song->composer;
         $meta['label']               = $song->f_publisher;

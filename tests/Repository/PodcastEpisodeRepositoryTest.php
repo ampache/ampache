@@ -391,4 +391,15 @@ class PodcastEpisodeRepositoryTest extends TestCase
 
         $this->subject->updateState($episode, $state);
     }
+
+    public function testCollectGarbageCollects(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
+            );
+
+        $this->subject->collectGarbage();
+    }
 }

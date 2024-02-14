@@ -307,7 +307,7 @@ class Stream_Playlist
                 case 'song':
                     /** @var Song $object */
                     $url['title']     = $object->title;
-                    $url['author']    = $object->f_artist_full;
+                    $url['author']    = $object->get_artist_fullname();
                     $url['info_url']  = $object->get_f_link();
                     $show_song_art    = AmpConfig::get('show_song_art', false);
                     $has_art          = Art::has_db($object->id, 'song');
@@ -321,7 +321,7 @@ class Stream_Playlist
                 case 'video':
                     /** @var Video $object */
                     $url['title']      = 'Video - ' . $object->title;
-                    $url['author']     = $object->f_artist_full;
+                    $url['author']     = $object->get_artist_fullname();
                     $url['resolution'] = $object->f_resolution;
                     $url['codec']      = $object->type;
                     break;
@@ -338,13 +338,13 @@ class Stream_Playlist
                 case 'song_preview':
                     /** @var Song_Preview $object */
                     $url['title']  = $object->title;
-                    $url['author'] = $object->f_artist_full;
+                    $url['author'] = $object->get_artist_fullname();
                     $url['codec']  = $object->type;
                     break;
                 case 'podcast_episode':
                     /** @var Podcast_Episode $object */
                     $url['title']     = $object->f_name;
-                    $url['author']    = $object->f_podcast;
+                    $url['author']    = $object->getPodcastName();
                     $url['info_url']  = $object->get_f_link();
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->type;
