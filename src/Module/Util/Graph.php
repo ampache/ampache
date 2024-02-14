@@ -252,10 +252,10 @@ class Graph
         // Only display other users if the graph is not for a specific user and user count is small
         if ($user_id < 1 && $ustats['users'] < 10) {
             $userArray = $userRepository->getValidArray();
-            foreach ($userArray as $validUser) {
+            foreach ($userArray as $userId => $userName) {
                 $user_values = $this->get_all_type_pts(
                     $fct,
-                    $validUser['id'],
+                    $userId,
                     $object_type,
                     $object_id,
                     $start_date,
@@ -268,7 +268,7 @@ class Graph
                     } else {
                         $value = 0;
                     }
-                    $MyData->addPoints($value, $validUser['username']);
+                    $MyData->addPoints($value, $userName);
                 }
             }
         }

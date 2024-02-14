@@ -97,7 +97,7 @@ final class PlaylistSearch implements SearchInterface
             $where_sql          = "(" . $where_sql . ") AND `playlist_data`.`object_type` = 'song'";
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
             if ($catalog_disable) {
-                if (!empty($where_sql)) {
+                if (!empty(trim($where_sql))) {
                     $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 } else {
                     $where_sql = "`catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";

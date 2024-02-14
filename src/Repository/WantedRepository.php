@@ -34,17 +34,7 @@ use Ampache\Repository\Model\User;
  *
  * Tables: `wanted`
  *
- * @phpstan-type DatabaseRow array{
- *  id: int,
- *  user: int,
- *  artist: null|int,
- *  artist_mbid: null|string,
- *  mbid: null|string,
- *  name: null|string,
- *  year: null|int,
- *  date: int,
- *  accepted: int
- * }
+ * @phpstan-import-type DatabaseRow from WantedRepositoryInterface
  */
 final class WantedRepository implements WantedRepositoryInterface
 {

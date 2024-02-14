@@ -36,28 +36,21 @@ use Sabre\DAV;
  */
 class WebDavFile extends DAV\File
 {
-    private $libitem;
+    private Media $libitem;
 
-    /**
-     * @param Media $libitem
-     */
     public function __construct(Media $libitem)
     {
         $this->libitem = $libitem;
     }
 
-    /**
-     * getName
-     */
     public function getName(): string
     {
         $nameinfo = pathinfo($this->libitem->file);
 
-        return (string)htmlentities($nameinfo['filename'] . '.' . $nameinfo['extension']);
+        return htmlentities($nameinfo['filename'] . '.' . $nameinfo['extension']);
     }
 
     /**
-     * get
      * @return resource|null
      */
     public function get()
@@ -86,17 +79,12 @@ class WebDavFile extends DAV\File
         return null;
     }
 
-    /**
-     * getSize
-     */
     public function getSize(): int
     {
         return $this->libitem->size;
     }
 
-    /**
-     * getETag
-     */
+
     public function getETag(): string
     {
         return md5(ObjectTypeToClassNameMapper::reverseMap(get_class($this->libitem)) . "_" . $this->libitem->id . "_" . $this->libitem->update_time);

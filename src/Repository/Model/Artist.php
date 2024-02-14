@@ -546,13 +546,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Get all childrens and sub-childrens medias.
-     * @param string $filter_type
-     * @return array
+     *
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null): array
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'song') {
+        if ($filter_type === null || $filter_type === 'song') {
             $songs = $this->getSongRepository()->getByArtist($this->id);
             foreach ($songs as $song_id) {
                 $medias[] = array(

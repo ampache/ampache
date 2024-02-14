@@ -219,13 +219,12 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     }
 
     /**
-     * @param string $filter_type
-     * @return array
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null): array
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'live_stream') {
+        if ($filter_type === null || $filter_type === 'live_stream') {
             $medias[] = array(
                 'object_type' => 'live_stream',
                 'object_id' => $this->id

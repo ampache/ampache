@@ -303,7 +303,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                         ($user instanceof User && $user->has_access(AccessLevelEnum::LEVEL_MANAGER)) ? null : $user
                     );
                     ob_start();
-                    $walbum->accepted = false;
+                    $walbum->accepted = 0;
                     $walbum->id       = 0;
                     $walbum->show_action_buttons();
                     $results['wanted_action_' . $mbid] = ob_get_clean();

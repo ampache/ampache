@@ -117,23 +117,20 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @param string $filter_type
-     * @return array
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null): array
+    public function get_medias(?string $filter_type = null): array
     {
-        $medias = $this->get_items();
         if ($filter_type) {
-            $nmedias = array();
-            foreach ($medias as $media) {
-                if ($media['object_type'] == $filter_type) {
-                    $nmedias[] = $media;
+            return array_filter(
+                $this->get_items(),
+                function (array $item) use ($filter_type): bool {
+                    return $item['object_type'] == $filter_type;
                 }
-            }
-            $medias = $nmedias;
+            );
+        } else {
+            return $this->get_items();
         }
-
-        return $medias;
     }
 
     /**

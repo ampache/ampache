@@ -270,14 +270,14 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get all childrens and sub-childrens medias.
-     * @param string $filter_type
-     * @return array
+     *
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null): array
+    public function get_medias(?string  $filter_type = null): array
     {
         // Not a media, shouldn't be that
         $medias = array();
-        if ($filter_type === null || $filter_type == 'broadcast') {
+        if ($filter_type === null || $filter_type === 'broadcast') {
             $medias[] = array(
                 'object_type' => 'broadcast',
                 'object_id' => $this->id

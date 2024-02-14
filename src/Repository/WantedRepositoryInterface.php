@@ -25,6 +25,19 @@ namespace Ampache\Repository;
 
 use Ampache\Repository\Model\User;
 
+/**
+ * @phpstan-type DatabaseRow array{
+ *   id: int,
+ *   user: int,
+ *   artist: null|int,
+ *   artist_mbid: null|string,
+ *   mbid: null|string,
+ *   name: null|string,
+ *   year: null|int,
+ *   date: int,
+ *   accepted: int
+ *  }
+ */
 interface WantedRepositoryInterface
 {
     /**
@@ -54,6 +67,8 @@ interface WantedRepositoryInterface
 
     /**
      * retrieves the info from the database and puts it in the cache
+     *
+     * @return null|DatabaseRow
      */
     public function getById(int $wantedId): ?array;
 }

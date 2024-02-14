@@ -415,13 +415,13 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Get all children and sub-childrens media.
-     * @param string $filter_type
-     * @return array
+     *
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null): array
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'song') {
+        if (!$filter_type || $filter_type === 'song') {
             $songs = $this->getSongRepository()->getByAlbumDisk($this->id);
             foreach ($songs as $song_id) {
                 $medias[] = array(

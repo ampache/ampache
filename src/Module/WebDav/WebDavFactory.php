@@ -29,9 +29,8 @@ use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Sabre\DAV\Auth\Backend\BackendInterface;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\Exception;
-use Sabre\DAV\INode;
+use Sabre\DAV\ICollection;
 use Sabre\DAV\Server;
-use Sabre\DAV\Tree;
 
 final class WebDavFactory implements WebDavFactoryInterface
 {
@@ -56,11 +55,9 @@ final class WebDavFactory implements WebDavFactoryInterface
     }
 
     /**
-     * @param Tree|INode|array|null $node The tree object
-     *
      * @throws Exception
      */
-    public function createServer($node): Server
+    public function createServer(ICollection $node): Server
     {
         return new Server($node);
     }

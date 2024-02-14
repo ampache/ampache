@@ -83,12 +83,11 @@ interface playable_item
     public function get_children($name): array;
 
     /**
-     * get_medias
-     *
      * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.
-     * @param string $filter_type
+     *
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null): array;
+    public function get_medias(?string $filter_type = null): array;
 
     public function getId(): int;
 

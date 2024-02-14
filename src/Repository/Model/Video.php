@@ -401,13 +401,13 @@ class Video extends database_object implements
 
     /**
      * Get all childrens and sub-childrens medias.
-     * @param string $filter_type
-     * @return array
+     *
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null): array
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'video') {
+        if ($filter_type === null || $filter_type === 'video') {
             $medias[] = array(
                 'object_type' => 'video',
                 'object_id' => $this->id
