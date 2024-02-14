@@ -48,7 +48,7 @@ use RuntimeException;
  */
 class Art extends database_object
 {
-    protected const DB_TABLENAME = 'art';
+    protected const DB_TABLENAME = 'image';
 
     public const VALID_TYPES = array(
         'bmp',
@@ -540,18 +540,6 @@ class Art extends database_object
         }
 
         return true;
-    }
-
-    /**
-     * clear_image
-     * Clear the image column (if you have the image on disk)
-     *
-     * @param int $image_id
-     */
-    public static function clear_image($image_id): void
-    {
-        $sql = "UPDATE `image` SET `image` = NULL WHERE `id` = ?";
-        Dba::write($sql, array($image_id));
     }
 
     /**
@@ -1171,20 +1159,6 @@ class Art extends database_object
     }
 
     /**
-     * Migrate an object associate images to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
-     * @return PDOStatement|bool
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        $sql = "UPDATE `image` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
-    }
-
-    /**
      * Duplicate an object associate images to a new object
      * @param string $object_type
      * @param int $old_object_id
@@ -1489,45 +1463,6 @@ class Art extends database_object
         echo "</div>";
 
         return true;
-    }
-
-    /**
-     * Get the object details for the art table
-     * @return list<array{id: int, object_id: int, object_type: string, size: string, mime: string}>
-     */
-    public static function get_art_array(): array
-    {
-        $results    = array();
-        $sql        = "SELECT `id`, `object_id`, `object_type`, `size`, `mime` FROM `image` WHERE `image` IS NOT NULL;";
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
-                'id' => (int) $row['id'],
-                'object_id' => (int) $row['object_id'],
-                'object_type' => $row['object_type'],
-                'size' => (string) $row['size'],
-                'mime' => (string) $row['mime'],
-            ];
-        }
-
-        return $results;
-    }
-
-    /**
-     * Get the object details for the art table
-     * @param array $data
-     */
-    public static function get_raw_image($data): string
-    {
-        $sql        = "SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?;";
-        $db_results = Dba::read($sql, $data);
-        $row        = Dba::fetch_assoc($db_results);
-        if (empty($row)) {
-            return '';
-        }
-
-        return (string)$row['image'];
     }
 
     /**

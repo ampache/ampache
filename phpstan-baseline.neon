@@ -12381,11 +12381,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:get_raw_image\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:save_thumb\\(\\) has parameter \\$size with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
