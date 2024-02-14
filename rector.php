@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\Caching\ValueObject\Storage\FileCacheStorage;
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\CodingStyle\Rector\Closure\StaticClosureRector;
@@ -12,6 +13,7 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/tests',
     ])
+    ->withCache(__DIR__ . '/build/rector', FileCacheStorage::class)
     ->withImportNames()
     ->withRules([
         InlineConstructorDefaultToPropertyRector::class
