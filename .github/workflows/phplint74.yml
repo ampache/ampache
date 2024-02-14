@@ -17,4 +17,4 @@ jobs:
       - name: PHP syntax checker 7.4
         uses: prestashop/github-action-php-lint/7.4@v1
         with:
-          folder-to-exclude: "! -path \"./vendor/*\" ! -path \"./tests/*\""
+          folder-to-exclude: "! -path \"./vendor/*\" ! -path \"./tests/*\" ! -path \"./rector.php\""
