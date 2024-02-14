@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\License;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -81,28 +82,33 @@ class EditActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $license    = $this->mock(License::class);
+        $license    = $this->createMock(License::class);
 
-        $licenseId     = 666;
-        $webPath       = 'some-path';
-        $name          = 'some-name';
-        $description   = 'some-description';
-        $external_link = 'some-external-link';
-        $data          = [
-            'license_id' => (string) 666,
-            'name' => $name,
-            'description' => $description,
-            'external_link' => $external_link,
-        ];
+        $licenseId    = 666;
+        $webPath      = 'some-path';
+        $name         = 'some-name';
+        $description  = 'some-description';
+        $externalLink = 'some-external-link';
 
-        $this->licenseRepository->shouldReceive('update')
-            ->with(
-                $license,
-                $name,
-                $description,
-                $external_link
-            )
-            ->once();
+        $this->licenseRepository->shouldReceive('findById')
+            ->with($licenseId)
+            ->once()
+            ->andReturn($license);
+
+        $license->expects(static::once())
+            ->method('setName')
+            ->with($name)
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('setDescription')
+            ->with($description)
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('setExternalLink')
+            ->with($externalLink)
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('save');
 
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
@@ -117,12 +123,12 @@ class EditActionTest extends MockeryTestCase
         $request->shouldReceive('getParsedBody')
             ->withNoArgs()
             ->once()
-            ->andReturn($data);
-
-        $this->licenseRepository->shouldReceive('findById')
-            ->with($licenseId)
-            ->once()
-            ->andReturn($license);
+            ->andReturn([
+                'license_id' => (string) 666,
+                'name' => $name,
+                'description' => $description,
+                'external_link' => $externalLink,
+            ]);
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -149,14 +155,46 @@ class EditActionTest extends MockeryTestCase
         );
     }
 
-    public function testRunCreatesAndReturnsNull(): void
+    public function testRunThrowsIfObjectWasNotFound(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
+        $licenseId = 666;
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $this->licenseRepository->shouldReceive('findById')
+            ->with($licenseId)
+            ->once()
+            ->andReturnNull();
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->once()
+            ->andReturnTrue();
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([
+                'license_id' => (string) 666,
+            ]);
+
+        $this->subject->run(
+            $request,
+            $gatekeeper
+        );
+    }
+
+    public function testRunCreatesAndReturnsNull(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $license    = $this->createMock(License::class);
+
         $name        = 'some-name';
         $description = 'some-description';
-        $data        = ['name' => $name, 'description' => $description];
         $webPath     = 'some-path';
 
         $this->configContainer->shouldReceive('getWebPath')
@@ -172,11 +210,29 @@ class EditActionTest extends MockeryTestCase
         $request->shouldReceive('getParsedBody')
             ->withNoArgs()
             ->once()
-            ->andReturn($data);
+            ->andReturn([
+                'name' => $name,
+                'description' => $description,
+            ]);
 
-        $this->licenseRepository->shouldReceive('create')
-            ->with($name, $description, '')
-            ->once();
+        $this->licenseRepository->shouldReceive('prototype')
+            ->once()
+            ->andReturn($license);
+
+        $license->expects(static::once())
+            ->method('setName')
+            ->with($name)
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('setDescription')
+            ->with($description)
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('setExternalLink')
+            ->with('')
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('save');
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()

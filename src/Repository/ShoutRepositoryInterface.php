@@ -24,10 +24,12 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Shoutbox;
-use Ampache\Repository\Model\User;
 use Traversable;
 
-interface ShoutRepositoryInterface
+/**
+ * @extends BaseRepositoryInterface<Shoutbox>
+ */
+interface ShoutRepositoryInterface extends BaseRepositoryInterface
 {
     /**
      * Returns all shout-box items for the provided object-type and -id
@@ -40,19 +42,9 @@ interface ShoutRepositoryInterface
     ): Traversable;
 
     /**
-     * Retrieve a single shout-item by its id
-     */
-    public function findById(int $shoutId): ?Shoutbox;
-
-    /**
      * Cleans out orphaned shout-box items
      */
     public function collectGarbage(?string $objectType = null, ?int $objectId = null): void;
-
-    /**
-     * this function deletes the shout-box entry
-     */
-    public function delete(Shoutbox $shout): void;
 
     /**
      * This returns the top user_shouts, shout-box objects are always shown regardless and count against the total
@@ -75,9 +67,4 @@ interface ShoutRepositoryInterface
      * Migrates an object associate shouts to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
-
-    /**
-     * Returns a new shout-item
-     */
-    public function prototype(): Shoutbox;
 }

@@ -34,10 +34,12 @@ use PDO;
  * Manages access to license data
  *
  * Tables: `license`
+ *
+ * @extends BaseRepository<License>
  */
-final class LicenseRepository implements LicenseRepositoryInterface
+final class LicenseRepository extends BaseRepository implements LicenseRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
+    protected DatabaseConnectionInterface $connection;
 
     public function __construct(
         DatabaseConnectionInterface $connection
@@ -60,66 +62,6 @@ final class LicenseRepository implements LicenseRepositoryInterface
     }
 
     /**
-     * Retrieve a single license-item by its id
-     */
-    public function findById(int $licenseId): ?License
-    {
-        $license = new License($licenseId);
-        if ($license->isNew()) {
-            return null;
-        }
-
-        return $license;
-    }
-
-    /**
-     * This inserts a new license entry, it returns the auto_inc id
-     *
-     * @return int The id of the created license
-     */
-    public function create(
-        string $name,
-        string $description,
-        string $externalLink
-    ): int {
-        $this->connection->query(
-            'INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)',
-            [$name, $description, $externalLink]
-        );
-
-        return $this->connection->getLastInsertedId();
-    }
-
-    /**
-     * This updates a license entry
-     */
-    public function update(
-        License $license,
-        string $name,
-        string $description,
-        string $externalLink
-    ): void {
-        $this->connection->query(
-            'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
-            [$name, $description, $externalLink, $license->getId()]
-        );
-    }
-
-    /**
-     * Deletes the license
-     */
-    public function delete(
-        License $license
-    ): void {
-        $this->connection->query(
-            'DELETE FROM `license` WHERE `id` = ?',
-            [
-                $license->getId()
-            ]
-        );
-    }
-
-    /**
      * Searches for the License by name and external link
      */
     public function find(string $searchValue): ?int
@@ -139,5 +81,65 @@ final class LicenseRepository implements LicenseRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * @return class-string<License>
+     */
+    protected function getModelClass(): string
+    {
+        return License::class;
+    }
+
+    protected function getTableName(): string
+    {
+        return 'license';
+    }
+
+    /**
+     * @return list<mixed>
+     */
+    protected function getPrototypeParameters(): array
+    {
+        return [
+            $this,
+        ];
+    }
+
+    /**
+     * Persists the item in the database
+     *
+     * If the item is new, it will be created. Otherwise, an update will happen
+     *
+     * @return null|non-negative-int
+     */
+    public function persist(License $license): ?int
+    {
+        $result = null;
+
+        if ($license->isNew()) {
+            $this->connection->query(
+                'INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)',
+                [
+                    $license->getName(),
+                    $license->getDescription(),
+                    $license->getExternalLink()
+                ]
+            );
+
+            $result = $this->connection->getLastInsertedId();
+        } else {
+            $this->connection->query(
+                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
+                [
+                    $license->getName(),
+                    $license->getDescription(),
+                    $license->getExternalLink(),
+                    $license->getId()
+                ]
+            );
+        }
+
+        return $result;
     }
 }

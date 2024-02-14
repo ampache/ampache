@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\License;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -43,16 +44,20 @@ class ShowEditActionTest extends MockeryTestCase
 
     private LicenseRepositoryInterface&MockObject $licenseRepository;
 
+    private ConfigContainerInterface&MockObject $configContainer;
+
     private ShowEditAction $subject;
 
     protected function setUp(): void
     {
         $this->ui                = $this->mock(UiInterface::class);
         $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new ShowEditAction(
             $this->ui,
             $this->licenseRepository,
+            $this->configContainer,
         );
     }
 
@@ -81,6 +86,7 @@ class ShowEditActionTest extends MockeryTestCase
         $license    = $this->mock(License::class);
 
         $licenseId = 666;
+        $webPath   = 'some-path';
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
@@ -97,11 +103,26 @@ class ShowEditActionTest extends MockeryTestCase
             ->with($licenseId)
             ->willReturn($license);
 
+        $this->configContainer->expects(static::once())
+            ->method('getWebPath')
+            ->willReturn($webPath);
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
+        $this->ui->shouldReceive('showBoxTop')
+            ->with('Edit license')
+            ->once();
         $this->ui->shouldReceive('show')
-            ->with('show_edit_license.inc.php', ['license' => $license])
+            ->with(
+                'show_edit_license.inc.php',
+                [
+                    'license' => $license,
+                    'webPath' => $webPath,
+                ]
+            )
+            ->once();
+        $this->ui->shouldReceive('showBoxBottom')
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
