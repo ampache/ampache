@@ -52,6 +52,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
@@ -4203,7 +4204,7 @@ abstract class Catalog extends database_object
             Label::migrate($object_type, $old_object_id, $new_object_id);
             Wanted::migrate($object_type, $old_object_id, $new_object_id);
             self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            Bookmark::migrate($object_type, $old_object_id, $new_object_id);
+            self::getBookmarkRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
 
             return true;
@@ -4355,5 +4356,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(MetadataManagerInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
     }
 }

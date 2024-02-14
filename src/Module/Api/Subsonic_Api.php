@@ -69,6 +69,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use DateTime;
 use DOMDocument;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -2734,15 +2735,22 @@ class Subsonic_Api
      * Returns all bookmarks for this user. A bookmark is a position within a certain media file.
      * Returns a <subsonic-response> element with a nested <bookmarks> element on success.
      * http://www.subsonic.org/pages/api.jsp#getBookmarks
-     * @param array $input
+     * @param array<mixed> $input
      * @param User $user
      */
     public static function getbookmarks($input, $user): void
     {
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getbookmarks');
         $bookmarks = [];
-        foreach (self::getBookmarkRepository()->getBookmarks($user->id) as $bookmarkId) {
-            $bookmarks[] = new Bookmark($bookmarkId);
+
+        $bookmarkRepository = self::getBookmarkRepository();
+
+        foreach ($bookmarkRepository->getByUser($user) as $bookmarkId) {
+            $bookmark = $bookmarkRepository->findById($bookmarkId);
+
+            if ($bookmark !== null) {
+                $bookmarks[] = $bookmark;
+            }
         }
 
         Subsonic_Xml_Data::addBookmarks($response, $bookmarks);
@@ -2780,7 +2788,7 @@ class Subsonic_Api
                     time()
                 );
             } else {
-                self::getBookmarkRepository()->update($bookmark->getId(), (int)$position, time());
+                self::getBookmarkRepository()->update($bookmark->getId(), (int)$position, new DateTime());
             }
             $response = Subsonic_Xml_Data::addSubsonicResponse('createbookmark');
         } else {

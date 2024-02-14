@@ -30,6 +30,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
@@ -706,14 +707,18 @@ class Xml5_Data
      *
      * This returns bookmarks to the user, in a pretty xml document with the information
      *
-     * @param int[] $bookmarks Bookmark id's to include
+     * @param list<int> $bookmarks Bookmark id's to include
      */
-    public static function bookmarks($bookmarks): string
+    public static function bookmarks(array $bookmarks): string
     {
+        $bookmarkRepository = self::getBookmarkRepository();
+
         $string = "";
         foreach ($bookmarks as $bookmark_id) {
-            $bookmark = new Bookmark($bookmark_id);
-            $string .= "<bookmark id=\"$bookmark_id\">\n\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n\t<object_id>" . $bookmark->object_id . "</object_id>\n\t<position>" . $bookmark->position . "</position>\n\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n</bookmark>\n";
+            $bookmark = $bookmarkRepository->findById($bookmark_id);
+            if ($bookmark !== null) {
+                $string .= "<bookmark id=\"$bookmark_id\">\n\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n\t<object_id>" . $bookmark->object_id . "</object_id>\n\t<position>" . $bookmark->position . "</position>\n\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n</bookmark>\n";
+            }
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -1210,5 +1215,15 @@ class Xml5_Data
         global $dic;
 
         return $dic->get(LicenseRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
     }
 }

@@ -88,7 +88,7 @@ class Bookmark extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -169,22 +169,13 @@ class Bookmark extends database_object
         return Dba::write($sql, array($data['position'], scrub_in((string) $data['comment']), $updateDate, $bookmarkId));
     }
 
-    /**
-     * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
-     * @return PDOStatement|bool
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        $sql = "UPDATE IGNORE `bookmark` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;";
-
-        return Dba::write($sql, array($new_object_id, $old_object_id, ucfirst($object_type)));
-    }
-
     public function getUserName(): string
     {
         return User::get_username($this->user);
+    }
+
+    public function ownedByUser(User $user): bool
+    {
+        return $user->getId() === $this->user;
     }
 }

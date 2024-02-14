@@ -1345,7 +1345,7 @@ class Subsonic_Xml_Data
     /**
      * addBookmarks
      * @param SimpleXMLElement $xml
-     * @param Bookmark[] $bookmarks
+     * @param list<Bookmark> $bookmarks
      */
     public static function addBookmarks($xml, $bookmarks): void
     {
