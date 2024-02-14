@@ -48,7 +48,7 @@ use RuntimeException;
  */
 class Art extends database_object
 {
-    protected const DB_TABLENAME = 'art';
+    protected const DB_TABLENAME = 'image';
 
     public const VALID_TYPES = array(
         'bmp',
