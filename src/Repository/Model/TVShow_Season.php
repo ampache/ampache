@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -428,7 +429,7 @@ class TVShow_Season extends database_object implements
             $sql     = "DELETE FROM `tvshow_season` WHERE `id` = ?";
             $deleted = (Dba::write($sql, array($this->id)) !== false);
             if ($deleted) {
-                Art::garbage_collection('tvshow_season', $this->id);
+                $this->getArtCleanup()->collectGarbageForObject('tvshow_season', $this->id);
                 Userflag::garbage_collection('tvshow_season', $this->id);
                 Rating::garbage_collection('tvshow_season', $this->id);
                 $this->getShoutRepository()->collectGarbage('tvshow_season', $this->getId());
@@ -469,5 +470,15 @@ class TVShow_Season extends database_object implements
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getArtCleanup(): ArtCleanupInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtCleanupInterface::class);
     }
 }

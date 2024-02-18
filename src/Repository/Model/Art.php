@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Art\Collector\MetaTagCollectorModule;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
@@ -683,7 +684,7 @@ class Art extends database_object
      * @param int $uid
      * @param string $kind
      */
-    private static function delete_from_dir($type, $uid, $kind = ''): void
+    public static function delete_from_dir($type, $uid, $kind = ''): void
     {
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, $kind);
@@ -721,11 +722,7 @@ class Art extends database_object
      */
     public function reset(): void
     {
-        if (AmpConfig::get('album_art_store_disk')) {
-            self::delete_from_dir($this->type, $this->uid, $this->kind);
-        }
-        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
-        Dba::write($sql, array($this->uid, $this->type, $this->kind));
+        $this->getArtCleanup()->deleteForArt($this);
     }
 
     /**
@@ -1106,59 +1103,6 @@ class Art extends database_object
     }
 
     /**
-     * garbage_collection
-     * This cleans up art that no longer has a corresponding object
-     * @param string $object_type
-     * @param int $object_id
-     */
-    public static function garbage_collection($object_type = null, $object_id = null): void
-    {
-        $types = array(
-            'album',
-            'album_disk',
-            'artist',
-            'catalog',
-            'tag',
-            'label',
-            'live_stream',
-            'playlist',
-            'podcast',
-            'podcast_episode',
-            'song',
-            'tvshow',
-            'tvshow_season',
-            'user',
-            'video'
-        );
-
-        if ($object_type !== null && $object_id !== null) {
-            if (in_array($object_type, $types)) {
-                if (AmpConfig::get('album_art_store_disk')) {
-                    self::delete_from_dir($object_type, $object_id);
-                }
-                $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, array($object_type, $object_id));
-            } else {
-                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
-            }
-        } else {
-            $album_art_store_disk = AmpConfig::get('album_art_store_disk');
-            // iterate over our types and delete the images
-            foreach ($types as $type) {
-                if ($album_art_store_disk) {
-                    $sql        = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
-                    $db_results = Dba::read($sql);
-                    while ($row = Dba::fetch_row($db_results)) {
-                        self::delete_from_dir($row[1], (int)$row[0]);
-                    }
-                }
-                $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
-                Dba::write($sql);
-            } // foreach
-        }
-    }
-
-    /**
      * Duplicate an object associate images to a new object
      * @param string $object_type
      * @param int $old_object_id
@@ -1466,12 +1410,22 @@ class Art extends database_object
     }
 
     /**
-     * @deprecated
+     * @deprecated Inject dependency
      */
     private function getSongRepository(): SongRepositoryInterface
     {
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private function getArtCleanup(): ArtCleanupInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtCleanupInterface::class);
     }
 }

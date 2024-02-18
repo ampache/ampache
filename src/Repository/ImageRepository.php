@@ -32,7 +32,7 @@ use PDO;
 /**
  * Manages database access related to images (`Art`)
  *
- * Tables: `image``,
+ * Tables: `image`
  */
 final class ImageRepository implements ImageRepositoryInterface
 {
