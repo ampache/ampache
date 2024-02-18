@@ -25,16 +25,18 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
-use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
+use MusicBrainz\MusicBrainz;
+use PDOStatement;
 
 class Wanted extends database_object
 {
@@ -134,7 +136,7 @@ class Wanted extends database_object
             $wartist['mbid'] = $lookupId;
             $wartist['name'] = $martist->{'name'};
             parent::add_to_cache('missing_artist', $lookupId, $wartist);
-            $wartist = self::get_missing_artist($lookupId);
+            $wartist = self::getMissingArtistRetriever()->retrieve($lookupId);
         }
 
         $wantedRepository = self::getWantedRepository();
@@ -185,7 +187,7 @@ class Wanted extends database_object
                                 $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
                                 $wanted->f_artist_link = ($artist !== null)
                                     ? $artist->get_f_link()
-                                    : $wartist['link'];
+                                    : $wartist['link'] ?? '';
                             }
                             $results[] = $wanted;
                         }
@@ -198,40 +200,33 @@ class Wanted extends database_object
     }
 
     /**
-     * Get missing artist data.
+     * Get wanted release by mbid.
      * @param string $mbid
-     * @return array
      */
-    public static function get_missing_artist($mbid): array
+    public static function get_wanted($mbid): int
     {
-        $wartist = array();
-        if (empty($mbid)) {
-            return $wartist;
+        $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
+        $db_results = Dba::read($sql, array($mbid));
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (int)$row['id'];
         }
 
-        if (parent::is_cached('missing_artist', $mbid)) {
-            $wartist = parent::get_from_cache('missing_artist', $mbid);
-        } else {
-            $mbrainz         = new MusicBrainz(new RequestsHttpAdapter());
-            $wartist['mbid'] = $mbid;
-            $wartist['name'] = T_('Unknown Artist');
+        return 0;
+    }
 
-            try {
-                $martist = $mbrainz->lookup('artist', $mbid);
-            } catch (Exception $error) {
-                return $wartist;
-            }
-            if (!isset($martist->{'name'})) {
-                return $wartist;
-            }
-
-            $wartist['name'] = $martist->{'name'};
-            parent::add_to_cache('missing_artist', $mbid, $wartist);
+    /**
+     * Get wanted release by name.
+     * @param string $name
+     */
+    public static function get_wanted_by_name($name): int
+    {
+        $sql        = "SELECT `id` FROM `wanted` WHERE `name` = ? LIMIT 1";
+        $db_results = Dba::read($sql, array($name));
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (int)$row['id'];
         }
 
-        $wartist['link'] = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $wartist['mbid'] . "\" title=\"" . $wartist['name'] . "\">" . $wartist['name'] . "</a>";
-
-        return $wartist;
+        return 0;
     }
 
     /**
@@ -377,8 +372,8 @@ class Wanted extends database_object
                                     $artist      = new Artist($this->artist);
                                     $artist_name = $artist->name;
                                 } elseif ($this->artist_mbid !== null) {
-                                    $wartist     = Wanted::get_missing_artist($this->artist_mbid);
-                                    $artist_name = $wartist['name'];
+                                    $wartist     = self::getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+                                    $artist_name = $wartist['name'] ?? '';
                                 } else {
                                     $artist_name = '';
                                 }
@@ -421,8 +416,8 @@ class Wanted extends database_object
             $artist              = new Artist($this->artist);
             $this->f_artist_link = $artist->get_f_link();
         } elseif ($this->artist_mbid !== null) {
-            $wartist             = Wanted::get_missing_artist($this->artist_mbid);
-            $this->f_artist_link = $wartist['link'];
+            $wartist             = self::getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+            $this->f_artist_link = $wartist['link'] ?? '';
         } else {
             $this->f_artist_link = '';
         }
@@ -448,6 +443,9 @@ class Wanted extends database_object
         return $this->mbid;
     }
 
+    /**
+     * @deprecated Inject dependency
+     */
     private static function getAlbumRepository(): AlbumRepositoryInterface
     {
         global $dic;
@@ -455,10 +453,23 @@ class Wanted extends database_object
         return $dic->get(AlbumRepositoryInterface::class);
     }
 
+    /**
+     * @deprecated Inject dependency
+     */
     private static function getWantedRepository(): WantedRepositoryInterface
     {
         global $dic;
 
         return $dic->get(WantedRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getMissingArtistRetriever(): MissingArtistRetrieverInterface
+    {
+        global $dic;
+
+        return $dic->get(MissingArtistRetrieverInterface::class);
     }
 }
