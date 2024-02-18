@@ -28,10 +28,10 @@ namespace Ampache\Module\Catalog\GarbageCollector;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -69,6 +69,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private WantedRepositoryInterface $wantedRepository;
 
+    private LabelRepositoryInterface $labelRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         BookmarkRepositoryInterface $bookmarkRepository,
@@ -77,7 +79,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         UserRepositoryInterface $userRepository,
         MetadataManagerInterface $metadataManager,
         PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        WantedRepositoryInterface $wantedRepository
+        WantedRepositoryInterface $wantedRepository,
+        LabelRepositoryInterface $labelRepository
     ) {
         $this->albumRepository          = $albumRepository;
         $this->bookmarkRepository       = $bookmarkRepository;
@@ -87,6 +90,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->metadataManager          = $metadataManager;
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
         $this->wantedRepository         = $wantedRepository;
+        $this->labelRepository          = $labelRepository;
     }
 
     public function collect(): void
@@ -101,7 +105,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Stats::garbage_collection();
         Rating::garbage_collection();
         Userflag::garbage_collection();
-        Label::garbage_collection();
+        $this->labelRepository->collectGarbage();
         Recommendation::garbage_collection();
         $this->useractivityRepository->collectGarbage();
         $this->userRepository->collectGarbage();

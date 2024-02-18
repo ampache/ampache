@@ -442,16 +442,8 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * garbage_collection
-     *
-     * This cleans out unused artists
+     * @deprecated inject dependency
      */
-    public static function garbage_collection(): void
-    {
-        Dba::write("DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`);");
-        Dba::write("DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL;");
-    }
-
     private static function getLabelRepository(): LabelRepositoryInterface
     {
         global $dic;
@@ -459,6 +451,9 @@ class Label extends database_object implements library_item
         return $dic->get(LabelRepositoryInterface::class);
     }
 
+    /**
+     * @deprecated inject dependency
+     */
     private static function getSongRepository(): SongRepositoryInterface
     {
         global $dic;

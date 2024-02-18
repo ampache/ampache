@@ -166,12 +166,6 @@ final class ModelFactory implements ModelFactoryInterface
         return new Access($accessId);
     }
 
-    public function createLabel(
-        int $labelId
-    ): Label {
-        return new Label($labelId);
-    }
-
     public function createVideo(
         int $videoId
     ): Video {

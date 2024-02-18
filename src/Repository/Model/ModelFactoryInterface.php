@@ -113,10 +113,6 @@ interface ModelFactoryInterface
         int $accessId
     ): Access;
 
-    public function createLabel(
-        int $labelId
-    ): Label;
-
     public function createVideo(
         int $videoId
     ): Video;

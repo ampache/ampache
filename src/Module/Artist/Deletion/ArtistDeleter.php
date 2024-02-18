@@ -23,9 +23,9 @@
 
 namespace Ampache\Module\Artist\Deletion;
 
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
@@ -55,6 +55,8 @@ final class ArtistDeleter implements ArtistDeleterInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private LabelRepositoryInterface $labelRepository;
+
     public function __construct(
         AlbumDeleterInterface $albumDeleter,
         ArtistRepositoryInterface $artistRepository,
@@ -62,7 +64,8 @@ final class ArtistDeleter implements ArtistDeleterInterface
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ShoutRepositoryInterface $shoutRepository,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        LabelRepositoryInterface $labelRepository
     ) {
         $this->albumDeleter           = $albumDeleter;
         $this->artistRepository       = $artistRepository;
@@ -71,6 +74,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
         $this->logger                 = $logger;
         $this->shoutRepository        = $shoutRepository;
         $this->useractivityRepository = $useractivityRepository;
+        $this->labelRepository        = $labelRepository;
     }
 
     /**
@@ -106,7 +110,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
             Art::garbage_collection('artist', $artistId);
             Userflag::garbage_collection('artist', $artistId);
             Rating::garbage_collection('artist', $artistId);
-            Label::garbage_collection();
+            $this->labelRepository->collectGarbage();
             $this->shoutRepository->collectGarbage('artist', $artistId);
             $this->useractivityRepository->collectGarbage('artist', $artistId);
         }

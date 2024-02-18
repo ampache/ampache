@@ -62,6 +62,7 @@ use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
+use DateTime;
 use Exception;
 use Generator;
 use PDOStatement;
@@ -2148,6 +2149,9 @@ abstract class Catalog extends database_object
         $user        = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
+
+        $labelRepository = self::getLabelRepository();
+
         foreach ($meta_order as $plugin_name) {
             if (in_array($plugin_name, $plugin_list)) {
                 // only load metadata plugins you enable
@@ -2158,8 +2162,10 @@ abstract class Catalog extends database_object
                     switch ($object_type) {
                         case 'label':
                             foreach ($object_list as $label_id) {
-                                $label = new Label($label_id);
-                                $plugin->_plugin->get_external_metadata($label, 'label');
+                                $label = $labelRepository->findById($label_id);
+                                if ($label !== null) {
+                                    $plugin->_plugin->get_external_metadata($label, 'label');
+                                }
                             }
                             break;
                         case 'artist':
@@ -2843,11 +2849,13 @@ abstract class Catalog extends database_object
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
                 $label_id = Label::helper($label_name) ?? $labelRepository->lookup($label_name);
                 if ((int)$label_id > 0) {
-                    $label   = new Label((int)$label_id);
-                    $artists = $label->get_artists();
-                    if ($song->artist && !in_array($song->artist, $artists)) {
-                        debug_event(__CLASS__, "$song->artist: adding association to $label->name", 4);
-                        $labelRepository->addArtistAssoc($label->id, $song->artist);
+                    $label = $labelRepository->findById($label_id);
+                    if ($label !== null) {
+                        $artists = $label->get_artists();
+                        if ($song->artist && !in_array($song->artist, $artists)) {
+                            debug_event(__CLASS__, "$song->artist: adding association to $label->name", 4);
+                            $labelRepository->addArtistAssoc($label->id, $song->artist, new DateTime());
+                        }
                     }
                 }
             }
