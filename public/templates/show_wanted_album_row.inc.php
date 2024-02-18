@@ -33,6 +33,6 @@ use Ampache\Repository\Model\Wanted;
 <td class="cel_user"><?php echo $libitem->f_user; ?></td>
 <td class="cel_action">
     <div id="wanted_action_<?php echo $libitem->mbid; ?>">
-    <?php $libitem->show_action_buttons(); ?>
+    <?php echo $libitem->show_action_buttons(); ?>
     </div>
 </td>

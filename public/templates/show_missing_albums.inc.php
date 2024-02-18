@@ -24,8 +24,9 @@ declare(strict_types=0);
  */
 
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Wanted;
 
-/** @var array $walbums */
+/** @var list<Wanted> $walbums */
 
 $thcount = 5; ?>
 <?php Ui::show_box_top(T_('Missing Albums'), 'info-box'); ?>
@@ -41,7 +42,7 @@ $thcount = 5; ?>
     </thead>
     <tbody>
         <?php
-        if (!empty($walbums)) {
+        if ($walbums !== []) {
             foreach ($walbums as $libitem) { ?>
         <tr id="walbum_<?php echo $libitem->mbid; ?>">
             <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>

@@ -41,11 +41,11 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\WantedRepositoryInterface;
 
 /**
  * This is a wrapper for all of the different database cleaning
@@ -67,6 +67,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
 
+    private WantedRepositoryInterface $wantedRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         BookmarkRepositoryInterface $bookmarkRepository,
@@ -74,7 +76,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         UserActivityRepositoryInterface $useractivityRepository,
         UserRepositoryInterface $userRepository,
         MetadataManagerInterface $metadataManager,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        WantedRepositoryInterface $wantedRepository
     ) {
         $this->albumRepository          = $albumRepository;
         $this->bookmarkRepository       = $bookmarkRepository;
@@ -83,6 +86,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->userRepository           = $userRepository;
         $this->metadataManager          = $metadataManager;
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->wantedRepository         = $wantedRepository;
     }
 
     public function collect(): void
@@ -92,7 +96,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->albumRepository->collectGarbage();
         Video::garbage_collection();
         $this->bookmarkRepository->collectGarbage();
-        Wanted::garbage_collection();
+        $this->wantedRepository->collectGarbage();
         Art::garbage_collection();
         Stats::garbage_collection();
         Rating::garbage_collection();
