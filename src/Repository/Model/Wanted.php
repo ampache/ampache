@@ -36,7 +36,6 @@ use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
-use PDOStatement;
 
 class Wanted extends database_object
 {
