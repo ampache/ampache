@@ -207,6 +207,5 @@ final class ConfigurationKeyEnum
     public const WAVEFORM                              = 'waveform';
     public const WEB_PATH                              = 'web_path';
     public const WRITE_TAGS                            = 'write_tags';
-
     public const ALBUM_ART_STORE_DISK                  = 'album_art_store_disk';
 }
