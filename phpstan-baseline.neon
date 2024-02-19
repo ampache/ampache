@@ -4711,11 +4711,6 @@ parameters:
 			path: src/Module/Application/Art/SelectArtAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$mbid of static method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_artist\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Artist/ShowMissingAction.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$enabled\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
@@ -14592,7 +14587,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$name on array\\.$#"
-			count: 3
+			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
@@ -14612,11 +14607,6 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$title on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
 
