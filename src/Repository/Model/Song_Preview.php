@@ -30,6 +30,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 
 class Song_Preview extends database_object implements Media, playable_item
 {
@@ -218,9 +219,9 @@ class Song_Preview extends database_object implements Media, playable_item
         if ($this->artist) {
             return (string) (new Artist($this->artist))->get_fullname();
         } else {
-            $wartist             = Wanted::get_missing_artist((string)$this->artist_mbid);
+            $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
 
-            return $wartist['name'];
+            return $wartist['name'] ?? '';
         }
     }
 
@@ -241,8 +242,8 @@ class Song_Preview extends database_object implements Media, playable_item
         if ($this->artist) {
             $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist) . "\"> " . scrub_out($this->f_artist) . "</a>";
         } else {
-            $wartist             = Wanted::get_missing_artist((string)$this->artist_mbid);
-            $this->f_artist_link = $wartist['link'];
+            $wartist             = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+            $this->f_artist_link = $wartist['link'] ?? '';
         }
 
         // Format the title
@@ -487,5 +488,15 @@ class Song_Preview extends database_object implements Media, playable_item
     public function remove(): bool
     {
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getMissingArtistRetriever(): MissingArtistRetrieverInterface
+    {
+        global $dic;
+
+        return $dic->get(MissingArtistRetrieverInterface::class);
     }
 }

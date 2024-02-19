@@ -34,6 +34,7 @@ use Ampache\Config\Init\InitializationHandlerGetText;
 use Ampache\Config\Init\InitializationHandlerGlobals;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\DbaDatabaseConnection;
+use Ampache\Module\System\Cache\ArrayCacheDriver;
 use Ampache\Module\Util\EnvironmentInterface;
 use getID3;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
@@ -51,6 +52,7 @@ use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
+use Psr\SimpleCache\CacheInterface;
 use SpotifyWebAPI\SpotifyWebAPI;
 
 use function DI\autowire;
@@ -83,6 +85,7 @@ return [
             ]
         );
     }),
+    CacheInterface::class => autowire(ArrayCacheDriver::class),
     Psr17Factory::class => autowire(),
     ResponseFactoryInterface::class => autowire(Psr17Factory::class),
     StreamFactoryInterface::class => autowire(Psr17Factory::class),
