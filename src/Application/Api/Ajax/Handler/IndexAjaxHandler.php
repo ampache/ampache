@@ -168,7 +168,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                         $biography = Recommendation::get_artist_info($artist->id);
                     } else {
                         $fullname  = $this->requestParser->getFromRequest('fullname');
-                        $artist    = new Wanted(Wanted::get_wanted_by_name($fullname));
+                        $artist    = $this->wantedRepository->findByName($fullname);
                         $biography = Recommendation::get_artist_info_by_name(rawurldecode($fullname));
                     }
                     ob_start();
@@ -284,10 +284,11 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
                     if ($user instanceof User && !$this->wantedRepository->find($mbid, $user)) {
                         Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
-                        ob_start();
-                        $walbum = new Wanted(Wanted::get_wanted($mbid));
-                        $walbum->show_action_buttons();
-                        $results['wanted_action_' . $mbid] = ob_get_clean();
+
+                        $walbum = $this->wantedRepository->findByMusicBrainzId($mbid);
+                        if ($walbum !== null) {
+                            $results['wanted_action_' . $mbid] = $walbum->show_action_buttons();
+                        }
                     } else {
                         debug_event('index.ajax', 'Already wanted, skipped.', 5);
                     }
@@ -295,29 +296,33 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'remove_wanted':
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
-                    $mbid    = $this->requestParser->getFromRequest('mbid');
-                    $walbum  = new Wanted(Wanted::get_wanted($mbid));
+                    $mbid   = $this->requestParser->getFromRequest('mbid');
+                    $walbum = $this->wantedRepository->findByMusicBrainzId($mbid);
 
                     $this->wantedRepository->deleteByMusicbrainzId(
                         $mbid,
                         ($user instanceof User && $user->has_access(AccessLevelEnum::LEVEL_MANAGER)) ? null : $user
                     );
-                    ob_start();
-                    $walbum->accepted = 0;
-                    $walbum->id       = 0;
-                    $walbum->show_action_buttons();
-                    $results['wanted_action_' . $mbid] = ob_get_clean();
+
+                    if ($walbum !== null) {
+                        $walbum->accepted = 0;
+                        $walbum->id       = 0;
+
+                        $results['wanted_action_' . $mbid] = $walbum->show_action_buttons();
+                    }
                 }
                 break;
             case 'accept_wanted':
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
                     $mbid = $this->requestParser->getFromRequest('mbid');
 
-                    $walbum = new Wanted(Wanted::get_wanted($mbid));
-                    $walbum->accept();
-                    ob_start();
-                    $walbum->show_action_buttons();
-                    $results['wanted_action_' . $mbid] = ob_get_clean();
+                    $walbum = $this->wantedRepository->findByMusicBrainzId($mbid);
+
+                    if ($walbum !== null) {
+                        $walbum->accept();
+
+                        $results['wanted_action_' . $mbid] = $walbum->show_action_buttons();
+                    }
                 }
                 break;
             case 'delete_play':

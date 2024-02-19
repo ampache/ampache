@@ -35,7 +35,6 @@ use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
-use PDOStatement;
 
 class Wanted extends database_object
 {
@@ -51,11 +50,6 @@ class Wanted extends database_object
     public ?int $year;
     public int $date;
     public int $accepted;
-
-    /**
-     * @var null|string $release_mbid
-     */
-    public $release_mbid;
 
     /**
      * @var null|string $link
@@ -99,7 +93,7 @@ class Wanted extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -112,7 +106,7 @@ class Wanted extends database_object
      * Get list of library's missing albums from MusicBrainz
      * @param Artist|null $artist
      * @param string $mbid
-     * @return array
+     * @return list<Wanted>
      */
     public static function get_missing_albums($artist, $mbid = ''): array
     {
@@ -143,6 +137,8 @@ class Wanted extends database_object
             $wartist = self::get_missing_artist($lookupId);
         }
 
+        $wantedRepository = self::getWantedRepository();
+
         $results = array();
         if (!empty($martist)) {
             foreach ($martist->{'release-groups'} as $group) {
@@ -159,11 +155,11 @@ class Wanted extends database_object
                             empty(static::getAlbumRepository()->getByMbidGroup(($group->id))) ||
                             ($artist !== null && $artist->id && empty(static::getAlbumRepository()->getByName($group->title, $artist->id)))
                         ) {
-                            $wantedid = self::get_wanted($group->id);
-                            $wanted   = new Wanted($wantedid);
-                            if ($wanted->isNew() === false) {
+                            $wanted = $wantedRepository->findByMusicBrainzId($group->id);
+                            if ($wanted !== null) {
                                 $wanted->format();
                             } else {
+                                $wanted       = $wantedRepository->prototype();
                                 $wanted->mbid = $group->id;
                                 if ($artist !== null) {
                                     $wanted->artist = $artist->id;
@@ -239,36 +235,6 @@ class Wanted extends database_object
     }
 
     /**
-     * Get wanted release by mbid.
-     * @param string $mbid
-     */
-    public static function get_wanted($mbid): int
-    {
-        $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
-        $db_results = Dba::read($sql, array($mbid));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int)$row['id'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * Get wanted release by name.
-     * @param string $name
-     */
-    public static function get_wanted_by_name($name): int
-    {
-        $sql        = "SELECT `id` FROM `wanted` WHERE `name` = ? LIMIT 1";
-        $db_results = Dba::read($sql, array($name));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int)$row['id'];
-        }
-
-        return 0;
-    }
-
-    /**
      * Delete a wanted release by mbid.
      * @param string $mbid
      * @throws \MusicBrainz\Exception
@@ -337,12 +303,13 @@ class Wanted extends database_object
     /**
      * Show action buttons.
      */
-    public function show_action_buttons(): void
+    public function show_action_buttons(): string
     {
         if ($this->isNew() === false) {
+            $result = '';
             if ($this->accepted === 0) {
                 if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
-                    echo Ajax::button(
+                    $result .= Ajax::button(
                         '?page=index&action=accept_wanted&mbid=' . $this->mbid,
                         'enable',
                         T_('Accept'),
@@ -363,18 +330,19 @@ class Wanted extends database_object
                     )
                 )
             ) {
-                echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
+                $result .= " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
             }
+
+            return $result;
         } else {
-            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode((string)$this->name) . '&year=' . (int) $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
+            return Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode((string)$this->name) . '&year=' . (int) $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
         }
     }
 
     /**
      * Load wanted release data.
-     * @param bool $track_details
      */
-    public function load_all($track_details = true): void
+    public function load_all(): void
     {
         $mbrainz     = new MusicBrainz(new RequestsHttpAdapter());
         $this->songs = array();
@@ -389,10 +357,10 @@ class Wanted extends database_object
                 // Load from database if already cached
                 $this->songs = Song_Preview::get_song_previews($this->mbid);
                 if (count($group->releases) > 0) {
-                    $this->release_mbid = $group->releases[0]->id;
-                    if ($track_details && count($this->songs) == 0) {
+                    $release_mbid = $group->releases[0]->id;
+                    if (count($this->songs) == 0) {
                         // Use the first release as reference for track content
-                        $release = $mbrainz->lookup('release', $this->release_mbid, array('recordings'));
+                        $release = $mbrainz->lookup('release', $release_mbid, array('recordings'));
                         foreach ($release->media as $media) {
                             foreach ($media->tracks as $track) {
                                 $song                = array();
@@ -458,62 +426,26 @@ class Wanted extends database_object
         } else {
             $this->f_artist_link = '';
         }
-        $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->name) . "</a>";
+
+
+        $this->f_link = sprintf(
+            '<a href="/albums.php?action=show_missing&mbid=%s&artist=%s&artist_mbid=%s" title="%s">%s</a>',
+            $this->mbid,
+            $this->artist,
+            $this->artist_mbid,
+            $this->name,
+            scrub_out($this->name)
+        );
+
         if (isset($this->user)) {
             $user         = new User($this->user);
             $this->f_user = $user->get_fullname();
         }
     }
 
-    /**
-     * get_fullname
-     */
-    public function get_fullname(): ?string
+    public function getMusicBrainzId(): ?string
     {
-        return $this->name;
-    }
-
-    /**
-     * Get item link.
-     */
-    public function get_link(): ?string
-    {
-        // don't do anything if it's formatted
-        if (!isset($this->link)) {
-            $web_path   = AmpConfig::get('web_path');
-            $this->link = $web_path . "/albums.php?action=show_missing&mbid=" . $this->mbid . "&artist=" . $this->artist . "&artist_mbid=" . $this->artist_mbid . "\" title=\"" . $this->name;
-        }
-
-        return $this->link;
-    }
-
-    /**
-     * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
-     * @return PDOStatement|bool
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        if ($object_type == 'artist') {
-            $sql    = "UPDATE `wanted` SET `artist` = ? WHERE `artist` = ?";
-            $params = array($new_object_id, $old_object_id);
-
-            return Dba::write($sql, $params);
-        }
-
-        return false;
-    }
-
-    /**
-     * garbage_collection
-     *
-     * This cleans out unused artists
-     */
-    public static function garbage_collection(): void
-    {
-        Dba::write("DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`);");
+        return $this->mbid;
     }
 
     private static function getAlbumRepository(): AlbumRepositoryInterface

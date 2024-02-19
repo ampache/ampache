@@ -24,6 +24,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Wanted;
 
 /**
  * @phpstan-type DatabaseRow array{
@@ -71,4 +72,31 @@ interface WantedRepositoryInterface
      * @return null|DatabaseRow
      */
     public function getById(int $wantedId): ?array;
+
+    /**
+     * Find a single item by its id
+     */
+    public function findById(int $itemId): ?Wanted;
+
+    /**
+     * Find wanted release by name.
+     */
+    public function findByName(string $name): ?Wanted;
+
+    /**
+     * Find wanted release by mbid.
+     */
+    public function findByMusicBrainzId(string $mbid): ?Wanted;
+
+    public function prototype(): Wanted;
+
+    /**
+     * This cleans out unused wanted items
+     */
+    public function collectGarbage(): void;
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrateArtist(int $oldObjectId, int $newObjectId): void;
 }

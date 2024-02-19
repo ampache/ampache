@@ -26,6 +26,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Wanted;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -197,5 +198,76 @@ class WantedRepositoryTest extends TestCase
             $value,
             $this->subject->getAcceptedCount()
         );
+    }
+
+    public function testFindByNameReturnsNullIfNoEntryWasFound(): void
+    {
+        $name = 'some-value';
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `id` FROM `wanted` WHERE `name` = ? LIMIT 1',
+                [$name]
+            )
+            ->willReturn(false);
+
+        static::assertNull(
+            $this->subject->findByName($name)
+        );
+    }
+
+    public function testFindByMusicBrainzIdReturnsNullIfNoEntryWasFound(): void
+    {
+        $mbid = 'some-mbid';
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `id` FROM `wanted` WHERE `mbid` = ?',
+                [$mbid]
+            )
+            ->willReturn(false);
+
+        static::assertNull(
+            $this->subject->findByMusicBrainzId($mbid)
+        );
+    }
+
+    public function testPrototypeReturnsNewInstance(): void
+    {
+        static::assertInstanceOf(
+            Wanted::class,
+            $this->subject->prototype()
+        );
+    }
+
+    public function testCollectGarbagePerformsCleanup(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'
+            );
+
+        $this->subject->collectGarbage();
+    }
+
+    public function testMigrateArtistMigrates(): void
+    {
+        $oldObjectId = 666;
+        $newObjectId = 42;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `wanted` SET `artist` = ? WHERE `artist` = ?',
+                [
+                    $newObjectId,
+                    $oldObjectId
+                ]
+            );
+
+        $this->subject->migrateArtist($oldObjectId, $newObjectId);
     }
 }

@@ -14616,11 +14616,6 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php

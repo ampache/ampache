@@ -28,6 +28,7 @@ namespace Ampache\Repository;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Wanted;
 
 /**
  * Manages database access related to Wanted-items/recommendations
@@ -146,5 +147,79 @@ final class WantedRepository implements WantedRepositoryInterface
 
         /** @var DatabaseRow $row */
         return $row;
+    }
+
+    /**
+     * Find a single item by its id
+     */
+    public function findById(int $itemId): ?Wanted
+    {
+        $item = new Wanted($itemId);
+        if ($item->isNew()) {
+            return null;
+        }
+
+        return $item;
+    }
+
+    /**
+     * Find wanted release by name.
+     */
+    public function findByName(string $name): ?Wanted
+    {
+        $rowId = $this->connection->fetchOne(
+            'SELECT `id` FROM `wanted` WHERE `name` = ? LIMIT 1',
+            [$name]
+        );
+
+        if ($rowId === false) {
+            return null;
+        }
+
+        return new Wanted($rowId);
+    }
+
+    /**
+     * Find wanted release by mbid.
+     */
+    public function findByMusicBrainzId(string $mbid): ?Wanted
+    {
+        $rowId = $this->connection->fetchOne(
+            'SELECT `id` FROM `wanted` WHERE `mbid` = ?',
+            [$mbid]
+        );
+
+        if ($rowId === false) {
+            return null;
+        }
+
+        return new Wanted($rowId);
+    }
+
+    public function prototype(): Wanted
+    {
+        return new Wanted();
+    }
+
+    /**
+     * This cleans out unused wanted items
+     */
+    public function collectGarbage(): void
+    {
+        $this->connection->query('DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+    }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrateArtist(int $oldObjectId, int $newObjectId): void
+    {
+        $this->connection->query(
+            'UPDATE `wanted` SET `artist` = ? WHERE `artist` = ?',
+            [
+                $newObjectId,
+                $oldObjectId
+            ]
+        );
     }
 }

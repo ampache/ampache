@@ -61,6 +61,7 @@ use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
 use Generator;
 use PDOStatement;
@@ -3362,7 +3363,7 @@ abstract class Catalog extends database_object
             Userflag::migrate('artist', $row['maxid'], $row['minid']);
             Label::migrate('artist', $row['maxid'], $row['minid']);
             Rating::migrate('artist', $row['maxid'], $row['minid']);
-            Wanted::migrate('artist', $row['maxid'], $row['minid']);
+            self::getWantedRepository()->migrateArtist($row['maxid'], $row['minid']);
             Clip::migrate('artist', $row['maxid'], $row['minid']);
             self::migrate_map('artist', $row['maxid'], $row['minid']);
 
@@ -4202,7 +4203,9 @@ abstract class Catalog extends database_object
             Art::duplicate($object_type, $old_object_id, $new_object_id);
             Playlist::migrate($object_type, $old_object_id, $new_object_id);
             Label::migrate($object_type, $old_object_id, $new_object_id);
-            Wanted::migrate($object_type, $old_object_id, $new_object_id);
+            if ($object_type === 'artist') {
+                self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
+            }
             self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::getBookmarkRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
@@ -4366,5 +4369,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(BookmarkRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getWantedRepository(): WantedRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(WantedRepositoryInterface::class);
     }
 }

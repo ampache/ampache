@@ -46,6 +46,7 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\WantedRepositoryInterface;
 use PDOStatement;
 use Traversable;
 
@@ -2186,7 +2187,7 @@ class Song extends database_object implements
             Userflag::migrate('artist', $old_artist, $new_artist);
             Rating::migrate('artist', $old_artist, $new_artist);
             Art::duplicate('artist', $old_artist, $new_artist);
-            Wanted::migrate('artist', $old_artist, $new_artist);
+            self::getWantedRepository()->migrateArtist($old_artist, $new_artist);
             Catalog::migrate_map('artist', $old_artist, $new_artist);
             // update mapping tables
             $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ?";
@@ -2425,5 +2426,15 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(MetadataManagerInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getWantedRepository(): WantedRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(WantedRepositoryInterface::class);
     }
 }
