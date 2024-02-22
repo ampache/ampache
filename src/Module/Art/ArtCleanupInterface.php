@@ -23,10 +23,27 @@
 
 namespace Ampache\Module\Art;
 
+use Ampache\Repository\Model\Art;
+
 interface ArtCleanupInterface
 {
     /**
      * look for art in the image table that doesn't fit min or max dimensions and delete it
      */
     public function cleanup(): void;
+
+    /**
+     * This cleans up art that no longer has a corresponding object
+     */
+    public function collectGarbageForObject(string $object_type, int $object_id): void;
+
+    /**
+     * This cleans up art that no longer has a corresponding object
+     */
+    public function collectGarbage(): void;
+
+    /**
+     * This resets the art in the database
+     */
+    public function deleteForArt(Art $art): void;
 }
