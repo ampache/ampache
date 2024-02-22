@@ -81,6 +81,10 @@ class Dba
         }
 
         self::$_sql = $sql;
+        if (empty(trim(self::$_sql))) {
+            debug_event(__CLASS__, 'Error_query SQL: the QUERY is empty', 1);
+            return false;
+        }
         try {
             // Run the query
             if (!empty($params) && strpos((string)self::$_sql, '?')) {
