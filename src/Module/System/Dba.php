@@ -83,6 +83,7 @@ class Dba
             return false;
         }
 
+        self::$_sql = $sql;
         try {
             // Run the query
             if (!empty($params) && strpos((string)self::$_sql, '?')) {
