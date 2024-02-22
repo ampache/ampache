@@ -1189,9 +1189,10 @@ class Search extends playlist_object
      * results.
      * @param array $data
      * @param User $user
+     * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
      * @return int[]
      */
-    public static function run($data, $user = null): array
+    public static function run($data, $user = null, $require_rules = false): array
     {
         $limit  = (int)($data['limit'] ?? 0);
         $offset = (int)($data['offset'] ?? 0);
@@ -1210,6 +1211,12 @@ class Search extends playlist_object
         }
 
         $search_info = $search->to_sql();
+        if ($require_rules && empty($search_info['where'])) {
+            debug_event(self::class, 'require_rules: No rules were set on this search', 5);
+
+            return array();
+        }
+
         $sql         = $search_info['base'] . ' ' . $search_info['table_sql'];
         if (!empty($search_info['where_sql'])) {
             $sql .= ' WHERE ' . $search_info['where_sql'];
