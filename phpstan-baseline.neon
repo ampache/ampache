@@ -3031,6 +3031,11 @@ parameters:
 			path: src/Module/Api/Method/ScrobbleMethod.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\SearchMethod\\:\\:search\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/SearchMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\SearchSongsMethod\\:\\:search_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/SearchSongsMethod.php
