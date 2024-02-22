@@ -75,8 +75,8 @@ final class PrintTagsCommand extends Command
             ['music'],
             '',
             '',
-            $dir_pattern,
-            $file_pattern
+            (string) $dir_pattern,
+            (string) $file_pattern
         );
 
         if ($dir_pattern !== '' || $file_pattern !== '') {
