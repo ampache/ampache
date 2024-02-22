@@ -398,8 +398,8 @@ class Catalog_dropbox extends Catalog
                 $this->get_gather_types('music'),
                 '',
                 '',
-                $this->sort_pattern,
-                $this->rename_pattern
+                (string) $this->sort_pattern,
+                (string) $this->rename_pattern
             );
             $vainfo->gather_tags();
 
@@ -466,8 +466,8 @@ class Catalog_dropbox extends Catalog
                     $gtypes,
                     '',
                     '',
-                    $this->sort_pattern,
-                    $this->rename_pattern,
+                    (string) $this->sort_pattern,
+                    (string) $this->rename_pattern,
                     $readfile
                 );
                 $vainfo->gather_tags();
@@ -561,8 +561,8 @@ class Catalog_dropbox extends Catalog
                         $this->get_gather_types('music'),
                         '',
                         '',
-                        $this->sort_pattern,
-                        $this->rename_pattern
+                        (string) $this->sort_pattern,
+                        (string) $this->rename_pattern
                     );
                     $vainfo->forceSize((int)$filesize);
                     $vainfo->gather_tags();

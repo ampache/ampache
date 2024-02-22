@@ -905,8 +905,8 @@ class Catalog_local extends Catalog
             $this->get_gather_types('music'),
             '',
             '',
-            $this->sort_pattern,
-            $this->rename_pattern
+            (string) $this->sort_pattern,
+            (string) $this->rename_pattern
         );
         $vainfo->gather_tags();
 
@@ -964,8 +964,8 @@ class Catalog_local extends Catalog
                         }
                     }
                     // sort_find_home will replace the % with the correct values.
-                    $directory = $this->sort_find_home($song, $this->sort_pattern, $root);
-                    $filename  = $this->sort_find_home($song, $this->rename_pattern);
+                    $directory = $this->sort_find_home($song, (string) $this->sort_pattern, $root);
+                    $filename  = $this->sort_find_home($song, (string) $this->rename_pattern);
                     if ($directory === null || $filename === null) {
                         $fullpath = (string)$song->file;
                     } else {
@@ -1057,8 +1057,8 @@ class Catalog_local extends Catalog
             $gtypes,
             '',
             '',
-            $this->sort_pattern,
-            $this->rename_pattern
+            (string) $this->sort_pattern,
+            (string) $this->rename_pattern
         );
         $vainfo->gather_tags();
 
@@ -1343,8 +1343,8 @@ class Catalog_local extends Catalog
                     $this->get_gather_types('music'),
                     '',
                     '',
-                    $this->sort_pattern,
-                    $this->rename_pattern
+                    (string) $this->sort_pattern,
+                    (string) $this->rename_pattern
                 );
                 if ($media->time > 0 && !$vainfo->check_time($media->time)) {
                     debug_event('local.catalog', 'check_time FAILED for: ' . $media->id, 5);

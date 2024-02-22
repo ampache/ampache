@@ -146,9 +146,9 @@ abstract class Catalog extends database_object
     public ?int $last_clean;
     public int $last_add;
     public bool $enabled;
-    public string $rename_pattern = '';
-    public string $sort_pattern   = '';
-    public string $gather_types   = '';
+    public ?string $rename_pattern = '';
+    public ?string $sort_pattern   = '';
+    public ?string $gather_types   = '';
 
     /**
      * @var string $key
@@ -3265,8 +3265,8 @@ abstract class Catalog extends database_object
             $gather_types,
             '',
             '',
-            $sort_pattern,
-            $rename_pattern
+            (string) $sort_pattern,
+            (string) $rename_pattern
         );
         try {
             $vainfo->gather_tags();

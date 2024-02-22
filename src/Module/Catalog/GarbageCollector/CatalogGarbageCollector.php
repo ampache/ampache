@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
@@ -71,6 +71,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private LabelRepositoryInterface $labelRepository;
 
+    private ArtCleanupInterface $artCleanup;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         BookmarkRepositoryInterface $bookmarkRepository,
@@ -80,7 +82,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         MetadataManagerInterface $metadataManager,
         PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         WantedRepositoryInterface $wantedRepository,
-        LabelRepositoryInterface $labelRepository
+        LabelRepositoryInterface $labelRepository,
+        ArtCleanupInterface $artCleanup
     ) {
         $this->albumRepository          = $albumRepository;
         $this->bookmarkRepository       = $bookmarkRepository;
@@ -91,6 +94,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
         $this->wantedRepository         = $wantedRepository;
         $this->labelRepository          = $labelRepository;
+        $this->artCleanup               = $artCleanup;
     }
 
     public function collect(): void
@@ -101,7 +105,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Video::garbage_collection();
         $this->bookmarkRepository->collectGarbage();
         $this->wantedRepository->collectGarbage();
-        Art::garbage_collection();
+        $this->artCleanup->collectGarbage();
         Stats::garbage_collection();
         Rating::garbage_collection();
         Userflag::garbage_collection();

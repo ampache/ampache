@@ -55,6 +55,9 @@ class Dba
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
         //debug_event(__CLASS__, $sql . ' ' . json_encode($params), 5);
+        if (empty(trim($sql))) {
+            return false;
+        }
 
         // Be aggressive, be strong, be dumb
         $tries = 0;
@@ -80,7 +83,6 @@ class Dba
             return false;
         }
 
-        self::$_sql = $sql;
         try {
             // Run the query
             if (!empty($params) && strpos((string)self::$_sql, '?')) {

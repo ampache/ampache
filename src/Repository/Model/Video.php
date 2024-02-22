@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
@@ -1073,7 +1074,7 @@ class Video extends database_object implements
             $sql     = "DELETE FROM `video` WHERE `id` = ?";
             $deleted = (Dba::write($sql, $params) !== false);
             if ($deleted) {
-                Art::garbage_collection('video', $this->id);
+                $this->getArtCleanup()->collectGarbageForObject('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);
                 Rating::garbage_collection('video', $this->id);
                 $this->getShoutRepository()->collectGarbage('video', $this->getId());
@@ -1202,5 +1203,15 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getArtCleanup(): ArtCleanupInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtCleanupInterface::class);
     }
 }
