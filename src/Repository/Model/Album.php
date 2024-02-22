@@ -26,12 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -397,10 +397,12 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $user = Core::get_global('user');
 
             try {
-                Wanted::delete_wanted_release(
-                    (string) $mbid,
-                    (empty($user) || !$user instanceof User || $user->has_access(AccessLevelEnum::LEVEL_MANAGER)) ? null : $user
-                );
+                if ($user instanceof User) {
+                    self::getWantedManager()->delete(
+                        (string) $mbid,
+                        $user
+                    );
+                }
             } catch (Exception $error) {
                 debug_event(self::class, 'Cannot process wanted releases auto-removal check: ' . $error->getMessage(), 2);
             }
@@ -1271,12 +1273,22 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
-     * @deprecated
+     * @deprecated Inject dependency
      */
     private function getUseractivityRepository(): UserActivityRepositoryInterface
     {
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getWantedManager(): WantedManagerInterface
+    {
+        global $dic;
+
+        return $dic->get(WantedManagerInterface::class);
     }
 }

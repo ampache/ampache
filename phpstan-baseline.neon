@@ -6,16 +6,6 @@ parameters:
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
 
 		-
-			message: "#^Parameter \\#2 \\$artist of static method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:add_wanted\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#5 \\$year of static method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:add_wanted\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$sid of static method Ampache\\\\Module\\\\System\\\\Session\\:\\:update_geolocation\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/StatsAjaxHandler.php
@@ -14593,11 +14583,6 @@ parameters:
 		-
 			message: "#^Cannot access property \\$name on array\\.$#"
 			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$release\\-group on array\\.$#"
-			count: 2
 			path: src/Repository/Model/Wanted.php
 
 		-
