@@ -27,5 +27,5 @@ use Ampache\Repository\Model\Label;
 
 interface LabelDeleterInterface
 {
-    public function delete(Label $label): bool;
+    public function delete(Label $label): void;
 }

@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -63,7 +64,15 @@ final class LabelArtists5Method
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
-        $label   = new Label((int) scrub_in((string) $input['filter']));
+
+        $label = self::getLabelRepository()->findById((int) $input['filter']);
+
+        if ($label === null) {
+            Api5::empty('artist', $input['api_format']);
+
+            return false;
+        }
+
         $results = $label->get_artists();
         if (empty($results)) {
             Api5::empty('artist', $input['api_format']);
@@ -81,5 +90,15 @@ final class LabelArtists5Method
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getLabelRepository(): LabelRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelRepositoryInterface::class);
     }
 }

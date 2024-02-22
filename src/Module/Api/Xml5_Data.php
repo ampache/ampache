@@ -31,6 +31,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
@@ -38,7 +39,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
@@ -451,9 +451,11 @@ class Xml5_Data
         }
         $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n";
 
+        $labelRepository = self::getLabelRepository();
+
         foreach ($labels as $label_id) {
-            $label = new Label($label_id);
-            if ($label->isNew()) {
+            $label = $labelRepository->findById($label_id);
+            if ($label === null) {
                 continue;
             }
             $label->format();
@@ -1225,5 +1227,15 @@ class Xml5_Data
         global $dic;
 
         return $dic->get(BookmarkRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getLabelRepository(): LabelRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelRepositoryInterface::class);
     }
 }

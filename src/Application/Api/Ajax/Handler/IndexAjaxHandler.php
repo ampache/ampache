@@ -35,7 +35,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Label;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Util\SlideshowInterface;
@@ -423,8 +422,13 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
                 ob_start();
                 if ($label_id > 0) {
-                    $label      = new Label($label_id);
-                    $object_ids = $this->songRepository->getByLabel((string)$label->name);
+                    $label = $this->labelRepository->findById($label_id);
+
+                    if ($label === null) {
+                        $object_ids = [];
+                    } else {
+                        $object_ids = $this->songRepository->getByLabel((string)$label->name);
+                    }
 
                     $browse = new Browse();
                     $browse->set_type('song');

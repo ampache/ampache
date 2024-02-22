@@ -29,7 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
@@ -54,22 +53,18 @@ final class ShowAction implements ApplicationActionInterface
 
     private LabelRepositoryInterface $labelRepository;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LoggerInterface $logger,
         PrivilegeCheckerInterface $privilegeChecker,
-        LabelRepositoryInterface $labelRepository,
-        ModelFactoryInterface $modelFactory
+        LabelRepositoryInterface $labelRepository
     ) {
         $this->configContainer  = $configContainer;
         $this->ui               = $ui;
         $this->logger           = $logger;
         $this->privilegeChecker = $privilegeChecker;
         $this->labelRepository  = $labelRepository;
-        $this->modelFactory     = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -91,23 +86,26 @@ final class ShowAction implements ApplicationActionInterface
             echo T_('You have requested an object that does not exist');
             $this->ui->showFooter();
         } else {
-            $label = $this->modelFactory->createLabel($label_id);
-            $label->format();
+            $label = $this->labelRepository->findById($label_id);
 
-            $this->ui->show(
-                'show_label.inc.php',
-                [
-                    'label' => $label,
-                    'object_ids' => $label->get_artists(),
-                    'object_type' => 'artist',
-                    'isLabelEditable' => $this->isEditable(
-                        $gatekeeper->getUserId(),
-                        $label
-                    )
-                ]
-            );
+            if ($label !== null) {
+                $label->format();
 
-            $this->ui->showFooter();
+                $this->ui->show(
+                    'show_label.inc.php',
+                    [
+                        'label' => $label,
+                        'object_ids' => $label->get_artists(),
+                        'object_type' => 'artist',
+                        'isLabelEditable' => $this->isEditable(
+                            $gatekeeper->getUserId(),
+                            $label
+                        )
+                    ]
+                );
+
+                $this->ui->showFooter();
+            }
 
             return null;
         }

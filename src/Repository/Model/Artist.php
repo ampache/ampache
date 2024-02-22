@@ -885,7 +885,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Stats::garbage_collection();
                 Rating::garbage_collection();
                 Userflag::garbage_collection();
-                Label::garbage_collection();
+                $this->getLabelRepository()->collectGarbage();
                 $this->getUseractivityRepository()->collectGarbage();
                 self::update_table_counts();
             } // if updated

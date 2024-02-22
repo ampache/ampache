@@ -29,9 +29,9 @@ use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -69,6 +69,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private WantedRepositoryInterface $wantedRepository;
 
+    private LabelRepositoryInterface $labelRepository;
+
     private ArtCleanupInterface $artCleanup;
 
     public function __construct(
@@ -80,6 +82,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         MetadataManagerInterface $metadataManager,
         PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         WantedRepositoryInterface $wantedRepository,
+        LabelRepositoryInterface $labelRepository,
         ArtCleanupInterface $artCleanup
     ) {
         $this->albumRepository          = $albumRepository;
@@ -90,6 +93,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->metadataManager          = $metadataManager;
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
         $this->wantedRepository         = $wantedRepository;
+        $this->labelRepository          = $labelRepository;
         $this->artCleanup               = $artCleanup;
     }
 
@@ -105,7 +109,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Stats::garbage_collection();
         Rating::garbage_collection();
         Userflag::garbage_collection();
-        Label::garbage_collection();
+        $this->labelRepository->collectGarbage();
         Recommendation::garbage_collection();
         $this->useractivityRepository->collectGarbage();
         $this->userRepository->collectGarbage();
