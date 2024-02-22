@@ -706,9 +706,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         // prefer the name of the artist as provided by MusicBrainz
         if (!empty($mbid)) {
-            $plugin = new Plugin('musicbrainz');
+            $plugin      = new Plugin('musicbrainz');
             $parsed_mbid = VaInfo::parse_mbid($mbid);
-            $data   = $plugin->_plugin->get_artist($parsed_mbid);
+            $data        = $plugin->_plugin->get_artist($parsed_mbid);
             if (array_key_exists('name', $data)) {
                 $trimmed = Catalog::trim_prefix(trim((string)$data['name']));
                 $name    = $trimmed['string'];
