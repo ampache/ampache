@@ -667,7 +667,7 @@ class Subsonic_Xml_Data
         $sub_id = (string)self::_getVideoId($video->id);
         $xvideo = self::addChildToResultXml($xml, htmlspecialchars($elementName));
         $xvideo->addAttribute('id', $sub_id);
-        $xvideo->addAttribute('title', (string)$video->f_full_title);
+        $xvideo->addAttribute('title', $video->getFileName());
         $xvideo->addAttribute('isDir', 'false');
         if ($video->has_art()) {
             $xvideo->addAttribute('coverArt', $sub_id);

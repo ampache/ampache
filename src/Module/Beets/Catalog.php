@@ -104,7 +104,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
         return [
             'file_path' => (string) $media->file,
-            'file_name' => $media->f_file,
+            'file_name' => $media->getFileName(),
             'file_size' => $media->size,
             'file_type' => $media->type,
         ];
