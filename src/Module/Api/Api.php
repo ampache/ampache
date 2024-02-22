@@ -131,6 +131,7 @@ class Api
         Method\RecordPlayMethod::ACTION => Method\RecordPlayMethod::class,
         Method\RegisterMethod::ACTION => Method\RegisterMethod::class,
         Method\ScrobbleMethod::ACTION => Method\ScrobbleMethod::class,
+        Method\SearchMethod::ACTION => Method\SearchMethod::class,
         Method\SearchSongsMethod::ACTION => Method\SearchSongsMethod::class,
         Method\ShareCreateMethod::ACTION => Method\ShareCreateMethod::class,
         Method\ShareDeleteMethod::ACTION => Method\ShareDeleteMethod::class,
