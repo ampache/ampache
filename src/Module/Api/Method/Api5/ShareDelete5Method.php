@@ -26,11 +26,13 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
+use Ampache\Repository\ShareRepositoryInterface;
 
 /**
  * Class ShareDelete5Method
@@ -58,19 +60,36 @@ final class ShareDelete5Method
             return false;
         }
         $object_id = $input['filter'];
-        if (in_array($object_id, Share::get_share_list($user))) {
-            if (Share::delete_share((int)$object_id, $user)) {
-                Api5::message('share ' . $object_id . ' deleted', $input['api_format']);
-                Catalog::count_table('share');
-            } else {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
-            }
-        } else {
+
+        $shareRepository = self::getShareRepository();
+
+        $share = $shareRepository->findById((int) $object_id);
+
+        if (
+            $share === null ||
+            !$share->isAccessible($user)
+        ) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+
+            return true;
         }
 
+        $shareRepository->delete($share);
+
+        Api5::message('share ' . $object_id . ' deleted', $input['api_format']);
+        Catalog::count_table('share');
+
         return true;
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }

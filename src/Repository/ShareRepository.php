@@ -25,7 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\User;
+use DateTimeInterface;
 
 /**
  * Manages share related database access
@@ -36,10 +43,27 @@ final class ShareRepository implements ShareRepositoryInterface
 {
     private DatabaseConnectionInterface $connection;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
-        DatabaseConnectionInterface $connection
+        DatabaseConnectionInterface $connection,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->connection = $connection;
+        $this->connection      = $connection;
+        $this->configContainer = $configContainer;
+    }
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Share
+    {
+        $result = new Share($itemId);
+        if ($result->isNew()) {
+            return null;
+        }
+
+        return $result;
     }
 
     /**
@@ -60,6 +84,65 @@ final class ShareRepository implements ShareRepositoryInterface
     {
         $this->connection->query(
             'DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < UNIX_TIMESTAMP()) OR (`max_counter` > 0 AND `counter` >= `max_counter`)',
+        );
+    }
+
+    /**
+     * Returns the ids of all items the user has access to
+     *
+     * @return list<int>
+     */
+    public function getIdsByUser(User $user): array
+    {
+        $userId = $user->getId();
+        $params = [];
+
+        $sql = 'SELECT `id` FROM `share` WHERE ';
+
+        if (!$user->has_access(AccessLevelEnum::LEVEL_MANAGER)) {
+            $sql .= '`user` = ?';
+            $params[] = $userId;
+        } else {
+            $sql .= '1=1';
+        }
+
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_FILTER)) {
+            $sql .= sprintf(' AND %s', Catalog::get_user_filter('share', $userId));
+        }
+
+        $result = $this->connection->query(
+            $sql,
+            $params
+        );
+
+        $items = [];
+
+        while ($rowId = $result->fetchColumn()) {
+            $items[] = (int) $rowId;
+        }
+
+        return $items;
+    }
+
+    /**
+     * Deletes a single item
+     */
+    public function delete(Share $item): void
+    {
+        $this->connection->query(
+            'DELETE FROM `share` WHERE `id` = ?',
+            [$item->getId()]
+        );
+    }
+
+    /**
+     * Sets the last access-date and raises the counter
+     */
+    public function registerAccess(Share $share, DateTimeInterface $date): void
+    {
+        $this->connection->query(
+            'UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?',
+            [$date->getTimestamp(), $share->getId()]
         );
     }
 }

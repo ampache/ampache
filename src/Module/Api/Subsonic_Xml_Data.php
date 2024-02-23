@@ -1084,15 +1084,15 @@ class Subsonic_Xml_Data
     /**
      * addShares
      * @param SimpleXMLElement $xml
-     * @param array $shares
+     * @param list<int> $shares
      */
     public static function addShares($xml, $shares): void
     {
         $xshares = self::addChildToResultXml($xml, 'shares');
         foreach ($shares as $share_id) {
-            $share = new Share((int)$share_id);
+            $share = new Share($share_id);
             // Don't add share with max counter already reached
-            if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
+            if ($share->max_counter === 0 || $share->counter < $share->max_counter) {
                 self::addShare($xshares, $share);
             }
         }

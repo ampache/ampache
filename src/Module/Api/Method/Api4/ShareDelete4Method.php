@@ -26,9 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\ShareRepositoryInterface;
 
 /**
  * Class ShareDelete4Method
@@ -56,16 +59,35 @@ final class ShareDelete4Method
             return false;
         }
         $object_id = $input['filter'];
-        if (in_array($object_id, Share::get_share_list($user))) {
-            if (Share::delete_share((int)$object_id, $user)) {
-                Api4::message('success', 'share ' . $object_id . ' deleted', null, $input['api_format']);
-            } else {
-                Api4::message('error', 'share ' . $object_id . ' was not deleted', '401', $input['api_format']);
-            }
-        } else {
-            Api4::message('error', 'share ' . $object_id . ' was not found', '404', $input['api_format']);
+
+        $shareRepository = self::getShareRepository();
+
+        $share = $shareRepository->findById((int) $object_id);
+
+        if (
+            $share === null ||
+            !$share->isAccessible($user)
+        ) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+
+            return true;
         }
 
+        $shareRepository->delete($share);
+
+        Api4::message('success', 'share ' . $object_id . ' deleted', null, $input['api_format']);
+
         return true;
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }

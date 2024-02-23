@@ -67,6 +67,7 @@ use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use DateTime;
@@ -1869,8 +1870,11 @@ class Subsonic_Api
     public static function getshares($input, $user): void
     {
         $response = Subsonic_Xml_Data::addSubsonicResponse('getshares');
-        $shares   = Share::get_share_list($user);
-        Subsonic_Xml_Data::addShares($response, $shares);
+
+        Subsonic_Xml_Data::addShares(
+            $response,
+            self::getShareRepository()->getIdsByUser($user)
+        );
         self::_apiOutput($input, $response);
     }
 
@@ -1920,7 +1924,7 @@ class Subsonic_Api
 
                 $response = Subsonic_Xml_Data::addSubsonicResponse('createshare');
                 $shares   = array();
-                $shares[] = Share::create_share(
+                $shareId  = Share::create_share(
                     $user->id,
                     $object_type,
                     $object_id,
@@ -1931,6 +1935,10 @@ class Subsonic_Api
                     0,
                     $description
                 );
+
+                if ($shareId !== null) {
+                    $shares[] = $shareId;
+                }
                 Subsonic_Xml_Data::addShares($response, $shares);
             } else {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'createshare');
@@ -1996,11 +2004,20 @@ class Subsonic_Api
         if (!$share_id) {
             return;
         }
+
         if (AmpConfig::get('share')) {
-            if (Share::delete_share((int)$share_id, $user)) {
-                $response = Subsonic_Xml_Data::addSubsonicResponse('deleteshare');
-            } else {
+            $shareRepository = self::getShareRepository();
+
+            $share = $shareRepository->findById((int) $share_id);
+            if (
+                $share === null ||
+                !$share->isAccessible($user)
+            ) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deleteshare');
+            } else {
+                $shareRepository->delete($share);
+
+                $response = Subsonic_Xml_Data::addSubsonicResponse('deleteshare');
             }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'deleteshare');
@@ -3211,5 +3228,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }
