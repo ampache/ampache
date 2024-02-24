@@ -38,6 +38,7 @@ use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
@@ -1917,11 +1918,12 @@ class Subsonic_Api
             if (!empty($object_type) && !empty($object_id)) {
                 global $dic; // @todo remove after refactoring
                 $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+                $shareCreator      = $dic->get(ShareCreatorInterface::class);
 
                 $response = Subsonic_Xml_Data::addSubsonicResponse('createshare');
                 $shares   = array();
-                $shares[] = Share::create_share(
-                    $user->id,
+                $shares[] = $shareCreator->create(
+                    $user,
                     $object_type,
                     $object_id,
                     true,

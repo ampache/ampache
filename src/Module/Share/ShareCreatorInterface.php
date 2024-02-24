@@ -20,27 +20,23 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\System;
+namespace Ampache\Module\Share;
 
-use Ampache\Module\System\Plugin\PluginRetriever;
-use Ampache\Module\System\Plugin\PluginRetrieverInterface;
-use Psr\Log\LoggerInterface;
+use Ampache\Repository\Model\User;
 
-use function DI\autowire;
-
-return [
-    LoggerInterface::class => autowire(LegacyLogger::class),
-    SessionInterface::class => autowire(Session::class),
-    InstallationHelperInterface::class => autowire(InstallationHelper::class),
-    PreferencesFromRequestUpdaterInterface::class => autowire(PreferencesFromRequestUpdater::class),
-    Update\UpdateHelperInterface::class => autowire(Update\UpdateHelper::class),
-    Update\UpdaterInterface::class => autowire(Update\Updater::class)
-        ->constructorParameter(
-            'updateRunner',
-            autowire(Update\UpdateRunner::class)
-        ),
-    PluginRetrieverInterface::class => autowire(PluginRetriever::class),
-];
+interface ShareCreatorInterface
+{
+    public function create(
+        User $user,
+        string $object_type,
+        int $object_id,
+        bool $allow_stream = true,
+        bool $allow_download = true,
+        int $expire_days = 0,
+        string $secret = '',
+        int $max_counter = 0,
+        string $description = ''
+    ): ?int;
+}

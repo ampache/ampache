@@ -31,7 +31,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Exception;
 use PDOStatement;
 
 class Share extends database_object
@@ -110,112 +109,9 @@ class Share extends database_object
         return Dba::write($sql, $params);
     }
 
-    /**
-     * @param string $type
-     * @return string
-     */
-    public static function is_valid_type($type)
+    public static function is_valid_type(string $type): bool
     {
-        if (in_array(strtolower($type), self::VALID_TYPES)) {
-            return $type;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param bool $allow_stream
-     * @param bool $allow_download
-     * @param int $expire_days
-     * @param string $secret
-     * @param int $max_counter
-     * @param string $description
-     * @return int|null
-     */
-    public static function create_share(
-        $user_id,
-        $object_type,
-        $object_id,
-        $allow_stream = true,
-        $allow_download = true,
-        $expire_days = 0,
-        $secret = '',
-        $max_counter = 0,
-        $description = ''
-    ): ?int {
-        if (!self::is_valid_type($object_type)) {
-            debug_event(self::class, 'create_share: Bad object_type ' . $object_type, 1);
-
-            return null;
-        }
-        if (!$allow_stream && !$allow_download) {
-            debug_event(self::class, 'create_share: must allow stream OR allow download', 1);
-
-            return null;
-        }
-
-        if ($description == '') {
-            if ($object_type == 'song') {
-                $song        = new Song($object_id);
-                $description = $song->title;
-            } elseif ($object_type == 'playlist') {
-                $playlist    = new Playlist($object_id);
-                $description = 'Playlist - ' . $playlist->name;
-            } elseif ($object_type == 'album') {
-                $album = new Album($object_id);
-                $album->format();
-                $description = $album->get_fullname() . ' (' . $album->get_artist_fullname() . ')';
-            } elseif ($object_type == 'album_disk') {
-                $albumdisk = new AlbumDisk($object_id);
-                $albumdisk->format();
-                $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_artist_fullname() . ')';
-            }
-        }
-        $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array(
-            $user_id,
-            $object_type,
-            $object_id,
-            time(),
-            (int)$allow_stream,
-            (int)$allow_download,
-            $expire_days,
-            $secret,
-            0,
-            $max_counter,
-            $description
-        );
-        Dba::write($sql, $params);
-
-        $share_id = Dba::insert_id();
-        if (!$share_id) {
-            return null;
-        }
-
-        $url = self::get_url((int)$share_id, $secret);
-        // Get a shortener url if any available
-        foreach (Plugin::get_plugins('shortener') as $plugin_name) {
-            try {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
-                    /** @var string|false $short_url */
-                    $short_url = $plugin->_plugin->shortener($url);
-                    if (!empty($short_url)) {
-                        $url = $short_url;
-                        break;
-                    }
-                }
-            } catch (Exception $error) {
-                debug_event(self::class, 'Share plugin error: ' . $error->getMessage(), 1);
-            }
-        }
-        $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
-        Dba::write($sql, array($url, $share_id));
-
-        return (int)$share_id;
+        return in_array(strtolower($type), self::VALID_TYPES);
     }
 
     /**

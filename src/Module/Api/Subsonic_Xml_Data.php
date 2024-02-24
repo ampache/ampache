@@ -1084,7 +1084,7 @@ class Subsonic_Xml_Data
     /**
      * addShares
      * @param SimpleXMLElement $xml
-     * @param array $shares
+     * @param list<int> $shares
      */
     public static function addShares($xml, $shares): void
     {
