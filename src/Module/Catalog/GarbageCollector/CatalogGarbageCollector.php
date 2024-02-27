@@ -28,9 +28,9 @@ namespace Ampache\Module\Catalog\GarbageCollector;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
@@ -72,6 +72,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
     private LabelRepositoryInterface $labelRepository;
 
     private ArtCleanupInterface $artCleanup;
+    private ArtistRepositoryInterface $artistRepository;
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
@@ -83,7 +84,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         WantedRepositoryInterface $wantedRepository,
         LabelRepositoryInterface $labelRepository,
-        ArtCleanupInterface $artCleanup
+        ArtCleanupInterface $artCleanup,
+        ArtistRepositoryInterface $artistRepository
     ) {
         $this->albumRepository          = $albumRepository;
         $this->bookmarkRepository       = $bookmarkRepository;
@@ -95,12 +97,13 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->wantedRepository         = $wantedRepository;
         $this->labelRepository          = $labelRepository;
         $this->artCleanup               = $artCleanup;
+        $this->artistRepository         = $artistRepository;
     }
 
     public function collect(): void
     {
         Song::garbage_collection();
-        Artist::garbage_collection();
+        $this->artistRepository->collectGarbage();
         $this->albumRepository->collectGarbage();
         Video::garbage_collection();
         $this->bookmarkRepository->collectGarbage();

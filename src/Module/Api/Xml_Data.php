@@ -561,9 +561,9 @@ class Xml_Data
                     }
                     break;
                 case 'song':
-                    $song         = new Song($object_id);
-                    $song_album   = Album::get_name_array_by_id($song->album);
-                    $song_artist  = Artist::get_name_array_by_id($song->artist);
+                    $song        = new Song($object_id);
+                    $song_album  = self::getAlbumRepository()->getNames($song->album);
+                    $song_artist = Artist::get_name_array_by_id($song->artist);
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n" .
                         "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name><prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix><basename><![CDATA[" . $song_artist['basename'] . "]]></basename></artist>\n" .
                         "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n";
@@ -1152,9 +1152,9 @@ class Xml_Data
             }
 
             $song->format();
-            $song_album    = Album::get_name_array_by_id($song->album);
-            $song_artist   = Artist::get_name_array_by_id($song->artist);
-            $song_artists  = array();
+            $song_album   = self::getAlbumRepository()->getNames($song->album);
+            $song_artist  = Artist::get_name_array_by_id($song->artist);
+            $song_artists = array();
             foreach ($song->get_artists() as $artist_id) {
                 $song_artists[] = Artist::get_name_array_by_id($artist_id);
             }
@@ -1267,7 +1267,7 @@ class Xml_Data
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
             $tag         = new Tag($song->tags['0']);
-            $song_album  = Album::get_name_array_by_id($song->album);
+            $song_album  = self::getAlbumRepository()->getNames($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
             $tag_string  = self::genre_string($song->tags);
             $rating      = new Rating($song->id, 'song');

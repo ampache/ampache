@@ -108,14 +108,13 @@ final class ArtistDeleter implements ArtistDeleterInterface
 
         $artistId = $artist->getId();
 
-        $deleted = $this->artistRepository->delete($artistId);
-        if ($deleted) {
-            $this->artCleanup->collectGarbageForObject('artist', $artistId);
-            Userflag::garbage_collection('artist', $artistId);
-            Rating::garbage_collection('artist', $artistId);
-            $this->labelRepository->collectGarbage();
-            $this->shoutRepository->collectGarbage('artist', $artistId);
-            $this->useractivityRepository->collectGarbage('artist', $artistId);
-        }
+        $this->artistRepository->delete($artist);
+
+        $this->artCleanup->collectGarbageForObject('artist', $artistId);
+        Userflag::garbage_collection('artist', $artistId);
+        Rating::garbage_collection('artist', $artistId);
+        $this->labelRepository->collectGarbage();
+        $this->shoutRepository->collectGarbage('artist', $artistId);
+        $this->useractivityRepository->collectGarbage('artist', $artistId);
     }
 }

@@ -52,6 +52,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -2404,8 +2405,8 @@ abstract class Catalog extends database_object
             }
             // collect the garbage too
             if ($album || $artist || $maps) {
-                Artist::garbage_collection();
-                static::getAlbumRepository()->collectGarbage();
+                self::getArtistRepository()->collectGarbage();
+                self::getAlbumRepository()->collectGarbage();
             }
         }
 
@@ -3379,8 +3380,8 @@ abstract class Catalog extends database_object
             Artist::migrate($row['maxid'], $row['minid']);
         }
         // remove the duplicates after moving everything
-        Artist::garbage_collection();
-        static::getAlbumRepository()->collectGarbage();
+        self::getArtistRepository()->collectGarbage();
+        self::getAlbumRepository()->collectGarbage();
     }
 
     /**
@@ -4387,5 +4388,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(WantedRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }

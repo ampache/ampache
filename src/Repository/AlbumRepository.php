@@ -457,4 +457,28 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         return null;
     }
+
+    /**
+     * Get item prefix, basename and name by the album id
+     *
+     * @return array{prefix: string, basename: string, name: string}
+     */
+    public function getNames(int $albumId): array
+    {
+        /** @var false|array{prefix: string, basename: string, name: string} $result */
+        $result = $this->connection->fetchRow(
+            'SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, \'\'), \' \', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?',
+            [$albumId]
+        );
+
+        if ($result !== false) {
+            return $result;
+        }
+
+        return [
+            'prefix' => '',
+            'basename' => '',
+            'name' => ''
+        ];
+    }
 }

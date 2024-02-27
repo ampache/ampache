@@ -32,12 +32,13 @@ use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use PDOStatement;
 
-class Artist extends database_object implements library_item, GarbageCollectibleInterface, CatalogItemInterface
+class Artist extends database_object implements library_item, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'artist';
 
@@ -171,22 +172,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * garbage_collection
-     *
-     * This cleans out unused artists
-     */
-    public static function garbage_collection(): void
-    {
-        debug_event(self::class, 'garbage_collection', 5);
-        Dba::write("DELETE FROM `artist_map` WHERE `object_type` = 'album' AND `object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);");
-        Dba::write("DELETE FROM `artist_map` WHERE `object_type` = 'album' AND `object_id` NOT IN (SELECT `id` FROM `album`);");
-        Dba::write("DELETE FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` NOT IN (SELECT `id` FROM `song`);");
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_id` NOT IN (SELECT `id` FROM `artist`);");
-        // delete the artists
-        Dba::write("DELETE FROM `artist` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `artist` LEFT JOIN (SELECT DISTINCT `song`.`artist` AS `artist_id` FROM `song` UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id` FROM `album` UNION SELECT DISTINCT `wanted`.`artist` AS `artist_id` FROM `wanted` UNION SELECT DISTINCT `clip`.`artist` AS `artist_id` FROM `clip` UNION SELECT DISTINCT `artist_id` FROM `artist_map`) AS `artist_map` ON `artist_map`.`artist_id` = `artist`.`id` WHERE `artist_map`.`artist_id` IS NULL) AS `null_artist`);");
-    }
-
-    /**
      * this attempts to build a cache of the data from the passed albums all in one query
      * @param int[] $ids
      * @param bool $extra
@@ -221,23 +206,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
         } // end if extra
 
         return true;
-    }
-
-    /**
-     * get_from_name
-     * This gets an artist object based on the artist name
-     * @param string $name
-     * @return Artist|false
-     */
-    public static function get_from_name($name)
-    {
-        $sql        = "SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? ";
-        $db_results = Dba::read($sql, array($name, $name));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return new Artist((int)$row['id']);
-        }
-
-        return false;
     }
 
     /**
@@ -881,7 +849,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             // clear out the old data
             if ($updated) {
                 debug_event(__CLASS__, "garbage_collection: " . $artist_id, 5);
-                self::garbage_collection();
+                $this->getArtistRepository()->collectGarbage();
                 Stats::garbage_collection();
                 Rating::garbage_collection();
                 Userflag::garbage_collection();
@@ -1107,5 +1075,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }
