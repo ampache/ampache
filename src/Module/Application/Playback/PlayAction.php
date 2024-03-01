@@ -624,7 +624,7 @@ final class PlayAction implements ApplicationActionInterface
 
                 $streamConfiguration = [
                     'file_path' => $file_target,
-                    'file_name' => $media->f_file,
+                    'file_name' => $media->getFileName(),
                     'file_size' => Core::get_filesize($file_target),
                     'file_type' => $cache_target,
                 ];

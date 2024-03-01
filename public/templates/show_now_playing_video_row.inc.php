@@ -58,10 +58,10 @@ if ($np_user->f_avatar_medium) {
     <div class="np_cell cel_video">
         <?php $art_showed = false;
 if ($media->get_default_art_kind() == 'preview') {
-    $art_showed = Art::display('video', $media->id, (string)$media->f_full_title, 9, $media->get_link(), false, 'preview');
+    $art_showed = Art::display('video', $media->id, (string)$media->getFileName(), 9, $media->get_link(), false, 'preview');
 }
 if (!$art_showed) {
-    Art::display('video', $media->id, (string)$media->f_full_title, 6, $media->get_link());
+    Art::display('video', $media->id, (string)$media->getFileName(), 6, $media->get_link());
 } ?>
     </div>
 </div>

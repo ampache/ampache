@@ -13401,11 +13401,6 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$f_file has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$f_name has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -13937,11 +13932,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$f_artist_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$f_file has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 

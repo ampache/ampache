@@ -51,7 +51,6 @@ class Song_Preview extends database_object implements Media, playable_item
     public $enabled      = true;
     public $mime;
     public $type;
-    public $f_file;
     public $f_artist;
     public $f_artist_link;
     public $f_name;
@@ -488,6 +487,14 @@ class Song_Preview extends database_object implements Media, playable_item
     public function remove(): bool
     {
         return true;
+    }
+
+    /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string
+    {
+        return '';
     }
 
     /**

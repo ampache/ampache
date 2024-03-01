@@ -76,7 +76,6 @@ class Podcast_Episode extends database_object implements
     public $type;
     public $mime;
     public $f_name;
-    public $f_file;
     public $f_time;
     public $f_time_h;
 
@@ -161,12 +160,7 @@ class Podcast_Episode extends database_object implements
         $hour           = sprintf("%02d", floor($min / 60));
         $min_h          = sprintf("%02d", ($min % 60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
-        // Format the Size
-        $this->f_file = $this->get_fullname() . '.' . $this->type;
 
-        if ($details) {
-            $this->f_file = $this->getPodcastName() . ' - ' . $this->f_file;
-        }
         if (AmpConfig::get('show_played_times')) {
             $this->total_count = (int) $this->total_count;
         }
@@ -655,6 +649,14 @@ class Podcast_Episode extends database_object implements
     public function get_artist_fullname(): string
     {
         return $this->getAuthor();
+    }
+
+    /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string
+    {
+        return sprintf('%s - %s.%s', $this->getPodcastName(), $this->get_fullname(), $this->type);
     }
 
     /**

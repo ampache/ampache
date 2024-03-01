@@ -729,7 +729,7 @@ class Json4_Data
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->getSizeFormatted(),
                 "mime" => $episode->mime,
-                "filename" => $episode->f_file,
+                "filename" => $episode->getFileName(),
                 "public_url" => $episode->get_link(),
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "catalog" => (string)$episode->catalog,

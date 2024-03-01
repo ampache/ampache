@@ -156,7 +156,6 @@ class Clip extends Video
                 $artist = new Artist($this->artist);
                 $artist->format();
                 $this->f_artist     = $artist->get_f_link();
-                $this->f_full_title = '[' . scrub_out($artist->get_fullname()) . '] ' . $this->f_full_title;
             }
 
             if ($this->song) {
@@ -164,6 +163,18 @@ class Clip extends Video
                 $this->f_song = $song->get_f_link();
             }
         }
+    }
+
+    public function getFileName(): string
+    {
+        if ($this->artist) {
+            $artist = new Artist($this->artist);
+            $artist->format();
+
+            return '[' . scrub_out($artist->get_fullname()) . '] ' . parent::getFileName();
+        }
+
+        return parent::getFileName();
     }
 
     /**
