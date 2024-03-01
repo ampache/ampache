@@ -63,10 +63,10 @@ class Ampachelistenbrainz implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('listenbrainz_token') && !Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('listenbrainz_api_url') && !Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
 

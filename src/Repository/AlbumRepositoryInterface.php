@@ -149,4 +149,11 @@ interface AlbumRepositoryInterface
      * Get the primary album_artist
      */
     public function getAlbumArtistId(int $albumId): ?int;
+
+    /**
+     * Get item prefix, basename and name by the album id
+     *
+     * @return array{prefix: string, basename: string, name: string}
+     */
+    public function getNames(int $albumId): array;
 }

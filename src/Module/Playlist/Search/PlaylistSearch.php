@@ -53,7 +53,7 @@ final class PlaylistSearch implements SearchInterface
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
             $operator = array();
-            if (!$type) {
+            if ($type === null) {
                 continue;
             }
             foreach ($search->basetypes[$type] as $baseOperator) {
@@ -62,7 +62,7 @@ final class PlaylistSearch implements SearchInterface
                     break;
                 }
             }
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+            $input        = $search->filter_data(scrub_in((string)$rule[2]), $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user` = " . $search_user_id . ")";
@@ -97,7 +97,7 @@ final class PlaylistSearch implements SearchInterface
             $where_sql          = "(" . $where_sql . ") AND `playlist_data`.`object_type` = 'song'";
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
             if ($catalog_disable) {
-                if (!empty($where_sql)) {
+                if (!empty(trim($where_sql))) {
                     $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 } else {
                     $where_sql = "`catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";

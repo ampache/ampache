@@ -25,27 +25,38 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\License;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\Model\License;
 use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowCreateActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface|null */
-    private MockInterface $ui;
+    private MockInterface&UiInterface $ui;
 
-    private ?ShowCreateAction $subject;
+    private LicenseRepositoryInterface&MockObject $licenseRepository;
+
+    private ConfigContainerInterface&MockObject $configContainer;
+
+    private ShowCreateAction $subject;
 
     protected function setUp(): void
     {
-        $this->ui = $this->mock(UiInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new ShowCreateAction(
-            $this->ui
+            $this->ui,
+            $this->licenseRepository,
+            $this->configContainer,
         );
     }
 
@@ -68,17 +79,39 @@ class ShowCreateActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $license    = $this->createMock(License::class);
+
+        $webPath = 'some-web-path';
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
             ->once()
             ->andReturnTrue();
 
+        $this->configContainer->expects(static::once())
+            ->method('getWebPath')
+            ->willReturn($webPath);
+
+        $this->licenseRepository->expects(static::once())
+            ->method('prototype')
+            ->willReturn($license);
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
+        $this->ui->shouldReceive('showBoxTop')
+            ->with('Create license')
+            ->once();
         $this->ui->shouldReceive('show')
-            ->with('show_edit_license.inc.php')
+            ->with(
+                'show_edit_license.inc.php',
+                [
+                    'license' => $license,
+                    'webPath' => $webPath,
+                ]
+            )
+            ->once();
+        $this->ui->shouldReceive('showBoxBottom')
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()

@@ -33,7 +33,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
@@ -252,8 +251,7 @@ if (Catalog::can_remove($album)) {
 </div>
 <?php
 define('TABLE_RENDERED', 1);
-foreach ($album->get_album_disk_ids() as $albumDiskId) {
-    $album_disk = new AlbumDisk($albumDiskId);
+foreach ($album->getDisks() as $album_disk) {
     $sub_title  = (!empty($album_disk->disksubtitle))
         ? scrub_out($f_name) . "<span class=\"discnb disc" . $album_disk->disk . "\">, " . T_('Disk') . " " . $album_disk->disk . ": " . scrub_out($album_disk->disksubtitle) . "</span>"
         : scrub_out($f_name) . "<span class=\"discnb disc" . $album_disk->disk . "\">, " . T_('Disk') . " " . $album_disk->disk . "</span>";

@@ -56,9 +56,9 @@ class easy_captcha_text_math_formula extends easy_captcha
     #-- make new captcha formula string
 
     /**
-     * @return mixed
+     * create_formula
      */
-    public function create_formula()
+    public function create_formula(): string
     {
         $formula = array(
             rand(20, 100) . " / " . rand(2, 10),

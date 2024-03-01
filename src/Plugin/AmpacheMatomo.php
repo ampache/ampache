@@ -58,10 +58,10 @@ class AmpacheMatomo implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('matomo_site_id') && !Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', 100, 'string', 'plugins', 'matomo')) {
+        if (!Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', 100, 'string', 'plugins', 'matomo')) {
             return false;
         }
-        if (!Preference::exists('matomo_url') && !Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get('web_path') . '/matomo/', 100, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get('web_path') . '/matomo/', 100, 'string', 'plugins', $this->name)) {
             return false;
         }
 

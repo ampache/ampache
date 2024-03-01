@@ -26,11 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Podcast\Feed;
 
 use Ampache\Module\Podcast\Feed\Exception\FeedLoadingException;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
+use DateTime;
+use DateTimeInterface;
 use SimpleXMLElement;
 
 /**
@@ -58,7 +57,7 @@ final class FeedLoader implements FeedLoaderInterface
      *  generator: string,
      *  episodes: SimpleXMLElement|null,
      *  artUrl: null|string,
-     *  lastBuildDate: null|int
+     *  lastBuildDate: null|DateTimeInterface
      * }
      *
      * @throws FeedLoadingException
@@ -66,7 +65,7 @@ final class FeedLoader implements FeedLoaderInterface
     public function load(
         string $feedUrl
     ): array {
-        $lastBuildDate = 0;
+        $lastBuildDate = null;
         $artUrl        = null;
 
         try {
@@ -87,7 +86,7 @@ final class FeedLoader implements FeedLoaderInterface
 
         $lastbuilddatestr = (string)$xml->channel->lastBuildDate;
         if ($lastbuilddatestr !== '') {
-            $lastBuildDate = (int) strtotime($lastbuilddatestr);
+            $lastBuildDate = new DateTime($lastbuilddatestr);
         }
 
         if ($xml->channel->image) {
@@ -97,7 +96,7 @@ final class FeedLoader implements FeedLoaderInterface
         return [
             'title' => html_entity_decode((string)$xml->channel->title),
             'website' => (string)$xml->channel->link,
-            'description' => html_entity_decode(Dba::check_length((string)$xml->channel->description, 4096)),
+            'description' => html_entity_decode((string)$xml->channel->description),
             'language' => (string)$xml->channel->language,
             'copyright' => html_entity_decode((string)$xml->channel->copyright),
             'generator' => html_entity_decode((string)$xml->channel->generator),

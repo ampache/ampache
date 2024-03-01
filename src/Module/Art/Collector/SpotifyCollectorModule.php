@@ -112,7 +112,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
         } elseif ($art->type == 'album') {
             $album_str  = $data['album'] ?? '';
             $artist_str = $data['artist'] ?? '';
-            $logString  = sprintf('gather_spotify album: %s, artist: %s', $album_str, $artist_str ?? '');
+            $logString  = sprintf('gather_spotify album: %s, artist: %s', $album_str, $artist_str);
             $this->logger->debug(
                 $logString,
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

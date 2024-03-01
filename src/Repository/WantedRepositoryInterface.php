@@ -23,26 +23,42 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Wanted;
+
+/**
+ * @phpstan-type DatabaseRow array{
+ *   id: int,
+ *   user: int,
+ *   artist: null|int,
+ *   artist_mbid: null|string,
+ *   mbid: null|string,
+ *   name: null|string,
+ *   year: null|int,
+ *   date: int,
+ *   accepted: int
+ *  }
+ */
 interface WantedRepositoryInterface
 {
     /**
      * Get wanted list.
      *
-     * @return int[]
+     * @return list<int>
      */
-    public function getAll(?int $userId): array;
+    public function findAll(?User $user = null): array;
 
     /**
      * Check if a release mbid is already marked as wanted
      */
-    public function find(string $musicbrainzId, int $userId): ?int;
+    public function find(string $musicbrainzId, User $user): ?int;
 
     /**
      * Delete wanted release.
      */
     public function deleteByMusicbrainzId(
         string $musicbrainzId,
-        ?int $userId
+        ?User $user = null
     ): void;
 
     /**
@@ -52,6 +68,35 @@ interface WantedRepositoryInterface
 
     /**
      * retrieves the info from the database and puts it in the cache
+     *
+     * @return null|DatabaseRow
      */
-    public function getById(int $wantedId): array;
+    public function getById(int $wantedId): ?array;
+
+    /**
+     * Find a single item by its id
+     */
+    public function findById(int $itemId): ?Wanted;
+
+    /**
+     * Find wanted release by name.
+     */
+    public function findByName(string $name): ?Wanted;
+
+    /**
+     * Find wanted release by mbid.
+     */
+    public function findByMusicBrainzId(string $mbid): ?Wanted;
+
+    public function prototype(): Wanted;
+
+    /**
+     * This cleans out unused wanted items
+     */
+    public function collectGarbage(): void;
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrateArtist(int $oldObjectId, int $newObjectId): void;
 }

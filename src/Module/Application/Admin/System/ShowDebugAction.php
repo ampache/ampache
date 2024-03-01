@@ -35,6 +35,8 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -48,14 +50,18 @@ final class ShowDebugAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        UpdateInfoRepositoryInterface $updateInfoRepository
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->requestParser        = $requestParser;
+        $this->configContainer      = $configContainer;
+        $this->ui                   = $ui;
+        $this->updateInfoRepository = $updateInfoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -70,12 +76,15 @@ final class ShowDebugAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $configuration = AmpConfig::get_all();
-        if ($this->requestParser->getFromRequest('autoupdate') == 'force') {
+        if ($this->requestParser->getFromRequest('autoupdate') === 'force') {
             AutoUpdate::get_latest_version(true);
         }
         $this->ui->show(
             'show_debug.inc.php',
-            ['configuration' => $configuration]
+            [
+                'configuration' => $configuration,
+                'lastCronDate' => (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::CRON_DATE)
+            ]
         );
 
         $this->ui->showQueryStats();

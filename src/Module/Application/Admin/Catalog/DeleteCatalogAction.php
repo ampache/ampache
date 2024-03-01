@@ -25,12 +25,12 @@ namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,12 +43,16 @@ final class DeleteCatalogAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        RequestParserInterface $requestParser
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -56,7 +60,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !Core::form_verify('delete_catalog')
+            !$this->requestParser->verifyForm('delete_catalog')
         ) {
             throw new AccessDeniedException();
         }

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Podcast\Feed;
 
 use Ampache\Module\Podcast\Feed\Exception\FeedLoadingException;
+use DateTimeInterface;
 use SimpleXMLElement;
 
 interface FeedLoaderInterface
@@ -42,7 +43,7 @@ interface FeedLoaderInterface
      *  generator: string,
      *  episodes: SimpleXMLElement,
      *  artUrl: null|string,
-     *  lastBuildDate: null|int
+     *  lastBuildDate: null|DateTimeInterface
      * }
      *
      * @throws FeedLoadingException

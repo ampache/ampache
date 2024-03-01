@@ -168,7 +168,7 @@ class JsonHandler extends Handler
      * @param string $item
      * @return array
      */
-    public function parse($item)
+    public function parse($item): array
     {
         $item         = $this->removeUnwantedStrings($item);
         $song         = json_decode($item, true);

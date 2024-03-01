@@ -65,7 +65,7 @@ final class Playlists5Method
         $results = Playlist::get_playlists($user->id, $filter, $like, true, $show_dupes);
         // merge with the smartlists
         if (!$hide) {
-            $searches = Playlist::get_smartlists($user->id, $filter, true, $show_dupes);
+            $searches = Playlist::get_smartlists($user->id, $filter, $like, true, $show_dupes);
             $results  = array_merge($results, $searches);
         }
         if (empty($results)) {

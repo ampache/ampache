@@ -32,7 +32,15 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_dxy_wave
 {
-    #-- init params
+    /** @var float|int $dist_x */
+    public $dist_x;
+    /** @var float|int $dist_y */
+    public $dist_y;
+    /** @var float|int $slow_x */
+    public $slow_x;
+    /** @var float|int $slow_y */
+    public $slow_y;
+
     /**
      * easy_captcha_dxy_wave constructor.
      * @param $max_x

@@ -27,10 +27,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
@@ -128,7 +126,7 @@ class Catalog_subsonic extends Catalog
     /**
      * @return array
      */
-    public function catalog_fields()
+    public function catalog_fields(): array
     {
         $fields = array();
 
@@ -162,7 +160,7 @@ class Catalog_subsonic extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param $catalog_id
+     * @param string $catalog_id
      * @param array $data
      */
     public static function create_type($catalog_id, $data): bool
@@ -394,7 +392,7 @@ class Catalog_subsonic extends Catalog
     /**
      * @return array
      */
-    public function check_catalog_proc()
+    public function check_catalog_proc(): array
     {
         return array();
     }
@@ -441,7 +439,10 @@ class Catalog_subsonic extends Catalog
         $db_results   = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $target_file = Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target);
-            $file_exists = ($target_file !== false && is_file($target_file));
+            if ($target_file === null) {
+                continue;
+            }
+            $file_exists = is_file($target_file);
             $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
             if (!$file_exists || (int)Core::get_filesize($target_file) == 0) {
                 $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $target;

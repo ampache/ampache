@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
@@ -101,9 +102,10 @@ final class ShareCreate4Method
             global $dic;
             $functionChecker   = $dic->get(FunctionCheckerInterface::class);
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+            $shareCreator      = $dic->get(ShareCreatorInterface::class);
 
-            $results[] = Share::create_share(
-                $user->id,
+            $results[] = $shareCreator->create(
+                $user,
                 $object_type,
                 $object_id,
                 true,

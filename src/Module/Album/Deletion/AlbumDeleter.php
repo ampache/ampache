@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Deletion;
 
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
@@ -58,6 +58,8 @@ final class AlbumDeleter implements AlbumDeleterInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private ArtCleanupInterface $artCleanup;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ModelFactoryInterface $modelFactory,
@@ -65,7 +67,8 @@ final class AlbumDeleter implements AlbumDeleterInterface
         SongRepositoryInterface $songRepository,
         ShoutRepositoryInterface $shoutRepository,
         SongDeleterInterface $songDeleter,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        ArtCleanupInterface $artCleanup
     ) {
         $this->albumRepository        = $albumRepository;
         $this->modelFactory           = $modelFactory;
@@ -74,6 +77,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
         $this->shoutRepository        = $shoutRepository;
         $this->songDeleter            = $songDeleter;
         $this->useractivityRepository = $useractivityRepository;
+        $this->artCleanup             = $artCleanup;
     }
 
     /**
@@ -99,7 +103,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
 
         $this->albumRepository->delete($album);
 
-        Art::garbage_collection('album', $albumId);
+        $this->artCleanup->collectGarbageForObject('album', $albumId);
         Userflag::garbage_collection('album', $albumId);
         Rating::garbage_collection('album', $albumId);
         $this->shoutRepository->collectGarbage('album', $albumId);

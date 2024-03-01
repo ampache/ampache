@@ -472,7 +472,8 @@ class Subsonic_Xml_Data
             $xsong->addAttribute('artistId', ($song->artist) ? (string)self::_getArtistId($song->artist) : '');
             $xsong->addAttribute('artist', (string)self::_checkName($song->get_artist_fullname()));
             if ($song->has_art()) {
-                $xsong->addAttribute('coverArt', $sub_id);
+                $art_id = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
+                $xsong->addAttribute('coverArt', $art_id);
             }
             $xsong->addAttribute('duration', (string)$song->time);
             $xsong->addAttribute('bitRate', (string)((int)($song->bitrate / 1024)));
@@ -508,7 +509,7 @@ class Subsonic_Xml_Data
                 $cache_path     = (string)AmpConfig::get('cache_path', '');
                 $cache_target   = (string)AmpConfig::get('cache_target', '');
                 $file_target    = Catalog::get_cache_path($song->getId(), $song->getCatalogId(), $cache_path, $cache_target);
-                $transcode_type = ($file_target && is_file($file_target))
+                $transcode_type = ($file_target !== null && is_file($file_target))
                     ? $cache_target
                     : Stream::get_transcode_format($song->type, null, 'api');
 
@@ -666,7 +667,7 @@ class Subsonic_Xml_Data
         $sub_id = (string)self::_getVideoId($video->id);
         $xvideo = self::addChildToResultXml($xml, htmlspecialchars($elementName));
         $xvideo->addAttribute('id', $sub_id);
-        $xvideo->addAttribute('title', (string)$video->f_full_title);
+        $xvideo->addAttribute('title', $video->getFileName());
         $xvideo->addAttribute('isDir', 'false');
         if ($video->has_art()) {
             $xvideo->addAttribute('coverArt', $sub_id);
@@ -1083,15 +1084,15 @@ class Subsonic_Xml_Data
     /**
      * addShares
      * @param SimpleXMLElement $xml
-     * @param array $shares
+     * @param list<int> $shares
      */
     public static function addShares($xml, $shares): void
     {
         $xshares = self::addChildToResultXml($xml, 'shares');
         foreach ($shares as $share_id) {
-            $share = new Share((int)$share_id);
+            $share = new Share($share_id);
             // Don't add share with max counter already reached
-            if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
+            if ($share->max_counter === 0 || $share->counter < $share->max_counter) {
                 self::addShare($xshares, $share);
             }
         }
@@ -1166,9 +1167,9 @@ class Subsonic_Xml_Data
     {
         $xjbox  = self::addChildToResultXml($xml, htmlspecialchars($elementName));
         $status = $localplay->status();
-        $index  = (AmpConfig::get('localplay_controller') == 'mpd') // TODO a way for this to support all localplay types
-            ? $status['track'] - 1
-            : 0;
+        $index  = (((int)$status['track']) === 0)
+            ? 0
+            : $status['track'] - 1;
         $xjbox->addAttribute('currentIndex', (string)$index);
         $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
         $xjbox->addAttribute('gain', (string)$status['volume']);
@@ -1317,7 +1318,7 @@ class Subsonic_Xml_Data
             }
             $xchannel->addAttribute('status', 'completed');
             if ($includeEpisodes) {
-                $episodes = $podcastRepository->getEpisodes($podcast);
+                $episodes = $podcast->getEpisodeIds();
 
                 foreach ($episodes as $episode_id) {
                     $episode = new Podcast_Episode($episode_id);
@@ -1344,7 +1345,7 @@ class Subsonic_Xml_Data
     /**
      * addBookmarks
      * @param SimpleXMLElement $xml
-     * @param Bookmark[] $bookmarks
+     * @param list<Bookmark> $bookmarks
      */
     public static function addBookmarks($xml, $bookmarks): void
     {
@@ -1393,13 +1394,13 @@ class Subsonic_Xml_Data
         $xepisode  = self::addChildToResultXml($xml, htmlspecialchars($elementName));
         $xepisode->addAttribute('id', $sub_id);
         $xepisode->addAttribute('channelId', $subParent);
-        $xepisode->addAttribute('title', (string)self::_checkName($episode->get_fullname()));
-        $xepisode->addAttribute('album', (string)$episode->f_podcast);
-        $xepisode->addAttribute('description', (string)self::_checkName($episode->f_description));
+        $xepisode->addAttribute('title', self::_checkName($episode->get_fullname()));
+        $xepisode->addAttribute('album', $episode->getPodcastName());
+        $xepisode->addAttribute('description', self::_checkName($episode->get_description()));
         $xepisode->addAttribute('duration', (string)$episode->time);
         $xepisode->addAttribute('genre', "Podcast");
         $xepisode->addAttribute('isDir', "false");
-        $xepisode->addAttribute('publishDate', $episode->f_pubdate);
+        $xepisode->addAttribute('publishDate', $episode->getPubDate()->format(DATE_ATOM));
         $xepisode->addAttribute('status', (string)$episode->state);
         $xepisode->addAttribute('parent', $subParent);
         if ($episode->has_art()) {
@@ -1648,7 +1649,7 @@ class Subsonic_Xml_Data
      * @param array $object_ids
      * @return array
      */
-    public static function _getAmpacheIdArrays($object_ids)
+    public static function _getAmpacheIdArrays($object_ids): array
     {
         $ampidarrays = array();
         $track       = 1;
@@ -1783,7 +1784,7 @@ class Subsonic_Xml_Data
             if (AmpConfig::get('ratings')) {
                 $starred = new Userflag($object_id, $objectType);
                 $result  = $starred->get_flag(null, true);
-                if (isset($result[1])) {
+                if (is_array($result) && isset($result[1])) {
                     $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int)$result[1]));
                 }
             }
@@ -1796,7 +1797,7 @@ class Subsonic_Xml_Data
      * @param string $file_Path
      * @return array
      */
-    private static function _getCatalogData($catalogId, $file_Path)
+    private static function _getCatalogData($catalogId, $file_Path): array
     {
         $results     = array();
         $sqllook     = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?;';

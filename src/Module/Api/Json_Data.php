@@ -25,20 +25,24 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\Live_Stream;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\License;
+use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
@@ -46,13 +50,11 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
-use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -196,6 +198,132 @@ class Json_Data
         }
 
         return $JSON;
+    }
+
+    /**
+     * index
+     *
+     * This takes an array of object_ids and return JSON based on the type of object
+     *
+     * @param list<int> $objects Array of object_ids (Mixed string|int)
+     * @param string $type 'catalog'|'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param User $user
+     * @param bool $include (add child id's of the object (in sub array by type))
+     * @return string  JSON Object "catalog"|"artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
+     */
+    public static function index($objects, $type, $user, $include = false): string
+    {
+        $output = array(
+            "total_count" => count($objects)
+        );
+
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
+
+        $output = [];
+
+        if ($include) {
+            switch ($type) {
+                case 'album_artist':
+                    foreach ($objects as $object_id) {
+                        $output[$object_id]['album'] = [];
+
+                        $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album';";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$object_id]['album'][] = $row['album_id'];
+                        }
+                    }
+                    break;
+                case 'song_artist':
+                    foreach ($objects as $object_id) {
+                        $output[$object_id]['album'] = [];
+
+                        $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'song';";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$object_id]['album'][] = $row['album_id'];
+                        }
+                    }
+                    break;
+                case 'artist':
+                    foreach ($objects as $object_id) {
+                        $output[$object_id]['album'] = [];
+
+                        $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ?;";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$object_id]['album'][] = $row['album_id'];
+                        }
+                    }
+                    break;
+                case 'album':
+                    foreach ($objects as $object_id) {
+                        $output[$object_id]['song'] = [];
+
+                        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ?;";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$object_id]['song'][] = $row['id'];
+                        }
+                    }
+                    break;
+                case 'playlist':
+                    foreach ($objects as $object_id) {
+                        $output[$object_id]['song'] = [];
+
+                        /**
+                         * Strip smart_ from playlist id and compare to original
+                         * smartlist = 'smart_1'
+                         * playlist  = 1000000
+                         */
+                        if ((int)$object_id === 0) {
+                            $playlist = new Search((int)str_replace('smart_', '', (string)$object_id), 'song', $user);
+                            foreach ($playlist->get_items() as $song) {
+                                $output[$object_id]['song'][] = $song['object_id'];
+                            }
+                        } else {
+                            $sql        = "SELECT DISTINCT `playlist_data`.`object_id`, `playlist_data`.`object_type` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?;";
+                            $db_results = Dba::read($sql, array($object_id));
+                            while ($row = Dba::fetch_assoc($db_results)) {
+                                $output[$object_id][$row['object_type']][] = $row['object_id'];
+                            }
+                        }
+                    }
+                    break;
+                case 'podcast':
+                    foreach ($objects as $object_id) {
+                        $output[$object_id]['podcast_episode'] = [];
+
+                        $sql        = "SELECT DISTINCT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ?;";
+                        $db_results = Dba::read($sql, array($object_id));
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$object_id]['podcast_episode'][] = $row['id'];
+                        }
+                    }
+                    break;
+                case 'catalog':
+                case 'live_stream':
+                case 'podcast_episode':
+                case 'share':
+                case 'song':
+                case 'video':
+                    // These objects don't have children
+                    foreach ($objects as $object_id) {
+                        $output[$object_id] = [];
+                    }
+                    break;
+            }
+        } else {
+            $output = $objects;
+        }
+        $output = json_encode(['type' => $output], JSON_PRETTY_PRINT);
+        if ($output !== false) {
+            return $output;
+        }
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
     }
 
     /**
@@ -390,15 +518,21 @@ class Json_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+
+        $licenseRepository = self::getLicenseRepository();
+
         $JSON = [];
         foreach ($objects as $license_id) {
-            $license = new License($license_id);
-            $JSON[]  = array(
-                "id" => (string)$license_id,
-                "name" => $license->name,
-                "description" => $license->description,
-                "external_link" => $license->external_link
-            );
+            $license = $licenseRepository->findById($license_id);
+
+            if ($license !== null) {
+                $JSON[]  = array(
+                    'id' => (string)$license_id,
+                    'name' => $license->getName(),
+                    'description' => $license->getDescription(),
+                    'external_link' => $license->getLinkFormatted()
+                );
+            }
         } // end foreach
         if ($object) {
             $output["license"] = $JSON;
@@ -427,9 +561,12 @@ class Json_Data
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $JSON = [];
+
+        $labelRepository = self::getLabelRepository();
+
         foreach ($objects as $label_id) {
-            $label = new Label($label_id);
-            if ($label->isNew()) {
+            $label = $labelRepository->findById($label_id);
+            if ($label === null) {
                 continue;
             }
             $label->format();
@@ -553,7 +690,8 @@ class Json_Data
                 "songcount" => $artist->song_count,
                 "genre" => self::genre_array($artist->tags),
                 "art" => $art_url,
-                "flag" => (bool)$flag->get_flag($user->getId(), false),
+                "has_art" => $artist->has_art(),
+                "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "mbid" => $artist->mbid,
@@ -652,7 +790,7 @@ class Json_Data
             $objArray['type']          = $album->release_type;
             $objArray['genre']         = self::genre_array($album->tags);
             $objArray['art']           = $art_url;
-            $objArray['flag']          = (bool)$flag->get_flag($user->getId(), false);
+            $objArray['flag']          = (bool)$flag->get_flag($user->getId());
             $objArray['rating']        = $user_rating;
             $objArray['averagerating'] = $rating->get_average_rating();
             $objArray['mbid']          = $album->mbid;
@@ -748,7 +886,8 @@ class Json_Data
                 "items" => $items,
                 "type" => $playlist_type,
                 "art" => $art_url,
-                "flag" => (bool)$flag->get_flag($user->getId(), false),
+                "has_art" => $playlist->has_art(),
+                "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating()
             ];
@@ -842,10 +981,17 @@ class Json_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+
+        $bookmarkRepository = self::getBookmarkRepository();
+
         $count = 0;
         $JSON  = [];
         foreach ($objects as $bookmark_id) {
-            $bookmark               = new Bookmark($bookmark_id);
+            $bookmark = $bookmarkRepository->findById($bookmark_id);
+            if ($bookmark === null) {
+                continue;
+            }
+
             $bookmark_username      = $bookmark->getUserName();
             $bookmark_object_type   = $bookmark->object_type;
             $bookmark_object_id     = (string)$bookmark->object_id;
@@ -992,7 +1138,7 @@ class Json_Data
             $podcast_public_url  = $podcast->get_link();
             $podcast_episodes    = array();
             if ($episodes) {
-                $results          = $podcastRepository->getEpisodes($podcast);
+                $results          = $podcast->getEpisodeIds();
                 $podcast_episodes = self::podcast_episodes($results, $user, false);
             }
             // Build this element
@@ -1009,7 +1155,8 @@ class Json_Data
                 "sync_date" => $podcast_sync_date,
                 "public_url" => $podcast_public_url,
                 "art" => $art_url,
-                "flag" => (bool)$flag->get_flag($user->getId(), false),
+                "has_art" => $podcast->has_art(),
+                "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "podcast_episode" => $podcast_episodes
@@ -1061,18 +1208,18 @@ class Json_Data
                 "name" => $episode->get_fullname(),
                 "podcast" => array(
                     "id" => $episode->podcast,
-                    "name" => $episode->get_f_podcast()
+                    "name" => $episode->getPodcastName()
                 ),
-                "description" => $episode->f_description,
-                "category" => $episode->f_category,
-                "author" => $episode->f_author,
-                "author_full" => $episode->f_artist_full,
-                "website" => $episode->f_website,
-                "pubdate" => $episode->f_pubdate,
-                "state" => $episode->f_state,
+                "description" => $episode->get_description(),
+                "category" => $episode->getCategory(),
+                "author" => $episode->getAuthor(),
+                "author_full" => $episode->getAuthor(),
+                "website" => $episode->getWebsite(),
+                "pubdate" => $episode->getPubDate()->format(DATE_ATOM),
+                "state" => $episode->getStateDescription(),
                 "filelength" => $episode->f_time_h,
-                "filesize" => $episode->f_size,
-                "filename" => $episode->f_file,
+                "filesize" => $episode->getSizeFormatted(),
+                "filename" => $episode->getFileName(),
                 "mime" => $episode->mime,
                 "time" => (int)$episode->time,
                 "size" => (int)$episode->size,
@@ -1085,7 +1232,8 @@ class Json_Data
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
-                "flag" => (bool)$flag->get_flag($user->getId(), false),
+                "has_art" => $episode->has_art(),
+                "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int)$episode->total_count,
@@ -1143,12 +1291,19 @@ class Json_Data
             $songMime     = $song->mime;
             $songBitrate  = $song->bitrate;
             $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
-            $song_album   = Album::get_name_array_by_id($song->album);
+            $song_album   = self::getAlbumRepository()->getNames($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
             $song_artists = array();
             foreach ($song->get_artists() as $artist_id) {
                 $song_artists[] = Artist::get_name_array_by_id($artist_id);
             }
+            $license     = $song->getLicense();
+            if ($license !== null) {
+                $licenseLink = $license->getLinkFormatted();
+            } else {
+                $licenseLink = '';
+            }
+
             $playlist_track++;
 
             $objArray = array(
@@ -1201,7 +1356,7 @@ class Json_Data
             $objArray['size']                  = (int)$song->size;
             $objArray['mbid']                  = $song->mbid;
             $objArray['art']                   = $art_url;
-            $objArray['flag']                  = (bool)$flag->get_flag($user->getId(), false);
+            $objArray['flag']                  = (bool)$flag->get_flag($user->getId());
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();
             $objArray['playcount']             = (int)$song->total_count;
@@ -1209,7 +1364,7 @@ class Json_Data
             $objArray['composer']              = $song->composer;
             $objArray['channels']              = $song->channels;
             $objArray['comment']               = $song->comment;
-            $objArray['license']               = $song->f_license;
+            $objArray['license']               = $licenseLink;
             $objArray['publisher']             = $song->label;
             $objArray['language']              = $song->language;
             $objArray['lyrics']                = $song->lyrics;
@@ -1220,12 +1375,15 @@ class Json_Data
             $objArray['r128_album_gain']       = $song->r128_album_gain;
             $objArray['r128_track_gain']       = $song->r128_track_gain;
 
-            if (Song::isCustomMetadataEnabled()) {
-                foreach ($song->getMetadata() as $metadata) {
+            /** @var Metadata $metadata */
+            foreach ($song->getMetadata() as $metadata) {
+                $field = $metadata->getField();
+
+                if ($field !== null) {
                     $meta_name = str_replace(
                         array(' ', '(', ')', '/', '\\', '#'),
                         '_',
-                        $metadata->getField()->getName()
+                        $field->getName()
                     );
                     $objArray[$meta_name] = $metadata->getData();
                 }
@@ -1286,7 +1444,8 @@ class Json_Data
                 "time" => (int)$video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
-                "flag" => (bool)$flag->get_flag($user->getId(), false),
+                "has_art" => $video->has_art(),
+                "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int)$video->total_count
@@ -1338,7 +1497,7 @@ class Json_Data
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
-            $song_album  = Album::get_name_array_by_id($song->album);
+            $song_album  = self::getAlbumRepository()->getNames($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
 
             $JSON[] = array(
@@ -1365,6 +1524,7 @@ class Json_Data
                 "url" => $play_url,
                 "size" => (int)$song->size,
                 "art" => $art_url,
+                "has_art" => $song->has_art(),
                 "rating" => $user_rating,
                 "averagerating" => ($rating->get_average_rating() ?? null),
                 "playcount" => (int)$song->total_count,
@@ -1384,6 +1544,7 @@ class Json_Data
     public static function user(User $user, bool $fullinfo, ?bool $object = true): string
     {
         $user->format();
+        $art_url = Art::url($user->id, 'user', $_REQUEST['auth'] ?? '');
         if ($fullinfo) {
             $JSON = array(
                 "id" => (string)$user->id,
@@ -1392,14 +1553,16 @@ class Json_Data
                 "email" => $user->email,
                 "access" => (int)$user->access,
                 "streamtoken" => $user->streamtoken,
-                "fullname_public" => (int)$user->fullname_public,
+                "fullname_public" => (bool)$user->fullname_public,
                 "validation" => $user->validation,
                 "disabled" => (bool)$user->disabled,
                 "create_date" => (int)$user->create_date,
                 "last_seen" => (int)$user->last_seen,
                 "website" => $user->website,
                 "state" => $user->state,
-                "city" => $user->city
+                "city" => $user->city,
+                "art" => $art_url,
+                "has_art" => $user->has_art()
             );
         } else {
             $JSON = array(
@@ -1409,10 +1572,11 @@ class Json_Data
                 "last_seen" => $user->last_seen,
                 "website" => $user->website,
                 "state" => $user->state,
-                "city" => $user->city
+                "city" => $user->city,
+                "art" => $art_url,
+                "has_art" => $user->has_art()
             );
         }
-
         if ($user->fullname_public) {
             $JSON['fullname'] = $user->fullname;
         }
@@ -1603,5 +1767,35 @@ class Json_Data
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getLicenseRepository(): LicenseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LicenseRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getLabelRepository(): LabelRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelRepositoryInterface::class);
     }
 }

@@ -97,7 +97,7 @@ class Ampache7digital implements AmpachePluginInterface
      * @param string $title
      * @return array
      */
-    public function get_song_preview($track_mbid, $artist_name, $title)
+    public function get_song_preview($track_mbid, $artist_name, $title): array
     {
         return array();
     }

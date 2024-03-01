@@ -24,15 +24,15 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Metadata\Repository\Metadata;
-use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -139,7 +139,7 @@ class Catalog_local extends Catalog
     /**
      * @return array
      */
-    public function catalog_fields()
+    public function catalog_fields(): array
     {
         $fields = array();
 
@@ -174,7 +174,7 @@ class Catalog_local extends Catalog
      * @param string $path
      * @return int|null
      */
-    public static function get_from_path($path)
+    public static function get_from_path($path): ?int
     {
         // First pull a list of all of the paths for the different catalogs
         $sql        = "SELECT `catalog_id`, `path` FROM `catalog_local`";
@@ -210,7 +210,7 @@ class Catalog_local extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param $catalog_id
+     * @param string $catalog_id
      * @param array $data
      */
     public static function create_type($catalog_id, $data): bool
@@ -444,7 +444,7 @@ class Catalog_local extends Catalog
                 $this->_playlists[] = $full_file;
             } else {
                 if (count($this->get_gather_types('music')) > 0) {
-                    if ($is_audio_file && $this->insert_local_song($full_file, $options)) {
+                    if ($is_audio_file && $this->_insert_local_song($full_file, $options)) {
                         debug_event('local.catalog', 'Imported song file: ' . $full_file, 5);
                     } else {
                         debug_event('local.catalog', 'Skipped song file: ' . $full_file, 5);
@@ -453,7 +453,7 @@ class Catalog_local extends Catalog
                     }
                 } else {
                     if (count($this->get_gather_types('video')) > 0) {
-                        if ($is_video_file && $this->insert_local_video($full_file, $options)) {
+                        if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
                             debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
                         } else {
                             debug_event('local.catalog', 'Skipped video file: ' . $full_file, 5);
@@ -533,14 +533,14 @@ class Catalog_local extends Catalog
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
                     debug_event('local.catalog', 'Processing playlist: ' . $full_file, 5);
-                    $result = Catalog::import_playlist($full_file, -1, 'public');
-                    if ($result['success']) {
+                    $result = PlaylistImporter::import_playlist($full_file, -1, 'public');
+                    if ($result !== null) {
                         $file = basename($full_file);
                         echo "\n$full_file\n";
                         if (!empty($result['results'])) {
                             foreach ($result['results'] as $file) {
                                 if ($file['found']) {
-                                    echo scrub_out($file['track']) . ": " . T_('Success') . ":\t" . scrub_out($file['file']) . "\n";
+                                    echo $file['track'] . ": " . T_('Success') . ":\t" . scrub_out($file['file']) . "\n";
                                 } else {
                                     echo "-: " . T_('Failure') . ":\t" . scrub_out($file['file']) . "\n";
                                 }
@@ -639,7 +639,8 @@ class Catalog_local extends Catalog
         if ($media_type === 'song') {
             Album::update_table_counts();
             Artist::update_table_counts();
-            Artist::garbage_collection();
+
+            $this->getArtistRepository()->collectGarbage();
             $this->getAlbumRepository()->collectGarbage();
         }
         debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
@@ -778,8 +779,7 @@ class Catalog_local extends Catalog
             Dba::write($sql);
         }
 
-        Metadata::garbage_collection();
-        MetadataField::garbage_collection();
+        $this->getMetadataManager()->collectGarbage();
 
         return $this->count;
     }
@@ -792,7 +792,7 @@ class Catalog_local extends Catalog
      * @param $chunk_size
      * @return array
      */
-    private function _clean_chunk($media_type, $chunk, $chunk_size)
+    private function _clean_chunk($media_type, $chunk, $chunk_size): array
     {
         $dead  = array();
         $count = $chunk * $chunk_size;
@@ -825,7 +825,7 @@ class Catalog_local extends Catalog
      * @param $chunk_size
      * @return array
      */
-    private function _check_chunk($media_type, $chunk, $chunk_size)
+    private function _check_chunk($media_type, $chunk, $chunk_size): array
     {
         $missing = array();
         $count   = $chunk * $chunk_size;
@@ -895,21 +895,20 @@ class Catalog_local extends Catalog
      * insert_local_song
      *
      * Insert a song that isn't already in the database.
-     * @param $file
-     * @param array $options
+     * @param array<string, mixed> $options
      * @return bool|int
      * @throws Exception
      * @throws Exception
      */
-    private function insert_local_song($file, $options = array())
+    private function _insert_local_song(string $file, $options = array())
     {
         $vainfo = $this->getUtilityFactory()->createVaInfo(
             $file,
             $this->get_gather_types('music'),
             '',
             '',
-            $this->sort_pattern,
-            $this->rename_pattern
+            (string) $this->sort_pattern,
+            (string) $this->rename_pattern
         );
         $vainfo->gather_tags();
 
@@ -967,8 +966,8 @@ class Catalog_local extends Catalog
                         }
                     }
                     // sort_find_home will replace the % with the correct values.
-                    $directory = $this->sort_find_home($song, $this->sort_pattern, $root);
-                    $filename  = $this->sort_find_home($song, $this->rename_pattern);
+                    $directory = $this->sort_find_home($song, (string) $this->sort_pattern, $root);
+                    $filename  = $this->sort_find_home($song, (string) $this->rename_pattern);
                     if ($directory === null || $filename === null) {
                         $fullpath = (string)$song->file;
                     } else {
@@ -1022,10 +1021,10 @@ class Catalog_local extends Catalog
                     Recommendation::get_artist_info($song->artist);
                 }
             }
-            if (Song::isCustomMetadataEnabled()) {
+
+            if ($this->getMetadataManager()->isCustomMetadataEnabled()) {
                 $song    = new Song($song_id);
-                $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
-                self::add_metadata($song, $results);
+                $this->addMetadata($song, $results);
             }
             // disable dupes if catalog_check_duplicate is enabled
             if ($is_duplicate) {
@@ -1045,12 +1044,12 @@ class Catalog_local extends Catalog
      * information we can get is super sketchy so it's kind of a crap shoot
      * here
      * @param string $file
-     * @param array $options
+     * @param array<string, mixed> $options
      * @return int
      * @throws Exception
      * @throws Exception
      */
-    private function insert_local_video($file, $options = array()): int
+    private function _insert_local_video($file, $options = array()): int
     {
         /* Create the vainfo object and get info */
         $gtypes = $this->get_gather_types('video');
@@ -1060,8 +1059,8 @@ class Catalog_local extends Catalog
             $gtypes,
             '',
             '',
-            $this->sort_pattern,
-            $this->rename_pattern
+            (string) $this->sort_pattern,
+            (string) $this->rename_pattern
         );
         $vainfo->gather_tags();
 
@@ -1121,7 +1120,7 @@ class Catalog_local extends Catalog
     {
         return [
             'file_path' => (string) $media->file,
-            'file_name' => $media->f_file,
+            'file_name' => $media->getFileName(),
             'file_size' => $media->size,
             'file_type' => $media->type
         ];
@@ -1162,7 +1161,7 @@ class Catalog_local extends Catalog
     /**
      * @return array
      */
-    public function check_catalog_proc()
+    public function check_catalog_proc(): array
     {
         if (!Core::is_readable($this->path)) {
             // First sanity check; no point in proceeding with an unreadable catalog root.
@@ -1331,12 +1330,12 @@ class Catalog_local extends Catalog
         foreach ($results as $song_id) {
             $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id, $path, $target);
             $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $song_id . '.' . $target;
-            if ($target_file !== false && is_file($old_target_file)) {
+            if ($target_file !== null && is_file($old_target_file)) {
                 // check for the old path first
                 rename($old_target_file, $target_file);
                 debug_event('local.catalog', 'Moved: ' . $song_id . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
             }
-            $file_exists = ($target_file !== false && is_file($target_file));
+            $file_exists = ($target_file !== null && is_file($target_file));
             $media       = new Song($song_id);
             // check the old path too
             if ($file_exists) {
@@ -1346,8 +1345,8 @@ class Catalog_local extends Catalog
                     $this->get_gather_types('music'),
                     '',
                     '',
-                    $this->sort_pattern,
-                    $this->rename_pattern
+                    (string) $this->sort_pattern,
+                    (string) $this->rename_pattern
                 );
                 if ($media->time > 0 && !$vainfo->check_time($media->time)) {
                     debug_event('local.catalog', 'check_time FAILED for: ' . $media->id, 5);
@@ -1384,5 +1383,25 @@ class Catalog_local extends Catalog
         global $dic;
 
         return $dic->get(PodcastSyncerInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getMetadataManager(): MetadataManagerInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataManagerInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }

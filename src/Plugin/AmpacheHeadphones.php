@@ -59,10 +59,10 @@ class AmpacheHeadphones implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('headphones_api_url') && !Preference::insert('headphones_api_url', T_('Headphones URL'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('headphones_api_url', T_('Headphones URL'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('headphones_api_key') && !Preference::insert('headphones_api_key', T_('Headphones API key'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('headphones_api_key', T_('Headphones API key'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
 

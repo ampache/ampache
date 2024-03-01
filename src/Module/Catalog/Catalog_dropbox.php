@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
@@ -139,7 +138,7 @@ class Catalog_dropbox extends Catalog
     /**
      * @return array
      */
-    public function catalog_fields()
+    public function catalog_fields(): array
     {
         $fields = array();
 
@@ -198,7 +197,7 @@ class Catalog_dropbox extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param $catalog_id
+     * @param string $catalog_id
      * @param array $data
      */
     public static function create_type($catalog_id, $data): bool
@@ -399,8 +398,8 @@ class Catalog_dropbox extends Catalog
                 $this->get_gather_types('music'),
                 '',
                 '',
-                $this->sort_pattern,
-                $this->rename_pattern
+                (string) $this->sort_pattern,
+                (string) $this->rename_pattern
             );
             $vainfo->gather_tags();
 
@@ -467,8 +466,8 @@ class Catalog_dropbox extends Catalog
                     $gtypes,
                     '',
                     '',
-                    $this->sort_pattern,
-                    $this->rename_pattern,
+                    (string) $this->sort_pattern,
+                    (string) $this->rename_pattern,
                     $readfile
                 );
                 $vainfo->gather_tags();
@@ -562,8 +561,8 @@ class Catalog_dropbox extends Catalog
                         $this->get_gather_types('music'),
                         '',
                         '',
-                        $this->sort_pattern,
-                        $this->rename_pattern
+                        (string) $this->sort_pattern,
+                        (string) $this->rename_pattern
                     );
                     $vainfo->forceSize((int)$filesize);
                     $vainfo->gather_tags();
@@ -629,7 +628,7 @@ class Catalog_dropbox extends Catalog
     /**
      * @return array
      */
-    public function check_catalog_proc()
+    public function check_catalog_proc(): array
     {
         return array();
     }
@@ -742,7 +741,7 @@ class Catalog_dropbox extends Catalog
 
         return [
             'file_path' => $file,
-            'file_name' => $media->f_file,
+            'file_name' => $media->getFileName(),
             'file_size' => $media->size,
             'file_type' => $media->type
         ];

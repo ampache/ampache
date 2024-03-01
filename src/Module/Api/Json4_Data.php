@@ -24,17 +24,19 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\License;
+use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
@@ -42,13 +44,11 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
-use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Traversable;
@@ -141,7 +141,7 @@ class Json4_Data
      * @param bool $simple
      * @return array
      */
-    private static function tags_array($tags, $simple = false)
+    private static function tags_array($tags, $simple = false): array
     {
         $JSON = array();
 
@@ -230,14 +230,17 @@ class Json4_Data
 
         $JSON = [];
         foreach ($licenses as $license_id) {
-            $license = new License($license_id);
-            $JSON[]  = array(
-                "id" => (string)$license_id,
-                "name" => $license->name,
-                "description" => $license->description,
-                "external_link" => $license->external_link
-            );
-        } // end foreach
+            $license = self::getLicenseRepository()->findById($license_id);
+
+            if ($license !== null) {
+                $JSON[]  = array(
+                    'id' => (string)$license_id,
+                    'name' => $license->getName(),
+                    'description' => $license->getDescription(),
+                    'external_link' => $license->getLinkFormatted()
+                );
+            }
+        }
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     }
@@ -338,7 +341,7 @@ class Json4_Data
                 "songcount" => $artist->song_count,
                 "tag" => self::tags_array($artist->tags),
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
+                "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => ($rating->get_average_rating() ?? null),
@@ -418,7 +421,7 @@ class Json4_Data
             $objArray['disk']          = (int) $album->disk_count;
             $objArray['tag']           = self::tags_array($album->tags);
             $objArray['art']           = $art_url;
-            $objArray['flag']          = (!$flag->get_flag($user->getId(), false) ? 0 : 1);
+            $objArray['flag']          = (!$flag->get_flag($user->getId()) ? 0 : 1);
             $objArray['preciserating'] = $user_rating;
             $objArray['rating']        = $user_rating;
             $objArray['averagerating'] = ($rating->get_average_rating() ?? null);
@@ -506,7 +509,7 @@ class Json4_Data
                 "items" => $items,
                 "type" => $playlist_type,
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
+                "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => (string)($rating->get_average_rating() ?? null)];
@@ -658,7 +661,7 @@ class Json4_Data
             $podcast_public_url  = $podcast->get_link();
             $podcast_episodes    = array();
             if ($episodes) {
-                $results          = $podcastRepository->getEpisodes($podcast);
+                $results          = $podcast->getEpisodeIds();
                 $podcast_episodes = self::podcast_episodes($results, $user, false);
             }
             // Build this element
@@ -675,7 +678,7 @@ class Json4_Data
                 "sync_date" => $podcast_sync_date,
                 "public_url" => $podcast_public_url,
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
+                "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => (string)($rating->get_average_rating() ?? null),
@@ -716,22 +719,22 @@ class Json4_Data
             $JSON[]      = [
                 "id" => (string)$episode_id,
                 "name" => $episode->get_fullname(),
-                "description" => $episode->f_description,
-                "category" => $episode->f_category,
-                "author" => $episode->f_author,
-                "author_full" => $episode->f_artist_full,
-                "website" => $episode->f_website,
-                "pubdate" => $episode->f_pubdate,
-                "state" => $episode->f_state,
+                "description" => $episode->get_description(),
+                "category" => $episode->getCategory(),
+                "author" => $episode->getAuthor(),
+                "author_full" => $episode->getAuthor(),
+                "website" => $episode->getWebsite(),
+                "pubdate" => $episode->getPubDate()->format(DATE_ATOM),
+                "state" => $episode->getStateDescription(),
                 "filelength" => $episode->f_time_h,
-                "filesize" => $episode->f_size,
+                "filesize" => $episode->getSizeFormatted(),
                 "mime" => $episode->mime,
-                "filename" => $episode->f_file,
-                "public_url" => $episode->link,
+                "filename" => $episode->getFileName(),
+                "public_url" => $episode->get_link(),
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
+                "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => (string)($rating->get_average_rating() ?? null),
@@ -784,6 +787,13 @@ class Json4_Data
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $license     = $song->getLicense();
+            if ($license !== null) {
+                $licenseLink = $license->getLinkFormatted();
+            } else {
+                $licenseLink = '';
+            }
+
             $playlist_track++;
 
             $ourSong = array(
@@ -820,7 +830,7 @@ class Json4_Data
             $ourSong['artist_mbid']           = $song->artist_mbid;
             $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
             $ourSong['art']                   = $art_url;
-            $ourSong['flag']                  = (!$flag->get_flag($user->getId(), false) ? 0 : 1);
+            $ourSong['flag']                  = (!$flag->get_flag($user->getId()) ? 0 : 1);
             $ourSong['preciserating']         = $user_rating;
             $ourSong['rating']                = $user_rating;
             $ourSong['averagerating']         = ($rating->get_average_rating() ?? null);
@@ -829,7 +839,7 @@ class Json4_Data
             $ourSong['composer']              = $song->composer;
             $ourSong['channels']              = $song->channels;
             $ourSong['comment']               = $song->comment;
-            $ourSong['license']               = $song->f_license;
+            $ourSong['license']               = $licenseLink;
             $ourSong['publisher']             = $song->label;
             $ourSong['language']              = $song->language;
             $ourSong['replaygain_album_gain'] = $song->replaygain_album_gain;
@@ -838,9 +848,13 @@ class Json4_Data
             $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
             $ourSong['genre']                 = self::tags_array($song->tags, true);
 
-            if (Song::isCustomMetadataEnabled()) {
-                foreach ($song->getMetadata() as $metadata) {
-                    $meta_name           = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_', $metadata->getField()->getName());
+            /** @var Metadata $metadata */
+            foreach ($song->getMetadata() as $metadata) {
+                $field = $metadata->getField();
+
+                if ($field !== null) {
+                    $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_', $field->getName());
+
                     $ourSong[$meta_name] = $metadata->getData();
                 }
             }
@@ -890,7 +904,7 @@ class Json4_Data
                 "time" => (int)$video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
+                "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => (string)($rating->get_average_rating() ?? null)
@@ -1116,5 +1130,15 @@ class Json4_Data
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getLicenseRepository(): LicenseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LicenseRepositoryInterface::class);
     }
 }

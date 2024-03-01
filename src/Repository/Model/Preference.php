@@ -181,7 +181,6 @@ class Preference extends database_object
         'catalogfav_max_items',
         'discogs_api_key',
         'discogs_secret_api_key',
-        'flattr_user_id',
         'flickr_api_key',
         'ftl_max_items',
         'gmaps_api_key',
@@ -457,15 +456,15 @@ class Preference extends database_object
      * it ignores the 'internal' category
      * @return array
      */
-    public static function get_categories()
+    public static function get_categories(): array
     {
-        $sql = "SELECT `preference`.`catagory` FROM `preference` GROUP BY `catagory` ORDER BY `catagory`";
+        $sql = "SELECT `preference`.`category` FROM `preference` GROUP BY `category` ORDER BY `category`";
 
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            if ($row['catagory'] != 'internal') {
-                $results[] = $row['catagory'];
+            if ($row['category'] != 'internal') {
+                $results[] = $row['category'];
             }
         } // end while
 
@@ -479,12 +478,12 @@ class Preference extends database_object
      * @param int $user_id
      * @return array
      */
-    public static function get($pref_name, $user_id)
+    public static function get($pref_name, $user_id): array
     {
         $user_id    = Dba::escape($user_id);
-        $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
+        $user_limit = ($user_id != -1) ? "AND `preference`.`category` != 'system'" : "";
 
-        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` = ? AND `user_preference`.`user` = ? AND `preference`.`catagory` != 'internal' $user_limit ORDER BY `preference`.`subcatagory`, `preference`.`description`";
+        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`category`, `preference`.`subcategory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` = ? AND `user_preference`.`user` = ? AND `preference`.`category` != 'internal' $user_limit ORDER BY `preference`.`subcategory`, `preference`.`description`";
 
         $db_results = Dba::read($sql, array($pref_name, $user_id));
         $results    = array();
@@ -497,8 +496,8 @@ class Preference extends database_object
                 'description' => $row['description'],
                 'value' => $row['value'],
                 'type' => $row['type'],
-                'category' => $row['catagory'],
-                'subcategory' => $row['subcatagory']
+                'category' => $row['category'],
+                'subcategory' => $row['subcategory']
             );
         }
 
@@ -529,7 +528,7 @@ class Preference extends database_object
         if ($subcategory !== null) {
             $subcategory = strtolower((string)$subcategory);
         }
-        $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($name, $description, $default, (int)$level, $type, $category, $subcategory));
 
         if (!$db_results) {
@@ -610,7 +609,7 @@ class Preference extends database_object
      * @param array $results
      * @return array
      */
-    public static function fix_preferences($results)
+    public static function fix_preferences($results): array
     {
         $arrays = array(
             'allow_zip_types',
@@ -650,7 +649,7 @@ class Preference extends database_object
      */
     public static function set_defaults(): void
     {
-        $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES " .
+        $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES " .
             "(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'), " .
             "(4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query'), " .
             "(19, 'transcode_bitrate', '128', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding'), " .
@@ -839,7 +838,6 @@ class Preference extends database_object
             'discogs_api_key' => T_('Discogs consumer key'),
             'discogs_secret_api_key' => T_('Discogs secret'),
             'download' => T_('Allow Downloads'),
-            'flattr_user_id' => T_('Flattr User ID'),
             'flickr_api_key' => T_('Flickr API key'),
             'force_http_play' => T_('Force HTTP playback regardless of port'),
             'ftl_max_items' => T_('Friends timeline max items'),
@@ -1221,7 +1219,7 @@ class Preference extends database_object
         }
 
         /* Get Global Preferences */
-        $sql        = "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`catagory` !='system'";
+        $sql        = "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`category`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`category` !='system'";
         $db_results = Dba::read($sql, array($user_id));
 
         $results = array();

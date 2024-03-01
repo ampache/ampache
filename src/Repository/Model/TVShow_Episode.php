@@ -185,20 +185,26 @@ class TVShow_Episode extends Video
         $this->f_season_link = $season->f_link;
         $this->f_tvshow      = $season->f_tvshow;
         $this->f_tvshow_link = $season->f_tvshow_link;
+    }
 
-        $this->f_file = $this->f_tvshow;
+    public function getFileName(): string
+    {
+        $season = new TVShow_Season($this->season);
+        $season->format();
+
+        $value = $season->f_tvshow;
         if ($this->episode_number) {
-            $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d', $this->episode_number);
+            $value .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d', $this->episode_number);
         }
-        $this->f_file .= ' - ' . $this->f_name;
-        $this->f_full_title = $this->f_file;
+
+        return sprintf('%s - %s', $value, $this->original_name ?? '');
     }
 
     /**
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords           = parent::get_keywords();
         $keywords['tvshow'] = array(
@@ -243,7 +249,7 @@ class TVShow_Episode extends Video
      * get_release_item_art
      * @return array
      */
-    public function get_release_item_art()
+    public function get_release_item_art(): array
     {
         return array(
             'object_type' => 'tvshow_season',

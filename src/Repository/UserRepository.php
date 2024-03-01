@@ -137,6 +137,8 @@ final class UserRepository implements UserRepositoryInterface
 
     /**
      * This returns all valid users in an array (id => name).
+     *
+     * @return array<int, string>
      */
     public function getValidArray(bool $includeDisabled = false): array
     {
@@ -365,7 +367,7 @@ final class UserRepository implements UserRepositoryInterface
     public function enable(int $userId): void
     {
         Dba::write(
-            'UPDATE `user` SET `disabled`=\'0\' WHERE id = ?',
+            'UPDATE `user` SET `disabled`=\'0\' WHERE `id` = ?',
             [$userId]
         );
     }

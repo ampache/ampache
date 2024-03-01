@@ -27,6 +27,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -86,7 +87,7 @@ class Recommendation
      * @param bool $get_items
      * @return array
      */
-    protected static function get_recommendation_cache($type, $object_id, $get_items = false)
+    protected static function get_recommendation_cache($type, $object_id, $get_items = false): array
     {
         if (!AmpConfig::get('cron_cache')) {
             self::garbage_collection();
@@ -119,7 +120,7 @@ class Recommendation
      * @param string $type
      * @param int $object_id
      */
-    protected static function delete_recommendation_cache($type, $object_id)
+    protected static function delete_recommendation_cache($type, $object_id): void
     {
         $cache = self::get_recommendation_cache($type, $object_id);
         if (array_key_exists('id', $cache)) {
@@ -134,7 +135,7 @@ class Recommendation
      * @param int $object_id
      * @param $recommendations
      */
-    protected static function update_recommendation_cache($type, $object_id, $recommendations)
+    protected static function update_recommendation_cache($type, $object_id, $recommendations): void
     {
         if (count($recommendations) > 0) {
             self::delete_recommendation_cache($type, $object_id);
@@ -162,7 +163,7 @@ class Recommendation
      * @param bool $local_only
      * @return array
      */
-    public static function get_songs_like($song_id, $limit = 5, $local_only = true)
+    public static function get_songs_like($song_id, $limit = 5, $local_only = true): array
     {
         if (!AmpConfig::get('lastfm_api_key')) {
             return array();
@@ -170,6 +171,21 @@ class Recommendation
 
         $song     = new Song($song_id);
         $artist   = new Artist($song->artist);
+
+        if ($artist->isNew()) {
+            debug_event(
+                self::class,
+                sprintf(
+                    'Artist `%d` of Song `%d` is invalid, skip recommendation lookup',
+                    $song->artist,
+                    $song->id
+                ),
+                LegacyLogger::LOG_LEVEL_WARNING
+            );
+
+            return [];
+        }
+
         $fullname = (string)$artist->get_fullname();
         $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
@@ -253,7 +269,7 @@ class Recommendation
      * @param bool $local_only
      * @return array
      */
-    public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
+    public static function get_artists_like($artist_id, $limit = 10, $local_only = true): array
     {
         if (!AmpConfig::get('lastfm_api_key')) {
             return array();
@@ -353,7 +369,7 @@ class Recommendation
      * @param string $fullname
      * @return array
      */
-    public static function get_artist_info_by_name($fullname)
+    public static function get_artist_info_by_name($fullname): array
     {
         $query = 'artist=' . rawurlencode($fullname);
 
@@ -383,7 +399,7 @@ class Recommendation
      * @param int $artist_id
      * @return array
      */
-    public static function get_artist_info($artist_id)
+    public static function get_artist_info($artist_id): array
     {
         $artist = new Artist($artist_id);
         $query  = ($artist->mbid)
@@ -445,7 +461,7 @@ class Recommendation
      * @param int $album_id
      * @return array
      */
-    public static function get_album_info($album_id)
+    public static function get_album_info($album_id): array
     {
         $album = new Album($album_id);
         $query = ($album->mbid)

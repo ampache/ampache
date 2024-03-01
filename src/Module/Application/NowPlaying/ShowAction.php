@@ -32,7 +32,6 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

@@ -130,7 +130,7 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createPrivateMsg(
         int $privateMessageId
-    ): PrivateMsg {
+    ): PrivateMessageInterface {
         return new PrivateMsg($privateMessageId);
     }
 
@@ -160,21 +160,15 @@ final class ModelFactory implements ModelFactoryInterface
         return new Search((int) $searchId, $searchType, $user);
     }
 
-    public function createLicense(
-        int $licenseId
-    ): License {
-        return new License($licenseId);
-    }
-
     public function createAccess(
         int $accessId
     ): Access {
         return new Access($accessId);
     }
 
-    public function createLabel(
-        int $labelId
-    ): Label {
-        return new Label($labelId);
+    public function createVideo(
+        int $videoId
+    ): Video {
+        return new Video($videoId);
     }
 }

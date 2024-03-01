@@ -112,7 +112,7 @@ Run the test scripts to make sure that nothing is broken.
 Please consider adding unit-tests for you newly written code.
 
 ```bash
-bash composer qa
+composer qa
 ```
 
 #### Rebase your changes

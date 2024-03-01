@@ -39,7 +39,7 @@ interface library_item extends playable_item
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords();
+    public function get_keywords(): array;
 
     /**
      * @return int|null

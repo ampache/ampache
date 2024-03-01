@@ -25,40 +25,83 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
+use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 
+/**
+ * Manages database access related to Live-Streams (Radiostations)
+ *
+ * Tables: `live_stream`
+ */
 final class LiveStreamRepository implements LiveStreamRepositoryInterface
 {
-    /**
-     * @return int[]
-     */
-    public function getAll(): array
-    {
-        $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $sql        = "SELECT DISTINCT `live_stream`.`id` FROM `live_stream` INNER JOIN `catalog_map` ON `catalog_map`.`object_id` = `live_stream`.`id` AND `catalog_map`.`object_type` = 'live_stream' AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ");";
-        $db_results = Dba::read($sql);
-        $radios     = [];
+    private ModelFactoryInterface $modelFactory;
 
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $radios[] = (int) $results['id'];
+    private DatabaseConnectionInterface $connection;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        DatabaseConnectionInterface $connection
+    ) {
+        $this->modelFactory = $modelFactory;
+        $this->connection   = $connection;
+    }
+
+    /**
+     * Returns all items
+     *
+     * If a user is provided, the result will be limited to catalogs the user has access to
+     *
+     * @return list<int>
+     */
+    public function findAll(
+        ?User $user = null
+    ): array {
+        $userId = null;
+
+        if ($user !== null) {
+            $userId = $user->getId();
         }
 
-        return $radios;
+        $db_results = $this->connection->query(
+            'SELECT DISTINCT `live_stream`.`id` FROM `live_stream` INNER JOIN `catalog_map` ON `catalog_map`.`object_id` = `live_stream`.`id` AND `catalog_map`.`object_type` = \'live_stream\' AND `catalog_map`.`catalog_id` IN (' . implode(',', Catalog::get_catalogs('', $userId, true)) . ');'
+        );
+
+        $result = [];
+        while ($rowId = $db_results->fetchColumn()) {
+            $result[] = (int) $rowId;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $objectId): ?Live_Stream
+    {
+        $result = $this->modelFactory->createLiveStream($objectId);
+
+        if ($result->isNew()) {
+            return null;
+        }
+
+        return $result;
     }
 
     /**
      * This deletes the object with the given id from the database
      */
-    public function delete(int $liveStreamId): bool
+    public function delete(Live_Stream $liveStream): void
     {
-        $result = Dba::write(
+        $this->connection->query(
             'DELETE FROM `live_stream` WHERE `id` = ?',
-            [$liveStreamId]
+            [$liveStream->getId()]
         );
-        Catalog::count_table('live_stream');
 
-        return $result !== false;
+        Catalog::count_table('live_stream');
     }
 }

@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -47,32 +48,37 @@ final class UserMethod
      * This get a user's public information
      *
      * username = (string) $username
+     *
+     * @param array{
+     *  username?: scalar,
+     *  api_format: string
+     * } $input
      */
     public static function user(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
+        $username = $input['username'] ?? null;
+
+        // if the username is omitted, use the current users context to retrieve its own data
+        if ($username === null) {
+            $check_user = $user;
+
+            $fullinfo = true;
+        } else {
+            $userRepository = self::getUserRepository();
+            $check_user     = $userRepository->findByUsername((string) $username);
+            if (
+                $check_user === null ||
+                !in_array($check_user->getId(), $userRepository->getValid(true))
+            ) {
+                /* HINT: Requested object string/id/type */
+                Api::error(sprintf(T_('Not Found: %s'), $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);
+
+                return false;
+            }
+
+            // get full info when you're an admin or searching for yourself
+            $fullinfo = $check_user->getId() === $user->getId() || $user->access === AccessLevelEnum::LEVEL_ADMIN;
         }
-        $username = (string) $input['username'];
-        if (empty($username)) {
-            debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);
-
-            return false;
-        }
-
-        $check_user = User::get_from_username($username);
-        $valid      = ($check_user instanceof User && in_array($check_user->id, static::getUserRepository()->getValid(true)));
-        if (!$valid) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);
-
-            return false;
-        }
-
-        // get full info when you're an admin or searching for yourself
-        $fullinfo = (($check_user->id == $user->id) || ($user->access === 100));
 
         ob_end_clean();
         switch ($input['api_format']) {

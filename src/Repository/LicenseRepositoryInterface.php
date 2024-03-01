@@ -23,45 +23,32 @@
 
 namespace Ampache\Repository;
 
-interface LicenseRepositoryInterface
+use Ampache\Repository\Model\License;
+use Traversable;
+
+/**
+ * @extends BaseRepositoryInterface<License>
+ */
+interface LicenseRepositoryInterface extends BaseRepositoryInterface
 {
     /**
      * Returns a list of licenses accessible by the current user.
      *
-     * @return int[]
+     * @return Traversable<int, string>
      */
-    public function getAll(): array;
-
-    /**
-     * This inserts a new license entry, it returns the auto_inc id
-     *
-     * @return int The id of the created license
-     */
-    public function create(
-        string $name,
-        string $description,
-        string $externalLink
-    ): int;
-
-    /**
-     * This takes a key'd array of data as input and updates a license entry
-     */
-    public function update(
-        int $licenseId,
-        string $name,
-        string $description,
-        string $externalLink
-    ): void;
-
-    /**
-     * Deletes the license
-     */
-    public function delete(
-        int $licenseId
-    ): void;
+    public function getList(): Traversable;
 
     /**
      * Searches for the License by name and external link
      */
     public function find(string $searchValue): ?int;
+
+    /**
+     * Persists the item in the database
+     *
+     * If the item is new, it will be created. Otherwise, an update will happen
+     *
+     * @return null|non-negative-int
+     */
+    public function persist(License $license): ?int;
 }

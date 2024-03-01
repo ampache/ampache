@@ -32,6 +32,14 @@ use Ampache\Module\System\Update;
 
 final class InitializationHandlerDatabaseUpdate implements InitializationHandlerInterface
 {
+    private Update\UpdaterInterface $updater;
+
+    public function __construct(
+        Update\UpdaterInterface $updater
+    ) {
+        $this->updater = $updater;
+    }
+
     public function init(): void
     {
         // Check to see if we need to perform an update
@@ -39,7 +47,7 @@ final class InitializationHandlerDatabaseUpdate implements InitializationHandler
             if (!Dba::check_database()) {
                 throw new EnvironmentNotSuitableException();
             }
-            if (Update::need_update()) {
+            if ($this->updater->hasPendingUpdates()) {
                 throw new DatabaseOutdatedException();
             }
         }

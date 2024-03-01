@@ -58,7 +58,7 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('lyrist_api_url') && !Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
 

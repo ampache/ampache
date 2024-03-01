@@ -24,24 +24,21 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\PrivateMessageInterface;
-use Ampache\Repository\Exception\ItemNotFoundException;
+use Ampache\Repository\Model\User;
 
 interface PrivateMessageRepositoryInterface
 {
     /**
      * Get the user received private messages.
-     *
-     * @param int $userId
-     * @return int
      */
     public function getUnreadCount(
-        int $userId
+        User $user
     ): int;
 
     /**
      * Get the subsonic chat messages.
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getChatMessages(int $since = 0): array;
 
@@ -50,29 +47,21 @@ interface PrivateMessageRepositoryInterface
      */
     public function cleanChatMessages(int $days = 30): void;
 
-    /**
-     * Sends a subsonic chat message
-     */
-    public function sendChatMessage(string $message, int $userId): ?int;
+    public function setIsRead(PrivateMessageInterface $message, int $state): void;
 
-    public function setIsRead(int $privateMessageId, int $state): void;
-
-    public function delete(int $privateMessageId): void;
+    public function delete(PrivateMessageInterface $message): void;
 
     /**
      * Creates a private message and returns the id of the newly created object
      */
     public function create(
-        int $senderUserId,
-        int $recipientUserId,
+        ?User $sender,
+        User $recipient,
         string $subject,
         string $message
-    ): ?int;
+    ): int;
 
-    /**
-     * @throws ItemNotFoundException
-     */
-    public function getById(
+    public function findById(
         int $privateMessageId
-    ): PrivateMessageInterface;
+    ): ?PrivateMessageInterface;
 }

@@ -23,6 +23,8 @@
 
 namespace Ampache\Gui\System;
 
+use Traversable;
+
 interface UpdateViewAdapterInterface
 {
     public function getHtmlLanguage(): string;
@@ -43,7 +45,14 @@ interface UpdateViewAdapterInterface
 
     public function getUpdateActionUrl(): string;
 
-    public function getUpdateInfo(): array;
+    /**
+     * @return Traversable<array{
+     *  title: string,
+     *  changelog: list<string>,
+     *  warning: bool
+     * }>
+     */
+    public function getUpdateInfo(): Traversable;
 
     public function getWebPath(): string;
 }

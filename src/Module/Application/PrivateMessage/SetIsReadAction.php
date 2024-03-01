@@ -33,7 +33,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
-use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -79,17 +78,17 @@ final class SetIsReadAction implements ApplicationActionInterface
         );
 
         foreach ($messageIds as $messageId) {
-            try {
-                $message = $this->privateMessageRepository->getById($messageId);
-                if ($message->getRecipientUserId() !== $gatekeeper->getUserId()) {
-                    throw new Exception();
-                }
-                $this->privateMessageRepository->setIsRead($messageId, $readMode);
-            } catch (Exception $e) {
+            $message = $this->privateMessageRepository->findById($messageId);
+            if (
+                $message === null ||
+                $message->getRecipientUserId() !== $gatekeeper->getUserId()
+            ) {
                 throw new AccessDeniedException(
                     sprintf('Unknown or unauthorized private message `%d`.', $messageId),
                 );
             }
+
+            $this->privateMessageRepository->setIsRead($message, $readMode);
         }
 
         $this->ui->showHeader();

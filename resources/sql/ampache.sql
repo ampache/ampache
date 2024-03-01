@@ -891,11 +891,11 @@ CREATE TABLE IF NOT EXISTS `preference` (
   `description` varchar(255) DEFAULT NULL,
   `level` int(11) UNSIGNED NOT NULL DEFAULT 100,
   `type` varchar(128) DEFAULT NULL,
-  `catagory` varchar(128) DEFAULT NULL,
-  `subcatagory` varchar(128) DEFAULT NULL,
+  `category` varchar(128) DEFAULT NULL,
+  `subcategory` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `preference_UN` (`name`),
-  KEY `catagory` (`catagory`),
+  KEY `category` (`category`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=189 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -903,7 +903,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
 -- Dumping data for table `preference`
 --
 
-INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES
+INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES
 (1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'),
 (4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query'),
 (19, 'transcode_bitrate', '128', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding'),
@@ -927,8 +927,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'),
 (70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'),
 (71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'),
-(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'),
-(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'plugins', 'lastfm'),
+(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'plugins', 'last.fm'),
+(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'last.fm'),
 (82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'),
 (83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'),
 (84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'browse'),
@@ -1480,7 +1480,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600049'),
+('db_version', '600051'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------

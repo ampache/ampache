@@ -34,22 +34,18 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
-use Exception;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface&MockInterface $ui;
 
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
+    private ConfigContainerInterface&MockInterface $configContainer;
 
-    /** @var PrivateMessageRepositoryInterface|MockInterface|null */
-    private MockInterface $privateMessageRepository;
+    private PrivateMessageRepositoryInterface&MockInterface $privateMessageRepository;
 
-    private ?ShowAction $subject;
+    private ShowAction $subject;
 
     protected function setUp(): void
     {
@@ -123,10 +119,10 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['pvmsg_id' => (string) $msgId]);
 
-        $this->privateMessageRepository->shouldReceive('getById')
+        $this->privateMessageRepository->shouldReceive('findById')
             ->with($msgId)
             ->once()
-            ->andThrow(new Exception());
+            ->andReturnNull();
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -164,7 +160,7 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['pvmsg_id' => (string) $msgId]);
 
-        $this->privateMessageRepository->shouldReceive('getById')
+        $this->privateMessageRepository->shouldReceive('findById')
             ->with($msgId)
             ->once()
             ->andReturn($message);
@@ -218,12 +214,12 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
-        $this->privateMessageRepository->shouldReceive('getById')
+        $this->privateMessageRepository->shouldReceive('findById')
             ->with($msgId)
             ->once()
             ->andReturn($message);
         $this->privateMessageRepository->shouldReceive('setIsRead')
-            ->with($msgId, 1)
+            ->with($message, 1)
             ->once();
 
         $this->ui->shouldReceive('showHeader')

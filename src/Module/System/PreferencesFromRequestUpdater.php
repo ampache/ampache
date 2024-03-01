@@ -55,7 +55,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
         // Get current keys
         $sql = ($user_id == '-1')
             ? "SELECT `id`, `name`, `type` FROM `preference`"
-            : "SELECT `id`, `name`, `type` FROM `preference` WHERE `catagory` != 'system'";
+            : "SELECT `id`, `name`, `type` FROM `preference` WHERE `category` != 'system'";
 
         $db_results = Dba::read($sql);
         $results    = array();

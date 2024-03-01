@@ -38,7 +38,6 @@ final class PluginEnum
         'chartlyrics' => Ampachechartlyrics::class,
         'discogs' => AmpacheDiscogs::class,
         'facebook' => AmpacheFacebook::class,
-        'flattr' => AmpacheFlattr::class,
         'flickr' => Ampacheflickr::class,
         'friendstimeline' => AmpacheFriendsTimeline::class,
         'googleanalytics' => AmpacheGoogleAnalytics::class,

@@ -58,10 +58,10 @@ class AmpachePiwik implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('piwik_site_id') && !Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', 100, 'string', 'plugins', 'piwik')) {
+        if (!Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', 100, 'string', 'plugins', 'piwik')) {
             return false;
         }
-        if (!Preference::exists('piwik_url') && !Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get('web_path') . '/piwik/', 100, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get('web_path') . '/piwik/', 100, 'string', 'plugins', $this->name)) {
             return false;
         }
 

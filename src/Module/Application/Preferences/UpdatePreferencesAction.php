@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -44,12 +45,16 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
-        UiInterface $ui
+        UiInterface $ui,
+        RequestParserInterface $requestParser
     ) {
         $this->preferencesFromRequestUpdater = $preferencesFromRequestUpdater;
         $this->ui                            = $ui;
+        $this->requestParser                 = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -59,7 +64,7 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
                 Core::get_post('method') == 'admin' &&
                 $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false
             ) ||
-            !Core::form_verify('update_preference')
+            !$this->requestParser->verifyForm('update_preference')
         ) {
             throw new AccessDeniedException();
         }

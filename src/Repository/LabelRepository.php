@@ -25,27 +25,48 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\Label;
+use DateTimeInterface;
+use PDO;
 
 final class LabelRepository implements LabelRepositoryInterface
 {
+    private DatabaseConnectionInterface $connection;
+
+    public function __construct(
+        DatabaseConnectionInterface $connection
+    ) {
+        $this->connection = $connection;
+    }
+
+    public function findById(int $labelId): ?Label
+    {
+        $label = new Label($labelId);
+        if ($label->isNew()) {
+            return null;
+        }
+
+        return $label;
+    }
+
     /**
      * @return array<int, string>
      */
     public function getByArtist(int $artistId): array
     {
-        $results = [];
+        $labels = [];
 
-        $db_results = Dba::read(
-            "SELECT `label`.`id`, `label`.`name` FROM `label` LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` WHERE `label_asso`.`artist` = ?",
+        $result = $this->connection->query(
+            'SELECT `label`.`id`, `label`.`name` FROM `label` LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` WHERE `label_asso`.`artist` = ?',
             [$artistId]
         );
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[(int) $row['id']] = $row['name'];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $labels[(int) $row['id']] = $row['name'];
         }
 
-        return $results;
+        return $labels;
     }
 
     /**
@@ -55,31 +76,35 @@ final class LabelRepository implements LabelRepositoryInterface
      */
     public function getAll(): array
     {
-        $db_results = Dba::read('SELECT `id`, `name` FROM `label`');
-        $results    = [];
+        $result = $this->connection->query('SELECT `id`, `name` FROM `label`');
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[(int) $row['id']] = $row['name'];
+        $labels = [];
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $labels[(int) $row['id']] = $row['name'];
         }
 
-        return $results;
+        return $labels;
     }
 
-    public function lookup(string $labelName, int $label_id = 0): int
+    public function lookup(string $labelName, int $labelId = 0): int
     {
         $ret  = -1;
         $name = trim($labelName);
-        if (!empty($name)) {
+
+        if ($name !== '') {
             $ret    = 0;
-            $sql    = "SELECT `id` FROM `label` WHERE `name` = ?";
+            $sql    = 'SELECT `id` FROM `label` WHERE `name` = ?';
             $params = [$name];
-            if ($label_id > 0) {
-                $sql .= " AND `id` != ?";
-                $params[] = $label_id;
+            if ($labelId > 0) {
+                $sql .= ' AND `id` != ?';
+                $params[] = $labelId;
             }
-            $db_results = Dba::read($sql, $params);
-            if ($row = Dba::fetch_assoc($db_results)) {
-                $ret = (int) $row['id'];
+
+            $result = $this->connection->fetchOne($sql, $params);
+
+            if ($result !== false) {
+                $ret = (int) $result;
             }
         }
 
@@ -88,27 +113,34 @@ final class LabelRepository implements LabelRepositoryInterface
 
     public function removeArtistAssoc(int $labelId, int $artistId): void
     {
-        Dba::write(
+        $this->connection->query(
             'DELETE FROM `label_asso` WHERE `label` = ? AND `artist` = ?',
             [$labelId, $artistId]
         );
     }
 
-    public function addArtistAssoc(int $labelId, int $artistId): void
+    public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void
     {
-        Dba::write(
+        $this->connection->query(
             'INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)',
-            [$labelId, $artistId, time()]
+            [$labelId, $artistId, $date->getTimestamp()]
         );
     }
 
-    public function delete(int $labelId): bool
+    public function delete(int $labelId): void
     {
-        $result = Dba::write(
-            "DELETE FROM `label` WHERE `id` = ?",
+        $this->connection->query(
+            'DELETE FROM `label` WHERE `id` = ?',
             [$labelId]
         );
+    }
 
-        return $result !== false;
+    /**
+     * This cleans out unused labels
+     */
+    public function collectGarbage(): void
+    {
+        $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+        $this->connection->query('DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL');
     }
 }

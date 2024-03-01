@@ -6,8 +6,6 @@
 .buildpath
 .env
 .pc
-.php_cs.cache
-.phpunit.result.cache
 .project
 bootstrap/
 build/
@@ -51,3 +49,4 @@ web.config
 *.swp
 *.v11.suo
 *~
+.php-cs-fixer.cache

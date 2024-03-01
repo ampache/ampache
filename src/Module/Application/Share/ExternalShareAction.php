@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Share;
@@ -57,18 +58,22 @@ final class ExternalShareAction implements ApplicationActionInterface
 
     private FunctionCheckerInterface $functionChecker;
 
+    private ShareCreatorInterface $shareCreator;
+
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         PasswordGeneratorInterface $passwordGenerator,
         ResponseFactoryInterface $responseFactory,
-        FunctionCheckerInterface $functionChecker
+        FunctionCheckerInterface $functionChecker,
+        ShareCreatorInterface $shareCreator
     ) {
         $this->requestParser     = $requestParser;
         $this->configContainer   = $configContainer;
         $this->passwordGenerator = $passwordGenerator;
         $this->responseFactory   = $responseFactory;
         $this->functionChecker   = $functionChecker;
+        $this->shareCreator      = $shareCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,7 +82,12 @@ final class ExternalShareAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+        $user = $gatekeeper->getUser();
+
+        if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
+            $user === null
+        ) {
             throw new AccessDeniedException();
         }
 
@@ -85,7 +95,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         if ($plugin->_plugin === null) {
             throw new AccessDeniedException('Access Denied - Unknown external share plugin');
         }
-        $plugin->load(Core::get_global('user'));
+        $plugin->load($user);
 
         $type           = $this->requestParser->getFromRequest('type');
         $share_id       = $this->requestParser->getFromRequest('id');
@@ -93,8 +103,8 @@ final class ExternalShareAction implements ApplicationActionInterface
         $allow_download = ($type == 'song' && $this->functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD)) ||
             $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD);
 
-        $share_id = Share::create_share(
-            Core::get_global('user')->id,
+        $share_id = $this->shareCreator->create(
+            $user,
             $type,
             (int)$share_id,
             true,

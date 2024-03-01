@@ -35,10 +35,12 @@ use Psr\Log\LoggerInterface;
  * Manages shout-box related database access
  *
  * Table: `user_shout`
+ *
+ * @extends BaseRepository<Shoutbox>
  */
-final class ShoutRepository implements ShoutRepositoryInterface
+final class ShoutRepository extends BaseRepository implements ShoutRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
+    protected DatabaseConnectionInterface $connection;
 
     private LoggerInterface $logger;
 
@@ -48,6 +50,27 @@ final class ShoutRepository implements ShoutRepositoryInterface
     ) {
         $this->connection   = $connection;
         $this->logger       = $logger;
+    }
+
+    /**
+     * @return class-string<Shoutbox>
+     */
+    protected function getModelClass(): string
+    {
+        return Shoutbox::class;
+    }
+
+    /**
+     * @return list<mixed>
+     */
+    protected function getPrototypeParameters(): array
+    {
+        return [$this];
+    }
+
+    protected function getTableName(): string
+    {
+        return 'user_shout';
     }
 
     /**
@@ -68,25 +91,6 @@ final class ShoutRepository implements ShoutRepositoryInterface
         while ($shout = $result->fetch()) {
             yield $shout;
         }
-    }
-
-    /**
-     * Retrieve a single shout-item by its id
-     */
-    public function findById(int $shoutId): ?Shoutbox
-    {
-        $result = $this->connection->query(
-            'SELECT * FROM `user_shout` WHERE `id` = ?',
-            [$shoutId]
-        );
-        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, [$this]);
-
-        $shout = $result->fetch();
-        if ($shout === false) {
-            return null;
-        }
-
-        return $shout;
     }
 
     /**
@@ -136,17 +140,6 @@ final class ShoutRepository implements ShoutRepositoryInterface
     }
 
     /**
-     * this function deletes the shout-box entry
-     */
-    public function delete(Shoutbox $shout): void
-    {
-        $this->connection->query(
-            'DELETE FROM `user_shout` WHERE `id` = ?',
-            [$shout->getId()]
-        );
-    }
-
-    /**
      * Persists the shout-item in the database
      *
      * If the item is new, it will be created. Otherwise, an update will happen
@@ -174,7 +167,7 @@ final class ShoutRepository implements ShoutRepositoryInterface
             $result = $this->connection->getLastInsertedId();
         } else {
             $this->connection->query(
-                'UPDATE `user_shout` SET user = ?, date = ?, text = ?, sticky = ?, object_id = ?, object_type = ?, data = ? WHERE id = ?',
+                'UPDATE `user_shout` SET `user` = ?, `date` = ?, `text` = ?, `sticky` = ?, `object_id` = ?, `object_type` = ?, `data` = ? WHERE `id` = ?',
                 [
                     $shout->getUserId(),
                     $shout->getDate()->getTimestamp(),
@@ -263,13 +256,5 @@ final class ShoutRepository implements ShoutRepositoryInterface
             'UPDATE `user_shout` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
             [$newObjectId, $objectType, $oldObjectId]
         );
-    }
-
-    /**
-     * Returns a new shout-item
-     */
-    public function prototype(): Shoutbox
-    {
-        return new Shoutbox($this);
     }
 }

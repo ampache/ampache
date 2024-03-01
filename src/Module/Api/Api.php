@@ -43,6 +43,8 @@ class Api
 {
     /**
      * This dict contains all known api-methods (key) and their respective handler (value)
+     *
+     * @var array<string, class-string<object>>
      */
     public const METHOD_LIST = [
         Method\AdvancedSearchMethod::ACTION => Method\AdvancedSearchMethod::class,
@@ -87,6 +89,7 @@ class Api
         Method\GetSimilarMethod::ACTION => Method\GetSimilarMethod::class,
         Method\GoodbyeMethod::ACTION => Method\GoodbyeMethod::class,
         Method\HandshakeMethod::ACTION => Method\HandshakeMethod::class,
+        Method\IndexMethod::ACTION => Method\IndexMethod::class,
         Method\LabelArtistsMethod::ACTION => Method\LabelArtistsMethod::class,
         Method\LabelMethod::ACTION => Method\LabelMethod::class,
         Method\LabelsMethod::ACTION => Method\LabelsMethod::class,
@@ -103,6 +106,7 @@ class Api
         Method\LocalplayMethod::ACTION => Method\LocalplayMethod::class,
         Method\LocalplaySongsMethod::ACTION => Method\LocalplaySongsMethod::class,
         Method\PingMethod::ACTION => Method\PingMethod::class,
+        Method\PlaylistAddMethod::ACTION => Method\PlaylistAddMethod::class,
         Method\PlaylistAddSongMethod::ACTION => Method\PlaylistAddSongMethod::class,
         Method\PlaylistCreateMethod::ACTION => Method\PlaylistCreateMethod::class,
         Method\PlaylistDeleteMethod::ACTION => Method\PlaylistDeleteMethod::class,
@@ -127,6 +131,7 @@ class Api
         Method\RecordPlayMethod::ACTION => Method\RecordPlayMethod::class,
         Method\RegisterMethod::ACTION => Method\RegisterMethod::class,
         Method\ScrobbleMethod::ACTION => Method\ScrobbleMethod::class,
+        Method\SearchMethod::ACTION => Method\SearchMethod::class,
         Method\SearchSongsMethod::ACTION => Method\SearchSongsMethod::class,
         Method\ShareCreateMethod::ACTION => Method\ShareCreateMethod::class,
         Method\ShareDeleteMethod::ACTION => Method\ShareDeleteMethod::class,
@@ -152,8 +157,10 @@ class Api
         Method\UserEditMethod::ACTION => Method\UserEditMethod::class,
         Method\UserDeleteMethod::ACTION => Method\UserDeleteMethod::class,
         Method\UserMethod::ACTION => Method\UserMethod::class,
+        Method\UserPlaylistsMethod::ACTION => Method\UserPlaylistsMethod::class,
         Method\UserPreferenceMethod::ACTION => Method\UserPreferenceMethod::class,
         Method\UserPreferencesMethod::ACTION => Method\UserPreferencesMethod::class,
+        Method\UserSmartlistsMethod::ACTION => Method\UserSmartlistsMethod::class,
         Method\UsersMethod::ACTION => Method\UsersMethod::class,
         Method\UserUpdateMethod::ACTION => Method\UserUpdateMethod::class,
         Method\VideoMethod::ACTION => Method\VideoMethod::class,
@@ -170,8 +177,8 @@ class Api
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version    = '350001';
-    public static string $version         = '6.2.1'; // AMPACHE_VERSION
-    public static string $version_numeric = '621000'; // AMPACHE_VERSION
+    public static string $version         = '6.3.0'; // AMPACHE_VERSION
+    public static string $version_numeric = '630000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
@@ -361,7 +368,7 @@ class Api
      * @param string $token
      * @return array
      */
-    public static function server_details($token = '')
+    public static function server_details($token = ''): array
     {
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
         $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';

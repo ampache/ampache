@@ -84,11 +84,12 @@
         "phpmailer/phpmailer": "6.5.*",
         "pklauzinski/jscroll": "2.*",
         "psr/log": "^1",
+        "psr/simple-cache": "^1",
         "rmccue/requests": "^2.0",
         "robloach/component-installer": "^0.0.12",
         "rsd/seafile-php-sdk": "^1",
         "sabre/dav": "3.*.*",
-        "scn/phptal": "dev-master",
+        "scn/phptal": "^4",
         "shrikeh/teapot": "^2.3",
         "swisnl/jquery-contextmenu": "2.1.*",
         "symfony/event-dispatcher": "^5.4.22",
@@ -107,9 +108,8 @@
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-mockery": "^1.1",
         "phpunit/phpunit": "^10",
-        "rector/rector": "^0.18.12",
+        "rector/rector": "^1",
         "seec/phpunit-consecutive-params": "^1.1",
-        "squizlabs/php_codesniffer": "^3.8",
         "szymach/c-pchart": "^3.0"
     },
     "repositories":
@@ -380,13 +380,13 @@
     },
     "scripts": {
         "coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
-        "qa": "composer run-script syntax && composer run-script fix-cs && composer run-script tests && composer run-script stan",
+        "qa": "composer run-script syntax && composer run-script cs:check && composer run-script tests && composer run-script stan",
         "stan": "resources/scripts/tests/stan.sh",
         "stan-baseline": "vendor/bin/phpstan --generate-baseline",
         "tests": "vendor/bin/phpunit tests",
-        "codestyle": "resources/scripts/tests/codestyle.sh",
         "syntax": "resources/scripts/tests/syntax.sh",
-        "fix-cs": "vendor/bin/php-cs-fixer fix -v",
+        "cs:fix": "vendor/bin/php-cs-fixer fix",
+        "cs:check": "vendor/bin/php-cs-fixer fix --dry-run",
         "post-autoload-dump": [
             "@php resources/scripts/composer/check_tag_tools.php"
         ],
@@ -399,10 +399,10 @@
         "stan": "Performs static analysis",
         "stan-baseline": "Regenerate phpstan baseline",
         "tests": "Executes the unit tests",
-        "codestyle": "Performs code-style related checks",
         "syntax": "Performs php syntax checks",
-        "fix-cs": "Performs code-style corrections on the whole codebase",
-        "rector:dry": "Performs rector code-migrations dry run",
+        "cs:fix": "Performs code-style corrections on the whole codebase",
+        "cs:check": "Performs a code-style dry-run on the whole codebase",
+        "rector:dry": "Performs rector code-migrations dry-run",
         "rector:fix": "Applies pending rector code-migrations"
     },
     "suggest": {

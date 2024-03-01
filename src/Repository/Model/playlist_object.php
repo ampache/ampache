@@ -61,7 +61,7 @@ abstract class playlist_object extends database_object implements library_item
      *  object_id: int
      * }>
      */
-    abstract public function get_items();
+    abstract public function get_items(): array;
 
     /**
      * format
@@ -117,30 +117,27 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @param string $filter_type
-     * @return array
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string $filter_type = null): array
     {
-        $medias = $this->get_items();
         if ($filter_type) {
-            $nmedias = array();
-            foreach ($medias as $media) {
-                if ($media['object_type'] == $filter_type) {
-                    $nmedias[] = $media;
+            return array_filter(
+                $this->get_items(),
+                function (array $item) use ($filter_type): bool {
+                    return $item['object_type'] == $filter_type;
                 }
-            }
-            $medias = $nmedias;
+            );
+        } else {
+            return $this->get_items();
         }
-
-        return $medias;
     }
 
     /**
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         return array();
     }
@@ -214,7 +211,7 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return $this->get_items();
     }
@@ -224,7 +221,7 @@ abstract class playlist_object extends database_object implements library_item
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event('playlist_object.abstract', 'get_children ' . $name, 5);
 

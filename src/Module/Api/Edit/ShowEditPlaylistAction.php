@@ -28,8 +28,8 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
-use Ampache\Repository\Model\database_object;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Repository\Model\library_item;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -69,7 +69,7 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        database_object $libitem,
+        library_item $libitem,
         int $object_id
     ): ?ResponseInterface {
         /**

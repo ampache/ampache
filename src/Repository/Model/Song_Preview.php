@@ -30,6 +30,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 
 class Song_Preview extends database_object implements Media, playable_item
 {
@@ -50,9 +51,7 @@ class Song_Preview extends database_object implements Media, playable_item
     public $enabled      = true;
     public $mime;
     public $type;
-    public $f_file;
     public $f_artist;
-    public $f_artist_full;
     public $f_artist_link;
     public $f_name;
     public $f_name_full;
@@ -213,16 +212,16 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * get_artist_fullname
      * gets the name of $this->artist, allows passing of id
-     * @param int $artist_id
      */
-    public function get_artist_fullname($artist_id = 0): ?string
+    public function get_artist_fullname(): string
     {
-        if (!$artist_id) {
-            $artist_id = $this->artist;
-        }
-        $artist = new Artist($artist_id);
+        if ($this->artist) {
+            return (string) (new Artist($this->artist))->get_fullname();
+        } else {
+            $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
 
-        return $artist->get_fullname();
+            return $wartist['name'] ?? '';
+        }
     }
 
     /**
@@ -237,15 +236,14 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         unset($details); // dead code but called from other format calls
         // Format the artist name
+        $this->f_artist = $this->get_artist_fullname();
+
         if ($this->artist) {
-            $this->f_artist_full = $this->get_artist_fullname();
-            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist_full) . "</a>";
+            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist) . "\"> " . scrub_out($this->f_artist) . "</a>";
         } else {
-            $wartist             = Wanted::get_missing_artist((string)$this->artist_mbid);
-            $this->f_artist_link = $wartist['link'];
-            $this->f_artist_full = $wartist['name'];
+            $wartist             = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+            $this->f_artist_link = $wartist['link'] ?? '';
         }
-        $this->f_artist = $this->f_artist_full;
 
         // Format the title
         $this->f_name_full  = $this->title;
@@ -308,7 +306,7 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array();
     }
@@ -318,7 +316,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -326,13 +324,12 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @param string $filter_type
-     * @return array
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'song_preview') {
+        if ($filter_type === null || $filter_type === 'song_preview') {
             $medias[] = array(
                 'object_type' => 'song_preview',
                 'object_id' => $this->id
@@ -366,7 +363,7 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * stream
      */
-    public function stream()
+    public function stream(): void
     {
         foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
@@ -383,7 +380,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param $player
      * @return array
      */
-    public function get_stream_types($player = null)
+    public function get_stream_types($player = null): array
     {
         return array('native');
     }
@@ -405,7 +402,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array())
+    public function get_transcode_settings($target = null, $player = null, $options = array()): array
     {
         return array();
     }
@@ -449,7 +446,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param string $album_mbid
      * @return array
      */
-    public static function get_song_previews($album_mbid)
+    public static function get_song_previews($album_mbid): array
     {
         $songs = array();
 
@@ -490,5 +487,23 @@ class Song_Preview extends database_object implements Media, playable_item
     public function remove(): bool
     {
         return true;
+    }
+
+    /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string
+    {
+        return '';
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getMissingArtistRetriever(): MissingArtistRetrieverInterface
+    {
+        global $dic;
+
+        return $dic->get(MissingArtistRetrieverInterface::class);
     }
 }

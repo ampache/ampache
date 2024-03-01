@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\License;
 
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -41,13 +42,16 @@ final class ShowAction implements ApplicationActionInterface
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
+    private LicenseRepositoryInterface $licenseRepository;
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        LicenseRepositoryInterface $licenseRepository
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui                = $ui;
+        $this->modelFactory      = $modelFactory;
+        $this->licenseRepository = $licenseRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,7 +65,13 @@ final class ShowAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('license');
         $browse->set_simple_browse(true);
-        $browse->show_objects($browse->get_objects());
+        $browse->show_objects(
+            array_keys(
+                iterator_to_array(
+                    $this->licenseRepository->getList()
+                )
+            )
+        );
         $browse->store();
 
         $this->ui->showQueryStats();

@@ -31,7 +31,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Personal_Video;
@@ -66,7 +65,6 @@ final class ObjectTypeToClassNameMapper
         'clip' => Clip::class,
         'genre' => Tag::class,
         'label' => Label::class,
-        'license' => License::class,
         'live_stream' => Live_Stream::class,
         'movie' => Movie::class,
         'personal_video' => Personal_Video::class,

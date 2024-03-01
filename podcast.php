@@ -28,8 +28,10 @@ use Ampache\Module\Application\Podcast\ConfirmDeleteAction;
 use Ampache\Module\Application\Podcast\CreateAction;
 use Ampache\Module\Application\Podcast\DeleteAction;
 use Ampache\Module\Application\Podcast\ExportPodcastsAction;
+use Ampache\Module\Application\Podcast\ImportPodcastsAction;
 use Ampache\Module\Application\Podcast\ShowAction;
 use Ampache\Module\Application\Podcast\ShowCreateAction;
+use Ampache\Module\Application\Podcast\ShowImportPodcastsAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
@@ -45,6 +47,8 @@ $dic->get(ApplicationRunner::class)->run(
         ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
         ShowAction::REQUEST_KEY => ShowAction::class,
         ExportPodcastsAction::REQUEST_KEY => ExportPodcastsAction::class,
+        ShowImportPodcastsAction::REQUEST_KEY => ShowImportPodcastsAction::class,
+        ImportPodcastsAction::REQUEST_KEY => ImportPodcastsAction::class,
     ],
     ShowAction::REQUEST_KEY
 );

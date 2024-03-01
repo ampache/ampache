@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Activity\TypeHandler;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 final class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterface

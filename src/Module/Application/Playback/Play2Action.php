@@ -640,8 +640,10 @@ final class Play2Action implements ApplicationActionInterface
             }
             $cache_path   = (string)AmpConfig::get('cache_path', '');
             $cache_target = (string)AmpConfig::get('cache_target', '');
-            $file_target  = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
-            if ($transcode_cfg != 'never' && !$is_download && ($file_target && is_file($file_target))) {
+            $file_target  = (!empty($cache_target) && $cache_target === $transcode_to)
+                ? Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target)
+                : null;
+            if ($transcode_cfg != 'never' && !$is_download && ($file_target !== null && is_file($file_target))) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -652,7 +654,7 @@ final class Play2Action implements ApplicationActionInterface
 
                 $streamConfiguration = [
                     'file_path' => $file_target,
-                    'file_name' => $media->f_file,
+                    'file_name' => $media->getFileName(),
                     'file_size' => Core::get_filesize($file_target),
                     'file_type' => $cache_target,
                 ];
@@ -723,7 +725,7 @@ final class Play2Action implements ApplicationActionInterface
 
         header('Access-Control-Allow-Origin: *');
 
-        $sessionkey = $session_id ?? Stream::get_session();
+        $sessionkey = $session_id === '' ? Stream::get_session() : $session_id;
         $agent      = (!empty($client))
             ? $client
             : Session::agent($sessionkey);
@@ -913,7 +915,7 @@ final class Play2Action implements ApplicationActionInterface
 
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
-            $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
+            $media_name  = $media->get_artist_fullname() . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } else {
             if ($cpaction && $media instanceof Song) {
                 $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
@@ -925,9 +927,13 @@ final class Play2Action implements ApplicationActionInterface
         }
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         if ($transcode) {
-            $maxbitrate = (empty($transcode_settings))
-                ? $media->bitrate / 1024
-                : Stream::get_max_bitrate($media, $transcode_settings);
+            if (isset($troptions['bitrate'])) {
+                $maxbitrate = $troptions['bitrate'];
+            } else {
+                $maxbitrate = (empty($transcode_settings))
+                    ? $media->bitrate / 1024
+                    : Stream::get_max_bitrate($media, $transcode_settings);
+            }
             if ($media->time > 0 && $maxbitrate > 0) {
                 $stream_size = (int)(($media->time * $maxbitrate * 1024) / 8);
             } else {

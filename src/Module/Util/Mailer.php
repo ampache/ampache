@@ -147,7 +147,7 @@ final class Mailer implements MailerInterface
      * @param $filter
      * @return array
      */
-    public static function get_users($filter)
+    public static function get_users($filter): array
     {
         switch ($filter) {
             case 'users':

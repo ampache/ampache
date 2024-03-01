@@ -78,15 +78,15 @@ final class ShowCreateAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
+        $object_type = $this->requestParser->getFromRequest('type');
+        $object_id   = (int) $this->requestParser->getFromRequest('id');
+
         $this->ui->showHeader();
 
-        $object_type = Share::is_valid_type($this->requestParser->getFromRequest('type'));
-        $object_id   = $this->requestParser->getFromRequest('id');
-        if (!empty($object_type) && !empty($object_id)) {
-            if (is_array($object_id)) {
-                $object_id = $object_id[0];
-            }
-
+        if (
+            Share::is_valid_type($object_type)
+            && !empty($object_id)
+        ) {
             $className = ObjectTypeToClassNameMapper::map($object_type);
             /** @var Song|Album|AlbumDisk|Playlist|Video $object */
             $object = new $className($object_id);

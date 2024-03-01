@@ -23,15 +23,29 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\User;
+
 interface LiveStreamRepositoryInterface
 {
     /**
-     * @return int[]
+     * Returns all items
+     *
+     * If a user is provided, the result will be limited to catalogs the user has access to
+     *
+     * @return list<int>
      */
-    public function getAll(): array;
+    public function findAll(
+        ?User $user = null
+    ): array;
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $objectId): ?Live_Stream;
 
     /**
      * This deletes the object with the given id from the database
      */
-    public function delete(int $liveStreamId): bool;
+    public function delete(Live_Stream $liveStream): void;
 }

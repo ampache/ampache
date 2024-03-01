@@ -308,7 +308,7 @@ class LocalPlay
      * the array of current songs for display or whatever
      * an empty array is passed on failure
      */
-    public function get()
+    public function get(): array
     {
         $data = $this->_player->get();
 
@@ -488,7 +488,7 @@ class LocalPlay
      * @param int $uid
      * @return array
      */
-    public function get_instance($uid)
+    public function get_instance($uid): array
     {
         return $this->_player->get_instance($uid);
     }
