@@ -1940,9 +1940,6 @@ class Subsonic_Api
                     $description
                 );
 
-                if ($shareId !== null) {
-                    $shares[] = $shareId;
-                }
                 Subsonic_Xml_Data::addShares($response, $shares);
             } else {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'createshare');
