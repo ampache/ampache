@@ -3242,6 +3242,7 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(ArtistRepositoryInterface::class);
+    }
 
     /**
      * @deprecated Inject dependency

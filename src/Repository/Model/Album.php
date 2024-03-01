@@ -1261,6 +1261,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         global $dic;
 
         return $dic->get(AlbumDiskRepositoryInterface::class);
+    }
 
     /**
      * @deprecated Inject dependency
