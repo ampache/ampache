@@ -426,11 +426,6 @@ parameters:
 			path: src/Module/Api/Edit/AbstractEditAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$message of method Psr\\\\Log\\\\LoggerInterface\\:\\:warning\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/AbstractEditAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$object_type of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:map\\(\\) expects string, string\\|false\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/AbstractEditAction.php
