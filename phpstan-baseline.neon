@@ -6,16 +6,6 @@ parameters:
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
 
 		-
-			message: "#^Parameter \\#2 \\$artist of static method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:add_wanted\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#5 \\$year of static method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:add_wanted\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$sid of static method Ampache\\\\Module\\\\System\\\\Session\\:\\:update_geolocation\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/StatsAjaxHandler.php
@@ -13391,11 +13381,6 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$f_file has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$f_name has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -13922,11 +13907,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$f_artist_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$f_file has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 
@@ -14578,11 +14558,6 @@ parameters:
 		-
 			message: "#^Cannot access property \\$name on array\\.$#"
 			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$release\\-group on array\\.$#"
-			count: 2
 			path: src/Repository/Model/Wanted.php
 
 		-

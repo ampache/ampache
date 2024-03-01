@@ -142,8 +142,12 @@ class Movie extends Video
 
         $this->f_original_name = trim((string)$this->prefix . " " . $this->get_fullname());
         $this->f_name          = ($this->f_original_name ?? $this->get_fullname());
-        $this->f_full_title    = $this->f_name;
         $this->f_link          = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
+    }
+
+    public function getFileName(): string
+    {
+        return $this->f_original_name ?? $this->get_fullname();
     }
 
     /**

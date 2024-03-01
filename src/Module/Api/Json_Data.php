@@ -1219,7 +1219,7 @@ class Json_Data
                 "state" => $episode->getStateDescription(),
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->getSizeFormatted(),
-                "filename" => $episode->f_file,
+                "filename" => $episode->getFileName(),
                 "mime" => $episode->mime,
                 "time" => (int)$episode->time,
                 "size" => (int)$episode->size,

@@ -667,7 +667,7 @@ class Subsonic_Xml_Data
         $sub_id = (string)self::_getVideoId($video->id);
         $xvideo = self::addChildToResultXml($xml, htmlspecialchars($elementName));
         $xvideo->addAttribute('id', $sub_id);
-        $xvideo->addAttribute('title', (string)$video->f_full_title);
+        $xvideo->addAttribute('title', $video->getFileName());
         $xvideo->addAttribute('isDir', 'false');
         if ($video->has_art()) {
             $xvideo->addAttribute('coverArt', $sub_id);
@@ -1090,9 +1090,9 @@ class Subsonic_Xml_Data
     {
         $xshares = self::addChildToResultXml($xml, 'shares');
         foreach ($shares as $share_id) {
-            $share = new Share((int)$share_id);
+            $share = new Share($share_id);
             // Don't add share with max counter already reached
-            if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
+            if ($share->max_counter === 0 || $share->counter < $share->max_counter) {
                 self::addShare($xshares, $share);
             }
         }

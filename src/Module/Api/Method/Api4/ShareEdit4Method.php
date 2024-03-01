@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\ShareRepositoryInterface;
 
 /**
  * Class ShareEdit4Method
@@ -60,29 +60,46 @@ final class ShareEdit4Method
             return false;
         }
         $share_id = $input['filter'];
-        if (in_array($share_id, Share::get_share_list($user))) {
-            $share       = new Share($share_id);
-            $description = (isset($input['description'])) ? htmlspecialchars($input['description']) : $share->description;
-            $stream      = (isset($input['stream'])) ? filter_var($input['stream'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_stream;
-            $download    = (isset($input['download'])) ? filter_var($input['download'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_download;
-            $expires     = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : $share->expire_days;
 
-            $data = array(
-                'max_counter' => $share->max_counter,
-                'expire' => $expires,
-                'allow_stream' => $stream,
-                'allow_download' => $download,
-                'description' => $description
-            );
-            if ($share->update($data, $user)) {
-                Api4::message('success', 'share ' . $share_id . ' updated', null, $input['api_format']);
-            } else {
-                Api4::message('error', 'share ' . $share_id . ' was not updated', '401', $input['api_format']);
-            }
-        } else {
+        $share = self::getShareRepository()->findById((int) $share_id);
+
+        if (
+            $share === null ||
+            !$share->isAccessible($user)
+        ) {
             Api4::message('error', 'share ' . $share_id . ' was not found', '404', $input['api_format']);
+
+            return true;
+        }
+
+        $description = (isset($input['description'])) ? htmlspecialchars($input['description']) : $share->description;
+        $stream      = (isset($input['stream'])) ? filter_var($input['stream'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_stream;
+        $download    = (isset($input['download'])) ? filter_var($input['download'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_download;
+        $expires     = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : $share->expire_days;
+
+        $data = array(
+            'max_counter' => $share->max_counter,
+            'expire' => $expires,
+            'allow_stream' => $stream,
+            'allow_download' => $download,
+            'description' => $description
+        );
+        if ($share->update($data, $user)) {
+            Api4::message('success', 'share ' . $share_id . ' updated', null, $input['api_format']);
+        } else {
+            Api4::message('error', 'share ' . $share_id . ' was not updated', '401', $input['api_format']);
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }

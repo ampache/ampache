@@ -199,58 +199,6 @@ class Wanted extends database_object
     }
 
     /**
-     * Get wanted release by mbid.
-     * @param string $mbid
-     */
-    public static function get_wanted($mbid): int
-    {
-        $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
-        $db_results = Dba::read($sql, array($mbid));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int)$row['id'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * Get wanted release by name.
-     * @param string $name
-     */
-    public static function get_wanted_by_name($name): int
-    {
-        $sql        = "SELECT `id` FROM `wanted` WHERE `name` = ? LIMIT 1";
-        $db_results = Dba::read($sql, array($name));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int)$row['id'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * Delete a wanted release by mbid.
-     * @param string $mbid
-     * @throws \MusicBrainz\Exception
-     */
-    public static function delete_wanted_release(
-        string $mbid,
-        ?User $user = null
-    ): void {
-        if (self::getWantedRepository()->getAcceptedCount() > 0) {
-            $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
-            $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
-
-            if ($malbum !== null && $malbum->{'release-group'}) {
-                self::getWantedRepository()->deleteByMusicbrainzId(
-                    print_r($malbum->{'release-group'}, true),
-                    $user
-                );
-            }
-        }
-    }
-
-    /**
      * Accept a wanted request.
      */
     public function accept(): void
@@ -267,30 +215,6 @@ class Wanted extends database_object
                     $plugin->_plugin->process_wanted($this);
                 }
             }
-        }
-    }
-
-    /**
-     * Add a new wanted release.
-     * @param string $mbid
-     * @param int $artist
-     * @param string $artist_mbid
-     * @param string $name
-     * @param int $year
-     */
-    public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year): void
-    {
-        $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $accept = Core::get_global('user')->has_access(75) ? true : AmpConfig::get('wanted_auto_accept', false);
-        $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, (int) $year, time(), '0');
-        Dba::write($sql, $params);
-
-        if ($accept) {
-            $wanted_id = (int)Dba::insert_id();
-            $wanted    = new Wanted($wanted_id);
-            $wanted->accept();
-
-            database_object::remove_from_cache('wanted', $wanted_id);
         }
     }
 

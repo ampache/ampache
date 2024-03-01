@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -83,30 +84,12 @@ class Share extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id ?? 0;
     }
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
-    }
-
-    /**
-     * delete_share
-     * @param int $share_id
-     * @param User $user
-     * @return PDOStatement|bool
-     */
-    public static function delete_share($share_id, $user)
-    {
-        $sql    = "DELETE FROM `share` WHERE `id` = ?";
-        $params = array($share_id);
-        if (!$user->has_access(75)) {
-            $sql .= " AND `user` = ?";
-            $params[] = $user->id;
-        }
-
-        return Dba::write($sql, $params);
+        return $this->id === 0;
     }
 
     public static function is_valid_type(string $type): bool
@@ -130,40 +113,12 @@ class Share extends database_object
     }
 
     /**
-     * get_share_list_sql
+     * Returns `true` if the user may access the share item
      */
-    private static function get_share_list_sql(User $user): string
+    public function isAccessible(User $user): bool
     {
-        $sql   = "SELECT `id` FROM `share` ";
-        $multi = 'WHERE ';
-        if (!$user->has_access(75)) {
-            $sql .= "WHERE `user` = " . $user->id;
-            $multi = ' AND ';
-        }
-        if (AmpConfig::get('catalog_filter') && $user->id > 0) {
-            $sql .= $multi . Catalog::get_user_filter('share', $user->id);
-        }
-        //debug_event(self::class, 'get_share_list_sql ' . $sql, 5);
-
-        return $sql;
-    }
-
-    /**
-     * get_share_list
-     * @param User $user
-     * @return int[]
-     */
-    public static function get_share_list(User $user): array
-    {
-        $sql        = self::get_share_list_sql($user);
-        $db_results = Dba::read($sql);
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
+        return $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ||
+            $this->user === $user->getId();
     }
 
     public function show_action_buttons(): void
@@ -203,7 +158,7 @@ class Share extends database_object
     public function getObjectUrl(): string
     {
         return ($this->getObject())
-            ? (string)$this->getObject()->get_f_link()
+            ? $this->getObject()->get_f_link()
             : '';
     }
 
@@ -221,12 +176,12 @@ class Share extends database_object
 
     public function getLastVisitDateFormatted(): string
     {
-        return $this->lastvisit_date > 0 ? get_datetime((int) $this->lastvisit_date) : '';
+        return $this->lastvisit_date > 0 ? get_datetime($this->lastvisit_date) : '';
     }
 
     public function getCreationDateFormatted(): string
     {
-        return get_datetime((int) $this->creation_date);
+        return get_datetime($this->creation_date);
     }
 
     /**
@@ -258,17 +213,6 @@ class Share extends database_object
         }
 
         return Dba::write($sql, $params);
-    }
-
-    /**
-     * save_access
-     * @return PDOStatement|bool
-     */
-    public function save_access()
-    {
-        $sql = "UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?";
-
-        return Dba::write($sql, array(time(), $this->id));
     }
 
     /**

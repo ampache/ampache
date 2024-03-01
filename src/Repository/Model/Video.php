@@ -139,10 +139,6 @@ class Video extends database_object implements
      */
     public $f_length;
     /**
-     * @var null|string $f_file
-     */
-    public $f_file;
-    /**
      * @var null|string $f_release_date
      */
     public $f_release_date;
@@ -234,7 +230,6 @@ class Video extends database_object implements
      */
     public function format($details = true): void
     {
-        $this->f_full_title = $this->get_fullname();
         $this->get_f_link();
         $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
@@ -269,10 +264,17 @@ class Video extends database_object implements
         }
 
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
-        $this->f_file   = $this->get_fullname() . '.' . $this->type;
         if ($this->release_date) {
             $this->f_release_date = get_datetime((int) $this->release_date, 'short', 'none');
         }
+    }
+
+    /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string
+    {
+        return $this->get_fullname() . '.' . $this->type;
     }
 
     /**
