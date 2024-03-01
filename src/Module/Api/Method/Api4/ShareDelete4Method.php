@@ -26,9 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -68,8 +65,7 @@ final class ShareDelete4Method
             $share === null ||
             !$share->isAccessible($user)
         ) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api4::message('error', 'share ' . $object_id . ' was not found', '404', $input['api_format']);
 
             return true;
         }
