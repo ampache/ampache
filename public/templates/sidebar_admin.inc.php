@@ -70,11 +70,11 @@ use Ampache\Module\Util\Ui;
           <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('E-mail Users'); ?></a></li>
         <?php
         }
-            if (AmpConfig::get('allow_upload')) { ?>
+      if (AmpConfig::get('allow_upload')) { ?>
             <li id="sb_admin_users_Uploads"><a href="<?php echo $web_path; ?>/admin/uploads.php"><?php echo T_('Browse Uploads'); ?></a></li>
         <?php
-            }
-                if (AmpConfig::get('sociable')) { ?>
+      }
+      if (AmpConfig::get('sociable')) { ?>
           <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
         <?php } ?>
         <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a></li>

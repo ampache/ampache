@@ -42,7 +42,7 @@ use Ampache\Module\Util\Ui;
                 if ($libitem->f_avatar_mini) {
                     echo $libitem->f_avatar_mini;
                 }
-                echo $libitem->username;
+echo $libitem->username;
 if ($libitem->fullname_public || Access::check('interface', 100)) {
     echo " (" . $libitem->fullname . ")";
 } ?>
@@ -63,18 +63,18 @@ if ($libitem->fullname_public || Access::check('interface', 100)) {
                 <?php
             }
         }
-        if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
+if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
             <td class="cel_follow"><?php echo $userFollowStateRenderer->render($libitem->getId(), Core::get_global('user')->getId()); ?></td>
             <?php } ?>
     <td class="cel_action">
     <?php
-        if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
+if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $libitem->username; ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>
     <?php
-        if (Access::check('interface', 100)) { ?>
+if (Access::check('interface', 100)) { ?>
             <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $libitem->id; ?>">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
@@ -82,12 +82,12 @@ if ($libitem->fullname_public || Access::check('interface', 100)) {
                 <?php echo Ui::get_icon('preferences', T_('Preferences')); ?>
             </a>
         <?php
-            // FIXME: Fix this for the extra permission levels
-            if ($libitem->disabled == '1') {
-                echo "<a href=\"" . $web_path . "/admin/users.php?action=enable&amp;user_id=$libitem->id\">" . Ui::get_icon('enable', T_('Enable')) . "</a>";
-            } else {
-                echo "<a href=\"" . $web_path . "/admin/users.php?action=disable&amp;user_id=$libitem->id\">" . Ui::get_icon('disable', T_('Disable')) . "</a>";
-            } ?>
+    // FIXME: Fix this for the extra permission levels
+    if ($libitem->disabled == '1') {
+        echo "<a href=\"" . $web_path . "/admin/users.php?action=enable&amp;user_id=$libitem->id\">" . Ui::get_icon('enable', T_('Enable')) . "</a>";
+    } else {
+        echo "<a href=\"" . $web_path . "/admin/users.php?action=disable&amp;user_id=$libitem->id\">" . Ui::get_icon('disable', T_('Disable')) . "</a>";
+    } ?>
         <a href="<?php echo $web_path; ?>/admin/users.php?action=delete&user_id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>

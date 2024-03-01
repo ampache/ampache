@@ -81,9 +81,9 @@ Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
                 (($random_count == $i) ? 'selected="selected"' : '') . '>' .
                 $i . "</option>\n";
         }
-            echo "\t\t\t" . '<option value="-1" ' .
-                (($random_count == '-1') ? 'selected="selected"' : '') . '>' .
-                T_('All') . "</option>\n"; ?>
+echo "\t\t\t" . '<option value="-1" ' .
+    (($random_count == '-1') ? 'selected="selected"' : '') . '>' .
+    T_('All') . "</option>\n"; ?>
         </select>
         </td>
 </tr>
