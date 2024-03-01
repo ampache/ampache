@@ -31,6 +31,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
@@ -63,6 +64,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private VideoRepositoryInterface $videoRepository;
 
+    private WantedManagerInterface $wantedManager;
+
     public function __construct(
         RequestParserInterface $requestParser,
         SlideshowInterface $slideshow,
@@ -70,7 +73,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         LabelRepositoryInterface $labelRepository,
         SongRepositoryInterface $songRepository,
         WantedRepositoryInterface $wantedRepository,
-        VideoRepositoryInterface $videoRepository
+        VideoRepositoryInterface $videoRepository,
+        WantedManagerInterface $wantedManager
     ) {
         $this->requestParser    = $requestParser;
         $this->slideshow        = $slideshow;
@@ -79,6 +83,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         $this->songRepository   = $songRepository;
         $this->wantedRepository = $wantedRepository;
         $this->videoRepository  = $videoRepository;
+        $this->wantedManager    = $wantedManager;
     }
 
     public function handle(): void
@@ -279,10 +284,17 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                         $artist_mbid = $aobj->mbid;
                     }
                     $name = $this->requestParser->getFromRequest('name');
-                    $year = $this->requestParser->getFromRequest('year');
+                    $year = (int) $this->requestParser->getFromRequest('year');
 
                     if ($user instanceof User && !$this->wantedRepository->find($mbid, $user)) {
-                        Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
+                        $this->wantedManager->add(
+                            $user,
+                            $mbid,
+                            $artist,
+                            $artist_mbid,
+                            $name,
+                            $year
+                        );
 
                         $walbum = $this->wantedRepository->findByMusicBrainzId($mbid);
                         if ($walbum !== null) {
@@ -318,7 +330,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $walbum = $this->wantedRepository->findByMusicBrainzId($mbid);
 
                     if ($walbum !== null) {
-                        $walbum->accept();
+                        $this->wantedManager->accept($walbum, $user);
 
                         $results['wanted_action_' . $mbid] = $walbum->show_action_buttons();
                     }
