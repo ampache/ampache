@@ -25,6 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\User;
+use DateTimeInterface;
+
 /**
  * Manages share related database access
  *
@@ -38,7 +42,29 @@ interface ShareRepositoryInterface
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 
     /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Share;
+
+    /**
      * Cleanup old shares
      */
     public function collectGarbage(): void;
+
+    /**
+     * Returns the ids of all items the user has access to
+     *
+     * @return list<int>
+     */
+    public function getIdsByUser(User $user): array;
+
+    /**
+     * Deletes a single item
+     */
+    public function delete(Share $item): void;
+
+    /**
+     * Sets the last access-date and raises the counter
+     */
+    public function registerAccess(Share $share, DateTimeInterface $date): void;
 }
