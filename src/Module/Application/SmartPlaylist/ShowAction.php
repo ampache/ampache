@@ -25,12 +25,14 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\SmartPlaylist;
 
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class ShowAction implements ApplicationActionInterface
 {
@@ -38,13 +40,17 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LoggerInterface $logger;
+
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         UiInterface $ui,
+        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory
     ) {
         $this->ui           = $ui;
+        $this->logger       = $logger;
         $this->modelFactory = $modelFactory;
     }
 
@@ -53,17 +59,25 @@ final class ShowAction implements ApplicationActionInterface
         $playlist = $this->modelFactory->createSearch(
             (int)($request->getQueryParams()['playlist_id'] ?? 0)
         );
-
-        $playlist->format();
-
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_search.inc.php',
-            [
-                'playlist' => $playlist,
-                'object_ids' => $playlist->get_items()
-            ]
-        );
+        if ($playlist->isNew()) {
+            $this->logger->warning(
+                'Requested a search that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $playlist->format();
+
+            $this->ui->show(
+                'show_search.inc.php',
+                [
+                    'playlist' => $playlist,
+                    'object_ids' => $playlist->get_items()
+                ]
+            );
+        }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

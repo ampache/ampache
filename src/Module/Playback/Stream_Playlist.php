@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -217,7 +218,11 @@ class Stream_Playlist
         $type      = $media['object_type'];
         $object_id = $media['object_id'];
         $className = ObjectTypeToClassNameMapper::map($type);
-        $object    = new $className($object_id);
+        /** @var library_item $object */
+        $object = new $className($object_id);
+        if ($object->isNew()) {
+            return null;
+        }
         $object->format();
 
         if (array_key_exists('client', $media)) {
@@ -246,10 +251,14 @@ class Stream_Playlist
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
 
-        return self::media_object_to_url($object, $additional_params, $urltype, $user);
+        if ($object instanceof Media) {
+            return self::media_object_to_url($object, $additional_params, $urltype, $user);
+        }
+
+        return null;
     }
 
-    private static function media_object_to_url(media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
+    private static function media_object_to_url(Media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
     {
         $surl = null;
         $url  = array();
@@ -298,7 +307,7 @@ class Stream_Playlist
                 case 'song':
                     /** @var Song $object */
                     $url['title']     = $object->title;
-                    $url['author']    = $object->f_artist_full;
+                    $url['author']    = $object->get_artist_fullname();
                     $url['info_url']  = $object->get_f_link();
                     $show_song_art    = AmpConfig::get('show_song_art', false);
                     $has_art          = Art::has_db($object->id, 'song');
@@ -312,7 +321,7 @@ class Stream_Playlist
                 case 'video':
                     /** @var Video $object */
                     $url['title']      = 'Video - ' . $object->title;
-                    $url['author']     = $object->f_artist_full;
+                    $url['author']     = $object->get_artist_fullname();
                     $url['resolution'] = $object->f_resolution;
                     $url['codec']      = $object->type;
                     break;
@@ -329,13 +338,13 @@ class Stream_Playlist
                 case 'song_preview':
                     /** @var Song_Preview $object */
                     $url['title']  = $object->title;
-                    $url['author'] = $object->f_artist_full;
+                    $url['author'] = $object->get_artist_fullname();
                     $url['codec']  = $object->type;
                     break;
                 case 'podcast_episode':
                     /** @var Podcast_Episode $object */
                     $url['title']     = $object->f_name;
-                    $url['author']    = $object->f_podcast;
+                    $url['author']    = $object->getPodcastName();
                     $url['info_url']  = $object->get_f_link();
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->type;
@@ -459,7 +468,7 @@ class Stream_Playlist
                 $ext      = $type = 'm3u';
                 $ctype    = 'audio/x-mpegurl';
                 $callable = function (): void {
-                    $this->create_m3u();
+                    echo $this->create_m3u();
                 };
                 break;
         }
@@ -537,10 +546,18 @@ class Stream_Playlist
     }
 
     /**
-     * creates an m3u file, this includes the EXTINFO and as such can be
+     * for compatibility, the get_m3u_string function name is generated in the ExportPlaylist console export
+     */
+    public function get_m3u_string(): string
+    {
+        return $this->create_m3u();
+    }
+
+    /**
+     * creates the content of an m3u file, this includes the EXTINFO and as such can be
      * large with very long playlists
      */
-    public function create_m3u(): void
+    public function create_m3u(): string
     {
         $ret = "#EXTM3U\n";
 
@@ -549,7 +566,7 @@ class Stream_Playlist
             $ret .= $url->url . "\n";
         }
 
-        echo $ret;
+        return $ret;
     }
 
     public function create_pls(): void

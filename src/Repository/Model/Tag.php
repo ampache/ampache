@@ -309,7 +309,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param int $merge_to
      * @param bool $is_persistent
      */
-    public function merge($merge_to, $is_persistent)
+    public function merge($merge_to, $is_persistent): void
     {
         if ($this->id != $merge_to) {
             debug_event(self::class, 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
@@ -328,7 +328,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * Get merged tags to this tag.
      * @return array
      */
-    public function get_merged_tags()
+    public function get_merged_tags(): array
     {
         $sql = "SELECT `tag`.`id`, `tag`.`name`FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
 
@@ -380,7 +380,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * remove_merges
      * Remove merged tags from this tag.
      */
-    public function remove_merges()
+    public function remove_merges(): void
     {
         $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?;";
         Dba::write($sql, array($this->id));
@@ -463,7 +463,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      *
      * Delete the tag and all maps
      */
-    public function delete()
+    public function delete(): void
     {
         $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?";
         Dba::write($sql, array($this->id));
@@ -541,7 +541,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param int $limit
      * @return array
      */
-    public static function get_top_tags($type, $object_id, $limit = 10)
+    public static function get_top_tags($type, $object_id, $limit = 10): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();
@@ -598,7 +598,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param int $offset
      * @return int[]
      */
-    public static function get_tag_objects($type, $tag_id, $count = 0, $offset = 0)
+    public static function get_tag_objects($type, $tag_id, $count = 0, $offset = 0): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();
@@ -638,7 +638,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $offset
      * @return int[]
      */
-    public static function get_tag_ids($type, $count = '', $offset = '')
+    public static function get_tag_ids($type, $count = '', $offset = ''): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();
@@ -678,7 +678,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $order
      * @return array
      */
-    public static function get_tags($type = '', $limit = 0, $order = 'count')
+    public static function get_tags($type = '', $limit = 0, $order = 'count'): array
     {
         if (parent::is_cached('tags_list', 'no_name')) {
             //debug_event(self::class, 'Tags list found into cache memory!', 5);
@@ -692,9 +692,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $type_sql = (!empty($type))
                 ? "AND `tag_map`.`object_type` = '" . (string)scrub_in($type) . "'"
                 : "";
+
             $sql = (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
-                ? "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql AND `tag`.`is_hidden` = false WHERE" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `name` IS NOT NULL "
-                : "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql AND `tag`.`is_hidden` = false WHERE `name` IS NOT NULL ";
+                ? "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql WHERE" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 "
+                : "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql WHERE `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 ";
 
             $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         }
@@ -711,8 +712,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['tag_id']] = array(
-                'id' => $row['tag_id'],
+            $results[$row['id']] = array(
+                'id' => $row['id'],
                 'name' => $row['name'],
                 'is_hidden' => $row['is_hidden'],
                 'count' => $row['count'] ?? 0
@@ -860,7 +861,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param int $user_id
      * @return array
      */
-    public function count($type = '', $user_id = 0)
+    public function count($type = '', $user_id = 0): array
     {
         $params = array($this->id);
 
@@ -939,7 +940,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords        = [];
         $keywords['tag'] = [
@@ -987,7 +988,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array();
     }
@@ -997,7 +998,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -1005,11 +1006,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * get_medias
-     * @param string $filter_type
-     * @return array
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
         if ($filter_type) {

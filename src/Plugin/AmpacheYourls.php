@@ -60,13 +60,13 @@ class AmpacheYourls implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('yourls_domain') && !Preference::insert('yourls_domain', T_('YOURLS domain name'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('yourls_domain', T_('YOURLS domain name'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('yourls_use_idn') && !Preference::insert('yourls_use_idn', T_('YOURLS use IDN'), '0', 75, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('yourls_use_idn', T_('YOURLS use IDN'), '0', 75, 'boolean', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('yourls_api_key') && !Preference::insert('yourls_api_key', T_('YOURLS API key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('yourls_api_key', T_('YOURLS API key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 

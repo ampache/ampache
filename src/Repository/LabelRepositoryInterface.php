@@ -23,8 +23,13 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Label;
+use DateTimeInterface;
+
 interface LabelRepositoryInterface
 {
+    public function findById(int $labelId): ?Label;
+
     /**
      * @return array<int, string>
      */
@@ -37,11 +42,16 @@ interface LabelRepositoryInterface
      */
     public function getAll(): array;
 
-    public function lookup(string $labelName, int $label_id = 0): int;
+    public function lookup(string $labelName, int $labelId = 0): int;
 
     public function removeArtistAssoc(int $labelId, int $artistId): void;
 
-    public function addArtistAssoc(int $labelId, int $artistId): void;
+    public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void;
 
-    public function delete(int $labelId): bool;
+    public function delete(int $labelId): void;
+
+    /**
+     * This cleans out unused labels
+     */
+    public function collectGarbage(): void;
 }

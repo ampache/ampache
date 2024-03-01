@@ -158,16 +158,11 @@ final class ArtCollector implements ArtCollectorInterface
 
             // Add the results we got to the current set
             $results = array_merge($results, (array)$data);
-
-            if ($limit && count($results) >= $limit) {
-                $this->logger->notice(
-                    'results:' . json_encode($results),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-
-                return array_slice($results, 0, $limit);
-            }
         }
+        $this->logger->notice(
+            'results:' . json_encode($results),
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
         return $results;
     }

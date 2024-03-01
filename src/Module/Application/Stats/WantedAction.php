@@ -25,10 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -65,12 +65,15 @@ final class WantedAction implements ApplicationActionInterface
 
         $this->ui->showBoxTop(T_('Information'));
 
-        $userId = null;
-        if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
-            $userId = Core::get_global('user')->id;
+        $user = $gatekeeper->getUser();
+        if (
+            $user !== null &&
+            $user->has_access(AccessLevelEnum::LEVEL_MANAGER)
+        ) {
+            $user = null;
         }
 
-        $object_ids = $this->wantedRepository->getAll($userId);
+        $object_ids = $this->wantedRepository->findAll($user);
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('wanted');

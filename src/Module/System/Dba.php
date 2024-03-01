@@ -55,6 +55,9 @@ class Dba
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
         //debug_event(__CLASS__, $sql . ' ' . json_encode($params), 5);
+        if (empty(trim($sql))) {
+            return false;
+        }
 
         // Be aggressive, be strong, be dumb
         $tries = 0;
@@ -189,7 +192,7 @@ class Dba
      * @param bool $finish
      * @return array
      */
-    public static function fetch_assoc($resource, $finish = true)
+    public static function fetch_assoc($resource, $finish = true): array
     {
         if (!$resource) {
             return array();
@@ -219,7 +222,7 @@ class Dba
      * @param bool $finish
      * @return array
      */
-    public static function fetch_row($resource, $finish = true)
+    public static function fetch_row($resource, $finish = true): array
     {
         if (!$resource) {
             return array();
@@ -276,15 +279,15 @@ class Dba
     }
 
     /**
-     * @param $resource
-     * @param string $class
+     * @param false|PDOStatement $resource
+     * @param class-string<object> $class
      * @param bool $finish
-     * @return array
+     * @return null|object
      */
     public static function fetch_object($resource, $class = 'stdClass', $finish = true)
     {
         if (!$resource) {
-            return array();
+            return null;
         }
 
         $result = $resource->fetchObject($class);
@@ -294,7 +297,7 @@ class Dba
                 self::finish($resource);
             }
 
-            return array();
+            return null;
         }
 
         return $result;
@@ -565,7 +568,7 @@ class Dba
      * @param string|null $charset
      * @return array
      */
-    public static function translate_to_mysqlcharset($charset)
+    public static function translate_to_mysqlcharset($charset): array
     {
         // Translate real charset names into fancy MySQL land names
         switch (strtoupper((string)$charset)) {

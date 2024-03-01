@@ -53,7 +53,7 @@ final class User4Method
         }
         $username   = (string) $input['username'];
         $check_user = User::get_from_username($username);
-        $valid      = $check_user instanceof User && in_array($check_user->id, static::getUserRepository()->getValid(true));
+        $valid      = ($check_user instanceof User && $check_user->isNew() !== false && in_array($check_user->id, static::getUserRepository()->getValid(true)));
         if (!$valid) {
             Api4::message('error', T_('User_id not found'), '404', $input['api_format']);
 

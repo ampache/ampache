@@ -41,12 +41,12 @@ class Democratic extends Tmp_Playlist
 {
     protected const DB_TABLENAME = 'democratic';
 
-    public ?string $name;
-    public ?int $cooldown;
-    public int $level;
-    public int $user;
-    public bool $primary;
-    public int $base_playlist;
+    public ?string $name      = null;
+    public ?int $cooldown     = null;
+    public int $level         = 0;
+    public int $user          = 0;
+    public bool $primary      = false;
+    public int $base_playlist = 0;
 
     public $f_cooldown;
     public $f_primary;
@@ -124,7 +124,7 @@ class Democratic extends Tmp_Playlist
      * set_parent
      * This returns the Tmp_Playlist for this democratic play instance
      */
-    public function set_parent()
+    public function set_parent(): void
     {
         $sql        = "SELECT * FROM `tmp_playlist` WHERE `session` = ?";
         $db_results = Dba::read($sql, array($this->id));
@@ -150,7 +150,7 @@ class Democratic extends Tmp_Playlist
      * This returns all of the current valid 'Democratic' Playlists that have been created.
      * @return int[]
      */
-    public static function get_playlists()
+    public static function get_playlists(): array
     {
         $sql = "SELECT `id` FROM `democratic` ORDER BY `name`";
 
@@ -197,7 +197,7 @@ class Democratic extends Tmp_Playlist
      * @param int $limit
      * @return array
      */
-    public function get_items($limit = null)
+    public function get_items($limit = null): array
     {
         // Remove 'unconnected' users votes
         if (AmpConfig::get('demo_clear_sessions')) {
@@ -306,7 +306,7 @@ class Democratic extends Tmp_Playlist
      * This returns all of the song_ids for songs that have happened within
      * the last 'cooldown' for this user.
      */
-    public function get_cool_songs()
+    public function get_cool_songs(): array
     {
         // Convert cooldown time to a timestamp in the past
         $cool_time = time() - ($this->cooldown * 60);
@@ -322,7 +322,7 @@ class Democratic extends Tmp_Playlist
      * already voted on any of these objects
      * @param $items
      */
-    public function add_vote($items)
+    public function add_vote($items): void
     {
         /* Iterate through the objects if no vote, add to playlist and vote */
         foreach ($items as $element) {

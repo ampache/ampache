@@ -84,6 +84,8 @@ class easy_captcha
     public $image;
     public $maxpasses;
     public $passed;
+    /** @var list<string> */
+    public array $prev = [];
     public $saved;
     public $sent;
     public $shortcut;
@@ -126,10 +128,7 @@ class easy_captcha
 
         #-- meta information
         $this->created      = time();
-        $this->{'created$'} = gmdate("r", $this->created);
         $this->expires      = $this->created + self::CAPTCHA_TIMEOUT;
-        //$this->tries = 0;
-        $this->passed = 0;
 
         #-- captcha processing info
         $this->sent       = 0;
@@ -347,11 +346,10 @@ class easy_captcha
     {
         // delete current and all previous data files
         $this->prev[] = $this->id;
-        if (isset($this->prev)) {
-            foreach ($this->prev as $file) {
-                @unlink($this->data_file($file));
-            }
+        foreach ($this->prev as $file) {
+            @unlink($this->data_file($file));
         }
+
         // clean object
         foreach ((array)$this as $name => $val) {
             unset($this->{$name});

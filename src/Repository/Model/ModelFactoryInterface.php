@@ -89,7 +89,7 @@ interface ModelFactoryInterface
 
     public function createPrivateMsg(
         int $privateMessageId
-    ): PrivateMsg;
+    ): PrivateMessageInterface;
 
     public function createTvShow(
         int $tvShowId
@@ -109,15 +109,11 @@ interface ModelFactoryInterface
         ?User $user = null
     ): Search;
 
-    public function createLicense(
-        int $licenseId
-    ): License;
-
     public function createAccess(
         int $accessId
     ): Access;
 
-    public function createLabel(
-        int $labelId
-    ): Label;
+    public function createVideo(
+        int $videoId
+    ): Video;
 }

@@ -104,8 +104,8 @@ final class PodcastEpisodesMethod implements MethodInterface
             );
         }
 
-        $results = $this->podcastRepository->getEpisodes($podcast);
-        if (empty($results)) {
+        $results = $podcast->getEpisodeIds();
+        if ($results === []) {
             $response->getBody()->write(
                 $output->writeEmpty('podcast_episode')
             );

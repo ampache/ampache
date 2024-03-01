@@ -57,7 +57,7 @@ class Ampacheflickr implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('flickr_api_key') && !Preference::insert('flickr_api_key', T_('Flickr API key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('flickr_api_key', T_('Flickr API key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -87,7 +87,7 @@ class Ampacheflickr implements AmpachePluginInterface
      * @param string $category
      * @return array
      */
-    public function get_photos($search, $category = 'concert')
+    public function get_photos($search, $category = 'concert'): array
     {
         $photos = array();
         $url    = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
@@ -114,7 +114,7 @@ class Ampacheflickr implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5)
+    public function gather_arts($type, $options = array(), $limit = 5): array
     {
         if (!$limit) {
             $limit = 5;

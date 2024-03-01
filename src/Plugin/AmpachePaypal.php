@@ -59,10 +59,10 @@ class AmpachePaypal implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('paypal_business') && !Preference::insert('paypal_business', T_('PayPal ID'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('paypal_business', T_('PayPal ID'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('paypal_currency_code') && !Preference::insert('paypal_currency_code', T_('PayPal Currency Code'), 'USD', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('paypal_currency_code', T_('PayPal Currency Code'), 'USD', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
 

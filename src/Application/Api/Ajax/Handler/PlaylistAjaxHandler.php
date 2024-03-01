@@ -55,6 +55,9 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
             case 'delete_track':
                 // Create the object and remove the track
                 $playlist = new Playlist($_REQUEST['playlist_id']);
+                if ($playlist->isNew()) {
+                    break;
+                }
                 $playlist->format();
                 if ($playlist->has_access()) {
                     $playlist->delete_track($_REQUEST['track_id']);

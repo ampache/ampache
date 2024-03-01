@@ -156,7 +156,6 @@ class Clip extends Video
                 $artist = new Artist($this->artist);
                 $artist->format();
                 $this->f_artist     = $artist->get_f_link();
-                $this->f_full_title = '[' . scrub_out($artist->get_fullname()) . '] ' . $this->f_full_title;
             }
 
             if ($this->song) {
@@ -166,11 +165,23 @@ class Clip extends Video
         }
     }
 
+    public function getFileName(): string
+    {
+        if ($this->artist) {
+            $artist = new Artist($this->artist);
+            $artist->format();
+
+            return '[' . scrub_out($artist->get_fullname()) . '] ' . parent::getFileName();
+        }
+
+        return parent::getFileName();
+    }
+
     /**
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords = parent::get_keywords();
         if ($this->artist) {

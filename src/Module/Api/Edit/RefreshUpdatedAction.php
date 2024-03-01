@@ -33,10 +33,10 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -102,7 +102,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        database_object $libitem,
+        library_item $libitem,
         int $object_id
     ): ?ResponseInterface {
         $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));

@@ -25,11 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\License;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,10 +41,18 @@ final class ShowCreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LicenseRepositoryInterface $licenseRepository;
+
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        LicenseRepositoryInterface $licenseRepository,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->ui = $ui;
+        $this->ui                = $ui;
+        $this->licenseRepository = $licenseRepository;
+        $this->configContainer   = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -52,9 +62,15 @@ final class ShowCreateAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        $this->ui->show('show_edit_license.inc.php');
-
+        $this->ui->showBoxTop(T_('Create license'));
+        $this->ui->show(
+            'show_edit_license.inc.php',
+            [
+                'license' => $this->licenseRepository->prototype(),
+                'webPath' => $this->configContainer->getWebPath(),
+            ]
+        );
+        $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

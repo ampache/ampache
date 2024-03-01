@@ -204,4 +204,45 @@ class AlbumRepositoryTest extends TestCase
             $this->subject->getAlbumArtistId($albumId)
         );
     }
+
+    public function testGetNamesReturnsArrayWithDefaultsIfEmpty(): void
+    {
+        $albumId = 666;
+
+        $this->connection->expects(static::once())
+            ->method('fetchRow')
+            ->with(
+                'SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, \'\'), \' \', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?',
+                [$albumId]
+            )
+            ->willReturn(false);
+
+        static::assertSame(
+            [
+                'prefix' => '',
+                'basename' => '',
+                'name' => ''
+            ],
+            $this->subject->getNames($albumId)
+        );
+    }
+
+    public function testGetNamesReturnsRow(): void
+    {
+        $albumId = 666;
+        $data    = ['some-data'];
+
+        $this->connection->expects(static::once())
+            ->method('fetchRow')
+            ->with(
+                'SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, \'\'), \' \', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?',
+                [$albumId]
+            )
+            ->willReturn($data);
+
+        static::assertSame(
+            $data,
+            $this->subject->getNames($albumId)
+        );
+    }
 }

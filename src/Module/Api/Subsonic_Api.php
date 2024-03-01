@@ -38,12 +38,14 @@ use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -67,8 +69,10 @@ use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use DateTime;
 use DOMDocument;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -330,7 +334,7 @@ class Subsonic_Api
      * @param array $input_options
      * @return array
      */
-    private static function _xml2Json($xml, $input_options = array())
+    private static function _xml2Json($xml, $input_options = array()): array
     {
         $defaults = array(
             'namespaceSeparator' => ' :', // you may want this to be something other than a colon
@@ -873,7 +877,7 @@ class Subsonic_Api
                             continue;
                         }
                         // get the songs in a random order for even more chaos
-                        $artist_songs = static::getSongRepository()->getRandomByArtist($artist);
+                        $artist_songs = self::getSongRepository()->getRandomByArtist($artist);
                         foreach ($artist_songs as $song) {
                             $songs[] = array('id' => $song);
                         }
@@ -932,14 +936,14 @@ class Subsonic_Api
     {
         unset($user);
         $name   = self::_check_parameter($input, 'artist');
-        $artist = Artist::get_from_name(urldecode((string)$name));
+        $artist = self::getArtistRepository()->findByName(urldecode((string)$name));
         $count  = (int)($input['count'] ?? 50);
         $songs  = array();
         if ($count < 1) {
             $count = 50;
         }
         if ($artist) {
-            $songs = static::getSongRepository()->getTopSongsByArtist(
+            $songs = self::getSongRepository()->getTopSongsByArtist(
                 $artist,
                 $count
             );
@@ -1291,7 +1295,7 @@ class Subsonic_Api
         $user_id   = $user->id ?? 0;
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
         $playlists = Playlist::get_playlists($user_id, '', true, true, false);
-        $searches  = Playlist::get_smartlists($user_id, '', true, false);
+        $searches  = Playlist::get_smartlists($user_id, '', true, true, false);
         // allow skipping dupe search names when used as refresh searches
         $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
 
@@ -1550,7 +1554,7 @@ class Subsonic_Api
         // vlc won't work if we use application/vnd.apple.mpegurl, but works fine with this. this is
         // also an allowed header by the standard
         header('Content-Type: audio/mpegurl;');
-        $stream->create_m3u();
+        echo $stream->create_m3u();
     }
 
     /**
@@ -1868,8 +1872,11 @@ class Subsonic_Api
     public static function getshares($input, $user): void
     {
         $response = Subsonic_Xml_Data::addSubsonicResponse('getshares');
-        $shares   = Share::get_share_list($user);
-        Subsonic_Xml_Data::addShares($response, $shares);
+
+        Subsonic_Xml_Data::addShares(
+            $response,
+            self::getShareRepository()->getIdsByUser($user)
+        );
         self::_apiOutput($input, $response);
     }
 
@@ -1879,6 +1886,7 @@ class Subsonic_Api
      * Returns a <subsonic-response> element with a nested <shares> element on success, which in turns contains a single <share> element for the newly created share.
      * http://www.subsonic.org/pages/api.jsp#createShare
      * @param array $input
+     * @param User $user
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -1916,11 +1924,12 @@ class Subsonic_Api
             if (!empty($object_type) && !empty($object_id)) {
                 global $dic; // @todo remove after refactoring
                 $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+                $shareCreator      = $dic->get(ShareCreatorInterface::class);
 
                 $response = Subsonic_Xml_Data::addSubsonicResponse('createshare');
                 $shares   = array();
-                $shares[] = Share::create_share(
-                    $user->id,
+                $shares[] = $shareCreator->create(
+                    $user,
                     $object_type,
                     $object_id,
                     true,
@@ -1930,6 +1939,7 @@ class Subsonic_Api
                     0,
                     $description
                 );
+
                 Subsonic_Xml_Data::addShares($response, $shares);
             } else {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'createshare');
@@ -1953,7 +1963,6 @@ class Subsonic_Api
         if (!$share_id) {
             return;
         }
-        $description = $input['description'] ?? '';
 
         if (AmpConfig::get('share')) {
             $share = new Share(Subsonic_Xml_Data::_getAmpacheId($share_id));
@@ -1966,7 +1975,7 @@ class Subsonic_Api
                     'expire' => $expires,
                     'allow_stream' => $share->allow_stream,
                     'allow_download' => $share->allow_download,
-                    'description' => $description ?? $share->description,
+                    'description' => $input['description'] ?? $share->description,
                 );
                 if ($share->update($data, $user)) {
                     $response = Subsonic_Xml_Data::addSubsonicResponse('updateshare');
@@ -1996,11 +2005,20 @@ class Subsonic_Api
         if (!$share_id) {
             return;
         }
+
         if (AmpConfig::get('share')) {
-            if (Share::delete_share((int)$share_id, $user)) {
-                $response = Subsonic_Xml_Data::addSubsonicResponse('deleteshare');
-            } else {
+            $shareRepository = self::getShareRepository();
+
+            $share = $shareRepository->findById((int) $share_id);
+            if (
+                $share === null ||
+                !$share->isAccessible($user)
+            ) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deleteshare');
+            } else {
+                $shareRepository->delete($share);
+
+                $response = Subsonic_Xml_Data::addSubsonicResponse('deleteshare');
             }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'deleteshare');
@@ -2328,7 +2346,7 @@ class Subsonic_Api
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getinternetradiostations');
-        $radios   = static::getLiveStreamRepository()->getAll();
+        $radios   = self::getLiveStreamRepository()->findAll();
         Subsonic_Xml_Data::addInternetRadioStations($response, $radios);
         self::_apiOutput($input, $response);
     }
@@ -2434,11 +2452,18 @@ class Subsonic_Api
         if (!$stream_id) {
             return;
         }
-        if (AmpConfig::get('live_stream') && $user->access >= 75) {
-            if (static::getLiveStreamRepository()->delete($stream_id)) {
-                $response = Subsonic_Xml_Data::addSubsonicResponse('deleteinternetradiostation');
-            } else {
+
+        $liveStreamRepository = self::getLiveStreamRepository();
+
+        if (AmpConfig::get('live_stream') && $user->access >= AccessLevelEnum::LEVEL_MANAGER) {
+            $liveStream = $liveStreamRepository->findById((int) $stream_id);
+
+            if ($liveStream === null) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deleteinternetradiostation');
+            } else {
+                $liveStreamRepository->delete($liveStream);
+
+                $response = Subsonic_Xml_Data::addSubsonicResponse('deleteinternetradiostation');
             }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'deleteinternetradiostation');
@@ -2458,11 +2483,16 @@ class Subsonic_Api
     {
         unset($user);
         $since                    = (int)($input['since'] ?? 0);
-        $privateMessageRepository = static::getPrivateMessageRepository();
+        $privateMessageRepository = self::getPrivateMessageRepository();
 
         $privateMessageRepository->cleanChatMessages();
 
-        $messages = $privateMessageRepository->getChatMessages($since);
+        if (!AmpConfig::get('sociable')) {
+            $messages = [];
+        } else {
+            $messages = $privateMessageRepository->getChatMessages($since);
+        }
+
         $response = Subsonic_Xml_Data::addSubsonicResponse('getchatmessages');
         Subsonic_Xml_Data::addChatMessages($response, $messages);
         self::_apiOutput($input, $response);
@@ -2482,11 +2512,13 @@ class Subsonic_Api
             return;
         }
 
-        if (static::getPrivateMessageRepository()->sendChatMessage(trim($message), $user->id) !== null) {
-            $response = Subsonic_Xml_Data::addSubsonicResponse('addchatmessage');
-        } else {
+        if (!AmpConfig::get('sociable')) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'addChatMessage');
+        } else {
+            self::getPrivateMessageRepository()->create(null, $user, '', trim($message));
+            $response = Subsonic_Xml_Data::addSubsonicResponse('addchatmessage');
         }
+
         self::_apiOutput($input, $response);
     }
 
@@ -2531,7 +2563,7 @@ class Subsonic_Api
     {
         if ($user->access === 100) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('getusers');
-            $users    = static::getUserRepository()->getValid();
+            $users    = self::getUserRepository()->getValid();
             Subsonic_Xml_Data::addUsers($response, $users);
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'getusers');
@@ -2721,15 +2753,22 @@ class Subsonic_Api
      * Returns all bookmarks for this user. A bookmark is a position within a certain media file.
      * Returns a <subsonic-response> element with a nested <bookmarks> element on success.
      * http://www.subsonic.org/pages/api.jsp#getBookmarks
-     * @param array $input
+     * @param array<mixed> $input
      * @param User $user
      */
     public static function getbookmarks($input, $user): void
     {
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getbookmarks');
         $bookmarks = [];
-        foreach (static::getBookmarkRepository()->getBookmarks($user->id) as $bookmarkId) {
-            $bookmarks[] = new Bookmark($bookmarkId);
+
+        $bookmarkRepository = self::getBookmarkRepository();
+
+        foreach ($bookmarkRepository->getByUser($user) as $bookmarkId) {
+            $bookmark = $bookmarkRepository->findById($bookmarkId);
+
+            if ($bookmark !== null) {
+                $bookmarks[] = $bookmark;
+            }
         }
 
         Subsonic_Xml_Data::addBookmarks($response, $bookmarks);
@@ -2767,7 +2806,7 @@ class Subsonic_Api
                     time()
                 );
             } else {
-                static::getBookmarkRepository()->update($bookmark->getId(), (int)$position, time());
+                self::getBookmarkRepository()->update($bookmark->getId(), (int)$position, new DateTime());
             }
             $response = Subsonic_Xml_Data::addSubsonicResponse('createbookmark');
         } else {
@@ -2795,7 +2834,7 @@ class Subsonic_Api
         if ($bookmark->isNew()) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletebookmark');
         } else {
-            static::getBookmarkRepository()->delete($bookmark->getId());
+            self::getBookmarkRepository()->delete($bookmark->getId());
             $response = Subsonic_Xml_Data::addSubsonicResponse('deletebookmark');
         }
         self::_apiOutput($input, $response);
@@ -2895,7 +2934,7 @@ class Subsonic_Api
         $albums = false;
         switch ($type) {
             case "random":
-                $albums = static::getAlbumRepository()->getRandom(
+                $albums = self::getAlbumRepository()->getRandom(
                     $user->id,
                     $size
                 );
@@ -3190,5 +3229,25 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }

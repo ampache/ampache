@@ -29,28 +29,27 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Sabre\DAV;
+use Sabre\DAV\Exception\NotFound;
+use Sabre\DAV\Node;
 
 /**
  * This class wrap Ampache albums and artist to WebDAV directories.
  */
 class WebDavDirectory extends DAV\Collection
 {
-    private $libitem;
+    private library_item $libitem;
 
-    /**
-     * @param library_item $libitem
-     */
     public function __construct(library_item $libitem)
     {
         $this->libitem = $libitem;
     }
 
     /**
-     * getChildren
-     * @return array
-     * @throws DAV\Exception\NotFound
+     * @return list<Node>
+     *
+     * @throws NotFound
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         //debug_event(self::class, 'Directory getChildren', 5);
         $children = array();
@@ -69,11 +68,11 @@ class WebDavDirectory extends DAV\Collection
     }
 
     /**
-     * getChild
      * @param string $name
-     * @return WebDavFile|WebDavDirectory
+     *
+     * @throws NotFound
      */
-    public function getChild($name)
+    public function getChild($name): Node
     {
         //debug_event(self::class, 'Directory getChild: ' . unhtmlentities($name), 5);
         $matches = $this->libitem->get_children(unhtmlentities($name));
@@ -83,21 +82,19 @@ class WebDavDirectory extends DAV\Collection
             return WebDavDirectory::getChildFromArray($matches[0]);
         }
 
-        throw new DAV\Exception\NotFound('The child with name: ' . $name . ' could not be found');
+        throw new NotFound('The child with name: ' . $name . ' could not be found');
     }
 
     /**
-     * getChildFromArray
-     * @param $array
-     * @return WebDavFile|WebDavDirectory
+     * @param array{object_type: string, object_id: int} $array
      */
-    public static function getChildFromArray($array)
+    public static function getChildFromArray(array $array): Node
     {
         $className = ObjectTypeToClassNameMapper::map($array['object_type']);
         /** @var library_item $libitem */
         $libitem = new $className($array['object_id']);
         if ($libitem->isNew()) {
-            throw new DAV\Exception\NotFound('The library item `' . $array['object_type'] . '` with id `' . $array['object_id'] . '` could not be found');
+            throw new NotFound('The library item `' . $array['object_type'] . '` with id `' . $array['object_id'] . '` could not be found');
         }
 
         if ($libitem instanceof Media) {
@@ -108,21 +105,17 @@ class WebDavDirectory extends DAV\Collection
     }
 
     /**
-     * childExists
      * @param string $name
      */
     public function childExists($name): bool
     {
         $matches = $this->libitem->get_children($name);
 
-        return (!empty($matches));
+        return !empty($matches);
     }
 
-    /**
-     * getName
-     */
     public function getName(): string
     {
-        return (string)$this->libitem->get_fullname();
+        return (string) $this->libitem->get_fullname();
     }
 }

@@ -30,7 +30,6 @@ use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\PodcastRepositoryInterface;
 

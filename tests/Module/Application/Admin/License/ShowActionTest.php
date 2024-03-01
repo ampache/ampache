@@ -26,33 +26,37 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\MockeryTestCase;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Mockery\MockInterface;
+use ArrayIterator;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private ?MockInterface $ui;
+    private UiInterface&MockObject $ui;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private ?MockInterface $modelFactory;
+    private MockObject&ModelFactoryInterface $modelFactory;
 
-    private ?ShowAction $subject;
+    private LicenseRepositoryInterface&MockObject $licenseRepository;
+
+    private ShowAction $subject;
 
     protected function setUp(): void
     {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->ui                = $this->createMock(UiInterface::class);
+        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
+        $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
 
         $this->subject = new ShowAction(
             $this->ui,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->licenseRepository,
         );
     }
 
@@ -73,48 +77,44 @@ class ShowActionTest extends MockeryTestCase
 
     public function testRunShowsAndReturnsNull(): void
     {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $browse     = $this->mock(Browse::class);
+        $request    = $this->createMock(ServerRequestInterface::class);
+        $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $browse     = $this->createMock(Browse::class);
 
-        $object_list = ['some-object'];
+        $id          = 666;
+        $name        = 'some-name';
 
-        $gatekeeper->shouldReceive('mayAccess')
+        $gatekeeper->expects(static::once())
+            ->method('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
+        $this->ui->expects(static::once())
+            ->method('showHeader');
+        $this->ui->expects(static::once())
+            ->method('showQueryStats');
+        $this->ui->expects(static::once())
+            ->method('showFooter');
 
-        $this->modelFactory->shouldReceive('createBrowse')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($browse);
+        $this->modelFactory->expects(static::once())
+            ->method('createBrowse')
+            ->willReturn($browse);
 
-        $browse->shouldReceive('set_type')
-            ->with('license')
-            ->once();
-        $browse->shouldReceive('set_simple_browse')
-            ->with(true)
-            ->once();
-        $browse->shouldReceive('show_objects')
-            ->with($object_list)
-            ->once();
-        $browse->shouldReceive('get_objects')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($object_list);
-        $browse->shouldReceive('store')
-            ->withNoArgs()
-            ->once();
+        $this->licenseRepository->expects(static::once())
+            ->method('getList')
+            ->willReturn(new ArrayIterator([$id => $name]));
+
+        $browse->expects(static::once())
+            ->method('set_type')
+            ->with('license');
+        $browse->expects(static::once())
+            ->method('set_simple_browse')
+            ->with(true);
+        $browse->expects(static::once())
+            ->method('show_objects')
+            ->with([$id]);
+        $browse->expects(static::once())
+            ->method('store');
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)

@@ -56,7 +56,7 @@ class AmpacheGoogleAnalytics implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('googleanalytics_tracking_id') && !Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', 100, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', 100, 'string', 'plugins', $this->name)) {
             return false;
         }
 

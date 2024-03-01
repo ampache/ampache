@@ -40,7 +40,7 @@ use Ampache\Repository\Model\Podcast;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Description'); ?></td>
-                <td><textarea name="description" cols="44" rows="4"><?php echo scrub_out($libitem->get_description()); ?></textarea></td>
+                <td><textarea name="description" cols="44" rows="4"><?php echo scrub_out($libitem->getDescription()); ?></textarea></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Language'); ?></td>

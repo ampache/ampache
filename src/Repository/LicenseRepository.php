@@ -25,71 +25,40 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\License;
+use Generator;
+use PDO;
 
-final class LicenseRepository implements LicenseRepositoryInterface
+/**
+ * Manages access to license data
+ *
+ * Tables: `license`
+ *
+ * @extends BaseRepository<License>
+ */
+final class LicenseRepository extends BaseRepository implements LicenseRepositoryInterface
 {
+    protected DatabaseConnectionInterface $connection;
+
+    public function __construct(
+        DatabaseConnectionInterface $connection
+    ) {
+        $this->connection = $connection;
+    }
+
     /**
      * Returns a list of licenses accessible by the current user.
      *
-     * @return int[]
+     * @return Generator<int, string>
      */
-    public function getAll(): array
+    public function getList(): Generator
     {
-        $sql = 'SELECT `id` FROM `license` ORDER BY `name`';
+        $result = $this->connection->query('SELECT `id`, `name` FROM `license` ORDER BY `name`');
 
-        $db_results = Dba::read($sql);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            yield (int) $row['id'] => (string) $row['name'];
         }
-
-        return $results;
-    }
-
-    /**
-     * This inserts a new license entry, it returns the auto_inc id
-     *
-     * @return int The id of the created license
-     */
-    public function create(
-        string $name,
-        string $description,
-        string $externalLink
-    ): int {
-        Dba::write(
-            "INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)",
-            [$name, $description, $externalLink]
-        );
-
-        return (int) Dba::insert_id();
-    }
-
-    /**
-     * This updates a license entry
-     */
-    public function update(
-        int $licenseId,
-        string $name,
-        string $description,
-        string $externalLink
-    ): void {
-        Dba::write(
-            'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
-            [$name, $description, $externalLink, $licenseId]
-        );
-    }
-
-    /**
-     * Deletes the license
-     */
-    public function delete(
-        int $licenseId
-    ): void {
-        Dba::write(
-            'DELETE FROM `license` WHERE `id` = ?',
-            [$licenseId]
-        );
     }
 
     /**
@@ -98,20 +67,79 @@ final class LicenseRepository implements LicenseRepositoryInterface
     public function find(string $searchValue): ?int
     {
         // lookup the license by name
-        $sql        = 'SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1;';
-        $db_results = Dba::read($sql, array($searchValue));
+        $result = $this->connection->fetchOne('SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1');
 
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['id'];
+        if ($result !== false) {
+            return (int) $result;
         }
-        // lookup the license by external_link
-        $sql        = 'SELECT `id` FROM `license` WHERE `external_link` = ? LIMIT 1;';
-        $db_results = Dba::read($sql, array($searchValue));
 
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['id'];
+        // lookup the license by external_link
+        $result = $this->connection->fetchOne('SELECT `id` FROM `license` WHERE `external_link` = ? LIMIT 1');
+
+        if ($result !== false) {
+            return (int) $result;
         }
 
         return null;
+    }
+
+    /**
+     * @return class-string<License>
+     */
+    protected function getModelClass(): string
+    {
+        return License::class;
+    }
+
+    protected function getTableName(): string
+    {
+        return 'license';
+    }
+
+    /**
+     * @return list<mixed>
+     */
+    protected function getPrototypeParameters(): array
+    {
+        return [
+            $this,
+        ];
+    }
+
+    /**
+     * Persists the item in the database
+     *
+     * If the item is new, it will be created. Otherwise, an update will happen
+     *
+     * @return null|non-negative-int
+     */
+    public function persist(License $license): ?int
+    {
+        $result = null;
+
+        if ($license->isNew()) {
+            $this->connection->query(
+                'INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)',
+                [
+                    $license->getName(),
+                    $license->getDescription(),
+                    $license->getExternalLink()
+                ]
+            );
+
+            $result = $this->connection->getLastInsertedId();
+        } else {
+            $this->connection->query(
+                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
+                [
+                    $license->getName(),
+                    $license->getDescription(),
+                    $license->getExternalLink(),
+                    $license->getId()
+                ]
+            );
+        }
+
+        return $result;
     }
 }

@@ -59,11 +59,11 @@ class AmpacheBitly implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('bitly_token') && !Preference::insert('bitly_token', T_('Bit.ly Token'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('bitly_token', T_('Bit.ly Token'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        if (!Preference::exists('bitly_group_guid') && !Preference::insert('bitly_group_guid', T_('Bit.ly Group GUID'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('bitly_group_guid', T_('Bit.ly Group GUID'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 

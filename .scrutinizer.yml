@@ -2,6 +2,16 @@ build:
     environment:
         php:
             version: "8.2"
+            ini:
+                memory_limit: "-1"            
+    nodes:
+        coverage:
+            tests:
+                override:
+                    - command: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover build/coverage-clover.xml tests
+                      coverage:
+                        file: build/coverage-clover.xml
+                        format: clover
 filter:
     excluded_paths:
         - 'public/lib/components/*'
@@ -18,8 +28,6 @@ tools:
                 - 'public/themes/*'
                 - '.github.*'
             paths: {  }
-    php_code_sniffer:
-        enabled: true
     php_pdepend:
         enabled: true
         configuration_file: null
@@ -62,11 +70,3 @@ tools:
         excluded_dirs:
             - 'public/lib/components/*'
             - 'vendor/*'
-    php_cpd:
-        enabled: true
-        excluded_dirs: {  }
-        filter:
-            excluded_paths:
-                - 'public/lib/components/*'
-                - 'vendor/*'
-            paths: {  }

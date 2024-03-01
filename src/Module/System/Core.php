@@ -181,63 +181,6 @@ class Core
     }
 
     /**
-     * form_verify
-     *
-     * This takes a form name and then compares it with the posted sid, if
-     * they don't match then it returns false and doesn't let the person
-     * continue
-     * @param string $name
-     * @param string $type
-     * @return bool
-     *
-     * @see RequestParser::verifyForm()
-     */
-    public static function form_verify($name, $type = 'post'): bool
-    {
-        switch ($type) {
-            case 'post':
-                $sid = $_POST['form_validation'] ?? '';
-                break;
-            case 'get':
-                $sid = $_GET['form_validation'] ?? '';
-                break;
-            case 'cookie':
-                $sid = $_COOKIE['form_validation'] ?? '';
-                break;
-            case 'request':
-                $sid = $_REQUEST['form_validation'] ?? '';
-                break;
-            default:
-                return false;
-        }
-
-        if (!isset($_SESSION['forms'][$sid])) {
-            debug_event(self::class, "Form $sid not found in session, rejecting request", 2);
-
-            return false;
-        }
-
-        $form = $_SESSION['forms'][$sid];
-        unset($_SESSION['forms'][$sid]);
-
-        if ($form['name'] == $name) {
-            debug_event(self::class, "Verified SID $sid for $type form $name", 5);
-            if ($form['expire'] < time()) {
-                debug_event(self::class, "Form $sid is expired, rejecting request", 2);
-
-                return false;
-            }
-
-            return true;
-        }
-
-        // OMG HAX0RZ
-        debug_event(self::class, "$type form $sid failed consistency check, rejecting request", 2);
-
-        return false;
-    }
-
-    /**
      * gen_secure_token
      *
      * This generates a cryptographically secure token.
@@ -271,7 +214,7 @@ class Core
      * @param string $image_data
      * @return array{width: int, height: int}
      */
-    public static function image_dimensions($image_data)
+    public static function image_dimensions($image_data): array
     {
         $empty = array(
             'width' => 0,
@@ -429,7 +372,7 @@ class Core
      * @param array $options
      * @return array
      */
-    public static function requests_options($options = array())
+    public static function requests_options($options = array()): array
     {
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {

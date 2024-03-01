@@ -61,13 +61,13 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('personalfav_display') && !Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('personalfav_playlist') && !Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', 25, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('personalfav_smartlist') && !Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', 25, 'integer', 'plugins', $this->name)) {
             return false;
         }
 

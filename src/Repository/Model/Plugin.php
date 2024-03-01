@@ -78,7 +78,7 @@ class Plugin
      * @param string $type
      * @return array
      */
-    public static function get_plugins($type = '')
+    public static function get_plugins($type = ''): array
     {
         // make static cache for optimization when multiple call
         static $plugins_list = array();

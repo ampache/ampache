@@ -32,13 +32,13 @@ use Ampache\Module\Application\Stream\DownloadAction;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Repository\ShareRepositoryInterface;
+use DateTime;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,18 +57,22 @@ final class ConsumeAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ShareRepositoryInterface $shareRepository;
+
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
         ContainerInterface $dic,
-        UiInterface $ui
+        UiInterface $ui,
+        ShareRepositoryInterface $shareRepository
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->networkChecker  = $networkChecker;
         $this->dic             = $dic;
         $this->ui              = $ui;
+        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -99,8 +103,14 @@ final class ConsumeAction implements ApplicationActionInterface
 
         $share_id = (int)$this->requestParser->getFromRequest('id');
         $secret   = $this->requestParser->getFromRequest('secret');
-        $share    = new Share($share_id);
-        if (empty($action) && $share->isNew() === false) {
+
+        $share = $this->shareRepository->findById($share_id);
+
+        if ($share === null) {
+            throw new AccessDeniedException();
+        }
+
+        if (empty($action)) {
             if ($share->allow_stream) {
                 $action = 'stream';
             } elseif ($share->allow_download) {
@@ -112,7 +122,8 @@ final class ConsumeAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $share->save_access();
+        $this->shareRepository->registerAccess($share, new DateTime());
+
         if ($action == 'download') {
             if ($share->object_type == 'song' || $share->object_type == 'video') {
                 $_REQUEST['action']                    = 'download';

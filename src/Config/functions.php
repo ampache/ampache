@@ -150,7 +150,7 @@ function invert_bool($value): bool
  * in the form of an array of names
  * @return array
  */
-function get_languages()
+function get_languages(): array
 {
     /* Open the locale directory */
     $handle = opendir(__DIR__ . '/../../locale');
@@ -360,7 +360,7 @@ if (!function_exists('apache_request_headers')) {
     /**
      * @return array
      */
-    function apache_request_headers()
+    function apache_request_headers(): array
     {
         $headers = array();
         foreach ($_SERVER as $name => $value) {
@@ -385,7 +385,7 @@ if (!function_exists('getallheaders')) {
     /**
      * @return array
      */
-    function getallheaders()
+    function getallheaders(): array
     {
         return apache_request_headers();
     }
@@ -1173,7 +1173,7 @@ function T_(string $msgid): string
  * @param int|string $value
  * @return string
  */
-function nT_($original, $plural, $value)
+function nT_($original, $plural, $value): string
 {
     if (function_exists('n__')) {
         return n__($original, $plural, (string)$value);
@@ -1189,7 +1189,7 @@ function nT_($original, $plural, $value)
  * array of the results
  * @return array
  */
-function get_themes()
+function get_themes(): array
 {
     /* Open the themes dir and start reading it */
     $handle = opendir(__DIR__ . '/../../public/themes');

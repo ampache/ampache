@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
@@ -49,17 +50,20 @@ final class UpdateUserAction extends AbstractUserAction
     private ConfigContainerInterface $configContainer;
 
     private UserRepositoryInterface $userRepository;
+    private RequestParserInterface $requestParser;
 
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        RequestParserInterface $requestParser
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
         $this->userRepository  = $userRepository;
+        $this->requestParser   = $requestParser;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -68,7 +72,7 @@ final class UpdateUserAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('edit_user')) {
+        if (!$this->requestParser->verifyForm('edit_user')) {
             throw new AccessDeniedException();
         }
 

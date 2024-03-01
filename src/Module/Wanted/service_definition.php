@@ -29,4 +29,6 @@ use function DI\autowire;
 
 return [
     MissingArtistFinderInterface::class => autowire(MissingArtistFinder::class),
+    MissingArtistRetrieverInterface::class => autowire(MissingArtistFromMusicBrainzRetriever::class),
+    WantedManagerInterface::class => autowire(WantedManager::class),
 ];

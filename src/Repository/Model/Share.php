@@ -26,23 +26,25 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Exception;
 use PDOStatement;
 
 class Share extends database_object
 {
     protected const DB_TABLENAME = 'share';
     public const VALID_TYPES     = array(
-        'song',
         'album',
-        'album_disk',
+        'artist',
         'playlist',
+        'podcast',
         'podcast_episode',
+        'search',
+        'song',
         'video'
     );
 
@@ -62,7 +64,6 @@ class Share extends database_object
     public ?string $description;
 
     public $f_name;
-    public $f_user;
     /** @var Song|Artist|Album|playlist_object|null $object */
     private $object;
 
@@ -83,147 +84,17 @@ class Share extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id ?? 0;
     }
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->id === 0;
     }
 
-    /**
-     * delete_share
-     * @param int $share_id
-     * @param User $user
-     * @return PDOStatement|bool
-     */
-    public static function delete_share($share_id, $user)
+    public static function is_valid_type(string $type): bool
     {
-        $sql    = "DELETE FROM `share` WHERE `id` = ?";
-        $params = array($share_id);
-        if (!$user->has_access(75)) {
-            $sql .= " AND `user` = ?";
-            $params[] = $user->id;
-        }
-
-        return Dba::write($sql, $params);
-    }
-
-    /**
-     * garbage_collection
-     */
-    public static function garbage_collection(): void
-    {
-        $sql = "DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < " . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)";
-        Dba::write($sql);
-    }
-
-    /**
-     * @param string $type
-     * @return string
-     */
-    public static function is_valid_type($type)
-    {
-        if (in_array(strtolower($type), self::VALID_TYPES)) {
-            return $type;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param bool $allow_stream
-     * @param bool $allow_download
-     * @param int $expire_days
-     * @param string $secret
-     * @param int $max_counter
-     * @param string $description
-     * @return int|null
-     */
-    public static function create_share(
-        $user_id,
-        $object_type,
-        $object_id,
-        $allow_stream = true,
-        $allow_download = true,
-        $expire_days = 0,
-        $secret = '',
-        $max_counter = 0,
-        $description = ''
-    ): ?int {
-        if (!self::is_valid_type($object_type)) {
-            debug_event(self::class, 'create_share: Bad object_type ' . $object_type, 1);
-
-            return null;
-        }
-        if (!$allow_stream && !$allow_download) {
-            debug_event(self::class, 'create_share: must allow stream OR allow download', 1);
-
-            return null;
-        }
-
-        if ($description == '') {
-            if ($object_type == 'song') {
-                $song        = new Song($object_id);
-                $description = $song->title;
-            } elseif ($object_type == 'playlist') {
-                $playlist    = new Playlist($object_id);
-                $description = 'Playlist - ' . $playlist->name;
-            } elseif ($object_type == 'album') {
-                $album = new Album($object_id);
-                $album->format();
-                $description = $album->get_fullname() . ' (' . $album->get_artist_fullname() . ')';
-            } elseif ($object_type == 'album_disk') {
-                $albumdisk = new AlbumDisk($object_id);
-                $albumdisk->format();
-                $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_artist_fullname() . ')';
-            }
-        }
-        $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array(
-            $user_id,
-            $object_type,
-            $object_id,
-            time(),
-            (int)$allow_stream,
-            (int)$allow_download,
-            $expire_days,
-            $secret,
-            0,
-            $max_counter,
-            $description
-        );
-        Dba::write($sql, $params);
-
-        $share_id = Dba::insert_id();
-        if (!$share_id) {
-            return null;
-        }
-
-        $url = self::get_url((int)$share_id, $secret);
-        // Get a shortener url if any available
-        foreach (Plugin::get_plugins('shortener') as $plugin_name) {
-            try {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
-                    /** @var string|false $short_url */
-                    $short_url = $plugin->_plugin->shortener($url);
-                    if (!empty($short_url)) {
-                        $url = $short_url;
-                        break;
-                    }
-                }
-            } catch (Exception $error) {
-                debug_event(self::class, 'Share plugin error: ' . $error->getMessage(), 1);
-            }
-        }
-        $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
-        Dba::write($sql, array($url, $share_id));
-
-        return (int)$share_id;
+        return in_array(strtolower($type), self::VALID_TYPES);
     }
 
     /**
@@ -242,43 +113,15 @@ class Share extends database_object
     }
 
     /**
-     * get_share_list_sql
+     * Returns `true` if the user may access the share item
      */
-    public static function get_share_list_sql(User $user): string
+    public function isAccessible(User $user): bool
     {
-        $sql   = "SELECT `id` FROM `share` ";
-        $multi = 'WHERE ';
-        if (!$user->has_access(75)) {
-            $sql .= "WHERE `user` = " . $user->id;
-            $multi = ' AND ';
-        }
-        if (AmpConfig::get('catalog_filter') && $user->id > 0) {
-            $sql .= $multi . Catalog::get_user_filter('share', $user->id);
-        }
-        //debug_event(self::class, 'get_share_list_sql ' . $sql, 5);
-
-        return $sql;
+        return $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ||
+            $this->user === $user->getId();
     }
 
-    /**
-     * get_share_list
-     * @param User $user
-     * @return int[]
-     */
-    public static function get_share_list(User $user)
-    {
-        $sql        = self::get_share_list_sql($user);
-        $db_results = Dba::read($sql);
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
-    }
-
-    public function show_action_buttons()
+    public function show_action_buttons(): void
     {
         if ($this->isNew() === false) {
             if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) || $this->user == (int)Core::get_global('user')->id) {
@@ -315,7 +158,7 @@ class Share extends database_object
     public function getObjectUrl(): string
     {
         return ($this->getObject())
-            ? (string)$this->getObject()->get_f_link()
+            ? $this->getObject()->get_f_link()
             : '';
     }
 
@@ -333,12 +176,12 @@ class Share extends database_object
 
     public function getLastVisitDateFormatted(): string
     {
-        return $this->lastvisit_date > 0 ? get_datetime((int) $this->lastvisit_date) : '';
+        return $this->lastvisit_date > 0 ? get_datetime($this->lastvisit_date) : '';
     }
 
     public function getCreationDateFormatted(): string
     {
-        return get_datetime((int) $this->creation_date);
+        return get_datetime($this->creation_date);
     }
 
     /**
@@ -370,17 +213,6 @@ class Share extends database_object
         }
 
         return Dba::write($sql, $params);
-    }
-
-    /**
-     * save_access
-     * @return PDOStatement|bool
-     */
-    public function save_access()
-    {
-        $sql = "UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?";
-
-        return Dba::write($sql, array(time(), $this->id));
     }
 
     /**
@@ -487,10 +319,10 @@ class Share extends database_object
                 }
                 break;
             default:
-                $medias[] = array(
-                    'object_type' => $this->object_type,
+                $medias[] = [
+                    'object_type' => (string) $this->object_type,
                     'object_id' => $this->object_id,
-                );
+                ];
                 break;
         }
         if (!empty($medias)) {
@@ -548,19 +380,5 @@ class Share extends database_object
         $result .= '</a>';
 
         return $result;
-    }
-
-    /**
-     * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
-     * @return PDOStatement|bool
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        $sql = "UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 }

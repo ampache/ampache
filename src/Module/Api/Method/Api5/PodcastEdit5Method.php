@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -83,20 +82,16 @@ final class PodcastEdit5Method
         $description = (array_key_exists('description', $input)) ? scrub_in((string) $input['description']) : $podcast->get_description();
         $generator   = (array_key_exists('generator', $input)) ? scrub_in((string) $input['generator']) : $podcast->getGenerator();
         $copyright   = (array_key_exists('copyright', $input)) ? scrub_in((string) $input['copyright']) : $podcast->getCopyright();
-        $data        = array(
-            'feed' => $feed,
-            'title' => $title,
-            'website' => $website,
-            'description' => $description,
-            'generator' => $generator,
-            'copyright' => $copyright
-        );
-        if ($podcast->update($data) !== false) {
-            Api5::message('podcast ' . $podcast_id . ' updated', $input['api_format']);
-        } else {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $podcast_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
-        }
+
+        $podcast->setTitle($title)
+            ->setFeedUrl($feed)
+            ->setWebsite($website)
+            ->setDescription($description)
+            ->setGenerator($generator)
+            ->setCopyright($copyright)
+            ->save();
+
+        Api5::message('podcast ' . $podcast_id . ' updated', $input['api_format']);
 
         return true;
     }

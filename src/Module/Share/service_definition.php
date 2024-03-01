@@ -29,4 +29,5 @@ use function DI\autowire;
 
 return [
     ShareUiLinkRendererInterface::class => autowire(ShareUiLinkRenderer::class),
+    ShareCreatorInterface::class => autowire(ShareCreator::class),
 ];

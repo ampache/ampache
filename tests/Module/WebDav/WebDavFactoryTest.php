@@ -31,6 +31,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Sabre\DAV\Auth\Plugin;
+use Sabre\DAV\ICollection;
 use Sabre\DAV\Server;
 
 class WebDavFactoryTest extends MockeryTestCase
@@ -48,6 +49,10 @@ class WebDavFactoryTest extends MockeryTestCase
         );
     }
 
+    /**
+     * @param class-string $expected_instance_name
+     * @param list<mixed> $params
+     */
     #[DataProvider(methodName: 'methodDataProvider')]
     public function testFactoryMethods(string $method, string $expected_instance_name, array $params): void
     {
@@ -57,12 +62,21 @@ class WebDavFactoryTest extends MockeryTestCase
         );
     }
 
+    public function testCreateServerReturnsInstance(): void
+    {
+        static::assertInstanceOf(
+            Server::class,
+            $this->subject->createServer(
+                $this->createMock(ICollection::class)
+            )
+        );
+    }
+
     public static function methodDataProvider(): array
     {
         return [
             ['createWebDavAuth', WebDavAuth::class, []],
             ['createWebDavCatalog', WebDavCatalog::class, [666]],
-            ['createServer', Server::class, [null]],
             ['createPlugin', Plugin::class, [null]]
         ];
     }

@@ -29,15 +29,21 @@
         <p tal:content="structure UPDATE/getUpdateInfoText">UPDATE INFO</p>
         <p i18n:translate="">The following updates need to be performed:</p>
     </div>
-    <tal:block tal:replace="UPDATE/getErrorText">ERROR</tal:block>
+    <tal:block tal:replace="structure UPDATE/getErrorText">ERROR</tal:block>
     <div class="content" tal:condition="not: UPDATE/hasUpdate">
         <p class="database-update">No Update Needed [<a tal:attributes="href UPDATE/getWebPath">Return to main page</a>]</p>
     </div>
     <div class="content" tal:condition="UPDATE/hasUpdate">
         <ul>
-            <li tal:repeat="update UPDATE/getUpdateInfo">
+            <li tal:repeat="update UPDATE/getUpdateInfo" style="margin-bottom: 10px">
                 <strong tal:content="update/title">VERSION</strong><br />
-                <tal:block tal:replace="structure update/description">DESCRIPTION</tal:block>
+                <div tal:condition="update/warning">
+                    <h4 i18n:translate="">Warning</h4>
+                    Please consider using the CLI for this update (`php bin/cli admin:updateDatabase -e`) <a href="https://github.com/ampache/ampache/wiki/ampache6-details">Ampache Wiki</a>,
+                </div>
+                <ul>
+                   <li tal:repeat="line update/changelog" tal:content="line">LINE</li>
+                </ul>
             </li>
         </ul>
     </div>

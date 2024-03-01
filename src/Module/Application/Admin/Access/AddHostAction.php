@@ -38,6 +38,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,17 +54,21 @@ final class AddHostAction implements ApplicationActionInterface
 
     private AccessListManagerInterface $accessListManager;
 
+    private RequestParserInterface $requestParser;
+
     private LoggerInterface $logger;
 
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
         AccessListManagerInterface $accessListManager,
+        RequestParserInterface $requestParser,
         LoggerInterface $logger
     ) {
         $this->ui                = $ui;
         $this->configContainer   = $configContainer;
         $this->accessListManager = $accessListManager;
+        $this->requestParser     = $requestParser;
         $this->logger            = $logger;
     }
 
@@ -72,7 +77,7 @@ final class AddHostAction implements ApplicationActionInterface
         // Make sure we've got a valid form submission
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
-            !Core::form_verify('add_acl')
+            !$this->requestParser->verifyForm('add_acl')
         ) {
             throw new AccessDeniedException();
         }

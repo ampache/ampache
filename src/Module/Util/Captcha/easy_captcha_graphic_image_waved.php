@@ -31,10 +31,11 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_graphic_image_waved extends easy_captcha_graphic
 {
-    /* returns jpeg file stream with unscannable letters encoded
-       in front of colorful disturbing background
-    */
+    public $img;
+
     /**
+     * returns jpeg file stream with unscannable letters encoded
+     * in front of colorful disturbing background
      * @return false|string
      */
     public function jpeg()

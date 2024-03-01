@@ -67,10 +67,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public ?string $link = null;
     public ?array $album_artists;
-    /** @var string $artist_prefix */
-    public $artist_prefix;
-    /** @var string $artist_name */
-    public $artist_name;
     /** @var array $tags */
     public $tags;
     /** @var null|string $f_artist_name */
@@ -247,7 +243,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords               = array();
         $keywords['mb_albumid'] = array(
@@ -396,7 +392,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * Get item children.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return $this->get_medias();
     }
@@ -406,7 +402,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -415,13 +411,13 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Get all children and sub-childrens media.
-     * @param string $filter_type
-     * @return array
+     *
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'song') {
+        if (!$filter_type || $filter_type === 'song') {
             $songs = $this->getSongRepository()->getByAlbumDisk($this->id);
             foreach ($songs as $song_id) {
                 $medias[] = array(
@@ -471,7 +467,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * Get each song id for the album_disk
      * @return int[]
      */
-    public function get_songs()
+    public function get_songs(): array
     {
         $results = array();
         $params  = array($this->album_id, $this->disk);

@@ -97,7 +97,7 @@ interface UiInterface
     public function createPreferenceInput(
         string $name,
         $value
-    );
+    ): void;
 
     /**
      * This shows the preference box for the preferences pages.

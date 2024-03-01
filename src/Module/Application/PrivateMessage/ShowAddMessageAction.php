@@ -33,7 +33,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Exception\ItemNotFoundException;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -74,8 +73,9 @@ final class ShowAddMessageAction implements ApplicationActionInterface
         $replyToMessageId = (int) ($request->getQueryParams()['reply_to'] ?? 0);
 
         if ($replyToMessageId > 0) {
-            try {
-                $message      = $this->privateMessageRepository->getById($replyToMessageId);
+            $message = $this->privateMessageRepository->findById($replyToMessageId);
+
+            if ($message !== null) {
                 $userId       = $gatekeeper->getUserId();
                 $senderUserId = $message->getSenderUserId();
 
@@ -89,8 +89,6 @@ final class ShowAddMessageAction implements ApplicationActionInterface
                     $_REQUEST['subject'] = sprintf('%s: %s', T_('RE'), $message->getSubject());
                     $_REQUEST['message'] = "\n\n\n---\n> " . str_replace("\n", "\n> ", $message->getMessage());
                 }
-            } catch (ItemNotFoundException $e) {
-                // ignore errors
             }
         }
 

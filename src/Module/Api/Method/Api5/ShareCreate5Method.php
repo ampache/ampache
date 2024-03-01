@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -108,9 +109,10 @@ final class ShareCreate5Method
             global $dic;
             $functionChecker   = $dic->get(FunctionCheckerInterface::class);
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+            $shareCreator      = $dic->get(ShareCreatorInterface::class);
 
-            $share = Share::create_share(
-                $user->id,
+            $share = $shareCreator->create(
+                $user,
                 $object_type,
                 $object_id,
                 true,

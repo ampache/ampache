@@ -122,9 +122,7 @@ class ShowActionTest extends TestCase
 
     public function testRunRenders(): void
     {
-        $podcast = $this->createMock(Podcast::class);
-
-        $name        = 'some-name';
+        $podcast     = $this->createMock(Podcast::class);
         $episodeList = [123, 456];
 
         $this->request->expects(static::once())
@@ -136,9 +134,8 @@ class ShowActionTest extends TestCase
             ->with(0)
             ->willReturn($podcast);
 
-        $this->podcastRepository->expects(static::once())
-            ->method('getEpisodes')
-            ->with($podcast)
+        $podcast->expects(static::once())
+            ->method('getEpisodeIds')
             ->willReturn($episodeList);
 
         $this->ui->expects(static::once())

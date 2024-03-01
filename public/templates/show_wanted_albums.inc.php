@@ -23,12 +23,18 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Repository\Model\Wanted;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\WantedRepositoryInterface;
 
-/** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */ ?>
+/** @var Browse $browse */
+/** @var list<int> $object_ids */
+
+global $dic;
+$wantedRepository = $dic->get(WantedRepositoryInterface::class);
+
+?>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="wanted">
     <thead>
         <tr class="th-top">
@@ -42,12 +48,12 @@ use Ampache\Module\Util\Ui;
     <tbody>
         <?php
         foreach ($object_ids as $wanted_id) {
-            $libitem = new Wanted($wanted_id);
-            if ($libitem->isNew()) {
+            $libitem = $wantedRepository->findById($wanted_id);
+            if ($libitem === null) {
                 continue;
             }
             $libitem->format(); ?>
-        <tr id="walbum_<?php echo $libitem->mbid; ?>">
+        <tr id="walbum_<?php echo $libitem->getMusicBrainzId(); ?>">
             <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>
         <?php

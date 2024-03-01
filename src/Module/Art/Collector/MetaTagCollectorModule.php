@@ -120,7 +120,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param string $art_type
      * @return array
      */
-    private static function sortArtByPriority($data, $art_type)
+    private static function sortArtByPriority($data, $art_type): array
     {
         $priorities = ($art_type === 'artist')
             ? self::TAG_ARTIST_ART_PRIORITY
@@ -186,7 +186,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param string $file
      * @return array
      */
-    public static function gatherFileArt($file)
+    public static function gatherFileArt($file): array
     {
         try {
             $getID3 = new getID3();
@@ -281,7 +281,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param array $data
      * @return array
      */
-    private function gatherMediaTags($media, $data)
+    private function gatherMediaTags($media, $data): array
     {
         $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         $images = self::gatherFileArt((string)$media->file);
@@ -309,7 +309,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param int $limit
      * @return array
      */
-    public function gatherSongTagsSingle(Art $art, $limit = 5)
+    public function gatherSongTagsSingle(Art $art, $limit = 5): array
     {
         // get song object directly from id, not by loop through album
         $song = new Song($art->uid);

@@ -1258,7 +1258,7 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 
 This takes a collection of inputs and returns ID + name for the object type
 
-**DEVELOP** This method is depreciated and will be removed in Ampache 7.0.0 (Use list)
+**DEVELOP** This method is depreciated and will be removed in **API7** (Use list)
 
 | Input         | Type       | Description                                                                                        | Optional |
 |---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
@@ -1322,6 +1322,55 @@ Return similar artist id's or similar song ids compared to the input filter
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_similar.xml)
+
+### indexes
+
+This takes a collection of inputs and returns ID + name for the object type
+
+| Input         | Type       | Description                                                                                                                                    | Optional |
+|---------------|------------|------------------------------------------------------------------------------------------------------------------------------------------------|---------:|
+| 'type'        | string     | `catalog`, `song`, `album`, `artist`, `album_artist`, `song_artist`, `playlist`, `podcast`, `podcast_episode`, `share`, `video`, `live_stream` |       NO |
+| 'filter'      | string     | Value is Alpha Match for returned results, may be more than one letter/number                                                                  |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                                                                |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date                                                |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date                                             |      YES |
+| 'include'     | boolean    | `0`, `1` (include songs in a playlist or episodes in a podcast)                                                                                |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                                                               |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                                                            |      YES |
+| 'hide_search' | integer    | `0`, `1` (if true do not include searches/smartlists in the result)                                                                            |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <catalog>|<song>|<album>|<artist>|<album_artist>|<song_artist>|<playlist>|<podcast>|<podcast_episode>|<share>|<video>|<live_stream>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+SONGS [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(song\).xml)
+
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(artist\).xml)
+
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(album\).xml)
+
+PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(playlist\).xml)
+
+PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(podcast\).xml)
+
+SONG [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(song%20with%20include\).xml)
+
+ARTIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(artist%20with%20include\).xml)
+
+ALBUM [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(album%20with%20include\).xml)
+
+PLAYLIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(playlist%20with%20include\).xml)
 
 ### labels
 
@@ -1741,6 +1790,34 @@ This returns a single playlist
 ### playlist_add_song
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
+
+| Input    | Type    | Description                                                   | Optional |
+|----------|---------|---------------------------------------------------------------|---------:|
+| 'filter' | string  | UID of Playlist                                               |       NO |
+| 'id'     | string  | UID of the object to add to playlist                          |       NO |
+| 'type'   | string  | 'song', 'album', 'artist', 'playlist'                         |       NO |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_add.xml)
+
+### playlist_add_song
+
+This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
+
+**DEVELOP** This method is depreciated and will be removed in **API7** (Use playlist_add)
 
 | Input    | Type    | Description                                                   | Optional |
 |----------|---------|---------------------------------------------------------------|---------:|
@@ -2821,11 +2898,13 @@ This takes a url and returns the song object in question
 
 ### user
 
-This gets a user's public information
+This gets a user's public information.
+
+If the username is omitted, this will return the current api user's public information.
 
 | Input      | Type   | Description                             | Optional |
 |------------|--------|-----------------------------------------|---------:|
-| 'username' | string | Username of the user to get details for |       NO |
+| 'username' | string | Username of the user to get details for |      YES |
 
 * return
 
@@ -2941,6 +3020,38 @@ Update an existing user.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_edit.xml)
 
+### user_playlists
+
+This returns playlists based on the specified filter for your user
+
+**NOTE** This method does not include smartlists
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <playlist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_playlists.xml)
+
 ### user_preference
 
 Get your user preference by name
@@ -2964,6 +3075,38 @@ Get your user preference by name
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_preference.xml)
+
+### user_smartlists
+
+This returns smartlists based on the specified filter for your user
+
+**NOTE** This method does not include playlists
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <playlist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_smartlists.xml)
 
 ### videos
 

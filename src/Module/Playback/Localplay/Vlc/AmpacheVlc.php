@@ -146,7 +146,7 @@ class AmpacheVlc extends localplay_controller
      * This returns a key'd array of the instance information with
      * [UID]=>[NAME]
      */
-    public function get_instances()
+    public function get_instances(): array
     {
         $sql        = "SELECT * FROM `localplay_vlc` ORDER BY `name`";
         $db_results = Dba::query($sql);
@@ -195,7 +195,7 @@ class AmpacheVlc extends localplay_controller
      * @param string $instance
      * @return array
      */
-    public function get_instance($instance = '')
+    public function get_instance($instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
@@ -320,8 +320,16 @@ class AmpacheVlc extends localplay_controller
      */
     public function skip($song): bool
     {
-        if ($this->_vlc->skip($song) === null) {
-            return false;
+        //vlc skip is based on his playlist track, we convert ampache localplay track to vlc
+        //playlist id
+        $listtracks = $this->get();
+        foreach($listtracks as $track) {
+            if($track['id'] == $song) {
+                if ($this->_vlc->skip($track['vlid']) === null) {
+                    return false;
+                }
+                break;
+            }
         }
 
         return true;
@@ -431,7 +439,7 @@ class AmpacheVlc extends localplay_controller
      * to, not to your browser but still this can take a lot of work for your server.
      * The xml files of VLC need work, not much documentation on them....
      */
-    public function get()
+    public function get(): array
     {
         /* Get the Current Playlist */
         $list = $this->_vlc->get_tracks();
@@ -445,7 +453,7 @@ class AmpacheVlc extends localplay_controller
         $counter = 0;
         // here we look if there are song in the playlist when media libary is used
         if ($list['node']['node'][0]['leaf'][$counter]['attr']['uri']) {
-            while ($list['node']['node'][0]['leaf'][$counter]) {
+            while (array_key_exists($counter, $list['node']['node'][0]['leaf'])) {
                 $songs[] = htmlspecialchars_decode(
                     $list['node']['node'][0]['leaf'][$counter]['attr']['uri'],
                     ENT_NOQUOTES
@@ -479,8 +487,9 @@ class AmpacheVlc extends localplay_controller
             $data = array();
 
             /* Required Elements */
-            $data['id']  = $song_id[$counter]; // id number of the files in the VLC playlist, needed for other operations
-            $data['raw'] = $entry;
+            $data['id']    = $counter; // id follows localplay api
+            $data['vlid']  = $song_id[$counter]; // vlid number of the files in the VLC playlist, needed for other operations
+            $data['raw']   = $entry;
 
             $url_data = $this->parse_url($entry);
             switch ($url_data['primary_key']) {
@@ -521,7 +530,7 @@ class AmpacheVlc extends localplay_controller
                     break;
             } // end switch on primary key type
 
-            $data['track'] = $key + 1;
+            $data['track'] = $key + 1; //track follows localplay api, 'id' + 1
             $counter++;
             $results[] = $data;
         } // foreach playlist items
@@ -540,6 +549,7 @@ class AmpacheVlc extends localplay_controller
         $arrayholder = $this->_vlc->fullstate(); //get status.xml via parser xmltoarray
         /* Construct the Array */
         $currentstat = $arrayholder['root']['state']['value'];
+        $listtracks  = $this->get();
 
         if ($currentstat == 'playing') {
             $state = 'play';
@@ -551,26 +561,60 @@ class AmpacheVlc extends localplay_controller
             $state = 'pause';
         }
 
-        $array           = array();
-        $array['state']  = $state ?? '';
-        $array['volume'] = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
-        $array['repeat'] = $arrayholder['root']['repeat']['value'];
-        $array['random'] = $arrayholder['root']['random']['value'];
-        $array['track']  = htmlspecialchars_decode(
-            $arrayholder['root']['information']['meta-information']['title']['value'],
-            ENT_NOQUOTES
-        );
+        $array                 = array();
+        $array['track']        = 0;
+        $oid                   = '';
 
-        $url_data = $this->parse_url($array['track']);
-        $song     = new Song($url_data['oid']);
-        if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
-            $array['track_title']  = $song->title;
-            $array['track_artist'] = $song->get_artist_fullname();
-            $array['track_album']  = $song->get_album_fullname();
-        } else {
-            // if not a known format
-            $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
-            $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
+        $array['track_title']  = '';
+        $array['track_artist'] = '';
+        $array['track_album']  = '';
+        $array['state']        = $state ?? '';
+        $array['volume']       = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
+        $array['repeat']       = $arrayholder['root']['repeat']['value'];
+        $array['random']       = $arrayholder['root']['random']['value'];
+
+        //api version 1
+        if(array_key_exists('meta-information', $arrayholder['root']['information'])) {
+            $ampurl  = htmlspecialchars_decode(
+                $arrayholder['root']['information']['meta-information']['title']['value'],
+                ENT_NOQUOTES
+            );
+            $url_data = $this->parse_url($ampurl);
+            $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
+
+            foreach($listtracks as $track) {
+                if($track['oid'] == $oid) {
+                    $array['track'] = $track['track'];
+                    break;
+                }
+            }
+        }
+
+        //api version 3
+        if(array_key_exists('currentplid', $arrayholder['root'])) {
+            $numtrack = 0 ;
+            $numtrack = (int)$arrayholder['root']['currentplid']['value'];
+
+            foreach($listtracks as $track) {
+                if($track['vlid'] == $numtrack) {
+                    $array['track'] = $track['track'];
+                    $oid            = $track['oid'];
+                    break;
+                }
+            }
+        }
+
+        if(!empty($oid)) {
+            $song     = new Song($oid);
+            if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
+                $array['track_title']  = $song->title;
+                $array['track_artist'] = $song->get_artist_fullname();
+                $array['track_album']  = $song->get_album_fullname();
+            } else {
+                // if not a known format
+                $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
+                $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
+            }
         }
 
         return $array;

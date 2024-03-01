@@ -39,7 +39,8 @@ use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\CatalogLoader;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
-use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Metadata\MetadataEnabledInterface;
+use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
@@ -51,13 +52,18 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
-use Ampache\Repository\Model\Metadata\Repository\Metadata;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\WantedRepositoryInterface;
+use DateTime;
 use Exception;
 use Generator;
 use PDOStatement;
@@ -141,9 +147,9 @@ abstract class Catalog extends database_object
     public ?int $last_clean;
     public int $last_add;
     public bool $enabled;
-    public string $rename_pattern = '';
-    public string $sort_pattern   = '';
-    public string $gather_types   = '';
+    public ?string $rename_pattern = '';
+    public ?string $sort_pattern   = '';
+    public ?string $gather_types   = '';
 
     /**
      * @var string $key
@@ -263,7 +269,7 @@ abstract class Catalog extends database_object
     /**
      * @return array
      */
-    abstract public function check_catalog_proc();
+    abstract public function check_catalog_proc(): array;
 
     /**
      * @param string $new_path
@@ -278,7 +284,7 @@ abstract class Catalog extends database_object
     /**
      * @return array
      */
-    abstract public function catalog_fields();
+    abstract public function catalog_fields(): array;
 
     /**
      * @param string $file_path
@@ -903,7 +909,7 @@ abstract class Catalog extends database_object
      * @param string $key
      * @param int|float $value
      */
-    public static function set_update_info($key, $value)
+    public static function set_update_info($key, $value): void
     {
         Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", array($key, $value));
     }
@@ -913,6 +919,7 @@ abstract class Catalog extends database_object
      * sets the enabled flag
      * @param bool $new_enabled
      * @param int $catalog_id
+     * @return PDOStatement|bool
      */
     public static function update_enabled($new_enabled, $catalog_id)
     {
@@ -972,7 +979,7 @@ abstract class Catalog extends database_object
      *
      * @see CatalogLoader
      */
-    public static function get_catalogs($filter_type = '', $user_id = null, $query = false)
+    public static function get_catalogs($filter_type = '', $user_id = null, $query = false): array
     {
         $params = array();
         $sql    = "SELECT `id` FROM `catalog` ";
@@ -1231,7 +1238,7 @@ abstract class Catalog extends database_object
      * @param int $user_id
      * @return int[]
      */
-    public static function get_server_counts($user_id)
+    public static function get_server_counts($user_id): array
     {
         $results = self::SERVER_COUNTS;
         if ($user_id > 0) {
@@ -1289,7 +1296,7 @@ abstract class Catalog extends database_object
      * @param int $catalog_id
      * @return int[]
      */
-    public static function count_catalog($catalog_id)
+    public static function count_catalog($catalog_id): array
     {
         $catalog = self::create_from_id($catalog_id);
         $results = array(
@@ -1358,7 +1365,7 @@ abstract class Catalog extends database_object
      * @param string $filter
      * @return int[]
      */
-    public function get_album_ids($filter = '')
+    public function get_album_ids($filter = ''): array
     {
         $results = array();
 
@@ -1382,7 +1389,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @return int[]
      */
-    public function get_video_ids($type = '')
+    public function get_video_ids($type = ''): array
     {
         $results = array();
 
@@ -1406,7 +1413,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @return Video[]
      */
-    public static function get_videos($catalogs = null, $type = '')
+    public static function get_videos($catalogs = null, $type = ''): array
     {
         if (!$catalogs) {
             $catalogs = self::get_catalogs();
@@ -1453,7 +1460,7 @@ abstract class Catalog extends database_object
      * This returns an array of ids of tvshows in this catalog
      * @return int[]
      */
-    public function get_tvshow_ids()
+    public function get_tvshow_ids(): array
     {
         $results    = array();
         $sql        = 'SELECT DISTINCT(`tvshow`.`id`) AS `id` FROM `tvshow` JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`catalog` = ?';
@@ -1470,7 +1477,7 @@ abstract class Catalog extends database_object
      * @param int[]|null $catalogs
      * @return TvShow[]
      */
-    public static function get_tvshows($catalogs = null)
+    public static function get_tvshows($catalogs = null): array
     {
         if (!$catalogs) {
             $catalogs = self::get_catalogs();
@@ -1499,7 +1506,7 @@ abstract class Catalog extends database_object
      * @param string $table
      * @return array
      */
-    public static function get_name_array($objects, $table)
+    public static function get_name_array($objects, $table): array
     {
         switch ($table) {
             case 'album':
@@ -1554,7 +1561,7 @@ abstract class Catalog extends database_object
      * @param array $catalogs
      * @return array
      */
-    public static function get_artist_arrays($catalogs)
+    public static function get_artist_arrays($catalogs): array
     {
         $sql = (count($catalogs) == 1)
             ? "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `catalog_map`.`catalog_id` AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int)$catalogs[0] . " LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL ORDER BY `f_name`;"
@@ -1576,7 +1583,7 @@ abstract class Catalog extends database_object
      * @param string $filter
      * @return int[]
      */
-    public function get_artist_ids($filter = '')
+    public function get_artist_ids($filter = ''): array
     {
         $results = array();
 
@@ -1614,7 +1621,7 @@ abstract class Catalog extends database_object
      * @param int $offset
      * @return Artist[]
      */
-    public static function get_artists($catalogs = null, $size = 0, $offset = 0)
+    public static function get_artists($catalogs = null, $size = 0, $offset = 0): array
     {
         $sql_where = "WHERE `artist`.`album_count` > 0";
         if (is_array($catalogs) && count($catalogs)) {
@@ -1671,7 +1678,7 @@ abstract class Catalog extends database_object
      * @param string $media_type
      * @return int[]
      */
-    public static function get_ids_from_folder($folder_path, $media_type)
+    public static function get_ids_from_folder($folder_path, $media_type): array
     {
         $objects     = array();
         $folder_path = Dba::escape($folder_path);
@@ -1692,7 +1699,7 @@ abstract class Catalog extends database_object
      * @param string $filter
      * @return int[]
      */
-    public function get_label_ids($filter)
+    public function get_label_ids($filter): array
     {
         $results = array();
 
@@ -1712,7 +1719,7 @@ abstract class Catalog extends database_object
      * @param int $catalog_id
      * @return array
      */
-    public static function get_children($name, $catalog_id = 0)
+    public static function get_children($name, $catalog_id = 0): array
     {
         $childrens = array();
         $sql       = "SELECT DISTINCT `artist`.`id` FROM `artist` ";
@@ -1743,7 +1750,7 @@ abstract class Catalog extends database_object
      * @param int[]|null $catalogs
      * @return int[]
      */
-    public static function get_albums($size = 0, $offset = 0, $catalogs = null)
+    public static function get_albums($size = 0, $offset = 0, $catalogs = null): array
     {
         $sql = "SELECT `album`.`id` FROM `album` ";
         if (is_array($catalogs) && count($catalogs)) {
@@ -1783,7 +1790,7 @@ abstract class Catalog extends database_object
      * @return int[]
      * @oaram int $offset
      */
-    public static function get_albums_by_artist($size = 0, $offset = 0, $catalogs = null)
+    public static function get_albums_by_artist($size = 0, $offset = 0, $catalogs = null): array
     {
         $sql       = "SELECT `album`.`id` FROM `album` ";
         $sql_where = "";
@@ -1823,7 +1830,7 @@ abstract class Catalog extends database_object
      * This returns an array of ids of podcasts in this catalog
      * @return int[]
      */
-    public function get_podcast_ids()
+    public function get_podcast_ids(): array
     {
         $results = array();
 
@@ -1841,7 +1848,7 @@ abstract class Catalog extends database_object
      * @param int[]|null $catalogs
      * @return Podcast[]
      */
-    public static function get_podcasts($catalogs = null)
+    public static function get_podcasts($catalogs = null): array
     {
         if (!$catalogs) {
             $catalogs = self::get_catalogs('podcast');
@@ -1895,7 +1902,7 @@ abstract class Catalog extends database_object
      * @param int $count
      * @return Podcast_Episode[]
      */
-    public static function get_newest_podcasts($count)
+    public static function get_newest_podcasts($count): array
     {
         $catalogs = self::get_catalogs('podcast');
         $results  = array();
@@ -2093,7 +2100,7 @@ abstract class Catalog extends database_object
      * including similar artists that exist in your catalog.
      * @param array $artist_list
      */
-    public function gather_artist_info($artist_list = array())
+    public function gather_artist_info($artist_list = array()): void
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -2129,7 +2136,7 @@ abstract class Catalog extends database_object
      * @param array $object_list
      * @param string $object_type
      */
-    public function update_from_external($object_list, $object_type)
+    public function update_from_external($object_list, $object_type): void
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -2143,6 +2150,9 @@ abstract class Catalog extends database_object
         $user        = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
+
+        $labelRepository = self::getLabelRepository();
+
         foreach ($meta_order as $plugin_name) {
             if (in_array($plugin_name, $plugin_list)) {
                 // only load metadata plugins you enable
@@ -2153,8 +2163,10 @@ abstract class Catalog extends database_object
                     switch ($object_type) {
                         case 'label':
                             foreach ($object_list as $label_id) {
-                                $label = new Label($label_id);
-                                $plugin->_plugin->get_external_metadata($label, 'label');
+                                $label = $labelRepository->findById($label_id);
+                                if ($label !== null) {
+                                    $plugin->_plugin->get_external_metadata($label, 'label');
+                                }
                             }
                             break;
                         case 'artist':
@@ -2177,7 +2189,7 @@ abstract class Catalog extends database_object
      * Returns an array of song objects.
      * @return Song[]
      */
-    public function get_songs($offset = 0, $limit = 0)
+    public function get_songs($offset = 0, $limit = 0): array
     {
         $songs   = array();
         $results = array();
@@ -2212,7 +2224,7 @@ abstract class Catalog extends database_object
      * Returns an array of song ids.
      * @return int[]
      */
-    public function get_song_ids()
+    public function get_song_ids(): array
     {
         $songs = array();
 
@@ -2239,7 +2251,7 @@ abstract class Catalog extends database_object
      * update_last_add
      * updates the last_add of the catalog
      */
-    public function update_last_add()
+    public function update_last_add(): void
     {
         $date = time();
         self::_update_item('last_add', $date, $this->id);
@@ -2249,7 +2261,7 @@ abstract class Catalog extends database_object
      * update_last_clean
      * This updates the last clean information
      */
-    public function update_last_clean()
+    public function update_last_clean(): void
     {
         $date = time();
         self::_update_item('last_clean', $date, $this->id);
@@ -2260,13 +2272,11 @@ abstract class Catalog extends database_object
      * This function updates the basic setting of the catalog
      * @param array $data
      */
-    public static function update_settings($data): bool
+    public static function update_settings($data): void
     {
         $sql    = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ? WHERE `id` = ?";
         $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['catalog_id']);
         Dba::write($sql, $params);
-
-        return true;
     }
 
     /**
@@ -2278,7 +2288,7 @@ abstract class Catalog extends database_object
      * @param bool $api
      * @return array
      */
-    public static function update_single_item($type, $object_id, $api = false)
+    public static function update_single_item($type, $object_id, $api = false): array
     {
         // Because single items are large numbers of things too
         set_time_limit(0);
@@ -2395,8 +2405,8 @@ abstract class Catalog extends database_object
             }
             // collect the garbage too
             if ($album || $artist || $maps) {
-                Artist::garbage_collection();
-                static::getAlbumRepository()->collectGarbage();
+                self::getArtistRepository()->collectGarbage();
+                self::getAlbumRepository()->collectGarbage();
             }
         }
 
@@ -2421,7 +2431,7 @@ abstract class Catalog extends database_object
         $gather_types = array('music'),
         $sort_pattern = '',
         $rename_pattern = ''
-    ) {
+    ): array {
         $array   = array();
         $catalog = self::create_from_id($media->catalog);
         if ($catalog === null) {
@@ -2493,7 +2503,7 @@ abstract class Catalog extends database_object
      * @return array
      * @throws ReflectionException
      */
-    public static function update_song_from_tags($results, Song $song)
+    public static function update_song_from_tags($results, Song $song): array
     {
         //debug_event(__CLASS__, "update_song_from_tags results: " . print_r($results, true), 4);
         // info for the song table. This is all the primary file data that is song related
@@ -2534,7 +2544,16 @@ abstract class Catalog extends database_object
             $licenseName       = (string) $results['license'];
             $licenseId         = $licenseRepository->find($licenseName);
 
-            $new_song->license = $licenseId === 0 ? $licenseRepository->create($licenseName, '', '') : $licenseId;
+            if ($licenseId === 0) {
+                $license = $licenseRepository->prototype()
+                    ->setName($licenseName);
+
+                $license->save();
+
+                $licenseId = $license->getId();
+            }
+
+            $new_song->license = $licenseId;
         } else {
             $new_song->license = null;
         }
@@ -2780,23 +2799,31 @@ abstract class Catalog extends database_object
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
 
-        if (AmpConfig::get('enable_custom_metadata')) {
-            $ctags = self::get_clean_metadata($song, $results);
+        $metadataManager = self::getMetadataManager();
+
+        if ($metadataManager->isCustomMetadataEnabled()) {
+            $ctags = self::filterMetadata($song, $results);
             //debug_event(__CLASS__, "get_clean_metadata " . print_r($ctags, true), 4);
-            if (method_exists($song, 'updateOrInsertMetadata')) {
-                $ctags = array_diff_key($ctags, array_flip($song->getDisabledMetadataFields()));
-                foreach ($ctags as $tag => $value) {
-                    $field = $song->getField($tag);
-                    $song->updateOrInsertMetadata($field, $value);
-                }
+            foreach ($ctags as $tag => $value) {
+                $metadataManager->updateOrAddMetadata($song, $tag, (string) $value);
             }
-            if (method_exists($song, 'deleteMetadata')) {
-                foreach ($song->getMetadata() as $metadata) {
-                    $metaName = $metadata->getField()->getName();
-                    if (!array_key_exists($metaName, $ctags)) {
-                        debug_event(__CLASS__, "delete metadata field " . $metaName, 4);
-                        $song->deleteMetadata($metadata);
-                    }
+
+            /** @var Metadata $metadata */
+            foreach ($metadataManager->getMetadata($song) as $metadata) {
+                $field = $metadata->getField();
+
+                if ($field === null) {
+                    debug_event(__CLASS__, "delete metadata with unknown field ", 4);
+
+                    $metadataManager->deleteMetadata($metadata);
+                    continue;
+                }
+
+                $metaName = $field->getName();
+
+                if (!array_key_exists($metaName, $ctags)) {
+                    debug_event(__CLASS__, "delete metadata field " . $metaName, 4);
+                    $metadataManager->deleteMetadata($metadata);
                 }
             }
         }
@@ -2823,11 +2850,13 @@ abstract class Catalog extends database_object
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
                 $label_id = Label::helper($label_name) ?? $labelRepository->lookup($label_name);
                 if ((int)$label_id > 0) {
-                    $label   = new Label((int)$label_id);
-                    $artists = $label->get_artists();
-                    if ($song->artist && !in_array($song->artist, $artists)) {
-                        debug_event(__CLASS__, "$song->artist: adding association to $label->name", 4);
-                        $labelRepository->addArtistAssoc($label->id, $song->artist);
+                    $label = $labelRepository->findById($label_id);
+                    if ($label !== null) {
+                        $artists = $label->get_artists();
+                        if ($song->artist && !in_array($song->artist, $artists)) {
+                            debug_event(__CLASS__, "$song->artist: adding association to $label->name", 4);
+                            $labelRepository->addArtistAssoc($label->id, $song->artist, new DateTime());
+                        }
                     }
                 }
             }
@@ -2895,7 +2924,7 @@ abstract class Catalog extends database_object
      * @param Video $video
      * @return array
      */
-    public static function update_video_from_tags($results, Video $video)
+    public static function update_video_from_tags($results, Video $video): array
     {
         /* Setup the vars */
         $new_video                = new Video();
@@ -2946,7 +2975,7 @@ abstract class Catalog extends database_object
      * @param Podcast_Episode $podcast_episode
      * @return array
      */
-    public static function update_podcast_episode_from_tags($results, Podcast_Episode $podcast_episode)
+    public static function update_podcast_episode_from_tags($results, Podcast_Episode $podcast_episode): array
     {
         $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `state` = 'completed' WHERE `id` = ?";
         Dba::write($sql, array($podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], $podcast_episode->id));
@@ -2967,14 +2996,15 @@ abstract class Catalog extends database_object
 
     /**
      * Get rid of all tags found in the libraryItem
-     * @param library_item $libraryItem
-     * @param array $metadata
-     * @return array
+     * @param array<string, scalar> $metadata
+     * @return array<string, scalar>
      */
-    private static function get_clean_metadata(library_item $libraryItem, $metadata)
+    private static function filterMetadata(MetadataEnabledInterface $libraryItem, array $metadata): array
     {
+        $metadataManager = self::getMetadataManager();
+
         // these fields seem to be ignored but should be removed
-        $databaseFields = array(
+        $databaseFields = [
             'artists' => null,
             'mb_albumartistid_array' => null,
             'mb_artistid_array' => null,
@@ -2987,9 +3017,18 @@ abstract class Catalog extends database_object
             'volume level (replaygain)' => null,
             'peak level (r128)' => null,
             'peak level (sample)' => null
-        );
-        $tags = array_diff_key($metadata, get_object_vars($libraryItem), array_flip($libraryItem::$aliases ?? array()), $databaseFields);
+        ];
 
+        // Drops ignored keys from the metadata
+        $tags = array_diff_key(
+            $metadata,
+            get_object_vars($libraryItem),
+            array_flip($libraryItem->getIgnoredMetadataKeys()),
+            $databaseFields,
+            array_flip($metadataManager->getDisabledMetadataFields())
+        );
+
+        // filters empty metadata values
         return array_filter($tags);
     }
 
@@ -3176,17 +3215,30 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
-     * @param library_item $libraryItem
-     * @param array $metadata
+     * @param array<string, scalar> $metadata
      */
-    public static function add_metadata(library_item $libraryItem, $metadata)
+    public function addMetadata(MetadataEnabledInterface $libraryItem, array $metadata): void
     {
-        $tags = self::get_clean_metadata($libraryItem, $metadata);
+        $metadataManager = self::getMetadataManager();
+
+        $tags = self::filterMetadata($libraryItem, $metadata);
 
         foreach ($tags as $tag => $value) {
-            $field = $libraryItem->getField($tag);
-            $libraryItem->addMetadata($field, $value);
+            $metadataManager->addMetadata($libraryItem, $tag, (string) $value);
+        }
+    }
+
+    /**
+     * @param array<string, scalar> $tags
+     */
+    protected function updateMetadata(MetadataEnabledInterface $item, array $tags): void
+    {
+        $metadataManager = self::getMetadataManager();
+
+        $tags = self::filterMetadata($item, $tags);
+
+        foreach ($tags as $tag => $value) {
+            $metadataManager->updateOrAddMetadata($item, $tag, (string) $value);
         }
     }
 
@@ -3198,7 +3250,7 @@ abstract class Catalog extends database_object
      * @param string $rename_pattern
      * @return array
      */
-    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
+    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern): array
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {
@@ -3214,8 +3266,8 @@ abstract class Catalog extends database_object
             $gather_types,
             '',
             '',
-            $sort_pattern,
-            $rename_pattern
+            (string) $sort_pattern,
+            (string) $rename_pattern
         );
         try {
             $vainfo->gather_tags();
@@ -3235,7 +3287,7 @@ abstract class Catalog extends database_object
      * @param string $media_type
      * @return array
      */
-    public function get_gather_types($media_type = '')
+    public function get_gather_types($media_type = ''): array
     {
         $catalog_media_type = $this->gather_types;
         if (empty($catalog_media_type)) {
@@ -3314,13 +3366,13 @@ abstract class Catalog extends database_object
             //Stats::migrate('artist', $row['maxid'], $row['minid']);
             Useractivity::migrate('artist', $row['maxid'], $row['minid']);
             Recommendation::migrate('artist', $row['maxid']);
-            Share::migrate('artist', $row['maxid'], $row['minid']);
+            self::getShareRepository()->migrate('artist', (int) $row['maxid'], (int) $row['minid']);
             self::getShoutRepository()->migrate('artist', (int) $row['maxid'], (int) $row['minid']);
             Tag::migrate('artist', $row['maxid'], $row['minid']);
             Userflag::migrate('artist', $row['maxid'], $row['minid']);
             Label::migrate('artist', $row['maxid'], $row['minid']);
             Rating::migrate('artist', $row['maxid'], $row['minid']);
-            Wanted::migrate('artist', $row['maxid'], $row['minid']);
+            self::getWantedRepository()->migrateArtist($row['maxid'], $row['minid']);
             Clip::migrate('artist', $row['maxid'], $row['minid']);
             self::migrate_map('artist', $row['maxid'], $row['minid']);
 
@@ -3328,8 +3380,8 @@ abstract class Catalog extends database_object
             Artist::migrate($row['maxid'], $row['minid']);
         }
         // remove the duplicates after moving everything
-        Artist::garbage_collection();
-        static::getAlbumRepository()->collectGarbage();
+        self::getArtistRepository()->collectGarbage();
+        self::getAlbumRepository()->collectGarbage();
     }
 
     /**
@@ -3411,7 +3463,7 @@ abstract class Catalog extends database_object
      * @param string $pattern
      * @return array
      */
-    public static function trim_prefix($string, $pattern = null)
+    public static function trim_prefix($string, $pattern = null): array
     {
         $prefix_pattern = $pattern ?? '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         if (preg_match($prefix_pattern, $string, $matches)) {
@@ -3476,7 +3528,7 @@ abstract class Catalog extends database_object
      * @param string $string
      * @return array
      */
-    public static function trim_featuring($string)
+    public static function trim_featuring($string): array
     {
         $items = preg_split("/ feat\. /i", $string);
         if (!$items) {
@@ -3572,224 +3624,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * playlist_import
-     * Attempts to create a Public Playlist based on the playlist file
-     * @param string $playlist_file
-     * @param int $user_id
-     * @param string $playlist_type (public|private)
-     * @return array
-     */
-    public static function import_playlist($playlist_file, $user_id, $playlist_type)
-    {
-        $data = file_get_contents($playlist_file);
-        if (substr($playlist_file, -3, 3) == 'm3u' || substr($playlist_file, -4, 4) == 'm3u8') {
-            $files = self::parse_m3u($data);
-        } elseif (substr($playlist_file, -3, 3) == 'pls') {
-            $files = self::parse_pls($data);
-        } elseif (substr($playlist_file, -3, 3) == 'asx') {
-            $files = self::parse_asx($data);
-        } elseif (substr($playlist_file, -4, 4) == 'xspf') {
-            $files = self::parse_xspf($data);
-        }
-
-        $songs    = array();
-        $import   = array();
-        $pinfo    = pathinfo($playlist_file);
-        $track    = 1;
-        $web_path = AmpConfig::get('web_path');
-        if (isset($files)) {
-            foreach ($files as $file) {
-                $found    = false;
-                $file     = trim((string)$file);
-                $orig     = $file;
-                $url_data = Stream_Url::parse($file);
-                // Check to see if it's a url from this ampache instance
-                if (array_key_exists('id', $url_data) && !empty($web_path) && substr($file, 0, strlen($web_path)) == $web_path) {
-                    $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
-                    $db_results = Dba::read($sql, array($url_data['id']));
-                    if (Dba::num_rows($db_results) && (int)$url_data['id'] > 0) {
-                        debug_event(__CLASS__, "import_playlist identified: {" . $url_data['id'] . "}", 5);
-                        $songs[$track] = $url_data['id'];
-                        $track++;
-                        $found = true;
-                    }
-                } else {
-                    // Remove file:// prefix if any
-                    if (strpos($file, "file://") !== false) {
-                        $file = urldecode(substr($file, 7));
-                        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                            // Removing starting / on Windows OS.
-                            if (substr($file, 0, 1) == '/') {
-                                $file = substr($file, 1);
-                            }
-                            // Restore real directory separator
-                            $file = str_replace("/", DIRECTORY_SEPARATOR, $file);
-                        }
-                    }
-
-                    // First, try to find the file as absolute path
-                    $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
-                    $db_results = Dba::read($sql, array($file));
-                    $results    = Dba::fetch_assoc($db_results);
-
-                    if (array_key_exists('id', $results) && (int)($results['id'] ?? 0) > 0) {
-                        debug_event(__CLASS__, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
-                        $songs[$track] = (int)$results['id'];
-                        $track++;
-                        $found = true;
-                    } else {
-                        // Not found in absolute path, create it from relative path
-                        $file = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $file;
-                        // Normalize the file path. realpath requires the files to exists.
-                        $file = realpath($file);
-                        if ($file) {
-                            $db_results = Dba::read($sql, array($file));
-                            $results    = Dba::fetch_assoc($db_results);
-
-                            if (array_key_exists('id', $results) && (int)($results['id'] ?? 0) > 0) {
-                                debug_event(__CLASS__, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
-                                $songs[$track] = (int)$results['id'];
-                                $track++;
-                                $found = true;
-                            }
-                        }
-                    }
-                } // if it's a file
-                if (!$found) {
-                    debug_event(__CLASS__, "import_playlist skipped: {{$orig}}", 5);
-                }
-                // add the results to an array to display after
-                $import[] = array(
-                    'track' => $track - 1,
-                    'file' => $orig,
-                    'found' => (int)$found
-                );
-            }
-        }
-
-        debug_event(__CLASS__, "import_playlist Parsed " . $playlist_file . ", found " . count($songs) . " songs", 5);
-
-        if (count($songs)) {
-            $name        = $pinfo['filename'];
-            $playlist_id = (int)Playlist::create($name, $playlist_type, $user_id);
-
-            if ($playlist_id < 1) {
-                return array(
-                    'success' => false,
-                    'error' => T_('Failed to create playlist'),
-                );
-            }
-
-            $playlist = new Playlist($playlist_id);
-            $playlist->delete_all();
-            $playlist->add_songs($songs);
-
-            return array(
-                'success' => true,
-                'id' => $playlist_id,
-                'count' => count($songs),
-                'results' => $import
-            );
-        }
-
-        return array(
-            'success' => false,
-            'error' => T_('No valid songs found in playlist file'),
-            'results' => $import
-        );
-    }
-
-    /**
-     * parse_m3u
-     * this takes m3u filename and then attempts to found song filenames listed in the m3u
-     * @param string $data
-     * @return array
-     */
-    public static function parse_m3u($data)
-    {
-        $files   = array();
-        $results = explode("\n", $data);
-
-        foreach ($results as $value) {
-            $value = trim((string)$value);
-            if (!empty($value) && substr($value, 0, 1) != '#') {
-                $files[] = $value;
-            }
-        }
-
-        return $files;
-    }
-
-    /**
-     * parse_pls
-     * this takes pls filename and then attempts to found song filenames listed in the pls
-     * @param string $data
-     * @return array
-     */
-    public static function parse_pls($data)
-    {
-        $files   = array();
-        $results = explode("\n", $data);
-
-        foreach ($results as $value) {
-            $value = trim((string)$value);
-            if (preg_match("/file[0-9]+[\s]*\=(.*)/i", $value, $matches)) {
-                $file = trim((string)$matches[1]);
-                if (!empty($file)) {
-                    $files[] = $file;
-                }
-            }
-        }
-
-        return $files;
-    }
-
-    /**
-     * parse_asx
-     * this takes asx filename and then attempts to found song filenames listed in the asx
-     * @param string $data
-     * @return array
-     */
-    public static function parse_asx($data)
-    {
-        $files = array();
-        $xml   = simplexml_load_string($data);
-
-        if ($xml) {
-            foreach ($xml->entry as $entry) {
-                $file = trim((string)$entry->ref['href']);
-                if (!empty($file)) {
-                    $files[] = $file;
-                }
-            }
-        }
-
-        return $files;
-    }
-
-    /**
-     * parse_xspf
-     * this takes xspf filename and then attempts to found song filenames listed in the xspf
-     * @param string $data
-     * @return array
-     */
-    public static function parse_xspf($data)
-    {
-        $files = array();
-        $xml   = simplexml_load_string($data);
-        if ($xml) {
-            foreach ($xml->trackList->track as $track) {
-                $file = trim((string)$track->location);
-                if (!empty($file)) {
-                    $files[] = $file;
-                }
-            }
-        }
-
-        return $files;
-    }
-
-    /**
      * delete
      * Deletes the catalog and everything associated with it
      * @param int $catalog_id
@@ -3830,7 +3664,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        $sql        = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE catalog_id = ?';
+        $sql        = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE `catalog_id` = ?';
         $db_results = Dba::write($sql, $params);
         if (!$db_results) {
             return false;
@@ -3850,7 +3684,7 @@ abstract class Catalog extends database_object
      * Update the catalog mapping for various types
      * @param string $table
      */
-    public static function update_mapping($table)
+    public static function update_mapping($table): void
     {
         // fill the data
         debug_event(__CLASS__, 'Update mapping for table: ' . $table, 5);
@@ -3911,6 +3745,7 @@ abstract class Catalog extends database_object
     public static function garbage_collect_filters(): void
     {
         Dba::write("DELETE FROM `catalog_filter_group_map` WHERE `group_id` NOT IN (SELECT `id` FROM `catalog_filter_group`);");
+        Dba::write("DELETE FROM `catalog_filter_group_map` WHERE `catalog_id` NOT IN (SELECT `id` FROM `catalog`);");
         Dba::write("UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` NOT IN (SELECT `id` FROM `catalog_filter_group`);");
         Dba::write("UPDATE IGNORE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT' AND `id` > 0;");
     }
@@ -3950,7 +3785,7 @@ abstract class Catalog extends database_object
      * Updates artist tags from given song id
      * @param int $song_id
      */
-    protected static function updateArtistTags(int $song_id)
+    protected static function updateArtistTags(int $song_id): void
     {
         foreach (Song::get_parent_array($song_id) as $artist_id) {
             $tags = self::getSongTags('artist', $artist_id);
@@ -3962,7 +3797,7 @@ abstract class Catalog extends database_object
      * Updates artist tags from given song id
      * @param int $album_id
      */
-    protected static function updateAlbumArtistTags(int $album_id)
+    protected static function updateAlbumArtistTags(int $album_id): void
     {
         foreach (Song::get_parent_array($album_id, 'album') as $artist_id) {
             $tags = self::getSongTags('artist', $artist_id);
@@ -3976,7 +3811,7 @@ abstract class Catalog extends database_object
      * @param int $object_id
      * @return array
      */
-    protected static function getSongTags($type, $object_id)
+    protected static function getSongTags($type, $object_id): array
     {
         $tags = array();
         $sql  = ($type == 'artist')
@@ -4021,13 +3856,12 @@ abstract class Catalog extends database_object
      * @param int $catalog_id
      * @param string $path
      * @param string $target
-     * @return string|false
      */
-    public static function get_cache_path($object_id, $catalog_id, $path = '', $target = '')
+    public static function get_cache_path($object_id, $catalog_id, $path = '', $target = ''): ?string
     {
         // need a destination and target filetype
         if (!is_dir($path) || empty($target)) {
-            return false;
+            return null;
         }
         // make a folder per catalog
         if (!is_dir(rtrim(trim($path), '/') . '/' . $catalog_id)) {
@@ -4370,7 +4204,7 @@ abstract class Catalog extends database_object
             Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id);
             Useractivity::migrate($object_type, $old_object_id, $new_object_id);
             Recommendation::migrate($object_type, $old_object_id);
-            Share::migrate($object_type, $old_object_id, $new_object_id);
+            self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::getShoutRepository()->migrate($object_type, $old_object_id, $new_object_id);
             Tag::migrate($object_type, $old_object_id, $new_object_id);
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
@@ -4378,9 +4212,11 @@ abstract class Catalog extends database_object
             Art::duplicate($object_type, $old_object_id, $new_object_id);
             Playlist::migrate($object_type, $old_object_id, $new_object_id);
             Label::migrate($object_type, $old_object_id, $new_object_id);
-            Wanted::migrate($object_type, $old_object_id, $new_object_id);
-            Metadata::migrate($object_type, $old_object_id, $new_object_id);
-            Bookmark::migrate($object_type, $old_object_id, $new_object_id);
+            if ($object_type === 'artist') {
+                self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
+            }
+            self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
+            self::getBookmarkRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
 
             return true;
@@ -4502,5 +4338,65 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated  inject dependency
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getMetadataManager(): MetadataManagerInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataManagerInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getWantedRepository(): WantedRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(WantedRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }

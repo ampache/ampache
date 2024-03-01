@@ -346,7 +346,7 @@ final class AmpacheRss implements AmpacheRssInterface
             $is_allowed_recent  = ($user) ? $user->id == $row_id : $has_allowed_recent;
             if ($song->enabled && $is_allowed_recent) {
                 $song->format();
-                $description = '<p>' . T_('User') . ': ' . $client->username . '</p><p>' . T_('Title') . ': ' . $song->f_name . '</p><p>' . T_('Artist') . ': ' . $song->f_artist_full . '</p><p>' . T_('Album') . ': ' . $song->f_album_full . '</p><p>' . T_('Play date') . ': ' . get_datetime($item['date']) . '</p>';
+                $description = '<p>' . T_('User') . ': ' . $client->username . '</p><p>' . T_('Title') . ': ' . $song->f_name . '</p><p>' . T_('Artist') . ': ' . $song->get_artist_fullname() . '</p><p>' . T_('Album') . ': ' . $song->f_album_full . '</p><p>' . T_('Play date') . ': ' . get_datetime($item['date']) . '</p>';
 
                 $xml_array = array(
                     'title' => $song->f_name . ' - ' . $song->f_artist . ' - ' . $song->f_album,
@@ -461,6 +461,9 @@ final class AmpacheRss implements AmpacheRssInterface
             if ($object !== null) {
                 $object->format();
                 $user = new User($shout->getUserId());
+                if ($user->isNew()) {
+                    continue;
+                }
                 $user->format();
 
                 $xml_array = array(

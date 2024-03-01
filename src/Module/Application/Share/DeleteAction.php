@@ -25,19 +25,20 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Share;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Deletes a share-item
+ */
 final class DeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'delete';
@@ -48,14 +49,18 @@ final class DeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ShareRepositoryInterface $shareRepository;
+
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        ShareRepositoryInterface $shareRepository
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,17 +72,28 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $share_id = $this->requestParser->getFromRequest('id');
+        $user = $gatekeeper->getUser();
+
+        $share = $this->shareRepository->findById(
+            (int) $this->requestParser->getFromRequest('id')
+        );
+
+        if (
+            $share === null ||
+            $user === null ||
+            !$share->isAccessible($user)
+        ) {
+            throw new AccessDeniedException();
+        }
+
+        $this->shareRepository->delete($share);
 
         $this->ui->showHeader();
-        if (Share::delete_share((int)$share_id, Core::get_global('user'))) {
-            $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
-            $this->ui->showConfirmation(
-                T_('No Problem'),
-                T_('Share has been deleted'),
-                $next_url
-            );
-        }
+        $this->ui->showConfirmation(
+            T_('No Problem'),
+            T_('Share has been deleted'),
+            sprintf('%s/stats.php?action=share', $this->configContainer->getWebPath())
+        );
         $this->ui->showFooter();
 
         return null;

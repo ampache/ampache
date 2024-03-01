@@ -68,7 +68,7 @@ class AmpConfig
      * This returns all of the current config variables as an array.
      * @return array
      */
-    public static function get_all()
+    public static function get_all(): array
     {
         return self::$_global;
     }

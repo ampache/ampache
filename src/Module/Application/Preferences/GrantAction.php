@@ -78,7 +78,8 @@ final class GrantAction implements ApplicationActionInterface
             ) {
                 // we receive a token for a valid plugin, have to call getSession and obtain a session key
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                if ($plugin->_plugin !== null) {
+                    $plugin->load($user);
                     if ($plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))) {
                         $title = T_('No Problem');
                         $text  = T_('Your account has been updated') . ' : ' . $plugin_name;

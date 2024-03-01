@@ -27,9 +27,9 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
+use Ampache\Repository\ShareRepositoryInterface;
 
 /**
  * Class ShareEdit5Method
@@ -61,31 +61,48 @@ final class ShareEdit5Method
             return false;
         }
         $share_id = $input['filter'];
-        if (in_array($share_id, Share::get_share_list($user))) {
-            $share       = new Share($share_id);
-            $description = (isset($input['description'])) ? htmlspecialchars($input['description']) : $share->description;
-            $stream      = (isset($input['stream'])) ? filter_var($input['stream'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_stream;
-            $download    = (isset($input['download'])) ? filter_var($input['download'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_download;
-            $expires     = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : $share->expire_days;
 
-            $data = array(
-                'max_counter' => $share->max_counter,
-                'expire' => $expires,
-                'allow_stream' => $stream,
-                'allow_download' => $download,
-                'description' => $description
-            );
-            if ($share->update($data, $user)) {
-                Api5::message('share ' . $share_id . ' updated', $input['api_format']);
-            } else {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(sprintf(T_('Bad Request: %s'), $share_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
-            }
-        } else {
+        $share = self::getShareRepository()->findById((int) $share_id);
+
+        if (
+            $share === null ||
+            !$share->isAccessible($user)
+        ) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $share_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+
+            return true;
+        }
+
+        $description = (isset($input['description'])) ? htmlspecialchars($input['description']) : $share->description;
+        $stream      = (isset($input['stream'])) ? filter_var($input['stream'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_stream;
+        $download    = (isset($input['download'])) ? filter_var($input['download'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_download;
+        $expires     = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : $share->expire_days;
+
+        $data = array(
+            'max_counter' => $share->max_counter,
+            'expire' => $expires,
+            'allow_stream' => $stream,
+            'allow_download' => $download,
+            'description' => $description
+        );
+        if ($share->update($data, $user)) {
+            Api5::message('share ' . $share_id . ' updated', $input['api_format']);
+        } else {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api5::error(sprintf(T_('Bad Request: %s'), $share_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }

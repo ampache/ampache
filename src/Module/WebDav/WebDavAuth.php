@@ -44,14 +44,13 @@ final class WebDavAuth extends DAV\Auth\Backend\AbstractBasic
     }
 
     /**
-     * @param $username
-     * @param $password
-     * @return mixed
+     * @param string $username
+     * @param string $password
      */
-    protected function validateUserPass($username, $password)
+    protected function validateUserPass($username, $password): bool
     {
         $auth = $this->authenticationManager->login($username, $password, true);
 
-        return $auth['success'];
+        return (bool) $auth['success'];
     }
 }

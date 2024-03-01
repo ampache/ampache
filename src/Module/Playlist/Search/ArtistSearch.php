@@ -67,7 +67,7 @@ final class ArtistSearch implements SearchInterface
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
             $operator = array();
-            if (!$type) {
+            if ($type === null) {
                 continue;
             }
             foreach ($search->basetypes[$type] as $baseOperator) {
@@ -76,7 +76,7 @@ final class ArtistSearch implements SearchInterface
                     break;
                 }
             }
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+            $input        = $search->filter_data(scrub_in((string)$rule[2]), $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
@@ -147,7 +147,7 @@ final class ArtistSearch implements SearchInterface
                     break;
                 case 'image_height':
                 case 'image_width':
-                    $looking       = ($rule[0] = 'image_width') ? 'width' : 'height';
+                    $looking       = ($rule[0] == 'image_width') ? 'width' : 'height';
                     $where[]       = "`image`.`$looking` $operator_sql ?";
                     $parameters[]  = $input;
                     $join['image'] = true;

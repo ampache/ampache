@@ -68,10 +68,10 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     public function install(): bool
     {
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        if (!Preference::exists('tadb_api_key') && !Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('tadb_overwrite_name') && !Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 
@@ -142,7 +142,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
      * @param array $media_info
      * @return array
      */
-    public function get_metadata($gather_types, $media_info)
+    public function get_metadata($gather_types, $media_info): array
     {
         // Music metadata only
         if (!in_array('music', $gather_types)) {
@@ -316,7 +316,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5)
+    public function gather_arts($type, $options = array(), $limit = 5): array
     {
         debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
 

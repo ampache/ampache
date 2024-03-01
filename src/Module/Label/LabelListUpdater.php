@@ -24,7 +24,7 @@
 namespace Ampache\Module\Label;
 
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Label;
+use DateTime;
 
 final class LabelListUpdater implements LabelListUpdaterInterface
 {
@@ -46,13 +46,18 @@ final class LabelListUpdater implements LabelListUpdaterInterface
     ): bool {
         debug_event(__CLASS__, 'Updating labels for values {' . $labelsComma . '} artist {' . $artistId . '}', 5);
 
-        $clabels      = $this->labelRepository->getByArtist((int) $artistId);
+        $clabels      = $this->labelRepository->getByArtist($artistId);
         $filter_list  = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labelsComma);
         $editedLabels = (is_array($filter_list)) ? array_unique($filter_list) : array();
 
         foreach ($clabels as $clid => $clv) {
             if ($clid) {
-                $clabel = new Label($clid);
+                $clabel = $this->labelRepository->findById($clid);
+
+                if ($clabel === null) {
+                    continue;
+                }
+
                 debug_event(__CLASS__, 'Processing label {' . $clabel->name . '}...', 5);
                 $found   = false;
                 $lstring = '';
@@ -84,8 +89,11 @@ final class LabelListUpdater implements LabelListUpdaterInterface
                     debug_event(__CLASS__, 'Creating a label directly from artist editing is not allowed.', 3);
                 }
                 if ($label_id > 0) {
-                    $clabel = new Label($label_id);
-                    $this->labelRepository->addArtistAssoc($clabel->getId(), $artistId);
+                    $clabel = $this->labelRepository->findById($label_id);
+
+                    if ($clabel !== null) {
+                        $this->labelRepository->addArtistAssoc($clabel->getId(), $artistId, new DateTime());
+                    }
                 }
             }
         }

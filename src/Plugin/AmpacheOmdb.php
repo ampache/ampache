@@ -202,7 +202,7 @@ class AmpacheOmdb implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5)
+    public function gather_arts($type, $options = array(), $limit = 5): array
     {
         return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }

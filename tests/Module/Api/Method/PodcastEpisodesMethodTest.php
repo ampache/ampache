@@ -197,9 +197,8 @@ class PodcastEpisodesMethodTest extends TestCase
             ->with('podcast_episode')
             ->willReturn($result);
 
-        $this->podcastRepository->expects(static::once())
-            ->method('getEpisodes')
-            ->with($podcast)
+        $podcast->expects(static::once())
+            ->method('getEpisodeIds')
             ->willReturn([]);
 
         static::assertSame(
@@ -244,9 +243,9 @@ class PodcastEpisodesMethodTest extends TestCase
             ->method('findById')
             ->with($podcastId)
             ->willReturn($podcast);
-        $this->podcastRepository->expects(static::once())
-            ->method('getEpisodes')
-            ->with($podcast)
+
+        $podcast->expects(static::once())
+            ->method('getEpisodeIds')
             ->willReturn([$episodeId]);
 
         $this->output->expects(static::once())

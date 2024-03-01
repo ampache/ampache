@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\database_object;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -123,7 +122,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        database_object $libitem,
+        library_item $libitem,
         int $object_id
     ): ?ResponseInterface;
 }

@@ -26,8 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Catalog\PlaylistImporter;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -60,11 +60,11 @@ final class ImportPlaylistAction implements ApplicationActionInterface
         $filename = $dir . basename($_FILES['filename']['name']);
         move_uploaded_file($_FILES['filename']['tmp_name'], $filename);
         // allow setting public or private for your imports
-        $playlist_type = filter_input(INPUT_POST, 'playlist_visibility', FILTER_SANITIZE_SPECIAL_CHARS);
+        $playlist_type = (string) filter_input(INPUT_POST, 'playlist_visibility', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $result = Catalog::import_playlist($filename, Core::get_global('user')->id, $playlist_type);
+        $result = PlaylistImporter::import_playlist($filename, Core::get_global('user')->id, $playlist_type);
 
-        if ($result['success']) {
+        if ($result !== null) {
             $url   = 'show_playlist&amp;playlist_id=' . $result['id'];
             $title = T_('No Problem');
             $body  = basename($_FILES['filename']['name']);
@@ -75,7 +75,7 @@ final class ImportPlaylistAction implements ApplicationActionInterface
                 $body .= "<table class=\"tabledata striped-rows\">\n<thead><tr class=\"th-top\">\n<th>" . T_('Track') . "</th><th>" . T_('File') . "</th><th>" . T_('Status') . "</th>\n<tbody>\n";
                 foreach ($result['results'] as $file) {
                     if ($file['found']) {
-                        $body .= "<tr>\n<td>" . scrub_out($file['track']) . "</td><td>" . scrub_out($file['file']) . "</td><td>" . T_('Success') . "</td>\n</tr>\n";
+                        $body .= "<tr>\n<td>" . $file['track'] . "</td><td>" . scrub_out($file['file']) . "</td><td>" . T_('Success') . "</td>\n</tr>\n";
                     } else {
                         $body .= "<tr><td></td><td>" . scrub_out($file['file']) . "</td><td>" . T_('Failure') . "</td></tr>\n";
                     }
@@ -86,7 +86,7 @@ final class ImportPlaylistAction implements ApplicationActionInterface
         } else {
             $url   = 'show_import_playlist';
             $title = T_('There Was a Problem');
-            $body  = T_('The Playlist could not be imported') . ': ' . $result['error'];
+            $body  = T_('The Playlist could not be imported') . ': ' . T_('No valid songs found in playlist file');
         }
         $this->ui->showConfirmation(
             $title,

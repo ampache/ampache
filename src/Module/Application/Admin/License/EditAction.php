@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -36,6 +36,9 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Actually updates or creates a license
+ */
 final class EditAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'edit';
@@ -44,19 +47,15 @@ final class EditAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private ModelFactoryInterface $modelFactory;
-
     private LicenseRepositoryInterface $licenseRepository;
 
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
         LicenseRepositoryInterface $licenseRepository
     ) {
         $this->ui                = $ui;
         $this->configContainer   = $configContainer;
-        $this->modelFactory      = $modelFactory;
         $this->licenseRepository = $licenseRepository;
     }
 
@@ -66,39 +65,38 @@ final class EditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
+        $data        = $request->getParsedBody();
+        $licenseId   = (int) ($data['license_id'] ?? 0);
+        $name        = (string) ($data['name'] ?? '');
+        $description = (string) ($data['description'] ?? '');
 
-        $data      = $request->getParsedBody();
-        $licenseId = (array_key_exists('license_id', $data))
-            ? (int)filter_var($data['license_id'], FILTER_SANITIZE_NUMBER_INT)
-            : 0;
+        $url = (string) filter_var($data['external_link'] ?? '', FILTER_SANITIZE_URL);
+
         if ($licenseId > 0) {
-            $license = $this->modelFactory->createLicense($licenseId);
+            $license = $this->licenseRepository->findById($licenseId);
 
-            if ($license->isNew() === false) {
-                $this->licenseRepository->update(
-                    $licenseId,
-                    (array_key_exists('name', $data)) ? htmlspecialchars($data['name']) : '',
-                    (array_key_exists('description', $data)) ? htmlspecialchars($data['description']) : '',
-                    (array_key_exists('external_link', $data)) ? (string)filter_var($data['external_link'], FILTER_SANITIZE_URL) : ''
-                );
+            if ($license === null) {
+                throw new ObjectNotFoundException($licenseId);
             }
+
             $text = T_('The License has been updated');
         } else {
-            $this->licenseRepository->create(
-                (array_key_exists('name', $data)) ? htmlspecialchars($data['name']) : '',
-                (array_key_exists('description', $data)) ? htmlspecialchars($data['description']) : '',
-                (array_key_exists('external_link', $data)) ? (string)filter_var($data['external_link'], FILTER_SANITIZE_URL) : ''
-            );
+            $license = $this->licenseRepository->prototype();
+
             $text = T_('A new License has been created');
         }
 
+        $license->setName($name)
+            ->setDescription($description)
+            ->setExternalLink($url)
+            ->save();
+
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             $text,
             sprintf('%s/admin/license.php', $this->configContainer->getWebPath())
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

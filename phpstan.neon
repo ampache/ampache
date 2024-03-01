@@ -10,7 +10,5 @@ parameters:
     - public/upnp
     - src/Module/Playback/Scrobble/ScrobblerAsync.php
     - tests
-  ignoreErrors:
-    - '#Static method Ampache\\Module\\System\\Update::_update_([0-9]+)\(\) is unused#'
 includes:
     - phpstan-baseline.neon

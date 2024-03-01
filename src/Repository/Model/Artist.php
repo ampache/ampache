@@ -32,12 +32,13 @@ use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use PDOStatement;
 
-class Artist extends database_object implements library_item, GarbageCollectibleInterface, CatalogItemInterface
+class Artist extends database_object implements library_item, CatalogItemInterface
 {
     protected const DB_TABLENAME = 'artist';
 
@@ -171,22 +172,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * garbage_collection
-     *
-     * This cleans out unused artists
-     */
-    public static function garbage_collection(): void
-    {
-        debug_event(self::class, 'garbage_collection', 5);
-        Dba::write("DELETE FROM `artist_map` WHERE `object_type` = 'album' AND `object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);");
-        Dba::write("DELETE FROM `artist_map` WHERE `object_type` = 'album' AND `object_id` NOT IN (SELECT `id` FROM `album`);");
-        Dba::write("DELETE FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` NOT IN (SELECT `id` FROM `song`);");
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_id` NOT IN (SELECT `id` FROM `artist`);");
-        // delete the artists
-        Dba::write("DELETE FROM `artist` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `artist` LEFT JOIN (SELECT DISTINCT `song`.`artist` AS `artist_id` FROM `song` UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id` FROM `album` UNION SELECT DISTINCT `wanted`.`artist` AS `artist_id` FROM `wanted` UNION SELECT DISTINCT `clip`.`artist` AS `artist_id` FROM `clip` UNION SELECT DISTINCT `artist_id` FROM `artist_map`) AS `artist_map` ON `artist_map`.`artist_id` = `artist`.`id` WHERE `artist_map`.`artist_id` IS NULL) AS `null_artist`);");
-    }
-
-    /**
      * this attempts to build a cache of the data from the passed albums all in one query
      * @param int[] $ids
      * @param bool $extra
@@ -224,30 +209,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * get_from_name
-     * This gets an artist object based on the artist name
-     * @param string $name
-     * @return Artist|false
-     */
-    public static function get_from_name($name)
-    {
-        $sql        = "SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? ";
-        $db_results = Dba::read($sql, array($name, $name));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return new Artist((int)$row['id']);
-        }
-
-        return false;
-    }
-
-    /**
      * get_id_arrays
      *
      * Get each id from the artist table with the minimum detail required for subsonic
      * @param array $catalogs
      * @return array
      */
-    public static function get_id_arrays($catalogs = array())
+    public static function get_id_arrays($catalogs = array()): array
     {
         $results = array();
         // if you have no catalogs set, just grab it all
@@ -277,7 +245,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int $artist_id
      * @return array
      */
-    public static function get_id_array($artist_id)
+    public static function get_id_array($artist_id): array
     {
         $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id`, `image`.`object_id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = (SELECT MIN(`catalog_map`.`catalog_id`) FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id`) LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
         $db_results = Dba::read($sql, array($artist_id));
@@ -291,7 +259,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Get each album id for the artist
      * @return int[]
      */
-    public function get_songs()
+    public function get_songs(): array
     {
         $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, array($this->id));
@@ -371,7 +339,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords                = array();
         $keywords['mb_artistid'] = array(
@@ -420,7 +388,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int|string|null $artist_id
      * @return array
      */
-    public static function get_name_array_by_id($artist_id)
+    public static function get_name_array_by_id($artist_id): array
     {
         if ($artist_id === 0) {
             return array(
@@ -509,7 +477,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Get item childrens.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         $medias = array();
         $albums = $this->getAlbumRepository()->getAlbumByArtist($this->id);
@@ -529,7 +497,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         $childrens  = array();
         $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album' AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?);";
@@ -546,13 +514,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Get all childrens and sub-childrens medias.
-     * @param string $filter_type
-     * @return array
+     *
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'song') {
+        if ($filter_type === null || $filter_type === 'song') {
             $songs = $this->getSongRepository()->getByArtist($this->id);
             foreach ($songs as $song_id) {
                 $medias[] = array(
@@ -798,7 +766,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int $object_id
      * @return int[]
      */
-    public static function get_artist_map($object_type, $object_id)
+    public static function get_artist_map($object_type, $object_id): array
     {
         $results    = array();
         $sql        = "SELECT `artist_id` AS `artist_id` FROM `artist_map` WHERE `object_type` = ? AND `object_id` = ?";
@@ -818,7 +786,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param string $mbid
      * @return array
      */
-    public static function update_name_from_mbid($new_name, $mbid)
+    public static function update_name_from_mbid($new_name, $mbid): array
     {
         $trimmed = Catalog::trim_prefix(trim((string)$new_name));
         $name    = $trimmed['string'];
@@ -881,11 +849,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
             // clear out the old data
             if ($updated) {
                 debug_event(__CLASS__, "garbage_collection: " . $artist_id, 5);
-                self::garbage_collection();
+                $this->getArtistRepository()->collectGarbage();
                 Stats::garbage_collection();
                 Rating::garbage_collection();
                 Userflag::garbage_collection();
-                Label::garbage_collection();
+                $this->getLabelRepository()->collectGarbage();
                 $this->getUseractivityRepository()->collectGarbage();
                 self::update_table_counts();
             } // if updated
@@ -1019,7 +987,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param int $old_object_id
      * @param int $new_object_id
      */
-    public static function migrate($old_object_id, $new_object_id)
+    public static function migrate($old_object_id, $new_object_id): void
     {
         if ((int)$new_object_id > 0) {
             // migrating to a new artist
@@ -1107,5 +1075,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }

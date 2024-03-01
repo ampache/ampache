@@ -493,7 +493,7 @@ if ($is_session) {
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user->id; ?>"><?php echo $current_user->fullname; ?></a>
                         <?php if ($site_social) { ?>
                             <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php global $dic;
-                            echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount(($current_user->getId())); ?>)</a>
+                            echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount($current_user); ?>)</a>
                         <?php } ?>
                         </span>
                     <?php

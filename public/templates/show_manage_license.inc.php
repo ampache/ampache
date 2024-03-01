@@ -24,10 +24,14 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
 
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
+
+global $dic;
+$licenseRepository = $dic->get(LicenseRepositoryInterface::class);
 
 $web_path = (string)AmpConfig::get('web_path', ''); ?>
 <div id="information_actions">
@@ -48,8 +52,8 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
     <tbody>
         <?php
         foreach ($object_ids as $license_id) {
-            $libitem = new License($license_id);
-            if ($libitem->isNew()) {
+            $libitem = $licenseRepository->findById($license_id);
+            if ($libitem === null) {
                 continue;
             }
             require Ui::find_template('show_license_row.inc.php');

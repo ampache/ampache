@@ -81,7 +81,7 @@ class UPnPPlaylist
     /**
      * @return array
      */
-    public function CurrentItem()
+    public function CurrentItem(): array
     {
         return $this->_songs[$this->_current] ?? array();
     }

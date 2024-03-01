@@ -99,7 +99,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function lst($fs_id, $with_root = false)
+    public function lst($fs_id, $with_root = false): array
     {
         $dir = (string)$this->path($fs_id);
         $lst = @scandir($dir);
@@ -144,7 +144,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function data($fs_id)
+    public function data($fs_id): array
     {
         if (strpos($fs_id, ":")) {
             $fs_id = array_map(array($this, 'id'), explode(':', $fs_id));
@@ -209,7 +209,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function create($fs_id, $name, $mkdir = false)
+    public function create($fs_id, $name, $mkdir = false): array
     {
         $dir = $this->path($fs_id);
         debug_event('fs.ajax', 'create ' . $fs_id . ' ' . $name, 5);
@@ -231,7 +231,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function rename($fs_id, $name)
+    public function rename($fs_id, $name): array
     {
         $dir = $this->path($fs_id);
         if ($dir === $this->base) {
@@ -257,7 +257,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function remove($fs_id)
+    public function remove($fs_id): array
     {
         $dir = $this->path($fs_id);
         if ($dir === $this->base) {
@@ -282,7 +282,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function move($fs_id, $par)
+    public function move($fs_id, $par): array
     {
         $dir = $this->path($fs_id);
         $par = $this->path($par);
@@ -300,7 +300,7 @@ class FileSystem
      * @return array
      * @throws Exception
      */
-    public function copy($fs_id, $par)
+    public function copy($fs_id, $par): array
     {
         $dir = $this->path($fs_id);
         $par = $this->path($par);
