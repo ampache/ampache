@@ -35,7 +35,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
+use Gettext\Loader\MoLoader;
 use Gettext\Translator;
+use Gettext\TranslatorFunctions;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -774,7 +776,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
     echo "</select>\n";
 
     if ($count === 0) {
-        echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
+        echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ")</script>\n";
     }
 }
 
@@ -831,7 +833,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
     echo "</select>\n";
 
     if ($count === 0) {
-        echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
+        echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ")</script>\n";
     }
 }
 
@@ -1144,12 +1146,13 @@ function load_gettext(): bool
     $lang   = AmpConfig::get('lang', 'en_US');
     $mopath = __DIR__ . '/../../locale/' . $lang . '/LC_MESSAGES/messages.mo';
 
-    $gettext = new Translator();
     if (file_exists($mopath)) {
-        $translations = Gettext\Translations::fromMoFile($mopath);
-        $gettext->loadTranslations($translations);
+        $loader       = new MoLoader();
+        $translations = $loader->loadFile($mopath);
+        $gettext      = Translator::createFromTranslations($translations);
+
+        TranslatorFunctions::register($gettext);
     }
-    $gettext->register();
 
     return true;
 }

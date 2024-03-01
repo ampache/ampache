@@ -91,7 +91,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
         $this->logger->warning(
-            $object_id,
+            (string) $object_id,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
         /** @var library_item $libitem */

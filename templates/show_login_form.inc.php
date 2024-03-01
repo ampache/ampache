@@ -107,13 +107,13 @@ $_SESSION['login'] = true; ?>
                 echo '<h1 id="headerlogo"></h1>';
                 echo '</div>';
             }
-            if (AmpConfig::get('cookie_disclaimer')) {
-                echo '<div id="cookie_notice>';
-                echo T_("Ampache places cookies on your computer to help make this website better.");
-                echo '</br>';
-                echo T_("Cookies are used for core site functionality and are not used for tracking or analytics.");
-                echo '</br>';
-                echo T_("By logging in you agree to the use of cookies while using this site.");
-                echo '</div>';
-            }
-            UI::show_footer();
+if (AmpConfig::get('cookie_disclaimer')) {
+    echo '<div id="cookie_notice>';
+    echo T_("Ampache places cookies on your computer to help make this website better.");
+    echo '</br>';
+    echo T_("Cookies are used for core site functionality and are not used for tracking or analytics.");
+    echo '</br>';
+    echo T_("By logging in you agree to the use of cookies while using this site.");
+    echo '</div>';
+}
+UI::show_footer();

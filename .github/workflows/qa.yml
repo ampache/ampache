@@ -2,9 +2,9 @@ name: qa
 
 on:
   push:
-    branches: [ develop, edge ]
+    branches: [ develop, master, patch7 ]
   pull_request:
-    branches: [ develop, edge ]
+    branches: [ develop, master, patch7 ]
 
 jobs:
   build:

@@ -72,6 +72,7 @@ final class DaapApiApplication implements ApiApplicationInterface
                     // Then let's call this function!
                     if ($act == $method) {
                         call_user_func(array(Daap_Api::class, $method), array_slice($params, $i, $p_count - $i));
+
                         // We only allow a single function to be called, and we assume it's cleaned up!
                         return;
                     }
