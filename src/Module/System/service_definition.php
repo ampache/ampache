@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System;
 
+use Ampache\Module\System\Plugin\PluginRetriever;
+use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Psr\Log\LoggerInterface;
 
 use function DI\autowire;
@@ -40,4 +42,5 @@ return [
             'updateRunner',
             autowire(Update\UpdateRunner::class)
         ),
+    PluginRetrieverInterface::class => autowire(PluginRetriever::class),
 ];

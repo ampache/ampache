@@ -741,7 +741,7 @@ class Catalog_dropbox extends Catalog
 
         return [
             'file_path' => $file,
-            'file_name' => $media->f_file,
+            'file_name' => $media->getFileName(),
             'file_size' => $media->size,
             'file_type' => $media->type
         ];

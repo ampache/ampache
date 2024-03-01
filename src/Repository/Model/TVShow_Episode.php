@@ -185,13 +185,19 @@ class TVShow_Episode extends Video
         $this->f_season_link = $season->f_link;
         $this->f_tvshow      = $season->f_tvshow;
         $this->f_tvshow_link = $season->f_tvshow_link;
+    }
 
-        $this->f_file = $this->f_tvshow;
+    public function getFileName(): string
+    {
+        $season = new TVShow_Season($this->season);
+        $season->format();
+
+        $value = $season->f_tvshow;
         if ($this->episode_number) {
-            $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d', $this->episode_number);
+            $value .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d', $this->episode_number);
         }
-        $this->f_file .= ' - ' . $this->f_name;
-        $this->f_full_title = $this->f_file;
+
+        return sprintf('%s - %s', $value, $this->original_name ?? '');
     }
 
     /**

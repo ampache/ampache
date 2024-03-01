@@ -20,15 +20,22 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Wanted;
+namespace Ampache\Module\System\Plugin;
 
-use function DI\autowire;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\User;
+use Generator;
 
-return [
-    MissingArtistFinderInterface::class => autowire(MissingArtistFinder::class),
-    MissingArtistRetrieverInterface::class => autowire(MissingArtistFromMusicBrainzRetriever::class),
-    WantedManagerInterface::class => autowire(WantedManager::class),
-];
+interface PluginRetrieverInterface
+{
+    /**
+     * Yields all loadable plugin of a certain type
+     *
+     * @todo migrate to php8+ enums
+     *
+     * @return Generator<Plugin>
+     */
+    public function retrieveByType(string $pluginType, User $user): Generator;
+}

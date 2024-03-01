@@ -20,15 +20,23 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Wanted;
+namespace Ampache\Module\Share;
 
-use function DI\autowire;
+use Ampache\Repository\Model\User;
 
-return [
-    MissingArtistFinderInterface::class => autowire(MissingArtistFinder::class),
-    MissingArtistRetrieverInterface::class => autowire(MissingArtistFromMusicBrainzRetriever::class),
-    WantedManagerInterface::class => autowire(WantedManager::class),
-];
+interface ShareCreatorInterface
+{
+    public function create(
+        User $user,
+        string $object_type,
+        int $object_id,
+        bool $allow_stream = true,
+        bool $allow_download = true,
+        int $expire_days = 0,
+        string $secret = '',
+        int $max_counter = 0,
+        string $description = ''
+    ): ?int;
+}

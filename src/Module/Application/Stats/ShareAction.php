@@ -28,11 +28,11 @@ namespace Ampache\Module\Application\Stats;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,14 +46,18 @@ final class ShareAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ShareRepositoryInterface $shareRepository;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ShareRepositoryInterface $shareRepository
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
+        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -85,7 +89,7 @@ final class ShareAction implements ApplicationActionInterface
         );
         $user       = Core::get_global('user');
         $object_ids = (!empty($user))
-            ? Share::get_share_list($user)
+            ? $this->shareRepository->getIdsByUser($user)
             : array();
         if (!empty($object_ids)) {
             $browse = $this->modelFactory->createBrowse();

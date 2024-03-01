@@ -657,7 +657,7 @@ class Catalog_Seafile extends Catalog
     public function prepare_media($media): array
     {
         $stream_path = (string) $media->file;
-        $stream_name = $media->f_file;
+        $stream_name = $media->getFileName();
         $size        = $media->size;
 
         if ($this->seafile->prepare()) {

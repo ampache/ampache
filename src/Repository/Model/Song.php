@@ -144,8 +144,6 @@ class Song extends database_object implements
     public $f_track;
     /** @var null|string $f_bitrate */
     public $f_bitrate;
-    /** @var null|string $f_file */
-    public $f_file;
     /** @var null|string $f_name_full */
     public $f_name_full;
     /** @var null|string $f_link */
@@ -1594,16 +1592,24 @@ class Song extends database_object implements
         $web_path       = AmpConfig::get('web_path');
         $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . $web_path . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
-        $this->f_file = $this->f_artist . ' - ';
-        if ($this->track) {
-            $this->f_file .= $this->track . ' - ';
-        }
-        $this->f_file .= $this->get_fullname() . '.' . $this->type;
-
         $this->f_composer  = $this->composer;
 
         $year              = (int)$this->year;
         $this->f_year_link = "<a href=\"" . $web_path . "/search.php?type=album&action=search&limit=0&rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
+    }
+
+    /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string
+    {
+        $value = $this->get_artist_fullname() . ' - ';
+        if ($this->track) {
+            $value .= $this->track . ' - ';
+        }
+        $value .= $this->get_fullname() . '.' . $this->type;
+
+        return $value;
     }
 
     /**

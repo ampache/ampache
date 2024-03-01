@@ -23,48 +23,36 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Wanted;
 
-use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
-use DateTimeInterface;
+use Ampache\Repository\Model\Wanted;
 
-/**
- * Manages share related database access
- *
- * Tables: `share`
- */
-interface ShareRepositoryInterface
+interface WantedManagerInterface
 {
     /**
-     * Migrate a share associate stats to a new object
+     * Delete a wanted release by mbid.
+     * @throws \MusicBrainz\Exception
      */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+    public function delete(string $mbid, ?User $user = null): void;
 
     /**
-     * Finds a single item by its id
+     * Accept a wanted request.
      */
-    public function findById(int $itemId): ?Share;
+    public function accept(
+        Wanted $wanted,
+        User $user
+    ): void;
 
     /**
-     * Cleanup old shares
+     * Add a new wanted release.
      */
-    public function collectGarbage(): void;
-
-    /**
-     * Returns the ids of all items the user has access to
-     *
-     * @return list<int>
-     */
-    public function getIdsByUser(User $user): array;
-
-    /**
-     * Deletes a single item
-     */
-    public function delete(Share $item): void;
-
-    /**
-     * Sets the last access-date and raises the counter
-     */
-    public function registerAccess(Share $share, DateTimeInterface $date): void;
+    public function add(
+        User $user,
+        string $mbid,
+        ?int $artist,
+        string $artist_mbid,
+        string $name,
+        int $year
+    ): void;
 }
