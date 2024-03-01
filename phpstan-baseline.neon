@@ -4796,11 +4796,6 @@ parameters:
 			path: src/Module/Application/SearchData/ShowAction.php
 
 		-
-			message: "#^Call to function is_array\\(\\) with non\\-falsy\\-string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Application/Share/ShowCreateAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:set_rules\\(\\) expects array, array\\|object\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/SmartPlaylist/UpdatePlaylistAction.php
@@ -13669,11 +13664,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$types has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:is_valid_type\\(\\) should return string but returns false\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"

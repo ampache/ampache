@@ -20,27 +20,22 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\System;
+namespace Ampache\Module\System\Plugin;
 
-use Ampache\Module\System\Plugin\PluginRetriever;
-use Ampache\Module\System\Plugin\PluginRetrieverInterface;
-use Psr\Log\LoggerInterface;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\User;
+use Generator;
 
-use function DI\autowire;
-
-return [
-    LoggerInterface::class => autowire(LegacyLogger::class),
-    SessionInterface::class => autowire(Session::class),
-    InstallationHelperInterface::class => autowire(InstallationHelper::class),
-    PreferencesFromRequestUpdaterInterface::class => autowire(PreferencesFromRequestUpdater::class),
-    Update\UpdateHelperInterface::class => autowire(Update\UpdateHelper::class),
-    Update\UpdaterInterface::class => autowire(Update\Updater::class)
-        ->constructorParameter(
-            'updateRunner',
-            autowire(Update\UpdateRunner::class)
-        ),
-    PluginRetrieverInterface::class => autowire(PluginRetriever::class),
-];
+interface PluginRetrieverInterface
+{
+    /**
+     * Yields all loadable plugin of a certain type
+     *
+     * @todo migrate to php8+ enums
+     *
+     * @return Generator<Plugin>
+     */
+    public function retrieveByType(string $pluginType, User $user): Generator;
+}

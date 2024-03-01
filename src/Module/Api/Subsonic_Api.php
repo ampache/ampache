@@ -38,6 +38,7 @@ use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
@@ -1884,6 +1885,7 @@ class Subsonic_Api
      * Returns a <subsonic-response> element with a nested <shares> element on success, which in turns contains a single <share> element for the newly created share.
      * http://www.subsonic.org/pages/api.jsp#createShare
      * @param array $input
+     * @param User $user
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -1921,11 +1923,12 @@ class Subsonic_Api
             if (!empty($object_type) && !empty($object_id)) {
                 global $dic; // @todo remove after refactoring
                 $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+                $shareCreator      = $dic->get(ShareCreatorInterface::class);
 
                 $response = Subsonic_Xml_Data::addSubsonicResponse('createshare');
                 $shares   = array();
-                $shareId  = Share::create_share(
-                    $user->id,
+                $shares[] = $shareCreator->create(
+                    $user,
                     $object_type,
                     $object_id,
                     true,
