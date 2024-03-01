@@ -72,6 +72,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
     private LabelRepositoryInterface $labelRepository;
 
     private ArtCleanupInterface $artCleanup;
+
     private ArtistRepositoryInterface $artistRepository;
 
     public function __construct(
