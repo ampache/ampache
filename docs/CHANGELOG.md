@@ -95,7 +95,6 @@ Definitely set `catalog_verify_by_time` if you have a large catalog. This will a
 * Verify catalog by song instead of album
 * Catalog verify will now use the config option `catalog_verify_by_time` and only check songs not updated since the last full verify
 * Don't update counts and collect garbage after updating individual songs
-* PlayAction stream_select will now block until there is data
 
 ### Fixed
 
@@ -112,10 +111,6 @@ Definitely set `catalog_verify_by_time` if you have a large catalog. This will a
 * Catalog update dates were set when the process was finished which negates `update_time` checks
 * Song `update_time` wasn't allowed to update
 * Check `update_time` in Catalog::count_table sql so you only verify what you need to
-* Transcode can't use range in headers
-* Empty result error on Stats::get_object_count
-* Subsonic
-  * Search2 and Search3 ignored musicFolderId
 
 ## API 6.2.1
 
