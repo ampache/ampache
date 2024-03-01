@@ -31,6 +31,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -542,26 +543,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
-     * Get item prefix, basename and name by the album id.
-     * @return array{prefix: string, basename: string, name: string}
-     */
-    public static function get_name_array_by_id(int $album_id): array
-    {
-        $sql        = "SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, array($album_id));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            /** @var array{prefix: string, basename: string, name: string} */
-            return $row;
-        }
-
-        return [
-            'prefix' => '',
-            'basename' => '',
-            'name' => ''
-        ];
-    }
-
-    /**
      * Get item link.
      */
     public function get_link(): string
@@ -670,21 +651,11 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
-     * get_album_disk_ids
-     *
-     * Returns the disk ids for an album
-     * @return int[]
+     * @return iterable<AlbumDisk>
      */
-    public function get_album_disk_ids(): array
+    public function getDisks(): iterable
     {
-        $sql        = "SELECT DISTINCT `id`, `disk` FROM `album_disk` WHERE `album_id` = ? ORDER BY `disk`;";
-        $db_results = Dba::read($sql, array($this->id));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
+        return $this->getAlbumDiskRepository()->getByAlbum($this);
     }
 
     /**
@@ -1280,6 +1251,16 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @inject dependency
+     */
+    private function getAlbumDiskRepository(): AlbumDiskRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumDiskRepositoryInterface::class);
     }
 
     /**

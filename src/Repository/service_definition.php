@@ -54,4 +54,5 @@ return [
     DeletedPodcastEpisodeRepositoryInterface::class => autowire(DeletedPodcastEpisodeRepository::class),
     PodcastEpisodeRepositoryInterface::class => autowire(PodcastEpisodeRepository::class),
     ImageRepositoryInterface::class => autowire(ImageRepository::class),
+    AlbumDiskRepositoryInterface::class => autowire(AlbumDiskRepository::class),
 ];

@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -23,34 +25,15 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 
-interface ArtistRepositoryInterface
+interface AlbumDiskRepositoryInterface
 {
     /**
-     * Deletes the artist entry
-     */
-    public function delete(
-        Artist $artist
-    ): void;
-
-    /**
-     * This returns a number of random artists.
+     * Returns the disks for an album
      *
-     * @return list<int>
+     * @return list<AlbumDisk>
      */
-    public function getRandom(
-        int $userId,
-        ?int $count = 1
-    ): array;
-
-    /**
-     * This cleans out unused artists
-     */
-    public function collectGarbage(): void;
-
-    /**
-     * This finds an artist based on its name
-     */
-    public function findByName(string $name): ?Artist;
+    public function getByAlbum(Album $album): array;
 }

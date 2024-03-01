@@ -1291,7 +1291,7 @@ class Json_Data
             $songMime     = $song->mime;
             $songBitrate  = $song->bitrate;
             $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
-            $song_album   = Album::get_name_array_by_id($song->album);
+            $song_album   = self::getAlbumRepository()->getNames($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
             $song_artists = array();
             foreach ($song->get_artists() as $artist_id) {
@@ -1497,7 +1497,7 @@ class Json_Data
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
-            $song_album  = Album::get_name_array_by_id($song->album);
+            $song_album  = self::getAlbumRepository()->getNames($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
 
             $JSON[] = array(

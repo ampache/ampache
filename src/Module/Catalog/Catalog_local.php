@@ -28,6 +28,7 @@ use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -638,7 +639,8 @@ class Catalog_local extends Catalog
         if ($media_type === 'song') {
             Album::update_table_counts();
             Artist::update_table_counts();
-            Artist::garbage_collection();
+
+            $this->getArtistRepository()->collectGarbage();
             $this->getAlbumRepository()->collectGarbage();
         }
         debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
@@ -1391,5 +1393,15 @@ class Catalog_local extends Catalog
         global $dic;
 
         return $dic->get(MetadataManagerInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }
