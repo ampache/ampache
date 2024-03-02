@@ -72,8 +72,9 @@ final class ExportAction implements ApplicationActionInterface
         // instead of waiting until contents are generated, which could take a long time.
         ob_implicit_flush();
 
-        $requestData = $request->getParsedBody();
-        $catalogId   = (int) ($requestData['export_catalog'] ?? 0);
+        $requestData  = $request->getParsedBody();
+        $catalogId    = (int) ($requestData['export_catalog'] ?? 0);
+        $exportFormat = CatalogExportTypeEnum::tryFrom($requestData['export_format'] ?? '') ?? CatalogExportTypeEnum::CSV;
 
         try {
             $catalog = $this->catalogLoader->getById($catalogId);
@@ -81,7 +82,7 @@ final class ExportAction implements ApplicationActionInterface
             $catalog = null;
         }
 
-        $exporter = $this->catalogExportFactory->createFromExportType($requestData['export_format'] ?? CatalogExportTypeEnum::CSV);
+        $exporter = $this->catalogExportFactory->createFromExportType($exportFormat);
         $exporter->sendHeaders();
         $exporter->export($catalog);
 

@@ -98,8 +98,8 @@ class ShowActionTest extends MockeryTestCase
                 [
                     'catalogs' => $catalogs,
                     'exportTypes' => [
-                        CatalogExportTypeEnum::CSV => 'CSV',
-                        CatalogExportTypeEnum::ITUNES => 'iTunes',
+                        CatalogExportTypeEnum::CSV->value => 'CSV',
+                        CatalogExportTypeEnum::ITUNES->value => 'iTunes',
                     ]
                 ]
             )

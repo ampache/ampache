@@ -86,7 +86,7 @@ if (Access::check('interface', 25)) { ?>
     <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
     <?php } ?>
 <td class="cel_pubdate optional"><?php echo $libitem->getPubDate()->format(DATE_ATOM); ?></td>
-<td class="cel_state optional"><?php echo $libitem->getStateDescription(); ?></td>
+<td class="cel_state optional"><?php echo $libitem->getState()->toDescription(); ?></td>
 <?php
 if ($show_ratings) { ?>
         <td class="cel_ratings">

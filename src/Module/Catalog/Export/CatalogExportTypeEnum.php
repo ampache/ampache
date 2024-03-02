@@ -27,12 +27,10 @@ namespace Ampache\Module\Catalog\Export;
 
 /**
  * Defines the available catalog export-types
- *
- * @todo convert to php8 enum when available
  */
-final class CatalogExportTypeEnum
+enum CatalogExportTypeEnum: string
 {
-    public const ITUNES = 'itunes';
+    case ITUNES = 'itunes';
 
-    public const CSV = 'csv';
+    case CSV = 'csv';
 }
