@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Traversable;
@@ -38,11 +39,11 @@ interface PodcastEpisodeRepositoryInterface
     /**
      * Returns all episode-ids for the given podcast
      *
-     * @param string $stateFilter Return only items with this state
+     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
      *
      * @return list<int>
      */
-    public function getEpisodes(Podcast $podcast, string $stateFilter = ''): array;
+    public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array;
 
     /**
      * Deletes a podcast-episode

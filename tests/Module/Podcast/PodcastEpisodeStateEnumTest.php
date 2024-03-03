@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -20,12 +20,32 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Podcast;
 
-enum UpdateInfoEnum: string
+use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
+class PodcastEpisodeStateEnumTest extends TestCase
 {
-    case DB_VERSION = 'db_version';
-    case CRON_DATE  = 'cron_date';
+    #[DataProvider(methodName: 'descriptionDataProvider')]
+    public function testToDescriptionReturnsLabel(PodcastEpisodeStateEnum $state, string $label): void
+    {
+        static::assertSame(
+            $label,
+            $state->toDescription()
+        );
+    }
+
+    public static function descriptionDataProvider(): Generator
+    {
+        yield [PodcastEpisodeStateEnum::SKIPPED, 'skipped'];
+
+        yield [PodcastEpisodeStateEnum::PENDING, 'pending'];
+
+        yield [PodcastEpisodeStateEnum::COMPLETED, 'completed'];
+    }
 }
