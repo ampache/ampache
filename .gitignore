@@ -33,7 +33,6 @@ public/ample
 storage/
 tmp/
 vendor/
-composer.lock
 composer.phar
 cs_fixer_tmp_*
 error_log

@@ -135,6 +135,7 @@ final class ConfigurationKeyEnum
     public const NOW_PLAYING_CSS_FILE                  = 'now_playing_css_file';
     public const NOW_PLAYING_PER_USER                  = 'now_playing_per_user';
     public const NOW_PLAYING_REFRESH_LIMIT             = 'now_playing_refresh_limit';
+    public const NPM_BINARY_PATH                       = 'npm_binary_path';
     public const OFFSET_LIMIT                          = 'offset_limit';
     public const OF_THE_MOMENT                         = 'of_the_moment';
     public const PERPETUAL_API_SESSION                 = 'perpetual_api_session';

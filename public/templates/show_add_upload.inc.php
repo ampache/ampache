@@ -49,7 +49,7 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
         <div class="treecontent default" style="text-align:center;"><?php echo T_('Target folder'); ?></div>
     </div>
 </div>
-<script src="<?php echo $web_path; ?>/lib/components/jstree/dist/jstree.min.js"></script>
+<script src="<?php echo $web_path; ?>/lib/components/jstree/jstree.min.js"></script>
 <script>
 $(window).resize(function () {
     var h = Math.max($(window).height() - 0, 420);
