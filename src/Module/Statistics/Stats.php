@@ -27,6 +27,8 @@ namespace Ampache\Module\Statistics;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -904,7 +906,7 @@ class Stats
         $personal_info_time   = 92;
         $personal_info_agent  = 93;
         $limit                = AmpConfig::get('popular_threshold', 10);
-        $access100            = Access::check('interface', 100);
+        $access100            = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         $object_string        = (empty($object_type))
             ? "'song', 'live_stream', 'podcast_episode', 'video'"
             : "'$object_type'";

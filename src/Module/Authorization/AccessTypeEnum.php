@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,14 +23,25 @@
  *
  */
 
-namespace Ampache\Module\Authorization\Check;
+namespace Ampache\Module\Authorization;
 
-use Ampache\Module\Authorization\AccessFunctionEnum;
-
-interface FunctionCheckerInterface
+/**
+ * Contains all known access types
+ */
+enum AccessTypeEnum: string
 {
-    /**
-     * This checks if specific functionality is enabled.
-     */
-    public function check(AccessFunctionEnum $function): bool;
+    case LOCALPLAY = 'localplay';
+    case NETWORK   = 'network';
+    case STREAM    = 'stream';
+    case API       = 'rpc';
+    case INTERFACE = 'interface';
+    case ALL       = 'all';
+
+    /** @var list<AccessTypeEnum> */
+    public const CONFIGURABLE_TYPE_LIST = [
+        AccessTypeEnum::API,
+        AccessTypeEnum::INTERFACE,
+        AccessTypeEnum::NETWORK,
+        AccessTypeEnum::STREAM,
+    ];
 }

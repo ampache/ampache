@@ -29,6 +29,7 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -103,7 +104,7 @@ final class Handshake5Method
         $networkAccessChecker = $dic->get(NetworkCheckerInterface::class);
 
         if (
-            $user_id > 0 && $networkAccessChecker->check(AccessLevelEnum::TYPE_API, $user_id, AccessLevelEnum::LEVEL_GUEST)
+            $user_id > 0 && $networkAccessChecker->check(AccessTypeEnum::API, $user_id, AccessLevelEnum::GUEST)
         ) {
             // Authentication with user/password, we still need to check the password
             if ($username) {

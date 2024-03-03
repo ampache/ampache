@@ -1,6 +1,9 @@
 <?php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\WebPlayer;
@@ -8,18 +11,18 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 
+// TODO remove me
+global $dic;
+$environment = $dic->get(EnvironmentInterface::class);
+
 /** @var bool $isVideo  */
 /** @var bool $isRadio */
 /** @var bool $isDemocratic */
 /** @var bool $isRandom */
 /** @var bool $isShare */
 /** @var bool $iframed */
-/** @var bool $embed */
-/** @var Ampache\Module\Playback\Stream_Playlist $playlist */
-
-// TODO remove me
-global $dic;
-$environment   = $dic->get(EnvironmentInterface::class);
+/** @var bool|null $embed */
+/** @var Stream_Playlist $playlist */
 $web_path      = (string)AmpConfig::get('web_path', '');
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 7, path: '/', secure: true, samesite: 'Strict'"
@@ -237,12 +240,12 @@ echo implode(',', $solutions); ?>",
                             echo "var lyricsobj = (typeof actiontype !== 'undefined' && currenttype === 'song') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/' + currenttype + '.php?action=show_lyrics&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\">" . addslashes(T_('Show Lyrics')) . "</a>' : '';";
                             echo "var actionsobj = (currentjpitem.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/albums.php?action=show&album=' + currentjpitem.attr('data-album_id') + '\');\" title=\"" . $showalbum . "\">" . Ui::get_icon('album', $showalbum) . "</a> |' : '';";
                             echo "actionsobj += (currentjpitem.attr('data-albumdisk_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/albums.php?action=show_disk&album_disk=' + currentjpitem.attr('data-albumdisk_id') + '\');\" title=\"" . $showalbum . "\">" . Ui::get_icon('album', $showalbum) . "</a> |' : '';";
-                            if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface', 25))) {
+                            if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER))) {
                                 echo "actionsobj += (typeof actiontype !== 'undefined') ? ' <a href=\"javascript:NavigateTo(\'" . $web_path . "/shout.php?action=show_add_shout&type=' + currenttype + '&id=' + currentjpitem.attr('data-media_id') + '\');\">" . Ui::get_icon('comment', addslashes(T_('Post Shout'))) . "</a> |' : '';";
                             }
                             echo "actionsobj += '<div id=\'action_buttons\'></div>';";
                             if (AmpConfig::get('waveform')) {
-                                $shoutLink = AmpConfig::get('sociable') && Access::check('interface', 25);
+                                $shoutLink = AmpConfig::get('sociable') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
                                 echo "var waveformobj = '';";
                                 if ($shoutLink) {
                                     echo "waveformobj += '<a href=\"#\" title=\"" . addslashes(T_('Double click to post a new shout')) . "\" onClick=\"javascript:WaveformClick(' + currentjpitem.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
@@ -492,7 +495,7 @@ if (!$isVideo) {
             </div>
             <?php if (!$isShare && !$environment->isMobile()) { ?>
                 <div class="player_actions">
-                    <?php if (AmpConfig::get('broadcast') && Access::check('interface', 25)) { ?>
+                    <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                         <div id="broadcast" class="broadcast action_button">
                             <?php if (AmpConfig::get('broadcast_by_default')) {
                                 $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);
@@ -512,7 +515,7 @@ if (!$isVideo) {
                         </div>
                     <?php } ?>
                     <?php if ($iframed && (!$isRadio && !$isRandom && !$isDemocratic)) { ?>
-                        <?php if (Access::check('interface', 25)) { ?>
+                        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                             <div class="action_button">
                                 <a href="javascript:SaveToExistingPlaylist(event);">
                                     <?php echo Ui::get_icon('playlist_add_all', addslashes(T_('Add All to playlist'))); ?>

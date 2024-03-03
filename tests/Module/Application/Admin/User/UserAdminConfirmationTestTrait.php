@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -17,7 +18,7 @@ trait UserAdminConfirmationTestTrait
 
         $gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         $request->expects(static::once())
@@ -51,7 +52,7 @@ trait UserAdminConfirmationTestTrait
 
         $gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         $request->expects(static::once())

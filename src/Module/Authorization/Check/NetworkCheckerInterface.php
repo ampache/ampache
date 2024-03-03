@@ -24,6 +24,7 @@
 namespace Ampache\Module\Authorization\Check;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 
 interface NetworkCheckerInterface
 {
@@ -32,8 +33,8 @@ interface NetworkCheckerInterface
      * are allowed. The IP is passed as a dotted quad.
      */
     public function check(
-        string $type,
+        AccessTypeEnum $type,
         ?int $user = null,
-        int $level = AccessLevelEnum::LEVEL_USER
+        AccessLevelEnum $level = AccessLevelEnum::USER
     ): bool;
 }

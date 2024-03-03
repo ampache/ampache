@@ -27,8 +27,8 @@ namespace Ampache\Module\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\Ui;
@@ -81,7 +81,7 @@ final class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
                 );
             } else {
                 if (
-                    $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD) &&
+                    $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
                     $this->zipHandler->isZipable($object_type)
                 ) {
                     $dllink = sprintf(

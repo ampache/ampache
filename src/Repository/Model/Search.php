@@ -27,6 +27,8 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playlist\Search\AlbumDiskSearch;
 use Ampache\Module\Playlist\Search\AlbumSearch;
 use Ampache\Module\Playlist\Search\ArtistSearch;
@@ -1123,7 +1125,7 @@ class Search extends playlist_object
         if (parent::is_cached($key, $user_id)) {
             return parent::get_from_cache($key, $user_id);
         }
-        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+        $is_admin = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1);
         $sql      = "SELECT `id`, `name` FROM `search` ";
         $params   = array();
 
@@ -1160,7 +1162,7 @@ class Search extends playlist_object
         if (parent::is_cached($key, $user_id)) {
             return parent::get_from_cache($key, $user_id);
         }
-        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+        $is_admin = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1);
         $sql      = "SELECT `id`, IF(`user` = ?, `name`, CONCAT(`name`, ' (', `username`, ')')) AS `name` FROM `search` ";
         $params   = array($user_id);
 

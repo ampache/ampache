@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -75,7 +76,7 @@ class ShowAddMessageActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnFalse();
 
@@ -91,7 +92,7 @@ class ShowAddMessageActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -109,7 +110,7 @@ class ShowAddMessageActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -149,7 +150,7 @@ class ShowAddMessageActionTest extends MockeryTestCase
         $replyToMessageId = 666;
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -201,7 +202,7 @@ class ShowAddMessageActionTest extends MockeryTestCase
         $senderUserName   = 'some-sender-username';
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
         $gatekeeper->shouldReceive('getUserId')

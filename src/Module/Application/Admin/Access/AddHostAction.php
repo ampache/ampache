@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessListManagerInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Exception\AclItemDuplicationException;
 use Ampache\Module\Authorization\Exception\InvalidEndIpException;
 use Ampache\Module\Authorization\Exception\InvalidIpRangeException;
@@ -76,7 +77,7 @@ final class AddHostAction implements ApplicationActionInterface
     {
         // Make sure we've got a valid form submission
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
             !$this->requestParser->verifyForm('add_acl')
         ) {
             throw new AccessDeniedException();
@@ -94,9 +95,9 @@ final class AddHostAction implements ApplicationActionInterface
                 $endIp,
                 $data['name'] ?? '',
                 (int)($data['user'] ?? -1),
-                (int)($data['level'] ?? 0),
-                $data['type'] ?? '',
-                $data['addtype'] ?? ''
+                AccessLevelEnum::from((int)($data['level'] ?? 0)),
+                AccessTypeEnum::from($data['type'] ?? 'stream'),
+                AccessTypeEnum::from($data['addtype'] ?? 'stream')
             );
         } catch (InvalidIpRangeException $e) {
             AmpError::add('start', T_('IP Address version mismatch'));

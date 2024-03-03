@@ -27,7 +27,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
@@ -63,7 +63,7 @@ final class DefaultAction implements ApplicationActionInterface
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_UPLOAD) === false ||
             $access_level == 0 ||
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, $access_level) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, $access_level) === false
         ) {
             throw new AccessDeniedException();
         }

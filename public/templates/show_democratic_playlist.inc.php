@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Authorization\Access;
@@ -34,12 +36,12 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var list<array{object_type: string, object_id: int, id: int}> $object_ids */
 
 $democratic = Democratic::get_current_playlist();
 $web_path   = (string)AmpConfig::get('web_path', '');
 $use_search = AmpConfig::get('demo_use_search');
-$access100  = Access::check('interface', 100);
+$access100  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum  = AmpConfig::get('album_group');
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');

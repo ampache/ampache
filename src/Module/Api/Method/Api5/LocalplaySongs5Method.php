@@ -29,6 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Repository\Model\User;
 
@@ -48,8 +50,8 @@ final class LocalplaySongs5Method
     public static function localplay_songs(array $input, User $user): bool
     {
         // localplay is actually meant to be behind permissions
-        $level = AmpConfig::get('localplay_level', 100);
-        if (!Api5::check_access('localplay', $level, $user->id, self::ACTION, $input['api_format'])) {
+        $level = AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value));
+        if (!Api5::check_access(AccessTypeEnum::LOCALPLAY, $level, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         // Load their Localplay instance

@@ -24,6 +24,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\TVShow_Season;
@@ -1173,7 +1174,7 @@ function T_(string $msgid): string
 /**
  * @param string $original
  * @param string $plural
- * @param int|string $value
+ * @param int|string|float $value
  * @return string
  */
 function nT_($original, $plural, $value): string
@@ -1285,7 +1286,7 @@ function canEditArtist(
     global $dic;
 
     return $dic->get(PrivilegeCheckerInterface::class)->check(
-        AccessLevelEnum::TYPE_INTERFACE,
-        AccessLevelEnum::LEVEL_CONTENT_MANAGER
+        AccessTypeEnum::INTERFACE,
+        AccessLevelEnum::CONTENT_MANAGER
     );
 }

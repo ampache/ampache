@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Horde_Browser;
@@ -427,7 +428,7 @@ final class InstallationHelper implements InstallationHelperInterface
             return false;
         }
 
-        $user_id = User::create($username, 'Administrator', '', '', $password, 100);
+        $user_id = User::create($username, 'Administrator', '', '', $password, AccessLevelEnum::ADMIN);
         if ($user_id < 1) {
             /* HINT: Database error message */
             AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));

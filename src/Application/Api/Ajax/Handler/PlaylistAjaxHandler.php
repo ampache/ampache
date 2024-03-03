@@ -27,6 +27,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
@@ -80,7 +82,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
             case 'append_item':
                 // Only song item are supported with playlists
                 if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
-                    if (!Access::check('interface', 25)) {
+                    if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
                         debug_event('playlist.ajax', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', 1);
                         break;
                     }

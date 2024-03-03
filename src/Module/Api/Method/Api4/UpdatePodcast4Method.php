@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -51,7 +53,7 @@ final class UpdatePodcast4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        if (!Api4::check_access('interface', 50, $user->id, 'update_podcast', $input['api_format'])) {
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
         $object_id = (int) $input['filter'];

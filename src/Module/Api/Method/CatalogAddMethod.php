@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -61,7 +63,7 @@ final class CatalogAddMethod
         if (!Api::check_parameter($input, array('name', 'path'), self::ACTION)) {
             return false;
         }
-        if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $path           = $input['path'];

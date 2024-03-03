@@ -24,6 +24,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -32,7 +33,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Search $playlist */
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
 
 ob_start();
 echo $playlist->get_fullname();
@@ -49,7 +50,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
     <ul>
 <?php global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
-if (Access::check_function('batch_download') && $zipHandler->isZipable('search')) { ?>
+if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('search')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>

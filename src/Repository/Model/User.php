@@ -412,15 +412,14 @@ class User extends database_object
      * has_access
      * this function checks to see if this user has access
      * to the passed action (pass a level requirement)
-     * @param int $needed_level
      */
-    public function has_access($needed_level): bool
+    public function has_access(AccessLevelEnum $needed_level): bool
     {
         if (AmpConfig::get('demo_mode')) {
             return true;
         }
 
-        if ($this->access >= $needed_level) {
+        if ($this->access >= $needed_level->value) {
             return true;
         }
 
@@ -856,7 +855,6 @@ class User extends database_object
      * @param string $email
      * @param string $website
      * @param string $password
-     * @param int $access
      * @param string $state
      * @param string $city
      * @param bool $disabled
@@ -869,7 +867,7 @@ class User extends database_object
         $email,
         $website,
         $password,
-        $access,
+        AccessLevelEnum $access,
         $catalog_filter_group = 0,
         $state = '',
         $city = '',
@@ -891,7 +889,7 @@ class User extends database_object
 
         /* Now Insert this new user */
         $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `catalog_filter_group`, `create_date`";
-        $params = array($username, $disabled, $fullname, $email, $password, $access, $catalog_filter_group, time());
+        $params = array($username, $disabled, $fullname, $email, $password, $access->value, $catalog_filter_group, time());
 
         if (!empty($website)) {
             $sql .= ", `website`";
@@ -1033,51 +1031,6 @@ class User extends database_object
     }
 
     /**
-     * access_name_to_level
-     * This takes the access name for the user and returns the level
-     * @param string $name
-     */
-    public static function access_name_to_level($name): int
-    {
-        // FIXME why is manager not here? (AccessLevelEnum::LEVEL_CONTENT_MANAGER;)
-        switch ($name) {
-            case 'admin':
-                return AccessLevelEnum::LEVEL_ADMIN;
-            case 'user':
-                return AccessLevelEnum::LEVEL_USER;
-            case 'manager':
-                return AccessLevelEnum::LEVEL_MANAGER;
-            case 'guest':
-                return AccessLevelEnum::LEVEL_GUEST;
-            default:
-                return AccessLevelEnum::LEVEL_DEFAULT;
-        }
-    }
-
-    /**
-     * access_level_to_name
-     * This takes the access level for the user and returns the translated name for that level
-     * @param string $level
-     */
-    public static function access_level_to_name($level): string
-    {
-        switch ($level) {
-            case '100':
-                return T_('Admin');
-            case '75':
-                return T_('Catalog Manager');
-            case '50':
-                return T_('Content Manager');
-            case '25':
-                return T_('User');
-            case '5':
-                return T_('Guest');
-            default:
-                return T_('Unknown');
-        }
-    }
-
-    /**
      * fix_preferences
      * This is the new fix_preferences function, it does the following
      * Remove Duplicates from user, add in missing
@@ -1169,7 +1122,7 @@ class User extends database_object
     public function delete(): bool
     {
         // Before we do anything make sure that they aren't the last admin
-        if ($this->has_access(100)) {
+        if ($this->has_access(AccessLevelEnum::ADMIN)) {
             $sql        = "SELECT `id` FROM `user` WHERE `access`='100' AND id != ?";
             $db_results = Dba::read($sql, array($this->id));
             if (!Dba::num_rows($db_results)) {

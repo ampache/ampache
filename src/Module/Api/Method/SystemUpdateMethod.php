@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Update;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -51,7 +53,7 @@ final class SystemUpdateMethod
     public static function system_update(array $input, User $user): bool
     {
         $updated = false;
-        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (AutoUpdate::is_update_available(true)) {

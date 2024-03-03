@@ -24,6 +24,7 @@ declare(strict_types=0);
  */
 
 // Try to guess the web path
+use Ampache\Module\Application\Installation\DefaultAction;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 
@@ -31,6 +32,10 @@ use Ampache\Module\System\Core;
 /** @var string $configfile */
 /** @var string $htaccess_play_file */
 /** @var string $htaccess_rest_file */
+/** @var string $web_path_guess */
+/** @var string $htmllang */
+/** @var string $charset */
+/** @var DefaultAction $this */
 
 $web_path_guess = $_REQUEST['web_path'] ?? '';
 if (empty($web_path_guess)) {

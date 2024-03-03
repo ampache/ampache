@@ -27,6 +27,7 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Query;
 use Ampache\Repository\Model\User;
@@ -103,7 +104,7 @@ final class Session implements SessionInterface
             $auth['fullname']     = "Ampache User";
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
-            $auth['access']       = $defaultAuthLevel ? User::access_name_to_level($defaultAuthLevel) : '5';
+            $auth['access']       = $defaultAuthLevel ? AccessLevelEnum::fromTextual($defaultAuthLevel)->value : AccessLevelEnum::GUEST->value;
             if (!array_key_exists($sessionName, $_COOKIE) || (!self::exists('interface', $_COOKIE[$sessionName]))) {
                 self::create_cookie();
                 self::create($auth);

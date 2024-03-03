@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
@@ -378,7 +379,7 @@ final class Play2Action implements ApplicationActionInterface
 
             // If require_session is set then we need to make sure we're legit
             if (!$user_auth && $use_auth && AmpConfig::get('require_session')) {
-                if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
+                if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')->id, AccessLevelEnum::GUEST)) {
                     $this->logger->notice(
                         'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -450,8 +451,8 @@ final class Play2Action implements ApplicationActionInterface
         // If they are using access lists let's make sure that they have enough access to play this mojo
         if (AmpConfig::get('access_control')) {
             if (
-                !$this->networkChecker->check(AccessLevelEnum::TYPE_STREAM, Core::get_global('user')->id) &&
-                !$this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id)
+                !$this->networkChecker->check(AccessTypeEnum::STREAM, Core::get_global('user')->id) &&
+                !$this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')->id)
             ) {
                 throw new AccessDeniedException(
                     sprintf('Streaming Access Denied: %s does not have stream level access', Core::get_user_ip())

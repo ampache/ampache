@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,14 +23,13 @@
  *
  */
 
-namespace Ampache\Module\Authorization\Check;
+namespace Ampache\Module\Authorization;
 
-use Ampache\Module\Authorization\AccessFunctionEnum;
-
-interface FunctionCheckerInterface
+/**
+ * Contains all known access function types
+ */
+enum AccessFunctionEnum: string
 {
-    /**
-     * This checks if specific functionality is enabled.
-     */
-    public function check(AccessFunctionEnum $function): bool;
+    case FUNCTION_DOWNLOAD       = 'download';
+    case FUNCTION_BATCH_DOWNLOAD = 'batch_download';
 }

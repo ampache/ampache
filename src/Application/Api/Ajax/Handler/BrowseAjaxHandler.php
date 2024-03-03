@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
@@ -166,7 +167,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         $key = 'smartplaylist_row_' . $playlist->id;
                         break;
                     case 'live_stream':
-                        if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
+                        if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) {
                             return;
                         }
                         $liveStreamId = (int) Core::get_request('id');

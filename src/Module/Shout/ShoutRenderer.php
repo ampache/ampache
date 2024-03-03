@@ -28,6 +28,7 @@ namespace Ampache\Module\Shout;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
@@ -106,7 +107,7 @@ final class ShoutRenderer implements ShoutRendererInterface
                     'add_' . $shoutObjectType . '_' . $shoutObjectId
                 );
             }
-            if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)) {
+            if ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
                 $html .= "<a href=\"" . $webPath . "/shout.php?action=show_add_shout&type=" . $shoutObjectType . "&id=" . $shoutObjectId . "\">" . Ui::get_icon('comment', T_('Post Shout')) . "</a>";
             }
             $html .= "</div>";

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -68,7 +69,7 @@ class ShowActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnFalse();
 
@@ -86,7 +87,7 @@ class ShowActionTest extends MockeryTestCase
 
         $gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(true);
 
         $this->ui->expects(static::once())

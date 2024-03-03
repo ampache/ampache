@@ -27,6 +27,7 @@ namespace Ampache\Module\Authorization\Check;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
@@ -52,8 +53,11 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
      *
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is used if no userid is provided
      */
-    public function check(string $type, int $level, ?int $userId = null): bool
-    {
+    public function check(
+        AccessTypeEnum $type,
+        AccessLevelEnum $level,
+        ?int $userId = null
+    ): bool {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return true;
         }
@@ -77,13 +81,13 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
 
         // Switch on the type
         switch ($type) {
-            case AccessLevelEnum::TYPE_LOCALPLAY:
+            case AccessTypeEnum::LOCALPLAY:
                 // Check their localplay_level
-                return $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level ||
-                    $user->access >= AccessLevelEnum::LEVEL_ADMIN;
-            case AccessLevelEnum::TYPE_INTERFACE:
+                return $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level->value ||
+                    $user->access >= AccessLevelEnum::ADMIN->value;
+            case AccessTypeEnum::INTERFACE:
                 // Check their standard user level
-                return ($user->access >= $level);
+                return ($user->access >= $level->value);
             default:
                 return false;
         }

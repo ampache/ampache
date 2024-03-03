@@ -27,13 +27,15 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
 /** @var User $client */
 $web_path       = (string)AmpConfig::get('web_path', '');
-$access100      = Access::check('interface', 100);
+$access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>
     <table class="tabledata">
@@ -99,7 +101,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         <tr>
             <td>
                 <?php echo T_('Stream Token'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
+                <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
                     <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new Stream token')); ?></a>
                 <?php } ?>
             </td>

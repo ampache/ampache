@@ -28,13 +28,13 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -100,8 +100,8 @@ final class ExternalShareAction implements ApplicationActionInterface
         $type           = $this->requestParser->getFromRequest('type');
         $share_id       = $this->requestParser->getFromRequest('id');
         $secret         = $this->passwordGenerator->generate_token();
-        $allow_download = ($type == 'song' && $this->functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD)) ||
-            $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD);
+        $allow_download = ($type == 'song' && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD)) ||
+            $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 
         $share_id = $this->shareCreator->create(
             $user,

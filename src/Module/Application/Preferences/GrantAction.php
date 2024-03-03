@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -62,7 +63,7 @@ final class GrantAction implements ApplicationActionInterface
 
         // Make sure we're a user and they came from the form
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false &&
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false &&
             !isset($user->id)
         ) {
             throw new AccessDeniedException();

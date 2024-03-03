@@ -126,15 +126,14 @@ class Access
      * check_function
      *
      * This checks if specific functionality is enabled.
-     * @param string $type     *
      * @deprecated See FunctionChecker::check
      */
-    public static function check_function($type): bool
+    public static function check_function(AccessFunctionEnum $type): bool
     {
         global $dic;
 
         return $dic->get(FunctionCheckerInterface::class)->check(
-            (string) $type
+            $type
         );
     }
 
@@ -146,18 +145,16 @@ class Access
      *
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
-     * @param string $type
-     * @param int $level
      * @param int|null $user_id
      * @deprecated See PrivilegeChecker::check
      */
-    public static function check($type, $level, $user_id = null): bool
+    public static function check(AccessTypeEnum $type, AccessLevelEnum $level, $user_id = null): bool
     {
         global $dic;
 
         return $dic->get(PrivilegeCheckerInterface::class)->check(
-            (string) $type,
-            (int) $level,
+            $type,
+            $level,
             $user_id
         );
     }

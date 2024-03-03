@@ -1,3 +1,6 @@
+<?php
+/** @var string $web_path */
+?>
         </div>
     <!-- /container -->
     <!-- Bootstrap core JavaScript

@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -279,7 +281,7 @@ class Preference extends database_object
      */
     public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false): bool
     {
-        $access100 = Access::check('interface', 100);
+        $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         // First prepare
         if (!is_numeric($preference)) {
             $pref_id = self::id_from_name($preference);
@@ -401,7 +403,7 @@ class Preference extends database_object
         $db_results = Dba::read($sql, array($preference));
         $data       = Dba::fetch_assoc($db_results);
 
-        if (Access::check('interface', $data['level'])) {
+        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::from((int) $data['level']))) {
             return true;
         }
 

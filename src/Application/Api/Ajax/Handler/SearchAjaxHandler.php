@@ -28,6 +28,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -306,7 +308,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'search_random':
-                if (!Access::check('interface', 75)) {
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                     echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
                     return;

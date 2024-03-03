@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutCreatorInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
@@ -75,7 +76,7 @@ final class AddShoutAction implements ApplicationActionInterface
 
         // Must be at least a user to do this
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
             !$this->requestParser->verifyForm('add_shout') ||
             $user === null
         ) {

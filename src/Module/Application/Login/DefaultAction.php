@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Login;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
@@ -122,7 +123,7 @@ final class DefaultAction implements ApplicationActionInterface
          * page if they aren't in the ACL
          */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
-            if (!$this->networkChecker->check(AccessLevelEnum::TYPE_INTERFACE, null, AccessLevelEnum::LEVEL_GUEST)) {
+            if (!$this->networkChecker->check(AccessTypeEnum::INTERFACE, null, AccessLevelEnum::GUEST)) {
                 throw new AccessDeniedException(
                     sprintf(
                         'Access denied: %s is not in the Interface Access list',
@@ -235,7 +236,7 @@ final class DefaultAction implements ApplicationActionInterface
                 }
             } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && !$user instanceof User) {
                 // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
-                $access   = User::access_name_to_level($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
+                $access   = AccessLevelEnum::fromTextual($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
                 $fullname = array_key_exists('name', $auth) ? $auth['name'] : '';
                 $email    = array_key_exists('email', $auth) ? $auth['email'] : '';
                 $website  = array_key_exists('website', $auth) ? $auth['website'] : '';
@@ -330,7 +331,7 @@ final class DefaultAction implements ApplicationActionInterface
             // If an admin, check for update
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&
-                $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ) {
                 // admins need to know if an update is available
                 AutoUpdate::is_update_available();

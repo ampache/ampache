@@ -29,7 +29,7 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-/** @var array $playlists */
+/** @var list<int> $playlists */
 
 Ui::show_box_top(T_('Manage')); ?>
 <table class="tabledata striped-rows">

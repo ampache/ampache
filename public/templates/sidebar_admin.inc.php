@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -57,7 +59,7 @@ use Ampache\Module\Util\Ui;
       <?php } ?>
     </ul>
   </li>
-  <?php if (Access::check('interface', 100)) { ?>
+  <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
   <li>
       <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('User Tools'); ?></span>

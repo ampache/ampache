@@ -27,6 +27,8 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -45,7 +47,10 @@ class Upload
         ob_start();
         define('CLI', true);
 
-        $can_upload = Access::check('interface', AmpConfig::get('upload_access_level', 25));
+        $can_upload = Access::check(
+            AccessTypeEnum::INTERFACE,
+            AccessLevelEnum::from((int) AmpConfig::get('upload_access_level', AccessLevelEnum::USER->value))
+        );
         $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
         if ($catalog !== null) {
