@@ -874,7 +874,7 @@ class Json5_Data
                 "author_full" => $episode->getAuthor(),
                 "website" => $episode->getWebsite(),
                 "pubdate" => $episode->getPubDate()->format(DATE_ATOM),
-                "state" => $episode->getStateDescription(),
+                "state" => $episode->getState()->toDescription(),
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),

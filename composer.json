@@ -1,7 +1,7 @@
 {
     "name": "ampache/ampache",
     "description": "A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.",
-    "homepage": "http://ampache.org",
+    "homepage": "https://ampache.org",
     "keywords": ["php", "music", "video", "player", "stream"],
     "type": "project",
     "license": "AGPL-3.0",
@@ -52,38 +52,27 @@
         "ext-simplexml": "*",
         "ext-xml": "*",
         "adhocore/cli": "^1.6",
-        "aehlke/tag-it": "2.*",
         "ampache/ampacheapi-php": "dev-master",
-        "aterrien/jquery-knob": "1.2.*",
-        "blueimp/jquery-file-upload": "v10.2.0",
         "cboden/ratchet": "0.4.*",
         "clue/multicast-react": "^1.1.0",
-        "components/bootstrap": "3.*",
-        "components/jquery": "3.5.*",
-        "components/jqueryui": "1.*",
         "doctrine/cache": "^2",
         "evenement/evenement": "^3",
         "gettext/gettext": "^5",
         "gettext/translator": "^1.2",
         "james-heinrich/getid3": "dev-master",
-        "jeromeetienne/jquery-qrcode": "dev-master",
-        "js-cookie/js-cookie": "2.*",
         "jwilsson/spotify-web-api-php": "^5",
         "krixon/xbmc-php-rpc": "dev-master",
-        "kumailht/responsive-elements": "dev-master",
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
-        "maennchen/zipstream-php": "0.4.*",
+        "maennchen/zipstream-php": "^3.1",
         "mikealmond/musicbrainz": "dev-master",
         "moinax/tvdb": "1.*",
-        "narrowspark/http-emitter": "^1.0 || ^2.0",
         "nyholm/psr7": "^1.3",
         "nyholm/psr7-server": "^1.0",
         "oomphinc/composer-installers-extender": "^2.0",
         "openid/php-openid": "^3",
         "php-curl-class/php-curl-class": "^9.18",
         "php-di/php-di": "^7.0",
-        "phpmailer/phpmailer": "6.5.*",
-        "pklauzinski/jscroll": "2.*",
+        "phpmailer/phpmailer": "^6",
         "psr/log": "^3",
         "psr/simple-cache": "^3",
         "rmccue/requests": "^2.0",
@@ -92,14 +81,12 @@
         "sabre/dav": "^4",
         "scn/phptal": "^4",
         "shrikeh/teapot": "^2.3",
-        "swisnl/jquery-contextmenu": "2.1.*",
+        "slim/slim": "^4.12",
         "symfony/event-dispatcher": "^5.4.22",
         "symfony/http-foundation": "^3.0",
         "symfony/process": "^5.4.22",
         "symfony/routing": "^3.0",
-        "tightenco/collect": "5.2.*",
-        "vakata/jstree": "3.*",
-        "xdan/datetimepicker": "2.*"
+        "tightenco/collect": "5.2.*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.49",
@@ -108,7 +95,7 @@
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-mockery": "^1.1",
-        "phpunit/phpunit": "^10",
+        "phpunit/phpunit": "^11",
         "rector/rector": "^1",
         "seec/phpunit-consecutive-params": "^1.1",
         "szymach/c-pchart": "^3.0"
@@ -129,246 +116,9 @@
                     "classmap": ["."]
                 }
             }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "jeromeetienne/jquery-qrcode",
-                "type": "component",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/jeromeetienne/jquery-qrcode.git",
-                    "type": "git",
-                    "reference": "master"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "src/jquery.qrcode.js",
-                            "src/qrcode.js"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "js-cookie/js-cookie",
-                "type": "component",
-                "version": "2.2.1",
-                "source": {
-                    "url": "https://github.com/js-cookie/js-cookie.git",
-                    "type": "git",
-                    "reference": "v2.2.1"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "src/js.cookie.js"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "aehlke/tag-it",
-                "type": "component",
-                "version": "2.0",
-                "source": {
-                    "url": "https://github.com/aehlke/tag-it.git",
-                    "type": "git",
-                    "reference": "v2.0"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "js/tag-it.js"
-                        ],
-                        "styles": [
-                            "css/jquery.tagit.css"
-                        ],
-                        "files": [
-                            "js/tag-it.min.js"
-                        ]
-                    }
-                }
-            }
-
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "scaron/prettyphoto",
-                "type": "component",
-                "version": "3.1.6",
-                "source": {
-                    "url": "https://github.com/scaron/prettyphoto.git",
-                    "type": "git",
-                    "reference": "3.1.6"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "js/jquery.prettyPhoto.js"
-                        ],
-                        "styles": [
-                            "css/prettyPhoto.css"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "xdan/datetimepicker",
-                "type": "component",
-                "version": "2.4.5",
-                "source": {
-                    "url": "https://github.com/xdan/datetimepicker.git",
-                    "type": "git",
-                    "reference": "2.4.5"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "jquery.datetimepicker.js"
-                        ],
-                        "styles": [
-                            "jquery.datetimepicker.css"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "blueimp/jquery-file-upload",
-                "type": "component",
-                "version": "v10.2.0",
-                "source": {
-                    "url": "https://github.com/blueimp/jQuery-File-Upload.git",
-                    "type": "git",
-                    "reference": "v10.2.0"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "js/jquery.fileupload.js",
-                            "js/jquery.iframe-transport.js"
-                        ],
-                        "files": [
-                            "js/jquery.fileupload.js",
-                            "js/jquery.iframe-transport.js"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "aterrien/jquery-knob",
-                "type": "component",
-                "version": "1.2.11",
-                "source": {
-                    "url": "https://github.com/aterrien/jQuery-Knob.git",
-                    "type": "git",
-                    "reference": "1.2.11"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "js/jquery.knob.js"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "pklauzinski/jscroll",
-                "type": "component",
-                "version": "2.3.4",
-                "source": {
-                    "url": "https://github.com/pklauzinski/jscroll.git",
-                    "type": "git",
-                    "reference": "v2.3.4"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "jquery.jscroll.js"
-                        ],
-                        "files": [
-                            "jquery.jscroll.min.js"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "kumailht/responsive-elements",
-                "type": "component",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/kumailht/responsive-elements.git",
-                    "type": "git",
-                    "reference": "master"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "responsive-elements.js"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "swisnl/jquery-contextmenu",
-                "type": "component",
-                "version": "2.1.0",
-                "source": {
-                    "url": "https://github.com/swisnl/jQuery-contextMenu.git",
-                    "type": "git",
-                    "reference": "2.1.0"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "dist/jquery.contextMenu.js"
-                        ],
-                        "styles": [
-                            "dist/jquery.contextMenu.css"
-                        ],
-                        "files": [
-                            "dist/jquery.contextMenu.js",
-                            "dist/jquery.contextMenu.min.js",
-                            "dist/jquery.contextMenu.min.css"
-                        ]
-                    }
-                }
-            }
         }
     ],
-    "extra": {
-        "sort-packages": true,
-        "installer-types": ["component"],
-        "installer-paths": {
-            "lib/components/jquery-file-upload/": ["blueimp/jquery-file-upload"],
-            "lib/components/{$name}/": ["type:component"]
-        }
-    },
+
     "autoload": {
         "psr-4": {
             "Ampache\\": "src/"
@@ -384,7 +134,7 @@
         "qa": "composer run-script syntax && composer run-script cs:check && composer run-script tests && composer run-script stan",
         "stan": "resources/scripts/tests/stan.sh",
         "stan-baseline": "vendor/bin/phpstan --generate-baseline",
-        "tests": "vendor/bin/phpunit tests",
+        "tests": "vendor/bin/phpunit -c phpunit.xml",
         "syntax": "resources/scripts/tests/syntax.sh",
         "cs:fix": "vendor/bin/php-cs-fixer fix",
         "cs:check": "vendor/bin/php-cs-fixer fix --dry-run",

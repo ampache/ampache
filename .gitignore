@@ -31,7 +31,6 @@ ample
 storage/
 tmp/
 vendor/
-composer.lock
 composer.phar
 cs_fixer_tmp_*
 error_log
@@ -50,3 +49,4 @@ web.config
 *.v11.suo
 *~
 .php-cs-fixer.cache
+.phpunit.result.cache

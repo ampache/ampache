@@ -66,8 +66,8 @@ final class ShowAction implements ApplicationActionInterface
             [
                 'catalogs' => $this->catalogLoader->getCatalogs(),
                 'exportTypes' => [
-                    CatalogExportTypeEnum::CSV => T_('CSV'),
-                    CatalogExportTypeEnum::ITUNES => T_('iTunes'),
+                    CatalogExportTypeEnum::CSV->value => T_('CSV'),
+                    CatalogExportTypeEnum::ITUNES->value => T_('iTunes'),
                 ],
             ]
         );
