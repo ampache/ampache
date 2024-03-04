@@ -368,16 +368,22 @@ class AutoUpdate
         ConfigContainerInterface $config,
         bool $api = false
     ): void {
-        $cmd = sprintf(
+        $cmdComposer = sprintf(
             '%s install --no-dev --prefer-source --no-interaction',
             $config->getComposerBinaryPath()
         );
+        $cmdNpm = sprintf(
+            '%s install',
+            $config->getNpmBinaryPath()
+        );
         if (!$api) {
-            echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
+            echo T_('Updating dependencies with `' . $cmdComposer . '` ...') . '<br />';
+            echo T_('Updating dependencies with `' . $cmdNpm . '` ...') . '<br />';
         }
         ob_flush();
         chdir(__DIR__ . '/../../../');
-        exec($cmd);
+        exec($cmdComposer);
+        exec($cmdNpm);
         if (!$api) {
             echo T_('Done') . '<br />';
         }

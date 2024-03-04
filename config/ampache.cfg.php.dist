@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 69
+config_version = 70
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -29,6 +29,11 @@ config_version = 69
 ; Either a binary name in $PATH as well as a fully qualified path is possible
 ; DEFAULT: composer
 ;composer_binary_path = "composer"
+
+; This value allows to override the npm binary path to distinguish between multiple npm versions
+; Either a binary name in $PATH as well as a fully qualified path is possible
+; DEFAULT: npm
+;npm_binary_path = "npm"
 
 ; We sometimes need to talk and will show a warning to admin users
 ; Enable this setting if you don't want to see warnings (When we enable them)
