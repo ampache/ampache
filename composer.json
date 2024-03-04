@@ -7,7 +7,6 @@
     "license": "AGPL-3.0",
     "config":
     {
-        "component-dir": "public/lib/components",
         "platform": {
             "ext-curl": "1.0",
             "ext-date": "1.0",
@@ -31,8 +30,6 @@
         "sort-packages": true,
         "allow-plugins": {
             "composer/installers": true,
-            "robloach/component-installer": true,
-            "oomphinc/composer-installers-extender": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true
         }
@@ -68,7 +65,6 @@
         "moinax/tvdb": "1.*",
         "nyholm/psr7": "^1.3",
         "nyholm/psr7-server": "^1.0",
-        "oomphinc/composer-installers-extender": "^2.0",
         "openid/php-openid": "^3",
         "php-curl-class/php-curl-class": "^9.18",
         "php-di/php-di": "^7.0",
@@ -76,7 +72,6 @@
         "psr/log": "^3",
         "psr/simple-cache": "^3",
         "rmccue/requests": "^2.0",
-        "robloach/component-installer": "^0.0.12",
         "rsd/seafile-php-sdk": "^1",
         "sabre/dav": "^4",
         "scn/phptal": "^4",
