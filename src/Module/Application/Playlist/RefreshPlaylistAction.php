@@ -71,6 +71,7 @@ final class RefreshPlaylistAction implements ApplicationActionInterface
                 $playlist->add_medias($objects);
             }
         }
+
         // Go elsewhere
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)

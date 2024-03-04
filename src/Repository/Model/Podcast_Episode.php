@@ -191,23 +191,9 @@ class Podcast_Episode extends database_object implements
         return new DateTime('@' . $this->pubdate);
     }
 
-    public function getStateDescription(): string
+    public function getState(): PodcastEpisodeStateEnum
     {
-        switch ($this->state) {
-            case PodcastEpisodeStateEnum::SKIPPED:
-                $state = T_('skipped');
-                break;
-            case PodcastEpisodeStateEnum::PENDING:
-                $state = T_('pending');
-                break;
-            case PodcastEpisodeStateEnum::COMPLETED:
-                $state = T_('completed');
-                break;
-            default:
-                $state = '';
-        }
-
-        return $state;
+        return PodcastEpisodeStateEnum::tryFrom((string) $this->state) ?? PodcastEpisodeStateEnum::PENDING;
     }
 
     public function getSizeFormatted(): string

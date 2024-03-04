@@ -322,6 +322,7 @@ class Json_Data
         if ($output !== false) {
             return $output;
         }
+
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
         return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
     }
@@ -1216,7 +1217,7 @@ class Json_Data
                 "author_full" => $episode->getAuthor(),
                 "website" => $episode->getWebsite(),
                 "pubdate" => $episode->getPubDate()->format(DATE_ATOM),
-                "state" => $episode->getStateDescription(),
+                "state" => $episode->getState()->toDescription(),
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),

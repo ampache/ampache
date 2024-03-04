@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\UpdateInfoEnum;
 
 /**
  * Provides access to the `update_info` table
@@ -45,11 +46,11 @@ final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
      *
      * Will return `null` if no item was found
      */
-    public function getValueByKey(string $key): ?string
+    public function getValueByKey(UpdateInfoEnum $key): ?string
     {
         $value = $this->connection->fetchOne(
             'SELECT value from update_info WHERE `key` = ? LIMIT 1',
-            [$key]
+            [$key->value]
         );
 
         if ($value === false) {
@@ -62,17 +63,17 @@ final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
     /**
      * Sets a value using the provided params
      */
-    public function setValue(string $key, string $value): void
+    public function setValue(UpdateInfoEnum $key, string $value): void
     {
         $result = $this->connection->query(
             'UPDATE `update_info` SET `value` = ? WHERE `key` = ?',
-            [$value, $key]
+            [$value, $key->value]
         );
 
         if ($result->rowCount() === 0) {
             $this->connection->query(
                 'INSERT INTO `update_info` (`key`, `value`) VALUES (?, ?)',
-                [$key, $value]
+                [$key->value, $value]
             );
         }
     }

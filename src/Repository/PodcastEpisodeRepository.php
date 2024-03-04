@@ -60,11 +60,11 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
     /**
      * Returns all episode-ids for the given podcast
      *
-     * @param string $stateFilter Return only items with this state
+     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
      *
      * @return list<int>
      */
-    public function getEpisodes(Podcast $podcast, string $stateFilter = ''): array
+    public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array
     {
         $skipDisabledCatalogs = $this->configContainer->get(ConfigurationKeyEnum::CATALOG_DISABLE);
 
@@ -77,9 +77,9 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
 
         $sql .= 'WHERE `podcast_episode`.`podcast` = ? ';
 
-        if (!empty($stateFilter)) {
+        if ($stateFilter !== null) {
             $sql .= 'AND `podcast_episode`.`state` = ? ';
-            $params[] = $stateFilter;
+            $params[] = $stateFilter->value;
         }
 
         if ($skipDisabledCatalogs) {
@@ -190,7 +190,7 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
             [
                 $podcast->getId(),
                 $podcast->getLastSyncDate()->getTimestamp(),
-                PodcastEpisodeStateEnum::PENDING
+                PodcastEpisodeStateEnum::PENDING->value
             ]
         );
 

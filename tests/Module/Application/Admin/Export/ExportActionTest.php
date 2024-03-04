@@ -129,7 +129,7 @@ class ExportActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn([
                 'export_catalog' => (string) $catalogId,
-                'export_format' => $exportFormat,
+                'export_format' => $exportFormat->value,
             ]);
 
         $this->catalogLoader->expects(static::once())

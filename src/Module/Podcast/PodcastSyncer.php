@@ -284,7 +284,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
             $title,
             $guid,
             $podcast->getId(),
-            $state,
+            $state->value,
             $source,
             $website,
             $description,

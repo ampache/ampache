@@ -70,11 +70,11 @@ final class ZipHandler implements ZipHandlerInterface
         $art      = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
         $addart   = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
         $filter   = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-        $arc      = new ZipStream($filter . ".zip");
+        $arc      = new ZipStream(
+            comment: (string) $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT),
+            outputName: $filter . ".zip"
+        );
         $playlist = '';
-        $options  = [
-            'comment' => $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT),
-        ];
 
         foreach ($media_files as $dir => $files) {
             foreach ($files as $file) {
@@ -85,7 +85,7 @@ final class ZipHandler implements ZipHandlerInterface
                 $folder  = explode('/', $dirname)[substr_count($dirname, "/")];
                 $playlist .= $folder . "/" . basename($file) . "\n";
                 try {
-                    $arc->addFileFromPath($folder . '/' . basename($file), $file, $options);
+                    $arc->addFileFromPath($folder . '/' . basename($file), $file);
                 } catch (Exception $e) {
                     $this->logger->error(
                         $e->getMessage(),
@@ -95,7 +95,7 @@ final class ZipHandler implements ZipHandlerInterface
             }
             if ($addart === true && !empty($folder) && !empty($artpath)) {
                 try {
-                    $arc->addFileFromPath($folder . '/' . $art, $artpath, $options);
+                    $arc->addFileFromPath($folder . '/' . $art, $artpath);
                 } catch (Exception $e) {
                     $this->logger->error(
                         $e->getMessage(),
@@ -105,7 +105,7 @@ final class ZipHandler implements ZipHandlerInterface
             }
         }
         if (!empty($playlist)) {
-            $arc->addFile($filter . ".m3u", $playlist, $options);
+            $arc->addFile($filter . ".m3u", $playlist);
         }
         $this->logger->debug(
             'Sending Zip ' . $filter,

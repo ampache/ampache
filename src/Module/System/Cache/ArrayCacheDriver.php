@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Cache;
 
+use DateInterval;
 use Generator;
 use Psr\SimpleCache\CacheInterface;
 
@@ -37,19 +38,19 @@ final class ArrayCacheDriver implements CacheInterface
     /** @var array<string, scalar> */
     private array $cache = [];
 
-    public function get($key, $default = null): mixed
+    public function get(string $key, mixed $default = null): mixed
     {
         return $this->cache[$key] ?? $default;
     }
 
-    public function set($key, $value, $ttl = null): bool
+    public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
     {
         $this->cache[$key] = $value;
 
         return true;
     }
 
-    public function delete($key): bool
+    public function delete(string $key): bool
     {
         if ($this->has($key)) {
             unset($this->cache[$key]);
@@ -66,11 +67,11 @@ final class ArrayCacheDriver implements CacheInterface
     }
 
     /**
-     * @param list<string> $keys
+     * @param iterable<string> $keys
      *
      * @return Generator<string, scalar>
      */
-    public function getMultiple($keys, $default = null): Generator
+    public function getMultiple(iterable $keys, mixed $default = null): Generator
     {
         foreach ($keys as $key) {
             yield $key => $this->cache[$key] ?? $default;
@@ -80,7 +81,7 @@ final class ArrayCacheDriver implements CacheInterface
     /**
      * @param iterable<string, scalar> $values
      */
-    public function setMultiple($values, $ttl = null): bool
+    public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             $this->cache[$key] = $value;
@@ -90,9 +91,9 @@ final class ArrayCacheDriver implements CacheInterface
     }
 
     /**
-     * @param list<string> $keys
+     * @param iterable<string> $keys
      */
-    public function deleteMultiple($keys): bool
+    public function deleteMultiple(iterable $keys): bool
     {
         foreach ($keys as $key) {
             $this->delete($key);
@@ -101,7 +102,7 @@ final class ArrayCacheDriver implements CacheInterface
         return true;
     }
 
-    public function has($key)
+    public function has(string $key): bool
     {
         return array_key_exists($key, $this->cache);
     }

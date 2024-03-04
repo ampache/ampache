@@ -393,6 +393,7 @@ class Upnp_Api
             $testKey = $keytoCheck;
         }
         $filt = explode(',', $filterValue); // do exact word match rather than partial, which is what strpos does.
+
         //debug_event(self::class, 'checking '.$testKey.' in '.var_export($filt, true), 5);
         return in_array($testKey, $filt, true); // this is necessary, (rather than strpos) because "res" turns up in many keys, whose results may not be wanted
     }
@@ -1381,6 +1382,7 @@ class Upnp_Api
     {
         // TODO patched out for now: creates problems in search results
         unset($filter);
+
         // NB filtering is handled in creation of the DIDL now
         //if( strpos( $filter, 'upnp:album' ) ){
         //    return 'album';
@@ -1722,6 +1724,7 @@ class Upnp_Api
 
         $fileTypesByExt = self::_getFileTypes();
         $arrFileType    = $fileTypesByExt[$song->type];
+
         /**
          * Properties observed for MS media player include
          * GetSearchCapabilities

@@ -81,7 +81,7 @@ use Ampache\Module\Util\Ui;
     </span>
     <?php
     }
-    if (Access::check('interface', 75)) { ?>
+if (Access::check('interface', 75)) { ?>
     <a id="<?php echo 'delete_podcast_' . $libitem->getId(); ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $libitem->getId(); ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>

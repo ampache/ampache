@@ -48,7 +48,7 @@ class CatalogExportFactoryTest extends TestCase
      */
     #[DataProvider(methodName: 'exportTypeDataProvider')]
     public function testCreateFromExportTypeReturnsInstance(
-        string $exportType,
+        CatalogExportTypeEnum $exportType,
         string $exporterClass
     ): void {
         static::assertInstanceOf(
@@ -61,6 +61,5 @@ class CatalogExportFactoryTest extends TestCase
     {
         yield [CatalogExportTypeEnum::ITUNES, ItunesExporter::class];
         yield [CatalogExportTypeEnum::CSV, CsvExporter::class];
-        yield ['snafu', CsvExporter::class];
     }
 }
