@@ -95,7 +95,7 @@ final class DefaultAction implements ApplicationActionInterface
         if ($this->configContainer->get('use_auth') && !isset($_GET['force_display'])) {
             $auth = false;
             $name = $this->configContainer->getSessionName();
-            if (array_key_exists($name, $_COOKIE) && Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()])) {
+            if (array_key_exists($name, $_COOKIE) && Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$this->configContainer->getSessionName()])) {
                 $auth = true;
             } elseif (Session::auth_remember()) {
                 $auth = true;

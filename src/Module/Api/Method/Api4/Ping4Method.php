@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
@@ -62,8 +63,8 @@ final class Ping4Method
         );
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
-        if (array_key_exists('auth', $input) && Session::exists('api', $input['auth'])) {
-            Session::extend($input['auth'], 'api');
+        if (array_key_exists('auth', $input) && Session::exists(AccessTypeEnum::API->value, $input['auth'])) {
+            Session::extend($input['auth'], AccessTypeEnum::API->value);
             // perpetual sessions do not expire
             $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
             $session_expire = ($perpetual)

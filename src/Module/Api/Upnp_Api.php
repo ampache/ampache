@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Module\Playback\Stream;
@@ -1751,7 +1752,7 @@ class Upnp_Api
             'upnp:album' => self::_replaceSpecialSymbols($song->f_album),
             'upnp:genre' => Tag::get_display($song->tags, false, 'song'),
             'upnp:originalTrackNumber' => $song->track,
-            'res' => $song->play_url('', 'api', true), // For upnp, use local
+            'res' => $song->play_url('', AccessTypeEnum::API->value, true), // For upnp, use local
             'protocolInfo' => $arrFileType['mime'],
             'size' => $song->size,
             'duration' => $song->f_time_h . '.0',

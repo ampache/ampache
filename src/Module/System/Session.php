@@ -28,6 +28,7 @@ namespace Ampache\Module\System;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Query;
 use Ampache\Repository\Model\User;
@@ -214,8 +215,8 @@ final class Session implements SessionInterface
      */
     public static function destroy_perpetual(): void
     {
-        $sql = "DELETE FROM `session` WHERE `expire` = 0 AND `type` = 'api';";
-        Dba::write($sql);
+        $sql = "DELETE FROM `session` WHERE `expire` = 0 AND `type` = ?;";
+        Dba::write($sql, array(AccessTypeEnum::API->value));
     }
 
     /**

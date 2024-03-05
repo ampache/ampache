@@ -25,6 +25,7 @@ namespace Ampache\Module\Application\Logout;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\System\LegacyLogger;
@@ -57,7 +58,7 @@ final class LogoutAction implements ApplicationActionInterface
     {
         // only log out the session passed to the user, not just whatever the browser has stored
         $input = $request->getQueryParams();
-        if (array_key_exists('session', $input) && Session::exists('interface', $input['session'])) {
+        if (array_key_exists('session', $input) && Session::exists(AccessTypeEnum::INTERFACE->value, $input['session'])) {
             $sessionName    = $this->configContainer->get('session_name');
             $cookie_options = [
                 'expires' => -1,

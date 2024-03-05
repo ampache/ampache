@@ -155,7 +155,7 @@ final class Handshake3Method
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);
                 } else {
-                    Session::extend($data['apikey'], 'api');
+                    Session::extend($data['apikey'], AccessTypeEnum::API->value);
                     $token = $data['apikey'];
                 }
 

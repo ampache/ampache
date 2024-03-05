@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
@@ -75,7 +76,7 @@ class Stream_Playlist
 
             $this->id = Stream::get_session();
 
-            if (!Session::exists('stream', $this->id)) {
+            if (!Session::exists(AccessTypeEnum::STREAM->value, $this->id)) {
                 debug_event(self::class, 'Session::exists failed', 2);
 
                 return;

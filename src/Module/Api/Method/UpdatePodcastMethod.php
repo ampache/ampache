@@ -65,7 +65,7 @@ final class UpdatePodcastMethod
         if ($podcast !== null) {
             if (static::getPodcastSyncer()->sync($podcast, true)) {
                 Api::message('Synced episodes for podcast: ' . (string) $object_id, $input['api_format']);
-                Session::extend($input['auth'], 'api');
+                Session::extend($input['auth'], AccessTypeEnum::API->value);
             } else {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'podcast', $input['api_format']);
