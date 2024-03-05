@@ -40,7 +40,8 @@ $album    = (int) (Core::get_request('album'));
 $web_path = (string)AmpConfig::get('web_path', '');
 $access50 = Access::check('interface', 50);
 $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
-<div id="container" role="main">
+
+<div id="jstreecontainer" role="main">
     <div id="tree"></div>
     <div id="data">
         <div class="treecontent code" style="display:none;"><textarea id="code" readonly="readonly"></textarea></div>
@@ -170,14 +171,6 @@ $(function () {
 });
 </script>
 
-<form id="uploadfile" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/upload.php">
-<input type="hidden" name="upload_action" value="upload" />
-<input type="hidden" id="folder" name="folder" value="" />
-<?php
-// Display a max file size client side if we know it
-if ($upload_max > 0) { ?>
-    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
-<?php } ?>
 <table class="tabledata">
     <tr>
     <h5><?php echo T_('Leave the artist and album fields blank to read file tags'); ?></h5>
@@ -227,116 +220,25 @@ if ($upload_max > 0) { ?>
         <?php echo str_replace("|", ", ", AmpConfig::get('catalog_file_pattern')); ?>
     </td>
 </tr>
-<tr>
-    <td>
-        <div id="dropfile">
-            <?php echo T_('Drop File Here'); ?>
-            <a><?php echo T_('Browse'); ?></a>
-            <input type="file" name="upl" multiple />
-
-            <ul>
-                <!-- The file uploads will be shown here -->
-            </ul>
-        </div>
-    </td>
-</tr>
 </table>
-</form>
+
+<input type="file" class="filepond" name="upl" multiple>
+<input type="hidden" id="folder" name="folder" value="" />
 
 <script>
-// Helper function that formats the file sizes
-function formatFileSize(bytes)
-{
-    if (typeof bytes !== 'number') {
-        return '';
-    }
-
-    if (bytes >= 1000000000) {
-        return (bytes / 1000000000).toFixed(2) + ' GB';
-    }
-
-    if (bytes >= 1000000) {
-        return (bytes / 1000000).toFixed(2) + ' MB';
-    }
-
-    return (bytes / 1000).toFixed(2) + ' KB';
-}
-
-$(function(){
-
-    var ul = $('#uploadfile ul');
-
-    $('#dropfile a').click(function(){
-        // Simulate a click on the file input button
-        // to show the file browser dialog
-        $(this).parent().find('input').click();
-    });
-
-    // Initialize the jQuery File Upload plugin
-    $('#uploadfile').fileupload({
-
-        // This element will accept file drag/drop uploading
-        dropZone: $('#dropfile'),
-
-        // This function is called when a file is added to the queue;
-        // either via the browse button, or via drag/drop:
-        add: function (e, data) {
-
-            var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
-                ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
-
-          // Append the file name and file size
-            tpl.find('p').text(data.files[0].name)
-                         .append('<i>' + formatFileSize(data.files[0].size) + '</i>');
-
-            // Add the HTML to the UL element
-            data.context = tpl.appendTo(ul);
-
-            // Initialize the knob plugin
-            tpl.find('input').knob();
-
-            // Listen for clicks on the cancel icon
-            tpl.find('span').click(function(){
-
-                if (tpl.hasClass('working')) {
-                    jqXHR.abort();
+    FilePond?.create(document.querySelector('input[type="file"].filepond'), {
+        server: {
+            url: "<?php echo $web_path; ?>/upload.php",
+            process: {
+                method: 'POST', // Set the HTTP method to POST
+                ondata: (formData) => {
+                    formData.append('upload_action', 'upload');
+                    formData.append('folder', document.querySelector("#folder").value);
+                    return formData;
                 }
-
-                tpl.fadeOut(function(){
-                    tpl.remove();
-                });
-
-            });
-
-            // Automatically upload the file once it is added to the queue
-            var jqXHR = data.submit();
+            },
         },
-
-        progress: function(e, data){
-
-            // Calculate the completion percentage of the upload
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-
-            // Update the hidden input field and trigger a change
-            // so that the jQuery knob plugin knows to update the dial
-            data.context.find('input').val(progress).change();
-
-            if (progress == 100) {
-                data.context.removeClass('working');
-            }
-        },
-
-        fail:function(e, data){
-            // Something has gone wrong!
-            data.context.addClass('error');
-        }
-
     });
-
-    // Prevent the default action when a file is dropped on the window
-    $(document).on('drop dragover', function (e) {
-        e.preventDefault();
-    });
-});
 </script>
+
 <?php Ui::show_box_bottom(); ?>
