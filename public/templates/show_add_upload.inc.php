@@ -239,6 +239,48 @@ $(function () {
             },
         },
     });
+
+    var filepondStrings = {
+        labelIdle: "<?php echo T_('Drag & Drop your files or <span class=\"filepond--label-action\"> Browse </span>'); ?>",
+        labelInvalidField: "<?php echo T_('Field contains invalid files'); ?>",
+        labelFileWaitingForSize: "<?php echo T_('Waiting for size'); ?>",
+        labelFileSizeNotAvailable: "<?php echo T_('Size not available'); ?>",
+        labelFileLoading: "<?php echo T_('Loading'); ?>",
+        labelFileLoadError: "<?php echo T_('Error during load'); ?>",
+        labelFileProcessing: "<?php echo T_('Uploading'); ?>",
+        labelFileProcessingComplete: "<?php echo T_('Upload complete'); ?>",
+        labelFileProcessingAborted: "<?php echo T_('Upload cancelled'); ?>",
+        labelFileProcessingError: "<?php echo T_('Error during upload'); ?>",
+        labelFileProcessingRevertError: "<?php echo T_('Error during revert'); ?>",
+        labelFileRemoveError: "<?php echo T_('Error during remove'); ?>",
+        labelTapToCancel: "<?php echo T_('tap to cancel'); ?>",
+        labelTapToRetry: "<?php echo T_('tap to retry'); ?>",
+        labelTapToUndo: "<?php echo T_('tap to undo'); ?>",
+        labelButtonRemoveItem: "<?php echo T_('Remove'); ?>",
+        labelButtonAbortItemLoad: "<?php echo T_('Abort'); ?>",
+        labelButtonRetryItemLoad: "<?php echo T_('Retry'); ?>",
+        labelButtonAbortItemProcessing: "<?php echo T_('Cancel'); ?>",
+        labelButtonUndoItemProcessing: "<?php echo T_('Undo'); ?>",
+        labelButtonRetryItemProcessing: "<?php echo T_('Retry'); ?>",
+        labelButtonProcessItem: "<?php echo T_('Upload'); ?>",
+        labelMaxFileSizeExceeded: "<?php echo T_('File is too large'); ?>",
+        labelMaxFileSize: "<?php echo T_('Maximum file size is {filesize}'); ?>",
+        labelMaxTotalFileSizeExceeded: "<?php echo T_('Maximum total size exceeded'); ?>",
+        labelMaxTotalFileSize: "<?php echo T_('Maximum total file size is {filesize}'); ?>",
+        labelFileTypeNotAllowed: "<?php echo T_('File of invalid type'); ?>",
+        fileValidateTypeLabelExpectedTypes: "<?php echo T_('Expects {allButLastType} or {lastType}'); ?>",
+        imageValidateSizeLabelFormatError: "<?php echo T_('Image type not supported'); ?>",
+        imageValidateSizeLabelImageSizeTooSmall: "<?php echo T_('Image is too small'); ?>",
+        imageValidateSizeLabelImageSizeTooBig: "<?php echo T_('Image is too big'); ?>",
+        imageValidateSizeLabelExpectedMinSize: "<?php echo T_('Minimum size is {minWidth} × {minHeight}'); ?>",
+        imageValidateSizeLabelExpectedMaxSize: "<?php echo T_('Maximum size is {maxWidth} × {maxHeight}'); ?>",
+        imageValidateSizeLabelImageResolutionTooLow: "<?php echo T_('Resolution is too low'); ?>",
+        imageValidateSizeLabelImageResolutionTooHigh: "<?php echo T_('Resolution is too high'); ?>",
+        imageValidateSizeLabelExpectedMinResolution: "<?php echo T_('Minimum resolution is {minResolution}'); ?>",
+        imageValidateSizeLabelExpectedMaxResolution: "<?php echo T_('Maximum resolution is {maxResolution}'); ?>"
+    }
+
+    FilePond?.setOptions(filepondStrings);
 </script>
 
 <?php Ui::show_box_bottom(); ?>
