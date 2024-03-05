@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -41,6 +42,6 @@ final class Migration500007 extends AbstractMigration
     {
         $this->updateDatabase("UPDATE `preference` SET `preference`.`subcatagory` = 'browse' WHERE `preference`.`name` IN ('show_played_times', 'browse_filter', 'libitem_browse_alpha', 'show_skipped_times')");
 
-        $this->updatePreferences('show_license', 'Show License', '1', 25, 'boolean', 'interface', 'browse');
+        $this->updatePreferences('show_license', 'Show License', '1', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse');
     }
 }

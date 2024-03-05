@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration400019 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('of_the_moment', 'Set the amount of items Album/Video of the Moment will display', '6', 25, 'integer', 'interface', 'home');
+        $this->updatePreferences('of_the_moment', 'Set the amount of items Album/Video of the Moment will display', '6', AccessLevelEnum::USER->value, 'integer', 'interface', 'home');
     }
 }

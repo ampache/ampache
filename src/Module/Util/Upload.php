@@ -190,7 +190,7 @@ class Upload
         $user_access = $user->access ?? -1;
 
         return AmpConfig::get('allow_upload') &&
-            $user_access >= AmpConfig::get('upload_access_level', 25);
+            $user_access >= AmpConfig::get('upload_access_level', AccessLevelEnum::USER->value);
     }
 
     /**

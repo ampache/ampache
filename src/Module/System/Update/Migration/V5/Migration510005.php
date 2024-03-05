@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration510005 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('subsonic_always_download', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', '0', 25, 'boolean', 'options', 'subsonic');
+        $this->updatePreferences('subsonic_always_download', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', '0', AccessLevelEnum::USER->value, 'boolean', 'options', 'subsonic');
     }
 }

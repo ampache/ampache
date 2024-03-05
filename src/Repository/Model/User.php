@@ -785,8 +785,12 @@ class User extends database_object
     public function disable(): bool
     {
         // Make sure we aren't disabling the last admin
-        $sql        = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `id` != '" . $this->id . "' AND `access`='100'";
-        $db_results = Dba::read($sql);
+        $sql    = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `access` = ? AND `id` != ? ";
+        $params = array(
+            AccessLevelEnum::ADMIN->value,
+            $this->id
+        );
+        $db_results = Dba::read($sql, $params);
 
         if (!Dba::num_rows($db_results)) {
             return false;
@@ -810,8 +814,12 @@ class User extends database_object
     {
         // There must always be at least one admin left if you're reducing access
         if ($new_access < 100) {
-            $sql        = "SELECT `id` FROM `user` WHERE `access`='100' AND `id` != '$this->id'";
-            $db_results = Dba::read($sql);
+            $sql    = "SELECT `id` FROM `user` WHERE `access`= ? AND `id` != ?";
+            $params = array(
+                AccessLevelEnum::ADMIN->value,
+                $this->id
+            );
+            $db_results = Dba::read($sql, $params);
             if (!Dba::num_rows($db_results)) {
                 return false;
             }
@@ -1123,8 +1131,12 @@ class User extends database_object
     {
         // Before we do anything make sure that they aren't the last admin
         if ($this->has_access(AccessLevelEnum::ADMIN)) {
-            $sql        = "SELECT `id` FROM `user` WHERE `access`='100' AND id != ?";
-            $db_results = Dba::read($sql, array($this->id));
+            $sql    = "SELECT `id` FROM `user` WHERE `access`= ? AND id != ?";
+            $params = array(
+                AccessLevelEnum::ADMIN->value,
+                $this->id
+            );
+            $db_results = Dba::read($sql, $params);
             if (!Dba::num_rows($db_results)) {
                 return false;
             }
