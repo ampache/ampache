@@ -25,16 +25,18 @@ $htmllang = str_replace("_", "-", $htmllang);
  *
  */
 
+$htmllang = $htmllang ?? 'en_US';
+$charset  = $charset ?? 'UTF-8';
 ?>
 <?php if (!defined('INSTALL')) {
     return false;
 } ?>
 <?php $results = 0; ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php /** @var string $htmllang */ echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
     <!-- Propelled by Ampache | ampache.org -->
-    <meta http-equiv="Content-Type" content="text/html; Charset=<?php /** @var string $charset */ echo $charset; ?>" />
+    <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="cache-control" content="max-age=0">
     <meta http-equiv="cache-control" content="no-cache">
