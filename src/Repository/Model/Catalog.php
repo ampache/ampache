@@ -46,6 +46,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
@@ -2146,7 +2147,7 @@ abstract class Catalog extends database_object
         // only allow your primary external metadata source to update values
         $overwrites  = true;
         $meta_order  = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
-        $plugin_list = Plugin::get_plugins('get_external_metadata');
+        $plugin_list = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_METADATA_RETRIEVER);
         $user        = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);

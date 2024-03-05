@@ -29,7 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
@@ -199,26 +199,6 @@ class Wanted extends database_object
     }
 
     /**
-     * Accept a wanted request.
-     */
-    public function accept(): void
-    {
-        if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) {
-            $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
-            Dba::write($sql, array($this->mbid));
-            $this->accepted = 1;
-
-            foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
-                    debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin_name, 5);
-                    $plugin->_plugin->process_wanted($this);
-                }
-            }
-        }
-    }
-
-    /**
      * Show action buttons.
      */
     public function show_action_buttons(): string
@@ -302,7 +282,7 @@ class Wanted extends database_object
                                 }
 
                                 $song['file'] = null;
-                                foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
+                                foreach (Plugin::get_plugins(PluginTypeEnum::WANTED_LOOKUP) as $plugin_name) {
                                     $plugin = new Plugin($plugin_name);
                                     if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                                         $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);

@@ -38,6 +38,7 @@ use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
@@ -2061,7 +2062,7 @@ class Song extends database_object implements
             return array('text' => $this->lyrics);
         }
 
-        foreach (Plugin::get_plugins('get_lyrics') as $plugin_name) {
+        foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                 $lyrics = $plugin->_plugin->get_lyrics($this);

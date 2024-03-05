@@ -30,6 +30,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
 use PDOStatement;
@@ -245,7 +246,7 @@ class Userflag extends database_object
      */
     public static function save_flag($user, $song, $flagged): void
     {
-        foreach (Plugin::get_plugins('set_flag') as $plugin_name) {
+        foreach (Plugin::get_plugins(PluginTypeEnum::USER_FLAG_MANAGER) as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin !== null && $plugin->load($user)) {

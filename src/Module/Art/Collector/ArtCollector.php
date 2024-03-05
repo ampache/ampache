@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -122,7 +123,7 @@ final class ArtCollector implements ArtCollectorInterface
             ? Core::get_global('user')
             : new User(-1);
 
-        $plugin_names = Plugin::get_plugins('gather_arts');
+        $plugin_names = Plugin::get_plugins(PluginTypeEnum::ART_RETRIEVER);
         foreach ($artOrder as $method) {
             $data = [];
             if (in_array(strtolower($method), $plugin_names)) {

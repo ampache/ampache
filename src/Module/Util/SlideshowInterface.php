@@ -23,7 +23,9 @@
 
 namespace Ampache\Module\Util;
 
+use Ampache\Repository\Model\User;
+
 interface SlideshowInterface
 {
-    public function getCurrentSlideshow(): array;
+    public function getCurrentSlideshow(User $user): array;
 }

@@ -27,27 +27,22 @@ namespace Ampache\Module\Wanted;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginRetrieverInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\database_object;
-use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\WantedRepositoryInterface;
 use MusicBrainz\MusicBrainz;
 
-final class WantedManager implements WantedManagerInterface
+final readonly class WantedManager implements WantedManagerInterface
 {
-    private WantedRepositoryInterface $wantedRepository;
-
-    private MusicBrainz $musicBrainz;
-
     public function __construct(
-        WantedRepositoryInterface $wantedRepository,
-        MusicBrainz $musicBrainz
+        private WantedRepositoryInterface $wantedRepository,
+        private MusicBrainz $musicBrainz,
+        private PluginRetrieverInterface $pluginRetriever
     ) {
-        $this->wantedRepository = $wantedRepository;
-        $this->musicBrainz      = $musicBrainz;
     }
 
     /**
@@ -103,12 +98,10 @@ final class WantedManager implements WantedManagerInterface
             Dba::write($sql, [$wanted->getMusicBrainzId()]);
             $wanted->accepted = 1;
 
-            foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
-                    debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin_name, 5);
-                    $plugin->_plugin->process_wanted($this);
-                }
+            foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::WANTED_LOOKUP, $user) as $plugin) {
+                debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin::class, 5);
+
+                $plugin->_plugin->process_wanted($this);
             }
         }
     }

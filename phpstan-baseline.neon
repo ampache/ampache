@@ -13281,11 +13281,6 @@ parameters:
 			path: src/Repository/Model/Plugin.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:get_plugins\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:is_installed\\(\\) has parameter \\$plugin_name with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Plugin.php
