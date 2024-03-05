@@ -24,8 +24,9 @@ declare(strict_types=0);
  */
 
 /** @var string $htmllang */
+$htmllang = $htmllang ?? 'en_US';
 /** @var string $charset */
-
+$charset = $charset ?? 'UTF-8';
 ?>
 <?php if (!defined('INSTALL')) {
     return false;
