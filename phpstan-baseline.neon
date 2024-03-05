@@ -1,15 +1,5 @@
 parameters:
 	ignoreErrors:
-			-
-			message: "#^Variable \\$htmllang on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: public/templates/install_header.inc.php
-
-		-
-			message: "#^Variable \\$htmllang might not be defined\\.$#"
-			count: 1
-			path: public/templates/install_header.inc.php
-
 		-
 			message: "#^Negated boolean expression is always true\\.$#"
 			count: 2
