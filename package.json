@@ -1,0 +1,53 @@
+{
+  "name": "ampache",
+  "version": "1.0.0",
+  "description": "Packages used by Ampache",
+  "private": "true",
+  "dependencies": {
+    "bootstrap": "^3.4.1",
+    "filepond": "^4.30.6",
+    "jquery": "3.5.*",
+    "jquery-contextmenu": "^2.9.2",
+    "jquery-datetimepicker": "^2.5.21",
+    "jquery-ui": "1.13.*",
+    "jquery.qrcode": "^1.0.3",
+    "js-cookie": "^2.2.1",
+    "jscroll": "^2.4.1",
+    "jstree": "^3.3.16",
+    "prettyphoto": "github:lachlan-00/prettyphoto",
+    "tag-it": "^2.0.0"
+  },
+  "scripts": {
+    "postinstall": "npm-run-all copy:*",
+    "copy:bootstrap": "copyfiles --up 3 node_modules/bootstrap/dist/**/* public/lib/components/bootstrap",
+    "copy:contextmenu": "copyfiles --up 3 node_modules/jquery-contextmenu/dist/**/* public/lib/components/jquery-contextmenu",
+    "copy:datetimepicker": "copyfiles --up 3 node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css public/lib/components/datetimepicker",
+    "copy:filepond": "copyfiles --up 3 node_modules/filepond/dist/filepond.min.js node_modules/filepond/dist/filepond.min.css public/lib/components/filepond",
+    "copy:jscookie": "copyfiles --up 3 node_modules/js-cookie/src/js.cookie.js public/lib/components/js-cookie",
+    "copy:jscroll": "copyfiles --up 3 node_modules/jscroll/dist/**/* public/lib/components/jscroll",
+    "copy:jstree": "copyfiles --up 3 node_modules/jstree/dist/jstree.min.js node_modules/jstree/dist/themes/default/style.min.css public/lib/components/jstree",
+    "copy:jquery": "copyfiles --up 3 node_modules/jquery/dist/jquery.min.js public/lib/components/jquery",
+    "copy:jqueryui": "copyfiles --up 3 node_modules/jquery-ui/dist/* public/lib/components/jquery-ui",
+    "copy:jqueryqrcode": "copyfiles --up 2 node_modules/jquery.qrcode/jquery.qrcode.min.js public/lib/components/jquery-qrcode",
+    "copy:prettyphoto": "copyfiles --up 2 node_modules/prettyphoto/images/**/* node_modules/prettyphoto/js/jquery.prettyPhoto.min.js node_modules/prettyphoto/css/prettyPhoto.min.css public/lib/components/prettyphoto",
+    "copy:tagit": "copyfiles --up 2 node_modules/tag-it/js/tag-it.min.js node_modules/tag-it/css/jquery.tagit.css public/lib/components/tag-it"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ampache/ampache.git"
+  },
+  "keywords": [
+    "ampache",
+    "music"
+  ],
+  "author": "ampache",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ampache/ampache/issues"
+  },
+  "homepage": "https://github.com/ampache/ampache#readme",
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "npm-run-all": "^4.1.5"
+  }
+}

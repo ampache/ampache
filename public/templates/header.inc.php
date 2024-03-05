@@ -74,57 +74,46 @@ $albumString = (AmpConfig::get('album_group'))
 global $dic;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
-$jQueryKnob       = (is_dir(__DIR__ . '/../lib/components/jquery-knob'))
-    ? 'jquery-knob'
-    : 'jQuery-Knob';
-$jQueryFileUpload = (is_dir(__DIR__ . '/../lib/components/jquery-file-upload'))
-    ? 'jquery-file-upload'
-    : 'jQuery-File-Upload';
-$jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
-    ? 'jquery-contextmenu'
-    : 'jQuery-contextMenu';
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl($site_lang) ? 'rtl' : 'ltr'; ?>">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
-        <link rel="search" type="application/opensearchdescription+xml" title="<?php echo $site_title; ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
+        <link rel="search" type="application/opensearchdescription+xml" title="<?php echo $site_title; ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor">
         <?php if (AmpConfig::get('use_rss')) { ?>
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_album" />
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Artists'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_artist" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php">
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played">
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_album">
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Artists'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_artist">
         <?php if ($site_social) { ?>
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_shout" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_shout">
         <?php }
         } ?>
-        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo $site_title; ?></title>
 
         <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
 
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jstree/dist/themes/default/style.min.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryContextMenu; ?>/dist/jquery.contextMenu.min.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jstree/themes/default/style.min.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.min.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jquery-contextmenu/jquery.contextMenu.min.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/filepond/filepond.min.css" type="text/css" media="screen">
 
         <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/modules/prettyphoto/js/jquery.prettyPhoto.min.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js-cookie-built.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.min.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.min.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js.cookie.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/jquery-qrcode-built.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/jquery.qrcode.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/modules/rhinoslider/js/rhinoslider-1.05.min.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/responsive-elements/responsive-elements.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryKnob; ?>/js/jquery.knob.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryFileUpload; ?>/js/jquery.iframe-transport.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryFileUpload; ?>/js/jquery.fileupload.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryContextMenu; ?>/dist/jquery.contextMenu.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.full.min.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/filepond/filepond.min.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-contextmenu/jquery.contextMenu.js"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" defer></script>
@@ -292,7 +281,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                             itemhtml += "<a>";
                         }
                         if (item.image !== '') {
-                            itemhtml += "<img src='" + item.image + "' class='searchart' alt='' />";
+                            itemhtml += "<img src='" + item.image + "' class='searchart' alt=''>";
                         }
                         itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels === '') ? "" : " - " + item.rels) + "</span>";
                         itemhtml += "</a>";
@@ -483,7 +472,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
                   <a href="<?php echo $web_path; ?>/index.php">
-                    <img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>" />
+                    <img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
                   </a>
                 </h1>
                 <div id="headerbox">
@@ -630,20 +619,20 @@ echo $isCollapsed ? ' content-left-wild' : ''; ?>">
                         $latest_version  = AutoUpdate::get_latest_version();
                         if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
                             AutoUpdate::show_new_version();
-                            echo '<br />';
+                            echo '<br>';
                         }
                     }
                     if (Plugin::is_update_available()) {
                         Plugin::show_update_available();
-                        echo '<br />';
+                        echo '<br>';
                     }
                     if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
                             <div class="fatalerror">
                                 <?php echo T_('Your Ampache config file is out of date!'); ?>
-                                <br />
+                                <br>
                                 <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Update your current config file automatically'); ?></a> |
                                 <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a copy of the new version'); ?></a>
-                                <br />
+                                <br>
                             </div>
                 <?php }
                     echo '</div>';

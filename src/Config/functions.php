@@ -559,7 +559,7 @@ function debug_result($status = false, $value = null, $comment = ''): string
     }
 
     return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
-        '</span> <em>' . $comment . '</em></button>';
+        '<em>' . $comment . '</em></button>';
 }
 
 /**
