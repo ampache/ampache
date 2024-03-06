@@ -75,7 +75,9 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             $apply_to_all = 'check_' . $data['name'];
             $new_level    = 'level_' . $data['name'];
             $pref_id      = (string)$data['id'];
-            $value        = (string)scrub_in((string) ($_REQUEST[$name] ?? ''));
+            $value        = (isset($_REQUEST[$name]) && is_array($_REQUEST[$name]))
+                ? implode(',', $_REQUEST[$name])
+                : (string)scrub_in((string)($_REQUEST[$name] ?? ''));
 
             // Some preferences require some extra checks to be performed
             switch ($name) {
