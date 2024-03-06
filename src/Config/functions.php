@@ -1022,7 +1022,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0): void
     } // end while
 
     echo "</select>\n";
-    echo "<a href=\"javascript:show_selected_license_link('" . $key . "');\">" . T_('View License') . "</a>";
+    echo "<a href=\"javascript:show_selected_license_link('" . $key . "');\">" . T_('View License') . " " . Ui::get_material_symbol('exit_to_app') . "</a>";
 }
 
 /**

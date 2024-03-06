@@ -94,7 +94,6 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
 
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jstree/themes/default/style.min.css" type="text/css" media="screen">
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen">
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen">
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.min.css" type="text/css" media="screen">
