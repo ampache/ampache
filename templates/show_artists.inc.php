@@ -95,7 +95,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                     Userflag::build_cache('artist', $object_ids);
                 }
 
-                $show_direct_play_cfg = AmpConfig::get('directplay');
+$show_direct_play_cfg                 = AmpConfig::get('directplay');
 $directplay_limit                     = AmpConfig::get('direct_play_limit');
 
 /* Foreach through every artist that has been passed to us */

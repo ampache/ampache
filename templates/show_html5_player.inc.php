@@ -274,11 +274,11 @@ echo implode(',', $solutions); ?>",
                     <?php }
                     }
                     }
-                    if (AmpConfig::get('song_page_title') && !$isShare) {
-                        echo "var mediaTitle = obj.title;\n";
-                        echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
-                        echo "document.title = mediaTitle + ' | " . addslashes(AmpConfig::get('site_title', '')) . "';";
-                    } ?>
+if (AmpConfig::get('song_page_title') && !$isShare) {
+    echo "var mediaTitle = obj.title;\n";
+    echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
+    echo "document.title = mediaTitle + ' | " . addslashes(AmpConfig::get('site_title', '')) . "';";
+} ?>
                 }
             });
             <?php if (AmpConfig::get('waveform') && !$isShare) { ?>

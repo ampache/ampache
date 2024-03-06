@@ -89,10 +89,10 @@ if ($np_user->f_avatar_medium) {
       } else {
           $playing = new AlbumDisk($media->get_album_disk());
       }
-      if ($playing->isNew() === false) {
-          $playing->format();
-          $playing->display_art(1);
-      } ?>
+if ($playing->isNew() === false) {
+    $playing->format();
+    $playing->display_art(1);
+} ?>
   </div>
 </div>
 

@@ -291,21 +291,21 @@ if ($use_label) { ?>
     $multi_object_ids = array('' => $object_ids);
 }
 
-    foreach ($multi_object_ids as $key => $object_ids) {
-        $title  = (!empty($key)) ? ucwords($key) : '';
-        $browse = new Browse();
-        $browse->set_type($object_type);
-        $browse->set_use_filters(false);
-        if ($is_album_type) {
-            $browse->set_sort($sort, $order);
-        }
-        $browse->set_use_alpha(false, false);
-        if (!empty($key)) {
-            $browse->set_content_div_ak($key);
-        }
-        $browse->show_objects($object_ids, array('group_disks' => true, 'title' => $title));
-        $browse->store();
-    } ?>
+foreach ($multi_object_ids as $key => $object_ids) {
+    $title  = (!empty($key)) ? ucwords($key) : '';
+    $browse = new Browse();
+    $browse->set_type($object_type);
+    $browse->set_use_filters(false);
+    if ($is_album_type) {
+        $browse->set_sort($sort, $order);
+    }
+    $browse->set_use_alpha(false, false);
+    if (!empty($key)) {
+        $browse->set_content_div_ak($key);
+    }
+    $browse->show_objects($object_ids, array('group_disks' => true, 'title' => $title));
+    $browse->store();
+} ?>
         </div>
         <?php echo Ajax::observe('top_tracks_link', 'click', Ajax::action('?page=index&action=top_tracks&artist=' . $artist->id, 'top_tracks')); ?>
         <div id="top_tracks" class="tab_content">

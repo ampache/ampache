@@ -74,18 +74,18 @@ if ($browse->is_show_header()) {
             Userflag::build_cache('tvshow', $object_ids);
         }
 
-        /* Foreach through every tv show that has been passed to us */
-        foreach ($object_ids as $tvshow_id) {
-            $libitem = new TVShow($tvshow_id);
-            if ($libitem->isNew()) {
-                continue;
-            }
-            $libitem->format(); ?>
+/* Foreach through every tv show that has been passed to us */
+foreach ($object_ids as $tvshow_id) {
+    $libitem = new TVShow($tvshow_id);
+    if ($libitem->isNew()) {
+        continue;
+    }
+    $libitem->format(); ?>
         <tr id="tvshow_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_tvshow_row.inc.php'); ?>
         </tr>
         <?php }
-        if (!count($object_ids)) { ?>
+if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No TV show found'); ?></span></td>
         </tr>
