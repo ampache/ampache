@@ -127,6 +127,7 @@ class Userflag extends database_object
             'playlist',
             'podcast',
             'podcast_episode',
+            'search',
             'song',
             'tvshow',
             'tvshow_season',
