@@ -31,7 +31,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
  */
 final class Migration600060 extends AbstractMigration
 {
-    protected array $changelog = ['Convert `object_type` to an enum on `cache_object_count` and `cache_object_count_run` tables'];
+    protected array $changelog = ['Convert `object_type` to an enum on `share` table'];
 
     public function migrate(): void
     {        

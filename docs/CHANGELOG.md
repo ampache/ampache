@@ -7,10 +7,12 @@
 * Lots more static typing on missing function returns
 * Dynamic properties on the Captcha classes
 * Add opml import for podcasts
-* Database 600052
+* Database 600060
   * Update Last.FM plugin preferences that could be incorrect
   * Spell category and subcategory correctly
   * Add unique constraint `playlist_track_UN` on `playlist_data` table
+  * Remove Flattr plugin (Service has been discontinued)
+  * Convert `object_type` to an enum on `image`, `rating`, `user_flag`, `user_activity`, `object_count`, `share`, `cache_object_count` tables
 
 ### Changed
 
@@ -41,6 +43,12 @@
 * Playlist had some issues adding songs
 * Localplay and jukebox mode improvements (VLC and XBMC)
 * Don't search for wanted albums on an invalid artist
+* Browse filtering for album artist and song artist in certain situations
+* Search inputs were being json encoded twice
+* Don't send an empty query to the database
+* Remove stray span and use valid lang value on installer pages
+* Updating array preferences
+* Showing favicon
 * Static typing errors
   * Updating album data when original_year is missing
   * Template `show_recently_played` with a non-database song
@@ -55,6 +63,7 @@
 ### Added
 
 * API6
+  * New Method: search (alias for advanced_search)
   * New Method: user_playlists (return user playlists and does not include smartlists)
   * New Method: user_smartlists (return user smartlists (searches) and does not include playlists)
   * New Method: playlist_add (add songs to a playlist, allowing different song parent types)
