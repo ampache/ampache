@@ -27,6 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Plugin;
@@ -69,7 +70,7 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
             $current_user->getId()
         );
 
-        $plugins = Plugin::get_plugins('display_user_field'); ?>
+        $plugins = Plugin::get_plugins(PluginTypeEnum::USER_FIELD_WIDGET); ?>
     <ul id="plugins_user_field">
 <?php foreach ($plugins as $plugin_name) {
     $plugin = new Plugin($plugin_name);

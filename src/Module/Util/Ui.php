@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -461,7 +462,7 @@ class Ui implements UiInterface
             show_table_render();
         }
 
-        $plugins = Plugin::get_plugins('display_on_footer');
+        $plugins = Plugin::get_plugins(PluginTypeEnum::FOOTER_WIDGET);
         foreach ($plugins as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {

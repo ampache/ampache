@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
@@ -831,7 +832,7 @@ class Graph
     ) {
         $pts = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
 
-        foreach (Plugin::get_plugins('display_map') as $plugin_name) {
+        foreach (Plugin::get_plugins(PluginTypeEnum::GEO_MAP) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                 if ($plugin->_plugin->display_map($pts)) {

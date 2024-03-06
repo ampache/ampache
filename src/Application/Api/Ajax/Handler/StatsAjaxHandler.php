@@ -27,9 +27,10 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\PluginRetrieverInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Session;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Song;
@@ -39,10 +40,14 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
 {
     private RequestParserInterface $requestParser;
 
+    private PluginRetrieverInterface $pluginRetriever;
+
     public function __construct(
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
+        PluginRetrieverInterface $pluginRetriever
     ) {
-        $this->requestParser = $requestParser;
+        $this->requestParser   = $requestParser;
+        $this->pluginRetriever = $pluginRetriever;
     }
 
     public function handle(): void
@@ -66,13 +71,10 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                             // First try to get from local cache (avoid external api requests)
                             $name = Stats::get_cached_place_name($latitude, $longitude);
                             if (empty($name)) {
-                                foreach (Plugin::get_plugins('get_location_name') as $plugin_name) {
-                                    $plugin = new Plugin($plugin_name);
-                                    if ($plugin->_plugin !== null && $plugin->load($user)) {
-                                        $name = $plugin->_plugin->get_location_name($latitude, $longitude);
-                                        if (!empty($name)) {
-                                            break;
-                                        }
+                                foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::GEO_LOCATION, $user) as $plugin) {
+                                    $name = $plugin->_plugin->get_location_name($latitude, $longitude);
+                                    if (!empty($name)) {
+                                        break;
                                     }
                                 }
                             }

@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
@@ -75,7 +76,7 @@ final class GrantAction implements ApplicationActionInterface
             $plugin_name = mb_strtolower($this->requestParser->getFromRequest('plugin'));
             if (
                 $this->requestParser->getFromRequest('token') &&
-                in_array($plugin_name, Plugin::get_plugins('save_mediaplay'))
+                in_array($plugin_name, Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
             ) {
                 // we receive a token for a valid plugin, have to call getSession and obtain a session key
                 $plugin = new Plugin($plugin_name);

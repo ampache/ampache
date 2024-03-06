@@ -30,6 +30,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 
 class Song_Preview extends database_object implements Media, playable_item
@@ -365,7 +366,7 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function stream(): void
     {
-        foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
+        foreach (Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_STREAM_PROVIDER) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                 if ($plugin->_plugin->stream_song_preview($this->file)) {

@@ -27,6 +27,7 @@ namespace Ampache\Module\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
@@ -113,7 +114,7 @@ final class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
         }
         $link .= '<li style=\'padding-top: 8px; text-align: right;\'>';
 
-        $plugins = Plugin::get_plugins('external_share');
+        $plugins = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_SHARE);
         foreach ($plugins as $plugin_name) {
             $link .= sprintf(
                 '<a onclick="handleShareAction(\'%s/share.php?action=external_share&plugin=%s&type=%s&id=%d\')" target="_blank">%s</a>&nbsp;',

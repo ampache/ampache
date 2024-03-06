@@ -31,6 +31,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\IpHistoryRepositoryInterface;
@@ -842,7 +843,7 @@ class User extends database_object
      */
     public static function save_mediaplay($user, $media): void
     {
-        foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
+        foreach (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY) as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin !== null && $plugin->load($user)) {
@@ -1272,7 +1273,7 @@ class User extends database_object
             $avatar['url_mini'] .= '&thumb=5';
             $avatar['url_medium'] .= '&thumb=3';
         } else {
-            foreach (Plugin::get_plugins('get_avatar_url') as $plugin_name) {
+            foreach (Plugin::get_plugins(PluginTypeEnum::AVATAR_PROVIDER) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                     $avatar['url'] = $plugin->_plugin->get_avatar_url($this);
@@ -1398,7 +1399,7 @@ class User extends database_object
             }
         }
 
-        foreach (Plugin::get_plugins('stream_control') as $plugin_name) {
+        foreach (Plugin::get_plugins(PluginTypeEnum::STREAM_CONTROLLER) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->_plugin !== null && $plugin->load($user)) {
                 if (!$plugin->_plugin->stream_control($media_ids)) {

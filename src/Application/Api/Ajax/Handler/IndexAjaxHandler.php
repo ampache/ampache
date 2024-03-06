@@ -405,7 +405,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'slideshow':
                 ob_start();
-                $images = $this->slideshow->getCurrentSlideshow();
+                $images = $this->slideshow->getCurrentSlideshow($user);
                 if (count($images) > 0) {
                     $fsname = 'fslider_' . time();
                     echo "<div id='" . $fsname . "'>";
