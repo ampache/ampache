@@ -208,7 +208,7 @@ class Wanted extends database_object
             Dba::write($sql, array($this->mbid));
             $this->accepted = 1;
 
-            foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
+            foreach (Plugin::get_plugins(PluginTypeEnum::WANTED_LOOKUP) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                     debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin_name, 5);
