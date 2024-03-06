@@ -197,7 +197,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `session_remember` MODIFY COLUMN `token` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
         Dba::write("ALTER TABLE `session_stream` MODIFY COLUMN `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
         Dba::write("ALTER TABLE `session_stream` MODIFY COLUMN `agent` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `share` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
+        Dba::write("ALTER TABLE `share` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
         Dba::write("ALTER TABLE `share` MODIFY COLUMN `secret` varchar(20) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `share` MODIFY COLUMN `public_url` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `share` MODIFY COLUMN `description` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
