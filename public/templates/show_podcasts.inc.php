@@ -103,17 +103,17 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                     Userflag::build_cache('podcast', $object_ids);
                 }
 
-                foreach ($object_ids as $podcastId) {
-                    $libitem = $podcastRepository->findById($podcastId);
-                    if ($libitem === null) {
-                        continue;
-                    }
-                    $libitem->format(); ?>
+foreach ($object_ids as $podcastId) {
+    $libitem = $podcastRepository->findById($podcastId);
+    if ($libitem === null) {
+        continue;
+    }
+    $libitem->format(); ?>
         <tr id="podcast_<?php echo $libitem->getId(); ?>">
             <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
         </tr>
         <?php
-                } ?>
+} ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast found'); ?></span></td>
