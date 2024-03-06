@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Video;
@@ -108,7 +110,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 
 <div class="formValidation">
     <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
-<?php if ($currentType == 'song' && Access::check('interface', 25)) { ?>
+<?php if ($currentType == 'song' && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <input id="savesearchbutton" class="button" type="submit" value="<?php echo T_('Save as Smart Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
     <input id="saveasplaylistbutton" class="button" type="submit" value="<?php echo T_('Save as Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
 <?php } ?>

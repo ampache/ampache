@@ -29,6 +29,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Preference;
@@ -44,8 +46,8 @@ use Ampache\Module\Util\Ui;
 /** @var string $t_uploads */
 /** @var string $t_upload */
 
-$access50     = Access::check('interface', 50);
-$access25     = ($access50 || Access::check('interface', 25));
+$access50     = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
+$access25     = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $categories   = Preference::get_categories();
 $current_user = $current_user ?? Core::get_global('user');
 $allow_upload = $allow_upload ?? $access25 && Upload::can_upload($current_user); ?>

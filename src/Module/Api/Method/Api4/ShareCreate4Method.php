@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -35,7 +36,6 @@ use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Repository\Model\User;
@@ -109,7 +109,7 @@ final class ShareCreate4Method
                 $object_type,
                 $object_id,
                 true,
-                $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
+                $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                 $expire_days,
                 $passwordGenerator->generate_token(),
                 0,

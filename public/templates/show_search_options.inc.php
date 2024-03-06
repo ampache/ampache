@@ -26,6 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
@@ -45,7 +46,7 @@ $search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_
 <?php }
 global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
-if (Access::check_function('batch_download') && $zipHandler->isZipable($search_type)) { ?>
+if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable($search_type)) { ?>
 <li>
     <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out($search_type); ?>&amp;browse_id=<?php echo $browse->id; ?>">
         <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>

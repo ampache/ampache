@@ -28,7 +28,9 @@ namespace Ampache\Module\Api;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -1467,10 +1469,10 @@ class Subsonic_Api
                 $params .= '&cache=1';
             }
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url('', AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
         } elseif (Subsonic_Xml_Data::_isPodcastEpisode($fileid)) {
             $object = new Podcast_episode((int) Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url('', AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
         }
 
         // return an error on missing files
@@ -1499,10 +1501,10 @@ class Subsonic_Api
         $url    = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url('', AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
         } elseif (Subsonic_Xml_Data::_isPodcastEpisode($fileid)) {
             $object = new Podcast_episode((int) Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url('', AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         // return an error on missing files
         if (empty($url)) {
@@ -1933,7 +1935,7 @@ class Subsonic_Api
                     $object_type,
                     $object_id,
                     true,
-                    Access::check_function('download'),
+                    Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                     $expire_days,
                     $passwordGenerator->generate_token(),
                     0,
@@ -2157,7 +2159,7 @@ class Subsonic_Api
             return;
         }
 
-        if (AmpConfig::get(ConfigurationKeyEnum::PODCAST) && $user->access >= AccessLevelEnum::LEVEL_MANAGER) {
+        if (AmpConfig::get(ConfigurationKeyEnum::PODCAST) && $user->access >= AccessLevelEnum::MANAGER->value) {
             $podcast = self::getPodcastRepository()->findById(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
             if ($podcast === null) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletepodcastchannel');
@@ -2455,7 +2457,7 @@ class Subsonic_Api
 
         $liveStreamRepository = self::getLiveStreamRepository();
 
-        if (AmpConfig::get('live_stream') && $user->access >= AccessLevelEnum::LEVEL_MANAGER) {
+        if (AmpConfig::get('live_stream') && $user->access >= AccessLevelEnum::MANAGER->value) {
             $liveStream = $liveStreamRepository->findById((int) $stream_id);
 
             if ($liveStream === null) {
@@ -2599,13 +2601,13 @@ class Subsonic_Api
             $email = urldecode($email);
         }
 
-        if ($user->access >= AccessLevelEnum::LEVEL_ADMIN) {
-            $access = AccessLevelEnum::LEVEL_USER;
+        if ($user->access >= AccessLevelEnum::ADMIN->value) {
+            $access = AccessLevelEnum::USER;
             if ($coverArtRole) {
-                $access = AccessLevelEnum::LEVEL_MANAGER;
+                $access = AccessLevelEnum::MANAGER;
             }
             if ($adminRole) {
-                $access = AccessLevelEnum::LEVEL_ADMIN;
+                $access = AccessLevelEnum::ADMIN;
             }
             $password = self::_decryptPassword($password);
             $user_id  = User::create($username, $username, $email, '', $password, $access);

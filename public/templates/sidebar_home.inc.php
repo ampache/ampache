@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Movie;
@@ -37,6 +39,8 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\VideoRepositoryInterface;
+
+global $dic;
 
 /** @var string $web_path */
 /** @var string $t_a_artists */
@@ -73,8 +77,6 @@ use Ampache\Repository\VideoRepositoryInterface;
 /** @var string $t_uploads */
 /** @var string $t_videos */
 /** @var string $t_wanted */
-
-global $dic;
 $server_allow    = AmpConfig::get('allow_localplay_playback');
 $controller      = AmpConfig::get('localplay_controller');
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
@@ -84,8 +86,8 @@ $showAlbumArtist = AmpConfig::get('show_album_artist');
 $showArtist      = AmpConfig::get('show_artist');
 $allowLabel      = AmpConfig::get('label');
 $allowPodcast    = AmpConfig::get('podcast');
-$access50        = Access::check('interface', 50);
-$access25        = ($access50 || Access::check('interface', 25));
+$access50        = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
+$access25        = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $current_user    = $current_user ?? Core::get_global('user');
 $allow_upload    = $allow_upload ?? $access25 && Upload::can_upload($current_user);
 $albumString     = (AmpConfig::get('album_group'))

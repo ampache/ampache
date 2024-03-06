@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\Shout;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\UiInterface;
@@ -80,7 +81,7 @@ class ShowEditActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(false);
 
         $this->subject->run($this->request, $this->gatekeeper);
@@ -90,7 +91,7 @@ class ShowEditActionTest extends TestCase
     {
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         static::expectException(ObjectNotFoundException::class);
@@ -106,7 +107,7 @@ class ShowEditActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         $this->request->expects(static::once())
@@ -134,7 +135,7 @@ class ShowEditActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         $this->request->expects(static::once())
@@ -180,7 +181,7 @@ class ShowEditActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         $this->request->expects(static::once())

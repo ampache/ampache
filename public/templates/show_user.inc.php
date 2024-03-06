@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Catalog;
@@ -84,12 +86,12 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
     <dt><?php echo T_('Display Name'); ?></dt>
     <dd>
         <?php echo $client->get_fullname(); ?>
-        <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>
-        <?php if (Access::check('interface', 100)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
             <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
             <a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('preferences', T_('Preferences')); ?></a>
         <?php } elseif ($client->id == $current_user->id) { ?>
@@ -107,7 +109,7 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
     <dd><?php echo $create_date; ?></dd>
     <dt><?php echo T_('Last Seen'); ?></dt>
     <dd><?php echo $last_seen; ?></dd>
-    <?php if (Access::check('interface', 50)) { ?>
+    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <dt><?php echo T_('Activity'); ?></dt>
     <dd><?php echo $client->f_usage; ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>

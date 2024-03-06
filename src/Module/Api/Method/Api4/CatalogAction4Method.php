@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -53,7 +55,7 @@ final class CatalogAction4Method
         if (!Api4::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
             return false;
         }
-        if (!Api4::check_access('interface', 75, $user->id, 'catalog_action', $input['api_format'])) {
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'catalog_action', $input['api_format'])) {
             return false;
         }
         $task = (string) $input['task'];

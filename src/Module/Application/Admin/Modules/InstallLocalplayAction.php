@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Modules;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -56,7 +57,7 @@ final class InstallLocalplayAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
             throw new AccessDeniedException();
         }
 
@@ -78,7 +79,7 @@ final class InstallLocalplayAction implements ApplicationActionInterface
         // Go ahead and enable Localplay (Admin->System) as we assume they want to do that
         // if they are enabling this
         Preference::update('allow_localplay_playback', -1, '1');
-        Preference::update('localplay_level', Core::get_global('user')->id, '100');
+        Preference::update('localplay_level', Core::get_global('user')->id, AccessLevelEnum::ADMIN->value);
         Preference::update('localplay_controller', Core::get_global('user')->id, $localplay->type);
 
         /* Show Confirmation */

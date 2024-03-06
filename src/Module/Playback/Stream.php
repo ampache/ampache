@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -625,7 +627,7 @@ class Stream
         }
         $sql .= "WHERE `np`.`object_type` IN ('song', 'video') ";
 
-        if (!Access::check('interface', 100)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
             // We need to check only for users which have allowed view of personal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id && !empty(Core::get_global('user'))) {

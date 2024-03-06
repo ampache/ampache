@@ -27,6 +27,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
@@ -67,7 +69,7 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 $show_browse = true;
                 break;
             case 'delete':
-                if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
+                if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) {
                     echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
                     return;
@@ -77,7 +79,7 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 $show_browse = true;
                 break;
             case 'send_playlist':
-                if (!Access::check('interface', 75)) {
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                     echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
                     return;
@@ -87,7 +89,7 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             case 'clear_playlist':
-                if (!Access::check('interface', 100)) {
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
                     echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
                     return;

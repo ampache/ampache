@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -58,10 +59,10 @@ class AmpacheMatomo implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', 100, 'string', 'plugins', 'matomo')) {
+        if (!Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'matomo')) {
             return false;
         }
-        if (!Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get('web_path') . '/matomo/', 100, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get('web_path') . '/matomo/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 

@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
@@ -312,7 +313,7 @@ final class Play2Action implements ApplicationActionInterface
                     ? $client
                     : substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
                 // this is a permastream link so create a session
-                if (!Session::exists('stream', $session_id)) {
+                if (!Session::exists(AccessTypeEnum::STREAM->value, $session_id)) {
                     Session::create(
                         array(
                             'sid' => $session_id,
@@ -324,7 +325,7 @@ final class Play2Action implements ApplicationActionInterface
                     );
                 } else {
                     Session::update_agent($session_id, $agent);
-                    Session::extend($session_id, 'stream');
+                    Session::extend($session_id, AccessTypeEnum::STREAM->value);
                 }
             }
         } elseif (!empty($apikey)) {
@@ -347,7 +348,7 @@ final class Play2Action implements ApplicationActionInterface
         $session_name = AmpConfig::get('session_name');
         // Identify the user according to it's web session
         // We try to avoid the generic 'Ampache User' as much as possible
-        if (!($user instanceof User) && array_key_exists($session_name, $_COOKIE) && Session::exists('interface', $_COOKIE[$session_name])) {
+        if (!($user instanceof User) && array_key_exists($session_name, $_COOKIE) && Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$session_name])) {
             Session::check();
             $user = (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata']))
                 ? User::get_from_username($_SESSION['userdata']['username'])
@@ -378,15 +379,15 @@ final class Play2Action implements ApplicationActionInterface
 
             // If require_session is set then we need to make sure we're legit
             if (!$user_auth && $use_auth && AmpConfig::get('require_session')) {
-                if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
+                if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')->id, AccessLevelEnum::GUEST)) {
                     $this->logger->notice(
                         'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
-                } elseif (!Session::exists('stream', $session_id)) {
+                } elseif (!Session::exists(AccessTypeEnum::STREAM->value, $session_id)) {
                     // No valid session id given, try with cookie session from web interface
                     $session_id = $_COOKIE[$session_name] ?? false;
-                    if ($session_id === false || !Session::exists('interface', $session_id)) {
+                    if ($session_id === false || !Session::exists(AccessTypeEnum::INTERFACE->value, $session_id)) {
                         $this->logger->warning(
                             "Streaming access denied: Session $session_id has expired",
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -397,7 +398,7 @@ final class Play2Action implements ApplicationActionInterface
                     }
                 }
                 // Now that we've confirmed the session is valid extend it
-                Session::extend($session_id, 'stream');
+                Session::extend($session_id, AccessTypeEnum::STREAM->value);
             }
 
             // Update the users last seen information
@@ -450,8 +451,8 @@ final class Play2Action implements ApplicationActionInterface
         // If they are using access lists let's make sure that they have enough access to play this mojo
         if (AmpConfig::get('access_control')) {
             if (
-                !$this->networkChecker->check(AccessLevelEnum::TYPE_STREAM, Core::get_global('user')->id) &&
-                !$this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id)
+                !$this->networkChecker->check(AccessTypeEnum::STREAM, Core::get_global('user')->id) &&
+                !$this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')->id)
             ) {
                 throw new AccessDeniedException(
                     sprintf('Streaming Access Denied: %s does not have stream level access', Core::get_user_ip())

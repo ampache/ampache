@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
@@ -1113,7 +1115,7 @@ class Video extends database_object implements
      */
     public static function update_played($new_played, $song_id): void
     {
-        self::_update_item('played', ($new_played ? 1 : 0), $song_id, '25');
+        self::_update_item('played', ($new_played ? 1 : 0), $song_id, AccessLevelEnum::USER);
     }
 
     /**
@@ -1125,12 +1127,11 @@ class Video extends database_object implements
      * @param string $field
      * @param string|int $value
      * @param int $video_id
-     * @param int $level
      */
-    private static function _update_item($field, $value, $video_id, $level): bool
+    private static function _update_item($field, $value, $video_id, AccessLevelEnum $level): bool
     {
         /* Check them Rights! */
-        if (!Access::check('interface', $level)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
             return false;
         }
 

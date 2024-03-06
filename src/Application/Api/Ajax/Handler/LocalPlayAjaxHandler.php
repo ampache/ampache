@@ -27,6 +27,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
@@ -53,7 +55,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'set_instance':
                 // Make sure they are allowed to do this
-                if (!Access::check('localplay', 5)) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST)) {
                     debug_event('localplay.ajax', 'Error attempted to set instance without required level', 1);
 
                     return;
@@ -73,7 +75,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'command':
                 // Make sure they are allowed to do this
-                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value)))) {
                     debug_event('localplay.ajax', 'Attempted to control Localplay without sufficient access', 1);
 
                     return;
@@ -141,7 +143,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'delete_track':
-                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value)))) {
                     debug_event('localplay.ajax', 'Attempted to delete track without access', 1);
 
                     return;
@@ -172,7 +174,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'delete_instance':
                 // Make sure that you have access to do this...
-                if (!Access::check('localplay', 75)) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER)) {
                     debug_event('localplay.ajax', 'Attempted to delete instance without access', 1);
 
                     return;
@@ -187,7 +189,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'repeat':
                 // Make sure that they have access to do this again no clue
-                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value)))) {
                     debug_event('localplay.ajax', 'Attempted to set repeat without access', 1);
 
                     return;
@@ -207,7 +209,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'random':
                 // Make sure that they have access to do this
-                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value)))) {
                     debug_event('localplay.ajax', 'Attempted to set random without access', 1);
 
                     return;

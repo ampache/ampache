@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\AmazonSearch;
@@ -62,19 +63,19 @@ class AmpacheAmazon implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, AccessLevelEnum::MANAGER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 

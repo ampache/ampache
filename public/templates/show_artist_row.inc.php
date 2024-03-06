@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
@@ -33,6 +35,9 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
+
+global $dic;
+$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 /** @var Ampache\Repository\Model\Artist $libitem */
 /** @var Ampache\Repository\Model\Browse|null $browse */
@@ -45,9 +50,6 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_time */
 /** @var string $cel_counter */
 /** @var string $cel_tags */
-// @deprecated
-global $dic;
-$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 $web_path   = (string)AmpConfig::get('web_path', ''); ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -103,7 +105,7 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
         </td>
     <?php } ?>
 <td class="cel_action">
-<?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
+<?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
     if (AmpConfig::get('sociable')) { ?>
     <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&amp;id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>

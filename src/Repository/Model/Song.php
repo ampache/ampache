@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Metadata\MetadataEnabledInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
@@ -411,7 +412,7 @@ class Song extends database_object implements
 
         // Allow scripts to populate new tags when injecting user uploads
         if (!defined('NO_SESSION')) {
-            if ($user_upload && !Access::check('interface', 50, $user_upload)) {
+            if ($user_upload && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user_upload)) {
                 $tags = Tag::clean_to_existing($tags);
             }
         }
@@ -1203,7 +1204,7 @@ class Song extends database_object implements
      */
     public static function update_year($new_year, $song_id): void
     {
-        self::_update_item('year', $new_year, $song_id, 50, true);
+        self::_update_item('year', $new_year, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1214,7 +1215,7 @@ class Song extends database_object implements
      */
     public static function update_label($new_value, $song_id): void
     {
-        self::_update_ext_item('label', $new_value, $song_id, 50, true);
+        self::_update_ext_item('label', $new_value, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1225,7 +1226,7 @@ class Song extends database_object implements
      */
     public static function update_language($new_lang, $song_id): void
     {
-        self::_update_ext_item('language', $new_lang, $song_id, 50, true);
+        self::_update_ext_item('language', $new_lang, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1236,7 +1237,7 @@ class Song extends database_object implements
      */
     public static function update_comment($new_comment, $song_id): void
     {
-        self::_update_ext_item('comment', $new_comment, $song_id, 50, true);
+        self::_update_ext_item('comment', $new_comment, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1247,7 +1248,7 @@ class Song extends database_object implements
      */
     public static function update_lyrics($new_lyrics, $song_id): void
     {
-        self::_update_ext_item('lyrics', $new_lyrics, $song_id, 50, true);
+        self::_update_ext_item('lyrics', $new_lyrics, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1258,7 +1259,7 @@ class Song extends database_object implements
      */
     public static function update_title($new_title, $song_id): void
     {
-        self::_update_item('title', $new_title, $song_id, 50, true);
+        self::_update_item('title', $new_title, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1269,7 +1270,7 @@ class Song extends database_object implements
      */
     public static function update_composer($new_composer, $song_id): void
     {
-        self::_update_item('composer', $new_composer, $song_id, 50, true);
+        self::_update_item('composer', $new_composer, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1280,7 +1281,7 @@ class Song extends database_object implements
      */
     public static function update_publisher($new_publisher, $song_id): void
     {
-        self::_update_item('publisher', $new_publisher, $song_id, 50, true);
+        self::_update_item('publisher', $new_publisher, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1291,7 +1292,7 @@ class Song extends database_object implements
      */
     public static function update_bitrate($new_bitrate, $song_id): void
     {
-        self::_update_item('bitrate', $new_bitrate, $song_id, 50, true);
+        self::_update_item('bitrate', $new_bitrate, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1302,7 +1303,7 @@ class Song extends database_object implements
      */
     public static function update_rate($new_rate, $song_id): void
     {
-        self::_update_item('rate', $new_rate, $song_id, 50, true);
+        self::_update_item('rate', $new_rate, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1313,7 +1314,7 @@ class Song extends database_object implements
      */
     public static function update_mode($new_mode, $song_id): void
     {
-        self::_update_item('mode', $new_mode, $song_id, 50, true);
+        self::_update_item('mode', $new_mode, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1324,7 +1325,7 @@ class Song extends database_object implements
      */
     public static function update_size($new_size, $song_id): void
     {
-        self::_update_item('size', $new_size, $song_id, 50);
+        self::_update_item('size', $new_size, $song_id, AccessLevelEnum::CONTENT_MANAGER);
     }
 
     /**
@@ -1335,7 +1336,7 @@ class Song extends database_object implements
      */
     public static function update_time($new_time, $song_id): void
     {
-        self::_update_item('time', $new_time, $song_id, 50, true);
+        self::_update_item('time', $new_time, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1346,7 +1347,7 @@ class Song extends database_object implements
      */
     public static function update_track($new_track, $song_id): void
     {
-        self::_update_item('track', $new_track, $song_id, 50, true);
+        self::_update_item('track', $new_track, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1357,7 +1358,7 @@ class Song extends database_object implements
      */
     public static function update_mbid($new_mbid, $song_id): void
     {
-        self::_update_item('mbid', $new_mbid, $song_id, 50);
+        self::_update_item('mbid', $new_mbid, $song_id, AccessLevelEnum::CONTENT_MANAGER);
     }
 
     /**
@@ -1368,7 +1369,7 @@ class Song extends database_object implements
      */
     public static function update_license($new_license, $song_id): void
     {
-        self::_update_item('license', $new_license, $song_id, 50, true);
+        self::_update_item('license', $new_license, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1382,7 +1383,7 @@ class Song extends database_object implements
     public static function update_artist($new_artist, $song_id, $old_artist, $update_counts = true): bool
     {
         if ($old_artist != $new_artist) {
-            if (self::_update_item('artist', $new_artist, $song_id, 50) !== false) {
+            if (self::_update_item('artist', $new_artist, $song_id, AccessLevelEnum::CONTENT_MANAGER) !== false) {
                 if ($update_counts && $old_artist) {
                     self::migrate_artist($new_artist, $old_artist);
                     Artist::update_table_counts();
@@ -1406,7 +1407,7 @@ class Song extends database_object implements
     public static function update_album($new_album, $song_id, $old_album, $update_counts = true): bool
     {
         if ($old_album != $new_album) {
-            if (self::_update_item('album', $new_album, $song_id, 50, true) !== false) {
+            if (self::_update_item('album', $new_album, $song_id, AccessLevelEnum::CONTENT_MANAGER, true) !== false) {
                 self::migrate_album($new_album, $song_id, $old_album);
                 if ($update_counts) {
                     Album::update_table_counts();
@@ -1443,7 +1444,7 @@ class Song extends database_object implements
      */
     public static function update_played($new_played, $song_id): void
     {
-        self::_update_item('played', ($new_played ? 1 : 0), $song_id, 25);
+        self::_update_item('played', ($new_played ? 1 : 0), $song_id, AccessLevelEnum::USER);
     }
 
     /**
@@ -1454,7 +1455,7 @@ class Song extends database_object implements
      */
     public static function update_enabled($new_enabled, $song_id): void
     {
-        self::_update_item('enabled', ($new_enabled ? 1 : 0), $song_id, 75, true);
+        self::_update_item('enabled', ($new_enabled ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
     }
 
     /**
@@ -1466,20 +1467,19 @@ class Song extends database_object implements
      * @param string $field
      * @param string|int|null $value
      * @param int $song_id
-     * @param int $level
      * @param bool $check_owner
      * @return PDOStatement|bool
      */
-    private static function _update_item($field, $value, $song_id, $level, $check_owner = false)
+    private static function _update_item($field, $value, $song_id, AccessLevelEnum $level, $check_owner = false)
     {
         if ($check_owner && !empty(Core::get_global('user'))) {
             $item = new Song($song_id);
             if (isset($item->id) && $item->get_user_owner() == Core::get_global('user')->id) {
-                $level = 25;
+                $level = AccessLevelEnum::USER;
             }
         }
         /* Check them Rights! */
-        if (!Access::check('interface', $level)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
             return false;
         }
 
@@ -1500,21 +1500,20 @@ class Song extends database_object implements
      * @param string $field
      * @param string $value
      * @param int $song_id
-     * @param int $level
      * @param bool $check_owner
      * @return PDOStatement|bool
      */
-    private static function _update_ext_item($field, $value, $song_id, $level, $check_owner = false)
+    private static function _update_ext_item($field, $value, $song_id, AccessLevelEnum $level, $check_owner = false)
     {
         if ($check_owner) {
             $item = new Song($song_id);
             if ($item->id && $item->get_user_owner() == Core::get_global('user')->id) {
-                $level = 25;
+                $level = AccessLevelEnum::USER;
             }
         }
 
         /* Check them rights boy! */
-        if (!Access::check('interface', $level)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
             return false;
         }
 
@@ -1977,7 +1976,7 @@ class Song extends database_object implements
         }
         $downsample_remote = false;
         // enforce or disable transcoding depending on local network ACL
-        if (AmpConfig::get('downsample_remote') && !$this->getNetworkChecker()->check(AccessLevelEnum::TYPE_NETWORK, $uid, AccessLevelEnum::LEVEL_DEFAULT)) {
+        if (AmpConfig::get('downsample_remote') && !$this->getNetworkChecker()->check(AccessTypeEnum::NETWORK, $uid, AccessLevelEnum::DEFAULT)) {
             $downsample_remote = true;
             debug_event(self::class, "Transcoding due to downsample_remote", 3);
         }

@@ -27,6 +27,8 @@ namespace Ampache\Gui\AlbumDisk;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
@@ -196,7 +198,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
     {
         return (
             $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === true
         ) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
@@ -217,7 +219,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) &&
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
@@ -228,7 +230,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function canBatchDownload(): bool
     {
-        return $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD) &&
+        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
             $this->zipHandler->isZipable('album_disk');
     }
@@ -249,7 +251,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) || $this->gatekeeper->getUserId() == $this->albumDisk->get_user_owner());
+        return ($this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) || $this->gatekeeper->getUserId() == $this->albumDisk->get_user_owner());
     }
 
     public function getEditButtonTitle(): string

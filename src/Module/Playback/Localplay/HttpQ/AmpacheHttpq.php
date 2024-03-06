@@ -24,6 +24,7 @@
 namespace Ampache\Module\Playback\Localplay\HttpQ;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Repository\Model\Live_Stream;
@@ -95,7 +96,7 @@ class AmpacheHttpq extends localplay_controller
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('httpq_active', T_('HTTPQ Active Instance'), 0, 25, 'integer', 'internal', 'httpq');
+        Preference::insert('httpq_active', T_('HTTPQ Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'httpq');
 
         return true;
     }

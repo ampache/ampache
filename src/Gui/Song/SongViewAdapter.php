@@ -27,6 +27,7 @@ namespace Ampache\Gui\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
@@ -176,7 +177,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return (
             $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === true
         ) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
@@ -197,7 +198,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) &&
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
@@ -246,7 +247,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return (
             (($owner_id !== null && !empty($GLOBALS['user'])) && $owner_id == $GLOBALS['user']->id) ||
-            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) &&
         $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
         is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/');
@@ -281,7 +282,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) ||
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
             ((!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
     }
 
@@ -297,7 +298,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canToggleState(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) ||
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
             ((!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
     }
 
@@ -402,7 +403,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         if (isset($this->song->r128_album_gain) && $this->song->r128_album_gain !== null) {
             $songprops[T_('R128 Album Gain')] = $this->song->r128_album_gain;
         }
-        if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) && $this->song->file !== null) {
+        if ($this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) && $this->song->file !== null) {
             $data                      = pathinfo($this->song->file);
             $songprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));
             $songprops[T_('Filename')] = scrub_out($data['filename'] . "." . ($data['extension'] ?? ''));
@@ -439,7 +440,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canEditPlaylist(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER);
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
     }
 
     public function getAddToPlaylistIcon(): string
@@ -449,7 +450,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canBeReordered(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER);
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
     }
 
     public function getReorderIcon(): string

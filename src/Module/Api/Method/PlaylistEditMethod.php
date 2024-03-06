@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -72,7 +73,7 @@ final class PlaylistEditMethod
         $playlist = new Playlist($input['filter']);
 
         // don't continue if you didn't actually get a playlist or the access level
-        if (!$playlist->id || (!$playlist->has_access($user->id) && $user->access !== 100)) {
+        if (!$playlist->id || (!$playlist->has_access($user->id) && $user->access !== AccessLevelEnum::ADMIN->value)) {
             Api::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;

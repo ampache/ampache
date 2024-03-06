@@ -25,13 +25,12 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\LicenseRepositoryInterface;
-use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
-
-/** @var list<int> $object_ids */
 
 global $dic;
 $licenseRepository = $dic->get(LicenseRepositoryInterface::class);
+
+/** @var list<int> $object_ids */
 
 $web_path = (string)AmpConfig::get('web_path', ''); ?>
 <div id="information_actions">

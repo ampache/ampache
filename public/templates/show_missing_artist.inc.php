@@ -27,7 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-/** @var array $wartist */
+/** @var array{name: string, mbid: string} $wartist */
 
 $web_path = (string)AmpConfig::get('web_path', '');
 Ui::show_box_top($wartist['name'], 'info-box');

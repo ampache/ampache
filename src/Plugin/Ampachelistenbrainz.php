@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Plugin;
@@ -63,10 +64,10 @@ class Ampachelistenbrainz implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -93,7 +94,7 @@ class Ampachelistenbrainz implements AmpachePluginInterface
             return false;
         }
         if ($from_version < 2) {
-            Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name);
+            Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
         }
 
         return true;

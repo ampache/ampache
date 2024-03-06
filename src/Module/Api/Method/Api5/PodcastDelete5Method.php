@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -54,7 +56,7 @@ final class PodcastDelete5Method
 
             return false;
         }
-        if (!Api5::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {

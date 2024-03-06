@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Rating;
@@ -72,7 +74,7 @@ use Ampache\Module\Util\Ui;
     <?php } ?>
 <td class="cel_action">
 <?php
-    if (Access::check('interface', 50)) { ?>
+    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <a id="<?php echo 'edit_podcast_' . $libitem->getId(); ?>" onclick="showEditDialog('podcast_row', '<?php echo $libitem->getId(); ?>', '<?php echo 'edit_podcast_' . $libitem->getId(); ?>', '<?php echo addslashes(T_('Podcast Edit')); ?>', 'podcast_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
@@ -81,7 +83,7 @@ use Ampache\Module\Util\Ui;
     </span>
     <?php
     }
-if (Access::check('interface', 75)) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) { ?>
     <a id="<?php echo 'delete_podcast_' . $libitem->getId(); ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $libitem->getId(); ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>

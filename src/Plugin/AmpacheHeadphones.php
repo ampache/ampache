@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
@@ -59,10 +60,10 @@ class AmpacheHeadphones implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('headphones_api_url', T_('Headphones URL'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('headphones_api_url', T_('Headphones URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('headphones_api_key', T_('Headphones API key'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('headphones_api_key', T_('Headphones API key'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 

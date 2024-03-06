@@ -30,6 +30,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog_beets;
 use Ampache\Module\Catalog\Catalog_beetsremote;
 use Ampache\Module\Catalog\Catalog_dropbox;
@@ -924,7 +926,7 @@ abstract class Catalog extends database_object
     public static function update_enabled($new_enabled, $catalog_id)
     {
         /* Check them Rights! */
-        if (!Access::check('interface', 75)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
             return false;
         }
 
@@ -3845,7 +3847,7 @@ abstract class Catalog extends database_object
         }
 
         return (
-            Access::check('interface', 75) ||
+            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
             ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove'))
         );
     }

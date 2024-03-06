@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Upnp_Api;
 use Ampache\Module\System\Session;
@@ -427,7 +428,7 @@ class UPnPPlayer
 
         $sid  = 'upnp_ply_' . $this->_description_url;
         $data = json_encode($this->_intState);
-        if (!Session::exists('stream', $sid)) {
+        if (!Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
             Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $data));
         } else {
             Session::write($sid, $data);

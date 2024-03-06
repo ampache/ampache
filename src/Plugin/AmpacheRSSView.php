@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -58,10 +59,10 @@ class AmpacheRSSView implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
 

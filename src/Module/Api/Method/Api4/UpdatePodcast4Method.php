@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -51,7 +53,7 @@ final class UpdatePodcast4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        if (!Api4::check_access('interface', 50, $user->id, 'update_podcast', $input['api_format'])) {
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -60,7 +62,7 @@ final class UpdatePodcast4Method
         if ($podcast !== null) {
             if (static::getPodcastSyncer()->sync($podcast, true)) {
                 Api4::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['api_format']);
-                Session::extend($input['auth'], 'api');
+                Session::extend($input['auth'], AccessTypeEnum::API->value);
             } else {
                 Api4::message('error', T_('Failed to sync episodes for podcast: ' . (string) $object_id), '400', $input['api_format']);
             }
