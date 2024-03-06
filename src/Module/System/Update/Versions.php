@@ -260,6 +260,13 @@ final class Versions
         600051 => Migration\V6\Migration600051::class,
         600052 => Migration\V6\Migration600052::class,
         600053 => Migration\V6\Migration600053::class,
+        600054 => Migration\V6\Migration600054::class,
+        600055 => Migration\V6\Migration600055::class,
+        600056 => Migration\V6\Migration600056::class,
+        600057 => Migration\V6\Migration600057::class,
+        600058 => Migration\V6\Migration600058::class,
+        600059 => Migration\V6\Migration600059::class,
+        600060 => Migration\V6\Migration600060::class,
     ];
 
     /**

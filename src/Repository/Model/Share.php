@@ -39,6 +39,7 @@ class Share extends database_object
     protected const DB_TABLENAME = 'share';
     public const VALID_TYPES     = array(
         'album',
+        'album_disk',
         'artist',
         'playlist',
         'podcast',
