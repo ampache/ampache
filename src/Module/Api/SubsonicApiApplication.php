@@ -229,6 +229,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (in_array($action, $methods)) {
             /** @see Subsonic_Api */
             call_user_func(array(Subsonic_Api::class, $action), $input, $user);
+
             // We only allow a single function to be called, and we assume it's cleaned up!
             return;
         }

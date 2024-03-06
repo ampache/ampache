@@ -80,7 +80,7 @@ use Ampache\Module\Util\Ui;
     </a>
     <?php
     }
-    if (Catalog::can_remove($libitem)) { ?>
+if (Catalog::can_remove($libitem)) { ?>
     <a id="<?php echo 'delete_tvshow_season_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
