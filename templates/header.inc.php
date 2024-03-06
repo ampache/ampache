@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
@@ -39,8 +41,8 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 $web_path          = (string)AmpConfig::get('web_path', '');
-$access100         = Access::check('interface', 100);
-$access25          = ($access100 || Access::check('interface', 25));
+$access100         = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
+$access25          = ($access100 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $site_lang         = AmpConfig::get('lang', 'en_US');
 $site_title        = scrub_out(AmpConfig::get('site_title'));
 $site_social       = AmpConfig::get('sociable');
@@ -99,6 +101,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen">
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.min.css" type="text/css" media="screen">
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jquery-contextmenu/jquery.contextMenu.min.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/filepond/filepond.min.css" type="text/css" media="screen">
 
         <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
@@ -109,9 +112,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/jquery.qrcode.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/modules/rhinoslider/js/rhinoslider-1.05.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.full.min.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jquery-knob/jquery.knob.min.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jquery-file-upload/js/jquery.iframe-transport.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jquery-file-upload/js/jquery.fileupload.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/filepond/filepond.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-contextmenu/jquery.contextMenu.js"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" defer></script>

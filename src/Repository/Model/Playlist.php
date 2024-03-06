@@ -27,6 +27,8 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
@@ -129,7 +131,7 @@ class Playlist extends playlist_object
                 return parent::get_from_cache($key, $user_id);
             }
         }
-        $is_admin = ($userOnly === false || (Access::check('interface', 100, $user_id) || $user_id == -1));
+        $is_admin = ($userOnly === false || (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1));
         $sql      = "SELECT `id` FROM `playlist` ";
         $params   = array();
         $join     = 'WHERE';
@@ -183,7 +185,7 @@ class Playlist extends playlist_object
         if ($user_id > 0 && parent::is_cached($key, $user_id)) {
             return parent::get_from_cache($key, $user_id);
         }
-        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+        $is_admin = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1);
         $sql      = "SELECT `id`, IF(`user` = ?, `name`, CONCAT(`name`, ' (', `username`, ')')) AS `name` FROM `playlist` ";
         $params   = array($user_id);
 
@@ -252,7 +254,7 @@ class Playlist extends playlist_object
                 return parent::get_from_cache($key, $user_id);
             }
         }
-        $is_admin = ($userOnly === false || (Access::check('interface', 100, $user_id) || $user_id == -1));
+        $is_admin = ($userOnly === false || (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1));
         $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search` ";
         $params   = array();
         $join     = 'WHERE';
@@ -596,7 +598,7 @@ class Playlist extends playlist_object
      */
     private function _update_item($field, $value)
     {
-        if (Core::get_global('user')->id != $this->user && !Access::check('interface', 50)) {
+        if (Core::get_global('user')->id != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             return false;
         }
 

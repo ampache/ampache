@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
@@ -78,7 +80,7 @@ if (Stream_Playlist::check_autoplay_next()) { ?>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_season_' . $season->id); ?>
         </li>
 <?php }
-if (Access::check('interface', 50)) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <li>
             <a id="<?php echo 'edit_tvshow_season_' . $season->id; ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id; ?>', '<?php echo 'edit_tvshow_season_' . $season->id; ?>', '<?php echo addslashes(T_('Season Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>

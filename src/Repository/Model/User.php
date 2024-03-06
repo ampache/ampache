@@ -31,6 +31,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\IpHistoryRepositoryInterface;
@@ -412,15 +413,14 @@ class User extends database_object
      * has_access
      * this function checks to see if this user has access
      * to the passed action (pass a level requirement)
-     * @param int $needed_level
      */
-    public function has_access($needed_level): bool
+    public function has_access(AccessLevelEnum $needed_level): bool
     {
         if (AmpConfig::get('demo_mode')) {
             return true;
         }
 
-        if ($this->access >= $needed_level) {
+        if ($this->access >= $needed_level->value) {
             return true;
         }
 
@@ -786,8 +786,12 @@ class User extends database_object
     public function disable(): bool
     {
         // Make sure we aren't disabling the last admin
-        $sql        = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `id` != '" . $this->id . "' AND `access`='100'";
-        $db_results = Dba::read($sql);
+        $sql    = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `access` = ? AND `id` != ? ";
+        $params = array(
+            AccessLevelEnum::ADMIN->value,
+            $this->id
+        );
+        $db_results = Dba::read($sql, $params);
 
         if (!Dba::num_rows($db_results)) {
             return false;
@@ -811,8 +815,12 @@ class User extends database_object
     {
         // There must always be at least one admin left if you're reducing access
         if ($new_access < 100) {
-            $sql        = "SELECT `id` FROM `user` WHERE `access`='100' AND `id` != '$this->id'";
-            $db_results = Dba::read($sql);
+            $sql    = "SELECT `id` FROM `user` WHERE `access`= ? AND `id` != ?";
+            $params = array(
+                AccessLevelEnum::ADMIN->value,
+                $this->id
+            );
+            $db_results = Dba::read($sql, $params);
             if (!Dba::num_rows($db_results)) {
                 return false;
             }
@@ -835,7 +843,7 @@ class User extends database_object
      */
     public static function save_mediaplay($user, $media): void
     {
-        foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
+        foreach (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY) as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin !== null && $plugin->load($user)) {
@@ -856,7 +864,6 @@ class User extends database_object
      * @param string $email
      * @param string $website
      * @param string $password
-     * @param int $access
      * @param string $state
      * @param string $city
      * @param bool $disabled
@@ -869,7 +876,7 @@ class User extends database_object
         $email,
         $website,
         $password,
-        $access,
+        AccessLevelEnum $access,
         $catalog_filter_group = 0,
         $state = '',
         $city = '',
@@ -891,7 +898,7 @@ class User extends database_object
 
         /* Now Insert this new user */
         $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `catalog_filter_group`, `create_date`";
-        $params = array($username, $disabled, $fullname, $email, $password, $access, $catalog_filter_group, time());
+        $params = array($username, $disabled, $fullname, $email, $password, $access->value, $catalog_filter_group, time());
 
         if (!empty($website)) {
             $sql .= ", `website`";
@@ -1033,51 +1040,6 @@ class User extends database_object
     }
 
     /**
-     * access_name_to_level
-     * This takes the access name for the user and returns the level
-     * @param string $name
-     */
-    public static function access_name_to_level($name): int
-    {
-        // FIXME why is manager not here? (AccessLevelEnum::LEVEL_CONTENT_MANAGER;)
-        switch ($name) {
-            case 'admin':
-                return AccessLevelEnum::LEVEL_ADMIN;
-            case 'user':
-                return AccessLevelEnum::LEVEL_USER;
-            case 'manager':
-                return AccessLevelEnum::LEVEL_MANAGER;
-            case 'guest':
-                return AccessLevelEnum::LEVEL_GUEST;
-            default:
-                return AccessLevelEnum::LEVEL_DEFAULT;
-        }
-    }
-
-    /**
-     * access_level_to_name
-     * This takes the access level for the user and returns the translated name for that level
-     * @param string $level
-     */
-    public static function access_level_to_name($level): string
-    {
-        switch ($level) {
-            case '100':
-                return T_('Admin');
-            case '75':
-                return T_('Catalog Manager');
-            case '50':
-                return T_('Content Manager');
-            case '25':
-                return T_('User');
-            case '5':
-                return T_('Guest');
-            default:
-                return T_('Unknown');
-        }
-    }
-
-    /**
      * fix_preferences
      * This is the new fix_preferences function, it does the following
      * Remove Duplicates from user, add in missing
@@ -1169,9 +1131,13 @@ class User extends database_object
     public function delete(): bool
     {
         // Before we do anything make sure that they aren't the last admin
-        if ($this->has_access(100)) {
-            $sql        = "SELECT `id` FROM `user` WHERE `access`='100' AND id != ?";
-            $db_results = Dba::read($sql, array($this->id));
+        if ($this->has_access(AccessLevelEnum::ADMIN)) {
+            $sql    = "SELECT `id` FROM `user` WHERE `access`= ? AND id != ?";
+            $params = array(
+                AccessLevelEnum::ADMIN->value,
+                $this->id
+            );
+            $db_results = Dba::read($sql, $params);
             if (!Dba::num_rows($db_results)) {
                 return false;
             }
@@ -1307,7 +1273,7 @@ class User extends database_object
             $avatar['url_mini'] .= '&thumb=5';
             $avatar['url_medium'] .= '&thumb=3';
         } else {
-            foreach (Plugin::get_plugins('get_avatar_url') as $plugin_name) {
+            foreach (Plugin::get_plugins(PluginTypeEnum::AVATAR_PROVIDER) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
                     $avatar['url'] = $plugin->_plugin->get_avatar_url($this);
@@ -1433,7 +1399,7 @@ class User extends database_object
             }
         }
 
-        foreach (Plugin::get_plugins('stream_control') as $plugin_name) {
+        foreach (Plugin::get_plugins(PluginTypeEnum::STREAM_CONTROLLER) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->_plugin !== null && $plugin->load($user)) {
                 if (!$plugin->_plugin->stream_control($media_ids)) {

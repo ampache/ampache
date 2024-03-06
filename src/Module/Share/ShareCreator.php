@@ -27,6 +27,7 @@ namespace Ampache\Module\Share;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Playlist;
@@ -123,7 +124,7 @@ final class ShareCreator implements ShareCreatorInterface
 
         $url = Share::get_url((int)$share_id, $secret);
         // Get a shortener url if any available
-        foreach ($this->pluginRetriever->retrieveByType('shortener', $user) as $plugin) {
+        foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::URL_SHORTENER, $user) as $plugin) {
             try {
                 /** @var string|false $short_url */
                 $short_url = $plugin->_plugin->shortener($url);

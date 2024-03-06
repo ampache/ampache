@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var VideoRepositoryInterface $videoRepository */
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
 
 $web_path     = (string)AmpConfig::get('web_path', '');
 $get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);

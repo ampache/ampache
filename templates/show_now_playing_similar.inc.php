@@ -27,8 +27,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
 
-/** @var array $artists */
-/** @var array $songs */
+/** @var list<array{id: null|int, mbid: string, name: string}> $artists */
+/** @var list<array{id: int}> $songs */
 ?>
 
 <?php

@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Image;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -108,8 +109,8 @@ final class ShowAction implements ApplicationActionInterface
             $cookie = $_COOKIE[AmpConfig::get('session_name')] ?? '';
 
             if (
-                !Session::exists('interface', $cookie) &&
-                !Session::exists('api', $auth) &&
+                !Session::exists(AccessTypeEnum::INTERFACE->value, $cookie) &&
+                !Session::exists(AccessTypeEnum::API->value, $auth) &&
                 !empty($token_check)
             ) {
                 $auth = ($auth !== '') ? $auth : $token;

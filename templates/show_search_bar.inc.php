@@ -29,7 +29,13 @@ use Ampache\Module\Util\EnvironmentInterface;
 // TODO remove me
 global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
-$t_search    = T_('Search'); ?>
+$t_search    = T_('Search');
+
+/** @var string $web_path */
+/** @var string $t_albums */
+/** @var string $t_artists */
+/** @var string $t_playlists */
+?>
 <div id="sb_Subsearch">
     <form name="search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
         <input type="text" name="rule_1_input" id="searchString" placeholder="<?php echo $t_search; ?>" />

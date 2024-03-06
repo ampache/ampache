@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
@@ -520,7 +522,7 @@ class Podcast_Episode extends database_object implements
     private static function _update_item(string $field, $value, int $episode_id): void
     {
         /* Check them Rights! */
-        if (!Access::check('interface', 25)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
             return;
         }
 

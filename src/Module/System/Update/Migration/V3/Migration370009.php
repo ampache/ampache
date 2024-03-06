@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Generator;
 
@@ -53,7 +54,7 @@ final class Migration370009 extends AbstractMigration
             $this->updateDatabase($sql);
         }
 
-        $this->updatePreferences('allow_video', 'Allow video features', '1', 75, 'integer', 'options');
+        $this->updatePreferences('allow_video', 'Allow video features', '1', AccessLevelEnum::MANAGER->value, 'integer', 'options');
     }
 
     public function getTableMigrations(

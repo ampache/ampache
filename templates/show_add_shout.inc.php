@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -37,7 +39,7 @@ use Ampache\Repository\Model\Shoutbox;
 /** @var ShoutRendererInterface $shoutRenderer */
 ?>
 <div>
-<?php if (Access::check('interface', 25)) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
 <div style="float: right">
 <?php
 $boxtitle = T_('Post to Shoutbox');
@@ -53,7 +55,7 @@ $boxtitle = T_('Post to Shoutbox');
 <tr>
     <td><textarea rows="5" cols="35" maxlength="2000" name="comment"></textarea></td>
 </tr>
-<?php if (Access::check('interface', 50)) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
 <tr>
     <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>

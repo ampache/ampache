@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -88,19 +89,19 @@ final class StreamMethod
         $url = '';
         if ($type == 'song') {
             $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url   = $media->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if ($type == 'podcast_episode') {
             $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url   = $media->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if ($type == 'search' || $type == 'playlist') {
             $song_id = Random::get_single_song($type, $user, $object_id);
             $media   = new Song($song_id);
-            $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url     = $media->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
-            Session::extend($input['auth'], 'api');
+            Session::extend($input['auth'], AccessTypeEnum::API->value);
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;

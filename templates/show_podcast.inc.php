@@ -26,6 +26,8 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Rss\AmpacheRss;
@@ -40,8 +42,8 @@ use Ampache\Repository\Model\Userflag;
 /** @var array $object_ids */
 /** @var string $object_type */
 
-$access75 = Access::check('interface', 75);
-$access50 = ($access75 || Access::check('interface', 50));
+$access75 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER);
+$access50 = ($access75 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER));
 $browse   = new Browse();
 $browse->set_type($object_type);
 $browse->set_use_filters(false);

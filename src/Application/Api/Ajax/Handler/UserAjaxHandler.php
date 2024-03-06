@@ -27,6 +27,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\User;
@@ -60,7 +62,7 @@ final class UserAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'flip_follow':
-                if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
+                if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) {
                     $fuser = new User($user_id);
                     if ($fuser->id > 0 && $user_id !== (int) Core::get_global('user')->id) {
                         $this->followToggler->toggle(

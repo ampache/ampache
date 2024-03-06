@@ -25,13 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Batch;
 
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -81,7 +81,7 @@ final class DefaultAction implements ApplicationActionInterface
         ob_end_clean();
         if (
             !defined('NO_SESSION') &&
-            !$this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD)
+            !$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
         ) {
             throw new AccessDeniedException();
         }

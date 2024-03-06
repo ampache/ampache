@@ -26,6 +26,9 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
@@ -50,7 +53,7 @@ use Ampache\Repository\Model\Userflag;
 
 $web_path          = (string)AmpConfig::get('web_path', '');
 $show_direct_play  = AmpConfig::get('directplay');
-$show_playlist_add = Access::check('interface', 25);
+$show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_similar      = AmpConfig::get('show_similar');
 $directplay_limit  = (int)AmpConfig::get('direct_play_limit', 0);
 $use_label         = AmpConfig::get('label');
@@ -183,7 +186,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php echo Ajax::button_with_text('?action=basket&type=artist_random&id=' . $artist->id, 'random', T_('Random All to Temporary Playlist'), 'random_' . $artist->id); ?>
         </li>
 <?php } ?>
-<?php if (Access::check('interface', 50)) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
                 <?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?>
@@ -204,7 +207,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => (string)$artist->id)); ?>
         </li>
 <?php } ?>
-<?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
+<?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
         <li>
@@ -217,7 +220,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     }
 global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
-if (Access::check_function('batch_download') && $zipHandler->isZipable('artist')) {
+if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('artist')) {
     $download = T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>">
@@ -226,7 +229,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('artist')
             </a>
         </li>
 <?php }
-if (($owner_id > 0 && $owner_id == $current_user->id) || Access::check('interface', 50)) { ?>
+if (($owner_id > 0 && $owner_id == $current_user->id) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">

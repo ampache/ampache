@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
@@ -43,7 +45,7 @@ use Ampache\Module\Util\Ui;
                     echo $libitem->f_avatar_mini;
                 }
 echo $libitem->username;
-if ($libitem->fullname_public || Access::check('interface', 100)) {
+if ($libitem->fullname_public || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
     echo " (" . $libitem->fullname . ")";
 } ?>
         </a>
@@ -51,7 +53,7 @@ if ($libitem->fullname_public || Access::check('interface', 100)) {
     <td class="cel_lastseen"><?php echo $last_seen; ?></td>
     <td class="cel_registrationdate"><?php echo $create_date; ?></td>
     <?php
-        if (Access::check('interface', 50)) { ?>
+        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
             <td class="cel_activity"><?php echo $libitem->f_usage; ?></td>
         <?php
             if (AmpConfig::get('track_user_ip')) { ?>
@@ -63,18 +65,18 @@ if ($libitem->fullname_public || Access::check('interface', 100)) {
                 <?php
             }
         }
-if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
             <td class="cel_follow"><?php echo $userFollowStateRenderer->render($libitem->getId(), Core::get_global('user')->getId()); ?></td>
             <?php } ?>
     <td class="cel_action">
     <?php
-if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $libitem->username; ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>
     <?php
-if (Access::check('interface', 100)) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
             <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $libitem->id; ?>">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>

@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
@@ -47,11 +49,11 @@ if (!empty($videos)) {
         <div id="video_<?php echo $video_id; ?>" class="art_album libitem_menu">
             <?php $art_showed = false;
         if ($video->get_default_art_kind() == 'preview') {
-            $art_showed = Art::display('video', $video->id, $video->getFileName() ?? '', 9, $video->get_link(), false, 'preview');
+            $art_showed = Art::display('video', $video->id, $video->getFileName(), 9, $video->get_link(), false, 'preview');
         }
         if (!$art_showed) {
             $thumb = Ui::is_grid_view('video') ? 7 : 6;
-            Art::display('video', $video->id, $video->getFileName() ?? '', $thumb, $video->get_link());
+            Art::display('video', $video->id, $video->getFileName(), $thumb, $video->get_link());
         } ?>
         </div>
         <div class="play_video">
@@ -66,7 +68,7 @@ if (!empty($videos)) {
         <?php } ?>
         </div>
         <?php
-        if (Access::check('interface', 25)) { ?>
+        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $video->id; ?>_video"><?php echo Rating::show($video->id, 'video'); ?></span>
                 <span class="cel_rating" id="userflag_<?php echo $video->id; ?>_video"><?php echo Userflag::show($video->id, 'video'); ?></span>

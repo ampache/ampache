@@ -27,6 +27,8 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -35,7 +37,7 @@ use Ampache\Module\Util\Ui;
 
 $web_path       = (string)AmpConfig::get('web_path', '');
 $display_fields = (array) AmpConfig::get('registration_display_fields');
-$access100      = Access::check('interface', 100); ?>
+$access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); ?>
 <?php echo AmpError::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo $web_path; ?>/preferences.php?action=update_user" enctype="multipart/form-data">
     <table class="tabledata">

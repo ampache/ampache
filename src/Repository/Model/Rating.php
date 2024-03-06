@@ -30,6 +30,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
 use PDOStatement;
@@ -362,7 +363,7 @@ class Rating extends database_object
         $rating = new Rating($object_id, $object_type);
         $user   = new User($user_id);
         if ($rating->id) {
-            foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
+            foreach (Plugin::get_plugins(PluginTypeEnum::RATING_SAVER) as $plugin_name) {
                 try {
                     $plugin = new Plugin($plugin_name);
                     if ($plugin->_plugin !== null && $plugin->load($user)) {

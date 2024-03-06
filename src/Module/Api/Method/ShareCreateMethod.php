@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -40,7 +41,6 @@ use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -128,7 +128,7 @@ final class ShareCreateMethod
                 $object_type,
                 $object_id,
                 true,
-                $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
+                $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                 $expire_days,
                 $passwordGenerator->generate_token(),
                 0,

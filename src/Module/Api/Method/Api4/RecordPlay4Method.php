@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -69,7 +71,7 @@ final class RecordPlay4Method
             return false;
         }
         // If you are setting plays for other users make sure we have an admin
-        if ($play_user->id !== $user->id && !Api4::check_access('interface', 100, $user->id, 'record_play', $input['api_format'])) {
+        if ($play_user->id !== $user->id && !Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, 'record_play', $input['api_format'])) {
             return false;
         }
         ob_end_clean();

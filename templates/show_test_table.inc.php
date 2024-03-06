@@ -51,7 +51,10 @@ function debug_wresult($status = false, $value = null, $comment = ''): string
 // TODO remove me
 global $dic;
 /** @var EnvironmentInterface $environment */
-$environment = $dic->get(EnvironmentInterface::class); ?>
+$environment = $dic->get(EnvironmentInterface::class);
+
+/** @var string $configfile */
+?>
 <tr>
     <td><?php echo T_('PHP version'); ?></td>
     <td><?php echo debug_result($environment->check_php_version()); ?></td>

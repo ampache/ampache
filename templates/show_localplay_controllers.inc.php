@@ -26,7 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 
-/** @var array $controllers */
+/** @var list<string> $controllers */
 
 $web_path = (string)AmpConfig::get('web_path', ''); ?>
 <!-- Plugin we've found -->

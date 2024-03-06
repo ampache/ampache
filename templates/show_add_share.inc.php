@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -68,7 +69,7 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
     <td><?php echo T_('Allow Stream'); ?></td>
     <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($allow_stream || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
-<?php if ((in_array($object_type, array('song', 'video', 'podcast_episode')) && (Access::check_function('download'))) || (Access::check_function('batch_download') && $isZipable)) { ?>
+<?php if ((in_array($object_type, array('song', 'video', 'podcast_episode')) && (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD))) || (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $isZipable)) { ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
     <td><input type="checkbox" name="allow_download" value="1" <?php echo ($allow_download || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>

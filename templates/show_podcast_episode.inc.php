@@ -24,6 +24,9 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
@@ -78,23 +81,23 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'add', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $episode->id); ?>
         <?php } ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=podcast_episode&id=<?php echo $episode->id; ?>">
                 <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
                 </a>
             <?php } ?>
         <?php } ?>
-        <?php if (Access::check('interface', 25)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
                 <?php echo Share::display_ui('podcast_episode', $episode->id, false); ?>
             <?php } ?>
         <?php } ?>
-        <?php if (Access::check_function('download') && !empty($episode->file)) { ?>
+        <?php if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD) && !empty($episode->file)) { ?>
             <a class="nohtml" href="<?php echo $episode->play_url(); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
             <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php } ?>
-        <?php if (Access::check('interface', 50)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php } ?>

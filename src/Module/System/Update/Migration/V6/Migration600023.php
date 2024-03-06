@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration600023 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('upload_access_level', 'Upload Access Level', '25', 100, 'special', 'system', 'upload');
+        $this->updatePreferences('upload_access_level', 'Upload Access Level', AccessLevelEnum::USER->value, AccessLevelEnum::ADMIN->value, 'special', 'system', 'upload');
     }
 }

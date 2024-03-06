@@ -30,6 +30,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog_beets;
 use Ampache\Module\Catalog\Catalog_beetsremote;
 use Ampache\Module\Catalog\Catalog_dropbox;
@@ -46,6 +48,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
@@ -924,7 +927,7 @@ abstract class Catalog extends database_object
     public static function update_enabled($new_enabled, $catalog_id)
     {
         /* Check them Rights! */
-        if (!Access::check('interface', 75)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
             return false;
         }
 
@@ -2146,7 +2149,7 @@ abstract class Catalog extends database_object
         // only allow your primary external metadata source to update values
         $overwrites  = true;
         $meta_order  = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
-        $plugin_list = Plugin::get_plugins('get_external_metadata');
+        $plugin_list = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_METADATA_RETRIEVER);
         $user        = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
@@ -3845,7 +3848,7 @@ abstract class Catalog extends database_object
         }
 
         return (
-            Access::check('interface', 75) ||
+            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
             ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove'))
         );
     }

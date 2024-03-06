@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -279,7 +281,7 @@ class Preference extends database_object
      */
     public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false): bool
     {
-        $access100 = Access::check('interface', 100);
+        $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         // First prepare
         if (!is_numeric($preference)) {
             $pref_id = self::id_from_name($preference);
@@ -401,7 +403,7 @@ class Preference extends database_object
         $db_results = Dba::read($sql, array($preference));
         $data       = Dba::fetch_assoc($db_results);
 
-        if (Access::check('interface', $data['level'])) {
+        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::from((int) $data['level']))) {
             return true;
         }
 
@@ -650,121 +652,121 @@ class Preference extends database_object
     public static function set_defaults(): void
     {
         $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES " .
-            "(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'), " .
-            "(4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query'), " .
-            "(19, 'transcode_bitrate', '128', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding'), " .
-            "(22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', 100, 'string', 'interface', 'custom'), " .
-            "(23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system', null), " .
-            "(24, 'force_http_play', '0', 'Force HTTP playback regardless of port', 100, 'boolean', 'system', null), " .
-            "(29, 'play_type', 'web_player', 'Playback Type', 25, 'special', 'streaming', null), " .
-            "(31, 'lang', 'en_US', 'Language', 100, 'special', 'interface', null), " .
-            "(32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist', null), " .
+            "(1, 'download', '1', 'Allow Downloads', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'feature'), " .
+            "(4, 'popular_threshold', '10', 'Popular Threshold', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'query'), " .
+            "(19, 'transcode_bitrate', '128', 'Transcode Bitrate', " . AccessLevelEnum::USER->value . ", 'string', 'streaming', 'transcoding'), " .
+            "(22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', " . AccessLevelEnum::ADMIN->value . ", 'string', 'interface', 'custom'), " .
+            "(23, 'lock_songs', '0', 'Lock Songs', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', null), " .
+            "(24, 'force_http_play', '0', 'Force HTTP playback regardless of port', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', null), " .
+            "(29, 'play_type', 'web_player', 'Playback Type', " . AccessLevelEnum::USER->value . ", 'special', 'streaming', null), " .
+            "(31, 'lang', 'en_US', 'Language', " . AccessLevelEnum::ADMIN->value . ", 'special', 'interface', null), " .
+            "(32, 'playlist_type', 'm3u', 'Playlist Type', " . AccessLevelEnum::ADMIN->value . ", 'special', 'playlist', null), " .
             "(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme'), " .
-            "(40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options', 'localplay'), " .
-            "(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options', 'localplay'), " .
-            "(44, 'allow_stream_playback', '1', 'Allow Streaming', 100, 'boolean', 'options', 'feature'), " .
-            "(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', 100, 'boolean', 'options', 'feature'), " .
-            "(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', 100, 'boolean', 'options', 'localplay'), " .
-            "(47, 'stats_threshold', '7', 'Statistics Day Threshold', 25, 'integer', 'interface', 'query'), " .
-            "(51, 'offset_limit', '50', 'Offset Limit', 5, 'integer', 'interface', 'query'), " .
-            "(52, 'rate_limit', '8192', 'Rate Limit', 100, 'integer', 'streaming', 'transcoding'), " .
-            "(53, 'playlist_method', 'default', 'Playlist Method', 5, 'string', 'playlist', null), " .
-            "(55, 'transcode', 'default', 'Allow Transcoding', 25, 'string', 'streaming', 'transcoding'), " .
+            "(40, 'localplay_level', '0', 'Localplay Access', " . AccessLevelEnum::ADMIN->value . ", 'special', 'options', 'localplay'), " .
+            "(41, 'localplay_controller', '0', 'Localplay Type', " . AccessLevelEnum::ADMIN->value . ", 'special', 'options', 'localplay'), " .
+            "(44, 'allow_stream_playback', '1', 'Allow Streaming', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'feature'), " .
+            "(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'feature'), " .
+            "(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'localplay'), " .
+            "(47, 'stats_threshold', '7', 'Statistics Day Threshold', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'query'), " .
+            "(51, 'offset_limit', '50', 'Offset Limit', " . AccessLevelEnum::GUEST->value . ", 'integer', 'interface', 'query'), " .
+            "(52, 'rate_limit', '8192', 'Rate Limit', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'streaming', 'transcoding'), " .
+            "(53, 'playlist_method', 'default', 'Playlist Method', " . AccessLevelEnum::GUEST->value . ", 'string', 'playlist', null), " .
+            "(55, 'transcode', 'default', 'Allow Transcoding', " . AccessLevelEnum::USER->value . ", 'string', 'streaming', 'transcoding'), " .
             "(69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'), " .
-            "(70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'), " .
-            "(71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'), " .
-            "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'), " .
-            "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm'), " .
-            "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'), " .
-            "(83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'), " .
-            "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'browse'), " .
-            "(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player'), " .
-            "(86, 'subsonic_backend', '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend'), " .
-            "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(90, 'allow_personal_info_now', '1', 'Share Now Playing information', 25, 'boolean', 'interface', 'privacy'), " .
-            "(91, 'allow_personal_info_recent', '1', 'Share Recently Played information', 25, 'boolean', 'interface', 'privacy'), " .
-            "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy'), " .
-            "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy'), " .
-            "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'), " .
-            "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system', 'update'), " .
-            "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'), " .
-            "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'), " .
-            "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'), " .
-            "(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player'), " .
-            "(100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', 25, 'boolean', 'interface', 'player'), " .
-            "(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', 100, 'boolean', 'streaming', null), " .
-            "(102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature'), " .
-            "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'), " .
-            "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'), " .
-            "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'), " .
-            "(108, 'album_group', '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'), " .
-            "(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'), " .
-            "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', null), " .
-            "(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', null), " .
-            "(112, 'upload_catalog', '-1', 'Destination catalog', 100, 'integer', 'system', 'upload'), " .
-            "(113, 'allow_upload', '0', 'Allow user uploads', 100, 'boolean', 'system', 'upload'), " .
-            "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 100, 'boolean', 'system', 'upload'), " .
-            "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 100, 'boolean', 'system', 'upload'), " .
-            "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload'), " .
-            "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 100, 'boolean', 'system', 'upload'), " .
-            "(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'), " .
-            "(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'), " .
-            "(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'), " .
-            "(121, 'allow_video', '0', 'Allow Video Features', 75, 'integer', 'options', 'feature'), " .
-            "(122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'), " .
-            "(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', null), " .
-            "(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'), " .
-            "(125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'integer', 'interface', 'home'), " .
-            "(126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'integer', 'interface', 'home'), " .
-            "(127, 'home_recently_played', '1', 'Show Recently Played', 25, 'integer', 'interface', 'home'), " .
-            "(128, 'home_now_playing', '1', 'Show Now Playing', 25, 'integer', 'interface', 'home'), " .
-            "(129, 'custom_logo', '', 'Custom URL - Logo', 25, 'string', 'interface', 'custom'), " .
-            "(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', 25, 'string', 'interface', 'library'), " .
-            "(131, 'browser_notify', '1', 'Web Player browser notifications', 25, 'integer', 'interface', 'notification'), " .
-            "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'), " .
-            "(133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'), " .
-            "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload'), " .
-            "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'), " .
-            "(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'), " .
-            "(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'), " .
-            "(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'), " .
-            "(140, 'notify_email', '0', 'Allow E-mail notifications', 25, 'boolean', 'options', null), " .
+            "(70, 'mpd_active', '0', 'MPD Active Instance', " . AccessLevelEnum::USER->value . ", 'integer', 'internal', 'mpd'), " .
+            "(71, 'httpq_active', '0', 'httpQ Active Instance', " . AccessLevelEnum::USER->value . ", 'integer', 'internal', 'httpq'), " .
+            "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', " . AccessLevelEnum::USER->value . ", 'string', 'internal', 'lastfm'), " .
+            "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', " . AccessLevelEnum::USER->value . ", 'string', 'internal', 'lastfm'), " .
+            "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', " . AccessLevelEnum::CONTENT_MANAGER->value . ", 'boolean', 'interface', 'home'), " .
+            "(83, 'album_sort', '0', 'Album - Default sort', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'library'), " .
+            "(84, 'show_played_times', '0', 'Show # played', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'browse'), " .
+            "(85, 'song_page_title', '1', 'Show current song in Web player page title', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'player'), " .
+            "(86, 'subsonic_backend', '1', 'Use Subsonic backend', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
+            "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', " . AccessLevelEnum::USER->value . ", 'boolean', 'streaming', 'player'), " .
+            "(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', " . AccessLevelEnum::USER->value . ", 'boolean', 'streaming', 'player'), " .
+            "(90, 'allow_personal_info_now', '1', 'Share Now Playing information', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'privacy'), " .
+            "(91, 'allow_personal_info_recent', '1', 'Share Recently Played information', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'privacy'), " .
+            "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'privacy'), " .
+            "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'privacy'), " .
+            "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
+            "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'update'), " .
+            "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', " . AccessLevelEnum::USER->value . ", 'string', 'internal', 'update'), " .
+            "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', " . AccessLevelEnum::USER->value . ", 'string', 'internal', 'update'), " .
+            "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', " . AccessLevelEnum::USER->value . ", 'boolean', 'internal', 'update'), " .
+            "(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'player'), " .
+            "(100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'player'), " .
+            "(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'streaming', null), " .
+            "(102, 'share', '0', 'Allow Share', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'feature'), " .
+            "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'share'), " .
+            "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'player'), " .
+            "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', " . AccessLevelEnum::USER->value . ", 'boolean', 'streaming', 'player'), " .
+            "(108, 'album_group', '1', 'Album - Group multiple disks', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'library'), " .
+            "(109, 'topmenu', '0', 'Top menu', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
+            "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', " . AccessLevelEnum::USER->value . ", 'boolean', 'playlist', null), " .
+            "(111, 'show_donate', '1', 'Show donate button in footer', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', null), " .
+            "(112, 'upload_catalog', '-1', 'Destination catalog', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'upload'), " .
+            "(113, 'allow_upload', '0', 'Allow user uploads', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(114, 'upload_subdir', '1', 'Create a subdirectory per user', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', " . AccessLevelEnum::ADMIN->value . ", 'string', 'system', 'upload'), " .
+            "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(118, 'daap_backend', '0', 'Use DAAP backend', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
+            "(119, 'daap_pass', '', 'DAAP backend password', " . AccessLevelEnum::ADMIN->value . ", 'string', 'system', 'backend'), " .
+            "(120, 'upnp_backend', '0', 'Use UPnP backend', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
+            "(121, 'allow_video', '0', 'Allow Video Features', " . AccessLevelEnum::MANAGER->value . ", 'integer', 'options', 'feature'), " .
+            "(122, 'album_release_type', '1', 'Album - Group per release type', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'library'), " .
+            "(123, 'ajax_load', '1', 'Ajax page load', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', null), " .
+            "(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'player'), " .
+            "(125, 'home_moment_albums', '1', 'Show Albums of the Moment', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'home'), " .
+            "(126, 'home_moment_videos', '0', 'Show Videos of the Moment', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'home'), " .
+            "(127, 'home_recently_played', '1', 'Show Recently Played', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'home'), " .
+            "(128, 'home_now_playing', '1', 'Show Now Playing', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'home'), " .
+            "(129, 'custom_logo', '', 'Custom URL - Logo', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'custom'), " .
+            "(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'library'), " .
+            "(131, 'browser_notify', '1', 'Web Player browser notifications', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'notification'), " .
+            "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'notification'), " .
+            "(133, 'geolocation', '0', 'Allow Geolocation', " . AccessLevelEnum::USER->value . ", 'integer', 'options', 'feature'), " .
+            "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', " . AccessLevelEnum::USER->value . ", 'boolean', 'streaming', 'player'), " .
+            "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(137, 'custom_favicon', '', 'Custom URL - Favicon', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(138, 'custom_text_footer', '', 'Custom text footer', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(139, 'webdav_backend', '0', 'Use WebDAV backend', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
+            "(140, 'notify_email', '0', 'Allow E-mail notifications', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', null), " .
             "(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'), " .
-            "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata'), " .
-            "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', 100, 'string', 'system', 'metadata'), " .
-            "(144, 'podcast_keep', '0', '# latest episodes to keep', 100, 'integer', 'system', 'podcast'), " .
-            "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast'), " .
+            "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', " . AccessLevelEnum::ADMIN->value . ", 'string', 'system', 'metadata'), " .
+            "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', " . AccessLevelEnum::ADMIN->value . ", 'string', 'system', 'metadata'), " .
+            "(144, 'podcast_keep', '0', '# latest episodes to keep', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'podcast'), " .
+            "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'podcast'), " .
             "(146, 'libitem_contextmenu', '1', 'Library item context menu', 0, 'boolean', 'interface', 'library'), " .
-            "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload'), " .
-            "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', 100, 'boolean', 'system', 'catalog'), " .
-            "(149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'browse'), " .
-            "(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme'), " .
-            "(151, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom'), " .
-            "(152, 'custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom'), " .
-            "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse'), " .
-            "(154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse'), " .
-            "(155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'), " .
-            "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog'), " .
-            "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL), " .
-            "(158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home'), " .
-            "(159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom'), " .
-            "(160, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse'), " .
-            "(161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse'), " .
-            "(162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse'), " .
-            "(163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse'), " .
-            "(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic'), " .
-            "(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
-            "(166, 'api_enable_4', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
-            "(167, 'api_enable_5', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
-            "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'ampache'), " .
-            "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse'), " .
-            "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', null), " .
-            "(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL), " .
-            "(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
-            "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
-            "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL);";
+            "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'catalog'), " .
+            "(149, 'browse_filter', '0', 'Show filter box on browse', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(150, 'sidebar_light', '0', 'Light sidebar by default', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
+            "(151, 'custom_blankalbum', '', 'Custom blank album default image', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(152, 'custom_blankmovie', '', 'Custom blank video default image', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'browse'), " .
+            "(154, 'show_skipped_times', '0', 'Show # skipped', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(155, 'custom_datetime', '', 'Custom datetime', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'custom'), " .
+            "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'catalog'), " .
+            "(157, 'unique_playlist', '0', 'Only add unique items to playlists', " . AccessLevelEnum::USER->value . ", 'boolean', 'playlist', NULL), " .
+            "(158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'home'), " .
+            "(159, 'custom_login_background', '', 'Custom URL - Login page background', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(160, 'show_license', '1', 'Show License', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', 'subsonic'), " .
+            "(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', 'ampache'), " .
+            "(166, 'api_enable_4', '1', 'Allow Ampache API3 responses', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', 'ampache'), " .
+            "(167, 'api_enable_5', '1', 'Allow Ampache API3 responses', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', 'ampache'), " .
+            "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', " . AccessLevelEnum::USER->value . ", 'special', 'options', 'ampache'), " .
+            "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', " . AccessLevelEnum::USER->value . ", 'string', 'options', null), " .
+            "(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', NULL), " .
+            "(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
+            "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
+            "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', NULL);";
         Dba::write($sql);
     }
 

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -39,9 +40,9 @@ final class Migration520000 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('api_enable_3', 'Enable API3 responses', '1', 25, 'boolean', 'options');
-        $this->updatePreferences('api_enable_4', 'Enable API4 responses', '1', 25, 'boolean', 'options');
-        $this->updatePreferences('api_enable_5', 'Enable API5 responses', '1', 25, 'boolean', 'options');
-        $this->updatePreferences('api_force_version', 'Force a specific API response (even if that version is disabled)', '0', 25, 'special', 'options');
+        $this->updatePreferences('api_enable_3', 'Enable API3 responses', '1', AccessLevelEnum::USER->value, 'boolean', 'options');
+        $this->updatePreferences('api_enable_4', 'Enable API4 responses', '1', AccessLevelEnum::USER->value, 'boolean', 'options');
+        $this->updatePreferences('api_enable_5', 'Enable API5 responses', '1', AccessLevelEnum::USER->value, 'boolean', 'options');
+        $this->updatePreferences('api_force_version', 'Force a specific API response (even if that version is disabled)', '0', AccessLevelEnum::USER->value, 'special', 'options');
     }
 }

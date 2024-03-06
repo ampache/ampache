@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
@@ -67,7 +69,7 @@ if (!empty($albumDisks)) {
         </div>
         <?php } ?>
         <?php
-        if (Access::check('interface', 25)) { ?>
+        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $albumDisk->id; ?>_album"><?php echo Rating::show($albumDisk->id, 'album_disk'); ?></span>
                 <span class="cel_rating" id="userflag_<?php echo $albumDisk->id; ?>_album"><?php echo Userflag::show($albumDisk->id, 'album_disk'); ?></span>

@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 
@@ -46,7 +48,7 @@ final class UserDelete4Method
      */
     public static function user_delete(array $input, User $user): bool
     {
-        if (!Api4::check_access('interface', 100, $user->id, 'user_delete', $input['api_format'])) {
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, 'user_delete', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('username'), self::ACTION)) {

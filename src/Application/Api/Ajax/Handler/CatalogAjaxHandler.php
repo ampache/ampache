@@ -27,6 +27,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
@@ -49,7 +51,7 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'flip_state':
-                if (!Access::check('interface', 75)) {
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                     debug_event('catalog.ajax', Core::get_global('user')->username . ' attempted to change the state of a catalog', 1);
 
                     return;

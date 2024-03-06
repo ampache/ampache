@@ -7,7 +7,6 @@
     "license": "AGPL-3.0",
     "config":
     {
-        "component-dir": "lib/components",
         "platform": {
             "ext-curl": "1.0",
             "ext-date": "1.0",
@@ -31,8 +30,6 @@
         "sort-packages": true,
         "allow-plugins": {
             "composer/installers": true,
-            "robloach/component-installer": true,
-            "oomphinc/composer-installers-extender": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true
         }
@@ -56,19 +53,17 @@
         "cboden/ratchet": "0.4.*",
         "clue/multicast-react": "^1.1.0",
         "doctrine/cache": "^2",
-        "evenement/evenement": "^3",
         "gettext/gettext": "^5",
         "gettext/translator": "^1.2",
         "james-heinrich/getid3": "dev-master",
         "jwilsson/spotify-web-api-php": "^5",
         "krixon/xbmc-php-rpc": "dev-master",
-        "kunalvarma05/dropbox-php-sdk": "^0.2.1",
+        "kunalvarma05/dropbox-php-sdk": "^0.4",
         "maennchen/zipstream-php": "^3.1",
         "mikealmond/musicbrainz": "dev-master",
         "moinax/tvdb": "1.*",
         "nyholm/psr7": "^1.3",
         "nyholm/psr7-server": "^1.0",
-        "oomphinc/composer-installers-extender": "^2.0",
         "openid/php-openid": "^3",
         "php-curl-class/php-curl-class": "^9.18",
         "php-di/php-di": "^7.0",
@@ -76,17 +71,11 @@
         "psr/log": "^3",
         "psr/simple-cache": "^3",
         "rmccue/requests": "^2.0",
-        "robloach/component-installer": "^0.0.12",
         "rsd/seafile-php-sdk": "^1",
         "sabre/dav": "^4",
         "scn/phptal": "^4",
         "shrikeh/teapot": "^2.3",
-        "slim/slim": "^4.12",
-        "symfony/event-dispatcher": "^5.4.22",
-        "symfony/http-foundation": "^3.0",
-        "symfony/process": "^5.4.22",
-        "symfony/routing": "^3.0",
-        "tightenco/collect": "5.2.*"
+        "slim/slim": "^4.12"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.49",

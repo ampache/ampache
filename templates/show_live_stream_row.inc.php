@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Authorization\Access;
@@ -56,7 +58,7 @@ $libitem->display_art($thumb); ?>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->id);
-if (Access::check('interface', 25)) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, '<?php echo 'live_stream'; ?>', '<?php echo $libitem->id; ?>')">
                 <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
             </a>
@@ -67,13 +69,13 @@ if (Access::check('interface', 25)) { ?>
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <td class="cel_action">
     <?php
-if (Access::check('interface', 50)) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <a id="<?php echo 'edit_live_stream_' . $libitem->id; ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_live_stream_' . $libitem->id; ?>', '<?php echo addslashes(T_('Live Stream Edit')); ?>', 'live_stream_')">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php
 }
-if (Access::check('interface', 75)) {
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
     echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_live_stream_' . $libitem->id);
 } ?>
 </td>

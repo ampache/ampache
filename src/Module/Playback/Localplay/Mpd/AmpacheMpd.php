@@ -24,6 +24,7 @@
 namespace Ampache\Module\Playback\Localplay\Mpd;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Repository\Model\library_item;
@@ -98,7 +99,7 @@ class AmpacheMpd extends localplay_controller
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('mpd_active', T_('MPD Active Instance'), 0, 25, 'integer', 'internal', 'mpd');
+        Preference::insert('mpd_active', T_('MPD Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'mpd');
 
         return true;
     }
