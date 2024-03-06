@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -60,7 +61,7 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
                 $owner_id < 1 ||
                 $owner_id != Core::get_global('user')->id
             ) &&
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
         ) {
             throw new AccessDeniedException();
         }

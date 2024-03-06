@@ -117,14 +117,14 @@ class Share extends database_object
      */
     public function isAccessible(User $user): bool
     {
-        return $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ||
+        return $user->has_access(AccessLevelEnum::MANAGER) ||
             $this->user === $user->getId();
     }
 
     public function show_action_buttons(): void
     {
         if ($this->isNew() === false) {
-            if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) || $this->user == (int)Core::get_global('user')->id) {
+            if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) || $this->user == (int)Core::get_global('user')->id) {
                 if ($this->allow_download) {
                     echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download', T_('Download')) . "</a>";
                 }
@@ -207,7 +207,7 @@ class Share extends database_object
             $this->description,
             $this->id
         );
-        if (!$user->has_access(75)) {
+        if (!$user->has_access(AccessLevelEnum::MANAGER)) {
             $sql .= " AND `user` = ?";
             $params[] = $user->id;
         }

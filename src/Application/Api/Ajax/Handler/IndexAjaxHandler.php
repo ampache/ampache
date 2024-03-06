@@ -29,6 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
@@ -119,7 +120,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 } else {
                     $results['random_selection'] = '<!-- None found -->';
 
-                    if (Access::check('interface', 75)) {
+                    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                         $catalogs = Catalog::get_catalogs();
                         if (count($catalogs) == 0) {
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
@@ -140,7 +141,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 } else {
                     $results['random_selection'] = '<!-- None found -->';
 
-                    if (Access::check('interface', 75)) {
+                    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                         $catalogs = Catalog::get_catalogs();
                         if (count($catalogs) == 0) {
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
@@ -312,7 +313,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
                     $this->wantedRepository->deleteByMusicbrainzId(
                         $mbid,
-                        ($user instanceof User && $user->has_access(AccessLevelEnum::LEVEL_MANAGER)) ? null : $user
+                        ($user instanceof User && $user->has_access(AccessLevelEnum::MANAGER)) ? null : $user
                     );
 
                     if ($walbum !== null) {
@@ -385,7 +386,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                         $button = $_REQUEST['button'];
                         break;
                     case 'admin':
-                        if (Access::check('interface', 75)) {
+                        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                             $button = $_REQUEST['button'];
                         } else {
                             return;

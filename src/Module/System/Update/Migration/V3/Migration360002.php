@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -60,7 +61,7 @@ final class Migration360002 extends AbstractMigration
         }
 
         // Now add in the min_object_count preference and the random_method
-        $this->updatePreferences('bandwidth', 'Bandwidth', '50', 5, 'integer', 'interface');
-        $this->updatePreferences('features', 'Features', '50', 5, 'integer', 'interface');
+        $this->updatePreferences('bandwidth', 'Bandwidth', '50', AccessLevelEnum::GUEST->value, 'integer', 'interface');
+        $this->updatePreferences('features', 'Features', '50', AccessLevelEnum::GUEST->value, 'integer', 'interface');
     }
 }

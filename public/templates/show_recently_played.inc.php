@@ -26,15 +26,15 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Rss\AmpacheRss;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-/** @var array $data */
-
-global $dic;
+/** @var list<array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
 
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? -1;
@@ -43,7 +43,7 @@ $refresh   = (isset($no_refresh))
     ? ""
     : "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
 $web_path  = (string)AmpConfig::get('web_path', '');
-$is_admin  = Access::check('interface', 100);
+$is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum = AmpConfig::get('album_group');
 UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_played'); ?>
 <table class="tabledata striped-rows">
@@ -193,7 +193,7 @@ foreach ($data as $row) {
 <div id="recent_more">
     <?php
 $user_id_a = '';
-if (isset($user_id) && !empty($user_id)) {
+if (!empty($user_id)) {
     $user_id_a = "&amp;user_id=" . scrub_out($user_id);
 } ?>
     <a href="<?php echo $web_path; ?>/stats.php?action=recent_song<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>

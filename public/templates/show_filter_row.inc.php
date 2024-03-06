@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Ui;
 
 $web_path = (string)AmpConfig::get('web_path', '');
@@ -36,7 +38,7 @@ $web_path = (string)AmpConfig::get('web_path', '');
 <td class="cel_num_users"><?php echo $num_users; ?></td>
 <td class="cel_num_catalogs"><?php echo $num_catalogs; ?></td>
 <td class="cel_action">
-<?php if (Access::check('interface', 100)) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
         <a href="<?php echo $web_path; ?>/admin/filter.php?action=show_edit&amp;filter_id=<?php echo $filter['id']; ?>&amp;filter_name=<?php echo $filter['name']; ?>">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>

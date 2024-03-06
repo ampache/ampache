@@ -5,7 +5,6 @@ parameters:
     - src
   excludePaths:
     - public/lib
-    - public/templates
     - public/themes
     - public/upnp
     - src/Module/Playback/Scrobble/ScrobblerAsync.php

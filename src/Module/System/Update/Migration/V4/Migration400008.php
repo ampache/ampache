@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Generator;
 
@@ -37,7 +38,7 @@ final class Migration400008 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('cron_cache', 'Cache computed SQL data (eg. media hits stats) using a cron', '0', 100, 'boolean', 'system', 'catalog');
+        $this->updatePreferences('cron_cache', 'Cache computed SQL data (eg. media hits stats) using a cron', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog');
 
         $tables    = ['cache_object_count', 'cache_object_count_run'];
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));

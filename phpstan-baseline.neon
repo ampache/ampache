@@ -1,6 +1,36 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 2
+			path: public/templates/show_html5_player.inc.php
+
+		-
+			message: "#^Access to private property Ampache\\\\Module\\\\Application\\\\Installation\\\\DefaultAction\\:\\:\\$installationHelper\\.$#"
+			count: 4
+			path: public/templates/show_install_config.inc.php
+
+		-
+			message: "#^Variable \\$is_100 might not be defined\\.$#"
+			count: 1
+			path: public/templates/show_preference_admin.inc.php
+
+		-
+			message: "#^Variable \\$is_25 might not be defined\\.$#"
+			count: 1
+			path: public/templates/show_preference_admin.inc.php
+
+		-
+			message: "#^Variable \\$is_5 might not be defined\\.$#"
+			count: 1
+			path: public/templates/show_preference_admin.inc.php
+
+		-
+			message: "#^Access to private property Ampache\\\\Module\\\\Application\\\\Register\\\\AddUserAction\\:\\:\\$ui\\.$#"
+			count: 1
+			path: public/templates/show_registration_confirmation.inc.php
+
+		-
 			message: "#^Parameter \\#1 \\$artist_id of static method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:get_artists_like\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
@@ -14517,11 +14547,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Parameter \\#4 \\$level of static method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:_update_item\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 

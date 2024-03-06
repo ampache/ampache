@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
@@ -251,7 +252,7 @@ final class Stats5Method
                         Xml5_Data::set_limit($limit);
                         echo Xml5_Data::videos($results, $user);
                 }
-                Session::extend($input['auth'], 'api');
+                Session::extend($input['auth'], AccessTypeEnum::API->value);
                 break;
             case 'podcast':
                 switch ($input['api_format']) {

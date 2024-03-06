@@ -29,8 +29,8 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
 /** @var LocalPlay $localplay */
-/** @var array $instances */
-/** @var array $fields */
+/** @var list<string, string> $instances */
+/** @var list<array{description: string, type: string}> $fields */
 
 Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table class="tabledata striped-rows">

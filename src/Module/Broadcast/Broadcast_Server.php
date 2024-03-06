@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Broadcast;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 use Exception;
@@ -165,7 +166,7 @@ class Broadcast_Server implements MessageComponentInterface
             $broadcast = $this->broadcasters[$from->resourceId];
             $clients   = $this->getListeners($broadcast);
 
-            Session::extend(Stream::get_session(), 'stream');
+            Session::extend(Stream::get_session(), AccessTypeEnum::STREAM->value);
 
             $broadcast->update_song($song_id);
             $this->broadcastMessage($clients, self::BROADCAST_SONG, base64_encode($this->getSongJS($song_id)));
@@ -308,7 +309,7 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
-        if ($broadcast && (!$broadcast->is_private || !AmpConfig::get('require_session') || Session::exists('stream', $this->sids[$from->resourceId]))) {
+        if ($broadcast && (!$broadcast->is_private || !AmpConfig::get('require_session') || Session::exists(AccessTypeEnum::STREAM->value, $this->sids[$from->resourceId]))) {
             $this->listeners[$broadcast->id][] = $from;
 
             // Send current song and song position to
@@ -333,7 +334,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function authSid(ConnectionInterface $conn, $sid): void
     {
-        if (Session::exists('stream', $sid)) {
+        if (Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
             $this->sids[$conn->resourceId] = $sid;
         } else {
             self::echo_message($this->verbose, "Wrong listener session " . $sid . "\r\n");
@@ -410,7 +411,7 @@ class Broadcast_Server implements MessageComponentInterface
         foreach ($clients as $client) {
             $sid = $this->sids[$client->resourceId];
             if ($sid) {
-                Session::extend($sid, 'stream');
+                Session::extend($sid, AccessTypeEnum::STREAM->value);
             }
             $client->send($msg);
         }

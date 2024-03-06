@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -59,11 +60,11 @@ class AmpacheBitly implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('bitly_token', T_('Bit.ly Token'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('bitly_token', T_('Bit.ly Token'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        if (!Preference::insert('bitly_group_guid', T_('Bit.ly Group GUID'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('bitly_group_guid', T_('Bit.ly Group GUID'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 

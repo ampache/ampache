@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
@@ -55,9 +56,9 @@ final class GoodbyeMethod
         debug_event(self::class, 'Goodbye Received from ' . $user->id . ' ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
 
         // Check and see if we should destroy the api session (done if valid session is passed)
-        if (Session::exists('api', $input['auth'])) {
-            $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";
-            Dba::write($sql, array($input['auth']));
+        if (Session::exists(AccessTypeEnum::API->value, $input['auth'])) {
+            $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = ?;";
+            Dba::write($sql, array($input['auth'], AccessTypeEnum::API->value));
 
             ob_end_clean();
             Api::message($input['auth'], $input['api_format']);

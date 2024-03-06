@@ -28,6 +28,7 @@ namespace Ampache\Module\Authorization\Check;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AccessRepositoryInterface;
 
@@ -50,27 +51,22 @@ final class NetworkChecker implements NetworkCheckerInterface
      * are allowed. The IP is passed as a dotted quad.
      */
     public function check(
-        string $type,
+        AccessTypeEnum $type,
         ?int $user = null,
-        int $level = AccessLevelEnum::LEVEL_USER
+        AccessLevelEnum $level = AccessLevelEnum::USER
     ): bool {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
-            switch ($type) {
-                case AccessLevelEnum::TYPE_INTERFACE:
-                case AccessLevelEnum::TYPE_STREAM:
-                    return true;
-                default:
-                    return false;
-            }
+            return match ($type) {
+                AccessTypeEnum::INTERFACE, AccessTypeEnum::STREAM => true,
+                default => false,
+            };
         }
 
         switch ($type) {
-            case AccessLevelEnum::TYPE_API:
-                $type = 'rpc';
-                // Intentional break fall-through
-            case AccessLevelEnum::TYPE_NETWORK:
-            case AccessLevelEnum::TYPE_INTERFACE:
-            case AccessLevelEnum::TYPE_STREAM:
+            case AccessTypeEnum::API:
+            case AccessTypeEnum::NETWORK:
+            case AccessTypeEnum::INTERFACE:
+            case AccessTypeEnum::STREAM:
                 break;
             default:
                 return false;

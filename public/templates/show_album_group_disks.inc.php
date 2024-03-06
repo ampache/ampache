@@ -26,6 +26,9 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Rss\AmpacheRss;
@@ -53,8 +56,8 @@ $title        = ($album->album_artist > 0)
     : scrub_out($f_name);
 
 $current_user         = Core::get_global('user');
-$access50             = Access::check('interface', 50);
-$access25             = ($access50 || Access::check('interface', 25));
+$access50             = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
+$access25             = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $show_playlist_add    = $access25;
 $show_direct_play_cfg = AmpConfig::get('directplay');
 $directplay_limit     = AmpConfig::get('direct_play_limit');
@@ -71,7 +74,7 @@ if ($directplay_limit > 0) {
 }
 global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
-$batch_dl   = Access::check_function('batch_download');
+$batch_dl   = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 $zip_album  = $batch_dl && $zipHandler->isZipable('album');
 $zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');
 $can_shout  = AmpConfig::get('sociable');

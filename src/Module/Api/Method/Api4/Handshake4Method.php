@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -103,7 +104,7 @@ final class Handshake4Method
         global $dic;
         $networkAccessChecker = $dic->get(NetworkCheckerInterface::class);
 
-        if ($user_id > 0 && $networkAccessChecker->check(AccessLevelEnum::TYPE_API, $user_id, AccessLevelEnum::LEVEL_GUEST)) {
+        if ($user_id > 0 && $networkAccessChecker->check(AccessTypeEnum::API, $user_id, AccessLevelEnum::GUEST)) {
             // Authentication with user/password, we still need to check the password
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
@@ -160,7 +161,7 @@ final class Handshake4Method
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);
                 } else {
-                    Session::extend($data['apikey'], 'api');
+                    Session::extend($data['apikey'], AccessTypeEnum::API->value);
                     $token = $data['apikey'];
                 }
 

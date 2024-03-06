@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
@@ -65,7 +66,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 
@@ -93,7 +94,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         }
         if (!Preference::exists('mb_overwrite_name')) {
             // this wasn't installed correctly only upgraded so may be missing
-            Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+            Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
 
         // did the upgrade work?

@@ -35,10 +35,9 @@ use Mockery\MockInterface;
 
 class AccessListManagerTest extends MockeryTestCase
 {
-    /** @var MockInterface|AccessRepositoryInterface|null */
-    private MockInterface $accessRepository;
+    private MockInterface&AccessRepositoryInterface $accessRepository;
 
-    private ?AccessListManager $subject;
+    private AccessListManager $subject;
 
     protected function setUp(): void
     {
@@ -59,8 +58,8 @@ class AccessListManagerTest extends MockeryTestCase
             '1.2.3.4',
             'some-name',
             42,
-            33,
-            'some-type'
+            AccessLevelEnum::ADMIN,
+            AccessTypeEnum::STREAM
         );
     }
 
@@ -74,8 +73,8 @@ class AccessListManagerTest extends MockeryTestCase
             '666',
             'some-name',
             42,
-            33,
-            'some-type'
+            AccessLevelEnum::ADMIN,
+            AccessTypeEnum::STREAM
         );
     }
 
@@ -89,8 +88,8 @@ class AccessListManagerTest extends MockeryTestCase
             '1.2.3.4',
             'some-name',
             42,
-            33,
-            'some-type'
+            AccessLevelEnum::ADMIN,
+            AccessTypeEnum::STREAM
         );
     }
 
@@ -101,8 +100,8 @@ class AccessListManagerTest extends MockeryTestCase
         $endIp    = '2.3.4.5';
         $name     = 'some-name';
         $userId   = 42;
-        $level    = 666;
-        $type     = AccessLevelEnum::TYPE_INTERFACE;
+        $level    = AccessLevelEnum::USER;
+        $type     = AccessTypeEnum::INTERFACE;
 
         $this->accessRepository->shouldReceive('update')
             ->with(
@@ -133,9 +132,9 @@ class AccessListManagerTest extends MockeryTestCase
         $endIp          = '2.3.4.5';
         $name           = 'some-name';
         $userId         = 42;
-        $level          = 666;
-        $type           = AccessLevelEnum::TYPE_INTERFACE;
-        $additionalType = 'all';
+        $level          = AccessLevelEnum::USER;
+        $type           = AccessTypeEnum::INTERFACE;
+        $additionalType = AccessTypeEnum::ALL;
 
         $this->accessRepository->shouldReceive('exists')
             ->with(
@@ -150,7 +149,7 @@ class AccessListManagerTest extends MockeryTestCase
             ->with(
                 inet_pton($startIp),
                 inet_pton($endIp),
-                AccessLevelEnum::TYPE_STREAM,
+                AccessTypeEnum::STREAM,
                 $userId
             )
             ->once()
@@ -159,7 +158,7 @@ class AccessListManagerTest extends MockeryTestCase
             ->with(
                 inet_pton($startIp),
                 inet_pton($endIp),
-                AccessLevelEnum::TYPE_INTERFACE,
+                AccessTypeEnum::INTERFACE,
                 $userId
             )
             ->once()
@@ -181,7 +180,7 @@ class AccessListManagerTest extends MockeryTestCase
                 $name,
                 $userId,
                 $level,
-                AccessLevelEnum::TYPE_STREAM
+                AccessTypeEnum::STREAM
             )
             ->once();
         $this->accessRepository->shouldReceive('create')
@@ -191,7 +190,7 @@ class AccessListManagerTest extends MockeryTestCase
                 $name,
                 $userId,
                 $level,
-                AccessLevelEnum::TYPE_INTERFACE
+                AccessTypeEnum::INTERFACE
             )
             ->once();
 
@@ -214,9 +213,9 @@ class AccessListManagerTest extends MockeryTestCase
         $endIp          = '2.3.4.5';
         $name           = 'some-name';
         $userId         = 42;
-        $level          = 666;
-        $type           = AccessLevelEnum::TYPE_INTERFACE;
-        $additionalType = 'all';
+        $level          = AccessLevelEnum::USER;
+        $type           = AccessTypeEnum::INTERFACE;
+        $additionalType = AccessTypeEnum::ALL;
 
         $this->accessRepository->shouldReceive('exists')
             ->with(

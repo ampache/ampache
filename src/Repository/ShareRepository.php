@@ -99,7 +99,7 @@ final class ShareRepository implements ShareRepositoryInterface
 
         $sql = 'SELECT `id` FROM `share` WHERE ';
 
-        if (!$user->has_access(AccessLevelEnum::LEVEL_MANAGER)) {
+        if (!$user->has_access(AccessLevelEnum::MANAGER)) {
             $sql .= '`user` = ?';
             $params[] = $userId;
         } else {

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
@@ -142,7 +143,12 @@ class Democratic extends Tmp_Playlist
     {
         $this->f_cooldown = $this->cooldown . ' ' . T_('minutes');
         $this->f_primary  = $this->primary ? T_('Primary') : '';
-        $this->f_level    = User::access_level_to_name((string)$this->level);
+        $this->f_level    = $this->getAccessLevel()->toDescription();
+    }
+
+    public function getAccessLevel(): AccessLevelEnum
+    {
+        return AccessLevelEnum::from($this->level);
     }
 
     /**

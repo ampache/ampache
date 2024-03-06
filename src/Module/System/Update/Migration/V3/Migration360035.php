@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -40,6 +41,6 @@ final class Migration360035 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('stream_beautiful_url', 'Use beautiful stream url', '0', 100, 'boolean', 'streaming');
+        $this->updatePreferences('stream_beautiful_url', 'Use beautiful stream url', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'streaming');
     }
 }

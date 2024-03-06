@@ -68,7 +68,7 @@ final class WantedAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
         if (
             $user !== null &&
-            $user->has_access(AccessLevelEnum::LEVEL_MANAGER)
+            $user->has_access(AccessLevelEnum::MANAGER)
         ) {
             $user = null;
         }

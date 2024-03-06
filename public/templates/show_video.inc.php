@@ -24,6 +24,9 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Movie;
@@ -99,21 +102,21 @@ if (!$gart) {
             <?php } ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'add', T_('Add to Temporary Playlist'), 'add_video_' . $video->id); ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
             <?php } ?>
         <?php } ?>
-    <?php if (Access::check('interface', 25)) { ?>
+    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
                 <?php echo Share::display_ui('video', $video->id, false); ?>
             <?php } ?>
         <?php } ?>
-        <?php if (Access::check_function('download')) { ?>
+        <?php if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)) { ?>
             <a class="nohtml" href="<?php echo $video->play_url(); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
             <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php } ?>
-        <?php if (Access::check('interface', 50)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php } ?>
@@ -141,7 +144,7 @@ $videoprops[T_('Audio Bitrate')] = scrub_out($video->f_bitrate);
 $videoprops[T_('Video Bitrate')] = scrub_out($video->f_video_bitrate);
 $videoprops[T_('Frame Rate')]    = scrub_out($video->f_frame_rate);
 $videoprops[T_('Channels')]      = scrub_out((string)$video->channels);
-if (Access::check('interface', 75)) {
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
     $data                       = pathinfo($video->file);
     $videoprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));
     $videoprops[T_('Filename')] = (isset($data['extension']))

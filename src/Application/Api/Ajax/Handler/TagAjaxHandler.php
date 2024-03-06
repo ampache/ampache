@@ -27,6 +27,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
@@ -80,7 +82,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 Tag::add_tag_map($type, (int) $object_id, (int) $_GET['tag_id'], false);
                 break;
             case 'add_tag_by_name':
-                if (!Access::check('interface', 75)) {
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                     debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to add new tag', 1);
 
                     return;
@@ -89,7 +91,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 Tag::add($type, $object_id, $_GET['tag_name'], false);
                 break;
             case 'delete':
-                if (!Access::check('interface', 75)) {
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                     debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to delete tag', 1);
 
                     return;
@@ -149,10 +151,10 @@ final class TagAjaxHandler implements AjaxHandlerInterface
         }
 
         if ($uid > 0) {
-            return Access::check('interface', 25);
+            return Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
         }
 
-        if (Access::check('interface', 75)) {
+        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
             return true;
         }
 

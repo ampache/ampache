@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Authentication;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
@@ -68,12 +69,12 @@ final class Gatekeeper implements GatekeeperInterface
 
     public function sessionExists(string $auth): bool
     {
-        return Session::exists('api', $auth);
+        return Session::exists(AccessTypeEnum::API->value, $auth);
     }
 
     public function extendSession(string $auth): void
     {
-        Session::extend($auth, 'api');
+        Session::extend($auth, AccessTypeEnum::API->value);
     }
 
     public function getUserName(): string

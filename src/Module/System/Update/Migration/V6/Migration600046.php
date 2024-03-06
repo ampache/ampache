@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration600046 extends AbstractMigration
@@ -35,6 +36,6 @@ final class Migration600046 extends AbstractMigration
      */
     public function migrate(): void
     {
-        $this->updatePreferences('home_recently_played_all', 'Show all media types in Recently Played', '0', 25, 'bool', 'interface', 'home');
+        $this->updatePreferences('home_recently_played_all', 'Show all media types in Recently Played', '0', AccessLevelEnum::USER->value, 'bool', 'interface', 'home');
     }
 }

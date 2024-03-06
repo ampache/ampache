@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -41,6 +42,6 @@ final class Migration600043 extends AbstractMigration
     {
         $this->updateDatabase('UPDATE `preference` SET `type` = \'boolean\' WHERE `name` = \'use_play2\'');
 
-        $this->updatePreferences('jp_volume', 'Default webplayer volume', 0.80, 25, 'special', 'streaming', 'player');
+        $this->updatePreferences('jp_volume', 'Default webplayer volume', 0.80, AccessLevelEnum::USER->value, 'special', 'streaming', 'player');
     }
 }

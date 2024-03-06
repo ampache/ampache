@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -110,7 +111,7 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
         ) {
             $this->ui->show(
@@ -137,8 +138,8 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         return $this->privilegeChecker->check(
-            AccessLevelEnum::TYPE_INTERFACE,
-            AccessLevelEnum::LEVEL_CONTENT_MANAGER
+            AccessTypeEnum::INTERFACE,
+            AccessLevelEnum::CONTENT_MANAGER
         );
     }
 }

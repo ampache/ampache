@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback\Localplay\Vlc;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Repository\Model\Preference;
@@ -92,7 +93,7 @@ class AmpacheVlc extends localplay_controller
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('vlc_active', T_('VLC Active Instance'), 0, 25, 'integer', 'internal', 'vlc');
+        Preference::insert('vlc_active', T_('VLC Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'vlc');
 
         return true;
     }

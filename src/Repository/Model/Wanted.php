@@ -199,6 +199,26 @@ class Wanted extends database_object
     }
 
     /**
+     * Accept a wanted request.
+     */
+    public function accept(): void
+    {
+        if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) {
+            $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
+            Dba::write($sql, array($this->mbid));
+            $this->accepted = 1;
+
+            foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
+                    debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin_name, 5);
+                    $plugin->_plugin->process_wanted($this);
+                }
+            }
+        }
+    }
+
+    /**
      * Show action buttons.
      */
     public function show_action_buttons(): string
@@ -206,7 +226,7 @@ class Wanted extends database_object
         if ($this->isNew() === false) {
             $result = '';
             if ($this->accepted === 0) {
-                if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
+                if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))) {
                     $result .= Ajax::button(
                         '?page=index&action=accept_wanted&mbid=' . $this->mbid,
                         'enable',
@@ -220,7 +240,7 @@ class Wanted extends database_object
             if (
                 $user instanceof User &&
                 (
-                    $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ||
+                    $user->has_access(AccessLevelEnum::MANAGER) ||
                     (
                         $this->mbid !== null &&
                         self::getWantedRepository()->find($this->mbid, $user) &&
