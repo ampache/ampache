@@ -19,10 +19,13 @@
 * Song additional metadata classes have been updated
 * When searching art limit results per-plugin instead of total results
 * Extend valid Share objects
+* Update composer scripts and checks
+* Don't send a cached file that does not match a requested target format
 
 ### Removed
 
 * Flattr service has shut down, so remove the plugin
+* php cs-cniffer from the project root and scrutinizer
 
 ### Fixed
 
@@ -37,6 +40,7 @@
 * Unable to use `bin/cli export:playlist` undefined method
 * Playlist had some issues adding songs
 * Localplay and jukebox mode improvements (VLC and XBMC)
+* Don't search for wanted albums on an invalid artist
 * Static typing errors
   * Updating album data when original_year is missing
   * Template `show_recently_played` with a non-database song
@@ -61,13 +65,16 @@
 ### Changed
 
 * API6
-  * playlist_add_song is depreciated and will be removed in **API7** (Use playlist_add)
-  * share_create add more valid types ('playlist', 'podcast', 'podcast_episode', 'video')
+  * playlist_add_song: depreciated and will be removed in **API7** (Use playlist_add)
+  * share_create: add more valid types ('playlist', 'podcast', 'podcast_episode', 'video')
+  * user: make username optional
 
 ### Fixed
 
 * ALL
   * Userflag wasn't sending bool when cached in the database
+  * Admin would always get everyones playlists when filtering
+  * Stream methods would not send the bitrate correctly
 * API4
   * playlists method not respecting like for smartlists
 * API5
