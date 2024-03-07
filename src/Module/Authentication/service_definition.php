@@ -30,7 +30,6 @@ use Ampache\Module\Authentication\Authenticator\DatabaseAuthenticator;
 use Ampache\Module\Authentication\Authenticator\ExternalAuthenticator;
 use Ampache\Module\Authentication\Authenticator\HttpAuthenticator;
 use Ampache\Module\Authentication\Authenticator\LdapAuthenticator;
-use Ampache\Module\Authentication\Authenticator\OpenIdAuthenticator;
 use Ampache\Module\Authentication\Authenticator\PamAuthenticator;
 use Psr\Container\ContainerInterface;
 
@@ -45,7 +44,6 @@ return [
                 'pam' => $dic->get(PamAuthenticator::class),
                 'external' => $dic->get(ExternalAuthenticator::class),
                 'http' => $dic->get(HttpAuthenticator::class),
-                'openid' => $dic->get(OpenIdAuthenticator::class),
                 'ldap' => $dic->get(LdapAuthenticator::class),
             ]
         );
