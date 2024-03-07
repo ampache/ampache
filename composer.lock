@@ -1179,25 +1179,26 @@
         },
         {
             "name": "jwilsson/spotify-web-api-php",
-            "version": "5.7.1",
+            "version": "6.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jwilsson/spotify-web-api-php.git",
-                "reference": "9cae7168883ed67a33fdd257773852ac2ad75878"
+                "reference": "a735c8a811fee747d5ac939d01bd52d463f0c221"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/9cae7168883ed67a33fdd257773852ac2ad75878",
-                "reference": "9cae7168883ed67a33fdd257773852ac2ad75878",
+                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/a735c8a811fee747d5ac939d01bd52d463f0c221",
+                "reference": "a735c8a811fee747d5ac939d01bd52d463f0c221",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "php": "^7.3 || ^8.0"
+                "php": "^8.1"
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.5",
-                "phpunit/phpunit": "^9.4",
+                "php-mock/php-mock-phpunit": "^2.7",
+                "phpunit/phpunit": "^10.2",
                 "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
@@ -1223,9 +1224,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jwilsson/spotify-web-api-php/issues",
-                "source": "https://github.com/jwilsson/spotify-web-api-php/tree/5.7.1"
+                "source": "https://github.com/jwilsson/spotify-web-api-php/tree/6.0.2"
             },
-            "time": "2023-08-01T17:38:44+00:00"
+            "time": "2023-12-14T19:12:17+00:00"
         },
         {
             "name": "krixon/xbmc-php-rpc",
