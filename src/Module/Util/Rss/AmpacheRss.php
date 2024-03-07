@@ -330,7 +330,7 @@ final class AmpacheRss implements AmpacheRssInterface
     private function load_recently_played(int $user_id, int &$pub_date): array
     {
         $results = array();
-        $data = Stats::get_recently_played($user_id, 'stream', 'song');
+        $data    = Stats::get_recently_played($user_id, 'stream', 'song');
 
         foreach ($data as $item) {
             $client = new User($item['user']);
