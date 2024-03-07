@@ -137,6 +137,7 @@ final class AmpacheRss implements AmpacheRssInterface
                 },
                 'recently_played' => function () use ($user, &$pub_date): array {
                     $pub_date = 0;
+
                     return $this->load_recently_played($user->getId(), $pub_date);
                 },
                 'latest_album' => function () use ($rssToken): array {
@@ -337,7 +338,7 @@ final class AmpacheRss implements AmpacheRssInterface
             $row_id = ($item['user'] > 0) ? (int) $item['user'] : -1;
 
             $has_allowed_recent = (bool) $item['user_recent'];
-            $is_allowed_recent  = $user_id > 0 ? $user_id == $row_id : $has_allowed_recent;
+            $is_allowed_recent  = ($user_id > 0) ? $user_id == $row_id : $has_allowed_recent;
             if ($song->enabled && $is_allowed_recent) {
                 $description = '<p>' . T_('User') . ': ' . $client->username . '</p><p>' . T_('Title') . ': ' . $song->get_fullname() . '</p><p>' . T_('Artist') . ': ' . $song->get_artist_fullname() . '</p><p>' . T_('Album') . ': ' . $song->get_album_fullname() . '</p><p>' . T_('Play date') . ': ' . get_datetime($item['date']) . '</p>';
 
