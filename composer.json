@@ -56,7 +56,7 @@
         "gettext/gettext": "^5",
         "gettext/translator": "^1.2",
         "james-heinrich/getid3": "dev-master",
-        "jwilsson/spotify-web-api-php": "^5",
+        "jwilsson/spotify-web-api-php": "^6",
         "krixon/xbmc-php-rpc": "dev-master",
         "kunalvarma05/dropbox-php-sdk": "^0.4",
         "maennchen/zipstream-php": "^3.1",
