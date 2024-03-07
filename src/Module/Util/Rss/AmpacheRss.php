@@ -30,7 +30,6 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Core;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -350,8 +349,9 @@ final class AmpacheRss implements AmpacheRssInterface
                     'pubDate' => date("r", (int)$item['date'])
                 );
                 $results[] = $xml_array;
-                if ($pub_date == 0)
+                if ($pub_date == 0) {
                     $pub_date = (int)$item['date'];
+                }
             }
         } // end foreach
 
