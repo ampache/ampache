@@ -75,27 +75,7 @@ final class TagSearch implements SearchInterface
             } // switch on ruletype
         } // foreach rule
 
-        $join['catalog_map'] = $catalog_filter;
-        $join['catalog']     = $catalog_disable || $catalog_filter;
-
         $where_sql = implode(" $sql_logic_operator ", $where);
-
-        if ($join['catalog']) {
-            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
-            if (!empty($where_sql)) {
-                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
-            } else {
-                $where_sql = "`catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
-            }
-        }
-        if ($join['catalog_map']) {
-            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_id` = `album`.`id` AND `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`catalog_id` = `catalog_se`.`id`";
-            if (!empty($where_sql)) {
-                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)";
-            } else {
-                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)";
-            }
-        }
 
         return array(
             'base' => 'SELECT DISTINCT(`tag`.`id`) FROM `tag`',
