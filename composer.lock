@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2dce1b5f0934a1c6d91e1b74046b142a",
+    "content-hash": "5389ef547c35337d8644f9ea5c24c4ae",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1179,25 +1179,26 @@
         },
         {
             "name": "jwilsson/spotify-web-api-php",
-            "version": "5.7.1",
+            "version": "6.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jwilsson/spotify-web-api-php.git",
-                "reference": "9cae7168883ed67a33fdd257773852ac2ad75878"
+                "reference": "a735c8a811fee747d5ac939d01bd52d463f0c221"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/9cae7168883ed67a33fdd257773852ac2ad75878",
-                "reference": "9cae7168883ed67a33fdd257773852ac2ad75878",
+                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/a735c8a811fee747d5ac939d01bd52d463f0c221",
+                "reference": "a735c8a811fee747d5ac939d01bd52d463f0c221",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "php": "^7.3 || ^8.0"
+                "php": "^8.1"
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.5",
-                "phpunit/phpunit": "^9.4",
+                "php-mock/php-mock-phpunit": "^2.7",
+                "phpunit/phpunit": "^10.2",
                 "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
@@ -1223,9 +1224,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jwilsson/spotify-web-api-php/issues",
-                "source": "https://github.com/jwilsson/spotify-web-api-php/tree/5.7.1"
+                "source": "https://github.com/jwilsson/spotify-web-api-php/tree/6.0.2"
             },
-            "time": "2023-08-01T17:38:44+00:00"
+            "time": "2023-12-14T19:12:17+00:00"
         },
         {
             "name": "krixon/xbmc-php-rpc",
@@ -1777,60 +1778,6 @@
                 }
             ],
             "time": "2023-11-08T09:30:43+00:00"
-        },
-        {
-            "name": "openid/php-openid",
-            "version": "3.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/openid/php-openid.git",
-                "reference": "d3e589c7575e4cb4498dc95a4cdaa35c2ad240e5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/openid/php-openid/zipball/d3e589c7575e4cb4498dc95a4cdaa35c2ad240e5",
-                "reference": "d3e589c7575e4cb4498dc95a4cdaa35c2ad240e5",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-dom": "*",
-                "ext-gmp": "*",
-                "php": ">=5.6"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "Auth"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                "."
-            ],
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "JanRain Inc.",
-                    "homepage": "http://www.openidenabled.com"
-                }
-            ],
-            "description": "OpenID library for PHP5",
-            "homepage": "http://github.com/openid/php-openid",
-            "keywords": [
-                "Authentication",
-                "OpenId",
-                "auth",
-                "yadis"
-            ],
-            "support": {
-                "issues": "https://github.com/openid/php-openid/issues",
-                "source": "https://github.com/openid/php-openid/tree/3.0.3"
-            },
-            "abandoned": true,
-            "time": "2020-11-20T17:46:41+00:00"
         },
         {
             "name": "php-curl-class/php-curl-class",
@@ -4808,16 +4755,16 @@
     "packages-dev": [
         {
             "name": "composer/pcre",
-            "version": "3.1.1",
+            "version": "3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/pcre.git",
-                "reference": "00104306927c7a0919b4ced2aaa6782c1e61a3c9"
+                "reference": "4775f35b2d70865807c89d32c8e7385b86eb0ace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/pcre/zipball/00104306927c7a0919b4ced2aaa6782c1e61a3c9",
-                "reference": "00104306927c7a0919b4ced2aaa6782c1e61a3c9",
+                "url": "https://api.github.com/repos/composer/pcre/zipball/4775f35b2d70865807c89d32c8e7385b86eb0ace",
+                "reference": "4775f35b2d70865807c89d32c8e7385b86eb0ace",
                 "shasum": ""
             },
             "require": {
@@ -4859,7 +4806,7 @@
             ],
             "support": {
                 "issues": "https://github.com/composer/pcre/issues",
-                "source": "https://github.com/composer/pcre/tree/3.1.1"
+                "source": "https://github.com/composer/pcre/tree/3.1.2"
             },
             "funding": [
                 {
@@ -4875,7 +4822,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-10-11T07:11:09+00:00"
+            "time": "2024-03-07T15:38:35+00:00"
         },
         {
             "name": "composer/semver",
@@ -5362,16 +5309,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.0.1",
+            "version": "v5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69"
+                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2218c2252c874a4624ab2f613d86ac32d227bc69",
-                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/139676794dc1e9231bf7bcd123cfc0c99182cb13",
+                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13",
                 "shasum": ""
             },
             "require": {
@@ -5414,9 +5361,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.1"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.2"
             },
-            "time": "2024-02-21T19:24:10+00:00"
+            "time": "2024-03-05T20:51:40+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -5582,16 +5529,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.59",
+            "version": "1.10.60",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "e607609388d3a6d418a50a49f7940e8086798281"
+                "reference": "95dcea7d6c628a3f2f56d091d8a0219485a86bbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e607609388d3a6d418a50a49f7940e8086798281",
-                "reference": "e607609388d3a6d418a50a49f7940e8086798281",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/95dcea7d6c628a3f2f56d091d8a0219485a86bbe",
+                "reference": "95dcea7d6c628a3f2f56d091d8a0219485a86bbe",
                 "shasum": ""
             },
             "require": {
@@ -5640,7 +5587,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-20T13:59:13+00:00"
+            "time": "2024-03-07T13:30:19+00:00"
         },
         {
             "name": "phpstan/phpstan-mockery",
