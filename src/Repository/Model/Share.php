@@ -30,24 +30,25 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use PDOStatement;
 
 class Share extends database_object
 {
     protected const DB_TABLENAME = 'share';
-    public const VALID_TYPES     = array(
-        'album',
-        'album_disk',
-        'artist',
-        'playlist',
-        'podcast',
-        'podcast_episode',
-        'search',
-        'song',
-        'video'
-    );
+
+    /** @var list<LibraryItemEnum> */
+    public const VALID_TYPES = [
+        LibraryItemEnum::ALBUM,
+        LibraryItemEnum::ALBUM_DISK,
+        LibraryItemEnum::ARTIST,
+        LibraryItemEnum::PLAYLIST,
+        LibraryItemEnum::PODCAST,
+        LibraryItemEnum::PODCAST_EPISODE,
+        LibraryItemEnum::SEARCH,
+        LibraryItemEnum::SONG,
+        LibraryItemEnum::VIDEO,
+    ];
 
     public int $id = 0;
     public int $user;
@@ -91,11 +92,6 @@ class Share extends database_object
     public function isNew(): bool
     {
         return $this->id === 0;
-    }
-
-    public static function is_valid_type(string $type): bool
-    {
-        return in_array(strtolower($type), self::VALID_TYPES);
     }
 
     /**
@@ -145,12 +141,11 @@ class Share extends database_object
     private function getObject()
     {
         if ($this->object === null) {
-            $className    = ObjectTypeToClassNameMapper::map((string)$this->object_type);
-            /** @var Song|Artist|Album|playlist_object $libitem */
-            $libitem      = new $className($this->object_id);
-            if ($libitem->isNew() === false) {
-                $this->object = $libitem;
-            }
+            $this->object = $this->getLibraryItemLoader()->load(
+                LibraryItemEnum::from((string) $this->object_type),
+                $this->object_id,
+                [Song::class, Artist::class, Album::class, playlist_object::class]
+            );
         }
 
         return $this->object ?? null;
@@ -269,59 +264,55 @@ class Share extends database_object
     }
 
     /**
-     * is_shared_media
      * Has this media object come from a shared object?
-     * @param int|string $media_id
      */
-    public function is_shared_media($media_id): bool
+    public function is_shared_media(int $media_id): bool
     {
-        $isShare = false;
-        switch ($this->object_type) {
-            case 'album':
-            case 'album_disk':
-            case 'playlist':
-                $className = ObjectTypeToClassNameMapper::map((string)$this->object_type);
-                /** @var Album|AlbumDisk|Playlist $object */
-                $object = new $className($this->object_id);
-                $songs  = (isset($object->id)) ? $object->get_songs() : array();
-                foreach ($songs as $songid) {
-                    $isShare = ($media_id == $songid);
-                    if ($isShare) {
-                        break;
-                    }
-                }
-                break;
-            default:
-                $isShare = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
-                break;
-        }
+        $objectType = $this->getObjectType();
 
-        return $isShare;
+        switch ($objectType) {
+            case LibraryItemEnum::ALBUM:
+            case LibraryItemEnum::ALBUM_DISK:
+            case LibraryItemEnum::PLAYLIST:
+                $object = $this->getLibraryItemLoader()->load(
+                    LibraryItemEnum::from((string) $this->object_type),
+                    $this->object_id,
+                    [Album::class, AlbumDisk::class, Playlist::class]
+                );
+
+                return in_array(
+                    $media_id,
+                    $object?->get_songs() ?? [],
+                    true
+                );
+            default:
+                return ($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id === $media_id;
+        }
     }
 
-    /**
-     * @return Stream_Playlist
-     */
     public function create_fake_playlist(): Stream_Playlist
     {
         $playlist = new Stream_Playlist(-1);
         $medias   = array();
 
-        switch ($this->object_type) {
-            case 'album':
-            case 'album_disk':
-            case 'playlist':
-                $className = ObjectTypeToClassNameMapper::map((string)$this->object_type);
-                /** @var Album|AlbumDisk|Playlist $object */
-                $object = new $className($this->object_id);
-                $songs  = (isset($object->id)) ? $object->get_medias('song') : array();
-                foreach ($songs as $song) {
-                    $medias[] = $song;
-                }
+        $objectType = $this->getObjectType();
+
+        switch ($objectType) {
+            case LibraryItemEnum::ALBUM:
+            case LibraryItemEnum::ALBUM_DISK:
+            case LibraryItemEnum::PLAYLIST:
+                $object = $this->getLibraryItemLoader()->load(
+                    $objectType,
+                    $this->object_id,
+                    [Album::class, AlbumDisk::class, Playlist::class]
+                );
+
+                $medias = $object?->get_medias('song') ?? [];
+
                 break;
             default:
                 $medias[] = [
-                    'object_type' => (string) $this->object_type,
+                    'object_type' => $objectType,
                     'object_id' => $this->object_id,
                 ];
                 break;
@@ -381,5 +372,20 @@ class Share extends database_object
         $result .= '</a>';
 
         return $result;
+    }
+
+    public function getObjectType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::from((string) $this->object_type);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getLibraryItemLoader(): LibraryItemLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(LibraryItemLoaderInterface::class);
     }
 }

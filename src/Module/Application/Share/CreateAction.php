@@ -36,6 +36,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -103,7 +104,7 @@ final class CreateAction implements ApplicationActionInterface
 
         $share_id = $this->shareCreator->create(
             $user,
-            $_REQUEST['type'] ?? '',
+            LibraryItemEnum::from($_REQUEST['type'] ?? ''),
             (int)($_REQUEST['id'] ?? 0),
             (bool)($_REQUEST['allow_stream'] ?? 0),
             (bool)($_REQUEST['allow_download'] ?? 0),

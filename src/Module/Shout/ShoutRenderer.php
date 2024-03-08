@@ -66,7 +66,7 @@ final class ShoutRenderer implements ShoutRendererInterface
     {
         $object          = $this->shoutObjectLoader->loadByShout($shout);
         $shoutObjectId   = $shout->getObjectId();
-        $shoutObjectType = (string) $shout->getObjectType();
+        $shoutObjectType = $shout->getObjectType()->value;
 
         if ($object === null) {
             return '';

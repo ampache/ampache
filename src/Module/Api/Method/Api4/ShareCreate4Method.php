@@ -32,6 +32,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
@@ -106,7 +107,7 @@ final class ShareCreate4Method
 
             $results[] = $shareCreator->create(
                 $user,
-                $object_type,
+                LibraryItemEnum::from($object_type),
                 $object_id,
                 true,
                 $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),

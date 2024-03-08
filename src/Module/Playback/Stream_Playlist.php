@@ -27,6 +27,7 @@ namespace Ampache\Module\Playback;
 
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -175,7 +176,7 @@ class Stream_Playlist
      * media_to_urlarray
      * Formats the URL and media information and adds it to the object
      * @param list<array{
-     *  object_type: string,
+     *  object_type: LibraryItemEnum,
      *  object_id: int,
      *  client?: string,
      *  action?: string,
@@ -203,7 +204,7 @@ class Stream_Playlist
     /**
      * media_to_url
      * @param array{
-     *  object_type: string,
+     *  object_type: LibraryItemEnum,
      *  object_id: int,
      *  client?: string,
      *  action?: string,
@@ -214,9 +215,14 @@ class Stream_Playlist
      *  custom_play_action?: string
      * } $media
      */
-    public static function media_to_url(array $media, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
-    {
-        $type      = $media['object_type'];
+    public static function media_to_url(
+        array $media,
+        string $additional_params = '',
+        string $urltype = 'web',
+        ?User $user = null
+    ): ?Stream_Url {
+        // @todo use LibraryItemLoader
+        $type      = $media['object_type']->value;
         $object_id = $media['object_id'];
         $className = ObjectTypeToClassNameMapper::map($type);
         /** @var library_item $object */
@@ -497,7 +503,7 @@ class Stream_Playlist
      * add
      * Adds an array of media
      * @param list<array{
-     *  object_type: string,
+     *  object_type: LibraryItemEnum,
      *  object_id: int,
      *  client?: string,
      *  action?: string,

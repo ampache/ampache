@@ -227,13 +227,12 @@ class TVShow_Season extends database_object implements
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * @return array{object_type: LibraryItemEnum, object_id: int}
      */
-    public function get_parent(): ?array
+    public function get_parent(): array
     {
         return array(
-            'object_type' => 'tvshow',
+            'object_type' => LibraryItemEnum::TV_SHOW,
             'object_id' => $this->tvshow
         );
     }
@@ -259,7 +258,7 @@ class TVShow_Season extends database_object implements
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -268,7 +267,7 @@ class TVShow_Season extends database_object implements
             $episodes = $this->get_episodes();
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
-                    'object_type' => 'video',
+                    'object_type' => LibraryItemEnum::VIDEO,
                     'object_id' => $episode_id
                 );
             }

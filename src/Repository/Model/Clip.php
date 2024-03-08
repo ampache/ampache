@@ -196,14 +196,13 @@ class Clip extends Video
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * @return null|array{object_type: LibraryItemEnum, object_id: int}
      */
     public function get_parent(): ?array
     {
         if ($this->artist) {
             return array(
-                'object_type' => 'artist',
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => $this->artist
             );
         }

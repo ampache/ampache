@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use DateTime;
 use PDO;
@@ -59,7 +60,7 @@ class ShoutRepositoryTest extends TestCase
 
     public function testGetByYieldsData(): void
     {
-        $objectType = 'some-object-type';
+        $objectType = LibraryItemEnum::SONG;
         $objectId   = 42;
 
         $shoutBox  = $this->createMock(Shoutbox::class);
@@ -69,7 +70,7 @@ class ShoutRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
-                [$objectType, $objectId]
+                [$objectType->value, $objectId]
             )
             ->willReturn($statement);
 
@@ -229,7 +230,7 @@ class ShoutRepositoryTest extends TestCase
         $text       = 'some-text';
         $sticky     = true;
         $objectId   = 123;
-        $objectType = 'snafu';
+        $objectType = LibraryItemEnum::ART;
         $offset     = 567;
 
         $shout->expects(static::once())
@@ -267,7 +268,7 @@ class ShoutRepositoryTest extends TestCase
                     $text,
                     (int) $sticky,
                     $objectId,
-                    $objectType,
+                    $objectType->value,
                     $offset
                 ]
             );
@@ -291,7 +292,7 @@ class ShoutRepositoryTest extends TestCase
         $text       = 'some-text';
         $sticky     = true;
         $objectId   = 123;
-        $objectType = 'snafu';
+        $objectType = LibraryItemEnum::TAG_HIDDEN;
         $offset     = 567;
 
         $shout->expects(static::once())
@@ -332,7 +333,7 @@ class ShoutRepositoryTest extends TestCase
                     $text,
                     (int) $sticky,
                     $objectId,
-                    $objectType,
+                    $objectType->value,
                     $offset,
                     $shoutId
                 ]

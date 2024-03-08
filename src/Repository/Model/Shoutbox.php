@@ -91,9 +91,9 @@ class Shoutbox extends BaseModel
     /**
      * Sets the related object-type
      */
-    public function setObjectType(string $object_type): Shoutbox
+    public function setObjectType(LibraryItemEnum $object_type): Shoutbox
     {
-        $this->object_type = $object_type;
+        $this->object_type = $object_type->value;
 
         return $this;
     }
@@ -101,9 +101,9 @@ class Shoutbox extends BaseModel
     /**
      * Returns the related object-type
      */
-    public function getObjectType(): string
+    public function getObjectType(): LibraryItemEnum
     {
-        return (string) $this->object_type;
+        return LibraryItemEnum::from((string) $this->object_type);
     }
 
     /**

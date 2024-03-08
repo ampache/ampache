@@ -32,6 +32,7 @@ use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
@@ -113,7 +114,7 @@ final class ShareCreate5Method
 
             $share = $shareCreator->create(
                 $user,
-                $object_type,
+                LibraryItemEnum::from($object_type),
                 $object_id,
                 true,
                 $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),

@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
@@ -74,7 +75,7 @@ class ShoutCreatorTest extends TestCase
         $libItem = $this->createMock(library_item::class);
         $shout   = $this->createMock(Shoutbox::class);
 
-        $objectType = 'some-type';
+        $objectType = LibraryItemEnum::SONG;
         $text       = '<div>some-text</div>';
         $isSticky   = false;
         $offset     = 666;
@@ -129,7 +130,7 @@ class ShoutCreatorTest extends TestCase
             ->with(
                 $userId,
                 'shout',
-                $objectType,
+                $objectType->value,
                 $objectId,
                 self::callback(static fn (int $value): bool => $value <= time())
             );

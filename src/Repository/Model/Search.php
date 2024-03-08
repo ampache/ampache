@@ -1304,7 +1304,7 @@ class Search extends playlist_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array(
                 'object_id' => $row['id'],
-                'object_type' => $this->objectType,
+                'object_type' => LibraryItemEnum::from($this->objectType),
                 'track' => $count++,
                 'track_id' => $row['id'],
             );

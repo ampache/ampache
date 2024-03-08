@@ -30,11 +30,12 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 
 /** @var string $data */
 /** @var Ampache\Repository\Model\library_item $object */
-/** @var string $object_type */
+/** @var LibraryItemEnum $object_type */
 /** @var Traversable<Shoutbox> $shouts */
 /** @var ShoutRendererInterface $shoutRenderer */
 ?>
@@ -64,7 +65,7 @@ $boxtitle = T_('Post to Shoutbox');
     <td>
         <?php echo Core::form_register('add_shout'); ?>
         <input type="hidden" name="object_id" value="<?php echo $object->getId(); ?>" />
-        <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
+        <input type="hidden" name="object_type" value="<?php echo $object_type->value; ?>" />
         <input type="hidden" name="data" value="<?php echo $data; ?>" />
         <input type="submit" value="<?php echo T_('Create'); ?>" /></td>
 </tr>

@@ -203,7 +203,7 @@ final class DefaultAction implements ApplicationActionInterface
         foreach ($media_ids as $element) {
             if (is_array($element)) {
                 if (isset($element['object_type'])) {
-                    $type    = $element['object_type'];
+                    $type    = $element['object_type']->value;
                     $mediaid = $element['object_id'];
                 } else {
                     $type    = array_shift($element);
@@ -223,7 +223,7 @@ final class DefaultAction implements ApplicationActionInterface
                 $dirname    = '';
                 $parent     = $media->get_parent();
                 if ($parent != null) {
-                    $className = ObjectTypeToClassNameMapper::map($parent['object_type']);
+                    $className = ObjectTypeToClassNameMapper::map($parent['object_type']->value);
                     /** @var class-string<library_item> $className */
                     $pobj = new $className($parent['object_id']);
                     $pobj->format();
