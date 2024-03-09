@@ -1599,7 +1599,10 @@ class Json_Data
     {
         $JSON = [];
         foreach ($users as $user_id) {
-            $user   = new User($user_id);
+            $user = new User($user_id);
+            if ($user->isNew()) {
+                continue;
+            }
             $JSON[] = array(
                 "id" => (string)$user_id,
                 "username" => $user->username
