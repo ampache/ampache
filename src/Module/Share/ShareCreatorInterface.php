@@ -37,6 +37,6 @@ interface ShareCreatorInterface
         int $expire_days = 0,
         string $secret = '',
         int $max_counter = 0,
-        string $description = ''
+        ?string $description = ''
     ): ?int;
 }
