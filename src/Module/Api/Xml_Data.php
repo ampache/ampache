@@ -731,6 +731,9 @@ class Xml_Data
                     }
                     break;
                 case 'podcast_episode':
+                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                        $objects = array_splice($objects, self::$offset, self::$limit);
+                    }
                     $string .= self::podcast_episodes($objects, $user, false);
                     break;
                 case 'video':
