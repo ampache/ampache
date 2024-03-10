@@ -63,7 +63,7 @@ final class ShareCreator implements ShareCreatorInterface
         int $expire_days = 0,
         string $secret = '',
         int $max_counter = 0,
-        string $description = ''
+        ?string $description = ''
     ): ?int {
         if (!Share::is_valid_type($object_type)) {
             $this->logger->error(
