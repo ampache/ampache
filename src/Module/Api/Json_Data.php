@@ -550,6 +550,7 @@ class Json_Data
      * This returns labels to the user, in a pretty JSON document with the information
      *
      * @param int[] $objects
+     * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
      */
@@ -605,6 +606,7 @@ class Json_Data
      * This returns genres to the user, in a pretty JSON document with the information
      *
      * @param int[] $objects Genre id's to include
+     * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
      */
@@ -832,6 +834,7 @@ class Json_Data
      * @param array $objects Playlist id's to include
      * @param User $user
      * @param bool $songs
+     * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "playlist"
      */
@@ -1120,6 +1123,7 @@ class Json_Data
      * @param int[] $objects Podcast id's to include
      * @param User $user
      * @param bool $episodes include the episodes of the podcast
+     * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast"
      */
@@ -1618,6 +1622,7 @@ class Json_Data
      * This handles creating an JSON document for a user list
      *
      * @param int[] $users User id list
+     * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
      */

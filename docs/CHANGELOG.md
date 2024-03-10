@@ -44,11 +44,14 @@
 * Localplay and jukebox mode improvements (VLC and XBMC)
 * Don't search for wanted albums on an invalid artist
 * Browse filtering for album artist and song artist in certain situations
-* Search inputs were being json encoded twice
 * Don't send an empty query to the database
 * Remove stray span and use valid lang value on installer pages
 * Updating array preferences
 * Showing favicon
+* Publication date of RSS feeds
+* Search
+  * Rule inputs were being json encoded twice
+  * Genre search joining catalogs when they're not needed
 * Static typing errors
   * Updating album data when original_year is missing
   * Template `show_recently_played` with a non-database song
