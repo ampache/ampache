@@ -144,6 +144,8 @@ final class SearchGroupMethod
                     'video'
                 );
         }
+        $offset         = $input['offset'] ?? 0;
+        $limit          = $input['limit'] ?? 0;
         $results        = array();
         $data           = $input;
         $data['offset'] = 0;
@@ -157,16 +159,22 @@ final class SearchGroupMethod
         switch ($input['api_format']) {
             case 'json':
                 $output = array('search' => array());
+                Json_Data::set_offset($offset);
+                Json_Data::set_limit($limit);
                 foreach ($results as $key => $search) {
-                    Json_Data::set_offset($input['offset'] ?? 0);
-                    Json_Data::set_limit($input['limit'] ?? 0);
                     switch ($key) {
                         case 'album':
+                            if ((count($search) > $limit || $offset > 0) && $limit) {
+                                $search = array_slice($search, $offset, $limit);
+                            }
                             $output['search'][$key] = Json_Data::albums($search, array(), $user, false);
                             break;
                         case 'song_artist':
                         case 'album_artist':
                         case 'artist':
+                            if ((count($search) > $limit || $offset > 0) && $limit) {
+                                $search = array_slice($search, $offset, $limit);
+                            }
                             $output['search'][$key] = Json_Data::artists($search, array(), $user, false);
                             break;
                         case 'label':
@@ -179,6 +187,9 @@ final class SearchGroupMethod
                             $output['search'][$key] = Json_Data::podcasts($search, $user, false, false);
                             break;
                         case 'podcast_episode':
+                            if ((count($search) > $limit || $offset > 0) && $limit) {
+                                $search = array_slice($search, $offset, $limit);
+                            }
                             $output['search'][$key] = Json_Data::podcast_episodes($search, $user, false);
                             break;
                         case 'genre':
@@ -191,7 +202,10 @@ final class SearchGroupMethod
                         case 'video':
                             $output['search'][$key] = Json_Data::videos($search, $user, false);
                             break;
-                        default:
+                        case 'song':
+                            if ((count($search) > $limit || $offset > 0) && $limit) {
+                                $search = array_slice($search, $offset, $limit);
+                            }
                             $output['search'][$key] = Json_Data::songs($search, $user, false);
                             break;
                     }
