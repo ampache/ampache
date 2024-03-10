@@ -63,6 +63,7 @@
 ### Added
 
 * API6
+  * New Method: search_group (return multiple object types from a single set of search rules)
   * New Method: search (alias for advanced_search)
   * New Method: user_playlists (return user playlists and does not include smartlists)
   * New Method: user_smartlists (return user smartlists (searches) and does not include playlists)
