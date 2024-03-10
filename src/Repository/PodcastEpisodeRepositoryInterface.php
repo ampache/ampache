@@ -77,12 +77,10 @@ interface PodcastEpisodeRepositoryInterface
 
     /**
      * Updates the state of an episode
-     *
-     * @todo replace state by enum after switching to php 8
      */
     public function updateState(
         Podcast_Episode $episode,
-        string $state
+        PodcastEpisodeStateEnum $state
     ): void;
 
     /**
