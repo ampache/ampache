@@ -635,11 +635,8 @@ class Xml_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param array $objects Array of object_ids (Mixed string|int)
-     * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param array $searches Array of object_ids (Mixed string|int)
      * @param User $user
-     * @param bool $full_xml whether to return a full XML document or just the node.
-     * @param bool $include include episodes from podcasts or tracks in a playlist
      */
     public static function searches($searches, $user): string
     {
@@ -877,6 +874,7 @@ class Xml_Data
      *
      * @param int[] $live_streams
      * @param User $user
+     * @param bool $full_xml
      */
     public static function live_streams($live_streams, $user, $full_xml = true): string
     {

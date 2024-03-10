@@ -946,11 +946,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:genres\\(\\) has parameter \\$encode with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:genres\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
@@ -967,11 +962,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:indexes\\(\\) should return string but returns array\\|string\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:labels\\(\\) has parameter \\$encode with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -1036,11 +1026,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcasts\\(\\) has parameter \\$encode with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcasts\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
@@ -1087,11 +1072,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:user\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:users\\(\\) has parameter \\$encode with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -4776,7 +4756,8 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:searches\\(\\) has parameter \\$searches with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:searches\\(\\) has parameter \\$searches with no value type specified in iterable type array\\.$#"
+
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 

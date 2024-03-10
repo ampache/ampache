@@ -2286,7 +2286,7 @@ Search for a song using text info and then record a play if found. This allows o
 
 ### search_group
 
-Perform an group search given passed rules. This function will return multiple object types if the rule names match the object type.
+Perform a group search given passed rules. This function will return multiple object types if the rule names match the object type.
 You can pass multiple rules as well as joins to create in depth search results.
 
 Limit and offset are applied per object type. Meaning with a limit of 10 you will return 10 objects of each type not 10 results total.
@@ -2358,7 +2358,19 @@ video
 * return array
 
 ```JSON
-"search": []
+"search": [
+    "song: [],
+    "album: [],
+    "song_artist: [],
+    "album_artist: [],
+    "artist: [],
+    "label: [],
+    "playlist: [],
+    "podcast: [],
+    "podcast_episode: [],
+    "genre: [],
+    "user: []
+]
 
 ```
 
