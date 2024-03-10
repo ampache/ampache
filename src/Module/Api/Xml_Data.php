@@ -873,7 +873,7 @@ class Xml_Data
      *
      * @param int[] $live_streams
      * @param User $user
-     * @param bool #$full_xml
+     * @param bool $full_xml
      */
     public static function live_streams($live_streams, $user, $full_xml = true): string
     {
