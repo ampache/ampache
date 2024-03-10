@@ -156,43 +156,43 @@ final class SearchGroupMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                $output = array();
+                $output = array('search' => array());
                 foreach ($results as $key => $search) {
                     Json_Data::set_offset($input['offset'] ?? 0);
                     Json_Data::set_limit($input['limit'] ?? 0);
                     switch ($key) {
                         case 'album':
-                            $output[$key] = Json_Data::albums($search, array(), $user, false);
+                            $output['search'][$key] = Json_Data::albums($search, array(), $user, false);
                             break;
                         case 'song_artist':
                         case 'album_artist':
                         case 'artist':
-                            $output[$key] = Json_Data::artists($search, array(), $user, false);
+                            $output['search'][$key] = Json_Data::artists($search, array(), $user, false);
                             break;
                         case 'label':
-                            $output[$key] = Json_Data::labels($search, false);
+                            $output['search'][$key] = Json_Data::labels($search, false);
                             break;
                         case 'playlist':
-                            $output[$key] = Json_Data::playlists($search, $user, false, false);
+                            $output['search'][$key] = Json_Data::playlists($search, $user, false, false);
                             break;
                         case 'podcast':
-                            $output[$key] = Json_Data::podcasts($search, $user, false, false);
+                            $output['search'][$key] = Json_Data::podcasts($search, $user, false, false);
                             break;
                         case 'podcast_episode':
-                            $output[$key] = Json_Data::podcast_episodes($search, $user, false);
+                            $output['search'][$key] = Json_Data::podcast_episodes($search, $user, false);
                             break;
                         case 'genre':
                         case 'tag':
-                            $output[$key] = Json_Data::genres($search, false);
+                            $output['search'][$key] = Json_Data::genres($search, false);
                             break;
                         case 'user':
-                            $output[$key] = Json_Data::users($search, false);
+                            $output['search'][$key] = Json_Data::users($search, false);
                             break;
                         case 'video':
-                            $output[$key] = Json_Data::videos($search, $user, false);
+                            $output['search'][$key] = Json_Data::videos($search, $user, false);
                             break;
                         default:
-                            $output[$key] = Json_Data::songs($search, $user, false);
+                            $output['search'][$key] = Json_Data::songs($search, $user, false);
                             break;
                     }
                 }
