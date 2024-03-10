@@ -946,7 +946,12 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:genres\\(\\) should return string but returns string\\|false\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:genres\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:genres\\(\\) should return array\\|string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -956,7 +961,17 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:labels\\(\\) should return string but returns string\\|false\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:indexes\\(\\) should return string but returns array\\|string\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:labels\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:labels\\(\\) should return array\\|string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -986,7 +1001,12 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:playlists\\(\\) should return string but returns string\\|false\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:playlists\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:playlists\\(\\) should return array\\|string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -1001,7 +1021,12 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcasts\\(\\) should return string but returns string\\|false\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcasts\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcasts\\(\\) should return array\\|string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -1046,7 +1071,12 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:users\\(\\) should return string but returns string\\|false\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:users\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:users\\(\\) should return array\\|string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -1092,7 +1122,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 5
+			count: 10
 			path: src/Module/Api/Method/AdvancedSearchMethod.php
 
 		-
@@ -2711,7 +2741,17 @@ parameters:
 			path: src/Module/Api/Method/FollowersMethod.php
 
 		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/FollowersMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\FollowingMethod\\:\\:following\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/FollowingMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/FollowingMethod.php
 
@@ -2746,6 +2786,11 @@ parameters:
 			path: src/Module/Api/Method/GenreMethod.php
 
 		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/GenreMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\GenreSongsMethod\\:\\:genre_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/GenreSongsMethod.php
@@ -2757,6 +2802,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\GenresMethod\\:\\:genres\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/GenresMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/GenresMethod.php
 
@@ -2816,7 +2866,17 @@ parameters:
 			path: src/Module/Api/Method/LabelMethod.php
 
 		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/LabelMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LabelsMethod\\:\\:labels\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/LabelsMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/LabelsMethod.php
 
@@ -2926,6 +2986,11 @@ parameters:
 			path: src/Module/Api/Method/PlaylistCreateMethod.php
 
 		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PlaylistCreateMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistDeleteMethod\\:\\:playlist_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistDeleteMethod.php
@@ -2956,6 +3021,11 @@ parameters:
 			path: src/Module/Api/Method/PlaylistMethod.php
 
 		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PlaylistMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistRemoveSongMethod\\:\\:playlist_remove_song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistRemoveSongMethod.php
@@ -2976,7 +3046,17 @@ parameters:
 			path: src/Module/Api/Method/PlaylistsMethod.php
 
 		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PlaylistsMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastCreateMethod\\:\\:podcast_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PodcastCreateMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PodcastCreateMethod.php
 
@@ -3006,7 +3086,17 @@ parameters:
 			path: src/Module/Api/Method/PodcastMethod.php
 
 		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PodcastMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PodcastsMethod\\:\\:podcasts\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PodcastsMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PodcastsMethod.php
 
@@ -3044,6 +3134,11 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\ScrobbleMethod\\:\\:scrobble\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/ScrobbleMethod.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\SearchGroupMethod\\:\\:search_group\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/SearchGroupMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\SearchMethod\\:\\:search\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3117,7 +3212,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 5
+			count: 7
 			path: src/Module/Api/Method/StatsMethod.php
 
 		-
@@ -3206,6 +3301,11 @@ parameters:
 			path: src/Module/Api/Method/UserEditMethod.php
 
 		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/UserPlaylistsMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UserPreferenceMethod\\:\\:user_preference\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/UserPreferenceMethod.php
@@ -3216,12 +3316,22 @@ parameters:
 			path: src/Module/Api/Method/UserPreferencesMethod.php
 
 		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/UserSmartlistsMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UserUpdateMethod\\:\\:user_update\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/UserUpdateMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UsersMethod\\:\\:users\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/UsersMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/UsersMethod.php
 
@@ -4616,6 +4726,11 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:live_streams\\(\\) has parameter \\$full_xml with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Xml_Data.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -4636,7 +4751,17 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:searches\\(\\) has parameter \\$searches with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Xml_Data.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Xml_Data.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(bool \\#\\$full_xml\\)\\: Unexpected token \"\\#\\$full_xml\", expected variable at offset 208$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
