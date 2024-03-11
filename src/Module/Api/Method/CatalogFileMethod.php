@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -59,7 +61,7 @@ final class CatalogFileMethod
      */
     public static function catalog_file(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {

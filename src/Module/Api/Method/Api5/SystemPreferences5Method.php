@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
@@ -45,7 +47,7 @@ final class SystemPreferences5Method
      */
     public static function system_preferences(array $input, User $user): bool
     {
-        if (!Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
 

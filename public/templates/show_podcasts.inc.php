@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -50,7 +52,7 @@ $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <div id="information_actions">
     <ul>
-        <?php if (Access::check('interface', 75)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) { ?>
         <li>
             <a href="<?php echo $webPath; ?>/podcast.php?action=show_create">
                 <?php echo Ui::get_icon('add', T_('Add')); ?>

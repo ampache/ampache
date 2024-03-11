@@ -27,6 +27,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Rss\AmpacheRss;
@@ -43,16 +46,18 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Psr\Container\ContainerInterface;
 
-/** @var Album $album */
-/** @var bool $isAlbumEditable */
-/** @var ContainerInterface $dic */
 global $dic;
 
+/** @var bool $isAlbumEditable */
+/** @var ContainerInterface $dic */
+
 $zipHandler = $dic->get(ZipHandlerInterface::class);
-$batch_dl   = Access::check_function('batch_download');
+$batch_dl   = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 $zip_album  = $batch_dl && $zipHandler->isZipable('album');
 // Title for this album
 $web_path = (string)AmpConfig::get('web_path', '');
+
+/** @var Album $album */
 $simple   = $album->get_fullname(true);
 $f_name   = $album->get_fullname(false, true);
 $title    = ($album->album_artist !== null)
@@ -62,7 +67,7 @@ $title    = ($album->album_artist !== null)
 
 $current_user      = Core::get_global('user');
 $show_direct_play  = AmpConfig::get('directplay');
-$show_playlist_add = Access::check('interface', 25);
+$show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
 $hide_array        = (AmpConfig::get('hide_single_artist') && $album->get_artist_count() == 1)
     ? array('cel_artist', 'cel_album', 'cel_year', 'cel_drag')
@@ -78,10 +83,10 @@ if ($directplay_limit > 0) {
 
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($album->get_artist_fullname()); ?>%22+%22<?php echo rawurlencode($simple); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($album->f_artist_name); ?>%22+%22<?php echo rawurlencode($simple); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode((string) $album->get_artist_fullname()); ?>%22+%22<?php echo rawurlencode($simple); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode((string) $album->f_artist_name); ?>%22+%22<?php echo rawurlencode($simple); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
         <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($simple); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($album->f_artist_name); ?>%22+%22<?php echo rawurlencode($simple); ?>%22&type=album" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode((string) $album->f_artist_name); ?>%22+%22<?php echo rawurlencode($simple); ?>%22&type=album" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     <?php if ($album->mbid) { ?>
         <a href="https://musicbrainz.org/release/<?php echo $album->mbid; ?>" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
     <?php } else { ?>
@@ -168,7 +173,7 @@ if (AmpConfig::get('use_rss')) { ?>
             <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => (string)$album->id)); ?>
         </li>
         <?php }
-if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
+if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
     if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
             <li>
@@ -180,14 +185,14 @@ if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
             <?php
     }
 }
-if (Access::check('interface', 25)) {
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
     if (AmpConfig::get('share')) { ?>
             <li>
                 <?php echo Share::display_ui('album', $album->id); ?>
             </li>
             <?php }
     }
-if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->id) || Access::check('interface', 50)) {
+if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->id) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
     $saveorder = T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>

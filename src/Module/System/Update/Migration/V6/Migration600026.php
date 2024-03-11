@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration600026 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('use_play2', 'Use an alternative playback action for streaming if you have issues with playing music', '0', 25, 'special', 'streaming', 'player');
+        $this->updatePreferences('use_play2', 'Use an alternative playback action for streaming if you have issues with playing music', '0', AccessLevelEnum::USER->value, 'special', 'streaming', 'player');
     }
 }

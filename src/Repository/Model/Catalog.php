@@ -30,6 +30,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog_beets;
 use Ampache\Module\Catalog\Catalog_beetsremote;
 use Ampache\Module\Catalog\Catalog_dropbox;
@@ -46,6 +48,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
@@ -799,7 +802,7 @@ abstract class Catalog extends database_object
                 $sql = " `$type`.`id` IN (SELECT `video`.`id` FROM `video` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `video`.`id`) ";
                 break;
             case "object_count_album_disk":
-                // enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video')
+                // enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tvshow', 'tvshow_season', 'user', 'video')
                 $sql = " `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'album_disk' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "object_count_artist":
@@ -816,7 +819,7 @@ abstract class Catalog extends database_object
                 $sql  = " `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "rating_album_disk":
-                // enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video')
+                // enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tvshow', 'tvshow_season', 'user', 'video')
                 $sql = " `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'album_disk' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "rating_artist":
@@ -924,7 +927,7 @@ abstract class Catalog extends database_object
     public static function update_enabled($new_enabled, $catalog_id)
     {
         /* Check them Rights! */
-        if (!Access::check('interface', 75)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
             return false;
         }
 
@@ -2146,7 +2149,7 @@ abstract class Catalog extends database_object
         // only allow your primary external metadata source to update values
         $overwrites  = true;
         $meta_order  = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
-        $plugin_list = Plugin::get_plugins('get_external_metadata');
+        $plugin_list = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_METADATA_RETRIEVER);
         $user        = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
@@ -3845,7 +3848,7 @@ abstract class Catalog extends database_object
         }
 
         return (
-            Access::check('interface', 75) ||
+            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
             ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove'))
         );
     }

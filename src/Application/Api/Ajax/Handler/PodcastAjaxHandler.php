@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\Core;
@@ -62,7 +64,7 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'sync':
-                if (!Access::check('interface', 75)) {
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                     debug_event('podcast.ajax', (Core::get_global('user')->username ?? T_('Unknown')) . ' attempted to sync podcast', 1);
 
                     return;

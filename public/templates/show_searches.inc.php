@@ -24,16 +24,18 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */ ?>
+/** @var list<int> $object_ids */ ?>
 <div id="information_actions">
     <ul>
-        <?php if (Access::check('interface', 25)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song">
                 <?php echo Ui::get_icon('add', T_('Add')); ?>

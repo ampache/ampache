@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginEnum;
 
 class Plugin
@@ -75,11 +76,16 @@ class Plugin
     /**
      * get_plugins
      * This returns an array of plugin names
-     * @param string $type
-     * @return array
+     * @return array<string, string>
      */
-    public static function get_plugins($type = ''): array
+    public static function get_plugins(?PluginTypeEnum $type = null): array
     {
+        if ($type === null) {
+            $type = '';
+        } else {
+            $type = $type->value;
+        }
+
         // make static cache for optimization when multiple call
         static $plugins_list = array();
         if (isset($plugins_list[$type])) {
@@ -89,7 +95,7 @@ class Plugin
         $plugins_list[$type] = array();
 
         foreach (PluginEnum::LIST as $name => $className) {
-            if ($type != '') {
+            if ($type !== '') {
                 $plugin = new Plugin($name);
                 if ($plugin->_plugin === null) {
                     continue;
@@ -105,6 +111,7 @@ class Plugin
                     continue;
                 }
             }
+
             // It's a plugin record it
             $plugins_list[$type][$name] = $name;
         }

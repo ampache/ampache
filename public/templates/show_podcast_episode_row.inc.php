@@ -24,6 +24,9 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
@@ -71,7 +74,7 @@ if ($is_mashup) {
     <span class="cel_item_add">
 <?php
     echo Ajax::button('?action=basket&type=podcast_episode&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $libitem->id);
-if (Access::check('interface', 25)) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id; ?>')">
             <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
@@ -101,11 +104,11 @@ if ($show_ratings) { ?>
         </td>
     <?php } ?>
 <td class="cel_action">
-    <?php if (Access::check_function('download') && !empty($libitem->file)) { ?>
+    <?php if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD) && !empty($libitem->file)) { ?>
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php } ?>
 <?php
-if (Access::check('interface', 50)) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <span id="button_sync_<?php echo $libitem->id; ?>">
         <?php echo Ajax::button('?page=podcast&action=sync&podcast_episode_id=' . $libitem->id, 'file_refresh', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
     </span>

@@ -25,6 +25,7 @@ namespace Ampache\Module\Application\Art;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -51,8 +52,8 @@ abstract class AbstractArtAction implements ApplicationActionInterface
 
         // If not a content manager user then kick em out
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false && (
-                $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false && (
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
                 $item->get_user_owner() != Core::get_global('user')->id
             )
         ) {

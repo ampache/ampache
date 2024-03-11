@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -908,7 +909,7 @@ final class VaInfo implements VaInfoInterface
     private function _get_plugin_tags(): void
     {
         $tag_order    = $this->get_metadata_order();
-        $plugin_names = Plugin::get_plugins('get_metadata');
+        $plugin_names = Plugin::get_plugins(PluginTypeEnum::METADATA_RETRIEVER);
         /** @var User $user */
         $user = (!empty(Core::get_global('user')))
             ? Core::get_global('user')

@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -38,13 +40,13 @@ $tag_types = array(
     'tag_hidden' => T_('Hidden'),
 );
 
-/** @var UiInterface $ui */
-/** @var Browse $browse2 */
-/** @var array $object_ids */
-/** @var string $browse_type */
-
 global $dic;
 $ui = $dic->get(UiInterface::class);
+
+/** @var UiInterface $ui */
+/** @var Browse $browse2 */
+/** @var list<array{id: int, name: string}> $object_ids */
+/** @var string $browse_type */
 
 $ui->show(
     'show_form_genre.inc.php',
@@ -58,7 +60,7 @@ $ui->show(
         <div class="tag_button">
             <span id="click_tag_hidden_<?php echo $data['id']; ?>"><?php echo scrub_out($data['name']); ?></span>
         </div>
-        <?php if (Access::check('interface', 50)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <div class="tag_actions">
             <ul>
                 <li>

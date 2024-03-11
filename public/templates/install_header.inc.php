@@ -2,8 +2,6 @@
 
 declare(strict_types=0);
 
-$htmllang = str_replace("_", "-", $htmllang);
-
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -24,16 +22,21 @@ $htmllang = str_replace("_", "-", $htmllang);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+/** @var string $charset */
+/** @var string $lang */
+$htmllang = str_replace("_", "-", $lang);
+
 ?>
 <?php if (!defined('INSTALL')) {
     return false;
 } ?>
 <?php $results = 0; ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $lang; ?>" lang="<?php echo $lang; ?>">
 <head>
     <!-- Propelled by Ampache | ampache.org -->
-    <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>">
+    <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="cache-control" content="max-age=0">
     <meta http-equiv="cache-control" content="no-cache">

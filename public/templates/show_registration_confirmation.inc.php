@@ -24,7 +24,10 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Application\Register\AddUserAction;
 use Ampache\Module\Util\Ui;
+
+/** @var AddUserAction $this */
 
 $htmllang          = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
 $web_path          = (string)AmpConfig::get('web_path', '');

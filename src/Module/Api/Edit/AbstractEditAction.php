@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
@@ -100,16 +102,16 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $libitem->format();
         }
 
-        $level = '50';
+        $level = AccessLevelEnum::CONTENT_MANAGER;
         if ($libitem->get_user_owner() == Core::get_global('user')->id) {
-            $level = '25';
+            $level = AccessLevelEnum::USER;
         }
         if (Core::get_request('action') == 'show_edit_playlist') {
-            $level = '25';
+            $level = AccessLevelEnum::USER;
         }
 
         // Make sure they got them rights
-        if (!Access::check('interface', (int) $level) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, $level) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
             return null;

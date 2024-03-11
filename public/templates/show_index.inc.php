@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Ajax;
@@ -39,7 +40,7 @@ use Ampache\Repository\Model\User;
 
 <?php $user = Core::get_global('user');
 if ($user instanceof User) {
-    foreach (Plugin::get_plugins('display_home') as $plugin_name) {
+    foreach (Plugin::get_plugins(PluginTypeEnum::HOMEPAGE_WIDGET) as $plugin_name) {
         $plugin = new Plugin($plugin_name);
         if ($plugin->_plugin !== null && $plugin->load($user)) {
             $plugin->_plugin->display_home();

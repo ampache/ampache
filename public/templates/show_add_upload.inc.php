@@ -26,6 +26,8 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
@@ -38,7 +40,7 @@ Ui::show_box_top(T_('Upload'));
 $artist   = (int) (Core::get_request('artist'));
 $album    = (int) (Core::get_request('album'));
 $web_path = (string)AmpConfig::get('web_path', '');
-$access50 = Access::check('interface', 50);
+$access50 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 
 <?php echo T_('Target folder'); ?>

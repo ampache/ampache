@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -68,10 +69,10 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     public function install(): bool
     {
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        if (!Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 
@@ -101,7 +102,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
             return false;
         }
         if ($from_version < (int)$this->version) {
-            Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+            Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
 
         return true;

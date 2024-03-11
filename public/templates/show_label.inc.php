@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
@@ -74,7 +76,7 @@ if ($label->website) {
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->id; ?>">

@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -58,10 +59,10 @@ class AmpachePiwik implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', 100, 'string', 'plugins', 'piwik')) {
+        if (!Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'piwik')) {
             return false;
         }
-        if (!Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get('web_path') . '/piwik/', 100, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get('web_path') . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 

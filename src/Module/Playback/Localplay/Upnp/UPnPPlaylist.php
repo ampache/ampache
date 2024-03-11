@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 
 class UPnPPlaylist
@@ -170,7 +171,7 @@ class UPnPPlaylist
             'upnp_playlist' => $this->_songs,
             'upnp_current' => $this->_current
         ));
-        if (!Session::exists('stream', $sid)) {
+        if (!Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
             Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $pls_data));
         } else {
             Session::write($sid, $pls_data);

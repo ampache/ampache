@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration600047 extends AbstractMigration
@@ -35,6 +36,6 @@ final class Migration600047 extends AbstractMigration
      */
     public function migrate(): void
     {
-        $this->updatePreferences('show_wrapped', 'Enable access to your personal "Spotify Wrapped" from your user page', '0', 25, 'bool', 'interface', 'privacy');
+        $this->updatePreferences('show_wrapped', 'Enable access to your personal "Spotify Wrapped" from your user page', '0', AccessLevelEnum::USER->value, 'bool', 'interface', 'privacy');
     }
 }

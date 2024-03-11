@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -68,7 +69,7 @@ final class ShowAction extends AbstractGraphRendererAction
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === true) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true) {
             $this->ui->showBoxTop(T_('Statistics'), 'box box_stats');
 
             echo $this->talFactory

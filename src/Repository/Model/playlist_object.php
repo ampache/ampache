@@ -24,6 +24,8 @@
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
@@ -102,10 +104,10 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function has_access($user_id = null): bool
     {
-        if (Access::check('interface', 100)) {
+        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
             return true;
         }
-        if (!Access::check('interface', 25)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
             return false;
         }
         // allow the owner

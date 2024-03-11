@@ -57,8 +57,8 @@ final class AccessListManager implements AccessListManagerInterface
         string $endIp,
         string $name,
         int $userId,
-        int $level,
-        string $type
+        AccessLevelEnum $level,
+        AccessTypeEnum $type
     ): void {
         $startIp = @inet_pton($startIp);
         $endIp   = @inet_pton($endIp);
@@ -72,7 +72,7 @@ final class AccessListManager implements AccessListManagerInterface
             $name,
             $userId,
             $level,
-            in_array($type, AccessLevelEnum::CONFIGURABLE_TYPE_LIST) ? $type : AccessLevelEnum::TYPE_STREAM
+            in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST) ? $type : AccessTypeEnum::STREAM
         );
     }
 
@@ -90,13 +90,13 @@ final class AccessListManager implements AccessListManagerInterface
         string $endIp,
         string $name,
         int $userId,
-        int $level,
-        string $type,
-        string $additionalType
+        AccessLevelEnum $level,
+        AccessTypeEnum $type,
+        AccessTypeEnum $additionalType
     ): void {
         $startIp = @inet_pton($startIp);
         $endIp   = @inet_pton($endIp);
-        $type    = in_array($type, AccessLevelEnum::CONFIGURABLE_TYPE_LIST) ? $type : AccessLevelEnum::TYPE_STREAM;
+        $type    = in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST) ? $type : AccessTypeEnum::STREAM;
 
         $this->verifyRange($startIp, $endIp);
 
@@ -114,27 +114,27 @@ final class AccessListManager implements AccessListManagerInterface
             );
 
             // Create Additional stuff based on the type
-            if (in_array($additionalType, ['stream', 'all'])) {
-                if ($this->accessRepository->exists($startIp, $endIp, AccessLevelEnum::TYPE_STREAM, $userId) === false) {
+            if (in_array($additionalType, [AccessTypeEnum::STREAM, AccessTypeEnum::ALL])) {
+                if ($this->accessRepository->exists($startIp, $endIp, AccessTypeEnum::STREAM, $userId) === false) {
                     $this->accessRepository->create(
                         $startIp,
                         $endIp,
                         $name,
                         $userId,
                         $level,
-                        AccessLevelEnum::TYPE_STREAM
+                        AccessTypeEnum::STREAM
                     );
                 }
             }
-            if ($additionalType === 'all') {
-                if ($this->accessRepository->exists($startIp, $endIp, AccessLevelEnum::TYPE_INTERFACE, $userId) === false) {
+            if ($additionalType === AccessTypeEnum::ALL) {
+                if ($this->accessRepository->exists($startIp, $endIp, AccessTypeEnum::INTERFACE, $userId) === false) {
                     $this->accessRepository->create(
                         $startIp,
                         $endIp,
                         $name,
                         $userId,
                         $level,
-                        AccessLevelEnum::TYPE_INTERFACE
+                        AccessTypeEnum::INTERFACE
                     );
                 }
             }

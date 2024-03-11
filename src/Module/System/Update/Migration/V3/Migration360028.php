@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -45,12 +46,12 @@ final class Migration360028 extends AbstractMigration
         $this->updateDatabase("UPDATE `preference` SET `name`='allow_personal_info_now', `description`='Personal information visibility - Now playing' WHERE `name`='allow_personal_info'");
 
         // Insert new recently played preference
-        $this->updatePreferences('allow_personal_info_recent', 'Personal information visibility - Recently played / actions', '1', 25, 'boolean', 'interface');
+        $this->updatePreferences('allow_personal_info_recent', 'Personal information visibility - Recently played / actions', '1', AccessLevelEnum::USER->value, 'boolean', 'interface');
 
         // Insert streaming time preference
-        $this->updatePreferences('allow_personal_info_time', 'Personal information visibility - Recently played - Allow to show streaming date/time', '1', 25, 'boolean', 'interface');
+        $this->updatePreferences('allow_personal_info_time', 'Personal information visibility - Recently played - Allow to show streaming date/time', '1', AccessLevelEnum::USER->value, 'boolean', 'interface');
 
         // Insert streaming agent preference
-        $this->updatePreferences('allow_personal_info_agent', 'Personal information visibility - Recently played - Allow to show streaming agent', '1', 25, 'boolean', 'interface');
+        $this->updatePreferences('allow_personal_info_agent', 'Personal information visibility - Recently played - Allow to show streaming agent', '1', AccessLevelEnum::USER->value, 'boolean', 'interface');
     }
 }

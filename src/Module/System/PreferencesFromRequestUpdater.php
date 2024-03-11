@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\System;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
@@ -75,7 +76,9 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             $apply_to_all = 'check_' . $data['name'];
             $new_level    = 'level_' . $data['name'];
             $pref_id      = (string)$data['id'];
-            $value        = (string)scrub_in((string) ($_REQUEST[$name] ?? ''));
+            $value        = (isset($_REQUEST[$name]) && is_array($_REQUEST[$name]))
+                ? implode(',', $_REQUEST[$name])
+                : (string)scrub_in((string)($_REQUEST[$name] ?? ''));
 
             // Some preferences require some extra checks to be performed
             switch ($name) {
@@ -106,7 +109,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                 Preference::update($pref_id, $user_id, $value, $applyToAll);
             }
 
-            if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) && array_key_exists($new_level, $_REQUEST)) {
+            if ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) && array_key_exists($new_level, $_REQUEST)) {
                 Preference::update_level($pref_id, (int)$_REQUEST[$new_level]);
             }
         } // end foreach preferences

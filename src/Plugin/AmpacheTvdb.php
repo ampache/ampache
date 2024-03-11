@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -59,7 +60,7 @@ class AmpacheTvdb implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('tvdb_api_key', T_('TVDb API key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('tvdb_api_key', T_('TVDb API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 

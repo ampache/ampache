@@ -24,6 +24,7 @@
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
@@ -93,7 +94,7 @@ class AmpacheUPnP extends localplay_controller
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('upnp_active', T_('UPnP Active Instance'), 0, 25, 'integer', 'internal', 'upnp');
+        Preference::insert('upnp_active', T_('UPnP Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'upnp');
 
         return true;
     }

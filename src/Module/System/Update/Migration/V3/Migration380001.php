@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Generator;
 
@@ -43,8 +44,8 @@ final class Migration380001 extends AbstractMigration
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `podcast` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `feed` varchar(4096) NOT NULL, `catalog` int(11) NOT NULL, `title` varchar(255) CHARACTER SET $charset NOT NULL, `website` varchar(255) NULL, `description` varchar(4096) CHARACTER SET $charset NULL, `language` varchar(5) NULL, `copyright` varchar(64) NULL, `generator` varchar(64) NULL, `lastbuilddate` int(11) UNSIGNED DEFAULT '0' NOT NULL, `lastsync` int(11) UNSIGNED DEFAULT '0' NOT NULL) ENGINE=$engine");
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `podcast_episode` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `title` varchar(255) CHARACTER SET $charset NOT NULL, `guid` varchar(255) NOT NULL, `podcast` int(11) NOT NULL, `state` varchar(32) NOT NULL, `file` varchar(4096) CHARACTER SET $charset NULL, `source` varchar(4096) NULL, `size` bigint(20) UNSIGNED DEFAULT '0' NOT NULL, `time` smallint(5) UNSIGNED DEFAULT '0' NOT NULL, `website` varchar(255) NULL, `description` varchar(4096) CHARACTER SET $charset NULL, `author` varchar(64) NULL, `category` varchar(64) NULL, `played` tinyint(1) UNSIGNED DEFAULT '0' NOT NULL, `pubdate` int(11) UNSIGNED NOT NULL, `addition_time` int(11) UNSIGNED NOT NULL) ENGINE=$engine");
 
-        $this->updatePreferences('podcast_keep', 'Podcast: # latest episodes to keep', '10', 100, 'integer', 'system');
-        $this->updatePreferences('podcast_new_download', 'Podcast: # episodes to download when new episodes are available', '1', 100, 'integer', 'system');
+        $this->updatePreferences('podcast_keep', 'Podcast: # latest episodes to keep', '10', AccessLevelEnum::ADMIN->value, 'integer', 'system');
+        $this->updatePreferences('podcast_new_download', 'Podcast: # episodes to download when new episodes are available', '1', AccessLevelEnum::ADMIN->value, 'integer', 'system');
 
         $this->updateDatabase("ALTER TABLE `rating` CHANGE COLUMN `object_type` `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') NULL");
     }

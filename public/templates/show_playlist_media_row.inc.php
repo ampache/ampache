@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
@@ -45,7 +47,7 @@ use Ampache\Module\Util\Ui;
 /** @var bool $show_ratings */
 
 // Don't show disabled medias to normal users
-if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface', 50)) { ?>
+if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
 <td class="cel_play">
     <span class="cel_play_content"><?php echo '<b>' . $playlist_track . '</b>'; ?></span>
     <div class="cel_play_hover">
@@ -71,7 +73,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->getId(), 'add', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->getId());
-    if (Access::check('interface', 25)) { ?>
+    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <a id="<?php echo 'add_playlist_' . $libitem->getId(); ?>" onclick="showPlaylistDialog(event, '<?php echo $object_type; ?>', '<?php echo $libitem->getId(); ?>')">
                 <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
             </a>
@@ -98,7 +100,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     </a>
     <?php
     }
-    if (Access::check('interface', 25)) {
+    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
         if (AmpConfig::get('share')) {
             echo Share::display_ui($object_type, $libitem->getId(), false);
         }

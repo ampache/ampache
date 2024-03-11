@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Album;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -62,7 +63,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
 

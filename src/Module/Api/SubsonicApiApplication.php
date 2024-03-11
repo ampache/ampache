@@ -28,6 +28,7 @@ namespace Ampache\Module\Api;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
@@ -136,7 +137,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         Session::createGlobalUser($user);
 
-        if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $user->id, AccessLevelEnum::LEVEL_GUEST)) {
+        if (!$this->networkChecker->check(AccessTypeEnum::API, $user->id, AccessLevelEnum::GUEST)) {
             $this->logger->warning(
                 'Unauthorized access attempt to Subsonic API [' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ']',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -60,13 +61,13 @@ class AmpacheYourls implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('yourls_domain', T_('YOURLS domain name'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('yourls_domain', T_('YOURLS domain name'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('yourls_use_idn', T_('YOURLS use IDN'), '0', 75, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('yourls_use_idn', T_('YOURLS use IDN'), '0', AccessLevelEnum::MANAGER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('yourls_api_key', T_('YOURLS API key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('yourls_api_key', T_('YOURLS API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 

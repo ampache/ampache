@@ -30,7 +30,10 @@ interface GuiGatekeeperInterface
     /**
      * Checks if the user may access the requested resource
      */
-    public function mayAccess(string $access_type, int $access_level): bool;
+    public function mayAccess(
+        AccessTypeEnum $type,
+        AccessLevelEnum $level
+    ): bool;
 
     /**
      * Returns the id of the currently logged in user
