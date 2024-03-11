@@ -318,7 +318,7 @@ class Json_Data
         } else {
             $output = $objects;
         }
-        $output = json_encode(['type' => $output], JSON_PRETTY_PRINT);
+        $output = json_encode([$type => $output], JSON_PRETTY_PRINT);
         if ($output !== false) {
             return $output;
         }
