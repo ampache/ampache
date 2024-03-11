@@ -47,8 +47,6 @@ final class UserPlaylistsMethod
      *
      * filter      = (string) Alpha-numeric search term (match all if missing) //optional
      * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * add         = Api::set_filter(date) //optional
-     * update      = Api::set_filter(date) //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      *

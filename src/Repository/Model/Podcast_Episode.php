@@ -626,10 +626,8 @@ class Podcast_Episode extends database_object implements
 
     /**
      * Updates the state of an episode
-     *
-     * @todo replace state by enum after switching to php 8
      */
-    public function change_state(string $state): void
+    public function change_state(PodcastEpisodeStateEnum $state): void
     {
         $this->getPodcastEpisodeRepository()->updateState($this, $state);
     }

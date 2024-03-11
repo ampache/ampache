@@ -44,7 +44,7 @@ final class PlaylistAddMethod
     public const ACTION = 'playlist_add';
 
     /**
-     * playlist_add_song
+     * playlist_add
      * MINIMUM_API_VERSION=6.3.0
      *
      * This adds a song to a playlist, allowing different song parent types

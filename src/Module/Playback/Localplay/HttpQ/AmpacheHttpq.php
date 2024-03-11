@@ -532,10 +532,16 @@ class AmpacheHttpq extends localplay_controller
 
         $url_data = $this->parse_url($array['track']);
         if (array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
-            $song                  = new Song($url_data['oid']);
-            $array['track_title']  = $song->title;
-            $array['track_artist'] = $song->get_artist_fullname();
-            $array['track_album']  = $song->get_album_fullname();
+            $song = new Song($url_data['oid']);
+            if ($song->isNew()) {
+                $array['track_title']  = T_('Unknown');
+                $array['track_artist'] = T_('Unknown');
+                $array['track_album']  = T_('Unknown');
+            } else {
+                $array['track_title']  = $song->title;
+                $array['track_artist'] = $song->get_artist_fullname();
+                $array['track_album']  = $song->get_album_fullname();
+            }
         } else {
             $array['track_title'] = basename($array['track'] ?? '');
         }

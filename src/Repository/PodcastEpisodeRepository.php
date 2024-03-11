@@ -212,16 +212,14 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
 
     /**
      * Updates the state of an episode
-     *
-     * @todo replace state by enum after switching to php 8
      */
     public function updateState(
         Podcast_Episode $episode,
-        string $state
+        PodcastEpisodeStateEnum $state
     ): void {
         $this->connection->query(
             'UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?',
-            [$state, $episode->getId()]
+            [$state->value, $episode->getId()]
         );
     }
 
