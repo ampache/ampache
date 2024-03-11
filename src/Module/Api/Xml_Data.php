@@ -1483,7 +1483,6 @@ class Xml_Data
         if ($full_xml) {
             $xml .= self::_footer();
         }
-        debug_event(self::class, $string, 2);
         // return formatted xml when asking for full_xml
         if ($full_xml) {
             $dom = new DOMDocument();
