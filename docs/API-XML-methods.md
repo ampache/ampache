@@ -1323,7 +1323,7 @@ Return similar artist id's or similar song ids compared to the input filter
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_similar.xml)
 
-### indexes
+### index
 
 This takes a collection of inputs and returns ID + name for the object type
 
