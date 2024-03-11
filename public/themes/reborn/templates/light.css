@@ -24,6 +24,10 @@
    General style rules
    -------------------------- */
 
+:root {
+    color-scheme: light;
+}
+
 body {
     color: #000;
     background-color: #fff;
@@ -48,6 +52,11 @@ hr {
 
 input[type=password],
 input[type=text],
+input[type=checkbox],
+input[type=radio],
+input[type=url],
+input[type=year],
+select,
 textarea {
     background-color: #f5f5f5;
     background-image: linear-gradient(to top, #eee, #fff);
@@ -124,18 +133,8 @@ input[type=submit]:focus:active {
     box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
 }
 
-#sb_Subsearch input[type=text] {
-    border-color: #bbb;
-}
-
 #sb_Subsearch input[type=text]:focus {
-    color: #555;
-    background: rgba(255, 255, 255, 0.9);
     border-color: #1990db;
-}
-
-#headerbox select {
-    color: #555;
 }
 
 /* ------------------------
