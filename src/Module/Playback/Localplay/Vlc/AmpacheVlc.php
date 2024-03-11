@@ -606,15 +606,15 @@ class AmpacheVlc extends localplay_controller
         }
 
         if(!empty($oid)) {
-            $song     = new Song($oid);
-            if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
-                $array['track_title']  = $song->title;
-                $array['track_artist'] = $song->get_artist_fullname();
-                $array['track_album']  = $song->get_album_fullname();
-            } else {
+            $song = new Song($oid);
+            if ($song->isNew()) {
                 // if not a known format
                 $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
                 $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
+            } else {
+                $array['track_title']  = $song->title;
+                $array['track_artist'] = $song->get_artist_fullname();
+                $array['track_album']  = $song->get_album_fullname();
             }
         }
 
