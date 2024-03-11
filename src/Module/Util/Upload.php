@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -49,7 +50,7 @@ class Upload
 
         $can_upload = Access::check(
             AccessTypeEnum::INTERFACE,
-            AccessLevelEnum::from((int) AmpConfig::get('upload_access_level', AccessLevelEnum::USER->value))
+            AccessLevelEnum::from((int) AmpConfig::get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL, AccessLevelEnum::USER->value))
         );
         $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
@@ -190,7 +191,7 @@ class Upload
         $user_access = $user->access ?? -1;
 
         return AmpConfig::get('allow_upload') &&
-            $user_access >= AmpConfig::get('upload_access_level', AccessLevelEnum::USER->value);
+            $user_access >= AmpConfig::get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL, AccessLevelEnum::USER->value);
     }
 
     /**
