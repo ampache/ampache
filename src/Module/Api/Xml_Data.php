@@ -394,54 +394,62 @@ class Xml_Data
         switch ($object_type) {
             case 'album_artist':
                 foreach ($objects as $object_id) {
-                    $string .= "<artist id=\"" . $object_id . "\">\n";
                     if ($include) {
+                        $string .= "<artist id=\"" . $object_id . "\">\n";
                         $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album';";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $string .= "<album id=\"" . $row['album_id'] . "\"/>\n";
                         }
+                        $string .= "</artist>\n";
+                    } else {
+                        $string .= "<artist id=\"" . $object_id . "\"/>\n";
                     }
-                    $string .= "</artist>\n";
                 }
                 break;
             case 'song_artist':
                 foreach ($objects as $object_id) {
-                    $string .= "<artist id=\"" . $object_id . "\">\n";
                     if ($include) {
+                        $string .= "<artist id=\"" . $object_id . "\">\n";
                         $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'song';";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $string .= "<album id=\"" . $row['album_id'] . "\"/>\n";
                         }
+                        $string .= "</artist>\n";
+                    } else {
+                        $string .= "<artist id=\"" . $object_id . "\"/>\n";
                     }
-                    $string .= "</artist>\n";
                 }
                 break;
             case 'artist':
                 foreach ($objects as $object_id) {
-                    $string .= "<artist id=\"" . $object_id . "\">\n";
                     if ($include) {
+                        $string .= "<artist id=\"" . $object_id . "\">\n";
                         $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ?;";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $string .= "<album id=\"" . $row['album_id'] . "\"/>\n";
                         }
+                        $string .= "</artist>\n";
+                    } else {
+                        $string .= "<artist id=\"" . $object_id . "\"/>\n";
                     }
-                    $string .= "</artist>\n";
                 }
                 break;
             case 'album':
                 foreach ($objects as $object_id) {
-                    $string .= "<album id=\"" . $object_id . "\">\n";
                     if ($include) {
+                        $string .= "<album id=\"" . $object_id . "\">\n";
                         $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ?;";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $string .= "<song id=\"" . $row['id'] . "\"/>\n";
                         }
+                        $string .= "</album>\n";
+                    } else {
+                        $string .= "<album id=\"" . $object_id . "\"/>\n";
                     }
-                    $string .= "</album>\n";
                 }
                 break;
             case 'playlist':
