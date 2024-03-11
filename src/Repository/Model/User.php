@@ -32,6 +32,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\IpHistoryRepositoryInterface;
@@ -1438,6 +1439,25 @@ class User extends database_object
     public function getPreferenceValue(string $preferenceName)
     {
         return Preference::get_by_user($this->getId(), $preferenceName);
+    }
+
+    public function getRssToken(): string
+    {
+        if ($this->rsstoken === null) {
+            self::getUserKeyGenerator()->generateRssToken($this);
+        }
+
+        return $this->rsstoken;
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getUserKeyGenerator(): UserKeyGeneratorInterface
+    {
+        global $dic;
+
+        return $dic->get(UserKeyGeneratorInterface::class);
     }
 
     /**
