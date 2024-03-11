@@ -65,10 +65,6 @@ final class SearchMethod
      */
     public static function search(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-
         return AdvancedSearchMethod::advanced_search($input, $user);
     }
 }
