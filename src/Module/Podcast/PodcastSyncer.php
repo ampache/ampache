@@ -172,7 +172,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
 
         /** @var Podcast_Episode $episode */
         foreach ($downloadEpisodes as $episode) {
-            $episode->change_state('pending');
+            $episode->change_state(PodcastEpisodeStateEnum::PENDING);
             if ($gather) {
                 $this->podcastEpisodeDownloader->fetch($episode);
 

@@ -375,7 +375,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
     {
         $episode = $this->createMock(Podcast_Episode::class);
 
-        $state     = 'some-state';
+        $state     = PodcastEpisodeStateEnum::PENDING;
         $episodeId = 666;
 
         $episode->expects(static::once())
@@ -386,7 +386,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?',
-                [$state, $episodeId]
+                [$state->value, $episodeId]
             );
 
         $this->subject->updateState($episode, $state);

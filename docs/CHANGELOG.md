@@ -44,11 +44,14 @@
 * Localplay and jukebox mode improvements (VLC and XBMC)
 * Don't search for wanted albums on an invalid artist
 * Browse filtering for album artist and song artist in certain situations
-* Search inputs were being json encoded twice
 * Don't send an empty query to the database
 * Remove stray span and use valid lang value on installer pages
 * Updating array preferences
 * Showing favicon
+* Publication date of RSS feeds
+* Search
+  * Rule inputs were being json encoded twice
+  * Genre search joining catalogs when they're not needed
 * Static typing errors
   * Updating album data when original_year is missing
   * Template `show_recently_played` with a non-database song
@@ -63,6 +66,7 @@
 ### Added
 
 * API6
+  * New Method: search_group (return multiple object types from a single set of search rules)
   * New Method: search (alias for advanced_search)
   * New Method: user_playlists (return user playlists and does not include smartlists)
   * New Method: user_smartlists (return user smartlists (searches) and does not include playlists)

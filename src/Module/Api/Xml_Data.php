@@ -630,6 +630,123 @@ class Xml_Data
     }
 
     /**
+     * searches
+     *
+     * This takes an array of object_ids and return XML based on the type of object
+     * we want
+     *
+     * @param array $searches Array of object_ids (Mixed string|int)
+     * @param User $user
+     */
+    public static function searches($searches, $user): string
+    {
+        $string = "<search>\n";
+
+        // here is where we call the object type
+        foreach ($searches as $object_type => $objects) {
+            switch ($object_type) {
+                case 'artist':
+                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                        $objects = array_splice($objects, self::$offset, self::$limit);
+                    }
+                    foreach ($objects as $object_id) {
+                        $artist = new Artist($object_id);
+                        if ($artist->isNew()) {
+                            break;
+                        }
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n</$object_type>\n";
+                    }
+                    break;
+                case 'album':
+                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                        $objects = array_splice($objects, self::$offset, self::$limit);
+                    }
+                    foreach ($objects as $object_id) {
+                        $album = new Album($object_id);
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
+                        if ($album->get_artist_fullname() != "") {
+                            $album_artist = array(
+                                "id" => $album->album_artist,
+                                "name" => $album->f_artist_name,
+                                "prefix" => $album->artist_prefix,
+                                "basename" => $album->artist_name
+                            );
+                            $string .= "\t<artist id=\"" . $album_artist['id'] . "\">\t<name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
+                        }
+                        $string .= "</$object_type>\n";
+                    }
+                    break;
+                case 'song':
+                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                        $objects = array_splice($objects, self::$offset, self::$limit);
+                    }
+                    foreach ($objects as $object_id) {
+                        $song        = new Song($object_id);
+                        $song_album  = self::getAlbumRepository()->getNames($song->album);
+                        $song_artist = Artist::get_name_array_by_id($song->artist);
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n" .
+                            "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name><prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix><basename><![CDATA[" . $song_artist['basename'] . "]]></basename></artist>\n" .
+                            "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n";
+                        if ($song->get_album_artist_fullname() != "") {
+                            $album_artist = ($song->artist !== $song->albumartist)
+                                ? Artist::get_name_array_by_id($song->albumartist)
+                                : $song_artist;
+                            $string .= "\t<albumartist id=\"" . $song->albumartist . "\"><name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</albumartist>\n";
+                        }
+                        $string .= "\t<disk><![CDATA[" . $song->disk . "]]></disk>\n\t<track>" . $song->track . "</track>\n</$object_type>\n";
+                    }
+                    break;
+                case 'playlist':
+                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                        $objects = array_splice($objects, self::$offset, self::$limit);
+                    }
+                    foreach ($objects as $object_id) {
+                        if ((int)$object_id === 0) {
+                            $playlist       = new Search((int)str_replace('smart_', '', (string)$object_id), 'song', $user);
+                            $playitem_total = $playlist->last_count;
+                        } else {
+                            $playlist       = new Playlist($object_id);
+                            $playitem_total = $playlist->get_media_count('song');
+                        }
+                        $playlist_name = $playlist->get_fullname();
+                        $playlist_user = $playlist->username;
+
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<items>" . (int)$playitem_total . "</items>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<type><![CDATA[" . $playlist->type . "]]></type>\n</$object_type>\n";
+                    }
+                    break;
+                case 'share':
+                    $string .= self::shares($objects, $user);
+                    break;
+                case 'podcast':
+                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                        $objects = array_splice($objects, self::$offset, self::$limit);
+                    }
+                    foreach ($objects as $object_id) {
+                        $podcast = self::getPodcastRepository()->findById($object_id);
+                        if ($podcast !== null) {
+                            $string .= "<podcast id=\"$object_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n\t</podcast>\n";
+                        }
+                    }
+                    break;
+                case 'podcast_episode':
+                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                        $objects = array_splice($objects, self::$offset, self::$limit);
+                    }
+                    $string .= self::podcast_episodes($objects, $user, false);
+                    break;
+                case 'video':
+                    $string .= self::videos($objects, $user, false);
+                    break;
+                case 'live_stream':
+                    $string .= self::live_streams($objects, $user, false);
+            }
+        } // end foreach objects
+        $string .= "</search>";
+
+        return self::output_xml($string);
+    }
+
+    /**
      * lists
      *
      * This takes a name array of objects and return the data in XML format
@@ -757,13 +874,14 @@ class Xml_Data
      *
      * @param int[] $live_streams
      * @param User $user
+     * @param bool $full_xml
      */
-    public static function live_streams($live_streams, $user): string
+    public static function live_streams($live_streams, $user, $full_xml = true): string
     {
         if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
             $live_streams = array_splice($live_streams, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('live_stream', $user->id) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('live_stream', $user->id) . "</total_count>\n" : '';
 
         foreach ($live_streams as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
@@ -771,7 +889,7 @@ class Xml_Data
             $string .= "<live_stream id=\"" . $live_stream_id . "\">\n\t<name><![CDATA[" . $live_stream->get_fullname() . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n\t<catalog>" . $live_stream->catalog . "</catalog>\n\t<site_url><![CDATA[" . $live_stream->site_url . "]]></site_url>\n</live_stream>\n";
         } // end foreach
 
-        return self::output_xml($string);
+        return self::output_xml($string, $full_xml);
     }
 
     /**
@@ -1240,7 +1358,7 @@ class Xml_Data
             $string .= "<video id=\"" . $video->id . "\">\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::genre_string($video->tags) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($video->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n</video>\n";
         } // end foreach
 
-        return self::output_xml($string);
+        return self::output_xml($string, $full_xml);
     }
 
     /**
@@ -1366,6 +1484,7 @@ class Xml_Data
         if ($full_xml) {
             $xml .= self::_footer();
         }
+        debug_event(self::class, $string, 2);
         // return formatted xml when asking for full_xml
         if ($full_xml) {
             $dom = new DOMDocument();

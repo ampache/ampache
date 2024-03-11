@@ -272,7 +272,7 @@ Data methods require additional information and parameters to return information
 ### advanced_search
 
 Perform an advanced search given passed rules. This works in a similar way to the web/UI search pages.
-You can pass multiple rules as well as joins to create in depth search results
+You can pass multiple rules as well as joins to create in depth search results.
 
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
 Use operator ('and', 'or') to choose whether to join or separate each rule when searching.
@@ -2283,6 +2283,108 @@ Search for a song using text info and then record a play if found. This allows o
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/scrobble.json)
+
+### search_group
+
+Perform a group search given passed rules. This function will return multiple object types if the rule names match the object type.
+You can pass multiple rules as well as joins to create in depth search results.
+
+Limit and offset are applied per object type. Meaning with a limit of 10 you will return 10 objects of each type not 10 results total.
+
+Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
+Use operator ('and', 'or') to choose whether to join or separate each rule when searching.
+
+Refer to the [Advanced Search](https://ampache.org/api/api-advanced-search) page for details about creating searches.
+
+**NOTE** the rules part can be confusing but essentially you can include as many 'arrays' of rules as you want.
+Just add 1 to the rule value to create a new group of rules.
+
+* Mandatory Rule Values
+  * rule_1
+  * rule_1_operator
+  * rule_1_input
+* Optional (Metadata searches **only**)
+  * rule_1_subtype
+
+**NOTE** the type parameter is different from the regular advanced_search method.
+Each type is a grouping of object types so allow single search calls to be made
+
+* all
+  * song
+  * album
+  * song_artist
+  * album_artist
+  * artist
+  * label
+  * playlist
+  * podcast
+  * podcast_episode
+  * genre
+  * user
+
+* music
+  * song
+  * album
+  * artist
+
+song_artist
+  * song
+  * album
+  * song_artist
+
+album_artist
+  * song
+  * album
+  * album_artist
+  
+podcast
+  * podcast
+  * podcast_episode
+
+video
+  * video
+
+| Input    | Type    | Description                                                                          | Optional |
+|----------|---------|--------------------------------------------------------------------------------------|---------:|
+| operator | string  | and, or (whether to match one rule or all)                                           |       NO |
+| rule_*   | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]                                        |       NO |
+| rule_*   | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]                                 |      YES |
+| type     | string  | `all`, `music`, `song_artist`, `album_artist`, `podcast`, `video` (`all` by default) |      YES |
+| random   | boolean | `0`, `1` (random order of results; default to 0)                                     |      YES |
+| 'offset' | integer | Return results starting from this index position                                     |      YES |
+| 'limit'  | integer | Maximum number of results to return                                                  |      YES |
+
+
+* return array
+
+```JSON
+"search": [
+    "song: [],
+    "album: [],
+    "song_artist: [],
+    "album_artist: [],
+    "artist: [],
+    "label: [],
+    "playlist: [],
+    "podcast: [],
+    "podcast_episode: [],
+    "genre: [],
+    "user: []
+]
+
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+ALL [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_group%20\(all\).json)
+
+MUSIC [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_group%20\(music\).json)
+
+PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_group%20\(podcast\).json)
 
 ### search_songs
 

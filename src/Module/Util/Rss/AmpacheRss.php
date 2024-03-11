@@ -30,7 +30,6 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Core;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -135,10 +134,10 @@ final class AmpacheRss implements AmpacheRssInterface
 
                     return $this->load_now_playing();
                 },
-                'recently_played' => function () use ($rssToken, &$pub_date): array {
-                    $pub_date = $this->pubdate_recently_played();
+                'recently_played' => function () use ($user, &$pub_date): array {
+                    $pub_date = 0;
 
-                    return $this->load_recently_played($rssToken);
+                    return $this->load_recently_played($user->getId(), $pub_date);
                 },
                 'latest_album' => function () use ($rssToken): array {
                     return $this->load_latest_album($rssToken);
@@ -327,15 +326,10 @@ final class AmpacheRss implements AmpacheRssInterface
      *  pubDate: non-empty-string
      * }>
      */
-    private function load_recently_played(string $rsstoken): array
+    private function load_recently_played(int $user_id, int &$pub_date): array
     {
         $results = array();
-        $user    = $rsstoken !== ''
-            ? $this->userRepository->getByRssToken($rsstoken)
-            : null;
-        $data = ($user)
-            ? Stats::get_recently_played($user->id, 'stream', 'song')
-            : Stats::get_recently_played(-1, 'stream', 'song');
+        $data    = Stats::get_recently_played($user_id, 'stream', 'song');
 
         foreach ($data as $item) {
             $client = new User($item['user']);
@@ -343,19 +337,21 @@ final class AmpacheRss implements AmpacheRssInterface
             $row_id = ($item['user'] > 0) ? (int) $item['user'] : -1;
 
             $has_allowed_recent = (bool) $item['user_recent'];
-            $is_allowed_recent  = ($user) ? $user->id == $row_id : $has_allowed_recent;
+            $is_allowed_recent  = ($user_id > 0) ? $user_id == $row_id : $has_allowed_recent;
             if ($song->enabled && $is_allowed_recent) {
-                $song->format();
-                $description = '<p>' . T_('User') . ': ' . $client->username . '</p><p>' . T_('Title') . ': ' . $song->f_name . '</p><p>' . T_('Artist') . ': ' . $song->get_artist_fullname() . '</p><p>' . T_('Album') . ': ' . $song->f_album_full . '</p><p>' . T_('Play date') . ': ' . get_datetime($item['date']) . '</p>';
+                $description = '<p>' . T_('User') . ': ' . $client->username . '</p><p>' . T_('Title') . ': ' . $song->get_fullname() . '</p><p>' . T_('Artist') . ': ' . $song->get_artist_fullname() . '</p><p>' . T_('Album') . ': ' . $song->get_album_fullname() . '</p><p>' . T_('Play date') . ': ' . get_datetime($item['date']) . '</p>';
 
                 $xml_array = array(
-                    'title' => $song->f_name . ' - ' . $song->f_artist . ' - ' . $song->f_album,
+                    'title' => $song->get_fullname() . ' - ' . $song->get_artist_fullname() . ' - ' . $song->get_album_fullname(),
                     'link' => str_replace('&amp;', '&', (string)$song->get_link()),
                     'description' => $description,
                     'comments' => (string)$client->username,
                     'pubDate' => date("r", (int)$item['date'])
                 );
                 $results[] = $xml_array;
+                if ($pub_date == 0) {
+                    $pub_date = (int)$item['date'];
+                }
             }
         } // end foreach
 
@@ -479,19 +475,6 @@ final class AmpacheRss implements AmpacheRssInterface
         } // end foreach
 
         return $results;
-    }
-
-    /**
-     * pubdate_recently_played
-     * This just returns the 'newest' Recently Played entry
-     */
-    private function pubdate_recently_played(): int
-    {
-        $user_id = Core::get_global('user')->id ?? -1;
-        $data    = Stats::get_recently_played($user_id, 'stream', 'song');
-        $element = array_shift($data);
-
-        return (int) $element['date'];
     }
 
     /**

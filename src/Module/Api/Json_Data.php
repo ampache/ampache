@@ -551,9 +551,11 @@ class Json_Data
      * This returns labels to the user, in a pretty JSON document with the information
      *
      * @param int[] $objects
+     * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return array|string JSON Object "label"
      */
-    public static function labels($objects, $object = true): string
+    public static function labels($objects, $encode = true, $object = true)
     {
         $output = array(
             "total_count" => count($objects)
@@ -585,13 +587,18 @@ class Json_Data
                 "user" => (string)$label->user,
             );
         } // end foreach
-        if ($object) {
-            $output["label"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? array();
+
+        if ($encode) {
+            if ($object) {
+                $output["label"] = $JSON;
+            } else {
+                $output = $JSON[0] ?? array();
+            }
+
+            return json_encode($output, JSON_PRETTY_PRINT);
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return $JSON;
     }
 
     /**
@@ -600,9 +607,11 @@ class Json_Data
      * This returns genres to the user, in a pretty JSON document with the information
      *
      * @param int[] $objects Genre id's to include
+     * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return array|string JSON Object "label"
      */
-    public static function genres($objects, $object = true): string
+    public static function genres($objects, $encode = true, $object = true)
     {
         $output = array(
             "total_count" => count($objects)
@@ -626,13 +635,18 @@ class Json_Data
                 "live_streams" => (int)($counts['live_stream'] ?? 0)
             );
         } // end foreach
-        if ($object) {
-            $output["genre"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? array();
+
+        if ($encode) {
+            if ($object) {
+                $output["genre"] = $JSON;
+            } else {
+                $output = $JSON[0] ?? array();
+            }
+
+            return json_encode($output, JSON_PRETTY_PRINT);
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return $JSON;
     }
 
     /**
@@ -821,9 +835,11 @@ class Json_Data
      * @param array $objects Playlist id's to include
      * @param User $user
      * @param bool $songs
+     * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return array|string JSON Object "playlist"
      */
-    public static function playlists($objects, $user, $songs = false, $object = true): string
+    public static function playlists($objects, $user, $songs = false, $encode = true, $object = true)
     {
         $output = array(
             "total_count" => count($objects)
@@ -894,13 +910,18 @@ class Json_Data
                 "averagerating" => $rating->get_average_rating()
             ];
         } // end foreach
-        if ($object) {
-            $output["playlist"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? array();
+
+        if ($encode) {
+            if ($object) {
+                $output["playlist"] = $JSON;
+            } else {
+                $output = $JSON[0] ?? array();
+            }
+
+            return json_encode($output, JSON_PRETTY_PRINT);
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return $JSON;
     }
 
     /**
@@ -1103,9 +1124,11 @@ class Json_Data
      * @param int[] $objects Podcast id's to include
      * @param User $user
      * @param bool $episodes include the episodes of the podcast
+     * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return array|string JSON Object "podcast"
      */
-    public static function podcasts($objects, $user, $episodes = false, $object = true): string
+    public static function podcasts($objects, $user, $episodes = false, $encode = true, $object = true)
     {
         $output = array(
             "total_count" => count($objects)
@@ -1164,13 +1187,18 @@ class Json_Data
                 "podcast_episode" => $podcast_episodes
             ];
         } // end foreach
-        if ($object) {
-            $output["podcast"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? array();
+
+        if ($encode) {
+            if ($object) {
+                $output["podcast"] = $JSON;
+            } else {
+                $output = $JSON[0] ?? array();
+            }
+
+            return json_encode($output, JSON_PRETTY_PRINT);
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return $JSON;
     }
 
     /**
@@ -1453,16 +1481,18 @@ class Json_Data
                 "playcount" => (int)$video->total_count
             );
         } // end foreach
-        if (!$encode) {
-            return $JSON;
-        }
-        if ($object) {
-            $output["video"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? array();
+
+        if ($encode) {
+            if ($object) {
+                $output["video"] = $JSON;
+            } else {
+                $output = $JSON[0] ?? array();
+            }
+
+            return json_encode($output, JSON_PRETTY_PRINT);
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return $JSON;
     }
 
     /**
@@ -1593,21 +1623,35 @@ class Json_Data
      * This handles creating an JSON document for a user list
      *
      * @param int[] $users User id list
+     * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return array|string JSON Object "label"
      */
-    public static function users($users, $object = true): string
+    public static function users($users, $encode = true, $object = true)
     {
         $JSON = [];
         foreach ($users as $user_id) {
-            $user   = new User($user_id);
+            $user = new User($user_id);
+            if ($user->isNew()) {
+                continue;
+            }
             $JSON[] = array(
                 "id" => (string)$user_id,
                 "username" => $user->username
             );
         } // end foreach
-        $output = ($object) ? array("user" => $JSON) : $JSON[0] ?? array();
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        if ($encode) {
+            if ($object) {
+                $output = array("user" => $JSON);
+            } else {
+                $output = $JSON[0] ?? array();
+            }
+
+            return json_encode($output, JSON_PRETTY_PRINT);
+        }
+
+        return $JSON;
     }
 
     /**
