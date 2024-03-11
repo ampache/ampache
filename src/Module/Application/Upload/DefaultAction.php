@@ -27,6 +27,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -46,7 +47,6 @@ final class DefaultAction implements ApplicationActionInterface
 
     private AjaxUriRetrieverInterface $ajaxUriRetriever;
 
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
@@ -59,10 +59,13 @@ final class DefaultAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $access_level = $this->configContainer->get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL);
+        $access_level = AccessLevelEnum::tryFrom(
+            (int) $this->configContainer->get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL)
+        ) ?? AccessLevelEnum::USER;
+
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_UPLOAD) === false ||
-            $access_level == 0 ||
+            $access_level === AccessLevelEnum::DEFAULT ||
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, $access_level) === false
         ) {
             throw new AccessDeniedException();

@@ -762,8 +762,8 @@ class AmpacheXbmc extends localplay_controller
                 $url_data = $this->parse_url($playlist_item);
                 $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
                 if(!empty($oid)) {
-                    $song     = new Song($oid);
-                    if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
+                    $song = new Song($oid);
+                    if ($song->isNew() === false) {
                         $array['track_title']  = $song->title;
                         $array['track_artist'] = $song->get_artist_fullname();
                         $array['track_album']  = $song->get_album_fullname();

@@ -395,60 +395,68 @@ class Xml_Data
         switch ($object_type) {
             case 'album_artist':
                 foreach ($objects as $object_id) {
-                    $string .= "<artist id=\"" . $object_id . "\">\n";
                     if ($include) {
+                        $string .= "<artist id=\"" . $object_id . "\">\n";
                         $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album';";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
-                            $string .= "<album id=\"" . $row['album_id'] . "\"></album>\n";
+                            $string .= "<album id=\"" . $row['album_id'] . "\"/>\n";
                         }
+                        $string .= "</artist>\n";
+                    } else {
+                        $string .= "<artist id=\"" . $object_id . "\"/>\n";
                     }
-                    $string .= "</artist>\n";
                 }
                 break;
             case 'song_artist':
                 foreach ($objects as $object_id) {
-                    $string .= "<artist id=\"" . $object_id . "\">\n";
                     if ($include) {
+                        $string .= "<artist id=\"" . $object_id . "\">\n";
                         $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'song';";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
-                            $string .= "<album id=\"" . $row['album_id'] . "\"></album>\n";
+                            $string .= "<album id=\"" . $row['album_id'] . "\"/>\n";
                         }
+                        $string .= "</artist>\n";
+                    } else {
+                        $string .= "<artist id=\"" . $object_id . "\"/>\n";
                     }
-                    $string .= "</artist>\n";
                 }
                 break;
             case 'artist':
                 foreach ($objects as $object_id) {
-                    $string .= "<artist id=\"" . $object_id . "\">\n";
                     if ($include) {
+                        $string .= "<artist id=\"" . $object_id . "\">\n";
                         $sql        = "SELECT DISTINCT `album_map`.`album_id` FROM `album_map` WHERE `album_map`.`object_id` = ?;";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
-                            $string .= "<album id=\"" . $row['album_id'] . "\"></album>\n";
+                            $string .= "<album id=\"" . $row['album_id'] . "\"/>\n";
                         }
+                        $string .= "</artist>\n";
+                    } else {
+                        $string .= "<artist id=\"" . $object_id . "\"/>\n";
                     }
-                    $string .= "</artist>\n";
                 }
                 break;
             case 'album':
                 foreach ($objects as $object_id) {
-                    $string .= "<album id=\"" . $object_id . "\">\n";
                     if ($include) {
+                        $string .= "<album id=\"" . $object_id . "\">\n";
                         $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ?;";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
-                            $string .= "<song id=\"" . $row['id'] . "\"></song>\n";
+                            $string .= "<song id=\"" . $row['id'] . "\"/>\n";
                         }
+                        $string .= "</album>\n";
+                    } else {
+                        $string .= "<album id=\"" . $object_id . "\"/>\n";
                     }
-                    $string .= "</album>\n";
                 }
                 break;
             case 'playlist':
                 foreach ($objects as $object_id) {
-                    $string .= "<playlist id=\"" . $object_id . "\">\n";
                     if ($include) {
+                        $string .= "<playlist id=\"" . $object_id . "\">\n";
                         /**
                          * Strip smart_ from playlist id and compare to original
                          * smartlist = 'smart_1'
@@ -466,21 +474,25 @@ class Xml_Data
                                 $string .= "<" . $row['object_type'] . " id=\"" . $row['object_id'] . "\"></" . $row['object_type'] . ">\n";
                             }
                         }
+                        $string .= "</playlist>\n";
+                    } else {
+                        $string .= "<playlist id=\"" . $object_id . "\"/>\n";
                     }
-                    $string .= "</playlist>\n";
                 }
                 break;
             case 'podcast':
                 foreach ($objects as $object_id) {
-                    $string .= "<podcast id=\"" . $object_id . "\">\n";
                     if ($include) {
+                        $string .= "<podcast id=\"" . $object_id . "\">\n";
                         $sql        = "SELECT DISTINCT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ?;";
                         $db_results = Dba::read($sql, array($object_id));
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $string .= "<podcast_episode id=\"" . $row['id'] . "\"></podcast_episode>\n";
                         }
+                        $string .= "</podcast>\n";
+                    } else {
+                        $string .= "<podcast id=\"" . $object_id . "\"/>\n";
                     }
-                    $string .= "</podcast>\n";
                 }
                 break;
             case 'catalog':
@@ -490,7 +502,7 @@ class Xml_Data
             case 'song':
             case 'video':
                 foreach ($objects as $object_id) {
-                    $string .= "<$object_type id=\"" . $object_id . "\"></$object_type>\n";
+                    $string .= "<$object_type id=\"" . $object_id . "\"/>\n";
                 } // end foreach objects
                 break;
         }
@@ -1484,7 +1496,6 @@ class Xml_Data
         if ($full_xml) {
             $xml .= self::_footer();
         }
-        debug_event(self::class, $string, 2);
         // return formatted xml when asking for full_xml
         if ($full_xml) {
             $dom = new DOMDocument();
