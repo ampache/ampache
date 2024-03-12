@@ -327,9 +327,7 @@ class Json_Data
                 case 'song':
                 case 'video':
                     // These objects don't have children
-                    foreach ($objects as $object_id) {
-                        $output[$object_id] = [];
-                    }
+                    $output = $objects;
                     break;
             }
         } else {
