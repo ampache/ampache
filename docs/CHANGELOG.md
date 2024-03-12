@@ -4,6 +4,7 @@
 
 ### Added
 
+* Translations 2024-03
 * Lots more static typing on missing function returns
 * Dynamic properties on the Captcha classes
 * Add opml import for podcasts
