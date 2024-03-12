@@ -525,7 +525,7 @@ class Catalog_local extends Catalog
 
         // If podcast catalog, we don't want to analyze files for now
         if ($this->gather_types == 'podcast') {
-            $this->count += $this->getPodcastSyncer()->syncForCatalogs([$this]);
+            $this->count += self::getPodcastSyncer()->syncForCatalogs([$this]);
         } else {
             /* Get the songs and then insert them into the db */
             $this->count += $this->add_files($this->path, $options);
@@ -640,8 +640,8 @@ class Catalog_local extends Catalog
             Album::update_table_counts();
             Artist::update_table_counts();
 
-            $this->getArtistRepository()->collectGarbage();
-            $this->getAlbumRepository()->collectGarbage();
+            self::getArtistRepository()->collectGarbage();
+            self::getAlbumRepository()->collectGarbage();
         }
         debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
         $this->update_last_update($date);
@@ -779,7 +779,7 @@ class Catalog_local extends Catalog
             Dba::write($sql);
         }
 
-        $this->getMetadataManager()->collectGarbage();
+        self::getMetadataManager()->collectGarbage();
 
         return $this->count;
     }
@@ -902,7 +902,7 @@ class Catalog_local extends Catalog
      */
     private function _insert_local_song(string $file, $options = array())
     {
-        $vainfo = $this->getUtilityFactory()->createVaInfo(
+        $vainfo = self::getUtilityFactory()->createVaInfo(
             $file,
             $this->get_gather_types('music'),
             '',
@@ -1022,7 +1022,7 @@ class Catalog_local extends Catalog
                 }
             }
 
-            if ($this->getMetadataManager()->isCustomMetadataEnabled()) {
+            if (self::getMetadataManager()->isCustomMetadataEnabled()) {
                 $song    = new Song($song_id);
                 $this->addMetadata($song, $results);
             }
@@ -1054,7 +1054,7 @@ class Catalog_local extends Catalog
         /* Create the vainfo object and get info */
         $gtypes = $this->get_gather_types('video');
 
-        $vainfo = $this->getUtilityFactory()->createVaInfo(
+        $vainfo = self::getUtilityFactory()->createVaInfo(
             $file,
             $gtypes,
             '',
@@ -1340,7 +1340,7 @@ class Catalog_local extends Catalog
             // check the old path too
             if ($file_exists) {
                 // get the time for the cached file and compare
-                $vainfo = $this->getUtilityFactory()->createVaInfo(
+                $vainfo = self::getUtilityFactory()->createVaInfo(
                     $target_file,
                     $this->get_gather_types('music'),
                     '',
@@ -1368,7 +1368,7 @@ class Catalog_local extends Catalog
     /**
      * @deprecated Inject by constructor
      */
-    private function getUtilityFactory(): UtilityFactoryInterface
+    private static function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;
 
@@ -1378,7 +1378,7 @@ class Catalog_local extends Catalog
     /**
      * @deprecated Inject by constructor
      */
-    private function getPodcastSyncer(): PodcastSyncerInterface
+    private static function getPodcastSyncer(): PodcastSyncerInterface
     {
         global $dic;
 
@@ -1388,7 +1388,7 @@ class Catalog_local extends Catalog
     /**
      * @deprecated inject dependency
      */
-    private function getMetadataManager(): MetadataManagerInterface
+    private static function getMetadataManager(): MetadataManagerInterface
     {
         global $dic;
 
@@ -1398,7 +1398,7 @@ class Catalog_local extends Catalog
     /**
      * @deprecated inject dependency
      */
-    private function getArtistRepository(): ArtistRepositoryInterface
+    private static function getArtistRepository(): ArtistRepositoryInterface
     {
         global $dic;
 
