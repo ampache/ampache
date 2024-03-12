@@ -49,5 +49,4 @@ if (
 <link rel="stylesheet" href="<?php echo $web_path . '/lib/components/prettyphoto/css/prettyPhoto.min.css'; ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-ui.custom.css'; ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-editdialog.css'; ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-file-upload.css'; ?>" type="text/css" media="screen" />
 <?php Ui::show_custom_style(); ?>

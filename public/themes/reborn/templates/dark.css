@@ -26,6 +26,7 @@
 
 :root {
     color-scheme: dark;
+    accent-color: #ff9d00;
 }
 
 body {
@@ -63,6 +64,7 @@ textarea {
     border-color: #222;
 }
 
+button,
 input[type=button],
 input[type=submit],
 .editdialogstyle.ui-dialog .ui-dialog-buttonset button {
@@ -71,6 +73,8 @@ input[type=submit],
     color: #fff;
 }
 
+button:hover,
+button:focus,
 input[type=button]:hover,
 input[type=button]:focus,
 input[type=submit]:hover,
@@ -79,6 +83,7 @@ input[type=submit]:focus,
     background-color: #cc6200;
 }
 
+button:focus:active,
 input[type=button]:focus:active,
 input[type=submit]:focus:active {
     box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -553,6 +558,24 @@ div.jp-playlist li {
 
 .jp-type-playlist .jp-playlist a.jp-playlist-current {
     color: #ff9d00;
+}
+
+/* ------------------------
+   Wunderbaum tree
+   ------------------------ */
+.wunderbaum {
+    --wb-node-text-color: #fff;
+    --wb-background-color: #222;
+    --wb-alternate-row-color: #292929;
+    --wb-alternate-row-color-hover: var(--wb-hover-color);
+    --wb-focus-border-color: var(--wb-active-color);
+    --wb-drop-source-color: var(--wb-hover-color);
+    --wb-drop-target-color: var(--wb-active-color);
+    --wb-hover-color: hsl(29, 100%, 20%);
+    --wb-active-color: hsl(29, 100%, 40%);
+    --wb-active-hover-color: var(--wb-active-color);
+    --wb-active-color-grayscale: var(--wb-active-color);
+    --wb-active-hover-color-grayscale: var(--wb-active-color);
 }
 
 /* --------------------------

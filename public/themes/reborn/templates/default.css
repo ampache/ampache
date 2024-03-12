@@ -197,6 +197,7 @@ textarea {
     box-sizing: border-box;
 }
 
+button,
 input[type=button],
 input[type=submit] {
     background-repeat: repeat-x;
@@ -207,8 +208,10 @@ input[type=submit] {
     border: 0;
     border-radius: 2px;
     cursor: pointer;
+    outline: 0;
 }
 
+button:hover,
 input[type=button]:hover,
 input[type=button]:focus,
 input[type=submit]:hover,
@@ -219,6 +222,7 @@ input[type=submit]:focus {
     text-decoration: none;
 }
 
+button:focus:active,
 input[type=button]:focus:active,
 input[type=submit]:focus:active {
     transition: background-position 0.1s linear;
@@ -1856,9 +1860,31 @@ dl.media_details dd {
     text-decoration: underline;
 }
 
+/* ------------------------
+   Wunderbaum tree (upload page)
+   ------------------------ */
+.wunderbaum.wunderbaum.wunderbaum {
+    font-family: inherit;
+    --wb-active-border-color: transparent;
+    --wb-active-border-color-grayscale: transparent;
+    --wb-hover-border-color: transparent;
+    --wb-active-hover-border-color: transparent;
+    --wb-border-color: transparent;
+    --wb-focus-border-color: transparent;
+}
+
 /* --------------------------
    Other
    -------------------------- */
+.material-symbol {
+    height: 1em;
+    width: 1em;
+    fill: currentColor;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+}
+
 ol,
 ul,
 #rightbar ul {
