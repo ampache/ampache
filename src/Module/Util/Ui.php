@@ -320,6 +320,44 @@ class Ui implements UiInterface
     }
 
     /**
+     * get_material_symbol
+     *
+     * Returns an <svg> tag for the specified Material Symbol
+     */
+    public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
+    {
+        $title    = $title ?? T_(ucfirst($name));
+        $icon_url = AmpConfig::get('web_path') . "/lib/components/material-symbols/" . $name . ".svg";
+        $tag      = '';
+        // load svg file
+        $svgicon = simplexml_load_file($icon_url);
+        if ($svgicon !== false) {
+            if (empty($svgicon->title)) {
+                $svgicon->addChild('title', $title);
+            } else {
+                $svgicon->title = $title;
+            }
+            if (empty($svgicon->desc)) {
+                $svgicon->addChild('desc', $title);
+            } else {
+                $svgicon->desc = $title;
+            }
+
+            if (!empty($id_attrib)) {
+                $svgicon->addAttribute('id', $id_attrib);
+            }
+            if (empty($class_attrib)) {
+                $class_attrib = '';
+            }
+            $svgicon->addAttribute('class', 'material-symbol material-symbol-' . $name . " " . $class_attrib);
+
+            $tag = explode("\n", (string)$svgicon->asXML(), 2)[1];
+        }
+
+        return $tag;
+    }
+
+    /**
      * _find_icon
      *
      * Does the finding icon thing. match svg first over png

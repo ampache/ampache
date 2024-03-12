@@ -26,6 +26,7 @@
 
 :root {
     color-scheme: light;
+    accent-color: #1990db;
 }
 
 body {
@@ -557,6 +558,24 @@ div.jp-playlist li {
 
 .jp-type-playlist .jp-playlist a.jp-playlist-current {
     color: #1990db;
+}
+
+/* ------------------------
+   Wunderbaum tree
+   ------------------------ */
+.wunderbaum {
+    --wb-node-text-color: #000;
+    --wb-background-color: #fff;
+    --wb-alternate-row-color: #eee;
+    --wb-alternate-row-color-hover: var(--wb-hover-color);
+    --wb-focus-border-color: var(--wb-active-color);
+    --wb-drop-source-color: var(--wb-hover-color);
+    --wb-drop-target-color: var(--wb-active-color);
+    --wb-hover-color: hsl(203, 80%, 90%);
+    --wb-active-color: hsl(203, 80%, 80%);
+    --wb-active-hover-color: var(--wb-active-color);
+    --wb-active-color-grayscale: var(--wb-active-color);
+    --wb-active-hover-color-grayscale: var(--wb-active-color);
 }
 
 /* ------------------------

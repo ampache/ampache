@@ -4,6 +4,7 @@
   "description": "Packages used by Ampache",
   "private": "true",
   "dependencies": {
+    "@material-symbols/svg-400": "^0.16.0",
     "bootstrap": "^3.4.1",
     "filepond": "^4.30.6",
     "jquery": "3.5.*",
@@ -13,24 +14,25 @@
     "jquery.qrcode": "^1.0.3",
     "js-cookie": "^2.2.1",
     "jscroll": "^2.4.1",
-    "jstree": "^3.3.16",
     "prettyphoto": "github:lachlan-00/prettyphoto",
-    "tag-it": "^2.0.0"
+    "tag-it": "^2.0.0",
+    "wunderbaum": "0.8.2"
   },
   "scripts": {
     "postinstall": "npm-run-all copy:*",
-    "copy:bootstrap": "copyfiles --up 3 node_modules/bootstrap/dist/**/* lib/components/bootstrap",
-    "copy:contextmenu": "copyfiles --up 3 node_modules/jquery-contextmenu/dist/**/* lib/components/jquery-contextmenu",
-    "copy:datetimepicker": "copyfiles --up 3 node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css lib/components/datetimepicker",
-    "copy:filepond": "copyfiles --up 3 node_modules/filepond/dist/filepond.min.js node_modules/filepond/dist/filepond.min.css lib/components/filepond",
-    "copy:jscookie": "copyfiles --up 3 node_modules/js-cookie/src/js.cookie.js lib/components/js-cookie",
-    "copy:jscroll": "copyfiles --up 3 node_modules/jscroll/dist/**/* lib/components/jscroll",
-    "copy:jstree": "copyfiles --up 3 node_modules/jstree/dist/jstree.min.js node_modules/jstree/dist/themes/default/style.min.css lib/components/jstree",
-    "copy:jquery": "copyfiles --up 3 node_modules/jquery/dist/jquery.min.js lib/components/jquery",
-    "copy:jqueryui": "copyfiles --up 3 node_modules/jquery-ui/dist/* lib/components/jquery-ui",
-    "copy:jqueryqrcode": "copyfiles --up 2 node_modules/jquery.qrcode/jquery.qrcode.min.js lib/components/jquery-qrcode",
-    "copy:prettyphoto": "copyfiles --up 2 node_modules/prettyphoto/images/**/* node_modules/prettyphoto/js/jquery.prettyPhoto.min.js node_modules/prettyphoto/css/prettyPhoto.min.css lib/components/prettyphoto",
-    "copy:tagit": "copyfiles --up 2 node_modules/tag-it/js/tag-it.min.js node_modules/tag-it/css/jquery.tagit.css lib/components/tag-it"
+    "copy:bootstrap": "copyfiles --up 3 node_modules/bootstrap/dist/**/* public/lib/components/bootstrap",
+    "copy:contextmenu": "copyfiles --up 3 node_modules/jquery-contextmenu/dist/**/* public/lib/components/jquery-contextmenu",
+    "copy:datetimepicker": "copyfiles --up 3 node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css public/lib/components/datetimepicker",
+    "copy:filepond": "copyfiles --up 3 node_modules/filepond/dist/filepond.min.js node_modules/filepond/dist/filepond.min.css public/lib/components/filepond",
+    "copy:jscookie": "copyfiles --up 3 node_modules/js-cookie/src/js.cookie.js public/lib/components/js-cookie",
+    "copy:jscroll": "copyfiles --up 3 node_modules/jscroll/dist/**/* public/lib/components/jscroll",
+    "copy:jquery": "copyfiles --up 3 node_modules/jquery/dist/jquery.min.js public/lib/components/jquery",
+    "copy:jqueryui": "copyfiles --up 3 node_modules/jquery-ui/dist/* public/lib/components/jquery-ui",
+    "copy:jqueryqrcode": "copyfiles --up 2 node_modules/jquery.qrcode/jquery.qrcode.min.js public/lib/components/jquery-qrcode",
+    "copy:materialsymbols": "copyfiles --up 4 node_modules/@material-symbols/svg-400/rounded/* public/lib/components/material-symbols",
+    "copy:prettyphoto": "copyfiles --up 2 node_modules/prettyphoto/images/**/* node_modules/prettyphoto/js/jquery.prettyPhoto.min.js node_modules/prettyphoto/css/prettyPhoto.min.css public/lib/components/prettyphoto",
+    "copy:tagit": "copyfiles --up 2 node_modules/tag-it/js/tag-it.min.js node_modules/tag-it/css/jquery.tagit.css public/lib/components/tag-it",
+    "copy:wunderbaum": "copyfiles --up 3 node_modules/wunderbaum/dist/**/* public/lib/components/wunderbaum"
   },
   "repository": {
     "type": "git",
