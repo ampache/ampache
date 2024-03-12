@@ -109,13 +109,11 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             'album_disk',
             'artist',
             'catalog',
-            'genre',
             'live_stream',
             'playlist',
             'podcast',
             'podcast_episode',
             'song',
-            'stream',
             'tvshow',
             'tvshow_season',
             'video'

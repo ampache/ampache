@@ -187,10 +187,12 @@ input[type=password],
 input[type=text],
 input[type=url],
 input[type=number],
+select,
 textarea {
     padding: 4px 6px;
     background-repeat: repeat-x;
-    border: 2px solid;
+    border-style: solid;
+    border-width: 1px;
     border-radius: 2px;
     box-sizing: border-box;
 }
@@ -198,7 +200,6 @@ textarea {
 input[type=button],
 input[type=submit] {
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
     position: relative;
     padding: 5px 12px 4px;
     font-size: 18px;
@@ -323,15 +324,37 @@ div#autoupdate > span {
     width: 100%;
 }
 
+#header .box-content {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+#header .box-content input,
+#header .box-content select {
+    height: 30px;
+    font-size: 15px;
+}
+
 #cookie_notice {
     padding-top: 20px;
     text-align: center;
 }
 
-#sb_Subsearch,
 #play_type_switch {
-    display: inline-block;
-    margin: 15px auto auto 50px;
+    margin-left: 50px;
+}
+
+#rightbar-minimize {
+    position: absolute;
+    top: 46px;
+    right: 2px;
+}
+
+#sb_Subsearch form {
+    display: flex;
+    gap: 4px;
+    align-items: center;
 }
 
 #loginInfo {
@@ -342,24 +365,16 @@ div#autoupdate > span {
 
 #sb_Subsearch input[type=submit] {
     min-width: 100px;
-    font-size: 15px;
 }
 
 #sb_Subsearch input[type=text] {
     width: 175px;
-    height: 30px;
-    padding: 0 25px;
-    margin: 0;
-    font-size: 15px;
+    padding: 0 10px;
     border-radius: 15px;
 }
 
 #headerbox select {
     min-width: 150px;
-    box-sizing: border-box;
-    font-size: 16px;
-    font-weight: normal;
-    line-height: normal;
 }
 
 #sb_Subsearch a {
@@ -1515,7 +1530,6 @@ span.fatalerror {
     padding: 8px 10px 8px;
     cursor: pointer;
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
     border-radius: 2px 4px 4px 2px;
     background-color: #5f5f5f;
     background-image: linear-gradient(to top, #6d6d6d, #4a4a4a);
