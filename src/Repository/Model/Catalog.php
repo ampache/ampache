@@ -3264,7 +3264,7 @@ abstract class Catalog extends database_object
             return array();
         }
 
-        $vainfo = $this->getUtilityFactory()->createVaInfo(
+        $vainfo = self::getUtilityFactory()->createVaInfo(
             $media->file,
             $gather_types,
             '',
@@ -4306,7 +4306,7 @@ abstract class Catalog extends database_object
     /**
      * @deprecated Inject by constructor
      */
-    private function getUtilityFactory(): UtilityFactoryInterface
+    private static function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;
 
