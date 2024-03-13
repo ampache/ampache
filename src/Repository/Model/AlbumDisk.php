@@ -373,14 +373,13 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * @return null|array{object_type: LibraryItemEnum, object_id: int}
      */
     public function get_parent(): ?array
     {
         if ($this->album_id) {
             return array(
-                'object_type' => 'album',
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => $this->album_id
             );
         }
@@ -412,7 +411,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /**
      * Get all children and sub-childrens media.
      *
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -421,7 +420,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             $songs = $this->getSongRepository()->getByAlbumDisk($this->id);
             foreach ($songs as $song_id) {
                 $medias[] = array(
-                    'object_type' => 'song',
+                    'object_type' => LibraryItemEnum::SONG,
                     'object_id' => $song_id
                 );
             }

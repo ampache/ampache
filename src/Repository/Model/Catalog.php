@@ -1962,7 +1962,7 @@ abstract class Catalog extends database_object
 
             $parent = $libitem->get_parent();
             if (!empty($parent) && $type !== 'album') {
-                self::gather_art_item($parent['object_type'], $parent['object_id'], $db_art_first, $api);
+                self::gather_art_item($parent['object_type']->value, $parent['object_id'], $db_art_first, $api);
             }
         }
 

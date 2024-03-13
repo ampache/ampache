@@ -311,7 +311,7 @@ class Playlist extends playlist_object
      * Because the same media can be on the same playlist twice they are
      * keyed by the uid from playlist_data
      * @return list<array{
-     *  object_type: string,
+     *  object_type: LibraryItemEnum,
      *  object_id: int,
      *  track: int,
      *  track_id: int
@@ -328,7 +328,7 @@ class Playlist extends playlist_object
         $db_object_types = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_object_types)) {
-            $object_type = $row['object_type'];
+            $object_type = LibraryItemEnum::from($row['object_type']);
             $params      = array($this->id);
 
             switch ($object_type) {
@@ -350,14 +350,14 @@ class Playlist extends playlist_object
                     break;
                 default:
                     $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist` = ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' ORDER BY `track`";
-                    debug_event(__CLASS__, "get_items(): $object_type not handled", 5);
+                    debug_event(__CLASS__, "get_items(): $object_type->value not handled", 5);
             }
             // debug_event(__CLASS__, "get_items(): Results:\n" . print_r($results,true) , 5);
             $db_results = Dba::read($sql, $params);
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = array(
-                    'object_type' => $row['object_type'],
+                    'object_type' => LibraryItemEnum::from($row['object_type']),
                     'object_id' => (int)$row['object_id'],
                     'track' => (int)$row['track'],
                     'track_id' => $row['id']

@@ -271,7 +271,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -280,7 +280,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
             $episodes = $this->get_episodes();
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
-                    'object_type' => 'video',
+                    'object_type' => LibraryItemEnum::VIDEO,
                     'object_id' => $episode_id
                 );
             }

@@ -325,14 +325,14 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type === 'song_preview') {
             $medias[] = array(
-                'object_type' => 'song_preview',
+                'object_type' => LibraryItemEnum::SONG_PREVIEW,
                 'object_id' => $this->id
             );
         }

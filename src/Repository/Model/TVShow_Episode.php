@@ -234,13 +234,12 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * @return array{object_type: LibraryItemEnum, object_id: int}
      */
     public function get_parent(): ?array
     {
         return array(
-            'object_type' => 'tvshow_season',
+            'object_type' => LibraryItemEnum::TV_SHOW_SEASON,
             'object_id' => $this->season
         );
     }

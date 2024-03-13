@@ -217,7 +217,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -226,7 +226,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
             $episodes = $this->getEpisodeIds(PodcastEpisodeStateEnum::COMPLETED);
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
-                    'object_type' => 'podcast_episode',
+                    'object_type' => LibraryItemEnum::PODCAST_EPISODE,
                     'object_id' => $episode_id
                 );
             }

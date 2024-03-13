@@ -413,7 +413,7 @@ final class Play2Action implements ApplicationActionInterface
                 return null;
             }
 
-            if (!$share->is_shared_media($object_id)) {
+            if (!$share->is_shared_media((int) $object_id)) {
                 header('HTTP/1.1 403 Access Unauthorized');
 
                 return null;

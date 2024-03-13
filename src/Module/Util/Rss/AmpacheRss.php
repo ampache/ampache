@@ -31,15 +31,16 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Rss\Surrogate\PlayableItemRssItemAdapter;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
@@ -48,28 +49,14 @@ use Ampache\Repository\UserRepositoryInterface;
 
 final class AmpacheRss implements AmpacheRssInterface
 {
-    private UserRepositoryInterface $userRepository;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private ShoutObjectLoaderInterface $shoutObjectLoader;
-
-    private RssPodcastBuilderInterface $rssPodcastBuilder;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UserRepositoryInterface $userRepository,
-        ShoutRepositoryInterface $shoutRepository,
-        ShoutObjectLoaderInterface $shoutObjectLoader,
-        RssPodcastBuilderInterface $rssPodcastBuilder,
-        ModelFactoryInterface $modelFactory
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly ShoutRepositoryInterface $shoutRepository,
+        private readonly ShoutObjectLoaderInterface $shoutObjectLoader,
+        private readonly RssPodcastBuilderInterface $rssPodcastBuilder,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly LibraryItemLoaderInterface $libraryItemLoader,
     ) {
-        $this->userRepository    = $userRepository;
-        $this->shoutRepository   = $shoutRepository;
-        $this->shoutObjectLoader = $shoutObjectLoader;
-        $this->rssPodcastBuilder = $rssPodcastBuilder;
-        $this->modelFactory      = $modelFactory;
     }
 
     /** @var list<string> */
@@ -102,25 +89,23 @@ final class AmpacheRss implements AmpacheRssInterface
         }
 
         if ($type === "podcast") {
-            if ($params != null && is_array($params)) {
-                $object_type = $params['object_type'];
-                $object_id   = $params['object_id'];
-                if (InterfaceImplementationChecker::is_library_item($object_type)) {
-                    $className = ObjectTypeToClassNameMapper::map($object_type);
-                    /** @var Album|Artist|Podcast $libitem */
-                    $libitem = new $className($object_id);
-                    if ($libitem->isNew() === false) {
-                        $libitem->format();
+            if ($params !== null) {
+                $item = $this->libraryItemLoader->load(
+                    LibraryItemEnum::from((string) $params['object_type']),
+                    (int) $params['object_id'],
+                    [Album::class, Artist::class, Podcast::class]
+                );
 
-                        return $this->rssPodcastBuilder->build(
-                            new PlayableItemRssItemAdapter(
-                                $this->modelFactory,
-                                $libitem,
-                                $user
-                            ),
+                if ($item !== null) {
+                    return $this->rssPodcastBuilder->build(
+                        new PlayableItemRssItemAdapter(
+                            $this->libraryItemLoader,
+                            $this->modelFactory,
+                            $item,
                             $user
-                        );
-                    }
+                        ),
+                        $user
+                    );
                 }
             }
 
@@ -451,6 +436,7 @@ final class AmpacheRss implements AmpacheRssInterface
 
         $results = array();
 
+        /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
             $object = $this->shoutObjectLoader->loadByShout($shout);
 
@@ -466,7 +452,7 @@ final class AmpacheRss implements AmpacheRssInterface
                     'title' => $user->getUsername() . ' ' . T_('on') . ' ' . $object->get_fullname(),
                     'link' => $object->get_link(),
                     'description' => $shout->getText(),
-                    'image' => (string)Art::url($shout->getObjectId(), (string)$shout->getObjectType(), null, 2),
+                    'image' => (string)Art::url($shout->getObjectId(), $shout->getObjectType()->value, null, 2),
                     'comments' => '',
                     'pubDate' => $shout->getDate()->format(DATE_ATOM)
                 );

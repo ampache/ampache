@@ -215,7 +215,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -224,7 +224,7 @@ class Label extends database_object implements library_item
             $songs = static::getSongRepository()->getByLabel((string)$this->name);
             foreach ($songs as $song_id) {
                 $medias[] = array(
-                    'object_type' => 'song',
+                    'object_type' => LibraryItemEnum::SONG,
                     'object_id' => $song_id
                 );
             }

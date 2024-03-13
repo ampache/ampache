@@ -328,13 +328,12 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * @return array{object_type: LibraryItemEnum, object_id: int}
      */
-    public function get_parent(): ?array
+    public function get_parent(): array
     {
         return array(
-            'object_type' => 'podcast',
+            'object_type' => LibraryItemEnum::PODCAST,
             'object_id' => $this->podcast
         );
     }
@@ -360,14 +359,14 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type === 'podcast_episode') {
             $medias[] = array(
-                'object_type' => 'podcast_episode',
+                'object_type' => LibraryItemEnum::PODCAST_EPISODE,
                 'object_id' => $this->id
             );
         }

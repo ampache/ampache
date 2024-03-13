@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Surrogate;
 
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
@@ -33,6 +34,8 @@ use PHPUnit\Framework\TestCase;
 
 class PlayableItemRssItemAdapterTest extends TestCase
 {
+    private LibraryItemLoaderInterface&MockObject $libraryItemLoader;
+
     private ModelFactoryInterface&MockObject $modelFactory;
 
     private playable_item&MockObject $playable;
@@ -43,11 +46,13 @@ class PlayableItemRssItemAdapterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
-        $this->playable     = $this->createMock(playable_item::class);
-        $this->user         = $this->createMock(User::class);
+        $this->libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
+        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
+        $this->playable          = $this->createMock(playable_item::class);
+        $this->user              = $this->createMock(User::class);
 
         $this->subject = new PlayableItemRssItemAdapter(
+            $this->libraryItemLoader,
             $this->modelFactory,
             $this->playable,
             $this->user,

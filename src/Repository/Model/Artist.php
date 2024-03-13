@@ -515,7 +515,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -524,7 +524,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             $songs = $this->getSongRepository()->getByArtist($this->id);
             foreach ($songs as $song_id) {
                 $medias[] = array(
-                    'object_type' => 'song',
+                    'object_type' => LibraryItemEnum::SONG,
                     'object_id' => $song_id
                 );
             }

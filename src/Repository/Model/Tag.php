@@ -1006,7 +1006,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -1015,7 +1015,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $ids = self::get_tag_objects($filter_type, $this->id);
             foreach ($ids as $object_id) {
                 $medias[] = array(
-                    'object_type' => $filter_type,
+                    'object_type' => LibraryItemEnum::from($filter_type),
                     'object_id' => $object_id
                 );
             }
