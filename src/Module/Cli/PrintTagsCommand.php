@@ -32,8 +32,6 @@ use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Catalog;
 use Exception;
 
-use function PHPStan\dumpType;
-
 final class PrintTagsCommand extends Command
 {
     private UtilityFactoryInterface $utilityFactory;
@@ -77,8 +75,8 @@ final class PrintTagsCommand extends Command
             ['music'],
             '',
             '',
-            $dir_pattern,
-            $file_pattern
+            (string) $dir_pattern,
+            (string) $file_pattern
         );
 
         if ($dir_pattern !== '' || $file_pattern !== '') {

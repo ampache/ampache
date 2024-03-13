@@ -1,5 +1,102 @@
 # CHANGELOG
 
+## Ampache 6.3.0
+
+### Added
+
+* Translations 2024-03
+* Lots more static typing on missing function returns
+* Dynamic properties on the Captcha classes
+* Add opml import (and export) for podcasts
+* Database 600060
+  * Update Last.FM plugin preferences that could be incorrect
+  * Spell category and subcategory correctly
+  * Add unique constraint `playlist_track_UN` on `playlist_data` table
+  * Remove Flattr plugin (Service has been discontinued)
+  * Convert `object_type` to an enum on `image`, `rating`, `user_flag`, `user_activity`, `object_count`, `share`, `cache_object_count` tables
+
+### Changed
+
+* Split database updates into small migration classes
+* Change usage of State in podcast_episode pages for Status
+* Song additional metadata classes have been updated
+* When searching art limit results per-plugin instead of total results
+* Extend valid Share objects
+* Update composer scripts and checks
+* Don't send a cached file that does not match a requested target format
+
+### Removed
+
+* Flattr service has shut down, so remove the plugin
+* php cs-sniffer from the project root and scrutinizer
+
+### Fixed
+
+* Catalog Filters could not be edited after creating
+* Catalogs were not cleaned up from the `catalog_filter_group_map` table
+* Wanted errors on an empty global user
+* Public users can not cache playlist browses
+* Last.FM plugin errors with preferences and linking accounts
+* Fix up localplay commands for Kodi/XBMC clients
+* Playlists were sorting by object type
+* User::get_user_data was not putting the default return in correctly
+* Unable to use `bin/cli export:playlist` undefined method
+* Playlist had some issues adding songs
+* Localplay and jukebox mode improvements (VLC and XBMC)
+* Don't search for wanted albums on an invalid artist
+* Browse filtering for album artist and song artist in certain situations
+* Don't send an empty query to the database
+* Remove stray span and use valid lang value on installer pages
+* Updating array preferences
+* Showing favicon
+* Publication date of RSS feeds
+* Search
+  * Rule inputs were being json encoded twice
+  * Genre search joining catalogs when they're not needed
+* Static typing errors
+  * Updating album data when original_year is missing
+  * Template `show_recently_played` with a non-database song
+  * Use isNew() to check for valid objects to avoid type errors
+  * Check for valid media before zip operations
+* Subsonic
+  * Data for starred results was not always an array
+  * Send correct art respecting `show_song_art` again
+
+## API 6.3.0
+
+### Added
+
+* API6
+  * New Method: search_group (return multiple object types from a single set of search rules)
+  * New Method: search (alias for advanced_search)
+  * New Method: user_playlists (return user playlists and does not include smartlists)
+  * New Method: user_smartlists (return user smartlists (searches) and does not include playlists)
+  * New Method: playlist_add (add songs to a playlist, allowing different song parent types)
+  * New Method: index (replaces get_indexes with a simpler list of id's. children can be included)
+  * Add `has_art` parameter to any object with an `art` url
+  * Add avatar url to user objects
+
+### Changed
+
+* API6
+  * playlist_add_song: depreciated and will be removed in **API7** (Use playlist_add)
+  * share_create: add more valid types ('playlist', 'podcast', 'podcast_episode', 'video')
+  * user: make username optional
+
+### Fixed
+
+* ALL
+  * Userflag wasn't sending bool when cached in the database
+  * Admin would always get everyones playlists when filtering
+  * Stream methods would not send the bitrate correctly
+* API4
+  * playlists method not respecting like for smartlists
+* API5
+  * playlists method not respecting like for smartlists
+* API6
+  * playlists method not respecting like for smartlists
+  * playlist_edit method will decode html `,` separators
+
 ## Ampache 6.2.1
 
 The catalog verify process has been reworked a little. There were some bugs that would prevent you being able to 'finish' a catalog.
@@ -704,7 +801,7 @@ Stream token's will let you design permalinked streams and allow users to stream
 ### Changed
 
 * Api6
-  * Renamed `user_update` to `user_edit` (user_update still works and will be depreciated in API7)
+  * Renamed `user_update` to `user_edit` (user_update still works and will be removed in **API7**)
 * Api5
   * Add backwards compatible `user_edit` method to point to `user_update`
 * ALL
@@ -717,7 +814,7 @@ Stream token's will let you design permalinked streams and allow users to stream
   * For data responses id is the only attribute and everything else is an element
   * Name was not set as an attribute OR an element so now it's always an element
   * Return original XML output (that may be malformed) when loadxml fails.
-* Api6::get_indexes: This method is depreciated and will be removed in Ampache 7.0.0 (Use Api6::list instead)
+* Api6::get_indexes: This method is depreciated and will be removed in Ampache **API7** (Use list instead)
 
 ### Removed
 

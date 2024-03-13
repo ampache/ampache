@@ -23,9 +23,9 @@
 
 namespace Ampache\Module\Artist\Deletion;
 
-use Ampache\Repository\Model\Art;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
@@ -55,6 +55,9 @@ final class ArtistDeleter implements ArtistDeleterInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private LabelRepositoryInterface $labelRepository;
+    private ArtCleanupInterface $artCleanup;
+
     public function __construct(
         AlbumDeleterInterface $albumDeleter,
         ArtistRepositoryInterface $artistRepository,
@@ -62,7 +65,9 @@ final class ArtistDeleter implements ArtistDeleterInterface
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ShoutRepositoryInterface $shoutRepository,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        LabelRepositoryInterface $labelRepository,
+        ArtCleanupInterface $artCleanup
     ) {
         $this->albumDeleter           = $albumDeleter;
         $this->artistRepository       = $artistRepository;
@@ -71,6 +76,8 @@ final class ArtistDeleter implements ArtistDeleterInterface
         $this->logger                 = $logger;
         $this->shoutRepository        = $shoutRepository;
         $this->useractivityRepository = $useractivityRepository;
+        $this->labelRepository        = $labelRepository;
+        $this->artCleanup             = $artCleanup;
     }
 
     /**
@@ -101,14 +108,13 @@ final class ArtistDeleter implements ArtistDeleterInterface
 
         $artistId = $artist->getId();
 
-        $deleted = $this->artistRepository->delete($artistId);
-        if ($deleted) {
-            Art::garbage_collection('artist', $artistId);
-            Userflag::garbage_collection('artist', $artistId);
-            Rating::garbage_collection('artist', $artistId);
-            Label::garbage_collection();
-            $this->shoutRepository->collectGarbage('artist', $artistId);
-            $this->useractivityRepository->collectGarbage('artist', $artistId);
-        }
+        $this->artistRepository->delete($artist);
+
+        $this->artCleanup->collectGarbageForObject('artist', $artistId);
+        Userflag::garbage_collection('artist', $artistId);
+        Rating::garbage_collection('artist', $artistId);
+        $this->labelRepository->collectGarbage();
+        $this->shoutRepository->collectGarbage('artist', $artistId);
+        $this->useractivityRepository->collectGarbage('artist', $artistId);
     }
 }

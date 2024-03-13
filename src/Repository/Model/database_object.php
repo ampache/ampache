@@ -128,7 +128,7 @@ abstract class database_object
      * @param int|string $object_id
      * @return array
      */
-    public static function get_from_cache($index, $object_id)
+    public static function get_from_cache($index, $object_id): array
     {
         // Check if the object is set
         if (isset(self::$object_cache[$index][$object_id])) {

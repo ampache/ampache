@@ -165,7 +165,7 @@ final class Stats5Method
                         break;
                     case 'playlist':
                         $playlists = Playlist::get_playlists($user_id, '', true, true, false);
-                        $searches  = Playlist::get_smartlists($user_id, '', true, false);
+                        $searches  = Playlist::get_smartlists($user_id, '', true, true, false);
                         $results   = array_merge($playlists, $searches);
                         shuffle($results);
                         break;

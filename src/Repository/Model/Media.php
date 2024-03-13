@@ -43,7 +43,7 @@ interface Media
      * @param string $player
      * @return array
      */
-    public function get_stream_types($player = null);
+    public function get_stream_types($player = null): array;
 
     /**
      * play_url
@@ -73,7 +73,7 @@ interface Media
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array());
+    public function get_transcode_settings($target = null, $player = null, $options = array()): array;
 
     /**
      * getYear
@@ -100,4 +100,14 @@ interface Media
      * Delete the object from disk and/or database where applicable.
      */
     public function remove(): bool;
+
+    /**
+     * Returns the full/formatted name of the media items artist/author
+     */
+    public function get_artist_fullname(): string;
+
+    /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string;
 }

@@ -25,60 +25,72 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\User;
+use DateTimeInterface;
 
 final class BookmarkRepository implements BookmarkRepositoryInterface
 {
+    private DatabaseConnectionInterface $connection;
+
+    public function __construct(
+        DatabaseConnectionInterface $connection
+    ) {
+        $this->connection = $connection;
+    }
+
     /**
-     * @return int[]
+     * @return list<int>
      */
-    public function getBookmarks(int $userId): array
+    public function getByUser(User $user): array
     {
         $ids = [];
 
-        $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ?";
-        $db_results = Dba::read($sql, array($userId));
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $ids[] = (int) $results['id'];
+        $result = $this->connection->query(
+            'SELECT `id` FROM `bookmark` WHERE `user` = ?',
+            [
+                $user->getId()
+            ]
+        );
+
+        while ($rowId = $result->fetchColumn()) {
+            $ids[] = (int) $rowId;
         }
 
         return $ids;
     }
 
     /**
-     * @param int $userId
-     * @param string $comment
-     * @return int[]
+     * @return list<int>
      */
-    public function getBookmarksByComment(int $userId, string $comment): array
+    public function getByUserAndComment(User $user, string $comment): array
     {
         $ids = [];
 
-        $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `comment` = ?";
-        $db_results = Dba::read($sql, array($userId, $comment));
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $ids[] = (int) $results['id'];
+        $result = $this->connection->query(
+            'SELECT `id` FROM `bookmark` WHERE `user` = ? AND `comment` = ?',
+            [
+                $user->getId(),
+                $comment
+            ]
+        );
+
+        while ($rowId = $result->fetchColumn()) {
+            $ids[] = (int) $rowId;
         }
 
         return $ids;
     }
 
-    public function getBookmark(int $bookmarkId, int $userId): int
+    public function delete(int $bookmarkId): void
     {
-        $sql        = "SELECT `id` FROM `bookmark` WHERE `id` = ? AND `user` = ?";
-        $db_results = Dba::read($sql, array($bookmarkId, $userId));
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
-        }
-
-        return 0;
-    }
-
-    public function delete(int $bookmarkId): bool
-    {
-        $sql = "DELETE FROM `bookmark` WHERE `id` = ?";
-
-        return Dba::write($sql, array($bookmarkId)) !== false;
+        $this->connection->query(
+            'DELETE FROM `bookmark` WHERE `id` = ?',
+            [
+                $bookmarkId
+            ]
+        );
     }
 
     /**
@@ -88,15 +100,48 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
     {
         $types = ['song', 'video', 'podcast_episode'];
         foreach ($types as $type) {
-            Dba::write("DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `$type` ON `$type`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = '$type' AND `$type`.`id` IS NULL;");
+            $this->connection->query(
+                sprintf(
+                    'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `%s` ON `%s`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'%s\' AND `%s`.`id` IS NULL;',
+                    $type,
+                    $type,
+                    $type,
+                    $type
+                )
+            );
         }
     }
 
-    public function update(int $bookmarkId, int $position, int $date): void
+    public function update(int $bookmarkId, int $position, DateTimeInterface $date): void
     {
-        Dba::write(
+        $this->connection->query(
             'UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?',
-            [$position, $date, $bookmarkId]
+            [$position, $date->getTimestamp(), $bookmarkId]
         );
+    }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        $this->connection->query(
+            'UPDATE IGNORE `bookmark` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?',
+            [$newObjectId, $oldObjectId, ucfirst($objectType)]
+        );
+    }
+
+    /**
+     * Finds a single item by id
+     */
+    public function findById(int $itemId): ?Bookmark
+    {
+        $bookmark = new Bookmark($itemId);
+
+        if ($bookmark->isNew()) {
+            return null;
+        }
+
+        return $bookmark;
     }
 }

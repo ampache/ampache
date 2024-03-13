@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
@@ -88,10 +89,7 @@ class Video extends database_object implements
      * @var null|string $f_full_title
      */
     public $f_full_title;
-    /**
-     * @var null|string $f_artist_full
-     */
-    public $f_artist_full;
+
     /**
      * @var null|string $f_time
      */
@@ -140,10 +138,6 @@ class Video extends database_object implements
      * @var null|string $f_length
      */
     public $f_length;
-    /**
-     * @var null|string $f_file
-     */
-    public $f_file;
     /**
      * @var null|string $f_release_date
      */
@@ -236,7 +230,6 @@ class Video extends database_object implements
      */
     public function format($details = true): void
     {
-        $this->f_full_title = $this->get_fullname();
         $this->get_f_link();
         $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
@@ -271,10 +264,17 @@ class Video extends database_object implements
         }
 
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
-        $this->f_file   = $this->get_fullname() . '.' . $this->type;
         if ($this->release_date) {
             $this->f_release_date = get_datetime((int) $this->release_date, 'short', 'none');
         }
+    }
+
+    /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string
+    {
+        return $this->get_fullname() . '.' . $this->type;
     }
 
     /**
@@ -293,7 +293,7 @@ class Video extends database_object implements
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords          = array();
         $keywords['title'] = array(
@@ -382,7 +382,7 @@ class Video extends database_object implements
      * Get item childrens.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array();
     }
@@ -392,7 +392,7 @@ class Video extends database_object implements
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -401,13 +401,13 @@ class Video extends database_object implements
 
     /**
      * Get all childrens and sub-childrens medias.
-     * @param string $filter_type
-     * @return array
+     *
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'video') {
+        if ($filter_type === null || $filter_type === 'video') {
             $medias[] = array(
                 'object_type' => 'video',
                 'object_id' => $this->id
@@ -490,7 +490,7 @@ class Video extends database_object implements
      * @param string $player
      * @return array
      */
-    public function get_stream_types($player = null)
+    public function get_stream_types($player = null): array
     {
         return Stream::get_stream_types_for_type($this->type, $player);
     }
@@ -549,7 +549,7 @@ class Video extends database_object implements
      * @param string $player
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array())
+    public function get_transcode_settings($target = null, $player = null, $options = array()): array
     {
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
     }
@@ -747,7 +747,7 @@ class Video extends database_object implements
      * Get release item art.
      * @return array
      */
-    public function get_release_item_art()
+    public function get_release_item_art(): array
     {
         return array(
             'object_type' => 'video',
@@ -815,7 +815,7 @@ class Video extends database_object implements
      * Get existing subtitles list for this video
      * @return array
      */
-    public function get_subtitles()
+    public function get_subtitles(): array
     {
         $subtitles = array();
         $pinfo     = pathinfo($this->file);
@@ -1076,7 +1076,7 @@ class Video extends database_object implements
             $sql     = "DELETE FROM `video` WHERE `id` = ?";
             $deleted = (Dba::write($sql, $params) !== false);
             if ($deleted) {
-                Art::garbage_collection('video', $this->id);
+                $this->getArtCleanup()->collectGarbageForObject('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);
                 Rating::garbage_collection('video', $this->id);
                 $this->getShoutRepository()->collectGarbage('video', $this->getId());
@@ -1150,7 +1150,7 @@ class Video extends database_object implements
      * get items from the deleted_videos table
      * @return int[]
      */
-    public static function get_deleted()
+    public static function get_deleted(): array
     {
         $deleted    = array();
         $sql        = "SELECT * FROM `deleted_video`";
@@ -1172,7 +1172,7 @@ class Video extends database_object implements
      * @param Video $new_video
      * @return array
      */
-    public static function compare_video_information(Video $video, Video $new_video)
+    public static function compare_video_information(Video $video, Video $new_video): array
     {
         // Remove some stuff we don't care about
         unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);
@@ -1180,6 +1180,11 @@ class Video extends database_object implements
         $skip_array   = array('id', 'tag_id', 'mime', 'total_count', 'disabledMetadataFields');
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
+    }
+
+    public function get_artist_fullname(): string
+    {
+        return '';
     }
 
     /**
@@ -1200,5 +1205,15 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getArtCleanup(): ArtCleanupInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtCleanupInterface::class);
     }
 }

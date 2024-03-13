@@ -105,11 +105,18 @@ final class PodcastCreator implements PodcastCreatorInterface
             throw new FeedNotLoadableException();
         }
 
-        $podcast = $this->podcastRepository->create(
-            $catalog,
-            $feedUrl,
-            $feed
-        );
+        $podcast = $this->podcastRepository->prototype()
+            ->setCatalog($catalog)
+            ->setFeedUrl($feedUrl)
+            ->setTitle($feed['title'])
+            ->setWebsite($feed['website'])
+            ->setDescription($feed['description'])
+            ->setLanguage($feed['language'])
+            ->setCopyright($feed['copyright'])
+            ->setGenerator($feed['generator'])
+            ->setLastBuildDate($feed['lastBuildDate']);
+
+        $podcast->save();
 
         try {
             $this->podcastFolderProvider->getBaseFolder($podcast);

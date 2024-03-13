@@ -30,13 +30,9 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\DeletedPodcastEpisodeRepositoryInterface;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\PodcastRepositoryInterface;
 
-/**
- * Class DeletedPodcastEpisodesMethod
- * @package Lib\ApiMethods
- */
 final class DeletedPodcastEpisodesMethod
 {
     public const ACTION = 'deleted_podcast_episodes';
@@ -49,6 +45,12 @@ final class DeletedPodcastEpisodesMethod
      *
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *  api_format: string,
+     *  limit?: string,
+     *  offset?: string
+     * } $input
      */
     public static function deleted_podcast_episodes(array $input, User $user): bool
     {
@@ -59,8 +61,8 @@ final class DeletedPodcastEpisodesMethod
             return false;
         }
 
-        $items = self::getPodcastRepository()->getDeletedEpisodes();
-        if (empty($items)) {
+        $items = iterator_to_array(self::getDeletedPodcastEpisodeRepository()->findAll());
+        if ($items === []) {
             Api::empty('deleted_podcast_episodes', $input['api_format']);
 
             return false;
@@ -69,13 +71,13 @@ final class DeletedPodcastEpisodesMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
-                Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_offset((int) ($input['offset'] ?? 0));
+                Json_Data::set_limit((int) ($input['limit'] ?? 0));
                 echo Json_Data::deleted('podcast_episode', $items);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
-                Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_offset((int) ($input['offset'] ?? 0));
+                Xml_Data::set_limit((int) ($input['limit'] ?? 0));
                 echo Xml_Data::deleted('podcast_episode', $items);
         }
 
@@ -85,10 +87,10 @@ final class DeletedPodcastEpisodesMethod
     /**
      * @todo inject dependency
      */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
+    private static function getDeletedPodcastEpisodeRepository(): DeletedPodcastEpisodeRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(PodcastRepositoryInterface::class);
+        return $dic->get(DeletedPodcastEpisodeRepositoryInterface::class);
     }
 }

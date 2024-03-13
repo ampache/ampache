@@ -24,13 +24,18 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-/** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var Browse $browse */
+/** @var list<int> $object_ids */
+
+global $dic;
+$labelRepository = $dic->get(LabelRepositoryInterface::class);
 
 $thcount  = 7;
 $is_table = $browse->is_grid_view();
@@ -67,8 +72,8 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
         <?php
         /* Foreach through every label that has been passed to us */
         foreach ($object_ids as $label_id) {
-            $libitem = new Label($label_id);
-            if ($libitem->isNew()) {
+            $libitem = $labelRepository->findById($label_id);
+            if ($libitem === null) {
                 continue;
             }
             $libitem->format(); ?>

@@ -8,7 +8,11 @@
 
 ## News
 
-Ampache6 is [HERE!](https://github.com/ampache/ampache/releases/tag/6.2.0)
+Ampache6 is [HERE!](https://github.com/ampache/ampache/releases/tag/6.2.1)
+
+Ampache7 development is going to begin shortly keep an eye out for a patch7 branch!
+
+Ampache7 will continue to use **API6** and will not make any breaking changes to the API.
 
 ## Basics
 

@@ -85,7 +85,7 @@ final class ShowUserAction implements ApplicationActionInterface
 
         $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
         $client = $this->modelFactory->createUser($userId);
-        if ($client->id === 0) {
+        if ($client->isNew()) {
             $this->logger->warning(
                 'Requested a user that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

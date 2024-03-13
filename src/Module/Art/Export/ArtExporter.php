@@ -27,6 +27,7 @@ namespace Ampache\Module\Art\Export;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Repository\ImageRepositoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\Art\Export;
 use Ampache\Module\System\LegacyLogger;
@@ -42,12 +43,16 @@ final class ArtExporter implements ArtExporterInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ImageRepositoryInterface $imageRepository;
+
     public function __construct(
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ImageRepositoryInterface $imageRepository
     ) {
         $this->logger          = $logger;
         $this->configContainer = $configContainer;
+        $this->imageRepository = $imageRepository;
     }
 
     public function export(
@@ -67,7 +72,7 @@ final class ArtExporter implements ArtExporterInterface
             );
         }
         // Get all of the art items with an image
-        $images = Art::get_art_array();
+        $images = $this->imageRepository->findAllImage();
         $count  = 0;
 
         // Run through them and get the art!
@@ -97,7 +102,10 @@ final class ArtExporter implements ArtExporterInterface
                         sprintf(T_('Unable to open `%s` for writing'), $target_file)
                     );
                 }
-                $write_result = fwrite($file_handle, Art::get_raw_image(array($artId, $artType, $artSize, $artMime)));
+                $write_result = fwrite(
+                    $file_handle,
+                    (string) $this->imageRepository->getRawImage($artId, $artType, $artSize, $artMime)
+                );
                 fclose($file_handle);
 
                 if ($write_result === false) {
@@ -121,7 +129,8 @@ final class ArtExporter implements ArtExporterInterface
                     'Clearing database image for ' . $artRow['id'],
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                Art::clear_image($artRow['id']);
+
+                $this->imageRepository->deleteImage($artRow['id']);
             }
         }
     }

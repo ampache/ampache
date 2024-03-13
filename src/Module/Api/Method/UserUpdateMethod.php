@@ -29,7 +29,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Repository\Model\User;
 
 /**
- * Class TagAlbums4Method
+ * Class UserUpdateMethod
  */
 final class UserUpdateMethod
 {

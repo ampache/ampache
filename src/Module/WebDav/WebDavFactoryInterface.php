@@ -26,9 +26,7 @@ namespace Ampache\Module\WebDav;
 use Sabre\DAV\Auth\Backend\BackendInterface;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\ICollection;
-use Sabre\DAV\INode;
 use Sabre\DAV\Server;
-use Sabre\DAV\Tree;
 
 interface WebDavFactoryInterface
 {
@@ -36,10 +34,7 @@ interface WebDavFactoryInterface
 
     public function createWebDavCatalog(int $catalog_id = 0): ICollection;
 
-    /**
-     * @param Tree|INode|array|null $node The tree object
-     */
-    public function createServer($node): Server;
+    public function createServer(ICollection $node): Server;
 
     public function createPlugin(?BackendInterface $backend): Plugin;
 }

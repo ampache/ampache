@@ -70,13 +70,13 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
         }
 
         if ($distinct === true) {
-            $group_sql = 'GROUP BY ip, date';
+            $group_sql = 'GROUP BY `ip`, `date`';
         }
 
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT ip, date FROM ip_history WHERE user = ? %s ORDER BY date DESC %s',
+                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? %s ORDER BY `date` DESC %s',
                 $group_sql,
                 $limit_sql,
             ),
@@ -99,7 +99,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
     public function getRecentIpForUser(User $user): ?string
     {
         $result = $this->connection->fetchOne(
-            'SELECT ip FROM ip_history WHERE user = ? ORDER BY date DESC LIMIT 1',
+            'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
             [
                 $user->getId(),
             ]

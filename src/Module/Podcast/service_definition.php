@@ -38,4 +38,6 @@ return [
     PodcastEpisodeDownloaderInterface::class => autowire(PodcastEpisodeDownloader::class),
     PodcastDeleterInterface::class => autowire(PodcastDeleter::class),
     Exchange\PodcastExporterInterface::class => autowire(Exchange\PodcastOpmlExporter::class),
+    Exchange\PodcastOpmlLoaderInterface::class => autowire(Exchange\PodcastOpmlLoader::class),
+    Exchange\PodcastOpmlImporterInterface::class => autowire(Exchange\PodcastOpmlImporter::class),
 ];

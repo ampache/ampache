@@ -79,6 +79,10 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
             ->once()
             ->andReturn($playlist);
 
+        $playlist->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(false);
         $playlist->shouldReceive('format')
             ->withNoArgs()
             ->once();

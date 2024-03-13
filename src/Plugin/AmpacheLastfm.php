@@ -66,10 +66,10 @@ class AmpacheLastfm implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('lastfm_challenge') && !Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name)) {
+        if (!Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name)) {
             return false;
         }
-        if (!Preference::exists('lastfm_grant_link') && !Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -113,7 +113,8 @@ class AmpacheLastfm implements AmpachePluginInterface
             Preference::delete('lastfm_url');
             Preference::delete('lastfm_host');
             Preference::delete('lastfm_port');
-            Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
+            Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins', $this->name, true);
+            Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name, true);
         }
 
         return true;

@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -60,8 +61,10 @@ final class LabelMethod
             return false;
         }
         $object_id = (int) $input['filter'];
-        $label     = new Label($object_id);
-        if ($label->isNew()) {
+
+        $label = self::getLabelRepository()->findById($object_id);
+
+        if ($label === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
@@ -71,12 +74,22 @@ final class LabelMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::labels(array($object_id), false);
+                echo Json_Data::labels(array($object_id), true, false);
                 break;
             default:
                 echo Xml_Data::labels(array($object_id), $user);
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getLabelRepository(): LabelRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelRepositoryInterface::class);
     }
 }

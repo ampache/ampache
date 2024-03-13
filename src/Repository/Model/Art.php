@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Art\Collector\MetaTagCollectorModule;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
@@ -48,7 +49,7 @@ use RuntimeException;
  */
 class Art extends database_object
 {
-    protected const DB_TABLENAME = 'art';
+    protected const DB_TABLENAME = 'image';
 
     public const VALID_TYPES = array(
         'bmp',
@@ -543,18 +544,6 @@ class Art extends database_object
     }
 
     /**
-     * clear_image
-     * Clear the image column (if you have the image on disk)
-     *
-     * @param int $image_id
-     */
-    public static function clear_image($image_id): void
-    {
-        $sql = "UPDATE `image` SET `image` = NULL WHERE `id` = ?";
-        Dba::write($sql, array($image_id));
-    }
-
-    /**
      * get_dir_on_disk
      * @param string $type
      * @param int $uid
@@ -695,7 +684,7 @@ class Art extends database_object
      * @param int $uid
      * @param string $kind
      */
-    private static function delete_from_dir($type, $uid, $kind = ''): void
+    public static function delete_from_dir($type, $uid, $kind = ''): void
     {
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, $kind);
@@ -733,11 +722,7 @@ class Art extends database_object
      */
     public function reset(): void
     {
-        if (AmpConfig::get('album_art_store_disk')) {
-            self::delete_from_dir($this->type, $this->uid, $this->kind);
-        }
-        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
-        Dba::write($sql, array($this->uid, $this->type, $this->kind));
+        $this->getArtCleanup()->deleteForArt($this);
     }
 
     /**
@@ -779,7 +764,7 @@ class Art extends database_object
      * @param array{width: int, height: int} $size
      * @return array{thumb?: string, thumb_mime?: string}
      */
-    public function get_thumb($size)
+    public function get_thumb($size): array
     {
         $sizetext   = $size['width'] . 'x' . $size['height'];
         $sql        = "SELECT `image`, `mime` FROM `image` WHERE `size` = ? AND `object_type` = ? AND `object_id` = ? AND `kind` = ?";
@@ -830,7 +815,7 @@ class Art extends database_object
      * @param string $mime
      * @return array{thumb?: string, thumb_mime?: string}
      */
-    public function generate_thumb($image, $size, $mime)
+    public function generate_thumb($image, $size, $mime): array
     {
         $data = explode('/', (string) $mime);
         $type = ((string)($data[1] ?? '') !== '') ? strtolower((string) $data[1]) : 'jpg';
@@ -1115,73 +1100,6 @@ class Art extends database_object
         }
 
         return $url;
-    }
-
-    /**
-     * garbage_collection
-     * This cleans up art that no longer has a corresponding object
-     * @param string $object_type
-     * @param int $object_id
-     */
-    public static function garbage_collection($object_type = null, $object_id = null): void
-    {
-        $types = array(
-            'album',
-            'album_disk',
-            'artist',
-            'catalog',
-            'tag',
-            'label',
-            'live_stream',
-            'playlist',
-            'podcast',
-            'podcast_episode',
-            'song',
-            'tvshow',
-            'tvshow_season',
-            'user',
-            'video'
-        );
-
-        if ($object_type !== null && $object_id !== null) {
-            if (in_array($object_type, $types)) {
-                if (AmpConfig::get('album_art_store_disk')) {
-                    self::delete_from_dir($object_type, $object_id);
-                }
-                $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, array($object_type, $object_id));
-            } else {
-                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
-            }
-        } else {
-            $album_art_store_disk = AmpConfig::get('album_art_store_disk');
-            // iterate over our types and delete the images
-            foreach ($types as $type) {
-                if ($album_art_store_disk) {
-                    $sql        = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
-                    $db_results = Dba::read($sql);
-                    while ($row = Dba::fetch_row($db_results)) {
-                        self::delete_from_dir($row[1], (int)$row[0]);
-                    }
-                }
-                $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
-                Dba::write($sql);
-            } // foreach
-        }
-    }
-
-    /**
-     * Migrate an object associate images to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
-     * @return PDOStatement|bool
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        $sql = "UPDATE `image` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 
     /**
@@ -1492,51 +1410,22 @@ class Art extends database_object
     }
 
     /**
-     * Get the object details for the art table
-     * @return list<array{id: int, object_id: int, object_type: string, size: string, mime: string}>
-     */
-    public static function get_art_array(): array
-    {
-        $results    = array();
-        $sql        = "SELECT `id`, `object_id`, `object_type`, `size`, `mime` FROM `image` WHERE `image` IS NOT NULL;";
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
-                'id' => (int) $row['id'],
-                'object_id' => (int) $row['object_id'],
-                'object_type' => $row['object_type'],
-                'size' => (string) $row['size'],
-                'mime' => (string) $row['mime'],
-            ];
-        }
-
-        return $results;
-    }
-
-    /**
-     * Get the object details for the art table
-     * @param array $data
-     */
-    public static function get_raw_image($data): string
-    {
-        $sql        = "SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?;";
-        $db_results = Dba::read($sql, $data);
-        $row        = Dba::fetch_assoc($db_results);
-        if (empty($row)) {
-            return '';
-        }
-
-        return (string)$row['image'];
-    }
-
-    /**
-     * @deprecated
+     * @deprecated Inject dependency
      */
     private function getSongRepository(): SongRepositoryInterface
     {
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private function getArtCleanup(): ArtCleanupInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtCleanupInterface::class);
     }
 }

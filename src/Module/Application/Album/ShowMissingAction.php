@@ -27,11 +27,11 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Wanted;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -47,16 +47,20 @@ final class ShowMissingAction implements ApplicationActionInterface
 
     private ArtCollectorInterface $artCollector;
 
+    private WantedRepositoryInterface $wantedRepository;
+
     public function __construct(
         RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
-        ArtCollectorInterface $artCollector
+        ArtCollectorInterface $artCollector,
+        WantedRepositoryInterface $wantedRepository
     ) {
-        $this->requestParser = $requestParser;
-        $this->modelFactory  = $modelFactory;
-        $this->ui            = $ui;
-        $this->artCollector  = $artCollector;
+        $this->requestParser    = $requestParser;
+        $this->modelFactory     = $modelFactory;
+        $this->ui               = $ui;
+        $this->artCollector     = $artCollector;
+        $this->wantedRepository = $wantedRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -65,9 +69,10 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         set_time_limit(600);
         $mbid   = $this->requestParser->getFromRequest('mbid');
-        $walbum = $this->modelFactory->createWanted(Wanted::get_wanted($mbid));
+        $walbum = $this->wantedRepository->findByMusicBrainzId($mbid);
 
-        if ($walbum->isNew()) {
+        if ($walbum === null) {
+            $walbum       = $this->wantedRepository->prototype();
             $walbum->mbid = $mbid;
             if (array_key_exists('artist', $_REQUEST)) {
                 $artist_id           = (int)$this->requestParser->getFromRequest('artist');
@@ -132,7 +137,7 @@ final class ShowMissingAction implements ApplicationActionInterface
             $walbum->mbid
         );
 
-        $walbum->show_action_buttons();
+        echo $walbum->show_action_buttons();
 
         print('</div></li></ul></div>');
 

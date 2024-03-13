@@ -141,7 +141,7 @@ final class PlayableItemRssItemAdapter implements RssItemInterface
                 'title' => (string) $media->get_fullname(),
                 'guid' => $media->get_link(),
                 'length' => $media->f_time,
-                'author' => $media->f_artist_full,
+                'author' => $media->get_artist_fullname(),
                 'pubDate' => null,
                 'type' => null,
                 'size' => null,

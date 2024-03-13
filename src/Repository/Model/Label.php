@@ -132,7 +132,7 @@ class Label extends database_object implements library_item
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         $medias  = array();
         $artists = $this->get_artists();
@@ -202,7 +202,7 @@ class Label extends database_object implements library_item
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords          = array();
         $keywords['label'] = array(
@@ -215,13 +215,12 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @param string $filter_type
-     * @return array
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'song') {
+        if ($filter_type === null || $filter_type === 'song') {
             $songs = static::getSongRepository()->getByLabel((string)$this->name);
             foreach ($songs as $song_id) {
                 $medias[] = array(
@@ -443,16 +442,8 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * garbage_collection
-     *
-     * This cleans out unused artists
+     * @deprecated inject dependency
      */
-    public static function garbage_collection(): void
-    {
-        Dba::write("DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`);");
-        Dba::write("DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL;");
-    }
-
     private static function getLabelRepository(): LabelRepositoryInterface
     {
         global $dic;
@@ -460,6 +451,9 @@ class Label extends database_object implements library_item
         return $dic->get(LabelRepositoryInterface::class);
     }
 
+    /**
+     * @deprecated inject dependency
+     */
     private static function getSongRepository(): SongRepositoryInterface
     {
         global $dic;

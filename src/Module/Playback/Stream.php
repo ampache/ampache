@@ -256,7 +256,7 @@ class Stream
         $player = null,
         $media_type = 'song',
         $options = array()
-    ) {
+    ): array {
         $target = self::get_transcode_format($source, $target, $player, $media_type);
         $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?? AmpConfig::get('transcode_cmd');
         if (empty($cmd)) {
@@ -349,7 +349,9 @@ class Stream
             return false;
         }
         $song_file = self::scrub_arg($media->file);
-        $bit_rate  = self::get_max_bitrate($media, $transcode_settings);
+        $bit_rate  = (isset($options['bitrate']))
+            ? $options['bitrate']
+            : self::get_max_bitrate($media, $transcode_settings);
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
         // Finalise the command line
@@ -488,7 +490,7 @@ class Stream
      * @param array $settings
      * @return array
      */
-    private static function start_process($command, $settings = array())
+    private static function start_process($command, $settings = array()): array
     {
         debug_event(self::class, "Transcode command: " . $command, 3);
 
@@ -639,11 +641,17 @@ class Stream
         while ($row = Dba::fetch_assoc($db_results)) {
             $className = ObjectTypeToClassNameMapper::map($row['object_type']);
             /** @var Song|Video $media */
-            $media     = new $className($row['object_id']);
+            $media = new $className($row['object_id']);
+            if ($media->isNew()) {
+                continue;
+            }
             if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->getCatalogId(), (int)$row['user'])) {
                 $client = new User($row['user']);
-                $media->format();
                 $client->format();
+                if ($client->isNew()) {
+                    continue;
+                }
+                $media->format();
                 $results[] = array(
                     'media' => $media,
                     'client' => $client,

@@ -27,7 +27,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
-use Generator;
 use Traversable;
 
 interface SongRepositoryInterface

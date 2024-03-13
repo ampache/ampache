@@ -46,6 +46,8 @@ use Ampache\Gui\System\ConfigViewAdapter;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\System\UpdateViewAdapter;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
+use Ampache\Module\System\Update\UpdateHelperInterface;
+use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Browse;
@@ -58,6 +60,7 @@ use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 
 final class GuiFactory implements GuiFactoryInterface
@@ -76,6 +79,12 @@ final class GuiFactory implements GuiFactoryInterface
 
     private VideoRepositoryInterface $videoRepository;
 
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    private UpdateHelperInterface $updateHelper;
+
+    private UpdaterInterface $updater;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
@@ -83,15 +92,21 @@ final class GuiFactory implements GuiFactoryInterface
         FunctionCheckerInterface $functionChecker,
         AjaxUriRetrieverInterface $ajaxUriRetriever,
         PlaylistLoaderInterface $playlistLoader,
-        VideoRepositoryInterface $videoRepository
+        VideoRepositoryInterface $videoRepository,
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        UpdateHelperInterface $updateHelper,
+        UpdaterInterface $updater
     ) {
-        $this->configContainer  = $configContainer;
-        $this->modelFactory     = $modelFactory;
-        $this->zipHandler       = $zipHandler;
-        $this->functionChecker  = $functionChecker;
-        $this->ajaxUriRetriever = $ajaxUriRetriever;
-        $this->playlistLoader   = $playlistLoader;
-        $this->videoRepository  = $videoRepository;
+        $this->configContainer      = $configContainer;
+        $this->modelFactory         = $modelFactory;
+        $this->zipHandler           = $zipHandler;
+        $this->functionChecker      = $functionChecker;
+        $this->ajaxUriRetriever     = $ajaxUriRetriever;
+        $this->playlistLoader       = $playlistLoader;
+        $this->videoRepository      = $videoRepository;
+        $this->updateInfoRepository = $updateInfoRepository;
+        $this->updateHelper         = $updateHelper;
+        $this->updater              = $updater;
     }
 
     public function createSongViewAdapter(
@@ -194,7 +209,10 @@ final class GuiFactory implements GuiFactoryInterface
     public function createUpdateViewAdapter(): UpdateViewAdapterInterface
     {
         return new UpdateViewAdapter(
-            $this->configContainer
+            $this->configContainer,
+            $this->updateInfoRepository,
+            $this->updateHelper,
+            $this->updater
         );
     }
 

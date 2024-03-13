@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\PreferencesFromRequestUpdaterInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -47,21 +48,25 @@ final class AdminUpdatePreferencesAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
         ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        RequestParserInterface $requestParser
     ) {
         $this->preferencesFromRequestUpdater = $preferencesFromRequestUpdater;
         $this->responseFactory               = $responseFactory;
         $this->configContainer               = $configContainer;
+        $this->requestParser                 = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
-            !Core::form_verify('update_preference')
+            !$this->requestParser->verifyForm('update_preference')
         ) {
             throw new AccessDeniedException();
         }

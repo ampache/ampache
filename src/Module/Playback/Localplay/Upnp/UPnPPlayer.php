@@ -141,7 +141,7 @@ class UPnPPlayer
     /**
      * @return array
      */
-    public function GetCurrentItem()
+    public function GetCurrentItem(): array
     {
         return $this->Playlist()->CurrentItem();
     }

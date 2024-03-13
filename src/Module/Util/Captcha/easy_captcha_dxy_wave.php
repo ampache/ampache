@@ -32,7 +32,15 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_dxy_wave
 {
-    #-- init params
+    /** @var float|int $dist_x */
+    public $dist_x;
+    /** @var float|int $dist_y */
+    public $dist_y;
+    /** @var float|int $slow_x */
+    public $slow_x;
+    /** @var float|int $slow_y */
+    public $slow_y;
+
     /**
      * easy_captcha_dxy_wave constructor.
      * @param $max_x
@@ -61,6 +69,7 @@ class easy_captcha_dxy_wave
         #-- dest pixels (with x+y together in each of the sin() calcs you get more deformation, else just yields y-ripple effect)
         $distortx = $this->dist_x * cos(($x / $this->slow_x) - ($y / 1.1 / $this->slow_y));
         $distorty = $this->dist_y * sin(($y / $this->slow_y) - ($x / 0.9 / $this->slow_x));
+
         #-- result
         return array($distortx, $distorty);
     }

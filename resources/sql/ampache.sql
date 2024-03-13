@@ -18,12 +18,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Dec 21, 2023 at 07:16 AM
--- Server version: 10.11.4-MariaDB-1~deb12u1-log
--- PHP Version: 8.2.13
+-- Generation Time: Mar 13, 2024 at 09:48 AM
+-- Server version: 10.11.6-MariaDB-0+deb12u1-log
+-- PHP Version: 8.2.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -247,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `broadcast` (
 DROP TABLE IF EXISTS `cache_object_count`;
 CREATE TABLE IF NOT EXISTS `cache_object_count` (
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `threshold` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `count_type` enum('download','stream','skip') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
@@ -263,7 +262,7 @@ CREATE TABLE IF NOT EXISTS `cache_object_count` (
 DROP TABLE IF EXISTS `cache_object_count_run`;
 CREATE TABLE IF NOT EXISTS `cache_object_count_run` (
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `threshold` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `count_type` enum('download','stream','skip') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
@@ -487,7 +486,7 @@ CREATE TABLE IF NOT EXISTS `image` (
   `height` int(4) UNSIGNED DEFAULT 0,
   `mime` varchar(64) DEFAULT NULL,
   `size` varchar(64) DEFAULT NULL,
-  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
   `kind` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -724,7 +723,7 @@ CREATE TABLE IF NOT EXISTS `now_playing` (
 DROP TABLE IF EXISTS `object_count`;
 CREATE TABLE IF NOT EXISTS `object_count` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `user` int(11) NOT NULL,
@@ -813,6 +812,7 @@ CREATE TABLE IF NOT EXISTS `playlist_data` (
   `object_type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `track` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `playlist_track_UN` (`playlist`,`track`),
   KEY `playlist` (`playlist`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -891,11 +891,11 @@ CREATE TABLE IF NOT EXISTS `preference` (
   `description` varchar(255) DEFAULT NULL,
   `level` int(11) UNSIGNED NOT NULL DEFAULT 100,
   `type` varchar(128) DEFAULT NULL,
-  `catagory` varchar(128) DEFAULT NULL,
-  `subcatagory` varchar(128) DEFAULT NULL,
+  `category` varchar(128) DEFAULT NULL,
+  `subcategory` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `preference_UN` (`name`),
-  KEY `catagory` (`catagory`),
+  KEY `category` (`category`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=189 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -903,7 +903,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
 -- Dumping data for table `preference`
 --
 
-INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES
+INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES
 (1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'),
 (4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query'),
 (19, 'transcode_bitrate', '128', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding'),
@@ -927,8 +927,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'),
 (70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'),
 (71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'),
-(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'),
-(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'plugins', 'lastfm'),
+(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'plugins', 'last.fm'),
+(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'last.fm'),
 (82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'),
 (83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'),
 (84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'browse'),
@@ -1043,7 +1043,7 @@ DROP TABLE IF EXISTS `rating`;
 CREATE TABLE IF NOT EXISTS `rating` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
-  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `rating` tinyint(4) NOT NULL,
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -1192,7 +1192,7 @@ DROP TABLE IF EXISTS `share`;
 CREATE TABLE IF NOT EXISTS `share` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) UNSIGNED NOT NULL,
-  `object_type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `object_type` enum('album','album_disk','artist','playlist','podcast','podcast_episode','search','song','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
   `allow_stream` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `allow_download` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
@@ -1480,7 +1480,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600049'),
+('db_version', '600060'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1525,7 +1525,7 @@ CREATE TABLE IF NOT EXISTS `user_activity` (
   `user` int(11) UNSIGNED NOT NULL,
   `action` varchar(20) DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `activity_date` int(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1557,7 +1557,7 @@ CREATE TABLE IF NOT EXISTS `user_flag` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`),

@@ -28,9 +28,11 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
@@ -39,7 +41,6 @@ use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
@@ -61,18 +62,25 @@ final class CreateAction implements ApplicationActionInterface
 
     private ZipHandlerInterface $zipHandler;
 
+    private RequestParserInterface $requestParser;
+    private ShareCreatorInterface $shareCreator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LoggerInterface $logger,
         PasswordGeneratorInterface $passwordGenerator,
-        ZipHandlerInterface $zipHandler
+        ZipHandlerInterface $zipHandler,
+        RequestParserInterface $requestParser,
+        ShareCreatorInterface $shareCreator
     ) {
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
         $this->logger            = $logger;
         $this->passwordGenerator = $passwordGenerator;
         $this->zipHandler        = $zipHandler;
+        $this->requestParser     = $requestParser;
+        $this->shareCreator      = $shareCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -81,17 +89,20 @@ final class CreateAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
+        $user = $gatekeeper->getUser();
+
         if (
+            $user === null ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            !Core::form_verify('add_share')
+            !$this->requestParser->verifyForm('add_share')
         ) {
             throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();
 
-        $share_id = Share::create_share(
-            Core::get_global('user')->id,
+        $share_id = $this->shareCreator->create(
+            $user,
             $_REQUEST['type'] ?? '',
             (int)($_REQUEST['id'] ?? 0),
             (bool)($_REQUEST['allow_stream'] ?? 0),

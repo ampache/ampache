@@ -105,12 +105,7 @@ final class BookmarkDelete5Method
             return false;
         }
 
-        $bookmark = static::getBookmarkRepository()->delete(current($find));
-        if (!$bookmark) {
-            Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
+        static::getBookmarkRepository()->delete((int) current($find));
 
         Api5::message('Deleted Bookmark: ' . $object_id, $input['api_format']);
 

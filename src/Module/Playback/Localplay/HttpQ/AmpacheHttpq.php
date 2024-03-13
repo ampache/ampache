@@ -26,7 +26,6 @@ namespace Ampache\Module\Playback\Localplay\HttpQ;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
-use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
@@ -151,7 +150,7 @@ class AmpacheHttpq extends localplay_controller
      * This returns a keyed array of the instance information with
      * [UID]=>[NAME]
      */
-    public function get_instances()
+    public function get_instances(): array
     {
         $sql = "SELECT * FROM `localplay_httpq` ORDER BY `name`";
 
@@ -206,7 +205,7 @@ class AmpacheHttpq extends localplay_controller
      * @param string $instance
      * @return array
      */
-    public function get_instance($instance = '')
+    public function get_instance($instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('httpq_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_httpq` WHERE `id` = ?" : "SELECT * FROM `localplay_httpq`";
@@ -439,7 +438,7 @@ class AmpacheHttpq extends localplay_controller
      * The songs that httpQ currently has in its playlist. This must be
      * done in a standardized fashion
      */
-    public function get()
+    public function get(): array
     {
         /* Get the Current Playlist */
         $list = $this->_httpq->get_tracks();
@@ -532,10 +531,16 @@ class AmpacheHttpq extends localplay_controller
 
         $url_data = $this->parse_url($array['track']);
         if (array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
-            $song                  = new Song($url_data['oid']);
-            $array['track_title']  = $song->title;
-            $array['track_artist'] = $song->get_artist_fullname();
-            $array['track_album']  = $song->get_album_fullname();
+            $song = new Song($url_data['oid']);
+            if ($song->isNew()) {
+                $array['track_title']  = T_('Unknown');
+                $array['track_artist'] = T_('Unknown');
+                $array['track_album']  = T_('Unknown');
+            } else {
+                $array['track_title']  = $song->title;
+                $array['track_artist'] = $song->get_artist_fullname();
+                $array['track_album']  = $song->get_album_fullname();
+            }
         } else {
             $array['track_title'] = basename($array['track'] ?? '');
         }

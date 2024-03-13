@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,64 +25,93 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
+use Ampache\Repository\LicenseRepository;
+use Ampache\Repository\LicenseRepositoryInterface;
 
-class License
+/**
+ * License item
+ *
+ * @see LicenseRepository
+ */
+class License extends BaseModel
 {
-    protected const DB_TABLENAME = 'license';
+    /** @var string|null License title */
+    private ?string $name = null;
 
-    public int $id = 0;
-    public ?string $name;
-    public ?string $description;
-    public ?string $external_link;
+    /** @var string|null Descriptive text */
+    private ?string $description = null;
 
-    /**
-     * Constructor
-     * This pulls the license information from the database and returns
-     * a constructed object
-     * @param int|null $license_id
-     */
-    public function __construct($license_id = 0)
-    {
-        if (!$license_id) {
-            return;
-        }
-        $this->has_info($license_id);
-    }
+    /** @var string|null Lint to the license page */
+    private ?string $external_link = null;
 
-    public function getId(): int
-    {
-        return (int)($this->id ?? 0);
-    }
+    private LicenseRepositoryInterface $licenseRepository;
 
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
+    public function __construct(
+        LicenseRepositoryInterface $licenseRepository
+    ) {
+        $this->licenseRepository = $licenseRepository;
     }
 
     /**
-     * has_info
-     * does the db call, reads from the license table
-     * @param int $license_id
+     * Set the name
      */
-    private function has_info($license_id): bool
+    public function setName(string $value): License
     {
-        $sql        = "SELECT * FROM `license` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($license_id));
-        $data       = Dba::fetch_assoc($db_results);
-        if (empty($data)) {
-            return false;
-        }
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->name = htmlspecialchars($value);
 
-        return true;
+        return $this;
     }
 
+    /**
+     * Returns the name
+     */
+    public function getName(): string
+    {
+        return (string) $this->name;
+    }
+
+    /**
+     * Sets the description
+     */
+    public function setDescription(string $value): License
+    {
+        $this->description = htmlspecialchars($value);
+
+        return $this;
+    }
+
+    /**
+     * Returns the description
+     */
+    public function getDescription(): string
+    {
+        return (string) $this->description;
+    }
+
+    /**
+     * Sets the external-link
+     */
+    public function setExternalLink(string $value): License
+    {
+        $this->external_link = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the external-link
+     */
+    public function getExternalLink(): string
+    {
+        return (string) $this->external_link;
+    }
+
+    /**
+     * Returns the external-link as html a-tag
+     */
     public function getLinkFormatted(): string
     {
-        if ($this->external_link) {
+        if ((string) $this->external_link !== '') {
             return sprintf(
                 '<a href="%s">%s</a>',
                 $this->external_link,
@@ -91,5 +120,20 @@ class License
         }
 
         return (string) $this->name;
+    }
+
+    /**
+     * Persists the object
+     */
+    public function save(): void
+    {
+        $result = $this->licenseRepository->persist($this);
+
+        if (
+            $result !== null &&
+            $this->isNew()
+        ) {
+            $this->id = $result;
+        }
     }
 }

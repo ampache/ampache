@@ -137,18 +137,28 @@ final class DefaultAction implements ApplicationActionInterface
                     foreach ($browse_media_ids as $media_id) {
                         switch ($object_type) {
                             case 'album':
-                                $album     = $this->modelFactory->createAlbum($media_id);
-                                $media_ids = array_merge($media_ids, $this->songRepository->getByAlbum($album->id));
+                                $album = $this->modelFactory->createAlbum($media_id);
+                                if ($album->isNew() === false) {
+                                    $media_ids = array_merge($media_ids, $this->songRepository->getByAlbum($album->id));
+                                }
                                 break;
                             case 'album_disk':
                                 $albumDisk = $this->modelFactory->createAlbumDisk($media_id);
-                                $media_ids = array_merge($media_ids, $this->songRepository->getByAlbumDisk($albumDisk->id));
+                                if ($albumDisk->isNew() === false) {
+                                    $media_ids = array_merge($media_ids, $this->songRepository->getByAlbumDisk($albumDisk->id));
+                                }
                                 break;
                             case 'song':
-                                $media_ids[] = $media_id;
+                                $song = $this->modelFactory->createSong($media_id);
+                                if ($song->isNew() === false) {
+                                    $media_ids[] = $media_id;
+                                }
                                 break;
                             case 'video':
-                                $media_ids[] = ['object_type' => 'Video', 'object_id' => $media_id];
+                                $video = $this->modelFactory->createVideo($media_id);
+                                if ($video->isNew() === false) {
+                                    $media_ids[] = ['object_type' => 'Video', 'object_id' => $media_id];
+                                }
                                 break;
                         } // switch on type
                     } // foreach media_id
@@ -171,10 +181,10 @@ final class DefaultAction implements ApplicationActionInterface
         session_write_close();
 
         // Take whatever we've got and send the zip
-        $song_files = $this->getMediaFiles($media_ids);
-        if (is_array($song_files['0'])) {
-            set_memory_limit($song_files['1'] + 32);
-            $this->zipHandler->zip($name, $song_files['0'], $flat_path);
+        $media_files = $this->getMediaFiles($media_ids);
+        if (is_array($media_files['0'])) {
+            set_memory_limit($media_files['1'] + 32);
+            $this->zipHandler->zip($name, $media_files['0'], $flat_path);
         }
 
         return null;
@@ -186,7 +196,7 @@ final class DefaultAction implements ApplicationActionInterface
      * @param array $media_ids Media IDs.
      * @return array
      */
-    private function getMediaFiles(array $media_ids)
+    private function getMediaFiles(array $media_ids): array
     {
         $media_files = [];
         $total_size  = 0;
@@ -204,6 +214,9 @@ final class DefaultAction implements ApplicationActionInterface
                 $media = new $className($mediaid);
             } else {
                 $media = $this->modelFactory->createSong((int) $element);
+            }
+            if ($media->isNew()) {
+                continue;
             }
             if ($media->enabled) {
                 $total_size = ((int)$total_size) + ($media->size ?? 0);

@@ -25,9 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -96,8 +98,9 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     /**
      * get_seasons
      * gets the tv show seasons
+     * @return int[]
      */
-    public function get_seasons()
+    public function get_seasons(): array
     {
         $sql        = "SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
         $db_results = Dba::read($sql, array($this->id));
@@ -112,8 +115,9 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     /**
      * get_episodes
      * gets all episodes for this tv show
+     * @return int[]
      */
-    public function get_episodes()
+    public function get_episodes(): array
     {
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` WHERE `tvshow_season`.`tvshow`='" . Dba::escape($this->id) . "' AND `catalog`.`enabled` = '1' "
@@ -134,7 +138,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * This returns the extra information for the tv show, this means totals etc
      * @return array
      */
-    private function _get_extra_info()
+    private function _get_extra_info(): array
     {
         // Try to find it in the cache and save ourselves the trouble
         if (parent::is_cached('tvshow_extra', $this->id)) {
@@ -180,7 +184,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords           = array();
         $keywords['tvshow'] = array(
@@ -249,7 +253,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array('tvshow_season' => $this->get_seasons());
     }
@@ -259,7 +263,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -267,13 +271,12 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     }
 
     /**
-     * @param string $filter_type
-     * @return array
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'video') {
+        if ($filter_type === null || $filter_type === 'video') {
             $episodes = $this->get_episodes();
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
@@ -418,8 +421,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
                 $current_id = (int)$tvshow_id;
                 Stats::migrate('tvshow', $this->id, $current_id, 0);
                 Useractivity::migrate('tvshow', $this->id, $current_id);
-                //Recommendation::migrate('tvshow', $this->id);
-                Share::migrate('tvshow', $this->id, $current_id);
+                $this->getShareRepository()->migrate('tvshow', $this->id, $current_id);
                 $this->getShoutRepository()->migrate('tvshow', $this->id, $current_id);
                 Tag::migrate('tvshow', $this->id, $current_id);
                 Userflag::migrate('tvshow', $this->id, $current_id);
@@ -469,7 +471,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * @param bool $add_to_childs
      * @param bool $force_update
      */
-    public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false): void
     {
         Tag::update_tag_list($tags_comma, 'tvshow', $this->id, $force_update ? true : $override_childs);
 
@@ -502,7 +504,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
             $sql     = "DELETE FROM `tvshow` WHERE `id` = ?";
             $deleted = (Dba::write($sql, array($this->id)) !== false);
             if ($deleted) {
-                Art::garbage_collection('tvshow', $this->id);
+                $this->getArtCleanup()->collectGarbageForObject('tvshow', $this->id);
                 Userflag::garbage_collection('tvshow', $this->id);
                 Rating::garbage_collection('tvshow', $this->id);
                 $this->getShoutRepository()->collectGarbage('tvshow', $this->getId());
@@ -531,5 +533,25 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getArtCleanup(): ArtCleanupInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtCleanupInterface::class);
     }
 }

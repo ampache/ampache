@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -51,16 +52,20 @@ final class AddUserAction extends AbstractUserAction
 
     private UserRepositoryInterface $userRepository;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        RequestParserInterface $requestParser
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
         $this->userRepository  = $userRepository;
+        $this->requestParser   = $requestParser;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -69,7 +74,7 @@ final class AddUserAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('add_user')) {
+        if (!$this->requestParser->verifyForm('add_user')) {
             throw new AccessDeniedException();
         }
 

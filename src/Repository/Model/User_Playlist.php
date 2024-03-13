@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
+use PDOStatement;
 
 /**
  * UserPlaylist Class
@@ -66,7 +67,7 @@ class User_Playlist extends database_object
      * This returns the next object in the user_playlist.
      * @return array
      */
-    public function get_current_object()
+    public function get_current_object(): array
     {
         $items = array();
         // Select the current object for this user
@@ -94,7 +95,7 @@ class User_Playlist extends database_object
      * @param int $object_id
      * @param int $position
      */
-    public function set_current_object($object_type, $object_id, $position)
+    public function set_current_object($object_type, $object_id, $position): void
     {
         // remove the old current
         $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
@@ -111,7 +112,7 @@ class User_Playlist extends database_object
      * @param int $track
      * @param int $position
      */
-    public function set_current_id($object_type, $track, $position)
+    public function set_current_id($object_type, $track, $position): void
     {
         // remove the old current
         $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
@@ -167,7 +168,7 @@ class User_Playlist extends database_object
      * clear
      * This clears all the objects out of a user's playlist for that client
      */
-    public function clear()
+    public function clear(): void
     {
         $sql = "DELETE FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
         Dba::write($sql, array($this->user, $this->client));
@@ -176,6 +177,7 @@ class User_Playlist extends database_object
     /**
      * add_items
      * Add an array of songs to the playlist
+     * @return PDOStatement|false
      */
     public function add_items($data, $time)
     {
@@ -205,7 +207,7 @@ class User_Playlist extends database_object
      * @param int $current_time
      * @param int $time
      */
-    public function set_items($playlist, $current_type, $current_id, $current_time, $time)
+    public function set_items($playlist, $current_type, $current_id, $current_time, $time): void
     {
         if (!empty($playlist)) {
             // clear the old list
@@ -225,7 +227,7 @@ class User_Playlist extends database_object
      * Returns an array of all object_ids currently in this User_Playlist.
      * @return array
      */
-    public function get_items()
+    public function get_items(): array
     {
         $items = array();
         // Select all objects from this user

@@ -23,20 +23,34 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Artist;
+
 interface ArtistRepositoryInterface
 {
     /**
      * Deletes the artist entry
      */
-    public function delete(int $artistId): bool;
+    public function delete(
+        Artist $artist
+    ): void;
 
     /**
      * This returns a number of random artists.
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getRandom(
         int $userId,
         ?int $count = 1
     ): array;
+
+    /**
+     * This cleans out unused artists
+     */
+    public function collectGarbage(): void;
+
+    /**
+     * This finds an artist based on its name
+     */
+    public function findByName(string $name): ?Artist;
 }

@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Label\Deletion;
 
-use Ampache\Repository\Model\Art;
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
@@ -41,30 +41,30 @@ final class LabelDeleter implements LabelDeleterInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private ArtCleanupInterface $artCleanup;
+
     public function __construct(
         ShoutRepositoryInterface $shoutRepository,
         LabelRepositoryInterface $labelRepository,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        ArtCleanupInterface $artCleanup
     ) {
         $this->shoutRepository        = $shoutRepository;
         $this->labelRepository        = $labelRepository;
         $this->useractivityRepository = $useractivityRepository;
+        $this->artCleanup             = $artCleanup;
     }
 
     public function delete(
         Label $label
-    ): bool {
+    ): void {
         $labelId = $label->getId();
 
-        $deleted = $this->labelRepository->delete($labelId);
-        if ($deleted) {
-            Art::garbage_collection('label', $labelId);
-            Userflag::garbage_collection('label', $labelId);
-            Rating::garbage_collection('label', $labelId);
-            $this->shoutRepository->collectGarbage('label', $labelId);
-            $this->useractivityRepository->collectGarbage('label', $labelId);
-        }
-
-        return $deleted !== false;
+        $this->labelRepository->delete($labelId);
+        $this->artCleanup->collectGarbageForObject('label', $labelId);
+        Userflag::garbage_collection('label', $labelId);
+        Rating::garbage_collection('label', $labelId);
+        $this->shoutRepository->collectGarbage('label', $labelId);
+        $this->useractivityRepository->collectGarbage('label', $labelId);
     }
 }

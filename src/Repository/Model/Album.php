@@ -29,7 +29,10 @@ use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\AlbumDiskRepositoryInterface;
+use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -208,7 +211,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * do it
      * @return array
      */
-    private function _get_extra_info()
+    private function _get_extra_info(): array
     {
         if ($this->isNew()) {
             return array();
@@ -244,18 +247,18 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param int $catalog_id
      * @param string $name
      * @param int $year
-     * @param string $mbid
-     * @param string $mbid_group
-     * @param int $album_artist
-     * @param string $release_type
-     * @param string $release_status
-     * @param int $original_year
-     * @param string $barcode
-     * @param string $catalog_number
-     * @param string $version
+     * @param string|null $mbid
+     * @param string|null $mbid_group
+     * @param int|null $album_artist
+     * @param string|null $release_type
+     * @param string|null $release_status
+     * @param int|null $original_year
+     * @param string|null $barcode
+     * @param string|null $catalog_number
+     * @param string|null $version
      * @param bool $readonly
      */
-    public static function check($catalog_id, $name, $year = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $release_status = null, $original_year = 0, $barcode = null, $catalog_number = null, $version = null, $readonly = false): int
+    public static function check($catalog_id, $name, $year = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $release_status = null, $original_year = null, $barcode = null, $catalog_number = null, $version = null, $readonly = false): int
     {
         $trimmed        = Catalog::trim_prefix(trim((string) $name));
         $name           = $trimmed['string'];
@@ -392,8 +395,15 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         Catalog::update_map($catalog_id, 'album', $album_id);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
+            $user = Core::get_global('user');
+
             try {
-                Wanted::delete_wanted_release((string)$mbid);
+                if ($user instanceof User) {
+                    self::getWantedManager()->delete(
+                        (string) $mbid,
+                        $user
+                    );
+                }
             } catch (Exception $error) {
                 debug_event(self::class, 'Cannot process wanted releases auto-removal check: ' . $error->getMessage(), 2);
             }
@@ -463,7 +473,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         $keywords               = array();
         $keywords['mb_albumid'] = array(
@@ -533,26 +543,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
-     * Get item prefix, basename and name by the album id.
-     * @return array{prefix: string, basename: string, name: string}
-     */
-    public static function get_name_array_by_id(int $album_id): array
-    {
-        $sql        = "SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, array($album_id));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            /** @var array{prefix: string, basename: string, name: string} */
-            return $row;
-        }
-
-        return [
-            'prefix' => '',
-            'basename' => '',
-            'name' => ''
-        ];
-    }
-
-    /**
      * Get item link.
      */
     public function get_link(): string
@@ -583,7 +573,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get item album_artists array
      * @return array
      */
-    public function get_artists()
+    public function get_artists(): array
     {
         if (empty($this->album_artist)) {
             return array();
@@ -661,21 +651,11 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
-     * get_album_disk_ids
-     *
-     * Returns the disk ids for an album
-     * @return int[]
+     * @return iterable<AlbumDisk>
      */
-    public function get_album_disk_ids()
+    public function getDisks(): iterable
     {
-        $sql        = "SELECT DISTINCT `id`, `disk` FROM `album_disk` WHERE `album_id` = ? ORDER BY `disk`;";
-        $db_results = Dba::read($sql, array($this->id));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
+        return $this->getAlbumDiskRepository()->getByAlbum($this);
     }
 
     /**
@@ -700,7 +680,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param int $primary_id
      * @return array
      */
-    public static function get_parent_array($album_id, $primary_id)
+    public static function get_parent_array($album_id, $primary_id): array
     {
         $results    = array();
         $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;";
@@ -720,7 +700,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get item children.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return $this->get_medias();
     }
@@ -730,10 +710,10 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         $childrens  = array();
-        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE song.album = ? AND `song`.`file` LIKE ?;";
+        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`file` LIKE ?;";
         $db_results = Dba::read($sql, array($this->id, "%" . $name));
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = array(
@@ -747,19 +727,19 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get all children and sub-childrens media.
-     * @param string $filter_type
+     *
      * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'song') {
+        if (!$filter_type || $filter_type === 'song') {
             $songs = $this->getSongRepository()->getByAlbum($this->id);
             foreach ($songs as $song_id) {
-                $medias[] = array(
+                $medias[] = [
                     'object_type' => 'song',
                     'object_id' => $song_id
-                );
+                ];
             }
         }
 
@@ -803,7 +783,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get each song id for the album
      * @return list<int>
      */
-    public function get_songs()
+    public function get_songs(): array
     {
         $results = array();
         $params  = array($this->id);
@@ -871,7 +851,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $mbid_group     = $data['mbid_group'] ?? null;
         $release_type   = $data['release_type'] ?? null;
         $release_status = $data['release_status'] ?? null;
-        $original_year  = $data['original_year'] ?? null;
+        $original_year  = (!empty($data['original_year']))
+            ? (int)$data['original_year']
+            : null;
         $barcode        = $data['barcode'] ?? null;
         $catalog_number = $data['catalog_number'] ?? null;
         $version        = $data['version'] ?? null;
@@ -891,7 +873,22 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $changed    = array();
         $songs      = $this->getSongRepository()->getByAlbum($this->getId());
         // run an album check on the current object READONLY means that it won't insert a new album
-        $album_id   = self::check($this->catalog, $name, $year, $mbid, $mbid_group, $album_artist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version, true);
+        $album_id   = self::check(
+            $this->catalog,
+            $name,
+            $year,
+            $mbid,
+            $mbid_group,
+            $album_artist,
+            $release_type,
+            $release_status,
+            $original_year,
+            $barcode,
+            $catalog_number,
+            $version,
+            true
+        );
+
         $cron_cache = AmpConfig::get('cron_cache');
         if ($album_id > 0 && $album_id != $this->id) {
             debug_event(self::class, "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
@@ -1247,12 +1244,32 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
-     * @deprecated
+     * @deprecated Inject dependency
      */
     private function getUseractivityRepository(): UserActivityRepositoryInterface
     {
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @inject dependency
+     */
+    private function getAlbumDiskRepository(): AlbumDiskRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumDiskRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getWantedManager(): WantedManagerInterface
+    {
+        global $dic;
+
+        return $dic->get(WantedManagerInterface::class);
     }
 }

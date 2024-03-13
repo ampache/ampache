@@ -28,6 +28,7 @@ namespace Ampache\Gui\Song;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -375,9 +376,33 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetLicenseLinkReturnsValue(): void
+    public function testGetLicenseLinkReturnsValueIfSet(): void
     {
-        $this->song->f_license = null;
+        $license = $this->createMock(License::class);
+
+        $link = 'some-link';
+
+        $this->song->shouldReceive('getLicense')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($license);
+
+        $license->expects(static::once())
+            ->method('getLinkFormatted')
+            ->willReturn($link);
+
+        $this->assertSame(
+            $link,
+            $this->subject->getLicenseLink()
+        );
+    }
+
+    public function testGetLicenseLinkReturnsEmptyStringIfNotSet(): void
+    {
+        $this->song->shouldReceive('getLicense')
+            ->withNoArgs()
+            ->once()
+            ->andReturnNull();
 
         $this->assertSame(
             '',

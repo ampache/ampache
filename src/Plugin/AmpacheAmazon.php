@@ -62,19 +62,19 @@ class AmpacheAmazon implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::exists('amazon_base_url') && !Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('amazon_max_results_pages') && !Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('amazon_developer_public_key') && !Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('amazon_developer_private_api_key') && !Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('amazon_developer_associate_tag') && !Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -172,7 +172,7 @@ class AmpacheAmazon implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5)
+    public function gather_arts($type, $options = array(), $limit = 5): array
     {
         $images        = array();
         $final_results = array();

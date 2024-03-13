@@ -29,7 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,12 +43,16 @@ final class UpdateFilterAction extends AbstractFilterAction
 
     private ConfigContainerInterface $configContainer;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        RequestParserInterface $requestParser
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->requestParser   = $requestParser;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -57,7 +61,7 @@ final class UpdateFilterAction extends AbstractFilterAction
             return null;
         }
 
-        if (!Core::form_verify('update_filter')) {
+        if (!$this->requestParser->verifyForm('update_filter')) {
             throw new AccessDeniedException();
         }
 
@@ -68,7 +72,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         $filter_id   = (int) ($body['filter_id'] ?? 0);
         $filter_name = ($filter_id === 0)
             ? 'DEFAULT'
-            : scrub_in(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES));
+            : scrub_in(htmlspecialchars($body['filter_name'] ?? '', ENT_NOQUOTES));
 
         if (empty($filter_name)) {
             AmpError::add('name', T_('A filter name is required'));

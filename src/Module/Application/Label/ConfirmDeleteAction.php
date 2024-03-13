@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Label;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -47,14 +47,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private LabelDeleterInterface $labelDeleter;
 
+    private LabelRepositoryInterface $labelRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        LabelDeleterInterface $labelDeleter
+        LabelDeleterInterface $labelDeleter,
+        LabelRepositoryInterface $labelRepository
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->labelDeleter    = $labelDeleter;
+        $this->labelRepository = $labelRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,28 +71,26 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $label = new Label($_REQUEST['label_id']);
-        if (!Catalog::can_remove($label)) {
+        $labelId = (int) ($request->getParsedBody()['label_id'] ?? 0);
+
+        $label = $this->labelRepository->findById($labelId);
+        if (
+            $label === null ||
+            !Catalog::can_remove($label)
+        ) {
             throw new AccessDeniedException(
-                sprintf('Unauthorized to remove the label `%s`', $label->id)
+                sprintf('Unauthorized to remove the label `%s`', $labelId)
             );
         }
+
+        $this->labelDeleter->delete($label);
 
         $this->ui->showHeader();
-        if ($this->labelDeleter->delete($label)) {
-            $this->ui->showConfirmation(
-                T_('No Problem'),
-                T_('The Label has been deleted'),
-                $this->configContainer->getWebPath()
-            );
-        } else {
-            $this->ui->showConfirmation(
-                T_('There Was a Problem'),
-                T_('Unable to delete this Label.'),
-                $this->configContainer->getWebPath()
-            );
-        }
-
+        $this->ui->showConfirmation(
+            T_('No Problem'),
+            T_('The Label has been deleted'),
+            $this->configContainer->getWebPath()
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

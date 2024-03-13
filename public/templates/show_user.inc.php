@@ -61,13 +61,13 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
 <?php if ($client->f_avatar) {
     echo $client->f_avatar . "<br /><br />";
 }
-if (AmpConfig::get('sociable')) {
-    echo $userFollowStateRenderer->render(
-        $client->getId(),
-        $current_user->getId()
-    );
+    if (AmpConfig::get('sociable')) {
+        echo $userFollowStateRenderer->render(
+            $client->getId(),
+            $current_user->getId()
+        );
 
-    $plugins = Plugin::get_plugins('display_user_field'); ?>
+        $plugins = Plugin::get_plugins('display_user_field'); ?>
     <ul id="plugins_user_field">
 <?php foreach ($plugins as $plugin_name) {
     $plugin = new Plugin($plugin_name);
@@ -78,7 +78,7 @@ if (AmpConfig::get('sociable')) {
 } ?>
     </ul>
 <?php
-} ?>
+    } ?>
 </div>
 <dl class="media_details">
     <dt><?php echo T_('Display Name'); ?></dt>

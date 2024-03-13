@@ -26,12 +26,13 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
-use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepository;
 use Ampache\Repository\PodcastRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
+use LogicException;
 
 /**
  * Podcast item
@@ -140,7 +141,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      *  }
      * }
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         return [
             'podcast' => [
@@ -198,9 +199,9 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     /**
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
-        return array('podcast_episode' => $this->getPodcastRepository()->getEpisodes($this));
+        return array('podcast_episode' => $this->getEpisodeIds());
     }
 
     /**
@@ -208,7 +209,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -216,14 +217,13 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * @param string $filter_type
-     * @return array
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'podcast_episode') {
-            $episodes = $this->getPodcastRepository()->getEpisodes($this, PodcastEpisodeStateEnum::COMPLETED);
+        if ($filter_type === null || $filter_type === 'podcast_episode') {
+            $episodes = $this->getEpisodeIds(PodcastEpisodeStateEnum::COMPLETED);
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
                     'object_type' => 'podcast_episode',
@@ -373,7 +373,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function setLanguage(string $value): Podcast
     {
-        $this->language = $value;
+        $this->language = mb_substr($value, 0, 5);
 
         return $this;
     }
@@ -427,7 +427,10 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function setDescription(string $value): Podcast
     {
-        $this->description = $value;
+        /**
+         * db field is limited to 4096 chars
+         */
+        $this->description = mb_substr($value, 0, 4096);
 
         return $this;
     }
@@ -479,9 +482,11 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     /**
      * Sets the last build-date
      */
-    public function setLastBuildDate(DateTimeInterface $value): Podcast
+    public function setLastBuildDate(?DateTimeInterface $value): Podcast
     {
-        $this->lastbuilddate = $value->getTimestamp();
+        if ($value !== null) {
+            $this->lastbuilddate = $value->getTimestamp();
+        }
 
         return $this;
     }
@@ -499,7 +504,11 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function save(): void
     {
-        $this->getPodcastRepository()->persist($this);
+        $id = $this->getPodcastRepository()->persist($this);
+
+        if ($id !== null) {
+            $this->id = $id;
+        }
     }
 
     /**
@@ -517,49 +526,25 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     /**
      * update
      * This takes a key'd array of data and updates the current podcast
-     * @param array{
-     *  feed?: string|null,
-     *  title?: string|null,
-     *  website?: string|null,
-     *  description?: string|null,
-     *  language?: string|null,
-     *  generator?: string|null,
-     *  copyright?: string|null
-     * } $data
+     * @param array<mixed> $data
      * @return int|false
      */
     public function update(array $data)
     {
-        $feed = $data['feed'] ?? $this->feed ?? '';
+        throw new LogicException('Podcast::update is not in use');
+    }
 
-        /** @var null|string $title */
-        $title = (isset($data['title'])) ? $data['title'] : null;
-
-        /** @var null|string $website */
-        $website = (isset($data['website'])) ? $data['website'] : null;
-
-        /** @var null|string $description */
-        $description = (isset($data['description'])) ? Dba::check_length((string)$data['description'], 4096) : null;
-
-        /** @var null|string $language */
-        $language = (isset($data['language'])) ? $data['language'] : null;
-
-        /** @var null|string $generator */
-        $generator = (isset($data['generator'])) ? $data['generator'] : null;
-
-        /** @var null|string $copyright */
-        $copyright = (isset($data['copyright'])) ? $data['copyright'] : null;
-
-        if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
-            debug_event(self::class, 'Podcast update canceled, bad feed url.', 1);
-
-            return false;
-        }
-
-        $sql = 'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `language` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?';
-        Dba::write($sql, array($feed, $title, $website, $description, $language, $generator, $copyright, $this->id));
-
-        return $this->id;
+    /**
+     * Returns the ids of all available episodes
+     *
+     * @param string $stateFilter Return only items with this state
+     *
+     * @return list<int>
+     */
+    public function getEpisodeIds(
+        string $stateFilter = ''
+    ): array {
+        return $this->getPodcastEpisodeRepository()->getEpisodes($this, $stateFilter);
     }
 
     /**
@@ -570,5 +555,15 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
     }
 }

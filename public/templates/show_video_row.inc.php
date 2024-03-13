@@ -119,11 +119,11 @@ if ($video_type != 'video') {
     <?php
     }
 }
- if (Access::check('interface', 25)) {
-     if (AmpConfig::get('share')) {
-         echo Share::display_ui('video', $libitem->id, false);
-     }
- }
+if (Access::check('interface', 25)) {
+    if (AmpConfig::get('share')) {
+        echo Share::display_ui('video', $libitem->id, false);
+    }
+}
 if (Access::check_function('download')) { ?>
     <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
 <?php }

@@ -1,0 +1,47 @@
+name: qa
+
+on:
+  push:
+    branches: [ develop, master ]
+  pull_request:
+    branches: [ develop, master ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-latest']
+        php: ['8.2', '8.3']
+    continue-on-error: ${{ matrix.php == '8.3' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install dependencies
+        if: ${{ matrix.php != '8.3' }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: composer update --no-interaction --no-progress
+
+      - name: Install Dependencies (ignore platform)
+        if: ${{ matrix.php == '8.3' }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: composer update --no-interaction --no-progress --ignore-platform-req=php
+
+      - name: Run test suite
+        run: composer run-script qa
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: 1

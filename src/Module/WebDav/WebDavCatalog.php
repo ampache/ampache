@@ -44,10 +44,9 @@ class WebDavCatalog extends DAV\Collection
     }
 
     /**
-     * getChildren
-     * @return array
+     * @return list<WebDavDirectory>
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         $children = array();
         $catalogs = null;
@@ -64,11 +63,9 @@ class WebDavCatalog extends DAV\Collection
     }
 
     /**
-     * getChild
      * @param string $name
-     * @return WebDavFile|WebDavDirectory
      */
-    public function getChild($name)
+    public function getChild($name): DAV\Node
     {
         $matches = Catalog::get_children($name, $this->catalog_id);
         //debug_event(self::class, 'Catalog getChild for `' . $name . '`', 5);
@@ -83,19 +80,15 @@ class WebDavCatalog extends DAV\Collection
     }
 
     /**
-     * childExists
      * @param string $name
      */
     public function childExists($name): bool
     {
         $matches = Catalog::get_children($name, $this->catalog_id);
 
-        return (!empty($matches));
+        return !empty($matches);
     }
 
-    /**
-     * getName
-     */
     public function getName(): string
     {
         if ($this->catalog_id > 0) {
@@ -104,6 +97,6 @@ class WebDavCatalog extends DAV\Collection
             return $catalog->name ?? '';
         }
 
-        return AmpConfig::get('site_title');
+        return (string) AmpConfig::get('site_title');
     }
 }

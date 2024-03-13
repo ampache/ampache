@@ -31,7 +31,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -148,7 +147,7 @@ class Catalog_Seafile extends Catalog
      * Return the necessary settings fields for creating a new Seafile catalog
      * @return array
      */
-    public function catalog_fields()
+    public function catalog_fields(): array
     {
         $fields = array();
 
@@ -179,7 +178,7 @@ class Catalog_Seafile extends Catalog
      * create_type
      *
      * This creates a new catalog type entry for a catalog
-     * @param $catalog_id
+     * @param string $catalog_id
      * @param array $data
      */
     public static function create_type($catalog_id, $data): bool
@@ -355,7 +354,7 @@ class Catalog_Seafile extends Catalog
                     parent::gather_art([$added]);
                     // Restore the Seafile virtual path
                     $virtpath = $this->seafile->to_virtual_path($file);
-                    Dba::write("UPDATE song SET file = ? WHERE id = ?", [$virtpath, $added]);
+                    Dba::write("UPDATE `song` SET `file` = ? WHERE `id` = ?", [$virtpath, $added]);
                     $this->count++;
                 }
 
@@ -384,7 +383,7 @@ class Catalog_Seafile extends Catalog
      * @return array
      * @throws Exception
      */
-    private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null, $keep = false)
+    private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null, $keep = false): array
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {
@@ -410,8 +409,8 @@ class Catalog_Seafile extends Catalog
             $gather_types,
             '',
             '',
-            $sort_pattern,
-            $rename_pattern
+            (string) $sort_pattern,
+            (string) $rename_pattern
         );
         if (!$is_cached) {
             $vainfo->forceSize((int)$file->size);
@@ -491,10 +490,10 @@ class Catalog_Seafile extends Catalog
      * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
-     * @return array|null
+     * @return array
      * @throws Exception
      */
-    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern): ?array
+    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern): array
     {
         // if you have the file it's all good
         /** @var Song $media */
@@ -511,7 +510,7 @@ class Catalog_Seafile extends Catalog
             }
         }
 
-        return null;
+        return array();
     }
 
     /**
@@ -585,7 +584,7 @@ class Catalog_Seafile extends Catalog
     /**
      * @return array
      */
-    public function check_catalog_proc()
+    public function check_catalog_proc(): array
     {
         return array();
     }
@@ -658,7 +657,7 @@ class Catalog_Seafile extends Catalog
     public function prepare_media($media): array
     {
         $stream_path = (string) $media->file;
-        $stream_name = $media->f_file;
+        $stream_name = $media->getFileName();
         $size        = $media->size;
 
         if ($this->seafile->prepare()) {

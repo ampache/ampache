@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -76,7 +75,7 @@ final class PodcastMethod
         $episodes = ($include == 'episodes' || (int)$include == 1);
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::podcasts(array($object_id), $user, $episodes, false);
+                echo Json_Data::podcasts(array($object_id), $user, $episodes, true, false);
                 break;
             default:
                 echo Xml_Data::podcasts(array($object_id), $user, $episodes);

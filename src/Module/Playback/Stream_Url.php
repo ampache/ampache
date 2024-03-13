@@ -54,7 +54,7 @@ class Stream_Url extends MemoryObject
      * @param string $url
      * @return array
      */
-    public static function parse($url)
+    public static function parse($url): array
     {
         if (empty($url)) {
             return array();

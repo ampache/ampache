@@ -244,7 +244,7 @@ class Waveform
      * @param string $input
      * @return array
      */
-    protected static function html2rgb($input)
+    protected static function html2rgb($input): array
     {
         $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
 

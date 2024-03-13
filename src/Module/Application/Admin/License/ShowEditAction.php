@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,29 +25,38 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\License;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Shows the license edit-page
+ */
 final class ShowEditAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_edit';
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
+    private LicenseRepositoryInterface $licenseRepository;
+
+    private ConfigContainerInterface $configContainer;
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        LicenseRepositoryInterface $licenseRepository,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui                = $ui;
+        $this->licenseRepository = $licenseRepository;
+        $this->configContainer   = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -56,15 +65,24 @@ final class ShowEditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $license = $this->modelFactory->createLicense((int)($request->getQueryParams()['license_id'] ?? 0));
+        $licenseId = (int) ($request->getQueryParams()['license_id'] ?? 0);
+
+        $license = $this->licenseRepository->findById($licenseId);
+
+        if ($license === null) {
+            throw new ObjectNotFoundException($licenseId);
+        }
 
         $this->ui->showHeader();
-
+        $this->ui->showBoxTop(T_('Edit license'));
         $this->ui->show(
             'show_edit_license.inc.php',
-            ['license' => $license]
+            [
+                'license' => $license,
+                'webPath' => $this->configContainer->getWebPath(),
+            ]
         );
-
+        $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

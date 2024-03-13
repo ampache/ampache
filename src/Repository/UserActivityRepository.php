@@ -104,7 +104,20 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         ?string $object_type = null,
         ?int $object_id = null
     ): void {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season');
+        $types = array(
+            'album',
+            'album_disk',
+            'artist',
+            'catalog',
+            'live_stream',
+            'playlist',
+            'podcast',
+            'podcast_episode',
+            'song',
+            'tvshow',
+            'tvshow_season',
+            'video'
+        );
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {

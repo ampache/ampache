@@ -23,36 +23,29 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\License;
 
-Ui::show_box_top(T_('Configure License')); ?>
-<form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=edit">
-<?php if (isset($license)) { ?>
-<input type="hidden" name="license_id" value="<?php echo $license->id; ?>" />
-<?php } ?>
+/** @var License $license */
+/** @var string $webPath */
+
+?>
+<form method="post" enctype="multipart/form-data" action="<?php echo $webPath; ?>/admin/license.php?action=edit">
+<input type="hidden" name="license_id" value="<?php echo $license->getId(); ?>" />
 <table class="tabledata">
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
-    <td><input type="text" name="name" value="<?php if (isset($license)) {
-        echo $license->name;
-    } ?>" autofocus /></td>
+    <td><input type="text" name="name" value="<?php echo $license->getName(); ?>" autofocus /></td>
 </tr>
 <tr>
     <td><?php echo T_('Description:'); ?></td>
-    <td><textarea rows="5" cols="70" maxlength="250" name="description"><?php if (isset($license)) {
-        echo $license->description;
-    } ?></textarea></td>
+    <td><textarea rows="5" cols="70" maxlength="250" name="description"><?php echo $license->getDescription(); ?></textarea></td>
 </tr>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('External Link'); ?></td>
-    <td><input type="text" name="external_link" value="<?php if (isset($license)) {
-        echo $license->external_link;
-    } ?>" /></td>
+    <td><input type="text" name="external_link" value="<?php echo $license->getExternalLink(); ?>" /></td>
 </tr>
 <tr>
     <td><input type="submit" value="<?php echo T_('Confirm'); ?>" /></td>
 </tr>
 </table>
 </form>
-<?php Ui::show_box_bottom(); ?>

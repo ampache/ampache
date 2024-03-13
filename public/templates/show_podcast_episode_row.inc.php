@@ -79,14 +79,14 @@ if (Access::check('interface', 25)) { ?>
     </span>
 </td>
 <?php if (!$is_table) { ?>
-<td class="cel_podcast"><?php echo $libitem->get_f_podcast_link(); ?></td>
+<td class="cel_podcast"><?php echo $libitem->getPodcastLink(); ?></td>
 <?php } ?>
 <td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
     <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
     <?php } ?>
-<td class="cel_pubdate optional"><?php echo $libitem->f_pubdate; ?></td>
-<td class="cel_state optional"><?php echo $libitem->f_state; ?></td>
+<td class="cel_pubdate optional"><?php echo $libitem->getPubDate()->format(DATE_ATOM); ?></td>
+<td class="cel_state optional"><?php echo $libitem->getStateDescription(); ?></td>
 <?php
 if ($show_ratings) { ?>
         <td class="cel_ratings">

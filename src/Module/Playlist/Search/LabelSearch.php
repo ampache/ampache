@@ -51,7 +51,7 @@ final class LabelSearch implements SearchInterface
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
             $operator = array();
-            if (!$type) {
+            if ($type === null) {
                 continue;
             }
             foreach ($search->basetypes[$type] as $baseOperator) {
@@ -60,7 +60,7 @@ final class LabelSearch implements SearchInterface
                     break;
                 }
             }
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+            $input        = $search->filter_data(scrub_in((string)$rule[2]), $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {

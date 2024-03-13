@@ -272,7 +272,7 @@ Data methods require additional information and parameters to return information
 ### advanced_search
 
 Perform an advanced search given passed rules. This works in a similar way to the web/UI search pages.
-You can pass multiple rules as well as joins to create in depth search results
+You can pass multiple rules as well as joins to create in depth search results.
 
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
 Use operator ('and', 'or') to choose whether to join or separate each rule when searching.
@@ -1221,7 +1221,7 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 
 This takes a collection of inputs and returns ID + name for the object type
 
-**DEVELOP** This method is depreciated and will be removed in Ampache 7.0.0 (Use list)
+**DEVELOP** This method is depreciated and will be removed in **API7** (Use list OR index)
 
 | Input         | Type       | Description                                                                                        | Optional |
 |---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
@@ -1247,7 +1247,7 @@ This takes a collection of inputs and returns ID + name for the object type
 "error": ""
 ```
 
-SONGS [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(song\).json)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(song\).json)
 
 ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(artist\).json)
 
@@ -1280,6 +1280,51 @@ Return similar artist id's or similar song ids compared to the input filter
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_similar.json)
+
+### index
+
+This takes a collection of inputs and return ID's for the object type. Add 'include' to include child objects
+
+| Input         | Type       | Description                                                                                                                                    | Optional |
+|---------------|------------|------------------------------------------------------------------------------------------------------------------------------------------------|---------:|
+| 'type'        | string     | `catalog`, `song`, `album`, `artist`, `album_artist`, `song_artist`, `playlist`, `podcast`, `podcast_episode`, `share`, `video`, `live_stream` |       NO |
+| 'filter'      | string     | Value is Alpha Match for returned results, may be more than one letter/number                                                                  |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                                                                |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date                                                |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date                                             |      YES |
+| 'include'     | boolean    | `0`, `1` (include songs in a playlist or episodes in a podcast)                                                                                |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                                                               |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                                                            |      YES |
+| 'hide_search' | integer    | `0`, `1` (if true do not include searches/smartlists in the result)                                                                            |      YES |
+
+* return array
+
+```JSON
+"catalog": []|"song": []|"album": []|"artist": []|"album_artist": []|"song_artist": []|"playlist": []|"podcast": []|"podcast_episode": []|"share": []|"video": []|"live_stream": []
+
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(song\).json)
+
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(artist\).json)
+
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(album\).json)
+
+PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(playlist\).json)
+
+SONG [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(song%20with%20include\).json)
+
+ARTIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(artist%20with%20include\).json)
+
+ALBUM [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(album%20with%20include\).json)
+
+PLAYLIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(playlist%20with%20include\).json)
 
 ### labels
 
@@ -1684,15 +1729,15 @@ This returns a single playlist
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist.json)
 
-### playlist_add_song
+### playlist_add
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
 
 | Input    | Type    | Description                                                   | Optional |
 |----------|---------|---------------------------------------------------------------|---------:|
 | 'filter' | string  | UID of Playlist                                               |       NO |
-| 'song'   | string  | UID of song to add to playlist                                |       NO |
-| 'check'  | boolean | `0`, `1` Whether to check and ignore duplicates (default = 0) |      YES |
+| 'id'     | string  | UID of the object to add to playlist                          |       NO |
+| 'type'   | string  | 'song', 'album', 'artist', 'playlist'                         |       NO |
 
 * return object
 
@@ -1706,7 +1751,7 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_add_song.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_add.json)
 
 ### playlist_create
 
@@ -2239,6 +2284,108 @@ Search for a song using text info and then record a play if found. This allows o
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/scrobble.json)
 
+### search_group
+
+Perform a group search given passed rules. This function will return multiple object types if the rule names match the object type.
+You can pass multiple rules as well as joins to create in depth search results.
+
+Limit and offset are applied per object type. Meaning with a limit of 10 you will return 10 objects of each type not 10 results total.
+
+Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
+Use operator ('and', 'or') to choose whether to join or separate each rule when searching.
+
+Refer to the [Advanced Search](https://ampache.org/api/api-advanced-search) page for details about creating searches.
+
+**NOTE** the rules part can be confusing but essentially you can include as many 'arrays' of rules as you want.
+Just add 1 to the rule value to create a new group of rules.
+
+* Mandatory Rule Values
+  * rule_1
+  * rule_1_operator
+  * rule_1_input
+* Optional (Metadata searches **only**)
+  * rule_1_subtype
+
+**NOTE** the type parameter is different from the regular advanced_search method.
+Each type is a grouping of object types so allow single search calls to be made
+
+* all
+  * song
+  * album
+  * song_artist
+  * album_artist
+  * artist
+  * label
+  * playlist
+  * podcast
+  * podcast_episode
+  * genre
+  * user
+
+* music
+  * song
+  * album
+  * artist
+
+song_artist
+  * song
+  * album
+  * song_artist
+
+album_artist
+  * song
+  * album
+  * album_artist
+  
+podcast
+  * podcast
+  * podcast_episode
+
+video
+  * video
+
+| Input    | Type    | Description                                                                          | Optional |
+|----------|---------|--------------------------------------------------------------------------------------|---------:|
+| operator | string  | and, or (whether to match one rule or all)                                           |       NO |
+| rule_*   | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]                                        |       NO |
+| rule_*   | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]                                 |      YES |
+| type     | string  | `all`, `music`, `song_artist`, `album_artist`, `podcast`, `video` (`all` by default) |      YES |
+| random   | boolean | `0`, `1` (random order of results; default to 0)                                     |      YES |
+| 'offset' | integer | Return results starting from this index position                                     |      YES |
+| 'limit'  | integer | Maximum number of results to return                                                  |      YES |
+
+
+* return array
+
+```JSON
+"search": [
+    "song: [],
+    "album: [],
+    "song_artist: [],
+    "album_artist: [],
+    "artist: [],
+    "label: [],
+    "playlist: [],
+    "podcast: [],
+    "podcast_episode: [],
+    "genre: [],
+    "user: []
+]
+
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+ALL [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_group%20\(all\).json)
+
+MUSIC [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_group%20\(music\).json)
+
+PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_group%20\(podcast\).json)
+
 ### search_songs
 
 This searches the songs and returns... songs
@@ -2769,11 +2916,13 @@ This takes a url and returns the song object in question
 
 ### user
 
-This gets a user's public information
+This gets a user's public information.
 
-| Input      | Type   | Description                         | Optional |
-|------------|--------|-------------------------------------|---------:|
-| 'username' | string | Username of the user to get details |       NO |
+If the username is omitted, this will return the current api user's public information.
+
+| Input      | Type   | Description                             | Optional |
+|------------|--------|-----------------------------------------|---------:|
+| 'username' | string | Username of the user to get details for |      YES |
 
 * return array
 
@@ -2881,6 +3030,33 @@ Update an existing user.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_edit.json)
 
+### user_playlists
+
+This returns playlists based on the specified filter
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+
+* return array
+
+```JSON
+"playlist": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_playlists.json)
+
 ### user_preference
 
 Get your user preference by name
@@ -2902,6 +3078,33 @@ Get your user preference by name
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_preference.json)
+
+### user_smartlists
+
+This returns smartlists based on the specified filter
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+
+* return array
+
+```JSON
+"playlist": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_smartlists.json)
 
 ### videos
 

@@ -596,6 +596,7 @@ class Query
                 break;
             case 'artist':
             case 'album_artist':
+            case 'song_artist':
             case 'album_disk':
             case 'catalog':
             case 'podcast':
@@ -1768,6 +1769,9 @@ class Query
                         break;
                     case 'album_artist':
                         $filter_sql = " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
+                        break;
+                    case 'song_artist':
+                        $filter_sql = " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'song') AND ";
                         break;
                     case 'unplayed':
                         if ((int)$value == 1) {

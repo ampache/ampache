@@ -25,7 +25,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
 
 /** @var int $endTime */

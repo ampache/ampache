@@ -327,7 +327,7 @@ final class VaInfo implements VaInfoInterface
      *
      * This function runs the various steps to gathering the metadata. Filling $this->tags
      */
-    public function gather_tags()
+    public function gather_tags(): void
     {
         // If this is broken, don't waste time figuring it out a second time, just return their rotting carcass of a media file.
         if ($this->_broken) {
@@ -467,7 +467,7 @@ final class VaInfo implements VaInfoInterface
      * @param array $frames
      * @return array
      */
-    public function prepare_metadata_for_writing($frames)
+    public function prepare_metadata_for_writing($frames): array
     {
         $ndata = array();
         foreach ($frames as $key => $text) {
@@ -492,7 +492,7 @@ final class VaInfo implements VaInfoInterface
      * This function runs the various steps to gathering the metadata
      * @return array
      */
-    public function read_id3()
+    public function read_id3(): array
     {
         // Get the Raw file information
         try {
@@ -520,7 +520,7 @@ final class VaInfo implements VaInfoInterface
      * @param string $configKey
      * @return array
      */
-    public static function get_tag_type($results, $configKey = 'metadata_order')
+    public static function get_tag_type($results, $configKey = 'metadata_order'): array
     {
         $tagorderMap = [
             'metadata_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
@@ -575,7 +575,7 @@ final class VaInfo implements VaInfoInterface
      * @param string $filename
      * @return array
      */
-    public static function clean_tag_info($results, $keys, $filename = null)
+    public static function clean_tag_info($results, $keys, $filename = null): array
     {
         $info         = self::DEFAULT_INFO;
         $info['file'] = $filename;
@@ -706,7 +706,7 @@ final class VaInfo implements VaInfoInterface
      * @param string $mbid
      * @return array
      */
-    public static function get_mbid_array($mbid)
+    public static function get_mbid_array($mbid): array
     {
         if (preg_match(self::MBID_REGEX, $mbid, $matches)) {
             return $matches;
@@ -741,7 +741,7 @@ final class VaInfo implements VaInfoInterface
      * @param string|array $mbid
      * @return array
      */
-    public static function parse_mbid_array($mbid)
+    public static function parse_mbid_array($mbid): array
     {
         if (empty($mbid)) {
             return array();
@@ -805,7 +805,7 @@ final class VaInfo implements VaInfoInterface
      * @return array
      * @throws Exception
      */
-    private function _get_tags()
+    private function _get_tags(): array
     {
         $results = array();
         //$this->logger->debug('RAW TAGS ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
@@ -888,7 +888,7 @@ final class VaInfo implements VaInfoInterface
      * get_metadata_order
      * @return array
      */
-    private function get_metadata_order()
+    private function get_metadata_order(): array
     {
         $tagorderMap = [
             'metadata_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
@@ -905,7 +905,7 @@ final class VaInfo implements VaInfoInterface
      *
      * Get additional metadata from plugins
      */
-    private function _get_plugin_tags()
+    private function _get_plugin_tags(): void
     {
         $tag_order    = $this->get_metadata_order();
         $plugin_names = Plugin::get_plugins('get_metadata');
@@ -948,7 +948,7 @@ final class VaInfo implements VaInfoInterface
      * @param $tags
      * @return array
      */
-    private function _parse_general($tags)
+    private function _parse_general($tags): array
     {
         //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         $parsed = array();
@@ -1069,7 +1069,7 @@ final class VaInfo implements VaInfoInterface
      * @return array
      * @throws Exception
      */
-    private function _cleanup_generic($tags)
+    private function _cleanup_generic($tags): array
     {
         $parsed = array();
         foreach ($tags as $tagname => $data) {
@@ -1151,7 +1151,7 @@ final class VaInfo implements VaInfoInterface
      * @param $tags
      * @return array
      */
-    private function _cleanup_lyrics($tags)
+    private function _cleanup_lyrics($tags): array
     {
         $parsed = array();
 
@@ -1173,7 +1173,7 @@ final class VaInfo implements VaInfoInterface
      * @return array
      * @throws Exception
      */
-    private function _cleanup_vorbiscomment($tags)
+    private function _cleanup_vorbiscomment($tags): array
     {
         $parsed = array();
 
@@ -1320,7 +1320,7 @@ final class VaInfo implements VaInfoInterface
      * @param $tags
      * @return array
      */
-    private function _cleanup_id3v1($tags)
+    private function _cleanup_id3v1($tags): array
     {
         $parsed = array();
 
@@ -1341,7 +1341,7 @@ final class VaInfo implements VaInfoInterface
      * @return array
      * @throws Exception
      */
-    private function _cleanup_id3v2($tags)
+    private function _cleanup_id3v2($tags): array
     {
         $parsed = array();
 
@@ -1551,7 +1551,7 @@ final class VaInfo implements VaInfoInterface
      * @param $tags
      * @return array
      */
-    private function _cleanup_riff($tags)
+    private function _cleanup_riff($tags): array
     {
         $parsed = array();
 
@@ -1575,7 +1575,7 @@ final class VaInfo implements VaInfoInterface
      * @return array
      * @throws Exception
      */
-    private function _cleanup_quicktime($tags)
+    private function _cleanup_quicktime($tags): array
     {
         $parsed = array();
 
@@ -1690,7 +1690,7 @@ final class VaInfo implements VaInfoInterface
      * @return array
      * @throws Exception
      */
-    private function _cleanup_asf($tags)
+    private function _cleanup_asf($tags): array
     {
         $parsed = array();
         foreach ($tags as $tagname => $data) {
@@ -1832,7 +1832,7 @@ final class VaInfo implements VaInfoInterface
      * @param string $filepath
      * @return array
      */
-    private function _parse_filename($filepath)
+    private function _parse_filename($filepath): array
     {
         $origin  = $filepath;
         $results = array();
@@ -1939,7 +1939,7 @@ final class VaInfo implements VaInfoInterface
      * @param string $filePattern
      * @return array
      */
-    public static function parse_pattern($filepath, $dirPattern, $filePattern)
+    public static function parse_pattern($filepath, $dirPattern, $filePattern): array
     {
         $logger          = static::getLogger();
         $results         = array();
@@ -2031,7 +2031,7 @@ final class VaInfo implements VaInfoInterface
      *
      * @return array Return broken title, album, artist
      */
-    public function set_broken()
+    public function set_broken(): array
     {
         /* Pull In the config option */
         $order = $this->configContainer->get(ConfigurationKeyEnum::TAG_ORDER);
@@ -2083,7 +2083,7 @@ final class VaInfo implements VaInfoInterface
      * @param array|string $data
      * @return array
      */
-    private function parseArtists($data)
+    private function parseArtists($data): array
     {
         //debug_event(__CLASS__, "parseArtists: " . print_r($data, true), 5);
         $result = null;

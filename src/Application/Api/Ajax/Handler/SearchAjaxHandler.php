@@ -30,12 +30,12 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
@@ -50,14 +50,18 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
 
     private MissingArtistFinderInterface $missingArtistFinder;
 
+    private LabelRepositoryInterface $labelRepository;
+
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        MissingArtistFinderInterface $missingArtistFinder
+        MissingArtistFinderInterface $missingArtistFinder,
+        LabelRepositoryInterface $labelRepository
     ) {
         $this->requestParser       = $requestParser;
         $this->configContainer     = $configContainer;
         $this->missingArtistFinder = $missingArtistFinder;
+        $this->labelRepository     = $labelRepository;
     }
 
     public function handle(): void
@@ -235,15 +239,18 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
                     foreach ($sres as $labelid) {
-                        $label     = new Label($labelid);
-                        $results[] = array(
-                            'type' => T_('Labels'),
-                            'link' => $web_path . '/labels.php?action=show&label=' . $labelid,
-                            'label' => $label->name,
-                            'value' => $label->name,
-                            'rels' => '',
-                            'image' => (string)Art::url($label->id, 'label', null, 10),
-                        );
+                        $label = $this->labelRepository->findById($labelid);
+
+                        if ($label !== null) {
+                            $results[] = array(
+                                'type' => T_('Labels'),
+                                'link' => $web_path . '/labels.php?action=show&label=' . $labelid,
+                                'label' => $label->name,
+                                'value' => $label->name,
+                                'rels' => '',
+                                'image' => (string)Art::url($label->getId(), 'label', null, 10),
+                            );
+                        }
                     }
                 }
 

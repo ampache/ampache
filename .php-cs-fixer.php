@@ -7,8 +7,8 @@ $finder = PhpCsFixer\Finder::create()
     ->in('tests/')
 ;
 
-$config = new PhpCsFixer\Config();
-return $config->setRules([
+return (new PhpCsFixer\Config())
+    ->setRules([
         '@PSR12' => true,
         'binary_operator_spaces' => [
             'operators' => ['=' => 'align']
@@ -47,10 +47,11 @@ return $config->setRules([
         'single_blank_line_at_eof' => true,
         'strict_param' => false,
         'visibility_required' => true,
+        'no_unused_imports' => true,
     ])
     ->setIndent("    ")
-    ->setUsingCache(false)
     ->setFinder($finder)
     ->setLineEnding("\n")
+    ->setUsingCache(true)
 ;
 

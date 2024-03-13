@@ -69,7 +69,7 @@ class IpHistoryRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT ip, date FROM ip_history WHERE user = ? GROUP BY ip, date ORDER BY date DESC LIMIT 1',
+                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? GROUP BY `ip`, `date` ORDER BY `date` DESC LIMIT 1',
                 [
                     $userId
                 ]
@@ -114,7 +114,7 @@ class IpHistoryRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                'SELECT ip FROM ip_history WHERE user = ? ORDER BY date DESC LIMIT 1',
+                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
                 [
                     $userId,
                 ]
@@ -140,7 +140,7 @@ class IpHistoryRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                'SELECT ip FROM ip_history WHERE user = ? ORDER BY date DESC LIMIT 1',
+                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
                 [
                     $userId,
                 ]

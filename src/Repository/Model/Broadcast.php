@@ -98,7 +98,7 @@ class Broadcast extends database_object implements library_item
      * @param bool $started
      * @param string $key
      */
-    public function update_state($started, $key = '')
+    public function update_state($started, $key = ''): void
     {
         $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
         Dba::write($sql, array($started, $key, $this->id));
@@ -110,7 +110,7 @@ class Broadcast extends database_object implements library_item
      * Update broadcast listeners.
      * @param int $listeners
      */
-    public function update_listeners($listeners)
+    public function update_listeners($listeners): void
     {
         $sql = "UPDATE `broadcast` SET `listeners` = ? WHERE `id` = ?";
         Dba::write($sql, array($listeners, $this->id));
@@ -121,7 +121,7 @@ class Broadcast extends database_object implements library_item
      * Update broadcast current song.
      * @param int $song_id
      */
-    public function update_song($song_id)
+    public function update_song($song_id): void
     {
         $sql = "UPDATE `broadcast` SET `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($song_id, $this->id));
@@ -168,7 +168,7 @@ class Broadcast extends database_object implements library_item
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
         $name        = $data['title'] ?? $this->name;
-        $description = $data['description'] ?? null;
+        $description = $data['description'] ?? '';
         $private     = !empty($data['private']);
 
         $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
@@ -194,7 +194,7 @@ class Broadcast extends database_object implements library_item
      * Get item keywords for metadata searches.
      * @return array
      */
-    public function get_keywords()
+    public function get_keywords(): array
     {
         return array();
     }
@@ -251,7 +251,7 @@ class Broadcast extends database_object implements library_item
      * Get item childrens.
      * @return array
      */
-    public function get_childrens()
+    public function get_childrens(): array
     {
         return array();
     }
@@ -261,7 +261,7 @@ class Broadcast extends database_object implements library_item
      * @param string $name
      * @return array
      */
-    public function get_children($name)
+    public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -270,14 +270,14 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get all childrens and sub-childrens medias.
-     * @param string $filter_type
-     * @return array
+     *
+     * @return list<array{object_type: string, object_id: int}>
      */
-    public function get_medias($filter_type = null)
+    public function get_medias(?string  $filter_type = null): array
     {
         // Not a media, shouldn't be that
         $medias = array();
-        if ($filter_type === null || $filter_type == 'broadcast') {
+        if ($filter_type === null || $filter_type === 'broadcast') {
             $medias[] = array(
                 'object_type' => 'broadcast',
                 'object_id' => $this->id
@@ -358,7 +358,7 @@ class Broadcast extends database_object implements library_item
     /**
      * Show action buttons.
      */
-    public function show_action_buttons()
+    public function show_action_buttons(): void
     {
         if ($this->id) {
             if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
@@ -404,7 +404,7 @@ class Broadcast extends database_object implements library_item
      * @param int $user_id
      * @return int[]
      */
-    public static function get_broadcasts($user_id)
+    public static function get_broadcasts($user_id): array
     {
         $sql        = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
         $db_results = Dba::read($sql, array($user_id));

@@ -27,14 +27,17 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Cleans up expired share items
+ */
 final class CleanAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'clean';
@@ -43,35 +46,37 @@ final class CleanAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ShareRepositoryInterface $shareRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        ShareRepositoryInterface $shareRepository
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
-            throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
+        if (
+            !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE) ||
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+        ) {
+            throw new AccessDeniedException('Access Denied: sharing not available.');
         }
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
-            throw new AccessDeniedException();
-        }
+        $this->shareRepository->collectGarbage();
 
         $this->ui->showHeader();
-
-        Share::garbage_collection();
-        $next_url = sprintf(
-            '%s/stats.php?action=share',
-            $this->configContainer->getWebPath()
-        );
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Expired shares have been cleaned'),
-            $next_url
+            sprintf(
+                '%s/stats.php?action=share',
+                $this->configContainer->getWebPath()
+            )
         );
         $this->ui->showFooter();
 

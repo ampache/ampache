@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -116,6 +117,8 @@ class User extends database_object
      * @var array $catalogs;
      */
     public $catalogs;
+
+    private ?bool $has_art = null;
 
     /**
      * Constructor
@@ -258,7 +261,7 @@ class User extends database_object
      * @param string $filter
      * @return int[]
      */
-    public static function get_user_catalogs($user_id, $filter = '')
+    public static function get_user_catalogs($user_id, $filter = ''): array
     {
         if (parent::is_cached('user_catalog' . $filter, $user_id)) {
             return parent::get_from_cache('user_catalog' . $filter, $user_id);
@@ -276,7 +279,7 @@ class User extends database_object
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return int[]
      */
-    public function get_catalogs($filter)
+    public function get_catalogs($filter): array
     {
         if (!isset($this->catalogs[$filter])) {
             $this->catalogs[$filter] = self::get_user_catalogs($this->id, $filter);
@@ -297,26 +300,26 @@ class User extends database_object
      * @param bool $system
      * @return array
      */
-    public function get_preferences($type = 0, $system = false)
+    public function get_preferences($type = 0, $system = false): array
     {
         $user_limit = "";
         if (!$system) {
             $user_id    = $this->id;
-            $user_limit = "AND preference.catagory != 'system'";
+            $user_limit = "AND `preference`.`category` != 'system'";
         } else {
             $user_id = -1;
             if ($type != '0') {
-                $user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
+                $user_limit = "AND `preference`.`category` = '" . Dba::escape($type) . "'";
             }
         }
 
-        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`catagory`, `preference`.`subcatagory`, `preference`.`description`";
+        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`";
         $db_results = Dba::read($sql, array($user_id));
         $results    = array();
         $type_array = array();
         /* Ok this is crappy, need to clean this up or improve the code FIXME */
         while ($row = Dba::fetch_assoc($db_results)) {
-            $type  = $row['catagory'];
+            $type  = $row['category'];
             $admin = false;
             if ($type == 'system') {
                 $admin = true;
@@ -326,7 +329,7 @@ class User extends database_object
                 'level' => $row['level'],
                 'description' => $row['description'],
                 'value' => $row['value'],
-                'subcategory' => $row['subcatagory']
+                'subcategory' => $row['subcategory']
             );
             $results[$type] = array(
                 'title' => ucwords((string)$type),
@@ -342,7 +345,7 @@ class User extends database_object
      * set_preferences
      * sets the prefs for this specific user
      */
-    public function set_preferences()
+    public function set_preferences(): void
     {
         $user_id    = Dba::escape($this->id);
         $sql        = "SELECT `preference`.`name`, `user_preference`.`value` FROM `preference`, `user_preference` WHERE `user_preference`.`user` = ? AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system';";
@@ -360,7 +363,7 @@ class User extends database_object
      * @param string $type
      * @return array
      */
-    public function get_favorites($type)
+    public function get_favorites($type): array
     {
         $items   = array();
         $count   = AmpConfig::get('popular_threshold', 10);
@@ -391,7 +394,7 @@ class User extends database_object
      * is_logged_in
      * checks to see if $this user is logged in returns their current IP if they are logged in
      */
-    public function is_logged_in()
+    public function is_logged_in(): ?string
     {
         $sql = (AmpConfig::get('perpetual_api_session'))
             ? "SELECT `id`, `ip` FROM `session` WHERE `username` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
@@ -402,7 +405,7 @@ class User extends database_object
             return $row['ip'] ?? null;
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -451,7 +454,7 @@ class User extends database_object
      * @param string $key
      * @param string|int $value
      */
-    public static function set_user_data(int $user_id, string $key, $value)
+    public static function set_user_data(int $user_id, string $key, $value): void
     {
         Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", array($user_id, $key, $value));
     }
@@ -464,7 +467,7 @@ class User extends database_object
      * @param string|int|null $default
      * @return array
      */
-    public static function get_user_data($user_id, $key = null, $default = null)
+    public static function get_user_data($user_id, $key = null, $default = null): array
     {
         $sql    = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?";
         $params = array($user_id);
@@ -474,8 +477,8 @@ class User extends database_object
         }
 
         $db_results = Dba::read($sql, $params);
-        $results    = ($key && $default !== null)
-            ? array('key' => $default)
+        $results    = ($key !== null && $default !== null)
+            ? array($key => $default)
             : array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['key']] = $row['value'];
@@ -513,11 +516,69 @@ class User extends database_object
     }
 
     /**
+     * update
+     * This function is an all encompassing update function that
+     * calls the mini ones does all the error checking and all that
+     * good stuff
+     * @param array $data
+     * @return int|false
+     */
+    public function update(array $data)
+    {
+        if (empty($data['username'])) {
+            AmpError::add('username', T_('Username is required'));
+        }
+
+        if ($data['password1'] != $data['password2'] && !empty($data['password1'])) {
+            AmpError::add('password', T_("Passwords do not match"));
+        }
+
+        if (AmpError::occurred()) {
+            return false;
+        }
+
+        if (!isset($data['fullname_public'])) {
+            $data['fullname_public'] = false;
+        }
+
+        foreach ($data as $name => $value) {
+            if ($name == 'password1') {
+                $name = 'password';
+            } else {
+                $value = scrub_in($value);
+            }
+
+            switch ($name) {
+                case 'password':
+                case 'access':
+                case 'email':
+                case 'username':
+                case 'fullname':
+                case 'fullname_public':
+                case 'website':
+                case 'state':
+                case 'city':
+                case 'catalog_filter_group':
+                    if ($this->$name != $value) {
+                        $function = 'update_' . $name;
+                        $this->$function($value);
+                    }
+                    break;
+                case 'clear_stats':
+                    Stats::clear($this->id);
+                    break;
+            }
+        }
+
+        return $this->id;
+    }
+
+    /**
      * update_catalog_filter_group
      * Set a new filter group catalog filter
      * @param int $new_filter
      */
-    public function update_catalog_filter_group($new_filter)
+    public function update_catalog_filter_group($new_filter): void
     {
         $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
 
@@ -531,7 +592,7 @@ class User extends database_object
      * updates their username
      * @param string $new_username
      */
-    public function update_username($new_username)
+    public function update_username($new_username): void
     {
         $sql            = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
@@ -563,7 +624,7 @@ class User extends database_object
      * updates their fullname
      * @param string $new_fullname
      */
-    public function update_fullname($new_fullname)
+    public function update_fullname($new_fullname): void
     {
         $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
 
@@ -577,7 +638,7 @@ class User extends database_object
      * updates their fullname public
      * @param bool|string $new_fullname_public
      */
-    public function update_fullname_public($new_fullname_public)
+    public function update_fullname_public($new_fullname_public): void
     {
         $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
 
@@ -591,7 +652,7 @@ class User extends database_object
      * updates their email address
      * @param string $new_email
      */
-    public function update_email($new_email)
+    public function update_email($new_email): void
     {
         $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
 
@@ -605,7 +666,7 @@ class User extends database_object
      * updates their website address
      * @param string $new_website
      */
-    public function update_website($new_website)
+    public function update_website($new_website): void
     {
         $new_website = rtrim((string)$new_website, "/");
         $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
@@ -620,7 +681,7 @@ class User extends database_object
      * updates their state
      * @param string $new_state
      */
-    public function update_state($new_state)
+    public function update_state($new_state): void
     {
         $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
 
@@ -634,7 +695,7 @@ class User extends database_object
      * updates their city
      * @param string $new_city
      */
-    public function update_city($new_city)
+    public function update_city($new_city): void
     {
         $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
 
@@ -732,7 +793,7 @@ class User extends database_object
             return false;
         }
 
-        $sql = "UPDATE `user` SET `disabled`='1' WHERE id='" . $this->id . "'";
+        $sql = "UPDATE `user` SET `disabled`='1' WHERE `id`='" . $this->id . "'";
         Dba::write($sql);
 
         // Delete any sessions they may have
@@ -888,7 +949,7 @@ class User extends database_object
      * @param string $new_password
      * @param string $hashed_password
      */
-    public function update_password($new_password, $hashed_password = null)
+    public function update_password($new_password, $hashed_password = null): void
     {
         debug_event(self::class, 'Updating password', 1);
         if (!$hashed_password) {
@@ -957,6 +1018,18 @@ class User extends database_object
         if (!empty($avatar['url_medium'])) {
             $this->f_avatar_medium = '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" style="width: 64px; height: 64px;" />';
         }
+    }
+
+    /**
+     * does the item have art?
+     */
+    public function has_art(): bool
+    {
+        if ($this->has_art === null) {
+            $this->has_art = Art::has_db($this->id, 'user');
+        }
+
+        return $this->has_art;
     }
 
     /**
@@ -1056,7 +1129,7 @@ class User extends database_object
 
         // If your user is missing preferences we copy the value from system (Except for plugins and system prefs)
         if ($user_id != '-1') {
-            $sql        = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` NOT IN ('plugins', 'system');";
+            $sql        = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`category` NOT IN ('plugins', 'system');";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -1070,7 +1143,7 @@ class User extends database_object
 
         // If not system, exclude system... *gasp*
         if ($user_id != '-1') {
-            $sql .= " WHERE catagory !='system';";
+            $sql .= " WHERE `category` !='system';";
         }
         $db_results = Dba::read($sql);
 
@@ -1143,7 +1216,7 @@ class User extends database_object
      * @param bool $newest
      * @return array
      */
-    public function get_recently_played($type, $count, $offset = 0, $newest = true, $count_type = 'stream')
+    public function get_recently_played($type, $count, $offset = 0, $newest = true, $count_type = 'stream'): array
     {
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $limit    = ($offset < 1) ? $count : $offset . "," . $count;
@@ -1222,12 +1295,11 @@ class User extends database_object
      * @param bool $local
      * @return array
      */
-    public function get_avatar($local = false)
+    public function get_avatar($local = false): array
     {
         $avatar          = array();
         $avatar['title'] = T_('User avatar');
-        $upavatar        = new Art($this->id, 'user');
-        if ($upavatar->has_db_info()) {
+        if ($this->has_art()) {
             $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id;
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
@@ -1280,8 +1352,8 @@ class User extends database_object
         if (!empty($_FILES['avatar']['tmp_name']) && $_FILES['avatar']['size'] <= AmpConfig::get('max_upload_size')) {
             $path_info      = pathinfo($_FILES['avatar']['name']);
             $upload['file'] = $_FILES['avatar']['tmp_name'];
-            $upload['mime'] = 'image/' . $path_info['extension'];
-            if (!in_array(strtolower($path_info['extension']), Art::VALID_TYPES)) {
+            $upload['mime'] = 'image/' . ($path_info['extension'] ?? '');
+            if (!in_array(strtolower($path_info['extension'] ?? ''), Art::VALID_TYPES)) {
                 return false;
             }
 
@@ -1328,11 +1400,11 @@ class User extends database_object
         $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE `user_preference`.`user` != -1 AND `user`.`id` IS NULL;";
         Dba::write($sql);
         // delete system prefs from users
-        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`catagory` = 'system';";
+        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`category` = 'system';";
         Dba::write($sql);
 
         // How many preferences should we have?
-        $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `catagory` != 'system';";
+        $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `category` != 'system';";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
         $pref_count = (int)$row['pref_count'];

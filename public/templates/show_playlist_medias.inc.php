@@ -78,6 +78,9 @@ $count     = 1; ?>
                     $className = ObjectTypeToClassNameMapper::map($object_type);
                     /** @var Ampache\Repository\Model\library_item $libitem */
                     $libitem = new $className($object['object_id']);
+                    if ($libitem->isNew()) {
+                        continue;
+                    }
                     if (method_exists($libitem, 'format')) {
                         $libitem->format();
                     }
