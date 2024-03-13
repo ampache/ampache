@@ -71,7 +71,7 @@ final class ShowDisabledAction implements ApplicationActionInterface
         if (count($songs)) {
             $this->ui->show(
                 'show_disabled_songs.inc.php',
-                ['$ongs' => $songs]
+                ['songs' => $songs]
             );
         } else {
             echo '<div class="error show-disabled">' . T_('No disabled Songs found') . '</div>';
