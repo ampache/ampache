@@ -59,9 +59,9 @@ input[type=url],
 input[type=year],
 select,
 textarea {
-    background-color: #000;
-    background-image: linear-gradient(to top, hsl(0, 0%, 8%), hsl(0, 0%, 4%));
-    border-color: #222;
+    background-color: hsl(0, 0%, 10%);
+    background-image: linear-gradient(to top, hsl(0, 0%, 12%), hsl(0, 0%, 8%));
+    border-color: hsl(0, 0%, 30%);
 }
 
 button,
