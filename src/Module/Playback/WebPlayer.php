@@ -302,6 +302,7 @@ class WebPlayer
                 } else {
                     $json['albumdisk_id'] = $media->get_album_disk();
                 }
+                $json['album_name'] = $media->get_album_disk_fullname();
                 // get replaygain from the song_data table
                 $media->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak, r128_track_gain, r128_album_gain');
                 $json['replaygain_track_gain'] = $media->replaygain_track_gain;
