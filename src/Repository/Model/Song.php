@@ -628,9 +628,9 @@ class Song extends database_object implements
      * This function gathers information from the song_ext_info table and adds it to the
      * current object
      * @param string $select
-     * @return array
+     * @return array|false
      */
-    public function _get_ext_info($select = ''): array
+    public function _get_ext_info($select = ''): array|false
     {
         $song_id = (int) ($this->id);
         $columns = (!empty($select)) ? Dba::escape($select) : '*';
