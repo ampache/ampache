@@ -118,12 +118,12 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
             imagesetthickness($this->img, rand(1, 2));
             imagearc(
                 $this->img,
-                rand( (int) (0.1 * $x), (int) (0.9 * $x)),
-                rand( (int) (0.1 * $y), (int) (0.9 * $y)),  // x,y
-                rand( (int) (0.1 * $x), (int) (0.3 * $x)),
-                rand( (int) (0.1 * $y),(int) (0.3 * $y)),  // w,h
+                rand((int)(0.1 * $x), (int)(0.9 * $x)),
+                rand((int)(0.1 * $y), (int)(0.9 * $y)),  // x,y
+                rand((int)(0.1 * $x), (int)(0.3 * $x)),
+                rand((int)(0.1 * $y), (int)(0.3 * $y)),  // w,h
                 $s,
-                rand( (int) ($s + 5), (int) ($s + 90)),     // s,e
+                rand((int)($s + 5), (int)($s + 90)),     // s,e
                 rand(0, 1) ? 0xFFFFFF : 0x000000   // col
             );
         }
